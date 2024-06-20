@@ -1,0 +1,32 @@
+﻿using UnrealBuildTool;
+
+public class WorldWidgetEdGeneration : ModuleRules
+{
+	public WorldWidgetEdGeneration(ReadOnlyTargetRules Target) : base(Target)
+	{
+		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
+
+		PublicDependencyModuleNames.AddRange(
+			new string[]
+			{
+				"Core",
+				"DevCore",
+				"DevEdCore",
+			}
+		);
+
+		PrivateDependencyModuleNames.AddRange(
+			new string[]
+			{
+				"CoreUObject",
+				"Engine",
+				"Slate",
+				"SlateCore",
+				"UMG",
+				"LevelEditor",
+				"UnrealEd",
+				"WorldWidgetGeneration",
+			}
+		);
+	}
+}

@@ -1,0 +1,2 @@
+﻿#include "Manager/ManagerType.h"
+

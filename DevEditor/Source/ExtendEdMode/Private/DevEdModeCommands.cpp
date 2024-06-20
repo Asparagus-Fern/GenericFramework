@@ -1,0 +1,26 @@
+﻿#include "DevEdModeCommands.h"
+
+#include "DevEdCoreStyle.h"
+
+
+#define LOCTEXT_NAMESPACE "DevCommonEdModeCommands"
+
+FDevEdModeCommands::FDevEdModeCommands()
+	: TCommands<FDevEdModeCommands>(
+		"DevEdModeCommands",
+		LOCTEXT("Tooltip", "Dev Editor Mode"),
+		NAME_None,
+		FDevEdCoreStyle::GetStyleSetName()
+	)
+{
+}
+
+void FDevEdModeCommands::RegisterCommands()
+{
+	TArray<TSharedPtr<FUICommandInfo>>& EdModeCommands = Commands.FindOrAdd(NAME_Default);
+
+	UI_COMMAND(DrawZoneShape, "DrawZoneShape", "Draw ZoneShape Actor", EUserInterfaceActionType::RadioButton, FInputChord());
+	EdModeCommands.Add(DrawZoneShape);
+}
+
+#undef LOCTEXT_NAMESPACE
