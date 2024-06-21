@@ -38,6 +38,12 @@ void FWorldWidgetPanel::NativeOnRefresh()
 
 	for (const auto& WorldWidget : WorldWidgets)
 	{
+		if (WorldWidget.Key->IsHidden())
+		{
+			WorldWidget.Value->SetVisibility(ESlateVisibility::Collapsed);
+			continue;
+		}
+
 		for (FConstPlayerControllerIterator Iterator = Owner->GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)
 		{
 			FVector2D ScreenPosition;
@@ -71,20 +77,37 @@ void FWorldWidgetPanel::NativeOnDestroy()
 {
 	IProcedureInterface::NativeOnDestroy();
 
+	for (const auto& WorldWidget : WorldWidgets)
+	{
+		if (IsValid(WorldWidget.Value))
+		{
+			WorldWidget.Value->MarkAsGarbage();
+		}
+	}
+
 	Owner = nullptr;
+	Panel = nullptr;
 	WorldWidgets.Reset();
 }
 
 void FWorldWidgetPanel::NativeOnActived()
 {
 	IProcedureInterface::NativeOnActived();
-	Panel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+
+	if (IsValid(Panel))
+	{
+		Panel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	}
 }
 
 void FWorldWidgetPanel::NativeOnInactived()
 {
 	IProcedureInterface::NativeOnInactived();
-	Panel->SetVisibility(ESlateVisibility::Collapsed);
+
+	if (IsValid(Panel))
+	{
+		Panel->SetVisibility(ESlateVisibility::Collapsed);
+	}
 }
 
 void FWorldWidgetPanel::AddWorldWidget(AWorldWidgetPoint* InWorldWidgetPoint)
@@ -169,16 +192,7 @@ void UWorldWidgetManager::NativeOnActived()
 {
 	Super::NativeOnActived();
 
-	if (GetWorld()->IsGameWorld())
-	{
-		UTagNameSlot* Slot = UScreenWidgetManager::Get()->GetSlot(FGameplayTag::RequestGameplayTag(FName("HUD.Main.WorldWidget")));
-		if (IsValid(Slot))
-		{
-			FWorldWidgetPanel* NewWorldWidgetPanel = CreateWorldWidgetPanel();
-			Slot->SetContent(NewWorldWidgetPanel->GetPanel());
-			NewWorldWidgetPanel->NativeOnActived();
-		}
-	}
+	FScreenWidgetDelegates::OnHUDCreated.AddUObject(this, &UWorldWidgetManager::GenerateWorldWidget);
 }
 
 void UWorldWidgetManager::NativeOnInactived()
@@ -186,7 +200,20 @@ void UWorldWidgetManager::NativeOnInactived()
 	Super::NativeOnInactived();
 
 	WorldWidgetPoints.Reset();
-	ClearWorldWidgetPanel();
+	ClearupWorldWidgetPanel();
+}
+
+void UWorldWidgetManager::GenerateWorldWidget()
+{
+	UTagNameSlot* Slot = UScreenWidgetManager::Get()->GetSlot(FGameplayTag::RequestGameplayTag(FName("HUD.Main.WorldWidget")));
+	if (IsValid(Slot))
+	{
+		FWorldWidgetPanel* NewWorldWidgetPanel = CreateWorldWidgetPanel();
+		Slot->SetContent(NewWorldWidgetPanel->GetPanel());
+		NewWorldWidgetPanel->NativeOnActived();
+
+		RefreshAllPanelWorldWidgetPoint();
+	}
 }
 
 void UWorldWidgetManager::AddWorldWidgetPoint(AWorldWidgetPoint* InWorldWidgetPoint)
@@ -264,7 +291,7 @@ void UWorldWidgetManager::RefreshAllPanelWorldWidgetPoint()
 {
 	for (const auto& WorldWidgetPoint : WorldWidgetPoints)
 	{
-		RefreshWolrdWidgetPoint(WorldWidgetPoint);
+		RefreshPanelWorldWidgetPoint(WorldWidgetPoint);
 	}
 }
 
@@ -277,11 +304,12 @@ FWorldWidgetPanel* UWorldWidgetManager::CreateWorldWidgetPanel()
 	return NewWorldWidgetPanel;
 }
 
-void UWorldWidgetManager::ClearWorldWidgetPanel()
+void UWorldWidgetManager::ClearupWorldWidgetPanel()
 {
 	for (const auto& WorldWidgetPanel : WorldWidgetPanels)
 	{
 		WorldWidgetPanel->NativeOnDestroy();
+		delete WorldWidgetPanel;
 	}
 
 	WorldWidgetPanels.Reset();

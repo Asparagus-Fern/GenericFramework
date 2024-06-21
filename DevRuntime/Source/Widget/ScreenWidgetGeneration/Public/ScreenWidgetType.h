@@ -4,6 +4,7 @@
 #include "NativeGameplayTags.h"
 #include "ScreenWidgetType.generated.h"
 
+class UUserWidgetBase;
 class UCommonButtonEvent;
 class UCommonButtonGroup;
 class UMenuStyle;
@@ -136,6 +137,16 @@ public:
  */
 struct SCREENWIDGETGENERATION_API FScreenWidgetDelegates
 {
+public:
+	static FSimpleMulticastDelegate OnHUDCreated;
+
+	static FSimpleMulticastDelegate OnMenuCleanup;
+	static FSimpleMulticastDelegate OnMenuGenerated;
+
+	DECLARE_MULTICAST_DELEGATE_OneParam(FUserWidgetDelegate, UUserWidgetBase*)
+	static FUserWidgetDelegate OnWidgetOpen;
+	static FUserWidgetDelegate OnWidgetClose;
+
 	DECLARE_MULTICAST_DELEGATE_OneParam(FMenuDelegate, FMenuInfo)
 	static FMenuDelegate OnMenuClicked;
 

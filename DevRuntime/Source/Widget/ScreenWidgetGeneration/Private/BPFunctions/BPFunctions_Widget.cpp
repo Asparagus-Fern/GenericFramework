@@ -43,6 +43,8 @@ void UBPFunctions_Widget::SetImageBrush(UImage* InImage, const FImageBrush InIma
 		return;
 	}
 
+	InImage->SetDesiredSizeOverride(InImageBrush.Size);
+
 	switch (InImageBrush.ImageBrushResource)
 	{
 	case EImageBrushResource::SlateBrush:
@@ -72,11 +74,6 @@ void UBPFunctions_Widget::SetImageBrush(UImage* InImage, const FImageBrush InIma
 	case EImageBrushResource::ResourceObject:
 		InImage->SetBrushResourceObject(InImageBrush.ResourceObject);
 		break;
-	}
-
-	if (!InImageBrush.MatchSize)
-	{
-		InImage->SetDesiredSizeOverride(InImageBrush.Size);
 	}
 }
 

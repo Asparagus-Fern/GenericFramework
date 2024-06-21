@@ -19,6 +19,8 @@ class SCREENWIDGETGENERATION_API UCommonButton : public UCommonButtonBase
 
 public:
 	UCommonButton(const FObjectInitializer& ObjectInitializer);
+	virtual void NativePreConstruct() override;
+	virtual void NativeConstruct() override;
 	virtual void NativeOnHovered() override;
 	virtual void NativeOnUnhovered() override;
 	virtual void NativeOnClicked() override;
@@ -28,7 +30,10 @@ public:
 	virtual void NativeOnDeselected(bool bBroadcast) override;
 
 public:
-	UPROPERTY(Getter, Setter, BlueprintGetter="GetEvents", BlueprintSetter="SetEvents")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bEnableInteraction;
+
+	UPROPERTY(EditAnywhere, Instanced, Getter, Setter, BlueprintGetter="GetEvents", BlueprintSetter="SetEvents")
 	TArray<UCommonButtonEvent*> Events;
 
 public:

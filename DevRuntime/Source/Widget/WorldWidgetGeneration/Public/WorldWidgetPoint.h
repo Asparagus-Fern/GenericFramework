@@ -19,6 +19,7 @@ public:
 	virtual void OnConstruction(const FTransform& Transform) override;
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+	virtual void Destroyed() override;
 
 	/* Preview */
 #if WITH_EDITORONLY_DATA
@@ -31,9 +32,15 @@ public:
 
 	/* AWorldWidgetPoint */
 public:
+	/* 可通过标签获取到所有该标签点位 */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="Point"))
 	FGameplayTag PointTag;
 
+	/* 该点位顺序 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	int32 Order = 0;
+
+	/* 点位UI */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced)
 	UWorldWidget* WorldWidget = nullptr;
 };

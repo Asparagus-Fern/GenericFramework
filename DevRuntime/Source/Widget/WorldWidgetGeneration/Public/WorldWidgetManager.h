@@ -41,7 +41,9 @@ public:
 	virtual void AddWorldWidget(AWorldWidgetPoint* InWorldWidgetPoint);
 	virtual void RemoveWorldWidget(AWorldWidgetPoint* InWorldWidgetPoint);
 	virtual void ClearWorldWidget();
+
 	virtual UCanvasPanel* GetPanel() { return Panel; }
+	TMap<AWorldWidgetPoint*, UWorldWidget*>& GetWorldWidgets() { return WorldWidgets; }
 };
 
 
@@ -78,6 +80,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Transient)
 	TArray<AWorldWidgetPoint*> WorldWidgetPoints;
 
+protected:
+	virtual void GenerateWorldWidget();
+
 public:
 	virtual void AddWorldWidgetPoint(AWorldWidgetPoint* InWorldWidgetPoint);
 	virtual void RemoveWorldWidgetPoint(AWorldWidgetPoint* InWorldWidgetPoint);
@@ -92,5 +97,5 @@ public:
 protected:
 	TArray<FWorldWidgetPanel*> WorldWidgetPanels;
 	virtual FWorldWidgetPanel* CreateWorldWidgetPanel();
-	virtual void ClearWorldWidgetPanel();
+	virtual void ClearupWorldWidgetPanel();
 };

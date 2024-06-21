@@ -59,7 +59,7 @@ void UScreenWidgetManager::NativeOnInactived()
 
 void UScreenWidgetManager::RegisterSlot(UTagNameSlot* InSlot)
 {
-	if (!InSlot->SlotTag.IsValid())
+	if (!InSlot->SlotTag.IsValid() || Slots.Contains(InSlot->SlotTag))
 	{
 		return;
 	}
@@ -72,7 +72,7 @@ UTagNameSlot* UScreenWidgetManager::GetSlot(const FGameplayTag InSlotTag) const
 	return Slots.FindRef(InSlotTag);
 }
 
-UUserWidgetBase* UScreenWidgetManager::GetSlotUserWidget(FGameplayTag InSlotTag) const
+UUserWidgetBase* UScreenWidgetManager::GetSlotWidget(FGameplayTag InSlotTag) const
 {
 	return SlotWidgets.FindRef(InSlotTag);
 }
@@ -80,7 +80,7 @@ UUserWidgetBase* UScreenWidgetManager::GetSlotUserWidget(FGameplayTag InSlotTag)
 UUserWidgetBase* UScreenWidgetManager::GetSlotUserWidgetByClass(FGameplayTag InSlotTag, TSubclassOf<UUserWidgetBase> InClass) const
 {
 	ensure(InClass);
-	return Cast<UUserWidgetBase>(GetSlotUserWidget(InSlotTag));
+	return Cast<UUserWidgetBase>(GetSlotWidget(InSlotTag));
 }
 
 void UScreenWidgetManager::CreateGameHUD()
@@ -94,6 +94,8 @@ void UScreenWidgetManager::CreateGameHUD()
 		UGameHUD* NewHUD = CreateWidget<UGameHUD>(GetWorld(), LoadHUDClass);
 		NewHUD->AddToViewport(NewHUD->ZOrder);
 	}
+
+	FScreenWidgetDelegates::OnHUDCreated.Broadcast();
 }
 
 UUserWidgetBase* UScreenWidgetManager::OpenUserWidgetByClass(TSubclassOf<UUserWidgetBase> InWidgetClass)
@@ -121,12 +123,13 @@ void UScreenWidgetManager::OpenUserWidget(UUserWidgetBase* InWidget)
 	if (IsValid(Slot))
 	{
 		/* Close Last Widget */
-		UUserWidgetBase* OldWidget = GetSlotUserWidget(SlotTag);
+		UUserWidgetBase* OldWidget = GetSlotWidget(SlotTag);
 		if (IsValid(OldWidget))
 		{
 			OldWidget->NativeOnClose();
 			Slot->RemoveChild(OldWidget);
 			SlotWidgets.Remove(OldWidget->SlotTag);
+			FScreenWidgetDelegates::OnWidgetClose.Broadcast(OldWidget);
 		}
 
 		/* Open New Widget */
@@ -135,6 +138,7 @@ void UScreenWidgetManager::OpenUserWidget(UUserWidgetBase* InWidget)
 			SlotWidgets.Add(SlotTag, InWidget);
 			Slot->SetContent(InWidget);
 			InWidget->NativeOnOpen();
+			FScreenWidgetDelegates::OnWidgetOpen.Broadcast(InWidget);
 		}
 	}
 }
@@ -179,6 +183,7 @@ void UScreenWidgetManager::SwitchGameMenu(UGameMenuSetting* InGameMenuSetting)
 		{
 			//todo:清除
 			FScreenWidgetDelegates::OnMenuSelectionChanged.Remove(MenuSelectionChangedHandle);
+			FScreenWidgetDelegates::OnMenuCleanup.Broadcast();
 		}
 
 		/* Generate Root Menu */
@@ -187,6 +192,7 @@ void UScreenWidgetManager::SwitchGameMenu(UGameMenuSetting* InGameMenuSetting)
 		{
 			MenuSelectionChangedHandle = FScreenWidgetDelegates::OnMenuSelectionChanged.AddUObject(this, &UScreenWidgetManager::OnMenuSelectionChanged);
 			GenerateMenu(*MenuContainerInfo);
+			FScreenWidgetDelegates::OnMenuGenerated.Broadcast();
 		}
 	}
 }

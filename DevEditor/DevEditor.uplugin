@@ -31,22 +31,22 @@
     {
       "Name": "ManagerVisualization",
       "Type": "Editor",
-      "LoadingPhase": "PostEngineInit"
+      "LoadingPhase": "PostDefault"
     },
     {
       "Name": "ExtendEdMode",
       "Type": "Editor",
-      "LoadingPhase": "PostEngineInit"
+      "LoadingPhase": "PostDefault"
     },
     {
       "Name": "WorldWidgetEdGeneration",
       "Type": "Editor",
-      "LoadingPhase": "PostEngineInit"
+      "LoadingPhase": "PostDefault"
     },
     {
       "Name": "CameraEdSystem",
       "Type": "Editor",
-      "LoadingPhase": "PostEngineInit"
+      "LoadingPhase": "PostDefault"
     }
   ]
 }

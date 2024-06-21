@@ -5,6 +5,11 @@
 UE_DEFINE_GAMEPLAY_TAG(TAG_HUD, "HUD");
 UE_DEFINE_GAMEPLAY_TAG(TAG_Menu, "Menu");
 
+FSimpleMulticastDelegate FScreenWidgetDelegates::OnHUDCreated;
+FSimpleMulticastDelegate FScreenWidgetDelegates::OnMenuCleanup;
+FSimpleMulticastDelegate FScreenWidgetDelegates::OnMenuGenerated;
+FScreenWidgetDelegates::FUserWidgetDelegate FScreenWidgetDelegates::OnWidgetOpen;
+FScreenWidgetDelegates::FUserWidgetDelegate FScreenWidgetDelegates::OnWidgetClose;
 FScreenWidgetDelegates::FMenuDelegate FScreenWidgetDelegates::OnMenuClicked;
 FScreenWidgetDelegates::FMenuSelectionDelegate FScreenWidgetDelegates::OnMenuSelectionChanged;
 

@@ -9,14 +9,15 @@
 /**
  * 
  */
-UCLASS(Abstract, HideCategories=(Interaction,Layout,Localization,Performance,Rendering,Navigation,Designer,Locked,Selection,Input))
+UCLASS(Abstract, HideCategories=(Interaction,Layout,Localization,Performance,Rendering,Navigation,Designer,Locked,Input))
 class WORLDWIDGETGENERATION_API UWorldWidget : public UCommonButton
 {
 	GENERATED_BODY()
 
 public:
 	UWorldWidget(const FObjectInitializer& ObjectInitializer);
-
+	virtual void NativePreConstruct() override;
+	
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FVector2D Anchor = FVector2D(.5f, 0.f);

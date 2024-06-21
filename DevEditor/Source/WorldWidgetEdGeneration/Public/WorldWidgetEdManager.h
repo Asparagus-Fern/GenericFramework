@@ -48,11 +48,14 @@ protected:
 	FLevelEditorViewportClient* LevelEditorViewportClient = nullptr;
 
 protected:
-	virtual void AddPanelToViewport();
-	virtual void RemovePanelFromViewport();
+	virtual bool AddPanelToViewport();
+	virtual bool RemovePanelFromViewport();
 
 	virtual void AddWorldWidget(AWorldWidgetPoint* InWorldWidgetPoint) override;
 	virtual void RemoveWorldWidget(AWorldWidgetPoint* InWorldWidgetPoint) override;
+
+private:
+	uint8 bRegisterInViewport : 1;
 };
 
 /**
@@ -95,6 +98,9 @@ protected:
 	FDelegateHandle LevelViewportClientListChangedHandle;
 	void OnLevelViewportClientListChanged();
 
+	FTimerHandle LevelViewportClientListChangedNextTickHandle;
+	void HandleLevelViewportClientListChangedNextTick();
+
 	/* 蓝图编译时更新 */
 	FDelegateHandle BlueprintCompiledHandle;
 	void OnBlueprintCompiled();
@@ -107,9 +113,14 @@ protected:
 	FDelegateHandle WorldWidgetPointConstructionHandle;;
 	void OnWorldWidgetPointConstruction(AWorldWidgetPoint* InWorldWidgetPoint);
 
+	FDelegateHandle WorldWidgetPointDestroyedHandle;;
+	void OnWorldWidgetPointDestroyed(AWorldWidgetPoint* InWorldWidgetPoint);
+
 protected:
+	TArray<FLevelEditorViewportClient*> HandleLevelEditorViewportClients;
 	TMap<FLevelEditorViewportClient*, FWorldWidgetPanel*> EditorWorldWidgetPanelMapping;
 	virtual void ReCreateEditorWorldWidgetPanel();
 	virtual FEditorWorldWidgetPanel* CreateEditorWorldWidgetPanel(FLevelEditorViewportClient* InLevelEditorViewportClient);
+	virtual void ClearupEditorWorldWidgetPanel(FLevelEditorViewportClient* InLevelEditorViewportClient);
 	virtual void CollectWorldWidgetPoints();
 };

@@ -3,12 +3,14 @@
 
 #include "Group/CommonButton.h"
 
+#include "Debug/DebugType.h"
 #include "Event/CommonButtonEvent.h"
 
 UCommonButton::UCommonButton(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
 	bSelectable = true;
+	bEnableInteraction = true;
 
 	static ConstructorHelpers::FClassFinder<UCommonButtonStyle> StyleClassFinder(TEXT("	/Script/Engine.Blueprint'/DevRuntime/ScreenWidgetGeneration/Style/ButtonStyle/CBS_Transparent.CBS_Transparent_C'"));
 	if (StyleClassFinder.Succeeded())
@@ -17,10 +19,23 @@ UCommonButton::UCommonButton(const FObjectInitializer& ObjectInitializer)
 	}
 }
 
+void UCommonButton::NativePreConstruct()
+{
+	Super::NativePreConstruct();
+	GetRootWidget()->SetVisibility(bEnableInteraction ? ESlateVisibility::SelfHitTestInvisible : ESlateVisibility::HitTestInvisible);
+}
+
+void UCommonButton::NativeConstruct()
+{
+	Super::NativeConstruct();
+	GetRootWidget()->SetVisibility(bEnableInteraction ? ESlateVisibility::SelfHitTestInvisible : ESlateVisibility::HitTestInvisible);
+}
+
 void UCommonButton::NativeOnHovered()
 {
 	Super::NativeOnHovered();
 	ResponseButtonEvent(ECommonButtonResponseEvent::OnHovered);
+	DEBUG_LOG(Debug_UI, Log, TEXT("Hovered"))
 }
 
 void UCommonButton::NativeOnUnhovered()

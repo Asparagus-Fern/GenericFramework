@@ -91,14 +91,18 @@ TSharedPtr<SLevelViewport> FStaticFunctions_LevelEditor::GetEditorViewportWidget
 {
 	if (InLevelEditorViewportClient)
 	{
-		const TSharedPtr<ILevelEditor> LevelEditor = InLevelEditorViewportClient->ParentLevelEditor.Pin();
-		if (LevelEditor.IsValid())
+		const TWeakPtr<ILevelEditor> ParentLevelEditor = InLevelEditorViewportClient->ParentLevelEditor;
+		if (ParentLevelEditor.IsValid())
 		{
-			for (auto Viewport : LevelEditor->GetViewports())
+			const TSharedPtr<ILevelEditor> LevelEditor = ParentLevelEditor.Pin();
+			if (LevelEditor.IsValid())
 			{
-				if (Viewport == InLevelEditorViewportClient->GetEditorViewportWidget())
+				for (auto Viewport : LevelEditor->GetViewports())
 				{
-					return Viewport;
+					if (Viewport == InLevelEditorViewportClient->GetEditorViewportWidget())
+					{
+						return Viewport;
+					}
 				}
 			}
 		}
@@ -106,7 +110,7 @@ TSharedPtr<SLevelViewport> FStaticFunctions_LevelEditor::GetEditorViewportWidget
 	return nullptr;
 }
 
-void FStaticFunctions_LevelEditor::AddToViewport(const FLevelEditorViewportClient* InLevelEditorViewportClient, const TSharedRef<SWidget>& InWidget)
+bool FStaticFunctions_LevelEditor::AddToViewport(const FLevelEditorViewportClient* InLevelEditorViewportClient, const TSharedRef<SWidget>& InWidget)
 {
 	if (InLevelEditorViewportClient)
 	{
@@ -114,11 +118,14 @@ void FStaticFunctions_LevelEditor::AddToViewport(const FLevelEditorViewportClien
 		if (LevelViewport.IsValid())
 		{
 			LevelViewport->AddOverlayWidget(InWidget);
+			return true;
 		}
 	}
+
+	return false;
 }
 
-void FStaticFunctions_LevelEditor::RemoveFromViewport(const FLevelEditorViewportClient* InLevelEditorViewportClient, const TSharedRef<SWidget>& InWidget)
+bool FStaticFunctions_LevelEditor::RemoveFromViewport(const FLevelEditorViewportClient* InLevelEditorViewportClient, const TSharedRef<SWidget>& InWidget)
 {
 	if (InLevelEditorViewportClient)
 	{
@@ -126,6 +133,9 @@ void FStaticFunctions_LevelEditor::RemoveFromViewport(const FLevelEditorViewport
 		if (LevelViewport.IsValid())
 		{
 			LevelViewport->RemoveOverlayWidget(InWidget);
+			return true;
 		}
 	}
+
+	return false;
 }

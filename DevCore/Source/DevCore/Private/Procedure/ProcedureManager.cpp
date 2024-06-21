@@ -76,7 +76,7 @@ void UProcedureManager::OnPostWorldInitialization(UWorld* InWorld, const UWorld:
 		 {
 			 InCoreManager->NativeOnInactived();
 			 InCoreManager->ManagerWorld = nullptr;
-			 DEBUG_LOG(Debug_Manager, Log, TEXT("Manager Inactived : %s"), *InCoreManager->GetName())
+			 DEBUG(Debug_Manager, Log, TEXT("Manager Inactived : %s"), *InCoreManager->GetName())
 		 }
 	 }
 	);
@@ -94,7 +94,7 @@ void UProcedureManager::OnPostWorldInitialization(UWorld* InWorld, const UWorld:
 
 			 InCoreManager->ManagerWorld = InWorld;
 			 InCoreManager->NativeOnActived();
-			 DEBUG_LOG(Debug_Manager, Log, TEXT("Manager Actived : %s"), *InCoreManager->GetName())
+			 DEBUG(Debug_Manager, Log, TEXT("Manager Actived : %s"), *InCoreManager->GetName())
 		 }
 	 }
 	);
@@ -117,7 +117,7 @@ void UProcedureManager::OnWorldMatchStarting(UWorld* InWorld)
 			 {
 				 InCoreManager->ManagerWorld = InWorld;
 				 InCoreManager->NativeOnActived();
-				 DEBUG_LOG(Debug_Manager, Log, TEXT("Manager Actived : %s"), *InCoreManager->GetName())
+				 DEBUG(Debug_Manager, Log, TEXT("Manager Actived : %s"), *InCoreManager->GetName())
 			 }
 		 }
 		);
@@ -143,7 +143,7 @@ void UProcedureManager::OnWorldCleanup(UWorld* InWorld, bool bSessionEnded, bool
 		 {
 			 InCoreManager->NativeOnInactived();
 			 InCoreManager->ManagerWorld = nullptr;
-			 DEBUG_LOG(Debug_Manager, Log, TEXT("Manager Inactived : %s"), *InCoreManager->GetName())
+			 DEBUG(Debug_Manager, Log, TEXT("Manager Inactived : %s"), *InCoreManager->GetName())
 		 }
 	 }
 	);
@@ -171,7 +171,7 @@ void UProcedureManager::OnWorldCleanup(UWorld* InWorld, bool bSessionEnded, bool
 		 {
 			 InCoreManager->ManagerWorld = EditorWorld;
 			 InCoreManager->NativeOnActived();
-			 DEBUG_LOG(Debug_Manager, Log, TEXT("Manager Actived : %s"), *InCoreManager->GetName())
+			 DEBUG(Debug_Manager, Log, TEXT("Manager Actived : %s"), *InCoreManager->GetName())
 		 }
 	 }
 	);
@@ -228,7 +228,7 @@ void UProcedureManager::OnEditorClose()
 		 {
 			 InCoreManager->NativeOnInactived();
 			 InCoreManager->ManagerWorld = nullptr;
-			 DEBUG_LOG(Debug_Manager, Log, TEXT("Manager Inactived : %s"), *InCoreManager->GetName())
+			 DEBUG(Debug_Manager, Log, TEXT("Manager Inactived : %s"), *InCoreManager->GetName())
 		 }
 	 }
 	);
@@ -290,7 +290,7 @@ bool UProcedureManager::SwitchProcedure(EGameplayProcedure InProcedure, bool bFo
 		}
 	);
 
-	DEBUG_LOG(Debug_Manager, Log, TEXT("Switch Procedure From %s To %s"), *UEnum::GetDisplayValueAsText(LastGameplayProcedure).ToString(), *UEnum::GetDisplayValueAsText(CurrentGameplayProcedure).ToString())
+	DEBUG(Debug_Manager, Log, TEXT("Switch Procedure From %s To %s"), *UEnum::GetDisplayValueAsText(LastGameplayProcedure).ToString(), *UEnum::GetDisplayValueAsText(CurrentGameplayProcedure).ToString())
 	return true;
 }
 

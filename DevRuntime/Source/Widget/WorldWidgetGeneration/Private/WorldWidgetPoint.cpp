@@ -36,3 +36,9 @@ void AWorldWidgetPoint::EndPlay(const EEndPlayReason::Type EndPlayReason)
 		WorldWidgetManager->RemoveWorldWidgetPoint(this);
 	}
 }
+
+void AWorldWidgetPoint::Destroyed()
+{
+	Super::Destroyed();
+	FWorldWidgetDelegates::OnWorldWidgetPointDestroy.Broadcast(this);
+}

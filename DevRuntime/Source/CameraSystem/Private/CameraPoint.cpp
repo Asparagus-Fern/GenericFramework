@@ -20,26 +20,6 @@ ACameraPoint::ACameraPoint()
 void ACameraPoint::OnConstruction(const FTransform& Transform)
 {
 	Super::OnConstruction(Transform);
-
-#if WITH_EDITOR
-
-	if (CameraTag.IsValid())
-	{
-		FString BaseName;
-		CameraTag.ToString().Split("Camera.", nullptr, &BaseName, ESearchCase::IgnoreCase);
-		const FString NewLabel = "CameraPoint_" + BaseName;
-		if (GetActorLabel() != NewLabel)
-		{
-			Modify();
-			SetActorLabel(NewLabel);
-		}
-	}
-	else
-	{
-		SetActorLabel("CameraPoint_None");
-	}
-
-#endif
 }
 
 void ACameraPoint::BeginPlay()

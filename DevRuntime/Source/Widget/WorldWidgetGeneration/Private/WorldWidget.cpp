@@ -6,7 +6,12 @@
 UWorldWidget::UWorldWidget(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
-	bSelectable = false;
+	bEnableInteraction = false;
+}
+
+void UWorldWidget::NativePreConstruct()
+{
+	Super::NativePreConstruct();
 }
 
 FVector2D UWorldWidget::GetAnchorOffset() const

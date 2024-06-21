@@ -51,7 +51,7 @@ public:
 	UTagNameSlot* GetSlot(FGameplayTag InSlotTag) const;
 
 	UFUNCTION(BlueprintPure)
-	UUserWidgetBase* GetSlotUserWidget(FGameplayTag InSlotTag) const;
+	UUserWidgetBase* GetSlotWidget(FGameplayTag InSlotTag) const;
 
 	UFUNCTION(BlueprintPure, meta = ( DeterminesOutputType = "InClass"), Category="Slot Manager")
 	UUserWidgetBase* GetSlotUserWidgetByClass(FGameplayTag InSlotTag, TSubclassOf<UUserWidgetBase> InClass) const;

@@ -11,4 +11,5 @@ struct WORLDWIDGETGENERATION_API FWorldWidgetDelegates
 {
 	DECLARE_MULTICAST_DELEGATE_OneParam(FWorldWidgetPointDelegate, AWorldWidgetPoint*)
 	static FWorldWidgetPointDelegate OnWorldWidgetPointConstruction;
+	static FWorldWidgetPointDelegate OnWorldWidgetPointDestroy;
 };
