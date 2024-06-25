@@ -22,13 +22,21 @@ UCommonButton::UCommonButton(const FObjectInitializer& ObjectInitializer)
 void UCommonButton::NativePreConstruct()
 {
 	Super::NativePreConstruct();
-	GetRootWidget()->SetVisibility(bEnableInteraction ? ESlateVisibility::SelfHitTestInvisible : ESlateVisibility::HitTestInvisible);
+
+	if (IsValid(GetRootWidget()))
+	{
+		GetRootWidget()->SetVisibility(bEnableInteraction ? ESlateVisibility::SelfHitTestInvisible : ESlateVisibility::HitTestInvisible);
+	}
 }
 
 void UCommonButton::NativeConstruct()
 {
 	Super::NativeConstruct();
-	GetRootWidget()->SetVisibility(bEnableInteraction ? ESlateVisibility::SelfHitTestInvisible : ESlateVisibility::HitTestInvisible);
+
+	if (IsValid(GetRootWidget()))
+	{
+		GetRootWidget()->SetVisibility(bEnableInteraction ? ESlateVisibility::SelfHitTestInvisible : ESlateVisibility::HitTestInvisible);
+	}
 }
 
 void UCommonButton::NativeOnHovered()
@@ -72,6 +80,36 @@ void UCommonButton::NativeOnDeselected(bool bBroadcast)
 {
 	Super::NativeOnDeselected(bBroadcast);
 	ResponseButtonEvent(ECommonButtonResponseEvent::OnDeselected);
+}
+
+void UCommonButton::NativeOnOpen()
+{
+	IUserWidgetInterface::NativeOnOpen();
+	IUserWidgetInterface::Execute_OnOpen(this);
+}
+
+void UCommonButton::NativeOnClose()
+{
+	IUserWidgetInterface::NativeOnClose();
+	IUserWidgetInterface::Execute_OnClose(this);
+}
+
+void UCommonButton::NativeOnCreate()
+{
+	IUserWidgetInterface::NativeOnCreate();
+	IUserWidgetInterface::Execute_OnCreate(this);
+}
+
+void UCommonButton::NativeOnRefresh()
+{
+	IUserWidgetInterface::NativeOnRefresh();
+	IUserWidgetInterface::Execute_OnRefresh(this);
+}
+
+void UCommonButton::NativeOnDestroy()
+{
+	IUserWidgetInterface::NativeOnDestroy();
+	IUserWidgetInterface::Execute_OnDestroy(this);
 }
 
 TArray<UCommonButtonEvent*> UCommonButton::GetEvents() const

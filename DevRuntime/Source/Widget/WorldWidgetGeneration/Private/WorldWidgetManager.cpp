@@ -16,22 +16,21 @@
 
 #define LOCTEXT_NAMESPACE "UWorldWidgetManager"
 
-FWorldWidgetPanel::FWorldWidgetPanel(UWorldWidgetManager* InOwner)
-	: Owner(InOwner)
+UWorldWidgetPanel::UWorldWidgetPanel(const FObjectInitializer& ObjectInitializer)
 {
-	Panel = NewObject<UCanvasPanel>(Owner);
+	Panel = NewObject<UCanvasPanel>(GetOuter());
 }
 
-void FWorldWidgetPanel::NativeOnCreate()
+void UWorldWidgetPanel::NativeOnCreate()
 {
 	IProcedureInterface::NativeOnCreate();
 }
 
-void FWorldWidgetPanel::NativeOnRefresh()
+void UWorldWidgetPanel::NativeOnRefresh()
 {
 	IProcedureInterface::NativeOnRefresh();
 
-	if (!IsValid(Owner) || !IsValid(Panel) || !IsValid(Owner->GetWorld()))
+	if (!IsValid(Panel) || !IsValid(GetWorld()))
 	{
 		return;
 	}
@@ -44,7 +43,7 @@ void FWorldWidgetPanel::NativeOnRefresh()
 			continue;
 		}
 
-		for (FConstPlayerControllerIterator Iterator = Owner->GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)
+		for (FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)
 		{
 			FVector2D ScreenPosition;
 			APlayerController* PlayerController = Iterator->Get();
@@ -73,7 +72,7 @@ void FWorldWidgetPanel::NativeOnRefresh()
 	}
 }
 
-void FWorldWidgetPanel::NativeOnDestroy()
+void UWorldWidgetPanel::NativeOnDestroy()
 {
 	IProcedureInterface::NativeOnDestroy();
 
@@ -85,12 +84,11 @@ void FWorldWidgetPanel::NativeOnDestroy()
 		}
 	}
 
-	Owner = nullptr;
 	Panel = nullptr;
 	WorldWidgets.Reset();
 }
 
-void FWorldWidgetPanel::NativeOnActived()
+void UWorldWidgetPanel::NativeOnActived()
 {
 	IProcedureInterface::NativeOnActived();
 
@@ -100,7 +98,7 @@ void FWorldWidgetPanel::NativeOnActived()
 	}
 }
 
-void FWorldWidgetPanel::NativeOnInactived()
+void UWorldWidgetPanel::NativeOnInactived()
 {
 	IProcedureInterface::NativeOnInactived();
 
@@ -110,25 +108,33 @@ void FWorldWidgetPanel::NativeOnInactived()
 	}
 }
 
-void FWorldWidgetPanel::AddWorldWidget(AWorldWidgetPoint* InWorldWidgetPoint)
+void UWorldWidgetPanel::AddWorldWidget(AWorldWidgetPoint* InWorldWidgetPoint)
 {
 	if (!WorldWidgets.Contains(InWorldWidgetPoint))
 	{
-		UWorldWidget* DuplicateWorldWidget = DuplicateObject(InWorldWidgetPoint->WorldWidget, InWorldWidgetPoint);
-		WorldWidgets.Add(InWorldWidgetPoint, DuplicateWorldWidget);
-
-		UPanelSlot* PanelSlot = Panel->AddChild(DuplicateWorldWidget);
-		if (UCanvasPanelSlot* CanvasPanelSlot = Cast<UCanvasPanelSlot>(PanelSlot))
+		if (IsValid(InWorldWidgetPoint->WorldWidget))
 		{
-			CanvasPanelSlot->SetAutoSize(true);
-			CanvasPanelSlot->SetAnchors(FAnchors());
-			CanvasPanelSlot->SetAlignment(FVector2D());
-			CanvasPanelSlot->SetOffsets(FMargin());
+			/* 直接使用该UMG会导致位置错误，因为会对所有的PlayerController进行位置更新，这就意味着他在不同player中看到的位置是不一样的 */
+			UWorldWidget* DuplicateWorldWidget = DuplicateObject(InWorldWidgetPoint->WorldWidget, InWorldWidgetPoint);
+			WorldWidgets.Add(InWorldWidgetPoint, DuplicateWorldWidget);
+			
+			UPanelSlot* PanelSlot = Panel->AddChild(DuplicateWorldWidget);
+			if (UCanvasPanelSlot* CanvasPanelSlot = Cast<UCanvasPanelSlot>(PanelSlot))
+			{
+				CanvasPanelSlot->SetAutoSize(true);
+				CanvasPanelSlot->SetAnchors(FAnchors());
+				CanvasPanelSlot->SetAlignment(FVector2D());
+				CanvasPanelSlot->SetOffsets(FMargin());
+			}
+
+			/* 创建，但未打开，只在需要的时候显示 */
+			DuplicateWorldWidget->NativeOnCreate();
+			DuplicateWorldWidget->SetVisibility(ESlateVisibility::Collapsed);
 		}
 	}
 }
 
-void FWorldWidgetPanel::RemoveWorldWidget(AWorldWidgetPoint* InWorldWidgetPoint)
+void UWorldWidgetPanel::RemoveWorldWidget(AWorldWidgetPoint* InWorldWidgetPoint)
 {
 	if (WorldWidgets.Contains(InWorldWidgetPoint) && IsValid(Panel))
 		if (WorldWidgets.Contains(InWorldWidgetPoint) && IsValid(Panel))
@@ -138,7 +144,7 @@ void FWorldWidgetPanel::RemoveWorldWidget(AWorldWidgetPoint* InWorldWidgetPoint)
 		}
 }
 
-void FWorldWidgetPanel::ClearWorldWidget()
+void UWorldWidgetPanel::ClearWorldWidget()
 {
 	Panel->ClearChildren();
 	WorldWidgets.Reset();
@@ -208,7 +214,7 @@ void UWorldWidgetManager::GenerateWorldWidget()
 	UTagNameSlot* Slot = UScreenWidgetManager::Get()->GetSlot(FGameplayTag::RequestGameplayTag(FName("HUD.Main.WorldWidget")));
 	if (IsValid(Slot))
 	{
-		FWorldWidgetPanel* NewWorldWidgetPanel = CreateWorldWidgetPanel();
+		UWorldWidgetPanel* NewWorldWidgetPanel = CreateWorldWidgetPanel();
 		Slot->SetContent(NewWorldWidgetPanel->GetPanel());
 		NewWorldWidgetPanel->NativeOnActived();
 
@@ -295,9 +301,9 @@ void UWorldWidgetManager::RefreshAllPanelWorldWidgetPoint()
 	}
 }
 
-FWorldWidgetPanel* UWorldWidgetManager::CreateWorldWidgetPanel()
+UWorldWidgetPanel* UWorldWidgetManager::CreateWorldWidgetPanel()
 {
-	FWorldWidgetPanel* NewWorldWidgetPanel = new FWorldWidgetPanel(this);
+	UWorldWidgetPanel* NewWorldWidgetPanel = NewObject<UWorldWidgetPanel>(this);
 	NewWorldWidgetPanel->NativeOnCreate();
 	WorldWidgetPanels.Add(NewWorldWidgetPanel);
 
@@ -309,7 +315,7 @@ void UWorldWidgetManager::ClearupWorldWidgetPanel()
 	for (const auto& WorldWidgetPanel : WorldWidgetPanels)
 	{
 		WorldWidgetPanel->NativeOnDestroy();
-		delete WorldWidgetPanel;
+		WorldWidgetPanel->MarkAsGarbage();
 	}
 
 	WorldWidgetPanels.Reset();

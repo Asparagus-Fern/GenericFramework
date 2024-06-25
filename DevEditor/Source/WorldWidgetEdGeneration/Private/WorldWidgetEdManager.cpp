@@ -16,21 +16,9 @@
 #include "StaticFunctions/StaticFunctions_LevelEditor.h"
 #include "Widgets/Layout/SConstraintCanvas.h"
 
-
-FEditorWorldWidgetPanel::FEditorWorldWidgetPanel(UWorldWidgetEdManager* InOwner, FLevelEditorViewportClient* InLevelEditorViewportClient)
-	: FWorldWidgetPanel(InOwner),
-	  LevelEditorViewportClient(InLevelEditorViewportClient),
-	  bRegisterInViewport(false)
+void UEditorWorldWidgetPanel::NativeOnCreate()
 {
-}
-
-FEditorWorldWidgetPanel::~FEditorWorldWidgetPanel()
-{
-}
-
-void FEditorWorldWidgetPanel::NativeOnCreate()
-{
-	FWorldWidgetPanel::NativeOnCreate();
+	UWorldWidgetPanel::NativeOnCreate();
 
 	ConstraintCanvas = SNew(SConstraintCanvas);
 	if (LevelEditorViewportClient)
@@ -39,9 +27,9 @@ void FEditorWorldWidgetPanel::NativeOnCreate()
 	}
 }
 
-void FEditorWorldWidgetPanel::NativeOnRefresh()
+void UEditorWorldWidgetPanel::NativeOnRefresh()
 {
-	if (!IsValid(Owner) || !ConstraintCanvas.IsValid() || !LevelEditorViewportClient)
+	if (!ConstraintCanvas.IsValid() || !LevelEditorViewportClient)
 	{
 		return;
 	}
@@ -94,18 +82,18 @@ void FEditorWorldWidgetPanel::NativeOnRefresh()
 	}
 }
 
-void FEditorWorldWidgetPanel::NativeOnDestroy()
+void UEditorWorldWidgetPanel::NativeOnDestroy()
 {
-	FWorldWidgetPanel::NativeOnDestroy();
+	UWorldWidgetPanel::NativeOnDestroy();
 
 	RemovePanelFromViewport();
 	ConstraintCanvas.Reset();
 	LevelEditorViewportClient = nullptr;
 }
 
-void FEditorWorldWidgetPanel::NativeOnActived()
+void UEditorWorldWidgetPanel::NativeOnActived()
 {
-	FWorldWidgetPanel::NativeOnActived();
+	UWorldWidgetPanel::NativeOnActived();
 
 	if (ConstraintCanvas.IsValid())
 	{
@@ -113,9 +101,9 @@ void FEditorWorldWidgetPanel::NativeOnActived()
 	}
 }
 
-void FEditorWorldWidgetPanel::NativeOnInactived()
+void UEditorWorldWidgetPanel::NativeOnInactived()
 {
-	FWorldWidgetPanel::NativeOnInactived();
+	UWorldWidgetPanel::NativeOnInactived();
 
 	if (ConstraintCanvas.IsValid())
 	{
@@ -123,7 +111,7 @@ void FEditorWorldWidgetPanel::NativeOnInactived()
 	}
 }
 
-bool FEditorWorldWidgetPanel::AddPanelToViewport()
+bool UEditorWorldWidgetPanel::AddPanelToViewport()
 {
 	if (ConstraintCanvas.IsValid() && LevelEditorViewportClient)
 	{
@@ -137,7 +125,7 @@ bool FEditorWorldWidgetPanel::AddPanelToViewport()
 	return false;;
 }
 
-bool FEditorWorldWidgetPanel::RemovePanelFromViewport()
+bool UEditorWorldWidgetPanel::RemovePanelFromViewport()
 {
 	if (ConstraintCanvas.IsValid() && LevelEditorViewportClient)
 	{
@@ -151,7 +139,7 @@ bool FEditorWorldWidgetPanel::RemovePanelFromViewport()
 	return false;;
 }
 
-void FEditorWorldWidgetPanel::AddWorldWidget(AWorldWidgetPoint* InWorldWidgetPoint)
+void UEditorWorldWidgetPanel::AddWorldWidget(AWorldWidgetPoint* InWorldWidgetPoint)
 {
 	if (!IsValid(InWorldWidgetPoint) || !InWorldWidgetPoint->bPreview || !IsValid(InWorldWidgetPoint->WorldWidget) || !ConstraintCanvas.IsValid())
 	{
@@ -182,7 +170,7 @@ void FEditorWorldWidgetPanel::AddWorldWidget(AWorldWidgetPoint* InWorldWidgetPoi
 	}
 }
 
-void FEditorWorldWidgetPanel::RemoveWorldWidget(AWorldWidgetPoint* InWorldWidgetPoint)
+void UEditorWorldWidgetPanel::RemoveWorldWidget(AWorldWidgetPoint* InWorldWidgetPoint)
 {
 	if (WorldWidgets.Contains(InWorldWidgetPoint) && ConstraintCanvas.IsValid() && bRegisterInViewport)
 	{
@@ -361,12 +349,14 @@ void UWorldWidgetEdManager::ReCreateEditorWorldWidgetPanel()
 	CollectWorldWidgetPoints();
 }
 
-FEditorWorldWidgetPanel* UWorldWidgetEdManager::CreateEditorWorldWidgetPanel(FLevelEditorViewportClient* InLevelEditorViewportClient)
+UEditorWorldWidgetPanel* UWorldWidgetEdManager::CreateEditorWorldWidgetPanel(FLevelEditorViewportClient* InLevelEditorViewportClient)
 {
-	FEditorWorldWidgetPanel* NewWorldWidgetPanel = new FEditorWorldWidgetPanel(this, InLevelEditorViewportClient);
-	NewWorldWidgetPanel->NativeOnCreate();
+	UEditorWorldWidgetPanel* NewWorldWidgetPanel = NewObject<UEditorWorldWidgetPanel>(this);
+	NewWorldWidgetPanel->LevelEditorViewportClient = InLevelEditorViewportClient;
 	WorldWidgetPanels.Add(NewWorldWidgetPanel);
 	EditorWorldWidgetPanelMapping.Add(InLevelEditorViewportClient, NewWorldWidgetPanel);
+
+	NewWorldWidgetPanel->NativeOnCreate();
 	NewWorldWidgetPanel->NativeOnActived();
 
 	return NewWorldWidgetPanel;
@@ -376,7 +366,7 @@ void UWorldWidgetEdManager::ClearupEditorWorldWidgetPanel(FLevelEditorViewportCl
 {
 	if (EditorWorldWidgetPanelMapping.Contains(InLevelEditorViewportClient))
 	{
-		if (FWorldWidgetPanel* FoundWorldWidgetPanel = EditorWorldWidgetPanelMapping.FindRef(InLevelEditorViewportClient))
+		if (UWorldWidgetPanel* FoundWorldWidgetPanel = EditorWorldWidgetPanelMapping.FindRef(InLevelEditorViewportClient))
 		{
 			FoundWorldWidgetPanel->NativeOnDestroy();
 			WorldWidgetPanels.Remove(FoundWorldWidgetPanel);

@@ -14,12 +14,11 @@ class AWorldWidgetPoint;
 /**
  * 
  */
-struct WORLDWIDGETGENERATION_API FWorldWidgetPanel : public IProcedureInterface
+UCLASS()
+class WORLDWIDGETGENERATION_API UWorldWidgetPanel : public UObject, public IProcedureInterface
 {
-public:
-	FWorldWidgetPanel(UWorldWidgetManager* InOwner);
-	virtual ~FWorldWidgetPanel() override { return; }
-
+	GENERATED_UCLASS_BODY()
+	
 	/* IProcedureBaseInterface */
 public:
 	virtual void NativeOnCreate() override;
@@ -33,8 +32,10 @@ public:
 
 	/* FWorldWidgetPanel */
 protected:
-	UWorldWidgetManager* Owner;
+	UPROPERTY()
 	UCanvasPanel* Panel;
+
+	UPROPERTY()
 	TMap<AWorldWidgetPoint*, UWorldWidget*> WorldWidgets;
 
 public:
@@ -95,7 +96,9 @@ public:
 	virtual void RefreshAllPanelWorldWidgetPoint();
 
 protected:
-	TArray<FWorldWidgetPanel*> WorldWidgetPanels;
-	virtual FWorldWidgetPanel* CreateWorldWidgetPanel();
+	UPROPERTY()
+	TArray<UWorldWidgetPanel*> WorldWidgetPanels;
+
+	virtual UWorldWidgetPanel* CreateWorldWidgetPanel();
 	virtual void ClearupWorldWidgetPanel();
 };

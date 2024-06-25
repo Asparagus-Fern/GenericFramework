@@ -43,7 +43,13 @@ void UBPFunctions_Widget::SetImageBrush(UImage* InImage, const FImageBrush InIma
 		return;
 	}
 
-	InImage->SetDesiredSizeOverride(InImageBrush.Size);
+	auto SetDesiredSizeOverride = [](UImage* Image, const FImageBrush& ImageBrush)
+	{
+		if (!ImageBrush.MatchSize)
+		{
+			Image->SetDesiredSizeOverride(ImageBrush.Size);
+		}
+	};
 
 	switch (InImageBrush.ImageBrushResource)
 	{
@@ -55,6 +61,7 @@ void UBPFunctions_Widget::SetImageBrush(UImage* InImage, const FImageBrush InIma
 		break;
 	case EImageBrushResource::SlateTextureAtlasInterface:
 		InImage->SetBrushFromAtlasInterface(InImageBrush.SlateTextureAtlasInterface, InImageBrush.MatchSize);
+		SetDesiredSizeOverride(InImage, InImageBrush);
 		break;
 	case EImageBrushResource::MaterialInterface:
 		InImage->SetBrushFromMaterial(InImageBrush.MaterialInterface);
@@ -64,12 +71,15 @@ void UBPFunctions_Widget::SetImageBrush(UImage* InImage, const FImageBrush InIma
 		break;
 	case EImageBrushResource::Texture2D:
 		InImage->SetBrushFromTexture(InImageBrush.Texture2D, InImageBrush.MatchSize);
+		SetDesiredSizeOverride(InImage, InImageBrush);
 		break;
 	case EImageBrushResource::SoftTexture2D:
 		InImage->SetBrushFromSoftTexture(InImageBrush.SoftTexture2D, InImageBrush.MatchSize);
+		SetDesiredSizeOverride(InImage, InImageBrush);
 		break;
 	case EImageBrushResource::Texture2DDynamic:
 		InImage->SetBrushFromTextureDynamic(InImageBrush.Texture2DDynamic, InImageBrush.MatchSize);
+		SetDesiredSizeOverride(InImage, InImageBrush);
 		break;
 	case EImageBrushResource::ResourceObject:
 		InImage->SetBrushResourceObject(InImageBrush.ResourceObject);

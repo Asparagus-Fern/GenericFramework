@@ -40,33 +40,3 @@ void UMenuStyle::NativeConstructMenuStyle(FMenuInfo InMenuInfo)
 	MenuInfo = InMenuInfo;
 	ConstructMenuStyle(InMenuInfo);
 }
-
-void UMenuStyle::NativeOnOpen()
-{
-	IUserWidgetInterface::NativeOnOpen();
-	Execute_OnOpen(this);
-}
-
-void UMenuStyle::NativeOnClose()
-{
-	IUserWidgetInterface::NativeOnClose();
-	Execute_OnClose(this);
-}
-
-void UMenuStyle::NativeOnCreate()
-{
-	IUserWidgetInterface::NativeOnCreate();
-	Execute_OnCreate(this);
-}
-
-void UMenuStyle::NativeOnDestroy()
-{
-	IUserWidgetInterface::NativeOnDestroy();
-	Execute_OnDestroy(this);
-}
-
-void UMenuStyle::NativeOnRefresh()
-{
-	IUserWidgetInterface::NativeOnRefresh();
-	Execute_OnRefresh(this);
-}

@@ -12,7 +12,7 @@
  * 
  */
 UCLASS(Abstract, BlueprintType, HideCategories=(Interaction,Layout,Localization,Performance,Rendering,Navigation,Designer))
-class SCREENWIDGETGENERATION_API UMenuStyle : public UCommonButton, public IUserWidgetInterface
+class SCREENWIDGETGENERATION_API UMenuStyle : public UCommonButton
 {
 	GENERATED_BODY()
 
@@ -28,17 +28,6 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 	void ConstructMenuStyle(FMenuInfo InMenuInfo);
 	virtual void NativeConstructMenuStyle(FMenuInfo InMenuInfo);
-
-	/* IUserWidgetInterface */
-public:
-	virtual void NativeOnOpen() override;
-	virtual void NativeOnClose() override;
-
-	/* IProcedureBaseInterface */
-public:
-	virtual void NativeOnCreate() override;
-	virtual void NativeOnDestroy() override;
-	virtual void NativeOnRefresh() override;
 
 public:
 	UPROPERTY(BlueprintReadOnly)

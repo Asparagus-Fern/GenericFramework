@@ -28,7 +28,7 @@ protected:
 
 protected:
 	virtual UClass* GetSlotClass() const override;
-	virtual void OnSlotAdded(UPanelSlot* InSlot) override;
+	virtual void OnSlotAdded(UPanelSlot* InSlot) override; 
 	virtual void OnSlotRemoved(UPanelSlot* InSlot) override;
 
 public:

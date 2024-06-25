@@ -21,15 +21,10 @@ class SLevelViewport;
  * 2. On Level Viewport Client List Changed
  * 3. On Editor Map Changed
  */
-struct FEditorWorldWidgetPanel : public FWorldWidgetPanel
+UCLASS()
+class UEditorWorldWidgetPanel : public UWorldWidgetPanel
 {
-public:
-	FEditorWorldWidgetPanel(UWorldWidgetEdManager* InOwner, FLevelEditorViewportClient* InLevelEditorViewportClient);
-	virtual ~FEditorWorldWidgetPanel() override;
-
-public:
-	bool operator==(const FEditorWorldWidgetPanel Other) const { return LevelEditorViewportClient == Other.LevelEditorViewportClient; }
-	bool operator==(const FLevelEditorViewportClient* OtherLevelEditorViewportClient) const { return LevelEditorViewportClient == OtherLevelEditorViewportClient; }
+	GENERATED_BODY()
 
 	/* IProcedureBaseInterface */
 public:
@@ -43,7 +38,7 @@ public:
 	virtual void NativeOnInactived() override;
 
 	/* FEditorWorldWidgetPanel */
-protected:
+public:
 	TSharedPtr<SConstraintCanvas> ConstraintCanvas;
 	FLevelEditorViewportClient* LevelEditorViewportClient = nullptr;
 
@@ -118,9 +113,9 @@ protected:
 
 protected:
 	TArray<FLevelEditorViewportClient*> HandleLevelEditorViewportClients;
-	TMap<FLevelEditorViewportClient*, FWorldWidgetPanel*> EditorWorldWidgetPanelMapping;
+	TMap<FLevelEditorViewportClient*, UWorldWidgetPanel*> EditorWorldWidgetPanelMapping;
 	virtual void ReCreateEditorWorldWidgetPanel();
-	virtual FEditorWorldWidgetPanel* CreateEditorWorldWidgetPanel(FLevelEditorViewportClient* InLevelEditorViewportClient);
+	virtual UEditorWorldWidgetPanel* CreateEditorWorldWidgetPanel(FLevelEditorViewportClient* InLevelEditorViewportClient);
 	virtual void ClearupEditorWorldWidgetPanel(FLevelEditorViewportClient* InLevelEditorViewportClient);
 	virtual void CollectWorldWidgetPoints();
 };

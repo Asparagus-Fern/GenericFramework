@@ -23,7 +23,7 @@ void SLine::Construct(const FArguments& InArgs)
 int32 SLine::OnPaint(const FPaintArgs& Args, const FGeometry& AllottedGeometry, const FSlateRect& MyCullingRect, FSlateWindowElementList& OutDrawElements, int32 LayerId, const FWidgetStyle& InWidgetStyle, bool bParentEnabled) const
 {
 	const TArray<FVector2D> Points = CalculatePoints();
-	// FSlateDrawElement::MakeLines(OutDrawElements, LayerId, AllottedGeometry.ToPaintGeometry(), Points, ESlateDrawEffect::None, LineColor, true, Thickness);
+	FSlateDrawElement::MakeLines(OutDrawElements, LayerId, AllottedGeometry.ToPaintGeometry(), Points, ESlateDrawEffect::None, LineColor, true, Thickness);
 	// FSlateDrawElement::MakeDrawSpaceSpline(OutDrawElements,LayerId,)
 	LayerId++;
 	
