@@ -22,11 +22,11 @@ class SCREENWIDGETGENERATION_API IUserWidgetInterface : public IProcedureBaseInt
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintNativeEvent)
+	UFUNCTION(BlueprintNativeEvent, Category="User Widget Interface")
 	void OnOpen();
 	virtual void NativeOnOpen();
 
-	UFUNCTION(BlueprintNativeEvent)
+	UFUNCTION(BlueprintNativeEvent, Category="User Widget Interface")
 	void OnClose();
 	virtual void NativeOnClose();
 };

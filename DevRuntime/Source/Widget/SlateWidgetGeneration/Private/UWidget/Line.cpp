@@ -18,6 +18,7 @@ TSharedRef<SWidget> ULine::RebuildWidget()
 		Cast<ULineSlot>(GetContentSlot())->BuildSlot(MyLine.ToSharedRef());
 	}
 
+	SetVisibility(ESlateVisibility::HitTestInvisible);
 	return MyLine.ToSharedRef();
 }
 

@@ -26,7 +26,7 @@ int32 SLine::OnPaint(const FPaintArgs& Args, const FGeometry& AllottedGeometry, 
 	FSlateDrawElement::MakeLines(OutDrawElements, LayerId, AllottedGeometry.ToPaintGeometry(), Points, ESlateDrawEffect::None, LineColor, true, Thickness);
 	// FSlateDrawElement::MakeDrawSpaceSpline(OutDrawElements,LayerId,)
 	LayerId++;
-	
+
 	const int32 Result = SCompoundWidget::OnPaint(Args, AllottedGeometry, MyCullingRect, OutDrawElements, LayerId, InWidgetStyle, bParentEnabled);
 	if (Content.IsValid() && !Points.IsEmpty())
 	{
@@ -77,6 +77,8 @@ FVector2D SLine::ComputeDesiredSize(float LayoutScaleMultiplier) const
 	// }
 
 	return SCompoundWidget::ComputeDesiredSize(LayoutScaleMultiplier);
+
+	// return FVector2D::Zero();
 }
 
 TArray<FVector2D> SLine::CalculatePoints() const
