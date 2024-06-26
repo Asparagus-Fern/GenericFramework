@@ -300,6 +300,13 @@ void UWorldWidgetEdManager::HandleLevelViewportClientListChangedNextTick()
 {
 	for (const auto& HandleLevelEditorViewportClient : HandleLevelEditorViewportClients)
 	{
+		FLevelViewportActorLock& ActorLock = HandleLevelEditorViewportClient->GetActorLock();
+		const AActor* Actor = ActorLock.GetLockedActor();
+		if (IsValid(Actor))
+		{
+			continue;
+		}
+
 		if (HandleLevelEditorViewportClient)
 		{
 			if (!EditorWorldWidgetPanelMapping.Contains(HandleLevelEditorViewportClient))
