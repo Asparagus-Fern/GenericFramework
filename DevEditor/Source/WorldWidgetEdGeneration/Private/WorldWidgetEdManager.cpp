@@ -41,7 +41,7 @@ void UEditorWorldWidgetPanel::NativeOnRefresh()
 			continue;
 		}
 
-		if (WorldWidget.Key->IsActorBeginningPlay() || WorldWidget.Key->IsActorBeingDestroyed())
+		if (WorldWidget.Key->IsActorBeingDestroyed())
 		{
 			WorldWidget.Value->SetVisibility(ESlateVisibility::Collapsed);
 			continue;
@@ -68,17 +68,16 @@ void UEditorWorldWidgetPanel::NativeOnRefresh()
 				const FVector2D ResultPosition = ScreenPosition + WorldWidget.Value->GetAnchorOffset();
 
 				/* 超出屏幕大小时隐藏 */
-				if ((ResultPosition.X > 0) && (ResultPosition.X < Viewport->GetSizeXY().X) && (ResultPosition.Y > 0) && (ResultPosition.Y < Viewport->GetSizeXY().Y))
+				if (ResultPosition.X > 0 && ResultPosition.X < Viewport->GetSizeXY().X && ResultPosition.Y > 0 && ResultPosition.Y < Viewport->GetSizeXY().Y)
 				{
 					WorldWidget.Value->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 					WorldWidget.Value->SetRenderTranslation(ResultPosition);
-				}
-				else
-				{
-					WorldWidget.Value->SetVisibility(ESlateVisibility::Collapsed);
+					continue;
 				}
 			}
 		}
+
+		WorldWidget.Value->SetVisibility(ESlateVisibility::Collapsed);
 	}
 }
 
@@ -186,6 +185,8 @@ UWorldWidgetEdManager::UWorldWidgetEdManager()
 {
 	DisplayName = LOCTEXT("DisplayName", "World Widget Editor Manager");
 	ProcedureOrder = 0;
+
+	bInitializeEditorWorldWidgetPanel = false;
 }
 
 void UWorldWidgetEdManager::Initialize(FSubsystemCollectionBase& Collection)
@@ -229,11 +230,6 @@ void UWorldWidgetEdManager::NativeOnRefresh()
 					if (WorldWidgetPanel->GetIsActive())
 					{
 						WorldWidgetPanel->NativeOnRefresh();
-
-						if (WorldWidgetPoints.Num() != WorldWidgetPanel->GetWorldWidgets().Num())
-						{
-							RefreshAllPanelWorldWidgetPoint();
-						}
 					}
 				}
 			}
@@ -266,7 +262,6 @@ void UWorldWidgetEdManager::NativeOnInactived()
 void UWorldWidgetEdManager::OnLevelEditorCreated(TSharedPtr<ILevelEditor> LevelEditor)
 {
 	CollectWorldWidgetPoints();
-	RefreshAllPanelWorldWidgetPoint();
 }
 
 void UWorldWidgetEdManager::OnLevelViewportClientListChanged()
@@ -321,6 +316,12 @@ void UWorldWidgetEdManager::HandleLevelViewportClientListChangedNextTick()
 	}
 
 	HandleLevelEditorViewportClients.Reset();
+
+	if (!bInitializeEditorWorldWidgetPanel)
+	{
+		bInitializeEditorWorldWidgetPanel = !bInitializeEditorWorldWidgetPanel;
+		RefreshAllPanelWorldWidgetPoint();
+	}
 }
 
 void UWorldWidgetEdManager::OnBlueprintCompiled()

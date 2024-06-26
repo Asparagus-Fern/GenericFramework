@@ -112,6 +112,7 @@ protected:
 	void OnWorldWidgetPointDestroyed(AWorldWidgetPoint* InWorldWidgetPoint);
 
 protected:
+	uint8 bInitializeEditorWorldWidgetPanel : 1;
 	TArray<FLevelEditorViewportClient*> HandleLevelEditorViewportClients;
 	TMap<FLevelEditorViewportClient*, UWorldWidgetPanel*> EditorWorldWidgetPanelMapping;
 	virtual void ReCreateEditorWorldWidgetPanel();
