@@ -20,29 +20,24 @@ UManagerEditor::UManagerEditor()
 	ProcedureOrder = 0;
 }
 
-void UManagerEditor::Initialize(FSubsystemCollectionBase& Collection)
-{
-	Super::Initialize(Collection);
-
-	FLevelEditorModule& LevelEditorModule = FModuleManager::Get().GetModuleChecked<FLevelEditorModule>("LevelEditor");
-	LevelEditorModule.OnLevelEditorCreated().AddUObject(this, &UManagerEditor::OnLevelEditorCreated);
-
-	FGlobalTabmanager::Get()->RegisterNomadTabSpawner(ManagerEditorTabName, FOnSpawnTab::CreateUObject(this, &UManagerEditor::SpawnManagerEditorTab))
-		.SetDisplayName(LOCTEXT("ManagerEditorTitle", "Manager Editor"))
-		.SetTooltipText(LOCTEXT("ManagerEditorTooltip", "Open Manager Editor Window."))
-		.SetIcon(FSlateIcon(FDevEdCoreStyle::GetStyleSetName(), "Manager.ToolbarButton.Small"));
-}
-
-void UManagerEditor::Deinitialize()
-{
-	FGlobalTabmanager::Get()->UnregisterNomadTabSpawner(ManagerEditorTabName);
-	Super::Deinitialize();
-}
-
-UManagerEditor* UManagerEditor::Get()
-{
-	return GEngine->GetEngineSubsystem<UManagerEditor>();
-}
+// void UManagerEditor::Initialize(FSubsystemCollectionBase& Collection)
+// {
+// 	Super::Initialize(Collection);
+//
+// 	FLevelEditorModule& LevelEditorModule = FModuleManager::Get().GetModuleChecked<FLevelEditorModule>("LevelEditor");
+// 	LevelEditorModule.OnLevelEditorCreated().AddUObject(this, &UManagerEditor::OnLevelEditorCreated);
+//
+// 	FGlobalTabmanager::Get()->RegisterNomadTabSpawner(ManagerEditorTabName, FOnSpawnTab::CreateUObject(this, &UManagerEditor::SpawnManagerEditorTab))
+// 		.SetDisplayName(LOCTEXT("ManagerEditorTitle", "Manager Editor"))
+// 		.SetTooltipText(LOCTEXT("ManagerEditorTooltip", "Open Manager Editor Window."))
+// 		.SetIcon(FSlateIcon(FDevEdCoreStyle::GetStyleSetName(), "Manager.ToolbarButton.Small"));
+// }
+//
+// void UManagerEditor::Deinitialize()
+// {
+// 	FGlobalTabmanager::Get()->UnregisterNomadTabSpawner(ManagerEditorTabName);
+// 	Super::Deinitialize();
+// }
 
 void UManagerEditor::InitCommandList(TSharedPtr<FUICommandList>& InCommandList)
 {

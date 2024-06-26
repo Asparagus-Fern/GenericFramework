@@ -15,7 +15,4 @@ UCLASS(Abstract, Blueprintable)
 class DEVCORE_API UGameplayProcedure : public UObject, public IProcedureInterface
 {
 	GENERATED_BODY()
-
-public:
-	virtual UWorld* GetWorld() const override;
 };

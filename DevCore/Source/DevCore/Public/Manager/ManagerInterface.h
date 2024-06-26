@@ -24,8 +24,4 @@ class DEVCORE_API IManagerInterface
 
 public:
 	virtual bool IsEditorManager() { return false; }
-
-	virtual bool IsSupportWorldType(const UWorld* InWorld);
-	virtual EWorldType::Type GetWorldType() { return EWorldType::None; }
-	virtual bool IsWorldType(EWorldType::Type InWorldType);
 };

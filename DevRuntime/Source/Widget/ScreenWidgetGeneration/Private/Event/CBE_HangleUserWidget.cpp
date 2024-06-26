@@ -8,11 +8,11 @@
 void UCBE_HangleUserWidget::NativeOnActived()
 {
 	Super::NativeOnActived();
-	UScreenWidgetManager::Get()->OpenUserWidget(HandleWidget);
+	GetManager<UScreenWidgetManager>()->OpenUserWidget(HandleWidget);
 }
 
 void UCBE_HangleUserWidget::NativeOnInactived()
 {
 	Super::NativeOnInactived();
-	UScreenWidgetManager::Get()->CloseUserWidget(HandleWidget);
+	GetManager<UScreenWidgetManager>()->CloseUserWidget(HandleWidget);
 }

@@ -12,17 +12,10 @@ void UProcedurePlay_Base::NativeOnActived()
 	Super::NativeOnActived();
 	Execute_OnActived(this);
 
-	/* todo:大世界游玩流程 */
-	if (UWorldManager::Get()->bIsWorldPartition)
-	{
-	}
-	/* 关卡流游玩流程 */
-	else
-	{
-		FOnFinish SetAlwaysVisibleLevelsDelegate;
-		SetAlwaysVisibleLevelsDelegate.BindUFunction(this, "OnSetAlwaysVisibleLevelsFinish");
-		UWorldManager::Get()->SetLevelsVisibility(UWorldManager::Get()->AlwaysLoadLevels, true, FOnOnceFinish(), SetAlwaysVisibleLevelsDelegate);
-	}
+
+	FOnFinish SetAlwaysVisibleLevelsDelegate;
+	SetAlwaysVisibleLevelsDelegate.BindUFunction(this, "OnSetAlwaysVisibleLevelsFinish");
+	GetManager<UWorldManager>()->SetLevelsVisibility(GetManager<UWorldManager>()->AlwaysLoadLevels, true, FOnOnceFinish(), SetAlwaysVisibleLevelsDelegate);
 }
 
 void UProcedurePlay_Base::NativeOnInactived()
@@ -35,7 +28,8 @@ void UProcedurePlay_Base::OnSetAlwaysVisibleLevelsFinish()
 {
 	OnFinish_SetAlwaysVisibleLevels();
 
-	UActiveNodeSubsystem::ChangeActiveNodeTo(this, UActiveNodeManager::Get()->DefaultNodeTag, false);
+
+	UActiveNodeSubsystem::ChangeActiveNodeTo(this, GetManager<UActiveNodeManager>()->DefaultNodeTag, false);
 }
 
 void UProcedurePlay_Base::OnFinish_SetAlwaysVisibleLevels_Implementation()

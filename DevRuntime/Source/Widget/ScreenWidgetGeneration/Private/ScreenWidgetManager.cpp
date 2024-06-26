@@ -21,16 +21,6 @@ UScreenWidgetManager::UScreenWidgetManager()
 	ProcedureOrder = -1;
 }
 
-void UScreenWidgetManager::Initialize(FSubsystemCollectionBase& Collection)
-{
-	Super::Initialize(Collection);
-}
-
-UScreenWidgetManager* UScreenWidgetManager::Get()
-{
-	return FManagerCollection::Get()->GetManager<UScreenWidgetManager>();
-}
-
 void UScreenWidgetManager::NativeOnActived()
 {
 	Super::NativeOnActived();

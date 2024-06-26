@@ -9,7 +9,7 @@ FManagerListViewItem::FManagerListViewItem()
 
 TSharedRef<SWidget> FManagerListViewItem::MakeWidget()
 {
-	FManagerListViewInfoPtr ManagerListViewInfo = UManagerEditor::Get()->GetManagerListView()->GetInfo(SharedThis(this));
+	FManagerListViewInfoPtr ManagerListViewInfo = GetManager<UManagerEditor>()->GetManagerListView()->GetInfo(SharedThis(this));
 	FString ManagerName = ManagerListViewInfo->CoreManager->GetClass()->GetName();
 
 	return SNew(SBox)

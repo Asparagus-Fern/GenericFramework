@@ -27,7 +27,6 @@ void FManagerCollection::RegisterManager(UCoreManager* InCoreManager)
 		{
 			if (InCoreManager->GetClass()->IsChildOf(Manager->GetClass()))
 			{
-				Manager->Deinitialize();
 				Managers.Remove(Manager);
 			}
 		}

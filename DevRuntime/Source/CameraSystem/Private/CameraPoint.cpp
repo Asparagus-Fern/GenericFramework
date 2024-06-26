@@ -25,12 +25,12 @@ void ACameraPoint::OnConstruction(const FTransform& Transform)
 void ACameraPoint::BeginPlay()
 {
 	Super::BeginPlay();
-	UCameraManager::Get()->AddCameraPoint(CameraTag, this);
+	GetManager<UCameraManager>()->AddCameraPoint(CameraTag, this);
 }
 
 void ACameraPoint::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-	UCameraManager::Get()->RemoveCameraPoint(CameraTag);
+	GetManager<UCameraManager>()->RemoveCameraPoint(CameraTag);
 	Super::EndPlay(EndPlayReason);
 }
 

@@ -26,8 +26,6 @@ class SCREENWIDGETGENERATION_API UScreenWidgetManager : public UCoreManager
 
 public:
 	UScreenWidgetManager();
-	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
-	static UScreenWidgetManager* Get();
 
 	/* IProcedureInterface */
 public:

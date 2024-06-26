@@ -58,9 +58,6 @@ class WORLDWIDGETGENERATION_API UWorldWidgetManager : public UCoreManager
 
 public:
 	UWorldWidgetManager();
-	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
-	virtual void Deinitialize() override;
-	static UWorldWidgetManager* Get();
 
 	/* FTickableGameObject */
 public:

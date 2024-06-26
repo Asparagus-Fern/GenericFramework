@@ -20,10 +20,15 @@ class DEVEDCORE_API UManagerEdSubsystem : public UEditorSubsystem
 public:
 	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+	virtual void Deinitialize() override;
 
 protected:
+	FDelegateHandle LevelEditorCreatedHandle;
 	void OnLevelEditorCreated(TSharedPtr<ILevelEditor> LevelEditor);
 
+	void OnPIEStarted(UGameInstance* InGameInstance);
+	void OnPIEEnded(UGameInstance* InGameInstance);
+	
 protected:
 	virtual void ExtendEditor();
 	virtual void RegisterEditorMenuBar();

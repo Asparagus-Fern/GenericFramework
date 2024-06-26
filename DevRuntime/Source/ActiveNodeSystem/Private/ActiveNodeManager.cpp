@@ -17,14 +17,4 @@ UActiveNodeManager::UActiveNodeManager()
 	bBlockUpdate = false;
 }
 
-void UActiveNodeManager::Initialize(FSubsystemCollectionBase& Collection)
-{
-	Super::Initialize(Collection);
-}
-
-UActiveNodeManager* UActiveNodeManager::Get()
-{
-	return FManagerCollection::Get()->GetManager<UActiveNodeManager>();
-}
-
 #undef LOCTEXT_NAMESPACE

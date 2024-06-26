@@ -23,7 +23,7 @@ TSharedRef<SWidget> UTagNameSlot::RebuildWidget()
 	}
 	else
 	{
-		UScreenWidgetManager::Get()->RegisterSlot(this);
+		GetManager<UScreenWidgetManager>()->RegisterSlot(this);
 		return Super::RebuildWidget();
 	}
 }

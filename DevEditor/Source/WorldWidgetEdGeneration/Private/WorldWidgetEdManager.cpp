@@ -189,37 +189,25 @@ UWorldWidgetEdManager::UWorldWidgetEdManager()
 	bInitializeEditorWorldWidgetPanel = false;
 }
 
-void UWorldWidgetEdManager::Initialize(FSubsystemCollectionBase& Collection)
-{
-	Super::Initialize(Collection);
-
-	/* 在世界被创建时和世界切换时更新 */
-	FLevelEditorModule& LevelEditorModule = FModuleManager::Get().GetModuleChecked<FLevelEditorModule>("LevelEditor");
-	LevelEditorCreatedHandle = LevelEditorModule.OnLevelEditorCreated().AddUObject(this, &UWorldWidgetEdManager::OnLevelEditorCreated);
-
-	LevelViewportClientListChangedHandle = GEditor->OnLevelViewportClientListChanged().AddUObject(this, &UWorldWidgetEdManager::OnLevelViewportClientListChanged);
-	BlueprintCompiledHandle = GEditor->OnBlueprintCompiled().AddUObject(this, &UWorldWidgetEdManager::OnBlueprintCompiled);
-	LevelActorDeletedHandle = GEditor->OnLevelActorDeleted().AddUObject(this, &UWorldWidgetEdManager::OnLevelActorDeleted);
-
-	WorldWidgetPointConstructionHandle = FWorldWidgetDelegates::OnWorldWidgetPointConstruction.AddUObject(this, &UWorldWidgetEdManager::OnWorldWidgetPointConstruction);
-	WorldWidgetPointDestroyedHandle = FWorldWidgetDelegates::OnWorldWidgetPointDestroy.AddUObject(this, &UWorldWidgetEdManager::OnWorldWidgetPointDestroyed);
-}
-
-void UWorldWidgetEdManager::Deinitialize()
-{
-	Super::Deinitialize();
-}
-
-UWorldWidgetEdManager* UWorldWidgetEdManager::Get()
-{
-	return FManagerCollection::Get()->GetManager<UWorldWidgetEdManager>();
-}
+// void UWorldWidgetEdManager::Initialize(FSubsystemCollectionBase& Collection)
+// {
+// 	/* 在世界被创建时和世界切换时更新 */
+// 	FLevelEditorModule& LevelEditorModule = FModuleManager::Get().GetModuleChecked<FLevelEditorModule>("LevelEditor");
+// 	LevelEditorCreatedHandle = LevelEditorModule.OnLevelEditorCreated().AddUObject(this, &UWorldWidgetEdManager::OnLevelEditorCreated);
+//
+// 	LevelViewportClientListChangedHandle = GEditor->OnLevelViewportClientListChanged().AddUObject(this, &UWorldWidgetEdManager::OnLevelViewportClientListChanged);
+// 	BlueprintCompiledHandle = GEditor->OnBlueprintCompiled().AddUObject(this, &UWorldWidgetEdManager::OnBlueprintCompiled);
+// 	LevelActorDeletedHandle = GEditor->OnLevelActorDeleted().AddUObject(this, &UWorldWidgetEdManager::OnLevelActorDeleted);
+//
+// 	WorldWidgetPointConstructionHandle = FWorldWidgetDelegates::OnWorldWidgetPointConstruction.AddUObject(this, &UWorldWidgetEdManager::OnWorldWidgetPointConstruction);
+// 	WorldWidgetPointDestroyedHandle = FWorldWidgetDelegates::OnWorldWidgetPointDestroy.AddUObject(this, &UWorldWidgetEdManager::OnWorldWidgetPointDestroyed);
+// }
 
 void UWorldWidgetEdManager::NativeOnRefresh()
 {
 	Super::NativeOnRefresh();
 
-	if (IsValid(GetWorld()) && IsWorldType(EWorldType::Editor) && !WorldWidgetPanels.IsEmpty())
+	if (IsValid(GetWorld()) && !WorldWidgetPanels.IsEmpty())
 	{
 		for (const auto& WorldWidgetPanel : WorldWidgetPanels)
 		{
@@ -241,22 +229,22 @@ void UWorldWidgetEdManager::NativeOnActived()
 {
 	Super::NativeOnActived();
 
-	if (IsWorldType(EWorldType::Editor))
-	{
-		CollectWorldWidgetPoints();
-		OnLevelViewportClientListChanged();
-		RefreshAllPanelWorldWidgetPoint();
-	}
+	// if (IsWorldType(EWorldType::Editor))
+	// {
+	CollectWorldWidgetPoints();
+	OnLevelViewportClientListChanged();
+	RefreshAllPanelWorldWidgetPoint();
+	// }
 }
 
 void UWorldWidgetEdManager::NativeOnInactived()
 {
 	Super::NativeOnInactived();
 
-	if (IsWorldType(EWorldType::Editor))
-	{
-		EditorWorldWidgetPanelMapping.Reset();
-	}
+	// if (IsWorldType(EWorldType::Editor))
+	// {
+	EditorWorldWidgetPanelMapping.Reset();
+	// }
 }
 
 void UWorldWidgetEdManager::OnLevelEditorCreated(TSharedPtr<ILevelEditor> LevelEditor)

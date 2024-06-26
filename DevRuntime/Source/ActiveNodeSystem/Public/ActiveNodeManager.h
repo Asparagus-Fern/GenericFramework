@@ -17,8 +17,6 @@ class ACTIVENODESYSTEM_API UActiveNodeManager : public UCoreManager
 
 public:
 	UActiveNodeManager();
-	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
-	static UActiveNodeManager* Get();
 
 	/* UActiveNodeManager */
 public:

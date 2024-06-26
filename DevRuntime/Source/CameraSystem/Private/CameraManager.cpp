@@ -16,23 +16,6 @@ UCameraManager::UCameraManager()
 	ProcedureOrder = 0;
 }
 
-void UCameraManager::Initialize(FSubsystemCollectionBase& Collection)
-{
-	Super::Initialize(Collection);
-
-	
-}
-
-void UCameraManager::Deinitialize()
-{
-	Super::Deinitialize();
-}
-
-UCameraManager* UCameraManager::Get()
-{
-	return FManagerCollection::Get()->GetManager<UCameraManager>();
-}
-
 void UCameraManager::NativeOnActived()
 {
 	Super::NativeOnActived();

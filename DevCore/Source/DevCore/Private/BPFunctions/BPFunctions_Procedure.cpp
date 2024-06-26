@@ -7,5 +7,5 @@
 
 bool UBPFunctions_Procedure::SwitchProcedure(EGameplayProcedure InProcedure)
 {
-	return UProcedureManager::Get()->SwitchProcedure(InProcedure);
+	return GetManager<UProcedureManager>()->SwitchProcedure(InProcedure);
 }

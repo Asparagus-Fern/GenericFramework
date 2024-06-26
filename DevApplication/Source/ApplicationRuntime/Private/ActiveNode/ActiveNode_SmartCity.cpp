@@ -20,7 +20,7 @@ void AActiveNode_SmartCity::LoginNode_Implementation()
 	{
 		for (const auto OpenUserWidgetOnLoading : GameWidgetSetting->OpenUserWidgetsOnLoading)
 		{
-			UScreenWidgetManager::Get()->OpenUserWidget(OpenUserWidgetOnLoading);
+			GetManager<UScreenWidgetManager>()->OpenUserWidget(OpenUserWidgetOnLoading);
 		}
 	}
 }
@@ -44,14 +44,14 @@ void AActiveNode_SmartCity::OnSetProjectLevelsVisibleFinish()
 	{
 		for (const auto OpenUserWidgetOnLoading : GameWidgetSetting->OpenUserWidgetsOnLoading)
 		{
-			UScreenWidgetManager::Get()->CloseUserWidget(OpenUserWidgetOnLoading);
+			GetManager<UScreenWidgetManager>()->CloseUserWidget(OpenUserWidgetOnLoading);
 		}
 
-		UScreenWidgetManager::Get()->SwitchGameMenu(GameWidgetSetting->GameMenu);
+		GetManager<UScreenWidgetManager>()->SwitchGameMenu(GameWidgetSetting->GameMenu);
 
 		for (const auto& DefaultOpenUserWidget : GameWidgetSetting->DefaultOpenUserWidgets)
 		{
-			UScreenWidgetManager::Get()->OpenUserWidget(DefaultOpenUserWidget);
+			GetManager<UScreenWidgetManager>()->OpenUserWidget(DefaultOpenUserWidget);
 		}
 	}
 }

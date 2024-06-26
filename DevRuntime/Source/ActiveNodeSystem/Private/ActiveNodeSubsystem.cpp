@@ -27,7 +27,7 @@ void UActiveNodeSubsystem::OnWorldMatchStarting()
 	if (NodeMappings.IsEmpty())
 		return;
 
-	if (UActiveNodeManager::Get()->bAutoLogin)
+	if (GetManager<UActiveNodeManager>()->bAutoLogin)
 	{
 		check(CurrentNode == nullptr);
 
@@ -145,7 +145,7 @@ void UActiveNodeSubsystem::Tick(float DeltaTime)
 		Exit();
 	}
 
-	if (IsCurrentNodeActive() && !UActiveNodeManager::Get()->bBlockUpdate)
+	if (IsCurrentNodeActive() && !GetManager<UActiveNodeManager>()->bBlockUpdate)
 	{
 		if (!CurrentNode->bAlwaysUpdate)
 			return;
@@ -356,7 +356,7 @@ bool UActiveNodeSubsystem::Entry(const FGameplayTag& InTag)
 
 	if (!LoginTag.IsValid())
 	{
-		LoginTag = UActiveNodeManager::Get()->DefaultNodeTag;
+		LoginTag = GetManager<UActiveNodeManager>()->DefaultNodeTag;
 	}
 
 #if WITH_EDITOR

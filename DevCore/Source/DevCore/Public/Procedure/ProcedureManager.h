@@ -18,8 +18,6 @@ class DEVCORE_API UProcedureManager : public UCoreManager
 
 public:
 	UProcedureManager();
-	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
-	static UProcedureManager* Get();
 
 protected:
 	TArray<FManagerOrder> ManagerOrders;

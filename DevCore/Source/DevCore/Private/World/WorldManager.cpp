@@ -15,24 +15,9 @@ UWorldManager::UWorldManager()
 	ProcedureOrder = 0;
 }
 
-void UWorldManager::Initialize(FSubsystemCollectionBase& Collection)
+void UWorldManager::NativeOnCreate()
 {
-	Super::Initialize(Collection);
-
-	FWorldDelegates::OnPostWorldInitialization.AddUObject(this, &UWorldManager::OnPostWorldInitialization);
-}
-
-UWorldManager* UWorldManager::Get()
-{
-	return FManagerCollection::Get()->GetManager<UWorldManager>();
-}
-
-void UWorldManager::OnPostWorldInitialization(UWorld* InWorld, const UWorld::InitializationValues InitializationValues)
-{
-	if (IsSupportWorldType(InWorld))
-	{
-		bIsWorldPartition = InWorld->IsPartitionedWorld();
-	}
+	Super::NativeOnCreate();
 }
 
 void UWorldManager::NativeOnActived()

@@ -21,7 +21,7 @@ void AWorldWidgetPoint::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (UWorldWidgetManager* WorldWidgetManager = UWorldWidgetManager::Get())
+	if (UWorldWidgetManager* WorldWidgetManager = GetManager<UWorldWidgetManager>())
 	{
 		WorldWidgetManager->AddWorldWidgetPoint(this);
 	}
@@ -31,7 +31,7 @@ void AWorldWidgetPoint::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
 
-	if (UWorldWidgetManager* WorldWidgetManager = UWorldWidgetManager::Get())
+	if (UWorldWidgetManager* WorldWidgetManager = GetManager<UWorldWidgetManager>())
 	{
 		WorldWidgetManager->RemoveWorldWidgetPoint(this);
 	}

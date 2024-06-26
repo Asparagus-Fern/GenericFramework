@@ -117,7 +117,7 @@ void UWorldWidgetPanel::AddWorldWidget(AWorldWidgetPoint* InWorldWidgetPoint)
 			/* 直接使用该UMG会导致位置错误，因为会对所有的PlayerController进行位置更新，这就意味着他在不同player中看到的位置是不一样的 */
 			UWorldWidget* DuplicateWorldWidget = DuplicateObject(InWorldWidgetPoint->WorldWidget, InWorldWidgetPoint);
 			WorldWidgets.Add(InWorldWidgetPoint, DuplicateWorldWidget);
-			
+
 			UPanelSlot* PanelSlot = Panel->AddChild(DuplicateWorldWidget);
 			if (UCanvasPanelSlot* CanvasPanelSlot = Cast<UCanvasPanelSlot>(PanelSlot))
 			{
@@ -154,21 +154,6 @@ UWorldWidgetManager::UWorldWidgetManager()
 {
 	DisplayName = LOCTEXT("DisplayName", "World Widget Manager");
 	ProcedureOrder = 0;
-}
-
-void UWorldWidgetManager::Initialize(FSubsystemCollectionBase& Collection)
-{
-	Super::Initialize(Collection);
-}
-
-void UWorldWidgetManager::Deinitialize()
-{
-	Super::Deinitialize();
-}
-
-UWorldWidgetManager* UWorldWidgetManager::Get()
-{
-	return FManagerCollection::Get()->GetManager<UWorldWidgetManager>();
 }
 
 void UWorldWidgetManager::Tick(float DeltaTime)
@@ -211,7 +196,7 @@ void UWorldWidgetManager::NativeOnInactived()
 
 void UWorldWidgetManager::GenerateWorldWidget()
 {
-	UTagNameSlot* Slot = UScreenWidgetManager::Get()->GetSlot(FGameplayTag::RequestGameplayTag(FName("HUD.Main.WorldWidget")));
+	UTagNameSlot* Slot = GetManager<UScreenWidgetManager>()->GetSlot(FGameplayTag::RequestGameplayTag(FName("HUD.Main.WorldWidget")));
 	if (IsValid(Slot))
 	{
 		UWorldWidgetPanel* NewWorldWidgetPanel = CreateWorldWidgetPanel();

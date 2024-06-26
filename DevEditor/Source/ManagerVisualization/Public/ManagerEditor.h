@@ -21,9 +21,6 @@ class MANAGERVISUALIZATION_API UManagerEditor : public UCoreManager, public IMan
 
 public:
 	UManagerEditor();
-	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
-	virtual void Deinitialize() override;
-	static UManagerEditor* Get();
 
 	/* IManagerInterface */
 public:

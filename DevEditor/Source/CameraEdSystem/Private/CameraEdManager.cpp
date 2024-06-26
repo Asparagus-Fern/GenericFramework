@@ -17,18 +17,13 @@ UCameraEdManager::UCameraEdManager()
 	ProcedureOrder = 0;
 }
 
-void UCameraEdManager::Initialize(FSubsystemCollectionBase& Collection)
-{
-	Super::Initialize(Collection);
-
-	FCameraSystemDelegates::OnCopyViewportCamera.AddUObject(this, &UCameraEdManager::OnCopyViewportCamera);
-	FCameraSystemDelegates::OnCameraPointPilotStateChanged.AddUObject(this, &UCameraEdManager::OnCameraPointPilotStateChanged);
-}
-
-void UCameraEdManager::Deinitialize()
-{
-	Super::Deinitialize();
-}
+// void UCameraEdManager::Initialize(FSubsystemCollectionBase& Collection)
+// {
+// 	Super::Initialize(Collection);
+//
+// 	FCameraSystemDelegates::OnCopyViewportCamera.AddUObject(this, &UCameraEdManager::OnCopyViewportCamera);
+// 	FCameraSystemDelegates::OnCameraPointPilotStateChanged.AddUObject(this, &UCameraEdManager::OnCameraPointPilotStateChanged);
+// }
 
 void UCameraEdManager::NativeOnActived()
 {

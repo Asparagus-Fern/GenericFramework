@@ -21,36 +21,36 @@ void SManagerEditor::Construct(const FArguments& InArgs, const TSharedRef<SDockT
 {
 	ParentDockTab = InDockTab;
 	TabManager = FGlobalTabmanager::Get()->NewTabManager(InDockTab);
-	ManagerListViewItems = UManagerEditor::Get()->GetManagerListView()->GetItems();
+	ManagerListViewItems = GetManager<UManagerEditor>()->GetManagerListView()->GetItems();
 
 	TabManager->RegisterTabSpawner(ManagerListTabID, FOnSpawnTab::CreateSP(this, &SManagerEditor::SpawnManagerListTab))
-	.SetDisplayName(LOCTEXT("ManagerListTitle", "Manager List"))
-	.SetIcon(FSlateIcon(FDevEdCoreStyle::GetStyleSetName(), "Manager.ToolbarButton.Small"));
+		.SetDisplayName(LOCTEXT("ManagerListTitle", "Manager List"))
+		.SetIcon(FSlateIcon(FDevEdCoreStyle::GetStyleSetName(), "Manager.ToolbarButton.Small"));
 
 	TabManager->RegisterTabSpawner(ManagerDetailTabID, FOnSpawnTab::CreateSP(this, &SManagerEditor::SpawnManagerDetailTab))
-	.SetDisplayName(LOCTEXT("ManagerDetailTitle", "Manager Detail"))
-	.SetIcon(FSlateIcon(FDevEdCoreStyle::GetStyleSetName(), "Manager.ToolbarButton.Small"));
+		.SetDisplayName(LOCTEXT("ManagerDetailTitle", "Manager Detail"))
+		.SetIcon(FSlateIcon(FDevEdCoreStyle::GetStyleSetName(), "Manager.ToolbarButton.Small"));
 
 	TSharedRef<FTabManager::FLayout> Layout = []()
 	{
 		return FTabManager::NewLayout("ManagerEditorLayout")
-		->AddArea
-		(
-			FTabManager::NewPrimaryArea()
-			->SetOrientation(Orient_Horizontal)
-			->Split
+			->AddArea
 			(
-				FTabManager::NewStack()
-				->SetSizeCoefficient(.35f)
-				->AddTab(ManagerListTabID, ETabState::OpenedTab)
-			)
-			->Split
-			(
-				FTabManager::NewStack()
-				->SetSizeCoefficient(.65f)
-				->AddTab(ManagerDetailTabID, ETabState::OpenedTab)
-			)
-		);
+				FTabManager::NewPrimaryArea()
+				->SetOrientation(Orient_Horizontal)
+				->Split
+				(
+					FTabManager::NewStack()
+					->SetSizeCoefficient(.35f)
+					->AddTab(ManagerListTabID, ETabState::OpenedTab)
+				)
+				->Split
+				(
+					FTabManager::NewStack()
+					->SetSizeCoefficient(.65f)
+					->AddTab(ManagerDetailTabID, ETabState::OpenedTab)
+				)
+			);
 	}();
 
 	ChildSlot
@@ -149,16 +149,16 @@ TSharedRef<SDockTab> SManagerEditor::SpawnManagerDetailTab(const FSpawnTabArgs& 
 TSharedRef<ITableRow> SManagerEditor::OnGenerateRow(FManagerListViewItemPtr InItem, const TSharedRef<STableViewBase>& Owner)
 {
 	return SNew(STableRow< FManagerListViewItemPtr>, Owner)
-		[
-			InItem->MakeWidget()
-		];
+	[
+		InItem->MakeWidget()
+	];
 }
 
 void SManagerEditor::OnSelectionChanged(FManagerListViewItemPtr InItem, ESelectInfo::Type SelectInfo)
 {
 	if (DetailsView.IsValid() && InItem.IsValid())
 	{
-		FManagerListViewInfoPtr ManagerListViewInfo = UManagerEditor::Get()->GetManagerListView()->GetInfo(InItem.ToSharedRef());
+		FManagerListViewInfoPtr ManagerListViewInfo = GetManager<UManagerEditor>()->GetManagerListView()->GetInfo(InItem.ToSharedRef());
 		DetailsView->SetObject(ManagerListViewInfo->CoreManager);
 	}
 	else

@@ -14,16 +14,10 @@ AActiveNode_Game::AActiveNode_Game()
 
 void AActiveNode_Game::LoginNode_Implementation()
 {
-	if (UWorldManager::Get()->bIsWorldPartition)
-	{
-	}
-	else
-	{
-		/* 加载所有流关卡 */
-		FOnFinish LoadCurrentWorldLevelStreamingDelegate;
-		LoadCurrentWorldLevelStreamingDelegate.BindUFunction(this, "OnLoadCurrentWorldLevelStreamingFinish");
-		UWorldManager::Get()->LoadCurrentWorldLevelStreaming(FOnOnceFinish(), LoadCurrentWorldLevelStreamingDelegate);
-	}
+	/* 加载所有流关卡 */
+	FOnFinish LoadCurrentWorldLevelStreamingDelegate;
+	LoadCurrentWorldLevelStreamingDelegate.BindUFunction(this, "OnLoadCurrentWorldLevelStreamingFinish");
+	GetManager<UWorldManager>()->LoadCurrentWorldLevelStreaming(FOnOnceFinish(), LoadCurrentWorldLevelStreamingDelegate);
 }
 
 void AActiveNode_Game::LogoutNode_Implementation()
@@ -37,7 +31,7 @@ void AActiveNode_Game::OnLoadCurrentWorldLevelStreamingFinish()
 		/* 设置默认显示项目关卡 */
 		FOnFinish SetProjectLevelsVisibleDelegate;
 		SetProjectLevelsVisibleDelegate.BindUFunction(this, "OnSetProjectLevelsVisibleFinish");
-		UWorldManager::Get()->SetLevelsVisibility(GameWorldSetting->Levels, true, FOnOnceFinish(), SetProjectLevelsVisibleDelegate);
+		GetManager<UWorldManager>()->SetLevelsVisibility(GameWorldSetting->Levels, true, FOnOnceFinish(), SetProjectLevelsVisibleDelegate);
 	}
 	else
 	{

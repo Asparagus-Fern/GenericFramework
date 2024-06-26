@@ -17,21 +17,17 @@ class DEVCORE_API UWorldManager : public UCoreManager
 
 public:
 	UWorldManager();
-	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
-	static UWorldManager* Get();
 
 protected:
 	void OnPostWorldInitialization(UWorld* InWorld, const UWorld::InitializationValues InitializationValues);
 
+	/* IProcedureBaseInterface */
+public:
+	virtual void NativeOnCreate() override;
+	
 	/* IProcedureInterface */
 public:
 	virtual void NativeOnActived() override;
-
-	/* ULevelStreamingManager */
-public:
-	/* 是否为大世界 */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	bool bIsWorldPartition = false;
 
 	/* Level Streaming*/
 public:

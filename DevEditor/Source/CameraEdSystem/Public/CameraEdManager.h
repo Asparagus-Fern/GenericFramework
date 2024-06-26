@@ -17,8 +17,6 @@ class CAMERAEDSYSTEM_API UCameraEdManager : public UCameraManager
 
 public:
 	UCameraEdManager();
-	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
-	virtual void Deinitialize() override;
 
 	/* IProcedureInterface*/
 public:

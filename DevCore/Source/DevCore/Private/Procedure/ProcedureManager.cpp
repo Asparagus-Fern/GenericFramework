@@ -30,22 +30,17 @@ UProcedureManager::UProcedureManager()
 	GameplayProcedureClass.Add(EGameplayProcedure::Exit);
 }
 
-void UProcedureManager::Initialize(FSubsystemCollectionBase& Collection)
-{
-	Super::Initialize(Collection);
-
-	FWorldDelegates::OnPostWorldInitialization.AddUObject(this, &UProcedureManager::OnPostWorldInitialization);
-	FWorldDelegates::OnWorldCleanup.AddUObject(this, &UProcedureManager::OnWorldCleanup);
-
-#if WITH_EDITOR
-	GEditor->OnEditorClose().AddUObject(this, &UProcedureManager::OnEditorClose);
-#endif
-}
-
-UProcedureManager* UProcedureManager::Get()
-{
-	return FManagerCollection::Get()->GetManager<UProcedureManager>();
-}
+// void UProcedureManager::Initialize(FSubsystemCollectionBase& Collection)
+// {
+// 	Super::Initialize(Collection);
+//
+// 	FWorldDelegates::OnPostWorldInitialization.AddUObject(this, &UProcedureManager::OnPostWorldInitialization);
+// 	FWorldDelegates::OnWorldCleanup.AddUObject(this, &UProcedureManager::OnWorldCleanup);
+//
+// #if WITH_EDITOR
+// 	GEditor->OnEditorClose().AddUObject(this, &UProcedureManager::OnEditorClose);
+// #endif
+// }
 
 void UProcedureManager::OnPostWorldInitialization(UWorld* InWorld, const UWorld::InitializationValues InitializationValues)
 {
@@ -262,7 +257,7 @@ bool UProcedureManager::SwitchProcedure(EGameplayProcedure InProcedure, bool bFo
 	}
 
 	/* 广播流程切换之前 */
-	FStaticFunctions_Manager::ProcessManagerInterface<UCoreManager>
+	ProcessManagers
 	([InProcedure, this](UCoreManager* InManager)
 		{
 			InManager->NativePreProcedureSwitch(CurrentGameplayProcedure, InProcedure);
@@ -283,7 +278,7 @@ bool UProcedureManager::SwitchProcedure(EGameplayProcedure InProcedure, bool bFo
 	}
 
 	/* 广播流程切换完成 */
-	FStaticFunctions_Manager::ProcessManagerInterface<UCoreManager>
+	ProcessManagers
 	([this](UCoreManager* InManager)
 		{
 			InManager->NativePostProcedureSwitch(CurrentGameplayProcedure);

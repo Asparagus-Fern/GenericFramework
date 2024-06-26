@@ -19,11 +19,6 @@ class CAMERASYSTEM_API UCameraManager : public UCoreManager
 
 public:
 	UCameraManager();
-	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
-	virtual void Deinitialize() override;
-
-	UFUNCTION(BlueprintPure, DisplayName="GetCameraManager")
-	static UCameraManager* Get();
 
 	/* IProcedureInterface */
 public:

@@ -6,7 +6,7 @@
 #include "DevEdCoreStyle.h"
 #include "LevelEditor.h"
 #include "Manager/ManagerEdInterface.h"
-#include "StaticFunctions/StaticFunctions_Manager.h"
+#include "Manager/ManagerGlobal.h"
 
 #define LOCTEXT_NAMESPACE "UManagerEdSubsystem"
 
@@ -19,14 +19,35 @@ void UManagerEdSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
 
-	/* Extend After Level Editor Created */
 	FLevelEditorModule& LevelEditorModule = FModuleManager::Get().GetModuleChecked<FLevelEditorModule>("LevelEditor");
-	LevelEditorModule.OnLevelEditorCreated().AddUObject(this, &UManagerEdSubsystem::OnLevelEditorCreated);
+	LevelEditorCreatedHandle = LevelEditorModule.OnLevelEditorCreated().AddUObject(this, &UManagerEdSubsystem::OnLevelEditorCreated);
+
+	FWorldDelegates::OnPIEStarted.AddUObject(this, &UManagerEdSubsystem::OnPIEStarted);
+	FWorldDelegates::OnPIEEnded.AddUObject(this, &UManagerEdSubsystem::OnPIEEnded);
+}
+
+void UManagerEdSubsystem::Deinitialize()
+{
+	Super::Deinitialize();
 }
 
 void UManagerEdSubsystem::OnLevelEditorCreated(TSharedPtr<ILevelEditor> LevelEditor)
 {
 	ExtendEditor();
+}
+
+void UManagerEdSubsystem::OnPIEStarted(UGameInstance* InGameInstance)
+{
+	if (true)
+	{
+	}
+}
+
+void UManagerEdSubsystem::OnPIEEnded(UGameInstance* InGameInstance)
+{
+	if (true)
+	{
+	}
 }
 
 void UManagerEdSubsystem::ExtendEditor()
@@ -38,7 +59,7 @@ void UManagerEdSubsystem::ExtendEditor()
 	FToolMenuSection& ToolBarSection = ToolBar->FindOrAddSection(ToolBarSectionName);
 
 	/* IManagerEdInterface 扩展 ToolBar 接口 */
-	for (const auto& Interface : FStaticFunctions_Manager::GetManagersWithInterface<IManagerEdInterface>())
+	for (const auto& Interface : GetManagersWithInterface<IManagerEdInterface>())
 	{
 		Interface->InitCommandList(CommandList);
 		Interface->ExtendToolBar(ToolBarSection);
@@ -76,7 +97,7 @@ void UManagerEdSubsystem::RegisterEditorMenuBar()
 void UManagerEdSubsystem::RegisterEditorMenuBarMenu(UToolMenu* InToolMenu)
 {
 	/* IManagerEdInterface 扩展 MenuBar 接口 */
-	for (const auto& Interface : FStaticFunctions_Manager::GetManagersWithInterface<IManagerEdInterface>())
+	for (const auto& Interface : GetManagersWithInterface<IManagerEdInterface>())
 	{
 		Interface->ExtendMenu(InToolMenu);
 	}
@@ -110,7 +131,7 @@ void UManagerEdSubsystem::RegisterEditorToolBarOption()
 void UManagerEdSubsystem::RegisterEditorToolBarOptionMenu(UToolMenu* InToolMenu)
 {
 	/* IManagerEdInterface 扩展 ToolBar选项卡 接口 */
-	for (const auto& Interface : FStaticFunctions_Manager::GetManagersWithInterface<IManagerEdInterface>())
+	for (const auto& Interface : GetManagersWithInterface<IManagerEdInterface>())
 	{
 		Interface->ExtendToolBarMenu(InToolMenu);
 	}
