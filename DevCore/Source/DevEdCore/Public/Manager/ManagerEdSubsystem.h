@@ -26,8 +26,11 @@ protected:
 	FDelegateHandle LevelEditorCreatedHandle;
 	void OnLevelEditorCreated(TSharedPtr<ILevelEditor> LevelEditor);
 
-	void OnPIEStarted(UGameInstance* InGameInstance);
-	void OnPIEEnded(UGameInstance* InGameInstance);
+	FDelegateHandle PIEBeginHandle;
+	void OnPIEBegin(const bool bIsSimulating);
+
+	FDelegateHandle PIEEndHandle;
+	void OnPIEEnd(const bool bIsSimulating);
 	
 protected:
 	virtual void ExtendEditor();

@@ -22,8 +22,8 @@ void UManagerEdSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 	FLevelEditorModule& LevelEditorModule = FModuleManager::Get().GetModuleChecked<FLevelEditorModule>("LevelEditor");
 	LevelEditorCreatedHandle = LevelEditorModule.OnLevelEditorCreated().AddUObject(this, &UManagerEdSubsystem::OnLevelEditorCreated);
 
-	FWorldDelegates::OnPIEStarted.AddUObject(this, &UManagerEdSubsystem::OnPIEStarted);
-	FWorldDelegates::OnPIEEnded.AddUObject(this, &UManagerEdSubsystem::OnPIEEnded);
+	PIEBeginHandle = FEditorDelegates::BeginPIE.AddUObject(this, &UManagerEdSubsystem::OnPIEBegin);
+	PIEEndHandle = FEditorDelegates::EndPIE.AddUObject(this, &UManagerEdSubsystem::OnPIEEnd);
 }
 
 void UManagerEdSubsystem::Deinitialize()
@@ -33,21 +33,32 @@ void UManagerEdSubsystem::Deinitialize()
 
 void UManagerEdSubsystem::OnLevelEditorCreated(TSharedPtr<ILevelEditor> LevelEditor)
 {
+	ProcessManagers([](UCoreManager* InManager)
+		{
+			if (InManager->IsEditorManager())
+			{
+				InManager->NativeOnActived();
+			}
+		}
+	);
+
 	ExtendEditor();
 }
 
-void UManagerEdSubsystem::OnPIEStarted(UGameInstance* InGameInstance)
+void UManagerEdSubsystem::OnPIEBegin(const bool bIsSimulating)
 {
-	if (true)
-	{
-	}
+	ProcessManagers([](UCoreManager* InManager)
+		{
+			if (InManager->IsEditorManager())
+			{
+				InManager->NativeOnInactived();
+			}
+		}
+	);
 }
 
-void UManagerEdSubsystem::OnPIEEnded(UGameInstance* InGameInstance)
+void UManagerEdSubsystem::OnPIEEnd(const bool bIsSimulating)
 {
-	if (true)
-	{
-	}
 }
 
 void UManagerEdSubsystem::ExtendEditor()

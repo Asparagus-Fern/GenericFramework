@@ -65,6 +65,8 @@ void UManagerSubsystem::OnWorldBeginTearDown(UWorld* InWorld)
 			InManager->NativeOnInactived();
 		}
 	);
+
+	World = nullptr;
 }
 
 UCoreManager* UManagerSubsystem::RegisterManager(TSubclassOf<UCoreManager> InManagerClass)

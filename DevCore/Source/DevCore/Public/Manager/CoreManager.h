@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "ManagerInterface.h"
 #include "ManagerType.h"
+#include "Config/ConfigInterface.h"
 #include "Debug/DebugType.h"
 #include "Manager/ManagerGlobal.h"
 #include "Procedure/ProcedureManagerInterface.h"
@@ -14,7 +15,7 @@
  * 
  */
 UCLASS(Abstract, Config = Manager, DefaultConfig)
-class DEVCORE_API UCoreManager : public UObject, public FTickableGameObject, public IProcedureManagerInterface, public IManagerInterface
+class DEVCORE_API UCoreManager : public UObject, public FTickableGameObject, public IConfigInterface, public IProcedureManagerInterface, public IManagerInterface
 {
 	GENERATED_BODY()
 
@@ -43,14 +44,7 @@ public:
 	virtual bool IsTickable() const override { return false; }
 	virtual bool IsTickableInEditor() const override { return false; }
 	virtual void Tick(float DeltaSeconds) override { return; }
-
-	/* Ini Save */
-protected:
-	FString GetSaveIniPath() { return GetSaveIniBasePath() + GetSaveIniRelativePath() + GetSaveIniFileName(); }
-	virtual FString GetSaveIniBasePath() { return FPaths::ProjectConfigDir(); }
-	virtual FString GetSaveIniRelativePath() { return ""; }
-	virtual FString GetSaveIniFileName() { return "DefaultManager.ini"; }
-
+	
 	/* IProcedureBaseInterface */
 public:
 	virtual void NativeOnCreate() override;
