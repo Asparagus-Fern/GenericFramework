@@ -33,6 +33,12 @@ void UProcedureManager::NativeOnDestroy()
 void UProcedureManager::NativeOnActived()
 {
 	Super::NativeOnActived();
+
+	/* 游戏的开始 */
+	if (DefaultProcedureTag.IsValid())
+	{
+		SwitchProcedure(DefaultProcedureTag);
+	}
 }
 
 void UProcedureManager::NativeOnInactived()

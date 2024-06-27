@@ -6,13 +6,14 @@ class FAssetTypeActions : public FAssetTypeActions_Base
 {
 public:
 	FAssetTypeActions(EAssetTypeCategories::Type InAssetCategory);
-
-	virtual uint32 GetCategories() override;
 	virtual FText GetName() const override;
 	virtual FColor GetTypeColor() const override;
+	virtual UClass* GetSupportedClass() const override;
+	virtual uint32 GetCategories() override;
 
 protected:
-	EAssetTypeCategories::Type AssetCategory;
 	FText AssetName;
 	FColor AssetColor;
+	UClass* AssetClass;
+	EAssetTypeCategories::Type AssetCategory;
 };

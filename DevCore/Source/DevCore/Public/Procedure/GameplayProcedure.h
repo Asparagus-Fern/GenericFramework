@@ -11,7 +11,7 @@
 /**
  * 
  */
-UCLASS(Abstract, Blueprintable)
+UCLASS(Blueprintable, BlueprintType)
 class DEVCORE_API UGameplayProcedure : public UObject, public IProcedureInterface
 {
 	GENERATED_BODY()

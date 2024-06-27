@@ -26,6 +26,7 @@ public class DevEdCore : ModuleRules
 				"UnrealEd",
 				"LevelEditor",
 				"AssetTools",
+				"ClassViewer"
 			}
 		);
 	}
