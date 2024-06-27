@@ -8,6 +8,7 @@
 #include "ManagerEditorType.h"
 #include "SlateOptMacros.h"
 #include "ToolMenus.h"
+#include "Manager/ManagerGlobal.h"
 
 #define LOCTEXT_NAMESPACE "SManagerEditor"
 

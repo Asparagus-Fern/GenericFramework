@@ -8,6 +8,5 @@
 class FScreenWidgetGenerationModule : public ICommonModuleInterface
 {
 public:
-	virtual void StartupModule() override;
-	virtual void ShutdownModule() override;
+	virtual void GetRegisterManager(TArray<TSubclassOf<UCoreManager>>& InRegisterManagerClasses) override;
 };

@@ -29,12 +29,13 @@ public:
 	UFUNCTION(BlueprintNativeEvent, Category="Procedure Interface")
 	void OnActived();
 	virtual void NativeOnActived();
-	
+
 	UFUNCTION(BlueprintNativeEvent, Category="Procedure Interface")
 	void OnInactived();
 	virtual void NativeOnInactived();
 
 public:
+	virtual int32 GetProcedureOrder() { return 0; }
 	virtual bool GetIsActive() { return bIsActive; }
 
 protected:

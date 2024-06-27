@@ -10,11 +10,10 @@
 #include "Components/CanvasPanel.h"
 #include "Components/CanvasPanelSlot.h"
 #include "Kismet/GameplayStatics.h"
-#include "Manager/ManagerCollection.h"
+#include "Manager/ManagerGlobal.h"
 #include "Widget/TagNameSlot.h"
 #include "Widgets/Layout/SConstraintCanvas.h"
 
-#define LOCTEXT_NAMESPACE "UWorldWidgetManager"
 
 UWorldWidgetPanel::UWorldWidgetPanel(const FObjectInitializer& ObjectInitializer)
 {
@@ -150,10 +149,15 @@ void UWorldWidgetPanel::ClearWorldWidget()
 	WorldWidgets.Reset();
 }
 
+#define LOCTEXT_NAMESPACE "UWorldWidgetManager"
+
 UWorldWidgetManager::UWorldWidgetManager()
 {
-	DisplayName = LOCTEXT("DisplayName", "World Widget Manager");
-	ProcedureOrder = 0;
+}
+
+FText UWorldWidgetManager::GetManagerDisplayName()
+{
+	return LOCTEXT("DisplayName", "World Widget Manager");
 }
 
 void UWorldWidgetManager::Tick(float DeltaTime)

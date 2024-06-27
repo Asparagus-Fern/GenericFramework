@@ -10,6 +10,12 @@ void FWorldWidgetEdGenerationModule::LoadDependentModule(TArray<FName>& InDepend
 	InDependentModuleName.Add("WorldWidgetGeneration");
 }
 
+void FWorldWidgetEdGenerationModule::GetRegisterManager(TArray<TSubclassOf<UCoreManager>>& InRegisterManagerClasses)
+{
+	ICommonEdModuleInterface::GetRegisterManager(InRegisterManagerClasses);
+	InRegisterManagerClasses.Add(UWorldWidgetEdManager::StaticClass());
+}
+
 #undef LOCTEXT_NAMESPACE
 
 IMPLEMENT_GAME_MODULE(FWorldWidgetEdGenerationModule, WorldWidgetEdGeneration)

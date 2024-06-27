@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "ScreenWidgetType.h"
-#include "Procedure/ProcedureManagerInterface.h"
 #include "UserWidget/Base/UserWidgetBase.h"
 #include "MenuContainer.generated.h"
 

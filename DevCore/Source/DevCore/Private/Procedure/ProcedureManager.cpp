@@ -3,11 +3,8 @@
 
 #include "Procedure/ProcedureManager.h"
 
-#if WITH_EDITOR
-#include "Editor.h"
-#endif
-
-#include "Manager/ManagerCollection.h"
+#include "Manager/ManagerGlobal.h"
+#include "Manager/ManagerSubsystem.h"
 #include "Procedure/GameplayProcedure.h"
 #include "StaticFunctions/StaticFunctions_Object.h"
 
@@ -15,223 +12,22 @@
 
 UProcedureManager::UProcedureManager()
 {
-	DisplayName = LOCTEXT("DisplayName", "Procedure Manager");
-	ProcedureOrder = -1;
-
-	EditorWorld = nullptr;
-
-	LastGameplayProcedure = EGameplayProcedure::None;
-	CurrentGameplayProcedure = EGameplayProcedure::None;
-
-	GameplayProcedureClass.Add(EGameplayProcedure::GameLoading);
-	GameplayProcedureClass.Add(EGameplayProcedure::MainMenu);
-	GameplayProcedureClass.Add(EGameplayProcedure::Play);
-	GameplayProcedureClass.Add(EGameplayProcedure::Pause);
-	GameplayProcedureClass.Add(EGameplayProcedure::Exit);
 }
 
-// void UProcedureManager::Initialize(FSubsystemCollectionBase& Collection)
-// {
-// 	Super::Initialize(Collection);
-//
-// 	FWorldDelegates::OnPostWorldInitialization.AddUObject(this, &UProcedureManager::OnPostWorldInitialization);
-// 	FWorldDelegates::OnWorldCleanup.AddUObject(this, &UProcedureManager::OnWorldCleanup);
-//
-// #if WITH_EDITOR
-// 	GEditor->OnEditorClose().AddUObject(this, &UProcedureManager::OnEditorClose);
-// #endif
-// }
-
-void UProcedureManager::OnPostWorldInitialization(UWorld* InWorld, const UWorld::InitializationValues InitializationValues)
+FText UProcedureManager::GetManagerDisplayName()
 {
-	/* todo:不同世界类型的处理 */
-	if (InWorld->WorldType != EWorldType::Game && InWorld->WorldType != EWorldType::PIE && InWorld->WorldType != EWorldType::Editor)
-	{
-		return;
-	}
-
-	/* 保存Editor世界 */
-#if WITH_EDITORONLY_DATA
-	if (InWorld->WorldType == EWorldType::Editor)
-		EditorWorld = InWorld;
-#endif
-
-	/* Game和PIE在该代理之后激活 */
-	InWorld->OnWorldMatchStarting.AddUObject(this, &UProcedureManager::OnWorldMatchStarting, InWorld);
-
-#if WITH_EDITOR
-	RefreshManagerOrders();
-
-	/* PIE运行退出Editor Manager */
-	ProcessManagerOrders
-	(false,
-	 [](UCoreManager* InCoreManager)
-	 {
-		 if (InCoreManager->GetIsActive() && InCoreManager->IsEditorManager())
-		 {
-			 InCoreManager->NativeOnInactived();
-			 InCoreManager->ManagerWorld = nullptr;
-			 DEBUG(Debug_Manager, Log, TEXT("Manager Inactived : %s"), *InCoreManager->GetName())
-		 }
-	 }
-	);
-
-	/* 编辑器打开激活Editor Manager */
-	ProcessManagerOrders
-	(true,
-	 [InWorld](UCoreManager* InCoreManager)
-	 {
-		 if (!InCoreManager->GetIsActive() && InCoreManager->IsEditorManager() && InWorld->WorldType == EWorldType::Editor)
-		 {
-			 bool a = InCoreManager->GetClass()->ImplementsInterface(UProcedureBaseInterface::StaticClass());
-			 bool b = InCoreManager->GetClass()->ImplementsInterface(UProcedureInterface::StaticClass());
-			 bool c = InCoreManager->GetClass()->ImplementsInterface(UProcedureManagerInterface::StaticClass());
-
-			 InCoreManager->ManagerWorld = InWorld;
-			 InCoreManager->NativeOnActived();
-			 DEBUG(Debug_Manager, Log, TEXT("Manager Actived : %s"), *InCoreManager->GetName())
-		 }
-	 }
-	);
-
-#endif
+	return LOCTEXT("DisplayName", "Procedure Manager");
 }
 
-void UProcedureManager::OnWorldMatchStarting(UWorld* InWorld)
+void UProcedureManager::NativeOnCreate()
 {
-	RefreshManagerOrders();
-
-	if (InWorld->WorldType == EWorldType::Game || InWorld->WorldType == EWorldType::PIE)
-	{
-		/* 在游戏确定性开始后激活管理类 */
-		ProcessManagerOrders
-		(true,
-		 [InWorld](UCoreManager* InCoreManager)
-		 {
-			 if (!InCoreManager->GetIsActive())
-			 {
-				 InCoreManager->ManagerWorld = InWorld;
-				 InCoreManager->NativeOnActived();
-				 DEBUG(Debug_Manager, Log, TEXT("Manager Actived : %s"), *InCoreManager->GetName())
-			 }
-		 }
-		);
-
-		/* 切换游戏默认流程 */
-		SwitchProcedure(DefaultGameplayProcedure);
-	}
+	Super::NativeOnCreate();
 }
 
-void UProcedureManager::OnWorldCleanup(UWorld* InWorld, bool bSessionEnded, bool bCleanupResources)
+void UProcedureManager::NativeOnDestroy()
 {
-	if (InWorld->WorldType != EWorldType::Game && InWorld->WorldType != EWorldType::PIE && InWorld->WorldType != EWorldType::Editor)
-	{
-		return;
-	}
-
-	/* 关闭所有的管理类 */
-	ProcessManagerOrders
-	(false,
-	 [](UCoreManager* InCoreManager)
-	 {
-		 if (InCoreManager->GetIsActive())
-		 {
-			 InCoreManager->NativeOnInactived();
-			 InCoreManager->ManagerWorld = nullptr;
-			 DEBUG(Debug_Manager, Log, TEXT("Manager Inactived : %s"), *InCoreManager->GetName())
-		 }
-	 }
-	);
-
-	CurrentGameplayProcedure = EGameplayProcedure::None;
-	LastGameplayProcedure = EGameplayProcedure::None;
-
-#if WITH_EDITORONLY_DATA
-	/* 切换编辑器世界时 */
-	if (InWorld->WorldType == EWorldType::Editor)
-	{
-		EditorWorld = nullptr;
-		return;
-	}
-#endif
-
-#if WITH_EDITOR
-
-	/* 在编辑器下退出了一个游戏世界，激活编辑器管理类 */
-	ProcessManagerOrders
-	(true,
-	 [this](UCoreManager* InCoreManager)
-	 {
-		 if (!InCoreManager->GetIsActive() && InCoreManager->IsEditorManager())
-		 {
-			 InCoreManager->ManagerWorld = EditorWorld;
-			 InCoreManager->NativeOnActived();
-			 DEBUG(Debug_Manager, Log, TEXT("Manager Actived : %s"), *InCoreManager->GetName())
-		 }
-	 }
-	);
-
-#endif
-}
-
-void UProcedureManager::RefreshManagerOrders()
-{
-	ManagerOrders.Reset();
-	for (auto& Manager : FManagerCollection::Get()->GetManagers())
-	{
-		if (!ManagerOrders.Contains(Manager->ProcedureOrder))
-		{
-			FManagerOrder NewManagerOrder = FManagerOrder(Manager->ProcedureOrder);
-			NewManagerOrder.Managers.Add(Manager);
-			ManagerOrders.Add(NewManagerOrder);
-		}
-		else
-		{
-			FManagerOrder& FindManagerOrder = *ManagerOrders.FindByKey(Manager->ProcedureOrder);
-			FindManagerOrder.Managers.Add(Manager);
-		}
-	}
-}
-
-void UProcedureManager::ProcessManagerOrders(bool IsForwardSort, const TFunctionRef<void(UCoreManager* InManager)>& Exec)
-{
-	ManagerOrders.Sort
-	([IsForwardSort](const FManagerOrder& A, const FManagerOrder& B)
-		{
-			return IsForwardSort ? (A.Order < B.Order) : (A.Order > B.Order);
-		}
-	);
-
-	for (auto& ManagerOrder : ManagerOrders)
-	{
-		for (const auto& Manager : ManagerOrder.Managers)
-		{
-			Exec(Manager);
-		}
-	}
-}
-
-void UProcedureManager::OnEditorClose()
-{
-#if WITH_EDITOR
-	/* 关闭所有的管理类 */
-	ProcessManagerOrders
-	(false,
-	 [](UCoreManager* InCoreManager)
-	 {
-		 if (InCoreManager->GetIsActive())
-		 {
-			 InCoreManager->NativeOnInactived();
-			 InCoreManager->ManagerWorld = nullptr;
-			 DEBUG(Debug_Manager, Log, TEXT("Manager Inactived : %s"), *InCoreManager->GetName())
-		 }
-	 }
-	);
-
-	CurrentGameplayProcedure = EGameplayProcedure::None;
-	LastGameplayProcedure = EGameplayProcedure::None;
-	EditorWorld = nullptr;
-#endif
+	Super::NativeOnDestroy();
+	GameplayProcedure.Reset();
 }
 
 void UProcedureManager::NativeOnActived()
@@ -242,78 +38,65 @@ void UProcedureManager::NativeOnActived()
 void UProcedureManager::NativeOnInactived()
 {
 	Super::NativeOnInactived();
-
-	LastGameplayProcedure = EGameplayProcedure::None;
-	CurrentGameplayProcedure = EGameplayProcedure::None;
-	GameplayProcedure.Reset();
 }
 
-bool UProcedureManager::SwitchProcedure(EGameplayProcedure InProcedure, bool bForce)
+void UProcedureManager::SwitchProcedure(FGameplayTag InProcedureTag, bool bForce)
 {
-	/* 不更新流程 */
-	if (CurrentGameplayProcedure == InProcedure && !bForce)
+	if (CurrentProcedureTag == InProcedureTag)
 	{
-		return false;
-	}
-
-	/* 广播流程切换之前 */
-	ProcessManagers
-	([InProcedure, this](UCoreManager* InManager)
+		if (bForce)
 		{
-			InManager->NativePreProcedureSwitch(CurrentGameplayProcedure, InProcedure);
+			UGameplayProcedure* CurrentGameplayProcedure = GetGameplayProcedure(InProcedureTag);
+			CurrentGameplayProcedure->NativeOnRefresh();
 		}
-	);
-
-	if (UGameplayProcedure* EndGameplayProcedure = GetGameplayProcedure(CurrentGameplayProcedure))
-	{
-		EndGameplayProcedure->NativeOnInactived();
 	}
-
-	LastGameplayProcedure = CurrentGameplayProcedure;
-	CurrentGameplayProcedure = InProcedure;
-
-	if (UGameplayProcedure* BeginGameplayProcedure = GetGameplayProcedure(CurrentGameplayProcedure))
+	else
 	{
-		BeginGameplayProcedure->NativeOnActived();
-	}
-
-	/* 广播流程切换完成 */
-	ProcessManagers
-	([this](UCoreManager* InManager)
+		UGameplayProcedure* EndGameplayProcedure = GetGameplayProcedure(InProcedureTag);
+		if (IsValid(EndGameplayProcedure))
 		{
-			InManager->NativePostProcedureSwitch(CurrentGameplayProcedure);
+			EndGameplayProcedure->NativeOnInactived();
 		}
-	);
 
-	DEBUG(Debug_Manager, Log, TEXT("Switch Procedure From %s To %s"), *UEnum::GetDisplayValueAsText(LastGameplayProcedure).ToString(), *UEnum::GetDisplayValueAsText(CurrentGameplayProcedure).ToString())
-	return true;
+		LastProcedureTag = CurrentProcedureTag;
+		CurrentProcedureTag = InProcedureTag;
+
+		UGameplayProcedure* BeginGameplayProcedure = GetGameplayProcedure(InProcedureTag);
+		if (IsValid(BeginGameplayProcedure))
+		{
+			BeginGameplayProcedure->NativeOnActived();
+		}
+	}
 }
 
-UGameplayProcedure* UProcedureManager::GetGameplayProcedure(EGameplayProcedure InProcedure)
+UGameplayProcedure* UProcedureManager::GetGameplayProcedure(FGameplayTag InProcedureTag)
 {
-	/* 流程不为空 */
-	if (InProcedure != EGameplayProcedure::None)
+	if (GameplayProcedure.Contains(InProcedureTag))
 	{
-		UGameplayProcedure* FoundGameplayProcedure = nullptr;
-		if (!GameplayProcedure.Contains(InProcedure))
+		return GameplayProcedure.FindRef(InProcedureTag);
+	}
+	else
+	{
+		if (GameplayProcedureObjects.Contains(InProcedureTag))
 		{
-			/* 创建流程类实例并返回 */
-			const TSoftClassPtr<UGameplayProcedure> FoundGameplayProcedureClass = GameplayProcedureClass.FindRef(InProcedure);
+			const TSoftObjectPtr<UGameplayProcedure> FoundGameplayProcedureClass = GameplayProcedureObjects.FindRef(InProcedureTag);
 			if (!FoundGameplayProcedureClass.IsNull())
 			{
-				TSubclassOf<UGameplayProcedure> LoadGameplayProcedure = FStaticFunctions_Object::LoadClass<UGameplayProcedure>(FoundGameplayProcedureClass);
-				FoundGameplayProcedure = NewObject<UGameplayProcedure>(this, LoadGameplayProcedure);
-				GameplayProcedure.Add(InProcedure, FoundGameplayProcedure);
+				UGameplayProcedure* LoadGameplayProcedure = FStaticFunctions_Object::LoadObject<UGameplayProcedure>(FoundGameplayProcedureClass);
+				GameplayProcedure.Add(InProcedureTag, LoadGameplayProcedure);
+				LoadGameplayProcedure->NativeOnCreate();
 			}
-			/* 返回流程类实例的缓存 */
 			else
 			{
-				FoundGameplayProcedure = GameplayProcedure.FindRef(InProcedure);
+				DEBUG(Debug_Procedure, Warning, TEXT("GameplayProcedureClass is NULL"))
 			}
 		}
-
-		return FoundGameplayProcedure;
+		else
+		{
+			DEBUG(Debug_Procedure, Warning, TEXT("GameplayProcedureClass is Not Contain ProcedureTag : %s"), *InProcedureTag.ToString())
+		}
 	}
+
 	return nullptr;
 }
 

@@ -6,14 +6,16 @@
 #include "CameraHandle.h"
 #include "CameraPoint.h"
 #include "CameraSystemType.h"
-#include "Manager/ManagerCollection.h"
 
 #define LOCTEXT_NAMESPACE "UCoreManager"
 
 UCameraManager::UCameraManager()
 {
-	DisplayName = LOCTEXT("DisplayName", "Camera Manager");
-	ProcedureOrder = 0;
+}
+
+FText UCameraManager::GetManagerDisplayName()
+{
+	return LOCTEXT("DisplayName", "Camera Manager");
 }
 
 void UCameraManager::NativeOnActived()

@@ -59,6 +59,10 @@ class WORLDWIDGETGENERATION_API UWorldWidgetManager : public UCoreManager
 public:
 	UWorldWidgetManager();
 
+	/* IManagerInterface */
+public:
+	virtual FText GetManagerDisplayName() override;
+	
 	/* FTickableGameObject */
 public:
 	virtual bool IsTickable() const override { return true; }

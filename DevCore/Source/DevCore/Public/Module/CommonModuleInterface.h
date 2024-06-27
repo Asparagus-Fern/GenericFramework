@@ -18,9 +18,15 @@ public:
 
 private:
 	void LoadDependentModule_Internal();
+	void RegisterManagers_Internal();
+
+protected:
+	FDelegateHandle ManagerSubsystemInitializeHandle;
+	void OnManagerSubsystemInitialize();
 
 protected:
 	virtual void PostStartupModule() { return; }
 	virtual void LoadDependentModule(TArray<FName>& InDependentModuleName);
+	virtual void GetRegisterManager(TArray<TSubclassOf<UCoreManager>>& InRegisterManagerClasses);
 	virtual void PreShutdownModule() { return; }
 };

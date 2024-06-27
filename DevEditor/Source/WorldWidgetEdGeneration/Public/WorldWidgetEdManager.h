@@ -70,10 +70,13 @@ public:
 
 	/* IManagerInterface */
 public:
-	virtual bool IsEditorManager() override { return true; }
+	virtual FText GetManagerDisplayName() override;
+	virtual bool DoesSupportWorldType(EWorldType::Type InWorldType) override;
 
 	/* IProcedureBaseInterface */
 public:
+	virtual void NativeOnCreate() override;
+	virtual void NativeOnDestroy() override;
 	virtual void NativeOnRefresh() override;
 
 	/* IProcedureInterface */

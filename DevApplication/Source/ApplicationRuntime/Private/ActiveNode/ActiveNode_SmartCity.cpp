@@ -5,6 +5,7 @@
 
 #include "ScreenWidgetManager.h"
 #include "DataAsset/GameWidgetSetting.h"
+#include "Manager/ManagerGlobal.h"
 
 AActiveNode_SmartCity::AActiveNode_SmartCity()
 {

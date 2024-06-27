@@ -2,16 +2,14 @@
 
 #include "DevCore.h"
 
+#include "Procedure/ProcedureManager.h"
+
 #define LOCTEXT_NAMESPACE "FDevCoreModule"
 
-void FDevCoreModule::StartupModule()
+void FDevCoreModule::GetRegisterManager(TArray<TSubclassOf<UCoreManager>>& InRegisterManagerClasses)
 {
-	ICommonModuleInterface::StartupModule();
-}
-
-void FDevCoreModule::ShutdownModule()
-{
-	ICommonModuleInterface::ShutdownModule();
+	ICommonModuleInterface::GetRegisterManager(InRegisterManagerClasses);
+	InRegisterManagerClasses.Add(UProcedureManager::StaticClass());
 }
 
 #undef LOCTEXT_NAMESPACE

@@ -25,8 +25,8 @@ public:
 	virtual void LogoutNode_Implementation() override;
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Active Node Setting")
-	UGameWorldSetting* GameWorldSetting = nullptr;
+	// UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Active Node Setting")
+	// UGameWorldSetting* GameWorldSetting = nullptr;
 
 protected:
 	UFUNCTION()

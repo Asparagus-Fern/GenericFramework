@@ -15,4 +15,11 @@ UCLASS(Abstract, Blueprintable)
 class DEVCORE_API UGameplayProcedure : public UObject, public IProcedureInterface
 {
 	GENERATED_BODY()
+
+public:
+	virtual void NativeOnCreate() override;
+	virtual void NativeOnDestroy() override;
+	virtual void NativeOnRefresh() override;
+	virtual void NativeOnActived() override;
+	virtual void NativeOnInactived() override;
 };

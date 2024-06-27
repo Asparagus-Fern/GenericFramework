@@ -5,7 +5,6 @@
 
 #include "DataAsset/GameMenuSetting.h"
 #include "Group/CommonButtonGroup.h"
-#include "Manager/ManagerCollection.h"
 #include "StaticFunctions/StaticFunctions_Object.h"
 #include "UserWidget/GameHUD.h"
 #include "UserWidget/Base/UserWidgetBase.h"
@@ -17,19 +16,17 @@
 
 UScreenWidgetManager::UScreenWidgetManager()
 {
-	DisplayName = LOCTEXT("DisplayName", "Screen Widget Manager");
-	ProcedureOrder = -1;
+}
+
+FText UScreenWidgetManager::GetManagerDisplayName()
+{
+	return LOCTEXT("DisplayName", "Screen Widget Manager");
 }
 
 void UScreenWidgetManager::NativeOnActived()
 {
 	Super::NativeOnActived();
 	CreateGameHUD();
-}
-
-void UScreenWidgetManager::NativePostProcedureSwitch(EGameplayProcedure InProcedure)
-{
-	Super::NativePostProcedureSwitch(InProcedure);
 }
 
 void UScreenWidgetManager::NativeOnInactived()

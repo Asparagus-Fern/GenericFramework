@@ -18,6 +18,11 @@ class CAMERAEDSYSTEM_API UCameraEdManager : public UCameraManager
 public:
 	UCameraEdManager();
 
+	/* IProcedureBaseInterface*/
+public:
+	virtual void NativeOnCreate() override;
+	virtual void NativeOnDestroy() override;
+
 	/* IProcedureInterface*/
 public:
 	virtual void NativeOnActived() override;
@@ -25,7 +30,8 @@ public:
 
 	/* IManagerInterface */
 public:
-	virtual bool IsEditorManager() override { return true; }
+	virtual FText GetManagerDisplayName() override;
+	virtual bool DoesSupportWorldType(EWorldType::Type InWorldType) override;
 
 	/* UCameraEdManager */
 protected:

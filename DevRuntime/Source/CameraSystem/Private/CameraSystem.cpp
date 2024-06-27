@@ -4,14 +4,10 @@
 
 #define LOCTEXT_NAMESPACE "FCameraSystemModule"
 
-void FCameraSystemModule::StartupModule()
+void FCameraSystemModule::GetRegisterManager(TArray<TSubclassOf<UCoreManager>>& InRegisterManagerClasses)
 {
-	ICommonModuleInterface::StartupModule();
-}
-
-void FCameraSystemModule::ShutdownModule()
-{
-	ICommonModuleInterface::ShutdownModule();
+	ICommonModuleInterface::GetRegisterManager(InRegisterManagerClasses);
+	InRegisterManagerClasses.Add(UCameraManager::StaticClass());
 }
 
 #undef LOCTEXT_NAMESPACE

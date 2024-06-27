@@ -7,16 +7,17 @@
 
 UCoreManager::UCoreManager()
 {
-	ManagerWorld = nullptr;
-	DisplayName = LOCTEXT("DisplayName", "Core Manager");
-	ProcedureOrder = 0;
 }
+
+#if WITH_EDITOR
 
 void UCoreManager::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
 {
 	Super::PostEditChangeProperty(PropertyChangedEvent);
 	TryUpdateDefaultConfigFile();
 }
+
+#endif
 
 UWorld* UCoreManager::GetWorld() const
 {
@@ -33,55 +34,43 @@ void UCoreManager::NativeOnCreate()
 	GConfig->Flush(false, *GetSaveIniPath());
 	LoadConfig(GetClass(), *GetSaveIniPath());
 
-	IProcedureManagerInterface::NativeOnCreate();
-	IProcedureManagerInterface::Execute_OnCreate(this);
+	IProcedureInterface::NativeOnCreate();
+	IProcedureInterface::Execute_OnCreate(this);
 
+	TryUpdateDefaultConfigFile();
 	DEBUG(Debug_Manager, Log, TEXT("On Created : %s"), *GetName());
 }
 
 void UCoreManager::NativeOnRefresh()
 {
-	IProcedureManagerInterface::NativeOnRefresh();
-	IProcedureManagerInterface::Execute_OnRefresh(this);
+	IProcedureInterface::NativeOnRefresh();
+	IProcedureInterface::Execute_OnRefresh(this);
 }
 
 void UCoreManager::NativeOnDestroy()
 {
 	TryUpdateDefaultConfigFile();
 
-	IProcedureManagerInterface::NativeOnDestroy();
-	IProcedureManagerInterface::Execute_OnDestroy(this);
+	IProcedureInterface::NativeOnDestroy();
+	IProcedureInterface::Execute_OnDestroy(this);
 
 	DEBUG(Debug_Manager, Log, TEXT("On Destroy : %s"), *GetName());
 }
 
 void UCoreManager::NativeOnActived()
 {
-	IProcedureManagerInterface::NativeOnActived();
-	IProcedureManagerInterface::Execute_OnActived(this);
+	IProcedureInterface::NativeOnActived();
+	IProcedureInterface::Execute_OnActived(this);
 
 	DEBUG(Debug_Manager, Log, TEXT("On Actived : %s"), *GetName());
 }
 
 void UCoreManager::NativeOnInactived()
 {
-	IProcedureManagerInterface::NativeOnInactived();
-	IProcedureManagerInterface::Execute_OnInactived(this);
+	IProcedureInterface::NativeOnInactived();
+	IProcedureInterface::Execute_OnInactived(this);
 
 	DEBUG(Debug_Manager, Log, TEXT("On Inactived : %s"), *GetName());
 }
-
-void UCoreManager::NativePreProcedureSwitch(EGameplayProcedure InOldProcedure, EGameplayProcedure InNewProcedure)
-{
-	IProcedureManagerInterface::NativePreProcedureSwitch(InOldProcedure, InNewProcedure);
-	IProcedureManagerInterface::Execute_PreProcedureSwitch(this, InOldProcedure, InNewProcedure);
-}
-
-void UCoreManager::NativePostProcedureSwitch(EGameplayProcedure InProcedure)
-{
-	IProcedureManagerInterface::NativePostProcedureSwitch(InProcedure);
-	IProcedureManagerInterface::Execute_PostProcedureSwitch(this, InProcedure);
-}
-
 
 #undef LOCTEXT_NAMESPACE

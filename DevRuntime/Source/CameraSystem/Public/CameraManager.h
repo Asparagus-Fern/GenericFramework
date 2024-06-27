@@ -20,6 +20,10 @@ class CAMERASYSTEM_API UCameraManager : public UCoreManager
 public:
 	UCameraManager();
 
+	/* IManagerInterface */
+public:
+	virtual FText GetManagerDisplayName() override;
+
 	/* IProcedureInterface */
 public:
 	virtual void NativeOnActived() override;

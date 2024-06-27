@@ -13,17 +13,20 @@
 
 UCameraEdManager::UCameraEdManager()
 {
-	DisplayName = LOCTEXT("DisplayName", "Camera Editor Manager");
-	ProcedureOrder = 0;
 }
 
-// void UCameraEdManager::Initialize(FSubsystemCollectionBase& Collection)
-// {
-// 	Super::Initialize(Collection);
-//
-// 	FCameraSystemDelegates::OnCopyViewportCamera.AddUObject(this, &UCameraEdManager::OnCopyViewportCamera);
-// 	FCameraSystemDelegates::OnCameraPointPilotStateChanged.AddUObject(this, &UCameraEdManager::OnCameraPointPilotStateChanged);
-// }
+void UCameraEdManager::NativeOnCreate()
+{
+	Super::NativeOnCreate();
+
+	FCameraSystemDelegates::OnCopyViewportCamera.AddUObject(this, &UCameraEdManager::OnCopyViewportCamera);
+	FCameraSystemDelegates::OnCameraPointPilotStateChanged.AddUObject(this, &UCameraEdManager::OnCameraPointPilotStateChanged);
+}
+
+void UCameraEdManager::NativeOnDestroy()
+{
+	Super::NativeOnDestroy();
+}
 
 void UCameraEdManager::NativeOnActived()
 {
@@ -33,6 +36,16 @@ void UCameraEdManager::NativeOnActived()
 void UCameraEdManager::NativeOnInactived()
 {
 	Super::NativeOnInactived();
+}
+
+FText UCameraEdManager::GetManagerDisplayName()
+{
+	return LOCTEXT("DisplayName", "Camera Editor Manager");
+}
+
+bool UCameraEdManager::DoesSupportWorldType(EWorldType::Type InWorldType)
+{
+	return Super::DoesSupportWorldType(InWorldType) || InWorldType == EWorldType::Editor;
 }
 
 void UCameraEdManager::OnCopyViewportCamera(ACameraPoint* InCameraPoint)

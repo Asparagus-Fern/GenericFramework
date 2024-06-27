@@ -7,6 +7,7 @@
 #include "CameraSystemType.h"
 #include "Camera/CameraComponent.h"
 #include "Handle/CameraHandle_Default.h"
+#include "Manager/ManagerGlobal.h"
 
 ACameraPoint::ACameraPoint()
 {

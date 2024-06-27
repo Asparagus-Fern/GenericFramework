@@ -24,11 +24,23 @@ public:
 
 protected:
 	FDelegateHandle LevelEditorCreatedHandle;
-	void OnLevelEditorCreated(TSharedPtr<ILevelEditor> LevelEditor);
+	virtual void OnLevelEditorCreated(TSharedPtr<ILevelEditor> LevelEditor);
 
-	void OnPIEStarted(UGameInstance* InGameInstance);
-	void OnPIEEnded(UGameInstance* InGameInstance);
-	
+	FDelegateHandle MapChangedHandle;
+	virtual void OnMapChanged(UWorld* InWorld, EMapChangeType InMapChangeType);
+
+	FDelegateHandle PIEBeginHandle;
+	virtual void OnPIEBegin(const bool bIsSimulating);
+
+	FDelegateHandle PIEEndHandle;
+	virtual void OnPIEEnd(const bool bIsSimulating);
+
+	FDelegateHandle PostManagerInActivedHandle;
+	virtual void PostManagerInActived();
+
+	FDelegateHandle EditorCloseHandle;
+	virtual void OnEditorClose();
+
 protected:
 	virtual void ExtendEditor();
 	virtual void RegisterEditorMenuBar();
@@ -40,4 +52,8 @@ protected:
 	FName MenuBarSectionName = "DevEdMenuBar";
 	FName ToolBarSectionName = "DevEdTooBar";
 	TSharedPtr<FUICommandList> CommandList = nullptr;
+
+protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UWorld* EditorWorld;
 };

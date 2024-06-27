@@ -1,6 +1,7 @@
 ﻿#include "ManagerEditorType.h"
 
 #include "ManagerEditor.h"
+#include "Manager/ManagerGlobal.h"
 
 
 FManagerListViewItem::FManagerListViewItem()

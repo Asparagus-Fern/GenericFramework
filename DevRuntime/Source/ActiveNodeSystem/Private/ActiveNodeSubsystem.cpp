@@ -6,6 +6,7 @@
 #include "ActiveNodeManager.h"
 #include "EngineUtils.h"
 #include "Components/GameFrameworkComponent.h"
+#include "Manager/ManagerGlobal.h"
 
 UE_DEFINE_GAMEPLAY_TAG(TAG_ActiveNode, "ActiveNode");
 

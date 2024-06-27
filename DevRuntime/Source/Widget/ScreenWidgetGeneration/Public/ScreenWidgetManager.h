@@ -27,10 +27,14 @@ class SCREENWIDGETGENERATION_API UScreenWidgetManager : public UCoreManager
 public:
 	UScreenWidgetManager();
 
+	/* IManagerInterface  */
+public:
+	virtual FText GetManagerDisplayName() override;
+	
 	/* IProcedureInterface */
 public:
+	virtual int32 GetProcedureOrder() override { return -2; }
 	virtual void NativeOnActived() override;
-	virtual void NativePostProcedureSwitch(EGameplayProcedure InProcedure) override;
 	virtual void NativeOnInactived() override;
 
 	/* UTagNameSlot */

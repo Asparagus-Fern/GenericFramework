@@ -4,17 +4,18 @@
 #include "ActiveNodeManager.h"
 
 #include "ActiveNodeSubsystem.h"
-#include "Manager/ManagerCollection.h"
 
 #define LOCTEXT_NAMESPACE "UActiveNodeManager"
 
 UActiveNodeManager::UActiveNodeManager()
 {
-	DisplayName = LOCTEXT("DisplayName", "Active Node Manager");
-	ProcedureOrder = 0;
-
 	bAutoLogin = true;
 	bBlockUpdate = false;
+}
+
+FText UActiveNodeManager::GetManagerDisplayName()
+{
+	return LOCTEXT("DisplayName", "Active Node Manager");
 }
 
 #undef LOCTEXT_NAMESPACE

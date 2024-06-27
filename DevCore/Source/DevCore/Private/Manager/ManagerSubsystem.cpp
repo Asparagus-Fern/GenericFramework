@@ -4,6 +4,9 @@
 #include "Manager/ManagerSubsystem.h"
 
 #include "Manager/CoreManager.h"
+#include "Manager/ManagerGlobal.h"
+
+bool UManagerSubsystem::bManagerSubsystemInitialize = false;
 
 bool UManagerSubsystem::ShouldCreateSubsystem(UObject* Outer) const
 {
@@ -16,6 +19,12 @@ void UManagerSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 
 	PostWorldInitializationHandle = FWorldDelegates::OnPostWorldInitialization.AddUObject(this, &UManagerSubsystem::OnPostWorldInitialization);
 	WorldBeginTearDownHandle = FWorldDelegates::OnWorldBeginTearDown.AddUObject(this, &UManagerSubsystem::OnWorldBeginTearDown);
+
+	if (!bManagerSubsystemInitialize)
+	{
+		bManagerSubsystemInitialize = true;
+		FManagerDelegates::OnManagerSubsystemInitialize.Broadcast();
+	}
 }
 
 void UManagerSubsystem::Deinitialize()
@@ -50,38 +59,70 @@ void UManagerSubsystem::OnPostWorldInitialization(UWorld* InWorld, const UWorld:
 void UManagerSubsystem::OnWorldMatchStarting()
 {
 	World->OnWorldMatchStarting.Remove(WorldMatchStartingHandle);
+	FManagerDelegates::PreManagerActived.Broadcast();
 
-	ProcessManagers([](UCoreManager* InManager)
+	ProcessManagersInOrder
+	(
+		true, [this](UCoreManager* InManager)
 		{
-			InManager->NativeOnActived();
+			if (InManager->DoesSupportWorldType(World->WorldType))
+			{
+				InManager->NativeOnActived();
+				FManagerDelegates::OnManagerActived.Broadcast(InManager);
+			}
 		}
 	);
+
+	FManagerDelegates::PostManagerActived.Broadcast();
 }
 
 void UManagerSubsystem::OnWorldBeginTearDown(UWorld* InWorld)
 {
-	ProcessManagers([](UCoreManager* InManager)
-		{
-			InManager->NativeOnInactived();
-		}
-	);
+	if (InWorld->IsGameWorld())
+	{
+		FManagerDelegates::PreManagerInActived.Broadcast();
+
+		ProcessManagersInOrder
+		(
+			false, [this](UCoreManager* InManager)
+			{
+				if (InManager->DoesSupportWorldType(World->WorldType))
+				{
+					FManagerDelegates::OnManagerInActived.Broadcast(InManager);
+					InManager->NativeOnInactived();
+				}
+			}
+		);
+
+		FManagerDelegates::PostManagerInActived.Broadcast();
+	}
 }
 
 UCoreManager* UManagerSubsystem::RegisterManager(TSubclassOf<UCoreManager> InManagerClass)
 {
-	if (IsManagerRegister(InManagerClass, true))
-	{
-		return nullptr;
-	}
-
+	/* 不创建Core Manager */
 	if (InManagerClass == UCoreManager::StaticClass())
 	{
+		DEBUG(Debug_Manager, Warning, TEXT("Core Manager is Abstract"))
 		return nullptr;
 	}
 
 	UCoreManager* NewManager = NewObject<UCoreManager>(this, InManagerClass);
+
+	/* 已被子类覆盖的，只刷新config */
+	const UCoreManager* Manager = GetManager(InManagerClass, false);
+	if (IsValid(Manager))
+	{
+		DEBUG(Debug_Manager, Warning, TEXT("Manager Has Register"))
+		OverrideManagers.Add(NewManager);
+		NewManager->TryUpdateDefaultConfigFile();
+		return nullptr;
+	}
+
+	/* 创建Manager */
 	Managers.Add(NewManager);
 	NewManager->NativeOnCreate();
+	FManagerDelegates::OnManagerRegister.Broadcast(NewManager);
 
 	return NewManager;
 }
@@ -91,6 +132,7 @@ void UManagerSubsystem::UnRegisterManager(TSubclassOf<UCoreManager> InManagerCla
 	UCoreManager* RemoveManager = GetManager(InManagerClass, true);
 	if (IsValid(RemoveManager))
 	{
+		FManagerDelegates::OnManagerUnRegister.Broadcast(RemoveManager);
 		RemoveManager->NativeOnDestroy();
 		Managers.Remove(RemoveManager);
 	}

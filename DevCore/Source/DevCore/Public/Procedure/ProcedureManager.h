@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "ProcedureType.h"
 #include "Manager/CoreManager.h"
 #include "ProcedureManager.generated.h"
@@ -19,48 +20,38 @@ class DEVCORE_API UProcedureManager : public UCoreManager
 public:
 	UProcedureManager();
 
-protected:
-	TArray<FManagerOrder> ManagerOrders;
-	void OnPostWorldInitialization(UWorld* InWorld, const UWorld::InitializationValues InitializationValues);
-	void OnWorldMatchStarting(UWorld* InWorld);
-	void OnWorldCleanup(UWorld* InWorld, bool bSessionEnded, bool bCleanupResources);
-	void RefreshManagerOrders();
-	void ProcessManagerOrders(bool IsForwardSort, const TFunctionRef<void(UCoreManager* InCoreManager)>& Exec);
+	/* IManagerInterface */
+public:
+	virtual FText GetManagerDisplayName() override;
 
-#if WITH_EDITOR
-
-protected:
-	void OnEditorClose();
-
-#endif
+	/* IProcedureBaseInterface */
+public:
+	virtual void NativeOnCreate() override;
+	virtual void NativeOnDestroy() override;
 
 	/* IProcedureInterface */
 public:
+	virtual int32 GetProcedureOrder() override { return -99; }
 	virtual void NativeOnActived() override;
 	virtual void NativeOnInactived() override;
 
 	/* UProcedureManager */
 public:
-	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly)
-	EGameplayProcedure DefaultGameplayProcedure = EGameplayProcedure::GameLoading;
+	UPROPERTY(GlobalConfig, EditAnywhere, BlueprintReadOnly, meta=(Categories="Procedure"))
+	FGameplayTag DefaultProcedureTag;
 
-	UPROPERTY(Config, EditAnywhere, BlueprintReadWrite)
-	TMap<EGameplayProcedure, TSoftClassPtr<UGameplayProcedure>> GameplayProcedureClass;
-
-#if WITH_EDITORONLY_DATA
-	UPROPERTY(VisibleAnywhere, AdvancedDisplay)
-	UWorld* EditorWorld;
-#endif
+	UPROPERTY(GlobalConfig, EditAnywhere, BlueprintReadWrite)
+	TMap<FGameplayTag, TSoftObjectPtr<UGameplayProcedure>> GameplayProcedureObjects;
 
 public:
 	UFUNCTION(BlueprintCallable)
-	bool SwitchProcedure(EGameplayProcedure InProcedure, bool bForce = false);
+	void SwitchProcedure(FGameplayTag InProcedureTag, bool bForce = false);
 
 	UFUNCTION(BlueprintCallable)
-	UGameplayProcedure* GetGameplayProcedure(EGameplayProcedure InProcedure);
+	UGameplayProcedure* GetGameplayProcedure(FGameplayTag InProcedureTag);
 
 protected:
-	EGameplayProcedure LastGameplayProcedure;
-	EGameplayProcedure CurrentGameplayProcedure;
-	TMap<EGameplayProcedure, UGameplayProcedure*> GameplayProcedure;
+	FGameplayTag LastProcedureTag;
+	FGameplayTag CurrentProcedureTag;
+	TMap<FGameplayTag, UGameplayProcedure*> GameplayProcedure;
 };

@@ -22,18 +22,24 @@ class MANAGERVISUALIZATION_API UManagerEditor : public UCoreManager, public IMan
 public:
 	UManagerEditor();
 
+	/* IProcedureBaseInterface */
+public:
+	virtual void NativeOnCreate() override;
+	virtual void NativeOnDestroy() override;
+
 	/* IManagerInterface */
 public:
-	virtual bool IsEditorManager() override { return true; }
+	virtual FText GetManagerDisplayName() override;
+	virtual bool DoesSupportWorldType(EWorldType::Type InWorldType) override;
 
 	/* IEdManagerInterface */
 public:
 	virtual void InitCommandList(TSharedPtr<FUICommandList>& InCommandList) override;
 	virtual void ExtendToolBar(FToolMenuSection& InSection) override;
-	virtual void ExtendToolBarMenu(UToolMenu* InToolMenu) override;
 
 	/* UManagerEditor */
 protected:
+	FDelegateHandle LevelEditorCreatedHandle;
 	void OnLevelEditorCreated(TSharedPtr<ILevelEditor> LevelEditor);
 
 	static FName ManagerEditorTabName;

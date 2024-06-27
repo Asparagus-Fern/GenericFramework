@@ -4,14 +4,10 @@
 
 #define LOCTEXT_NAMESPACE "FActiveNodeSystemModule"
 
-void FActiveNodeSystemModule::StartupModule()
+void FActiveNodeSystemModule::GetRegisterManager(TArray<TSubclassOf<UCoreManager>>& InRegisterManagerClasses)
 {
-	ICommonModuleInterface::StartupModule();
-}
-
-void FActiveNodeSystemModule::ShutdownModule()
-{
-	ICommonModuleInterface::ShutdownModule();
+	ICommonModuleInterface::GetRegisterManager(InRegisterManagerClasses);
+	InRegisterManagerClasses.Add(UActiveNodeManager::StaticClass());
 }
 
 #undef LOCTEXT_NAMESPACE

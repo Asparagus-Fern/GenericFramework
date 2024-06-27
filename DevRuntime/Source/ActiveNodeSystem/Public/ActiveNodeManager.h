@@ -18,17 +18,25 @@ class ACTIVENODESYSTEM_API UActiveNodeManager : public UCoreManager
 public:
 	UActiveNodeManager();
 
+	/* IManagerInterface */
+public:
+	virtual FText GetManagerDisplayName() override;
+
+	/* IProcedureInterface */
+public:
+	virtual int32 GetProcedureOrder() override { return -1; }
+
 	/* UActiveNodeManager */
 public:
 	// 在世界即将开始时自动进入活跃点.
-	UPROPERTY(Config, EditDefaultsOnly)
+	UPROPERTY(GlobalConfig, EditDefaultsOnly)
 	uint8 bAutoLogin : 1;
 
 	// 如果不支持更新, 将在活跃点管理子系统层面直接停用所有更新.
-	UPROPERTY(Config, EditDefaultsOnly)
+	UPROPERTY(GlobalConfig, EditDefaultsOnly)
 	uint8 bBlockUpdate : 1;
 
 	/* 全局默认进入的活跃点Tag */
-	UPROPERTY(Config, EditAnywhere, meta = (Categories = "ActiveNode"))
+	UPROPERTY(GlobalConfig, EditAnywhere, meta = (Categories = "ActiveNode"))
 	FGameplayTag DefaultNodeTag;
 };

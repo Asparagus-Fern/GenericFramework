@@ -4,6 +4,7 @@
 #include "Event/CBE_HangleUserWidget.h"
 
 #include "ScreenWidgetManager.h"
+#include "Manager/ManagerGlobal.h"
 
 void UCBE_HangleUserWidget::NativeOnActived()
 {

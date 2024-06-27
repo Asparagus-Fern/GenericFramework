@@ -12,7 +12,7 @@ ADevPawn::ADevPawn()
 	bUseControllerRotationPitch = true;
 	bUseControllerRotationRoll = true;
 	bUseControllerRotationYaw = true;
-
+	
 	FloatingPawnMovement = CreateDefaultSubobject<UFloatingPawnMovement>("Movement");
 }
 

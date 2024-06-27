@@ -21,9 +21,12 @@ void UManagerEdSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 
 	FLevelEditorModule& LevelEditorModule = FModuleManager::Get().GetModuleChecked<FLevelEditorModule>("LevelEditor");
 	LevelEditorCreatedHandle = LevelEditorModule.OnLevelEditorCreated().AddUObject(this, &UManagerEdSubsystem::OnLevelEditorCreated);
+	MapChangedHandle = LevelEditorModule.OnMapChanged().AddUObject(this, &UManagerEdSubsystem::OnMapChanged);
 
-	FWorldDelegates::OnPIEStarted.AddUObject(this, &UManagerEdSubsystem::OnPIEStarted);
-	FWorldDelegates::OnPIEEnded.AddUObject(this, &UManagerEdSubsystem::OnPIEEnded);
+	PIEBeginHandle = FEditorDelegates::BeginPIE.AddUObject(this, &UManagerEdSubsystem::OnPIEBegin);
+	PIEEndHandle = FEditorDelegates::EndPIE.AddUObject(this, &UManagerEdSubsystem::OnPIEEnd);
+
+	EditorCloseHandle = GEditor->OnEditorClose().AddUObject(this, &UManagerEdSubsystem::OnEditorClose);
 }
 
 void UManagerEdSubsystem::Deinitialize()
@@ -33,21 +36,84 @@ void UManagerEdSubsystem::Deinitialize()
 
 void UManagerEdSubsystem::OnLevelEditorCreated(TSharedPtr<ILevelEditor> LevelEditor)
 {
+	ProcessManagersInOrder
+	(
+		true, [this](UCoreManager* InManager)
+		{
+			if (InManager->DoesSupportWorldType(EditorWorld->WorldType))
+			{
+				InManager->NativeOnActived();
+			}
+		}
+	);
+
 	ExtendEditor();
 }
 
-void UManagerEdSubsystem::OnPIEStarted(UGameInstance* InGameInstance)
+void UManagerEdSubsystem::OnMapChanged(UWorld* InWorld, EMapChangeType InMapChangeType)
 {
-	if (true)
+	if (InWorld->WorldType == EWorldType::Editor || InWorld->WorldType == EWorldType::EditorPreview)
 	{
+		if (InMapChangeType == EMapChangeType::LoadMap || InMapChangeType == EMapChangeType::NewMap)
+		{
+			EditorWorld = InWorld;
+		}
+		else if (InMapChangeType == EMapChangeType::TearDownWorld)
+		{
+			EditorWorld = nullptr;
+		}
 	}
 }
 
-void UManagerEdSubsystem::OnPIEEnded(UGameInstance* InGameInstance)
+void UManagerEdSubsystem::OnPIEBegin(const bool bIsSimulating)
 {
-	if (true)
-	{
-	}
+	ProcessManagersInOrder
+	(
+		false, [this](UCoreManager* InManager)
+		{
+			if (InManager->DoesSupportWorldType(EditorWorld->WorldType))
+			{
+				InManager->NativeOnInactived();
+			}
+		}
+	);
+}
+
+void UManagerEdSubsystem::OnPIEEnd(const bool bIsSimulating)
+{
+	PostManagerInActivedHandle = FManagerDelegates::PostManagerInActived.AddUObject(this, &UManagerEdSubsystem::PostManagerInActived);
+}
+
+void UManagerEdSubsystem::PostManagerInActived()
+{
+	FManagerDelegates::PostManagerInActived.Remove(PostManagerInActivedHandle);
+
+	ProcessManagersInOrder
+	(
+		true, [this](UCoreManager* InManager)
+		{
+			if (InManager->DoesSupportWorldType(EditorWorld->WorldType))
+			{
+				InManager->NativeOnActived();
+			}
+		}
+	);
+}
+
+void UManagerEdSubsystem::OnEditorClose()
+{
+	ProcessManagersInOrder
+	(
+		false, [this](UCoreManager* InManager)
+		{
+			if (InManager->DoesSupportWorldType(EditorWorld->WorldType))
+			{
+				InManager->NativeOnInactived();
+			}
+		}
+	);
+
+	EditorWorld = nullptr;
 }
 
 void UManagerEdSubsystem::ExtendEditor()

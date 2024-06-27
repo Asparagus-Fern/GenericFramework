@@ -23,6 +23,9 @@ public:
 	virtual UWorld* GetWorld() const override;
 	static UManagerSubsystem* Get();
 
+public:
+	static bool bManagerSubsystemInitialize;
+
 protected:
 	FDelegateHandle PostWorldInitializationHandle;
 	void OnPostWorldInitialization(UWorld* InWorld, const UWorld::InitializationValues IVS);
@@ -52,10 +55,13 @@ public:
 	UFUNCTION(BlueprintPure)
 	TArray<UCoreManager*> GetManagers();
 
-public:
+protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TArray<UCoreManager*> Managers;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TArray<UCoreManager*> OverrideManagers;
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UWorld* World;
 };

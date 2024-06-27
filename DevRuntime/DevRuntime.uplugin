@@ -38,6 +38,21 @@
       "LoadingPhase": "Default"
     },
     {
+      "Name": "InputSystem",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
+    },
+    {
+      "Name": "LevelStreaming",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
+    },
+    {
+      "Name": "WorldPartition",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
+    },
+    {
       "Name": "ScreenWidgetGeneration",
       "Type": "Runtime",
       "LoadingPhase": "Default"
@@ -48,12 +63,12 @@
       "LoadingPhase": "Default"
     },
     {
-      "Name": "CameraSystem",
+      "Name": "ActiveNodeSystem",
       "Type": "Runtime",
       "LoadingPhase": "Default"
     },
     {
-      "Name": "ActiveNodeSystem",
+      "Name": "CameraSystem",
       "Type": "Runtime",
       "LoadingPhase": "Default"
     }

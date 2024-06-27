@@ -3,9 +3,7 @@
 
 #include "ActiveNode/ActiveNode_Game.h"
 
-#include "World/GameWorldSetting.h"
-#include "World/LevelStreamingType.h"
-#include "World/WorldManager.h"
+#include "Manager/ManagerGlobal.h"
 
 AActiveNode_Game::AActiveNode_Game()
 {
@@ -15,9 +13,9 @@ AActiveNode_Game::AActiveNode_Game()
 void AActiveNode_Game::LoginNode_Implementation()
 {
 	/* 加载所有流关卡 */
-	FOnFinish LoadCurrentWorldLevelStreamingDelegate;
-	LoadCurrentWorldLevelStreamingDelegate.BindUFunction(this, "OnLoadCurrentWorldLevelStreamingFinish");
-	GetManager<UWorldManager>()->LoadCurrentWorldLevelStreaming(FOnOnceFinish(), LoadCurrentWorldLevelStreamingDelegate);
+	// FOnFinish LoadCurrentWorldLevelStreamingDelegate;
+	// LoadCurrentWorldLevelStreamingDelegate.BindUFunction(this, "OnLoadCurrentWorldLevelStreamingFinish");
+	// GetManager<UWorldManager>()->LoadCurrentWorldLevelStreaming(FOnOnceFinish(), LoadCurrentWorldLevelStreamingDelegate);
 }
 
 void AActiveNode_Game::LogoutNode_Implementation()
@@ -26,17 +24,17 @@ void AActiveNode_Game::LogoutNode_Implementation()
 
 void AActiveNode_Game::OnLoadCurrentWorldLevelStreamingFinish()
 {
-	if (IsValid(GameWorldSetting))
-	{
-		/* 设置默认显示项目关卡 */
-		FOnFinish SetProjectLevelsVisibleDelegate;
-		SetProjectLevelsVisibleDelegate.BindUFunction(this, "OnSetProjectLevelsVisibleFinish");
-		GetManager<UWorldManager>()->SetLevelsVisibility(GameWorldSetting->Levels, true, FOnOnceFinish(), SetProjectLevelsVisibleDelegate);
-	}
-	else
-	{
-		OnSetProjectLevelsVisibleFinish();
-	}
+	// if (IsValid(GameWorldSetting))
+	// {
+	// 	/* 设置默认显示项目关卡 */
+	// 	FOnFinish SetProjectLevelsVisibleDelegate;
+	// 	SetProjectLevelsVisibleDelegate.BindUFunction(this, "OnSetProjectLevelsVisibleFinish");
+	// 	GetManager<UWorldManager>()->SetLevelsVisibility(GameWorldSetting->Levels, true, FOnOnceFinish(), SetProjectLevelsVisibleDelegate);
+	// }
+	// else
+	// {
+	// 	OnSetProjectLevelsVisibleFinish();
+	// }
 }
 
 void AActiveNode_Game::OnSetProjectLevelsVisibleFinish()

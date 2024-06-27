@@ -12,7 +12,6 @@
 #include "Blueprint/WidgetLayoutLibrary.h"
 #include "Components/CanvasPanel.h"
 #include "Components/CanvasPanelSlot.h"
-#include "Manager/ManagerCollection.h"
 #include "StaticFunctions/StaticFunctions_LevelEditor.h"
 #include "Widgets/Layout/SConstraintCanvas.h"
 
@@ -183,25 +182,39 @@ void UEditorWorldWidgetPanel::RemoveWorldWidget(AWorldWidgetPoint* InWorldWidget
 
 UWorldWidgetEdManager::UWorldWidgetEdManager()
 {
-	DisplayName = LOCTEXT("DisplayName", "World Widget Editor Manager");
-	ProcedureOrder = 0;
-
 	bInitializeEditorWorldWidgetPanel = false;
 }
 
-// void UWorldWidgetEdManager::Initialize(FSubsystemCollectionBase& Collection)
-// {
-// 	/* 在世界被创建时和世界切换时更新 */
-// 	FLevelEditorModule& LevelEditorModule = FModuleManager::Get().GetModuleChecked<FLevelEditorModule>("LevelEditor");
-// 	LevelEditorCreatedHandle = LevelEditorModule.OnLevelEditorCreated().AddUObject(this, &UWorldWidgetEdManager::OnLevelEditorCreated);
-//
-// 	LevelViewportClientListChangedHandle = GEditor->OnLevelViewportClientListChanged().AddUObject(this, &UWorldWidgetEdManager::OnLevelViewportClientListChanged);
-// 	BlueprintCompiledHandle = GEditor->OnBlueprintCompiled().AddUObject(this, &UWorldWidgetEdManager::OnBlueprintCompiled);
-// 	LevelActorDeletedHandle = GEditor->OnLevelActorDeleted().AddUObject(this, &UWorldWidgetEdManager::OnLevelActorDeleted);
-//
-// 	WorldWidgetPointConstructionHandle = FWorldWidgetDelegates::OnWorldWidgetPointConstruction.AddUObject(this, &UWorldWidgetEdManager::OnWorldWidgetPointConstruction);
-// 	WorldWidgetPointDestroyedHandle = FWorldWidgetDelegates::OnWorldWidgetPointDestroy.AddUObject(this, &UWorldWidgetEdManager::OnWorldWidgetPointDestroyed);
-// }
+FText UWorldWidgetEdManager::GetManagerDisplayName()
+{
+	return LOCTEXT("DisplayName", "World Widget Editor Manager");
+}
+
+bool UWorldWidgetEdManager::DoesSupportWorldType(EWorldType::Type InWorldType)
+{
+	return Super::DoesSupportWorldType(InWorldType) || EWorldType::Editor;
+}
+
+void UWorldWidgetEdManager::NativeOnCreate()
+{
+	Super::NativeOnCreate();
+
+	/* 在世界被创建时和世界切换时更新 */
+	FLevelEditorModule& LevelEditorModule = FModuleManager::Get().GetModuleChecked<FLevelEditorModule>("LevelEditor");
+	LevelEditorCreatedHandle = LevelEditorModule.OnLevelEditorCreated().AddUObject(this, &UWorldWidgetEdManager::OnLevelEditorCreated);
+
+	LevelViewportClientListChangedHandle = GEditor->OnLevelViewportClientListChanged().AddUObject(this, &UWorldWidgetEdManager::OnLevelViewportClientListChanged);
+	BlueprintCompiledHandle = GEditor->OnBlueprintCompiled().AddUObject(this, &UWorldWidgetEdManager::OnBlueprintCompiled);
+	LevelActorDeletedHandle = GEditor->OnLevelActorDeleted().AddUObject(this, &UWorldWidgetEdManager::OnLevelActorDeleted);
+
+	WorldWidgetPointConstructionHandle = FWorldWidgetDelegates::OnWorldWidgetPointConstruction.AddUObject(this, &UWorldWidgetEdManager::OnWorldWidgetPointConstruction);
+	WorldWidgetPointDestroyedHandle = FWorldWidgetDelegates::OnWorldWidgetPointDestroy.AddUObject(this, &UWorldWidgetEdManager::OnWorldWidgetPointDestroyed);
+}
+
+void UWorldWidgetEdManager::NativeOnDestroy()
+{
+	Super::NativeOnDestroy();
+}
 
 void UWorldWidgetEdManager::NativeOnRefresh()
 {

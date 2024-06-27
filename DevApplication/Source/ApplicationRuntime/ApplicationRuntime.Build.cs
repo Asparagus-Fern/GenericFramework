@@ -24,7 +24,9 @@ public class ApplicationRuntime : ModuleRules
 				"GameplayTags",
 				"ActiveNodeSystem",
 				"ScreenWidgetGeneration",
-				"CameraSystem"
+				"CameraSystem",
+				"LevelStreaming",
+				"WorldPartition"
 			}
 		);
 	}

@@ -6,7 +6,6 @@
 class FWorldWidgetGenerationModule : public ICommonModuleInterface
 {
 public:
-	virtual void StartupModule() override;
-	virtual void ShutdownModule() override;
 	virtual void LoadDependentModule(TArray<FName>& InDependentModuleName) override;
+	virtual void GetRegisterManager(TArray<TSubclassOf<UCoreManager>>& InRegisterManagerClasses) override;
 };
