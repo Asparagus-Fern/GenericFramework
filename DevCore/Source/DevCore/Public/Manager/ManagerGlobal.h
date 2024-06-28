@@ -82,3 +82,24 @@ static void ProcessManagersInOrder(bool bAscending, const TFunctionRef<void(UCor
 		}
 	}
 }
+
+/**
+ * 
+ * @tparam InterfaceClass 
+ * @param bAscending 
+ * @param Exec 
+ */
+template <typename InterfaceClass>
+static void ProcessManagerInterfacesInOrder(bool bAscending, const TFunctionRef<void(InterfaceClass* Interface)>& Exec)
+{
+	ProcessManagersInOrder
+	(
+		bAscending, [Exec](UCoreManager* ProcessCoreManager)
+		{
+			if (ProcessCoreManager->GetClass()->ImplementsInterface(InterfaceClass::UClassType::StaticClass()))
+			{
+				Exec(Cast<InterfaceClass>(ProcessCoreManager));
+			}
+		}
+	);
+}

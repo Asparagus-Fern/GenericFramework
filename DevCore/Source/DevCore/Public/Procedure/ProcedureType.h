@@ -1,5 +1,7 @@
 #pragma once
+
 #include "NativeGameplayTags.h"
+#include "ProcedureInterface.h"
 
 class UCoreManager;
 
@@ -20,6 +22,30 @@ enum class EGameplayProcedure : uint8
 	Loading UMETA(DisplayName="加载"),
 	MainMenu UMETA(DisplayName="主菜单"),
 	Play UMETA(DisplayName="游玩"),
-	Pause UMETA(DisplayName="暂停"),
 	Exit UMETA(DisplayName="退出")
+};
+
+/**
+ * 
+ */
+struct DEVCORE_API FProcedureInterfaceHandle
+{
+public:
+	FProcedureInterfaceHandle();
+	FProcedureInterfaceHandle(IProcedureInterface* InInterface, bool InTargetActiveState);
+
+public:
+	bool operator==(const FProcedureInterfaceHandle& Other) const
+	{
+		return Interface == Other.Interface;
+	}
+
+	bool operator==(const IProcedureInterface* OtherInterface) const
+	{
+		return Interface == OtherInterface;
+	}
+	
+public:
+	IProcedureInterface* Interface;
+	bool bTargetActiveState;
 };

@@ -24,6 +24,6 @@ class DEVCORE_API IManagerInterface
 
 public:
 	virtual FText GetManagerDisplayName();
-	virtual bool IsEditorManager();
-	virtual bool DoesSupportWorldType(EWorldType::Type InWorldType);
+	virtual bool IsEditorManager() ;
+	virtual bool DoesSupportWorldType(EWorldType::Type InWorldType) ;
 };

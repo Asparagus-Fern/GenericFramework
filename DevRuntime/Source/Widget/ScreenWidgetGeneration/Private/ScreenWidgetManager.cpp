@@ -96,6 +96,14 @@ UUserWidgetBase* UScreenWidgetManager::OpenUserWidgetByClass(TSubclassOf<UUserWi
 	return NewWidget;
 }
 
+void UScreenWidgetManager::OpenUserWidgets(TArray<UUserWidgetBase*> InWidgets)
+{
+	for (const auto& InWidget : InWidgets)
+	{
+		OpenUserWidget(InWidget);
+	}
+}
+
 void UScreenWidgetManager::OpenUserWidget(UUserWidgetBase* InWidget)
 {
 	/* Make sure User Widget Is Not NULL */

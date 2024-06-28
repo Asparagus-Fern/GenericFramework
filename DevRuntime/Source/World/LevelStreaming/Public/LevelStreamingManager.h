@@ -31,11 +31,6 @@ public:
 	virtual int32 GetProcedureOrder() override { return -2; }
 	virtual void NativeOnActived() override;
 
-	/* Level Streaming*/
-public:
-	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, meta=(EditCondition = "!bIsWorldPartition", EditConditionHides))
-	TArray<TSoftObjectPtr<UWorld>> AlwaysLoadLevels;
-
 public:
 	UFUNCTION(BlueprintCallable, Category="WorldManager|LevelStreaming")
 	void LoadLevel(TSoftObjectPtr<UWorld> Level, bool bMakeVisibleAfterLoad, bool bShouldBlockOnLoad, FOnFinish OnFinish);

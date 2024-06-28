@@ -187,7 +187,7 @@ void UWorldWidgetManager::NativeOnActived()
 {
 	Super::NativeOnActived();
 
-	FScreenWidgetDelegates::OnHUDCreated.AddUObject(this, &UWorldWidgetManager::GenerateWorldWidget);
+	FScreenWidgetDelegates::OnHUDCreated.AddUObject(this, &UWorldWidgetManager::GenerateWorldWidgetPanel);
 }
 
 void UWorldWidgetManager::NativeOnInactived()
@@ -198,7 +198,7 @@ void UWorldWidgetManager::NativeOnInactived()
 	ClearupWorldWidgetPanel();
 }
 
-void UWorldWidgetManager::GenerateWorldWidget()
+void UWorldWidgetManager::GenerateWorldWidgetPanel()
 {
 	UTagNameSlot* Slot = GetManager<UScreenWidgetManager>()->GetSlot(FGameplayTag::RequestGameplayTag(FName("HUD.Main.WorldWidget")));
 	if (IsValid(Slot))
@@ -241,8 +241,8 @@ void UWorldWidgetManager::RemoveWorldWidgetPoint(AWorldWidgetPoint* InWorldWidge
 		return;
 	}
 
-	RemovePanelWorldWidgetPoint(InWorldWidgetPoint);
 	WorldWidgetPoints.Remove(InWorldWidgetPoint);
+	RemovePanelWorldWidgetPoint(InWorldWidgetPoint);
 }
 
 void UWorldWidgetManager::RefreshWolrdWidgetPoint(AWorldWidgetPoint* InWorldWidgetPoint)

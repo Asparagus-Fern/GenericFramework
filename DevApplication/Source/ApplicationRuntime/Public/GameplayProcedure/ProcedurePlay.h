@@ -5,8 +5,11 @@
 #include "CoreMinimal.h"
 #include "Procedure/GameplayProcedure.h"
 #include "LevelStreamingType.h"
+#include "NativeGameplayTags.h"
 #include "ProcedurePlay.generated.h"
 
+class UUserWidgetBase;
+class UGameMenuSetting;
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_ProcedurePlay_Default);
 
 /**
@@ -21,11 +24,10 @@ public:
 	virtual void NativeOnActived() override;
 	virtual void NativeOnInactived() override;
 
-protected:
-	UFUNCTION()
-	void OnSetAlwaysVisibleLevelsFinish();
-
 public:
-	UFUNCTION(BlueprintNativeEvent)
-	void OnFinish_SetAlwaysVisibleLevels();
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UGameMenuSetting* GameMenuSetting;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<UUserWidgetBase*> DefaultOpenWidgets;
 };

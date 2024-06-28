@@ -24,6 +24,9 @@ public:
 	virtual void NativeConstruct() override;
 
 public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="UMG"))
+	FGameplayTag SelfTag;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="HUD"))
 	FGameplayTag SlotTag;
 

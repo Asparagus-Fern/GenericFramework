@@ -10,7 +10,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(BlueprintType)
 class SCREENWIDGETGENERATION_API UGameMenuSetting : public UDataAsset
 {
 	GENERATED_BODY()

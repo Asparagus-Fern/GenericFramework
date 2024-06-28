@@ -3,7 +3,12 @@
 
 #include "Procedure/GameplayProcedure.h"
 
+#include "Manager/ManagerGlobal.h"
 #include "Procedure/ProcedureManager.h"
+
+UGameplayProcedure::UGameplayProcedure()
+{
+}
 
 void UGameplayProcedure::NativeOnCreate()
 {

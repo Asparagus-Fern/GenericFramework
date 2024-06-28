@@ -32,6 +32,10 @@ public:
 
 	/* AWorldWidgetPoint */
 public:
+	/* 被添加进WorldWidgetManager时自动激活，显示到屏幕上，为false则为手动控制 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	bool bIsAutoActived = true;
+
 	/* 可通过标签获取到所有该标签点位 */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="Point"))
 	FGameplayTag PointTag;

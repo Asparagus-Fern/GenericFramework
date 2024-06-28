@@ -16,8 +16,7 @@ class DEVEDCORE_API UGameplayProcedureFactory : public UAssetFactory
 
 public:
 	UGameplayProcedureFactory();
-	virtual UObject* FactoryCreateNew(UClass* InClass, UObject* InParent, FName InName, EObjectFlags Flags, UObject* Context, FFeedbackContext* Warn) override;
-	// virtual UObject* FactoryCreateNew(UClass* InClass, UObject* InParent, FName InName, EObjectFlags Flags, UObject* Context, FFeedbackContext* Warn, FName CallingContext) override;
+	virtual UObject* FactoryCreateNew(UClass* InClass, UObject* InParent, FName InName, EObjectFlags Flags, UObject* Context, FFeedbackContext* Warn, FName CallingContext) override;
 
 protected:
 	virtual void ConfigureFilter(TSharedRef<FAssetFilter>& Filter) override;

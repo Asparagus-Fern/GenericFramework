@@ -41,7 +41,7 @@ public:
 	virtual void NativeOnCreate() override;
 	virtual void NativeOnRefresh() override;
 	virtual void NativeOnDestroy() override;
-	
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bEnableInteraction;

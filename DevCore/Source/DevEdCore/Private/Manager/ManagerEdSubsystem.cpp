@@ -34,19 +34,23 @@ void UManagerEdSubsystem::Deinitialize()
 	Super::Deinitialize();
 }
 
+UManagerEdSubsystem* UManagerEdSubsystem::Get()
+{
+	return GEditor->GetEditorSubsystem<UManagerEdSubsystem>();
+}
+
+UWorld* UManagerEdSubsystem::GetWorld() const
+{
+	if (!HasAnyFlags(RF_ClassDefaultObject) && ensureMsgf(GetOuter(), TEXT("Manager: %s has a null OuterPrivate in UCoreManager::GetWorld()"), *GetFullName())
+		&& !GetOuter()->HasAnyFlags(RF_BeginDestroyed) && !GetOuter()->IsUnreachable())
+	{
+		return EditorWorld;
+	}
+	return Super::GetWorld();
+}
+
 void UManagerEdSubsystem::OnLevelEditorCreated(TSharedPtr<ILevelEditor> LevelEditor)
 {
-	ProcessManagersInOrder
-	(
-		true, [this](UCoreManager* InManager)
-		{
-			if (InManager->DoesSupportWorldType(EditorWorld->WorldType))
-			{
-				InManager->NativeOnActived();
-			}
-		}
-	);
-
 	ExtendEditor();
 }
 
@@ -57,9 +61,31 @@ void UManagerEdSubsystem::OnMapChanged(UWorld* InWorld, EMapChangeType InMapChan
 		if (InMapChangeType == EMapChangeType::LoadMap || InMapChangeType == EMapChangeType::NewMap)
 		{
 			EditorWorld = InWorld;
+
+			ProcessManagerInterfacesInOrder<IManagerEdInterface>
+			(
+				true, [this](IManagerEdInterface* Interface)
+				{
+					if (!Interface->GetIsEditorActived())
+					{
+						Interface->NativeOnEditorActived();
+					}
+				}
+			);
 		}
 		else if (InMapChangeType == EMapChangeType::TearDownWorld)
 		{
+			ProcessManagerInterfacesInOrder<IManagerEdInterface>
+			(
+				false, [this](IManagerEdInterface* Interface)
+				{
+					if (Interface->GetIsEditorActived())
+					{
+						Interface->NativeOnEditorInactived();
+					}
+				}
+			);
+
 			EditorWorld = nullptr;
 		}
 	}
@@ -67,13 +93,13 @@ void UManagerEdSubsystem::OnMapChanged(UWorld* InWorld, EMapChangeType InMapChan
 
 void UManagerEdSubsystem::OnPIEBegin(const bool bIsSimulating)
 {
-	ProcessManagersInOrder
+	ProcessManagerInterfacesInOrder<IManagerEdInterface>
 	(
-		false, [this](UCoreManager* InManager)
+		false, [this](IManagerEdInterface* Interface)
 		{
-			if (InManager->DoesSupportWorldType(EditorWorld->WorldType))
+			if (Interface->GetIsEditorActived())
 			{
-				InManager->NativeOnInactived();
+				Interface->NativeOnEditorInactived();
 			}
 		}
 	);
@@ -88,13 +114,13 @@ void UManagerEdSubsystem::PostManagerInActived()
 {
 	FManagerDelegates::PostManagerInActived.Remove(PostManagerInActivedHandle);
 
-	ProcessManagersInOrder
+	ProcessManagerInterfacesInOrder<IManagerEdInterface>
 	(
-		true, [this](UCoreManager* InManager)
+		true, [this](IManagerEdInterface* Interface)
 		{
-			if (InManager->DoesSupportWorldType(EditorWorld->WorldType))
+			if (!Interface->GetIsEditorActived())
 			{
-				InManager->NativeOnActived();
+				Interface->NativeOnEditorActived();
 			}
 		}
 	);
@@ -102,13 +128,13 @@ void UManagerEdSubsystem::PostManagerInActived()
 
 void UManagerEdSubsystem::OnEditorClose()
 {
-	ProcessManagersInOrder
+	ProcessManagerInterfacesInOrder<IManagerEdInterface>
 	(
-		false, [this](UCoreManager* InManager)
+		false, [this](IManagerEdInterface* Interface)
 		{
-			if (InManager->DoesSupportWorldType(EditorWorld->WorldType))
+			if (Interface->GetIsEditorActived())
 			{
-				InManager->NativeOnInactived();
+				Interface->NativeOnEditorInactived();
 			}
 		}
 	);

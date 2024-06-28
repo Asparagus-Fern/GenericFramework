@@ -3,11 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "ProcedureInterface.h"
 #include "UObject/Object.h"
 #include "GameplayProcedure.generated.h"
 
-
+class UTimelineComponent;
 /**
  * 
  */
@@ -17,6 +18,7 @@ class DEVCORE_API UGameplayProcedure : public UObject, public IProcedureInterfac
 	GENERATED_BODY()
 
 public:
+	UGameplayProcedure();
 	virtual void NativeOnCreate() override;
 	virtual void NativeOnDestroy() override;
 	virtual void NativeOnRefresh() override;

@@ -83,7 +83,7 @@ public:
 	TArray<AWorldWidgetPoint*> WorldWidgetPoints;
 
 protected:
-	virtual void GenerateWorldWidget();
+	virtual void GenerateWorldWidgetPanel();
 
 public:
 	virtual void AddWorldWidgetPoint(AWorldWidgetPoint* InWorldWidgetPoint);

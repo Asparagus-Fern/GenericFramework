@@ -5,6 +5,7 @@
 
 #include "Debug/DebugType.h"
 #include "Event/CommonButtonEvent.h"
+#include "Procedure/ProcedureHandle.h"
 
 UCommonButton::UCommonButton(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -43,7 +44,6 @@ void UCommonButton::NativeOnHovered()
 {
 	Super::NativeOnHovered();
 	ResponseButtonEvent(ECommonButtonResponseEvent::OnHovered);
-	DEBUG_LOG(Debug_UI, Log, TEXT("Hovered"))
 }
 
 void UCommonButton::NativeOnUnhovered()
@@ -124,18 +124,21 @@ void UCommonButton::SetEvents(TArray<UCommonButtonEvent*> InEvents)
 
 void UCommonButton::ResponseButtonEvent(ECommonButtonResponseEvent InResponseEvent)
 {
+	if (Events.IsEmpty())
+	{
+		return;
+	}
+
+	UProcedureHandle* ProcedureHandle = NewObject<UProcedureHandle>(this);
+	TArray<FProcedureInterfaceHandle> ProcedureInterfaceHandles;
+
 	for (const auto& Event : Events)
 	{
 		if (Event->ResponseEvent.Contains(InResponseEvent))
 		{
-			if (Event->ResponseEvent.FindRef(InResponseEvent))
-			{
-				Event->NativeOnActived();
-			}
-			else
-			{
-				Event->NativeOnInactived();
-			}
+			ProcedureInterfaceHandles.Add(FProcedureInterfaceHandle(Event, Event->ResponseEvent.FindRef(InResponseEvent)));
 		}
 	}
+
+	ProcedureHandle->Handle(ProcedureInterfaceHandles);
 }

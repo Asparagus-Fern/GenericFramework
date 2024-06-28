@@ -30,7 +30,7 @@ public:
 	/* IManagerInterface  */
 public:
 	virtual FText GetManagerDisplayName() override;
-	
+
 	/* IProcedureInterface */
 public:
 	virtual int32 GetProcedureOrder() override { return -2; }
@@ -72,6 +72,9 @@ public:
 	UUserWidgetBase* OpenUserWidgetByClass(TSubclassOf<UUserWidgetBase> InWidgetClass);
 
 	UFUNCTION(BlueprintCallable)
+	void OpenUserWidgets(TArray<UUserWidgetBase*> InWidgets);
+
+	UFUNCTION(BlueprintCallable)
 	void OpenUserWidget(UUserWidgetBase* InWidget);
 
 	UFUNCTION(BlueprintCallable)
@@ -85,18 +88,15 @@ public:
 	UPROPERTY(BlueprintReadOnly, Transient)
 	UGameMenuSetting* GameMenu = nullptr;
 
+	UPROPERTY(BlueprintReadOnly)
+	TArray<FMenuGenerateInfo> MenuGenerateInfos;
+
 public:
 	UFUNCTION(BlueprintCallable)
 	void SwitchGameMenu(UGameMenuSetting* InGameMenuSetting);
 
-	UFUNCTION(BlueprintCallable)
-	void GenerateMenu(FMenuContainerInfo InMenuContainerInfo);
-
-public:
-	UPROPERTY(BlueprintReadOnly)
-	TArray<FMenuGenerateInfo> MenuGenerateInfos;
-
 protected:
 	FDelegateHandle MenuSelectionChangedHandle;
+	void GenerateMenu(FMenuContainerInfo InMenuContainerInfo);
 	void OnMenuSelectionChanged(FMenuInfo InMenuInfo, bool bSelection);
 };

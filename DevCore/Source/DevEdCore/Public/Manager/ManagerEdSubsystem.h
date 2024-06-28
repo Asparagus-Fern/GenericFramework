@@ -21,6 +21,8 @@ public:
 	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void Deinitialize() override;
+	static UManagerEdSubsystem* Get();
+	virtual UWorld* GetWorld() const override;
 
 protected:
 	FDelegateHandle LevelEditorCreatedHandle;

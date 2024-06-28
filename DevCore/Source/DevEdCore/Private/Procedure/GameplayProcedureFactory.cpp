@@ -3,6 +3,7 @@
 
 #include "Procedure/GameplayProcedureFactory.h"
 
+#include "Kismet2/KismetEditorUtilities.h"
 #include "Procedure/GameplayProcedure.h"
 
 #define LOCTEXT_NAMESPACE "UGameplayProcedureFactory"
@@ -14,10 +15,11 @@ UGameplayProcedureFactory::UGameplayProcedureFactory()
 	bPickClass = true;
 }
 
-UObject* UGameplayProcedureFactory::FactoryCreateNew(UClass* InClass, UObject* InParent, FName InName, EObjectFlags Flags, UObject* Context, FFeedbackContext* Warn)
+UObject* UGameplayProcedureFactory::FactoryCreateNew(UClass* InClass, UObject* InParent, FName InName, EObjectFlags Flags, UObject* Context, FFeedbackContext* Warn, FName CallingContext)
 {
 	if (IsValid(PickClass))
 	{
+		// FKismetEditorUtilities::CreateBlueprint(PickClass, InParent, InName, EBlueprintType::BPTYPE_Normal, UBlueprint::StaticClass(), UBlueprintGeneratedClass::StaticClass(), CallingContext);
 		return NewObject<UGameplayProcedure>(InParent, PickClass, InName, Flags);
 	}
 	else

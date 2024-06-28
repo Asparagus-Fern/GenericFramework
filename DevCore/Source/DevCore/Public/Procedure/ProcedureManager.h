@@ -40,7 +40,7 @@ public:
 	UPROPERTY(GlobalConfig, EditAnywhere, BlueprintReadOnly, meta=(Categories="Procedure"))
 	FGameplayTag DefaultProcedureTag;
 
-	UPROPERTY(GlobalConfig, EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(GlobalConfig, EditAnywhere, BlueprintReadWrite, meta=(Categories="Procedure"))
 	TMap<FGameplayTag, TSoftObjectPtr<UGameplayProcedure>> GameplayProcedureObjects;
 
 public:

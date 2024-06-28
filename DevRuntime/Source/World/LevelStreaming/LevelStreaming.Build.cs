@@ -20,7 +20,8 @@ public class LevelStreaming : ModuleRules
 				"CoreUObject",
 				"Engine",
 				"Slate",
-				"SlateCore"
+				"SlateCore",
+				"ScreenWidgetGeneration"
 			}
 		);
 	}

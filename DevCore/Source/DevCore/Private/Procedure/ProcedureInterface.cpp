@@ -11,3 +11,13 @@ void IProcedureInterface::NativeOnInactived()
 {
 	bIsActive = false;
 }
+
+void IProcedureInterface::RequestActivedFinish() const
+{
+	OnActivedFinish.Broadcast();
+}
+
+void IProcedureInterface::RequestInactivedFinish() const
+{
+	OnInactivedFinish.Broadcast();
+}

@@ -5,6 +5,7 @@
 
 #include "WorldWidget.h"
 #include "WorldWidgetManager.h"
+#include "Manager/ManagerGlobal.h"
 
 AWorldWidgetPoint::AWorldWidgetPoint(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)

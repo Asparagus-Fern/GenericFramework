@@ -6,6 +6,7 @@
 #include "Manager/ManagerGlobal.h"
 #include "Manager/ManagerSubsystem.h"
 #include "Procedure/GameplayProcedure.h"
+#include "Procedure/ProcedureHandle.h"
 #include "StaticFunctions/StaticFunctions_Object.h"
 
 #define LOCTEXT_NAMESPACE "UProcedureManager"
@@ -44,35 +45,57 @@ void UProcedureManager::NativeOnActived()
 void UProcedureManager::NativeOnInactived()
 {
 	Super::NativeOnInactived();
+
+	LastProcedureTag = FGameplayTag::EmptyTag;
+	CurrentProcedureTag = FGameplayTag::EmptyTag;
+
+	for (const auto& Procedure : GameplayProcedure)
+	{
+		Procedure.Value->NativeOnInactived();
+	}
+	GameplayProcedure.Reset();
 }
 
 void UProcedureManager::SwitchProcedure(FGameplayTag InProcedureTag, bool bForce)
 {
-	if (CurrentProcedureTag == InProcedureTag)
+	UProcedureHandle* ProcedureHandle = NewObject<UProcedureHandle>(this);
+	TArray<FProcedureInterfaceHandle> ProcedureInterfaceHandles;
+
+	if (CurrentProcedureTag.IsValid())
 	{
-		if (bForce)
+		if (CurrentProcedureTag == InProcedureTag)
 		{
-			UGameplayProcedure* CurrentGameplayProcedure = GetGameplayProcedure(InProcedureTag);
-			CurrentGameplayProcedure->NativeOnRefresh();
+			if (bForce)
+			{
+				UGameplayProcedure* CurrentGameplayProcedure = GetGameplayProcedure(InProcedureTag);
+				CurrentGameplayProcedure->NativeOnRefresh();
+				return;
+			}
+		}
+		else
+		{
+			if (IsValid(GetGameplayProcedure(CurrentProcedureTag)))
+			{
+				ProcedureInterfaceHandles.Add(FProcedureInterfaceHandle(GetGameplayProcedure(CurrentProcedureTag), false));
+			}
+
+			if (IsValid(GetGameplayProcedure(InProcedureTag)))
+			{
+				ProcedureInterfaceHandles.Add(FProcedureInterfaceHandle(GetGameplayProcedure(InProcedureTag), true));
+			}
 		}
 	}
 	else
 	{
-		UGameplayProcedure* EndGameplayProcedure = GetGameplayProcedure(InProcedureTag);
-		if (IsValid(EndGameplayProcedure))
+		if (IsValid(GetGameplayProcedure(InProcedureTag)))
 		{
-			EndGameplayProcedure->NativeOnInactived();
-		}
-
-		LastProcedureTag = CurrentProcedureTag;
-		CurrentProcedureTag = InProcedureTag;
-
-		UGameplayProcedure* BeginGameplayProcedure = GetGameplayProcedure(InProcedureTag);
-		if (IsValid(BeginGameplayProcedure))
-		{
-			BeginGameplayProcedure->NativeOnActived();
+			ProcedureInterfaceHandles.Add(FProcedureInterfaceHandle(GetGameplayProcedure(InProcedureTag), true));
 		}
 	}
+
+	LastProcedureTag = CurrentProcedureTag;
+	CurrentProcedureTag = InProcedureTag;
+	ProcedureHandle->Handle(ProcedureInterfaceHandles);
 }
 
 UGameplayProcedure* UProcedureManager::GetGameplayProcedure(FGameplayTag InProcedureTag)
@@ -91,6 +114,7 @@ UGameplayProcedure* UProcedureManager::GetGameplayProcedure(FGameplayTag InProce
 				UGameplayProcedure* LoadGameplayProcedure = FStaticFunctions_Object::LoadObject<UGameplayProcedure>(FoundGameplayProcedureClass);
 				GameplayProcedure.Add(InProcedureTag, LoadGameplayProcedure);
 				LoadGameplayProcedure->NativeOnCreate();
+				return LoadGameplayProcedure;
 			}
 			else
 			{

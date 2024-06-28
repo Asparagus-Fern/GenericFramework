@@ -2,6 +2,7 @@
 
 #include "Groups/CommonButtonGroupBase.h"
 
+UE_DEFINE_GAMEPLAY_TAG(TAG_UMG, "UMG");
 UE_DEFINE_GAMEPLAY_TAG(TAG_HUD, "HUD");
 UE_DEFINE_GAMEPLAY_TAG(TAG_Menu, "Menu");
 

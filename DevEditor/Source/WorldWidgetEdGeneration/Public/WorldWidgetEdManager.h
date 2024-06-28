@@ -79,10 +79,10 @@ public:
 	virtual void NativeOnDestroy() override;
 	virtual void NativeOnRefresh() override;
 
-	/* IProcedureInterface */
+	/* IManagerEdInterface */
 public:
-	virtual void NativeOnActived() override;
-	virtual void NativeOnInactived() override;
+	virtual void NativeOnEditorActived() override;
+	virtual void NativeOnEditorInactived() override;
 
 	/* UWorldWidgetEdManager */
 protected:
@@ -117,6 +117,6 @@ protected:
 	TMap<FLevelEditorViewportClient*, UWorldWidgetPanel*> EditorWorldWidgetPanelMapping;
 	virtual void ReCreateEditorWorldWidgetPanel();
 	virtual UEditorWorldWidgetPanel* CreateEditorWorldWidgetPanel(FLevelEditorViewportClient* InLevelEditorViewportClient);
-	virtual void ClearupEditorWorldWidgetPanel(FLevelEditorViewportClient* InLevelEditorViewportClient);
+	virtual void RemoveEditorWorldWidgetPanel(FLevelEditorViewportClient* InLevelEditorViewportClient);
 	virtual void CollectWorldWidgetPoints();
 };
