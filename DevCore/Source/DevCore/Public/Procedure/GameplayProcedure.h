@@ -12,7 +12,7 @@ class UTimelineComponent;
 /**
  * 
  */
-UCLASS(Blueprintable, BlueprintType)
+UCLASS(BlueprintType)
 class DEVCORE_API UGameplayProcedure : public UObject, public IProcedureInterface
 {
 	GENERATED_BODY()
