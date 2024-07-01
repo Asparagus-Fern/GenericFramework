@@ -136,7 +136,7 @@ void UCommonButton::ResponseButtonEvent(ECommonButtonResponseEvent InResponseEve
 	{
 		if (Event->ResponseEvent.Contains(InResponseEvent))
 		{
-			ProcedureInterfaceHandles.Add(FProcedureInterfaceHandle(Event, Event->ResponseEvent.FindRef(InResponseEvent)));
+			ProcedureInterfaceHandles.Add(FProcedureInterfaceHandle(DuplicateObject(Event, this), Event->ResponseEvent.FindRef(InResponseEvent)));
 		}
 	}
 

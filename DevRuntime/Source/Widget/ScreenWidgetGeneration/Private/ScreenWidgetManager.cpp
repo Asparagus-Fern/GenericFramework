@@ -140,6 +140,12 @@ void UScreenWidgetManager::OpenUserWidget(UUserWidgetBase* InWidget)
 
 void UScreenWidgetManager::CloseUserWidget(UUserWidgetBase* InWidget)
 {
+	if (!IsValid(InWidget))
+	{
+		DEBUG(Debug_UI, Error, TEXT("InWidget Is NULL"))
+		return;
+	}
+	
 	CloseUserWidgetBySlotTag(InWidget->SlotTag);
 }
 
@@ -192,7 +198,7 @@ void UScreenWidgetManager::SwitchGameMenu(UGameMenuSetting* InGameMenuSetting)
 	}
 }
 
-void UScreenWidgetManager::GenerateMenu(FMenuContainerInfo InMenuContainerInfo)
+void UScreenWidgetManager::GenerateMenu(const FMenuContainerInfo& InMenuContainerInfo)
 {
 	/* 如果从没生成过，创建菜单信息 */
 	if (!MenuGenerateInfos.Contains(InMenuContainerInfo))

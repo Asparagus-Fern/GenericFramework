@@ -26,13 +26,14 @@ enum class EGameplayProcedure : uint8
 };
 
 /**
- * 
+ * 流程处理句柄
  */
 struct DEVCORE_API FProcedureInterfaceHandle
 {
 public:
 	FProcedureInterfaceHandle();
 	FProcedureInterfaceHandle(IProcedureInterface* InInterface, bool InTargetActiveState);
+	
 
 public:
 	bool operator==(const FProcedureInterfaceHandle& Other) const
@@ -44,8 +45,11 @@ public:
 	{
 		return Interface == OtherInterface;
 	}
-	
+
 public:
+	/* 需要进行处理的类对象 */
 	IProcedureInterface* Interface;
+
+	/* 期望的激活状态 */
 	bool bTargetActiveState;
 };

@@ -35,7 +35,7 @@ void UProcedureManager::NativeOnActived()
 {
 	Super::NativeOnActived();
 
-	/* 游戏的开始 */
+	/* 游戏开始流程入口 */
 	if (DefaultProcedureTag.IsValid())
 	{
 		SwitchProcedure(DefaultProcedureTag);
@@ -51,7 +51,10 @@ void UProcedureManager::NativeOnInactived()
 
 	for (const auto& Procedure : GameplayProcedure)
 	{
-		Procedure.Value->NativeOnInactived();
+		if (Procedure.Value->GetIsActive())
+		{
+			Procedure.Value->NativeOnInactived();
+		}
 	}
 	GameplayProcedure.Reset();
 }
@@ -65,6 +68,7 @@ void UProcedureManager::SwitchProcedure(FGameplayTag InProcedureTag, bool bForce
 	{
 		if (CurrentProcedureTag == InProcedureTag)
 		{
+			/* 已经是指定流程但强制刷新 */
 			if (bForce)
 			{
 				UGameplayProcedure* CurrentGameplayProcedure = GetGameplayProcedure(InProcedureTag);
@@ -74,11 +78,13 @@ void UProcedureManager::SwitchProcedure(FGameplayTag InProcedureTag, bool bForce
 		}
 		else
 		{
+			/* 退出上一个流程 */
 			if (IsValid(GetGameplayProcedure(CurrentProcedureTag)))
 			{
 				ProcedureInterfaceHandles.Add(FProcedureInterfaceHandle(GetGameplayProcedure(CurrentProcedureTag), false));
 			}
 
+			/* 进入下一个流程 */
 			if (IsValid(GetGameplayProcedure(InProcedureTag)))
 			{
 				ProcedureInterfaceHandles.Add(FProcedureInterfaceHandle(GetGameplayProcedure(InProcedureTag), true));
@@ -100,12 +106,14 @@ void UProcedureManager::SwitchProcedure(FGameplayTag InProcedureTag, bool bForce
 
 UGameplayProcedure* UProcedureManager::GetGameplayProcedure(FGameplayTag InProcedureTag)
 {
+	/* 返回缓存 */
 	if (GameplayProcedure.Contains(InProcedureTag))
 	{
 		return GameplayProcedure.FindRef(InProcedureTag);
 	}
 	else
 	{
+		/* 软引用加载 */
 		if (GameplayProcedureObjects.Contains(InProcedureTag))
 		{
 			const TSoftObjectPtr<UGameplayProcedure> FoundGameplayProcedureClass = GameplayProcedureObjects.FindRef(InProcedureTag);

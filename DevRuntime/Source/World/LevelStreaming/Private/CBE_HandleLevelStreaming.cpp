@@ -9,11 +9,27 @@
 void UCBE_HandleLevelStreaming::NativeOnActived()
 {
 	Super::NativeOnActived();
-	GetManager<ULevelStreamingManager>()->SetLevelsVisibility(HandleLevels, bLevelVisibility, FOnOnceFinish(), FOnFinish());
+
+	FOnFinish OnFinish;
+	OnFinish.BindDynamic(this, &UCBE_HandleLevelStreaming::OnActivateLevelsFinish);
+	GetManager<ULevelStreamingManager>()->SetLevelsVisibility(ActivateLevels, true, FOnOnceFinish(), OnFinish);
 }
 
 void UCBE_HandleLevelStreaming::NativeOnInactived()
 {
 	Super::NativeOnInactived();
-	GetManager<ULevelStreamingManager>()->SetLevelsVisibility(HandleLevels, bLevelVisibility, FOnOnceFinish(), FOnFinish());
+
+	FOnFinish OnFinish;
+	OnFinish.BindDynamic(this, &UCBE_HandleLevelStreaming::OnInactivateLevelsFinish);
+	GetManager<ULevelStreamingManager>()->SetLevelsVisibility(InactivateLevels, false, FOnOnceFinish(), OnFinish);
+}
+
+void UCBE_HandleLevelStreaming::OnActivateLevelsFinish()
+{
+	RequestActivateFinish();
+}
+
+void UCBE_HandleLevelStreaming::OnInactivateLevelsFinish()
+{
+	RequestInactivateFinish();
 }

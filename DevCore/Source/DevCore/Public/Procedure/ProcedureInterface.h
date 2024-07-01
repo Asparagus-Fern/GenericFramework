@@ -25,29 +25,29 @@ class DEVCORE_API IProcedureInterface : public IProcedureBaseInterface
 {
 	GENERATED_BODY()
 
-	/* IProcedureInterface */
 public:
-	UFUNCTION(BlueprintNativeEvent, Category="Procedure Interface")
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Procedure Interface")
 	void OnActived();
 	virtual void NativeOnActived();
 
-	UFUNCTION(BlueprintNativeEvent, Category="Procedure Interface")
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Procedure Interface")
 	void OnInactived();
 	virtual void NativeOnInactived();
-
-public:
-	FProcedureDelegate OnActivedFinish;
-	void RequestActivedFinish() const;
-
-	FProcedureDelegate OnInactivedFinish;
-	void RequestInactivedFinish() const;
 
 public:
 	virtual int32 GetProcedureOrder() { return 0; }
 	virtual bool GetIsAsync() { return bIsAsync; }
 	virtual bool GetIsActive() { return bIsActive; }
+	FProcedureDelegate GetActivateFinishDelegate() { return OnActivedFinish; }
+	FProcedureDelegate GetInactivateFinishDelegate() { return OnInactivedFinish; }
 
 protected:
 	bool bIsAsync = false;
 	bool bIsActive = false;
+
+	FProcedureDelegate OnActivedFinish;
+	FProcedureDelegate OnInactivedFinish;
+
+	void RequestActivateFinish() const;
+	void RequestInactivateFinish() const;
 };

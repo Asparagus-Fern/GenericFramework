@@ -97,6 +97,6 @@ public:
 
 protected:
 	FDelegateHandle MenuSelectionChangedHandle;
-	void GenerateMenu(FMenuContainerInfo InMenuContainerInfo);
+	void GenerateMenu(const FMenuContainerInfo& InMenuContainerInfo);
 	void OnMenuSelectionChanged(FMenuInfo InMenuInfo, bool bSelection);
 };
