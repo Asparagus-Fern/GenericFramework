@@ -13,7 +13,7 @@
 UCLASS()
 class SCREENWIDGETGENERATION_API UTagNameSlot : public UInstanceSlot
 {
-	GENERATED_BODY()
+	GENERATED_UCLASS_BODY()
 
 protected:
 	virtual void ReleaseSlateResources(bool bReleaseChildren) override;

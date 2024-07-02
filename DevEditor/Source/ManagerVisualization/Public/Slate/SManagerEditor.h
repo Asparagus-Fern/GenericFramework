@@ -11,7 +11,7 @@
 /**
  * 
  */
-class MANAGERVISUALIZATION_API SManagerEditor : public SCompoundWidget, public IProcedureInterface
+class MANAGERVISUALIZATION_API SManagerEditor : public SCompoundWidget, public IProcedureBaseInterface
 {
 public:
 	SLATE_BEGIN_ARGS(SManagerEditor)

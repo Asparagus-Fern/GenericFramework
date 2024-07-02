@@ -5,10 +5,6 @@
 
 #define LOCTEXT_NAMESPACE "UCoreManager"
 
-UCoreManager::UCoreManager()
-{
-}
-
 #if WITH_EDITOR
 
 void UCoreManager::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
@@ -34,8 +30,8 @@ void UCoreManager::NativeOnCreate()
 	GConfig->Flush(false, *GetSaveIniPath());
 	LoadConfig(GetClass(), *GetSaveIniPath());
 
-	IProcedureInterface::NativeOnCreate();
-	IProcedureInterface::Execute_OnCreate(this);
+	IProcedureBaseInterface::NativeOnCreate();
+	IProcedureBaseInterface::Execute_OnCreate(this);
 
 	TryUpdateDefaultConfigFile();
 	DEBUG(Debug_Manager, Log, TEXT("On Created : %s"), *GetName());
@@ -43,16 +39,16 @@ void UCoreManager::NativeOnCreate()
 
 void UCoreManager::NativeOnRefresh()
 {
-	IProcedureInterface::NativeOnRefresh();
-	IProcedureInterface::Execute_OnRefresh(this);
+	IProcedureBaseInterface::NativeOnRefresh();
+	IProcedureBaseInterface::Execute_OnRefresh(this);
 }
 
 void UCoreManager::NativeOnDestroy()
 {
 	TryUpdateDefaultConfigFile();
 
-	IProcedureInterface::NativeOnDestroy();
-	IProcedureInterface::Execute_OnDestroy(this);
+	IProcedureBaseInterface::NativeOnDestroy();
+	IProcedureBaseInterface::Execute_OnDestroy(this);
 
 	DEBUG(Debug_Manager, Log, TEXT("On Destroy : %s"), *GetName());
 }

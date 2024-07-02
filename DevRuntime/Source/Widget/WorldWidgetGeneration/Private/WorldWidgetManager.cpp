@@ -22,12 +22,12 @@ UWorldWidgetPanel::UWorldWidgetPanel(const FObjectInitializer& ObjectInitializer
 
 void UWorldWidgetPanel::NativeOnCreate()
 {
-	IProcedureInterface::NativeOnCreate();
+	IProcedureBaseInterface::NativeOnCreate();
 }
 
 void UWorldWidgetPanel::NativeOnRefresh()
 {
-	IProcedureInterface::NativeOnRefresh();
+	IProcedureBaseInterface::NativeOnRefresh();
 
 	if (!IsValid(Panel) || !IsValid(GetWorld()))
 	{
@@ -73,7 +73,7 @@ void UWorldWidgetPanel::NativeOnRefresh()
 
 void UWorldWidgetPanel::NativeOnDestroy()
 {
-	IProcedureInterface::NativeOnDestroy();
+	IProcedureBaseInterface::NativeOnDestroy();
 
 	for (const auto& WorldWidget : WorldWidgets)
 	{

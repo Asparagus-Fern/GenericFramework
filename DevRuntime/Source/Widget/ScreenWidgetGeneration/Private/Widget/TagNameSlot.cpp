@@ -3,6 +3,13 @@
 #include "Widget/TagNameSlot.h"
 
 #include "ScreenWidgetManager.h"
+#include "Manager/ManagerGlobal.h"
+
+UTagNameSlot::UTagNameSlot(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
+{
+	SetClipping(EWidgetClipping::ClipToBounds);
+}
 
 void UTagNameSlot::ReleaseSlateResources(bool bReleaseChildren)
 {

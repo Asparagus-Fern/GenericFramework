@@ -16,7 +16,7 @@ class CAMERASYSTEM_API UCameraHandle_Default : public UCameraHandle
 
 public:
 	UCameraHandle_Default();
-	virtual void HandleSwitchToCameraPoint_Implementation(APlayerController* InPlayerController, ACameraPoint* InCameraPoint) override;
+	virtual void HandleSwitchToCameraPoint_Implementation(APlayerController* InPlayerController, ACameraPointBase* InCameraPoint) override;
 	virtual void OnSwitchToCameraPointFinish_Implementation() override;
 
 public:
@@ -25,5 +25,5 @@ public:
 
 protected:
 	UPROPERTY()
-	ACameraPoint* PreviewCameraPoint = nullptr;
+	ACameraPointBase* PreviewCameraPoint = nullptr;
 };

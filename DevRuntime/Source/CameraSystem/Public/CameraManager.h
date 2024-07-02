@@ -7,7 +7,7 @@
 #include "Manager/CoreManager.h"
 #include "CameraManager.generated.h"
 
-class ACameraPoint;
+class ACameraPointBase;
 
 /**
  * 
@@ -31,12 +31,12 @@ public:
 
 	/* UCameraManager */
 public:
-	virtual void AddCameraPoint(FGameplayTag InCameraTag, ACameraPoint* InCameraPoint);
+	virtual void AddCameraPoint(FGameplayTag InCameraTag, ACameraPointBase* InCameraPoint);
 	virtual void RemoveCameraPoint(FGameplayTag InCameraTag);
 
 public:
 	UFUNCTION(BlueprintPure)
-	ACameraPoint* GetCameraPoint(FGameplayTag InCameraTag) const;
+	ACameraPointBase* GetCameraPoint(FGameplayTag InCameraTag) const;
 
 	UFUNCTION(BlueprintCallable)
 	void SwitchToCamera(FGameplayTag InCameraTag);
@@ -46,5 +46,5 @@ public:
 
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	TMap<FGameplayTag, ACameraPoint*> CameraPoints;
+	TMap<FGameplayTag, ACameraPointBase*> CameraPoints;
 };

@@ -3,11 +3,11 @@
 
 #include "CameraEdManager.h"
 
-#include "CameraPoint.h"
 #include "CameraSystemType.h"
-#include "LevelEditor.h"
 #include "LevelEditorSubsystem.h"
 #include "LevelEditorViewport.h"
+#include "CameraPoint/CameraPointBase.h"
+#include "Manager/ManagerEdGlobal.h"
 
 #define LOCTEXT_NAMESPACE "UCameraEdManager"
 
@@ -48,9 +48,9 @@ bool UCameraEdManager::DoesSupportWorldType(EWorldType::Type InWorldType)
 	return Super::DoesSupportWorldType(InWorldType) || InWorldType == EWorldType::Editor;
 }
 
-void UCameraEdManager::OnCopyViewportCamera(ACameraPoint* InCameraPoint)
+void UCameraEdManager::OnCopyViewportCamera(ACameraPointBase* InCameraPoint)
 {
-	if (GetWorld()->WorldType == EWorldType::Editor)
+	if (!IsValid(GetWorld()) && IsValid(FManagerEdGlobal::GetEditorWorld()))
 	{
 		InCameraPoint->Modify();
 		InCameraPoint->SetActorLocation(GCurrentLevelEditingViewportClient->GetViewLocation());
@@ -60,7 +60,7 @@ void UCameraEdManager::OnCopyViewportCamera(ACameraPoint* InCameraPoint)
 	}
 }
 
-void UCameraEdManager::OnCameraPointPilotStateChanged(ACameraPoint* InCameraPoint, bool bIsPilot)
+void UCameraEdManager::OnCameraPointPilotStateChanged(ACameraPointBase* InCameraPoint, bool bIsPilot)
 {
 	ULevelEditorSubsystem* LevelEditorSubsystem = GEditor->GetEditorSubsystem<ULevelEditorSubsystem>();
 	if (bIsPilot)

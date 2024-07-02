@@ -13,7 +13,7 @@ DECLARE_MULTICAST_DELEGATE(FProcedureDelegate);
  * 
  */
 UINTERFACE(MinimalAPI)
-class UProcedureInterface : public UProcedureBaseInterface
+class UProcedureInterface : public UInterface
 {
 	GENERATED_BODY()
 };
@@ -21,7 +21,7 @@ class UProcedureInterface : public UProcedureBaseInterface
 /**
  * 
  */
-class DEVCORE_API IProcedureInterface : public IProcedureBaseInterface
+class DEVCORE_API IProcedureInterface : public IInterface
 {
 	GENERATED_BODY()
 

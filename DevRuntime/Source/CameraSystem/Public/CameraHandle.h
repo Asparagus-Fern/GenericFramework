@@ -7,7 +7,7 @@
 #include "UObject/Object.h"
 #include "CameraHandle.generated.h"
 
-class ACameraPoint;
+class ACameraPointBase;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSwitchCameraFinish);
 
@@ -28,7 +28,7 @@ public:
 
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	void HandleSwitchToCameraPoint(APlayerController* InPlayerController, ACameraPoint* InCameraPoint);
+	void HandleSwitchToCameraPoint(APlayerController* InPlayerController, ACameraPointBase* InCameraPoint);
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void OnSwitchToCameraPointFinish();

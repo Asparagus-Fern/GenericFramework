@@ -14,12 +14,14 @@
  * 
  */
 UCLASS(Abstract, Config = Manager, DefaultConfig)
-class DEVCORE_API UCoreManager : public UObject, public FTickableGameObject, public IConfigInterface, public IProcedureInterface, public IManagerInterface
+class DEVCORE_API UCoreManager : public UObject
+                                 , public FTickableGameObject
+                                 , public IConfigInterface
+                                 , public IProcedureBaseInterface
+                                 , public IProcedureInterface
+                                 , public IManagerInterface
 {
 	GENERATED_BODY()
-
-public:
-	UCoreManager();
 
 	/* UObject */
 public:

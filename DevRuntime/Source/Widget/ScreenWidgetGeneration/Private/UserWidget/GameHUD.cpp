@@ -2,3 +2,8 @@
 
 
 #include "UserWidget/GameHUD.h"
+
+int32 UGameHUD::GetViewportZOrder() const
+{
+	return ViewportZOrder;
+}

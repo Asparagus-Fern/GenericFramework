@@ -7,7 +7,7 @@
 #include "GameplayTagContainer.h"
 #include "ThirdPersonPawn.generated.h"
 
-class ACameraPoint;
+class ACameraPointBase;
 class USphereComponent;
 class UCommonSpringArmComponent;
 class UCameraComponent;
@@ -50,8 +50,8 @@ public:
 
 	/* FCameraPointDelegates */
 public:
-	virtual void PreSwitchCamera(ACameraPoint* InCameraPoint);
-	virtual void PostSwitchCamera(ACameraPoint* InCameraPoint);
+	virtual void PreSwitchCamera(ACameraPointBase* InCameraPoint);
+	virtual void PostSwitchCamera(ACameraPointBase* InCameraPoint);
 
 	/* AThirdPersonPawn */
 protected:

@@ -79,14 +79,6 @@ DerivedDataCache/*
 /Plugins/**/Intermediate/
 /Plugins/**/Build/
 
-*/iVisual/
-
-
-/.idea/.idea.DevProject/.idea/vcs.xml
-/.idea/.idea.DevProject/.idea/indexLayout.xml
-/.idea/.idea.DevProject/.idea/projectSettingsUpdater.xml
-/.idea/.idea.DevProject/.idea/workspace.xml
 Movies
-.idea
-RiderLink
+Marketplace
 

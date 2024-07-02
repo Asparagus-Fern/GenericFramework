@@ -12,19 +12,19 @@ UGameplayProcedure::UGameplayProcedure()
 
 void UGameplayProcedure::NativeOnCreate()
 {
-	IProcedureInterface::NativeOnCreate();
+	IProcedureBaseInterface::NativeOnCreate();
 	Execute_OnCreate(this);
 }
 
 void UGameplayProcedure::NativeOnDestroy()
 {
-	IProcedureInterface::NativeOnDestroy();
+	IProcedureBaseInterface::NativeOnDestroy();
 	Execute_OnDestroy(this);
 }
 
 void UGameplayProcedure::NativeOnRefresh()
 {
-	IProcedureInterface::NativeOnRefresh();
+	IProcedureBaseInterface::NativeOnRefresh();
 	Execute_OnRefresh(this);
 }
 

@@ -3,11 +3,6 @@
 
 #include "Pawn/SmartCityPawn.h"
 
-#include "CameraPoint.h"
-#include "CameraSystemType.h"
-#include "Camera/CameraComponent.h"
-#include "Component/CommonSpringArmComponent.h"
-
 
 ASmartCityPawn::ASmartCityPawn()
 {

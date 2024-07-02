@@ -14,7 +14,7 @@ class UCommonButtonEvent;
  * 
  */
 UCLASS()
-class SCREENWIDGETGENERATION_API UCommonButton : public UCommonButtonBase, public IUserWidgetInterface
+class SCREENWIDGETGENERATION_API UCommonButton : public UCommonButtonBase, public IUserWidgetInterface, public IProcedureBaseInterface
 {
 	GENERATED_BODY()
 
@@ -23,6 +23,8 @@ public:
 	UCommonButton(const FObjectInitializer& ObjectInitializer);
 	virtual void NativePreConstruct() override;
 	virtual void NativeConstruct() override;
+	virtual void NativeDestruct() override;
+	
 	virtual void NativeOnHovered() override;
 	virtual void NativeOnUnhovered() override;
 	virtual void NativeOnClicked() override;

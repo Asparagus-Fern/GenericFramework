@@ -4,9 +4,9 @@
 #include "Pawn/ThirdPersonPawn.h"
 
 #include "CameraManager.h"
-#include "CameraPoint.h"
 #include "CameraSystemType.h"
 #include "Camera/CameraComponent.h"
+#include "CameraPoint/CameraPointBase.h"
 #include "Component/CommonSpringArmComponent.h"
 #include "Components/SphereComponent.h"
 
@@ -56,10 +56,10 @@ UCameraComponent* AThirdPersonPawn::GetActiveCameraComponent() const
 
 void AThirdPersonPawn::AddLocation_Implementation(FVector2D InValue)
 {
-	const float CameraHeight = GetPlayerController()->PlayerCameraManager->GetCameraLocation().Z - GetActorLocation().Z;
-	const float TargetArmLength = CommonSpringArmComponent->TargetArmLength;
-	float Degree = (180.0) / UE_DOUBLE_PI * FMath::Asin(CameraHeight / TargetArmLength);
-	Degree = FMath::GetMappedRangeValueClamped(FVector2D(-90.f, 90.f), FVector2D(0.f, 90.f), Degree);
+	// const float CameraHeight = GetPlayerController()->PlayerCameraManager->GetCameraLocation().Z - GetActorLocation().Z;
+	// const float TargetArmLength = CommonSpringArmComponent->TargetArmLength;
+	// float Degree = (180.0) / UE_DOUBLE_PI * FMath::Asin(CameraHeight / TargetArmLength);
+	// Degree = FMath::GetMappedRangeValueClamped(FVector2D(-90.f, 90.f), FVector2D(0.f, 90.f), Degree);
 
 	Super::AddLocation_Implementation(FVector2D(InValue.X * CommonSpringArmComponent->TargetArmLength, InValue.Y * CommonSpringArmComponent->TargetArmLength));
 }
@@ -86,13 +86,19 @@ void AThirdPersonPawn::RefreshTransform_Implementation()
 	Super::RefreshTransform_Implementation();
 }
 
-void AThirdPersonPawn::PreSwitchCamera(ACameraPoint* InCameraPoint)
+void AThirdPersonPawn::PreSwitchCamera(ACameraPointBase* InCameraPoint)
 {
 }
 
-void AThirdPersonPawn::PostSwitchCamera(ACameraPoint* InCameraPoint)
+void AThirdPersonPawn::PostSwitchCamera(ACameraPointBase* InCameraPoint)
 {
-	CameraCacheComponent = DuplicateObject<UCameraComponent>(InCameraPoint->CameraComponent, this);
+	if (!IsValid(InCameraPoint->GetCameraComponent()))
+	{
+		DEBUG(Debug_Camera, Error, TEXT("InCameraPoint CameraComponent Is NULL"))
+		return;
+	}
+
+	CameraCacheComponent = DuplicateObject<UCameraComponent>(InCameraPoint->GetCameraComponent(), this);
 	CameraCacheComponent->AttachToComponent(CommonSpringArmComponent, FAttachmentTransformRules::SnapToTargetIncludingScale);
 
 	CameraComponent->SetActive(false);

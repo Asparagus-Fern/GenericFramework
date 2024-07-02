@@ -9,7 +9,7 @@
 
 // This class does not need to be modified.
 UINTERFACE()
-class UUserWidgetInterface : public UProcedureBaseInterface
+class UUserWidgetInterface : public UInterface
 {
 	GENERATED_BODY()
 };
@@ -17,7 +17,7 @@ class UUserWidgetInterface : public UProcedureBaseInterface
 /**
  * 
  */
-class SCREENWIDGETGENERATION_API IUserWidgetInterface : public IProcedureBaseInterface
+class SCREENWIDGETGENERATION_API IUserWidgetInterface : public IInterface
 {
 	GENERATED_BODY()
 

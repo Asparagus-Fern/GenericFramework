@@ -34,10 +34,16 @@ void UCommonButton::NativeConstruct()
 {
 	Super::NativeConstruct();
 
+	NativeOnOpen();
 	if (IsValid(GetRootWidget()))
 	{
 		GetRootWidget()->SetVisibility(bEnableInteraction ? ESlateVisibility::SelfHitTestInvisible : ESlateVisibility::HitTestInvisible);
 	}
+}
+
+void UCommonButton::NativeDestruct()
+{
+	Super::NativeDestruct();
 }
 
 void UCommonButton::NativeOnHovered()
@@ -96,20 +102,20 @@ void UCommonButton::NativeOnClose()
 
 void UCommonButton::NativeOnCreate()
 {
-	IUserWidgetInterface::NativeOnCreate();
-	IUserWidgetInterface::Execute_OnCreate(this);
+	IProcedureBaseInterface::NativeOnCreate();
+	IProcedureBaseInterface::Execute_OnCreate(this);
 }
 
 void UCommonButton::NativeOnRefresh()
 {
-	IUserWidgetInterface::NativeOnRefresh();
-	IUserWidgetInterface::Execute_OnRefresh(this);
+	IProcedureBaseInterface::NativeOnRefresh();
+	IProcedureBaseInterface::Execute_OnRefresh(this);
 }
 
 void UCommonButton::NativeOnDestroy()
 {
-	IUserWidgetInterface::NativeOnDestroy();
-	IUserWidgetInterface::Execute_OnDestroy(this);
+	IProcedureBaseInterface::NativeOnDestroy();
+	IProcedureBaseInterface::Execute_OnDestroy(this);
 }
 
 TArray<UCommonButtonEvent*> UCommonButton::GetEvents() const

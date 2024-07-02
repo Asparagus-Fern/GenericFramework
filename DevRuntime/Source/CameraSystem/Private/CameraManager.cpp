@@ -4,8 +4,8 @@
 #include "CameraManager.h"
 
 #include "CameraHandle.h"
-#include "CameraPoint.h"
 #include "CameraSystemType.h"
+#include "CameraPoint/CameraPointBase.h"
 
 #define LOCTEXT_NAMESPACE "UCoreManager"
 
@@ -30,7 +30,7 @@ void UCameraManager::NativeOnInactived()
 	CameraPoints.Reset();
 }
 
-void UCameraManager::AddCameraPoint(FGameplayTag InCameraTag, ACameraPoint* InCameraPoint)
+void UCameraManager::AddCameraPoint(FGameplayTag InCameraTag, ACameraPointBase* InCameraPoint)
 {
 	if (InCameraTag.IsValid())
 	{
@@ -43,7 +43,7 @@ void UCameraManager::RemoveCameraPoint(FGameplayTag InCameraTag)
 	CameraPoints.Remove(InCameraTag);
 }
 
-ACameraPoint* UCameraManager::GetCameraPoint(const FGameplayTag InCameraTag) const
+ACameraPointBase* UCameraManager::GetCameraPoint(const FGameplayTag InCameraTag) const
 {
 	if (CameraPoints.Contains(InCameraTag))
 	{
@@ -61,7 +61,7 @@ void UCameraManager::SwitchToCamera(FGameplayTag InCameraTag)
 		return;
 	}
 
-	if (ACameraPoint* FoundCameraPoint = GetCameraPoint(InCameraTag))
+	if (ACameraPointBase* FoundCameraPoint = GetCameraPoint(InCameraTag))
 	{
 		for (FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)
 		{
@@ -87,7 +87,7 @@ void UCameraManager::SwitchToCameraByPlayerController(FGameplayTag InCameraTag, 
 	}
 
 	/* Switch */
-	if (ACameraPoint* FoundCameraPoint = CameraPoints.FindRef(InCameraTag))
+	if (ACameraPointBase* FoundCameraPoint = CameraPoints.FindRef(InCameraTag))
 	{
 		FCameraSystemDelegates::PreSwitchCamera.Broadcast(FoundCameraPoint);
 

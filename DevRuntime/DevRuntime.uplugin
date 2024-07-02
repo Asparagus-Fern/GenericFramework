@@ -23,7 +23,7 @@
       "Enabled": true
     },
     {
-      "Name": "Niagara",
+      "Name": "DBTween",
       "Enabled": true
     },
     {
@@ -34,11 +34,6 @@
   "Modules": [
     {
       "Name": "SlateWidgetGeneration",
-      "Type": "Runtime",
-      "LoadingPhase": "Default"
-    },
-    {
-      "Name": "InputSystem",
       "Type": "Runtime",
       "LoadingPhase": "Default"
     },

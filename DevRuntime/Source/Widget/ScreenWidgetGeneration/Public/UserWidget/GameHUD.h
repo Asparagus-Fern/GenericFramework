@@ -13,4 +13,12 @@ UCLASS(Abstract)
 class SCREENWIDGETGENERATION_API UGameHUD : public UUserWidgetBase
 {
 	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, Getter, BlueprintGetter="GetViewportZOrder")
+	int32 ViewportZOrder = 0;
+
+public:
+	UFUNCTION(BlueprintPure)
+	int32 GetViewportZOrder() const;
 };

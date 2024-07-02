@@ -3,9 +3,7 @@
 
 #include "Handle/CameraHandle_Default.h"
 
-#include "CameraPoint.h"
-#include "CameraSystemType.h"
-#include "Camera/CameraActor.h"
+#include "CameraPoint/CameraPointBase.h"
 
 UCameraHandle_Default::UCameraHandle_Default()
 {
@@ -15,7 +13,7 @@ UCameraHandle_Default::UCameraHandle_Default()
 	ViewTargetTransitionParams.bLockOutgoing = false;
 }
 
-void UCameraHandle_Default::HandleSwitchToCameraPoint_Implementation(APlayerController* InPlayerController, ACameraPoint* InCameraPoint)
+void UCameraHandle_Default::HandleSwitchToCameraPoint_Implementation(APlayerController* InPlayerController, ACameraPointBase* InCameraPoint)
 {
 	if (!InPlayerController)
 	{
@@ -34,7 +32,7 @@ void UCameraHandle_Default::HandleSwitchToCameraPoint_Implementation(APlayerCont
 	/* Create Camera Point For Blend View Target */
 	if (!IsValid(PreviewCameraPoint))
 	{
-		PreviewCameraPoint = GetWorld()->SpawnActor<ACameraPoint>();
+		PreviewCameraPoint = GetWorld()->SpawnActor<ACameraPointBase>();
 		PreviewCameraPoint->SetActorLabel("CameraPoint_Preview");
 	}
 

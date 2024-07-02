@@ -3,6 +3,7 @@
 
 #include "ScreenWidgetManager.h"
 
+#include "Animation/WidgetAnimationEvent.h"
 #include "DataAsset/GameMenuSetting.h"
 #include "Group/CommonButtonGroup.h"
 #include "StaticFunctions/StaticFunctions_Object.h"
@@ -79,7 +80,7 @@ void UScreenWidgetManager::CreateGameHUD()
 
 		TSubclassOf<UGameHUD> LoadHUDClass = FStaticFunctions_Object::LoadClass<UGameHUD>(GameHUDClass);
 		UGameHUD* NewHUD = CreateWidget<UGameHUD>(GetWorld(), LoadHUDClass);
-		NewHUD->AddToViewport(NewHUD->ZOrder);
+		NewHUD->AddToViewport(NewHUD->GetViewportZOrder());
 	}
 
 	FScreenWidgetDelegates::OnHUDCreated.Broadcast();
@@ -121,20 +122,28 @@ void UScreenWidgetManager::OpenUserWidget(UUserWidgetBase* InWidget)
 		UUserWidgetBase* OldWidget = GetSlotWidget(SlotTag);
 		if (IsValid(OldWidget))
 		{
-			OldWidget->NativeOnClose();
-			Slot->RemoveChild(OldWidget);
-			SlotWidgets.Remove(OldWidget->SlotTag);
-			FScreenWidgetDelegates::OnWidgetClose.Broadcast(OldWidget);
+			/* 如果是在同一个Slot，在上一个Widget关闭之后，再打开新的Widget */
+			if (OldWidget->SlotTag == InWidget->SlotTag)
+			{
+				FDelegateHandle WidgetCloseHandle = FScreenWidgetDelegates::OnWidgetClose.AddLambda([&WidgetCloseHandle, this, &Slot, &SlotTag, &InWidget](UUserWidgetBase*)
+					{
+						FScreenWidgetDelegates::OnWidgetClose.Remove(WidgetCloseHandle);
+
+						SlotWidgets.Add(SlotTag, InWidget);
+						Slot->SetContent(InWidget);
+						FScreenWidgetDelegates::OnWidgetOpen.Broadcast(InWidget);
+					}
+				);
+
+				return;
+			}
+
+			CloseUserWidgetBySlotTag(OldWidget->SlotTag);
 		}
 
-		/* Open New Widget */
-		if (IsValid(InWidget))
-		{
-			SlotWidgets.Add(SlotTag, InWidget);
-			Slot->SetContent(InWidget);
-			InWidget->NativeOnOpen();
-			FScreenWidgetDelegates::OnWidgetOpen.Broadcast(InWidget);
-		}
+		SlotWidgets.Add(SlotTag, InWidget);
+		Slot->SetContent(InWidget);
+		FScreenWidgetDelegates::OnWidgetOpen.Broadcast(InWidget);
 	}
 }
 
@@ -145,7 +154,7 @@ void UScreenWidgetManager::CloseUserWidget(UUserWidgetBase* InWidget)
 		DEBUG(Debug_UI, Error, TEXT("InWidget Is NULL"))
 		return;
 	}
-	
+
 	CloseUserWidgetBySlotTag(InWidget->SlotTag);
 }
 
@@ -163,9 +172,24 @@ void UScreenWidgetManager::CloseUserWidgetBySlotTag(FGameplayTag InSlotTag)
 		UUserWidgetBase* RemoveWidget = SlotWidgets.FindRef(InSlotTag);
 		if (IsValid(RemoveWidget))
 		{
-			RemoveWidget->NativeOnClose();
-			Slot->RemoveChild(RemoveWidget);
-			SlotWidgets.Remove(InSlotTag);
+			/* 无动画事件时，直接从槽内移除 */
+			if (!RemoveWidget->HasAnimationEvent())
+			{
+				Slot->RemoveChild(RemoveWidget);
+				SlotWidgets.Remove(InSlotTag);
+				FScreenWidgetDelegates::OnWidgetClose.Broadcast(RemoveWidget);
+			}
+			else
+			{
+				/* 如果有动画事件，等待 UWidgetAnimationEvent::RequestAnimationFinish 后再从Slot中移除 */
+				RemoveWidget->GetAnimationEvent()->GetOnAnimationFinishDelegate().AddLambda([this, &Slot, &InSlotTag, &RemoveWidget]()
+					{
+						Slot->RemoveChild(RemoveWidget);
+						SlotWidgets.Remove(InSlotTag);
+						FScreenWidgetDelegates::OnWidgetClose.Broadcast(RemoveWidget);
+					}
+				);
+			}
 		}
 	}
 }
@@ -252,9 +276,7 @@ void UScreenWidgetManager::GenerateMenu(const FMenuContainerInfo& InMenuContaine
 						MenuContainer->ConstructMenuStyle(MenuStyle);
 						MenuStyle->NativeConstructMenuStyle(MenuInfo);
 
-						/* Call On Open */
 						MenuStyleArr.Add(MenuStyle);
-						MenuStyle->NativeOnOpen();
 					}
 				}
 
@@ -285,14 +307,14 @@ void UScreenWidgetManager::OnMenuSelectionChanged(FMenuInfo InMenuInfo, bool bSe
 		{
 			FoundMenuGenerateInfo->CommonButtonGroup->DeselectAll();
 
-			FoundMenuGenerateInfo->CommonButtonGroup->ForEach([](UCommonButtonBase& Button, int32 Index)
-				{
-					if (UMenuStyle* MenuStyle = Cast<UMenuStyle>(&Button))
-					{
-						MenuStyle->NativeOnClose();
-					}
-				}
-			);
+			// FoundMenuGenerateInfo->CommonButtonGroup->ForEach([](UCommonButtonBase& Button, int32 Index)
+			// 	{
+			// 		if (UMenuStyle* MenuStyle = Cast<UMenuStyle>(&Button))
+			// 		{
+			// 			MenuStyle->NativeOnClose();
+			// 		}
+			// 	}
+			// );
 
 			if (IsValid(FoundMenuGenerateInfo->MenuContainerInfo.MenuContainer))
 			{

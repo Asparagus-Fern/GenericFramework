@@ -9,29 +9,56 @@
 #include "UserWidget/Base/UserWidgetType.h"
 #include "UserWidgetBase.generated.h"
 
+class UWidgetAnimationEvent;
+
 /**
  * 
  */
-UCLASS(Abstract, HideCategories=(Appearance,Input,Interaction,Layout,Localization,Performance,Rendering,Navigation,Designer))
-class SCREENWIDGETGENERATION_API UUserWidgetBase : public UUserWidget, public IUserWidgetInterface
+UCLASS(Abstract, HideCategories=(Appearance,Input,Interaction,Layout,Localization,Performance,Navigation,Designer))
+class SCREENWIDGETGENERATION_API UUserWidgetBase : public UUserWidget, public IUserWidgetInterface, public IProcedureBaseInterface
 {
-	GENERATED_BODY()
+	GENERATED_UCLASS_BODY()
 
 public:
 	virtual TSharedRef<SWidget> RebuildWidget() override;
 	virtual void ReleaseSlateResources(bool bReleaseChildren) override;
 	virtual void NativePreConstruct() override;
 	virtual void NativeConstruct() override;
+	virtual void NativeDestruct() override;
+
+protected:
+#if WITH_EDITOR
+	virtual const FText GetPaletteCategory() override { return NSLOCTEXT("DevWidget", "UserCreate", "User Widget Base"); }
+#endif
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="UMG"))
+	UPROPERTY(EditAnywhere, Getter, BlueprintGetter="GetSelfTag", meta=(Categories="UMG"))
 	FGameplayTag SelfTag;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="HUD"))
+	UPROPERTY(EditAnywhere, Getter, BlueprintGetter="GetSlotTag", meta=(Categories="HUD"))
 	FGameplayTag SlotTag;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	int32 ZOrder = 0;
+	// UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	// TSubclassOf<UWidgetAnimationEvent> AnimationEventClass = nullptr;
+
+	UPROPERTY(EditAnywhere, Instanced, Getter, Setter, BlueprintGetter="GetAnimationEvent", BlueprintSetter="SetAnimationEvent")
+	UWidgetAnimationEvent* AnimationEvent = nullptr;
+
+public:
+	UFUNCTION(BlueprintPure)
+	FGameplayTag GetSelfTag() const;
+
+	UFUNCTION(BlueprintPure)
+	FGameplayTag GetSlotTag() const;
+
+	UFUNCTION(BlueprintPure)
+	UWidgetAnimationEvent* GetAnimationEvent() const;
+
+	UFUNCTION(BlueprintCallable)
+	void SetAnimationEvent(UWidgetAnimationEvent* InAnimationEvent);
+
+public:
+	bool HasAnimationEvent() const;
 
 	/* IUserWidgetInterface */
 public:
