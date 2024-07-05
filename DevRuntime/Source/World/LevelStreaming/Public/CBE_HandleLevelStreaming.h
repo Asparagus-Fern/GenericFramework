@@ -16,10 +16,16 @@ class LEVELSTREAMING_API UCBE_HandleLevelStreaming : public UCommonButtonEvent
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<TSoftObjectPtr<UWorld>> ActivateLevels;
+	TArray<TSoftObjectPtr<UWorld>> ActivateVisibleLevels;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<TSoftObjectPtr<UWorld>> InactivateLevels;
+	TArray<TSoftObjectPtr<UWorld>> ActivateHiddenLevels;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<TSoftObjectPtr<UWorld>> InactivateVisibleLevels;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<TSoftObjectPtr<UWorld>> InactivateHiddenLevels;
 
 	/* IProcedureInterface */
 public:
@@ -29,8 +35,14 @@ public:
 
 public:
 	UFUNCTION()
-	void OnActivateLevelsFinish();
+	void OnActivateVisibleLevelsFinish();
 
 	UFUNCTION()
-	void OnInactivateLevelsFinish();
+	void OnActivateHiddenLevelsFinish();
+
+	UFUNCTION()
+	void OnInactivateVisibleLevelsFinish();
+
+	UFUNCTION()
+	void OnInactivateHiddenLevelsFinish();
 };

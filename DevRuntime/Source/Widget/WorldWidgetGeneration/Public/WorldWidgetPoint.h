@@ -40,11 +40,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="Point"))
 	FGameplayTag PointTag;
 
-	/* 该点位顺序 */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	int32 Order = 0;
-
 	/* 点位UI */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced)
 	UWorldWidget* WorldWidget = nullptr;
+
+public:
+	UFUNCTION(BlueprintCallable)
+	void SetIsActive(bool InActive);
 };

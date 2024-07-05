@@ -6,6 +6,7 @@
 #include "GameplayTagContainer.h"
 #include "ScreenWidgetType.h"
 #include "Manager/CoreManager.h"
+#include "Procedure/ProcedureType.h"
 #include "ScreenWidgetManager.generated.h"
 
 class UWidget;
@@ -15,6 +16,8 @@ class UGameLoading;
 class UGameHUD;
 class UGameMenuSetting;
 class UUserWidgetBase;
+
+DECLARE_DYNAMIC_DELEGATE(FOnUserWidgetHandleFinish);
 
 /**
  * 
@@ -27,26 +30,26 @@ class SCREENWIDGETGENERATION_API UScreenWidgetManager : public UCoreManager
 public:
 	UScreenWidgetManager();
 
+	/* IProcedureInterface */
+public:
+	virtual void NativeOnActived() override;
+	virtual void NativeOnInactived() override;
+
 	/* IManagerInterface  */
 public:
 	virtual FText GetManagerDisplayName() override;
 
-	/* IProcedureInterface */
-public:
-	virtual int32 GetProcedureOrder() override { return -2; }
-	virtual void NativeOnActived() override;
-	virtual void NativeOnInactived() override;
-
 	/* UTagNameSlot */
-public:
-	void RegisterSlot(UTagNameSlot* InSlot);
-
 protected:
 	UPROPERTY()
 	TMap<FGameplayTag, UTagNameSlot*> Slots;
 
 	UPROPERTY(BlueprintReadOnly, Transient)
 	TMap<FGameplayTag, UUserWidgetBase*> SlotWidgets;
+
+public:
+	void RegisterSlot(UTagNameSlot* InSlot);
+	void UnRegisterSlot(const UTagNameSlot* InSlot);
 
 public:
 	UFUNCTION(BlueprintPure)
@@ -68,20 +71,19 @@ protected:
 
 	/* User Widget Base */
 public:
-	UFUNCTION(BlueprintCallable, meta=(DeterminesOutputType = "InWidgetClass"))
-	UUserWidgetBase* OpenUserWidgetByClass(TSubclassOf<UUserWidgetBase> InWidgetClass);
+	virtual UUserWidgetBase* CreateUserWidget(TSubclassOf<UUserWidgetBase> InWidgetClass);
+	virtual UUserWidgetBase* OpenUserWidget(TSubclassOf<UUserWidgetBase> InWidgetClass, FSimpleMulticastDelegate OnFinish = FSimpleMulticastDelegate());
+	virtual void OpenUserWidget(TArray<UUserWidgetBase*> InWidgets);
+	virtual void OpenUserWidget(UUserWidgetBase* InWidget, FSimpleMulticastDelegate OnFinish = FSimpleMulticastDelegate());
+	virtual void CloseUserWidget(const UUserWidgetBase* InWidget, const FSimpleMulticastDelegate& OnFinish = FSimpleMulticastDelegate());
+	virtual void CloseUserWidget(FGameplayTag InSlotTag, FSimpleMulticastDelegate OnFinish = FSimpleMulticastDelegate());
 
-	UFUNCTION(BlueprintCallable)
-	void OpenUserWidgets(TArray<UUserWidgetBase*> InWidgets);
+	TArray<FProcedureInterfaceHandle> GetProcedureInterfaceHandles(UUserWidget* InWidget, bool TargetActiveState);
+	virtual TArray<IProcedureInterface*> GetProcedureInterfaceWidgets(UUserWidget* InWidget);
 
-	UFUNCTION(BlueprintCallable)
-	void OpenUserWidget(UUserWidgetBase* InWidget);
-
-	UFUNCTION(BlueprintCallable)
-	void CloseUserWidget(UUserWidgetBase* InWidget);
-
-	UFUNCTION(BlueprintCallable)
-	void CloseUserWidgetBySlotTag(FGameplayTag InSlotTag);
+protected:
+	virtual void ActiveWidget(UUserWidgetBase* InWidget, FSimpleMulticastDelegate OnFinish = FSimpleMulticastDelegate());
+	virtual void InactiveWidget(UUserWidgetBase* InWidget, FSimpleMulticastDelegate OnFinish = FSimpleMulticastDelegate());
 
 	/* Game Menu */
 public:
@@ -97,6 +99,6 @@ public:
 
 protected:
 	FDelegateHandle MenuSelectionChangedHandle;
-	void GenerateMenu(const FMenuContainerInfo& InMenuContainerInfo);
-	void OnMenuSelectionChanged(FMenuInfo InMenuInfo, bool bSelection);
+	virtual void GenerateMenu(const FMenuContainerInfo& InMenuContainerInfo);
+	virtual void OnMenuSelectionChanged(FMenuInfo InMenuInfo, bool bSelection);
 };

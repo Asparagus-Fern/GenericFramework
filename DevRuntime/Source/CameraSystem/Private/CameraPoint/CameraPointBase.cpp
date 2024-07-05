@@ -33,6 +33,10 @@ void ACameraPointBase::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
+void ACameraPointBase::SetCameraComponent_Implementation(UCameraComponent* InCameraComponent)
+{
+}
+
 UCameraComponent* ACameraPointBase::GetCameraComponent_Implementation()
 {
 	return nullptr;

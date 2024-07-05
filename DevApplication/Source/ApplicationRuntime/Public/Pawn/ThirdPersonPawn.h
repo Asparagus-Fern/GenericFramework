@@ -7,6 +7,7 @@
 #include "GameplayTagContainer.h"
 #include "ThirdPersonPawn.generated.h"
 
+class UCameraHandle;
 class ACameraPointBase;
 class USphereComponent;
 class UCommonSpringArmComponent;
@@ -44,14 +45,13 @@ public:
 public:
 	virtual void AddLocation_Implementation(FVector2D InValue) override;
 	virtual void AddRotation_Implementation(FVector2D InValue) override;
-	virtual FRotator GetRotation_Implementation() override;
 	virtual void SetRotation_Implementation(FRotator InValue) override;
-	virtual void RefreshTransform_Implementation() override;
-
+	virtual FRotator GetRotation_Implementation() override;
+	virtual FRotator GetCameraRotation_Implementation() override;
+	
 	/* FCameraPointDelegates */
 public:
-	virtual void PreSwitchCamera(ACameraPointBase* InCameraPoint);
-	virtual void PostSwitchCamera(ACameraPointBase* InCameraPoint);
+	virtual void OnSwitchCameraFinish(UCameraHandle* InCameraHandle);
 
 	/* AThirdPersonPawn */
 protected:

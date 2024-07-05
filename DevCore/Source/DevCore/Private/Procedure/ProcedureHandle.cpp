@@ -3,15 +3,26 @@
 
 #include "Procedure/ProcedureHandle.h"
 
-void UProcedureHandle::Handle(const TArray<FProcedureInterfaceHandle>& InHandles)
+void UProcedureHandle::Reset()
+{
+	bReset = true;
+	OnHandleReset.Broadcast();
+	OnHandleFinish_Internal();
+}
+
+void UProcedureHandle::Handle(const TArray<FProcedureInterfaceHandle>& InHandles, const FSimpleMulticastDelegate& InHandleFinish, const FSimpleMulticastDelegate& InHandleReset)
 {
 	/* 无处理内容 */
-	Handles = InHandles;
-	if (Handles.IsEmpty())
+	if (InHandles.IsEmpty())
 	{
 		OnHandleFinish_Internal();
 		return;
 	}
+
+	bReset = false;
+	Handles = InHandles;
+	OnHandleReset = InHandleReset;
+	OnHandleFinish = InHandleFinish;
 
 	CurrentHandle = Handles[HandleIndex];
 	HandleProcedure();
@@ -29,43 +40,38 @@ void UProcedureHandle::HandleProcedure()
 	if (CurrentHandle.Interface->GetIsAsync())
 	{
 		/* 处理异步流程，异步流程内部使用 RequestActivateFinish/RequestInactivateFinish 标志异步的处理完成 */
-		if (CurrentHandle.Interface->GetIsActive() != CurrentHandle.bTargetActiveState)
+		if (CurrentHandle.bTargetActiveState)
 		{
-			if (CurrentHandle.bTargetActiveState)
-			{
-				CurrentHandle.Interface->GetActivateFinishDelegate().AddUObject(this, &UProcedureHandle::OnHandleOnceFinish_Internal);
-			}
-			else
-			{
-				CurrentHandle.Interface->GetInactivateFinishDelegate().AddUObject(this, &UProcedureHandle::OnHandleOnceFinish_Internal);
-			}
+			CurrentHandle.Interface->GetActivateFinishDelegate().AddUObject(this, &UProcedureHandle::OnHandleOnceFinish_Internal);
 		}
 		else
 		{
-			OnHandleOnceFinish_Internal();
+			CurrentHandle.Interface->GetInactivateFinishDelegate().AddUObject(this, &UProcedureHandle::OnHandleOnceFinish_Internal);
 		}
+	}
+
+	if (CurrentHandle.bTargetActiveState)
+	{
+		CurrentHandle.Interface->NativeOnActived();
 	}
 	else
 	{
-		/* 处理非异步流程 */
-		if (CurrentHandle.Interface->GetIsActive() != CurrentHandle.bTargetActiveState)
-		{
-			if (CurrentHandle.bTargetActiveState)
-			{
-				CurrentHandle.Interface->NativeOnActived();
-			}
-			else
-			{
-				CurrentHandle.Interface->NativeOnInactived();
-			}
-		}
+		CurrentHandle.Interface->NativeOnInactived();
+	}
 
+	if (!CurrentHandle.Interface->GetIsAsync())
+	{
 		OnHandleOnceFinish_Internal();
 	}
 }
 
 void UProcedureHandle::OnHandleOnceFinish_Internal()
 {
+	if (bReset)
+	{
+		return;
+	}
+
 	/* 流程的单次完成 */
 	CurrentHandle.Interface->GetActivateFinishDelegate().Clear();
 	CurrentHandle.Interface->GetInactivateFinishDelegate().Clear();
@@ -86,6 +92,5 @@ void UProcedureHandle::OnHandleFinish_Internal()
 {
 	Handles.Reset();
 	HandleIndex = 0;
-	GetHandleFinishDelegate().Broadcast();
-	MarkAsGarbage();
+	if (!bReset) { OnHandleFinish.Broadcast(); }
 }

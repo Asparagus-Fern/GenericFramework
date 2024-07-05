@@ -34,13 +34,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetTargetArmLength(float InValue);
 
-public:
-	UFUNCTION(BlueprintCallable)
-	void SetIsUpdateLag(bool InIsUpdateLag);
-
 protected:
-	bool IsUpdateLag = true;
 	float DesiredArmLength = 0.f;
 	void UpdateTargetArmLength(float DeltaTime);
-	virtual void UpdateDesiredArmLocation(bool bDoTrace, bool bDoLocationLag, bool bDoRotationLag, float DeltaTime) override;
 };

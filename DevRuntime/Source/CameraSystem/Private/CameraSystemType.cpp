@@ -2,8 +2,8 @@
 
 UE_DEFINE_GAMEPLAY_TAG(TAG_Camera, "Camera");
 
-FCameraSystemDelegates::FCameraPointMulticastDelegate FCameraSystemDelegates::OnCopyViewportCamera;
+FCameraSystemDelegates::FCameraPointDelegate FCameraSystemDelegates::OnCopyViewportCamera;
 FCameraSystemDelegates::FOnCameraPointPilotStateChanged FCameraSystemDelegates::OnCameraPointPilotStateChanged;
-FCameraSystemDelegates::FCameraPointMulticastDelegate FCameraSystemDelegates::PreSwitchCamera;
-FCameraSystemDelegates::FCameraPointMulticastDelegate FCameraSystemDelegates::PostSwitchCamera;
-FSimpleMulticastDelegate FCameraSystemDelegates::OnSwitchCameraFinish;
+FCameraSystemDelegates::FCameraPointDelegate FCameraSystemDelegates::PreSwitchCamera;
+FCameraSystemDelegates::FCameraPointDelegate FCameraSystemDelegates::PostSwitchCamera;
+FCameraSystemDelegates::FCameraHandleDelegate FCameraSystemDelegates::OnSwitchCameraFinish;

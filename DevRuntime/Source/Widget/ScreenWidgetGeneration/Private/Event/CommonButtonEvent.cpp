@@ -6,9 +6,11 @@
 void UCommonButtonEvent::NativeOnActived()
 {
 	IProcedureInterface::NativeOnActived();
+	Execute_OnActived(this);
 }
 
 void UCommonButtonEvent::NativeOnInactived()
 {
 	IProcedureInterface::NativeOnInactived();
+	Execute_OnInactived(this);
 }

@@ -2,6 +2,7 @@
 
 #include "GameplayTagContainer.h"
 #include "NativeGameplayTags.h"
+#include "Components/Widget.h"
 #include "ScreenWidgetType.generated.h"
 
 class UUserWidgetBase;
@@ -55,6 +56,11 @@ public:
 	TArray<UCommonButtonEvent*> Events;
 
 public:
+	bool operator==(const FMenuInfo InMenuInfo) const
+	{
+		return MenuTag == InMenuInfo.MenuTag;
+	}
+
 	bool operator==(const FGameplayTag InMenuTag) const
 	{
 		return MenuTag == InMenuTag;
@@ -131,6 +137,9 @@ public:
 
 	UPROPERTY(BlueprintReadOnly)
 	FMenuContainerInfo MenuContainerInfo;
+
+	UPROPERTY(BlueprintReadOnly)
+	TArray<UMenuStyle*> ActivedMenuStyles;
 };
 
 /**
@@ -153,6 +162,9 @@ public:
 
 	DECLARE_MULTICAST_DELEGATE_TwoParams(FMenuSelectionDelegate, FMenuInfo, bool)
 	static FMenuSelectionDelegate OnMenuSelectionChanged;
+
+	DECLARE_MULTICAST_DELEGATE_OneParam(FWidgetAnimationDelegate, UWidget*)
+	static FWidgetAnimationDelegate OnWidgetAnimationFinish;
 };
 
 /**

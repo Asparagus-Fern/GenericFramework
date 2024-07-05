@@ -12,7 +12,7 @@ ADevPawn::ADevPawn()
 	bUseControllerRotationPitch = true;
 	bUseControllerRotationRoll = true;
 	bUseControllerRotationYaw = true;
-	
+
 	FloatingPawnMovement = CreateDefaultSubobject<UFloatingPawnMovement>("Movement");
 }
 
@@ -33,14 +33,36 @@ void ADevPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void ADevPawn::AddLocation_Implementation(FVector2D InValue)
 {
-	AddMovementInput(UKismetMathLibrary::GetRightVector(GetActorRotation()), InValue.X);
-	AddMovementInput(UKismetMathLibrary::GetForwardVector(GetActorRotation()), InValue.Y);
+	if (CanMove())
+	{
+		AddMovementInput(UKismetMathLibrary::GetRightVector(GetActorRotation()), InValue.X);
+		AddMovementInput(UKismetMathLibrary::GetForwardVector(GetActorRotation()), InValue.Y);
+	}
 }
 
 void ADevPawn::AddRotation_Implementation(FVector2D InValue)
 {
-	AddControllerYawInput(InValue.X);
-	AddControllerPitchInput(InValue.Y);
+	if (CanTurn())
+	{
+		AddControllerYawInput(InValue.X);
+		AddControllerPitchInput(InValue.Y);
+	}
+}
+
+void ADevPawn::SetLocation_Implementation(const FVector InValue)
+{
+	if (CanMove())
+	{
+		SetActorLocation(InValue);
+	}
+}
+
+void ADevPawn::SetRotation_Implementation(const FRotator InValue)
+{
+	if (CanTurn())
+	{
+		SetActorRotation(InValue);
+	}
 }
 
 FVector ADevPawn::GetLocation_Implementation()
@@ -53,14 +75,14 @@ FRotator ADevPawn::GetRotation_Implementation()
 	return GetActorRotation();
 }
 
-void ADevPawn::SetLocation_Implementation(const FVector InValue)
+FVector ADevPawn::GetCameraLocation_Implementation()
 {
-	SetActorLocation(InValue);
+	return GetPlayerController()->PlayerCameraManager->GetCameraLocation();
 }
 
-void ADevPawn::SetRotation_Implementation(const FRotator InValue)
+FRotator ADevPawn::GetCameraRotation_Implementation()
 {
-	SetActorRotation(InValue);
+	return GetPlayerController()->PlayerCameraManager->GetCameraRotation();
 }
 
 APlayerController* ADevPawn::GetPlayerController() const

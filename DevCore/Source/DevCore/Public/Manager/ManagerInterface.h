@@ -26,4 +26,14 @@ public:
 	virtual FText GetManagerDisplayName();
 	virtual bool IsEditorManager() ;
 	virtual bool DoesSupportWorldType(EWorldType::Type InWorldType) ;
+
+public:
+public:
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Procedure Interface")
+	void OnBeginPlay();
+	virtual void NativeOnBeginPlay();
+	
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Procedure Interface")
+	void OnEndPlay();
+	virtual void NativeOnEndPlay();
 };

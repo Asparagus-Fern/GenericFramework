@@ -16,6 +16,7 @@ class CAMERASYSTEM_API ACineCameraPoint : public ACameraPointBase
 public:
 	ACineCameraPoint();
 	virtual UCameraComponent* GetCameraComponent_Implementation() override;
+	virtual void SetCameraComponent_Implementation(UCameraComponent* InCameraComponent) override;
 
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Camera Point")

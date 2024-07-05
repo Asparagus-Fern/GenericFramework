@@ -3,19 +3,40 @@
 
 #include "Animation/WidgetAnimationEvent.h"
 
-void UWidgetAnimationEvent::NativeOnOpen(UUserWidgetBase* InUserWidget)
+#include "ScreenWidgetType.h"
+
+void UWidgetAnimationEvent::NativeOnActived()
 {
-	IWidgetAnimationInterface::NativeOnOpen(InUserWidget);
-	Execute_OnOpen(this, InUserWidget);
+	IProcedureInterface::NativeOnActived();
+	IProcedureInterface::Execute_OnActived(this);
 }
 
-void UWidgetAnimationEvent::NativeOnClose(UUserWidgetBase* InUserWidget)
+void UWidgetAnimationEvent::NativeOnInactived()
 {
-	IWidgetAnimationInterface::NativeOnClose(InUserWidget);
-	Execute_OnClose(this, InUserWidget);
+	IProcedureInterface::NativeOnInactived();
+	IProcedureInterface::Execute_OnInactived(this);
 }
 
 void UWidgetAnimationEvent::RequestAnimationFinish()
 {
-	GetOnAnimationFinishDelegate().Broadcast();
+	if (GetIsActive())
+	{
+		RequestActivateFinish();
+	}
+	else
+	{
+		RequestInactivateFinish();
+	}
+
+	FScreenWidgetDelegates::OnWidgetAnimationFinish.Broadcast(TargetWidget);
+}
+
+UWidget* UWidgetAnimationEvent::GetTargetWidget() const
+{
+	return TargetWidget;
+}
+
+void UWidgetAnimationEvent::SetTargetWidget(UWidget* InWidget)
+{
+	TargetWidget = InWidget;
 }

@@ -8,6 +8,7 @@ FManagerDelegates::FManagerDelegate FManagerDelegates::OnManagerUnRegister;
 FSimpleMulticastDelegate FManagerDelegates::PreManagerActived;
 FManagerDelegates::FManagerDelegate FManagerDelegates::OnManagerActived;
 FSimpleMulticastDelegate FManagerDelegates::PostManagerActived;
+
 FSimpleMulticastDelegate FManagerDelegates::PreManagerInActived;
 FManagerDelegates::FManagerDelegate FManagerDelegates::OnManagerInActived;
 FSimpleMulticastDelegate FManagerDelegates::PostManagerInActived;

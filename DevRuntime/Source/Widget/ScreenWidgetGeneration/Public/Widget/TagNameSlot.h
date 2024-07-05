@@ -16,8 +16,8 @@ class SCREENWIDGETGENERATION_API UTagNameSlot : public UInstanceSlot
 	GENERATED_UCLASS_BODY()
 
 protected:
-	virtual void ReleaseSlateResources(bool bReleaseChildren) override;
 	virtual TSharedRef<SWidget> RebuildWidget() override;
+	virtual void ReleaseSlateResources(bool bReleaseChildren) override;
 
 public:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, meta=(Categories="HUD"))

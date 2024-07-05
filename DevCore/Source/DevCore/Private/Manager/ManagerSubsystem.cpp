@@ -73,6 +73,12 @@ void UManagerSubsystem::OnWorldMatchStarting()
 		}
 	);
 
+	ProcessManagers([this](UCoreManager* InManager)
+		{
+			InManager->NativeOnBeginPlay();
+		}
+	);
+
 	FManagerDelegates::PostManagerActived.Broadcast();
 }
 
@@ -81,6 +87,12 @@ void UManagerSubsystem::OnWorldBeginTearDown(UWorld* InWorld)
 	if (InWorld->IsGameWorld())
 	{
 		FManagerDelegates::PreManagerInActived.Broadcast();
+
+		ProcessManagers([this](UCoreManager* InManager)
+			{
+				InManager->NativeOnEndPlay();
+			}
+		);
 
 		ProcessManagersInOrder
 		(

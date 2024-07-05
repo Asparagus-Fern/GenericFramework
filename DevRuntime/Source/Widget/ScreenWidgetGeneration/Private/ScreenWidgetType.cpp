@@ -13,6 +13,7 @@ FScreenWidgetDelegates::FUserWidgetDelegate FScreenWidgetDelegates::OnWidgetOpen
 FScreenWidgetDelegates::FUserWidgetDelegate FScreenWidgetDelegates::OnWidgetClose;
 FScreenWidgetDelegates::FMenuDelegate FScreenWidgetDelegates::OnMenuClicked;
 FScreenWidgetDelegates::FMenuSelectionDelegate FScreenWidgetDelegates::OnMenuSelectionChanged;
+FScreenWidgetDelegates::FWidgetAnimationDelegate FScreenWidgetDelegates::OnWidgetAnimationFinish;
 
 FMenuInfo::FMenuInfo()
 {

@@ -24,11 +24,13 @@ public:
 public:
 	virtual void AddLocation_Implementation(FVector2D InValue) override;
 	virtual void AddRotation_Implementation(FVector2D InValue) override;
-	virtual FVector GetLocation_Implementation() override;
-	virtual FRotator GetRotation_Implementation() override;
 	virtual void SetLocation_Implementation(FVector InValue) override;
 	virtual void SetRotation_Implementation(FRotator InValue) override;
-
+	virtual FVector GetLocation_Implementation() override;
+	virtual FRotator GetRotation_Implementation() override;
+	virtual FVector GetCameraLocation_Implementation() override;
+	virtual FRotator GetCameraRotation_Implementation() override;
+	
 	/* ADevPawn */
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

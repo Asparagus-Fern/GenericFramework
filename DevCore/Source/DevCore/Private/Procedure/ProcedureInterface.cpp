@@ -4,12 +4,17 @@
 
 void IProcedureInterface::NativeOnActived()
 {
-	bIsActive = true;
+	SetIsActive(true);
 }
 
 void IProcedureInterface::NativeOnInactived()
 {
-	bIsActive = false;
+	SetIsActive(false);
+}
+
+void IProcedureInterface::SetIsActive(const bool InActive)
+{
+	bIsActive = InActive;
 }
 
 void IProcedureInterface::RequestActivateFinish() const

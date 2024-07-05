@@ -13,7 +13,7 @@ void UProcedurePlay::NativeOnActived()
 {
 	Super::NativeOnActived();
 
-	GetManager<UScreenWidgetManager>()->OpenUserWidgets(DefaultOpenWidgets);
+	GetManager<UScreenWidgetManager>()->OpenUserWidget(DefaultOpenWidgets);
 	GetManager<UScreenWidgetManager>()->SwitchGameMenu(GameMenuSetting);
 }
 

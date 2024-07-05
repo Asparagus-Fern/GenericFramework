@@ -3,6 +3,7 @@
 #include "DevCore.h"
 
 #include "Input/InputManager.h"
+#include "Pawn/PawnManager.h"
 #include "Procedure/ProcedureManager.h"
 
 #define LOCTEXT_NAMESPACE "FDevCoreModule"
@@ -12,6 +13,7 @@ void FDevCoreModule::GetRegisterManager(TArray<TSubclassOf<UCoreManager>>& InReg
 	ICommonModuleInterface::GetRegisterManager(InRegisterManagerClasses);
 	InRegisterManagerClasses.Add(UProcedureManager::StaticClass());
 	InRegisterManagerClasses.Add(UInputManager::StaticClass());
+	InRegisterManagerClasses.Add(UPawnManager::StaticClass());
 }
 
 #undef LOCTEXT_NAMESPACE

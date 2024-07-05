@@ -14,3 +14,15 @@ UCameraComponent* ACineCameraPoint::GetCameraComponent_Implementation()
 {
 	return CineCameraComponent;
 }
+
+void ACineCameraPoint::SetCameraComponent_Implementation(UCameraComponent* InCameraComponent)
+{
+	if (UCineCameraComponent* CastComponent = Cast<UCineCameraComponent>(InCameraComponent))
+	{
+		CineCameraComponent = CastComponent;
+	}
+	else
+	{
+		Super::SetCameraComponent_Implementation(InCameraComponent);
+	}
+}

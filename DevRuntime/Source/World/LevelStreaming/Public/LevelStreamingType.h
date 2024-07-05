@@ -107,7 +107,7 @@ protected:
 
 	virtual void Load(const TSoftObjectPtr<UWorld>& Level, bool bMakeVisibleAfterLoad, bool bShouldBlockOnLoad, const FString& CallbackName, UObject* CallbackObject) const;
 	virtual void Unload(const TSoftObjectPtr<UWorld>& Level, bool bShouldBlockOnUnload, const FString& CallbackName, UObject* CallbackObject) const;
-	virtual void SetLevelVisibility(ULevelStreaming* LevelStreaming, bool bVisible, TScriptDelegate<FLevelStreamingVisibilityStatus::ThreadSafetyMode> Callback);
+	virtual void SetLevelVisibility(ULevelStreaming* LevelStreaming, bool bVisible);
 
 protected:
 	UFUNCTION()
@@ -170,7 +170,7 @@ public:
 
 protected:
 	TArray<FLevelStreamingVisibilitySetting> LevelStreamingVisibilitySettings;
-
+	
 	virtual void OnOnceFinish() override;
 	virtual void OnFinish() override;
 };

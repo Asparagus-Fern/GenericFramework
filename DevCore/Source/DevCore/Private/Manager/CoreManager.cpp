@@ -69,4 +69,14 @@ void UCoreManager::NativeOnInactived()
 	DEBUG(Debug_Manager, Log, TEXT("On Inactived : %s"), *GetName());
 }
 
+void UCoreManager::NativeOnBeginPlay()
+{
+	Execute_OnBeginPlay(this);
+}
+
+void UCoreManager::NativeOnEndPlay()
+{
+	Execute_OnEndPlay(this);
+}
+
 #undef LOCTEXT_NAMESPACE

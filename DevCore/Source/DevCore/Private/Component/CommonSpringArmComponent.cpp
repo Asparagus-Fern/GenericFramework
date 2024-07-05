@@ -28,11 +28,8 @@ void UCommonSpringArmComponent::BeginPlay()
 void UCommonSpringArmComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	if (IsUpdateLag)
-	{
-		UpdateTargetArmLength(DeltaTime);
-	}
+	
+	UpdateTargetArmLength(DeltaTime);
 }
 
 void UCommonSpringArmComponent::AddTargetArmLength(const float InValue)
@@ -50,22 +47,10 @@ void UCommonSpringArmComponent::AddTargetArmLength(const float InValue)
 void UCommonSpringArmComponent::SetTargetArmLength(const float InValue)
 {
 	TargetArmLength = DesiredArmLength = FMath::Clamp(InValue, MinArmLength, MaxArmLength);
-}
-
-void UCommonSpringArmComponent::SetIsUpdateLag(bool InIsUpdateLag)
-{
-	IsUpdateLag = InIsUpdateLag;
+	UpdateDesiredArmLocation(false, false, false, 0.f);
 }
 
 void UCommonSpringArmComponent::UpdateTargetArmLength(float DeltaTime)
 {
 	TargetArmLength = TargetArmLength + DeltaTime * (DesiredArmLength - TargetArmLength);
-}
-
-void UCommonSpringArmComponent::UpdateDesiredArmLocation(bool bDoTrace, bool bDoLocationLag, bool bDoRotationLag, float DeltaTime)
-{
-	if (IsUpdateLag)
-	{
-		Super::UpdateDesiredArmLocation(bDoTrace, bDoLocationLag, bDoRotationLag, DeltaTime);
-	}
 }

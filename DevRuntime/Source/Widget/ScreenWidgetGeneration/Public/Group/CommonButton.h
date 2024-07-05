@@ -5,16 +5,21 @@
 #include "CoreMinimal.h"
 #include "CommonButtonBase.h"
 #include "ScreenWidgetType.h"
-#include "UserWidget/Base/UserWidgetInterface.h"
+#include "Procedure/ProcedureBaseInterface.h"
+#include "Procedure/ProcedureInterface.h"
 #include "CommonButton.generated.h"
 
+class UWidgetAnimationEvent;
+class UProcedureHandle;
 class UCommonButtonEvent;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnButtonEventHandleFinish);
 
 /**
  * 
  */
 UCLASS()
-class SCREENWIDGETGENERATION_API UCommonButton : public UCommonButtonBase, public IUserWidgetInterface, public IProcedureBaseInterface
+class SCREENWIDGETGENERATION_API UCommonButton : public UCommonButtonBase, public IProcedureInterface, public IProcedureBaseInterface
 {
 	GENERATED_BODY()
 
@@ -24,7 +29,7 @@ public:
 	virtual void NativePreConstruct() override;
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
-	
+
 	virtual void NativeOnHovered() override;
 	virtual void NativeOnUnhovered() override;
 	virtual void NativeOnClicked() override;
@@ -33,10 +38,10 @@ public:
 	virtual void NativeOnSelected(bool bBroadcast) override;
 	virtual void NativeOnDeselected(bool bBroadcast) override;
 
-	/* IUserWidgetInterface */
+	/* IProcedureInterface */
 public:
-	virtual void NativeOnOpen() override;
-	virtual void NativeOnClose() override;
+	virtual void NativeOnActived() override;
+	virtual void NativeOnInactived() override;
 
 	/* IProcedureBaseInterface */
 public:
@@ -59,5 +64,26 @@ public:
 	void SetEvents(TArray<UCommonButtonEvent*> InEvents);
 
 protected:
+	UPROPERTY(Transient)
+	UProcedureHandle* ActiveProcedureHandle = nullptr;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnButtonEventHandleFinish OnButtonEventHandleFinish;
+
+protected:
 	void ResponseButtonEvent(ECommonButtonResponseEvent InResponseEvent);
+
+	/* Widget Animation */
+public:
+	UPROPERTY(EditAnywhere, Instanced, Getter, Setter, BlueprintGetter="GetAnimationEvent", BlueprintSetter="SetAnimationEvent")
+	UWidgetAnimationEvent* AnimationEvent = nullptr;
+
+	UFUNCTION(BlueprintPure)
+	UWidgetAnimationEvent* GetAnimationEvent() const;
+
+	UFUNCTION(BlueprintCallable)
+	void SetAnimationEvent(UWidgetAnimationEvent* InAnimationEvent);
+
+	UFUNCTION(BlueprintPure)
+	bool HasAnimationEvent() const;
 };

@@ -15,8 +15,6 @@ DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(Debug_UI, Log, All);
 
 DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(Debug_Camera, Log, All);
 
-DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(Debug_Viewport, Log, All);
-
 DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(Debug_World, Log, All);
 
 #define DEBUG(CategoryName, Verbosity, Format, ...) \

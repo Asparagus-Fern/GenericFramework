@@ -4,18 +4,20 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
-#include "UserWidgetInterface.h"
 #include "Blueprint/UserWidget.h"
+#include "Procedure/ProcedureBaseInterface.h"
+#include "Procedure/ProcedureInterface.h"
 #include "UserWidget/Base/UserWidgetType.h"
 #include "UserWidgetBase.generated.h"
 
 class UWidgetAnimationEvent;
 
+
 /**
  * 
  */
 UCLASS(Abstract, HideCategories=(Appearance,Input,Interaction,Layout,Localization,Performance,Navigation,Designer))
-class SCREENWIDGETGENERATION_API UUserWidgetBase : public UUserWidget, public IUserWidgetInterface, public IProcedureBaseInterface
+class SCREENWIDGETGENERATION_API UUserWidgetBase : public UUserWidget, public IProcedureInterface, public IProcedureBaseInterface
 {
 	GENERATED_UCLASS_BODY()
 
@@ -38,12 +40,6 @@ public:
 	UPROPERTY(EditAnywhere, Getter, BlueprintGetter="GetSlotTag", meta=(Categories="HUD"))
 	FGameplayTag SlotTag;
 
-	// UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	// TSubclassOf<UWidgetAnimationEvent> AnimationEventClass = nullptr;
-
-	UPROPERTY(EditAnywhere, Instanced, Getter, Setter, BlueprintGetter="GetAnimationEvent", BlueprintSetter="SetAnimationEvent")
-	UWidgetAnimationEvent* AnimationEvent = nullptr;
-
 public:
 	UFUNCTION(BlueprintPure)
 	FGameplayTag GetSelfTag() const;
@@ -51,19 +47,24 @@ public:
 	UFUNCTION(BlueprintPure)
 	FGameplayTag GetSlotTag() const;
 
+	/* Widget Animation */
+public:
+	UPROPERTY(EditAnywhere, Instanced, Getter, Setter, BlueprintGetter="GetAnimationEvent", BlueprintSetter="SetAnimationEvent")
+	UWidgetAnimationEvent* AnimationEvent = nullptr;
+
 	UFUNCTION(BlueprintPure)
 	UWidgetAnimationEvent* GetAnimationEvent() const;
 
 	UFUNCTION(BlueprintCallable)
 	void SetAnimationEvent(UWidgetAnimationEvent* InAnimationEvent);
 
-public:
+	UFUNCTION(BlueprintPure)
 	bool HasAnimationEvent() const;
 
-	/* IUserWidgetInterface */
+	/* IProcedureInterface */
 public:
-	virtual void NativeOnOpen() override;
-	virtual void NativeOnClose() override;
+	virtual void NativeOnActived() override;
+	virtual void NativeOnInactived() override;
 
 	/* IProcedureBaseInterface */
 public:

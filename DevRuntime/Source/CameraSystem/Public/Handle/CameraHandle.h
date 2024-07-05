@@ -26,12 +26,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	uint8 bLockCamera : 1;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	uint8 bLockLocation : 1;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	uint8 bLockRotation : 1;
+
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	void HandleSwitchToCameraPoint(APlayerController* InPlayerController, ACameraPointBase* InCameraPoint);
-
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	void OnSwitchToCameraPointFinish();
+	bool HandleSwitchToCameraPoint(APlayerController* InPlayerController, ACameraPointBase* InCameraPoint);
 
 public:
 	UPROPERTY(BlueprintAssignable)
@@ -40,6 +43,10 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	APlayerController* OwnerPlayerController = nullptr;
 
+	UPROPERTY(BlueprintReadOnly)
+	ACameraPointBase* TargetCameraPoint = nullptr;
+
 protected:
 	FDelegateHandle SwitchCameraPointHandle;
+	virtual void OnSwitchToCameraPointFinish();
 };

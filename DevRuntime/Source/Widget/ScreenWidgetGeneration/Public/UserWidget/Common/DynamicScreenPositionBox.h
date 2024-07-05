@@ -3,10 +3,35 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Components/CanvasPanelSlot.h"
 #include "UserWidget/Base/UserWidgetBase.h"
 #include "DynamicScreenPositionBox.generated.h"
 
+class UCanvasPanelSlot;
 class UCanvasPanel;
+
+
+USTRUCT(BlueprintType)
+struct FDynamicWidget
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FAnchorData LayoutData;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bAutoSize = true;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 ZOrder = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FVector2D Position;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced)
+	UUserWidgetBase* Widget;
+};
 
 /**
  * 
@@ -20,6 +45,6 @@ public:
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget = "CanvasPanel"))
 	UCanvasPanel* CanvasPanel;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced)
-	TArray<UUserWidgetBase*> Widgets;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TArray<FDynamicWidget> DynamicWidgets;
 };

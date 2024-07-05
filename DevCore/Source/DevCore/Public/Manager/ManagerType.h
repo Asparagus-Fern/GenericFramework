@@ -17,6 +17,7 @@ struct DEVCORE_API FManagerDelegates
 	static FSimpleMulticastDelegate PreManagerActived;
 	static FManagerDelegate OnManagerActived;
 	static FSimpleMulticastDelegate PostManagerActived;
+
 	static FSimpleMulticastDelegate PreManagerInActived;
 	static FManagerDelegate OnManagerInActived;
 	static FSimpleMulticastDelegate PostManagerInActived;

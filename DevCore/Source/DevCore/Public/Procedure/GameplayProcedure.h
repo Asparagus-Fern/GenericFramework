@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
+#include "ProcedureBaseInterface.h"
 #include "ProcedureInterface.h"
 #include "UObject/Object.h"
 #include "GameplayProcedure.generated.h"

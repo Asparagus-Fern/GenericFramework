@@ -8,7 +8,9 @@
 #include "Manager/CoreManager.h"
 #include "ProcedureManager.generated.h"
 
+class UProcedureHandle;
 class UGameplayProcedure;
+
 /**
  * 
  */
@@ -20,10 +22,6 @@ class DEVCORE_API UProcedureManager : public UCoreManager
 public:
 	UProcedureManager();
 
-	/* IManagerInterface */
-public:
-	virtual FText GetManagerDisplayName() override;
-
 	/* IProcedureBaseInterface */
 public:
 	virtual void NativeOnCreate() override;
@@ -31,9 +29,14 @@ public:
 
 	/* IProcedureInterface */
 public:
-	virtual int32 GetProcedureOrder() override { return -99; }
 	virtual void NativeOnActived() override;
 	virtual void NativeOnInactived() override;
+
+	/* IManagerInterface */
+public:
+	virtual FText GetManagerDisplayName() override;
+	virtual void NativeOnBeginPlay() override;
+	virtual void NativeOnEndPlay() override;
 
 	/* UProcedureManager */
 public:
@@ -54,4 +57,13 @@ protected:
 	FGameplayTag LastProcedureTag;
 	FGameplayTag CurrentProcedureTag;
 	TMap<FGameplayTag, UGameplayProcedure*> GameplayProcedure;
+
+	/* Procedure Handle */
+public:
+	virtual UProcedureHandle* RegisterProcedureHandle(const TArray<FProcedureInterfaceHandle>& InHandles, FSimpleMulticastDelegate OnHandleFinish = FSimpleMulticastDelegate(), FSimpleMulticastDelegate OnHandleReset = FSimpleMulticastDelegate());
+	virtual void ResetProcedureHandle(UProcedureHandle* InHandle);
+
+protected:
+	UPROPERTY()
+	TArray<UProcedureHandle*> ActiveProcedureHandles;
 };

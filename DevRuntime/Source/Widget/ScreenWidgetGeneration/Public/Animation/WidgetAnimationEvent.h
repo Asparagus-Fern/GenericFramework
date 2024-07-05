@@ -3,31 +3,35 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "WidgetAnimationInterface.h"
+#include "Procedure/ProcedureInterface.h"
 #include "UObject/Object.h"
-#include "UserWidget/Base/UserWidgetInterface.h"
 #include "WidgetAnimationEvent.generated.h"
 
+class UWidget;
 /**
  * 
  */
 UCLASS(Abstract, Blueprintable, BlueprintType, EditInlineNew)
-class SCREENWIDGETGENERATION_API UWidgetAnimationEvent : public UObject, public IWidgetAnimationInterface
+class SCREENWIDGETGENERATION_API UWidgetAnimationEvent : public UObject, public IProcedureInterface
 {
 	GENERATED_BODY()
 
-	/* IWidgetAnimationInterface */
+	/* IProcedureInterface */
 public:
-	virtual void NativeOnOpen(UUserWidgetBase* InUserWidget) override;
-	virtual void NativeOnClose(UUserWidgetBase* InUserWidget) override;
+	virtual void NativeOnActived() override;
+	virtual void NativeOnInactived() override;
 
 public:
-	FSimpleMulticastDelegate GetOnAnimationFinishDelegate() { return OnAnimationFinish; }
+	UPROPERTY(Getter, Setter, BlueprintGetter="GetTargetWidget", BlueprintSetter="SetTargetWidget")
+	UWidget* TargetWidget;
 
 public:
 	UFUNCTION(BlueprintCallable)
 	void RequestAnimationFinish();
 
-protected:
-	FSimpleMulticastDelegate OnAnimationFinish;
+	UFUNCTION(BlueprintPure)
+	UWidget* GetTargetWidget() const;
+
+	UFUNCTION(BlueprintCallable)
+	void SetTargetWidget(UWidget* InWidget);
 };

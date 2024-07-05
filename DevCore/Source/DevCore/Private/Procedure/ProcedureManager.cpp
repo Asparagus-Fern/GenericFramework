@@ -4,7 +4,6 @@
 #include "Procedure/ProcedureManager.h"
 
 #include "Manager/ManagerGlobal.h"
-#include "Manager/ManagerSubsystem.h"
 #include "Procedure/GameplayProcedure.h"
 #include "Procedure/ProcedureHandle.h"
 #include "StaticFunctions/StaticFunctions_Object.h"
@@ -13,11 +12,6 @@
 
 UProcedureManager::UProcedureManager()
 {
-}
-
-FText UProcedureManager::GetManagerDisplayName()
-{
-	return LOCTEXT("DisplayName", "Procedure Manager");
 }
 
 void UProcedureManager::NativeOnCreate()
@@ -34,12 +28,6 @@ void UProcedureManager::NativeOnDestroy()
 void UProcedureManager::NativeOnActived()
 {
 	Super::NativeOnActived();
-
-	/* 游戏开始流程入口 */
-	if (DefaultProcedureTag.IsValid())
-	{
-		SwitchProcedure(DefaultProcedureTag);
-	}
 }
 
 void UProcedureManager::NativeOnInactived()
@@ -49,6 +37,12 @@ void UProcedureManager::NativeOnInactived()
 	LastProcedureTag = FGameplayTag::EmptyTag;
 	CurrentProcedureTag = FGameplayTag::EmptyTag;
 
+	// for (const auto& ActiveProcedureHandle : ActiveProcedureHandles)
+	// {
+	// 	ActiveProcedureHandle->Reset();
+	// 	ActiveProcedureHandle->MarkAsGarbage();
+	// }
+
 	for (const auto& Procedure : GameplayProcedure)
 	{
 		if (Procedure.Value->GetIsActive())
@@ -56,12 +50,33 @@ void UProcedureManager::NativeOnInactived()
 			Procedure.Value->NativeOnInactived();
 		}
 	}
+
+	ActiveProcedureHandles.Reset();
 	GameplayProcedure.Reset();
+}
+
+FText UProcedureManager::GetManagerDisplayName()
+{
+	return LOCTEXT("DisplayName", "Procedure Manager");
+}
+
+void UProcedureManager::NativeOnBeginPlay()
+{
+	Super::NativeOnBeginPlay();
+
+	if (DefaultProcedureTag.IsValid())
+	{
+		SwitchProcedure(DefaultProcedureTag);
+	}
+}
+
+void UProcedureManager::NativeOnEndPlay()
+{
+	Super::NativeOnEndPlay();
 }
 
 void UProcedureManager::SwitchProcedure(FGameplayTag InProcedureTag, bool bForce)
 {
-	UProcedureHandle* ProcedureHandle = NewObject<UProcedureHandle>(this);
 	TArray<FProcedureInterfaceHandle> ProcedureInterfaceHandles;
 
 	if (CurrentProcedureTag.IsValid())
@@ -93,6 +108,7 @@ void UProcedureManager::SwitchProcedure(FGameplayTag InProcedureTag, bool bForce
 	}
 	else
 	{
+		/* 进入首个流程 */
 		if (IsValid(GetGameplayProcedure(InProcedureTag)))
 		{
 			ProcedureInterfaceHandles.Add(FProcedureInterfaceHandle(GetGameplayProcedure(InProcedureTag), true));
@@ -101,7 +117,7 @@ void UProcedureManager::SwitchProcedure(FGameplayTag InProcedureTag, bool bForce
 
 	LastProcedureTag = CurrentProcedureTag;
 	CurrentProcedureTag = InProcedureTag;
-	ProcedureHandle->Handle(ProcedureInterfaceHandles);
+	RegisterProcedureHandle(ProcedureInterfaceHandles);
 }
 
 UGameplayProcedure* UProcedureManager::GetGameplayProcedure(FGameplayTag InProcedureTag)
@@ -136,6 +152,38 @@ UGameplayProcedure* UProcedureManager::GetGameplayProcedure(FGameplayTag InProce
 	}
 
 	return nullptr;
+}
+
+UProcedureHandle* UProcedureManager::RegisterProcedureHandle(const TArray<FProcedureInterfaceHandle>& InHandles, FSimpleMulticastDelegate OnHandleFinish, FSimpleMulticastDelegate OnHandleReset)
+{
+	UProcedureHandle* NewProcedureHandle = NewObject<UProcedureHandle>(this);
+	ActiveProcedureHandles.Add(NewProcedureHandle);
+
+	FSimpleMulticastDelegate OnFinish;
+	OnFinish.AddLambda([this, NewProcedureHandle, OnHandleFinish]()
+		{
+			ActiveProcedureHandles.Remove(NewProcedureHandle);
+			OnHandleFinish.Broadcast();
+			NewProcedureHandle->MarkAsGarbage();
+		}
+	);
+
+	FSimpleMulticastDelegate OnReset;
+	OnReset.AddLambda([this, NewProcedureHandle, OnHandleReset]()
+		{
+			OnHandleReset.Broadcast();
+			ActiveProcedureHandles.Remove(NewProcedureHandle);
+			NewProcedureHandle->MarkAsGarbage();
+		}
+	);
+
+	NewProcedureHandle->Handle(InHandles, OnFinish, OnReset);
+	return NewProcedureHandle;
+}
+
+void UProcedureManager::ResetProcedureHandle(UProcedureHandle* InHandle)
+{
+	InHandle->Reset();
 }
 
 #undef LOCTEXT_NAMESPACE

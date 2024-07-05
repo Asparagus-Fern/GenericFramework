@@ -3,9 +3,12 @@
 
 #include "Group/CommonButton.h"
 
+#include "Animation/WidgetAnimationEvent.h"
 #include "Debug/DebugType.h"
 #include "Event/CommonButtonEvent.h"
+#include "Manager/ManagerGlobal.h"
 #include "Procedure/ProcedureHandle.h"
+#include "Procedure/ProcedureManager.h"
 
 UCommonButton::UCommonButton(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -33,12 +36,6 @@ void UCommonButton::NativePreConstruct()
 void UCommonButton::NativeConstruct()
 {
 	Super::NativeConstruct();
-
-	NativeOnOpen();
-	if (IsValid(GetRootWidget()))
-	{
-		GetRootWidget()->SetVisibility(bEnableInteraction ? ESlateVisibility::SelfHitTestInvisible : ESlateVisibility::HitTestInvisible);
-	}
 }
 
 void UCommonButton::NativeDestruct()
@@ -84,20 +81,32 @@ void UCommonButton::NativeOnSelected(bool bBroadcast)
 
 void UCommonButton::NativeOnDeselected(bool bBroadcast)
 {
-	Super::NativeOnDeselected(bBroadcast);
 	ResponseButtonEvent(ECommonButtonResponseEvent::OnDeselected);
+	Super::NativeOnDeselected(bBroadcast);
 }
 
-void UCommonButton::NativeOnOpen()
+void UCommonButton::NativeOnActived()
 {
-	IUserWidgetInterface::NativeOnOpen();
-	IUserWidgetInterface::Execute_OnOpen(this);
+	IProcedureInterface::NativeOnActived();
+	IProcedureInterface::Execute_OnActived(this);
+
+	if (IsValid(AnimationEvent))
+	{
+		AnimationEvent->SetTargetWidget(this);
+		AnimationEvent->NativeOnActived();
+	}
 }
 
-void UCommonButton::NativeOnClose()
+void UCommonButton::NativeOnInactived()
 {
-	IUserWidgetInterface::NativeOnClose();
-	IUserWidgetInterface::Execute_OnClose(this);
+	IProcedureInterface::NativeOnInactived();
+	IProcedureInterface::Execute_OnInactived(this);
+
+	if (IsValid(AnimationEvent))
+	{
+		AnimationEvent->SetTargetWidget(this);
+		AnimationEvent->NativeOnInactived();
+	}
 }
 
 void UCommonButton::NativeOnCreate()
@@ -135,16 +144,42 @@ void UCommonButton::ResponseButtonEvent(ECommonButtonResponseEvent InResponseEve
 		return;
 	}
 
-	UProcedureHandle* ProcedureHandle = NewObject<UProcedureHandle>(this);
+	bool bNeedProcedureHandle = false;
 	TArray<FProcedureInterfaceHandle> ProcedureInterfaceHandles;
-
 	for (const auto& Event : Events)
 	{
-		if (Event->ResponseEvent.Contains(InResponseEvent))
+		if (IsValid(Event))
 		{
-			ProcedureInterfaceHandles.Add(FProcedureInterfaceHandle(DuplicateObject(Event, this), Event->ResponseEvent.FindRef(InResponseEvent)));
+			if (Event->ResponseEvent.Contains(InResponseEvent))
+			{
+				bNeedProcedureHandle = true;
+				ProcedureInterfaceHandles.Add(FProcedureInterfaceHandle(Event, Event->ResponseEvent.FindRef(InResponseEvent)));
+			}
 		}
 	}
 
-	ProcedureHandle->Handle(ProcedureInterfaceHandles);
+	if (bNeedProcedureHandle)
+	{
+		if (IsValid(ActiveProcedureHandle))
+		{
+			ActiveProcedureHandle->Reset();
+		}
+		
+		ActiveProcedureHandle = GetManager<UProcedureManager>()->RegisterProcedureHandle(ProcedureInterfaceHandles);
+	}
+}
+
+UWidgetAnimationEvent* UCommonButton::GetAnimationEvent() const
+{
+	return AnimationEvent;
+}
+
+void UCommonButton::SetAnimationEvent(UWidgetAnimationEvent* InAnimationEvent)
+{
+	AnimationEvent = InAnimationEvent;
+}
+
+bool UCommonButton::HasAnimationEvent() const
+{
+	return IsValid(AnimationEvent);;
 }

@@ -16,3 +16,11 @@ bool IManagerInterface::DoesSupportWorldType(EWorldType::Type InWorldType)
 {
 	return InWorldType == EWorldType::Game || InWorldType == EWorldType::PIE || InWorldType == EWorldType::GamePreview || InWorldType == EWorldType::GameRPC;
 }
+
+void IManagerInterface::NativeOnBeginPlay()
+{
+}
+
+void IManagerInterface::NativeOnEndPlay()
+{
+}

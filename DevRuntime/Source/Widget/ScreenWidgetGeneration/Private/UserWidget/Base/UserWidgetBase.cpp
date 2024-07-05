@@ -33,7 +33,6 @@ void UUserWidgetBase::NativePreConstruct()
 void UUserWidgetBase::NativeConstruct()
 {
 	Super::NativeConstruct();
-	NativeOnOpen();
 }
 
 void UUserWidgetBase::NativeDestruct()
@@ -66,18 +65,28 @@ bool UUserWidgetBase::HasAnimationEvent() const
 	return IsValid(AnimationEvent);
 }
 
-void UUserWidgetBase::NativeOnOpen()
+void UUserWidgetBase::NativeOnActived()
 {
-	IUserWidgetInterface::NativeOnOpen();
-	if (IsValid(AnimationEvent)) { AnimationEvent->NativeOnOpen(this); }
-	Execute_OnOpen(this);
+	IProcedureInterface::NativeOnActived();
+	IProcedureInterface::Execute_OnActived(this);
+
+	if (IsValid(AnimationEvent))
+	{
+		AnimationEvent->SetTargetWidget(this);
+		AnimationEvent->NativeOnActived();
+	}
 }
 
-void UUserWidgetBase::NativeOnClose()
+void UUserWidgetBase::NativeOnInactived()
 {
-	IUserWidgetInterface::NativeOnClose();
-	if (IsValid(AnimationEvent)) { AnimationEvent->NativeOnClose(this); }
-	Execute_OnClose(this);
+	IProcedureInterface::NativeOnInactived();
+	IProcedureInterface::Execute_OnInactived(this);
+
+	if (IsValid(AnimationEvent))
+	{
+		AnimationEvent->SetTargetWidget(this);
+		AnimationEvent->NativeOnInactived();
+	}
 }
 
 void UUserWidgetBase::NativeOnCreate()

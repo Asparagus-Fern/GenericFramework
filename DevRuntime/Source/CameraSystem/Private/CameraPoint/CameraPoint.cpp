@@ -15,3 +15,8 @@ UCameraComponent* ACameraPoint::GetCameraComponent_Implementation()
 {
 	return CameraComponent;
 }
+
+void ACameraPoint::SetCameraComponent_Implementation(UCameraComponent* InCameraComponent)
+{
+	CameraComponent = InCameraComponent;
+}

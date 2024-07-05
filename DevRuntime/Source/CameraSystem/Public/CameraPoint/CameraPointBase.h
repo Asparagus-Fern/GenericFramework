@@ -32,6 +32,9 @@ public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintPure)
 	UCameraComponent* GetCameraComponent();
 
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void SetCameraComponent(UCameraComponent* InCameraComponent);
+
 #if WITH_EDITOR
 
 public:

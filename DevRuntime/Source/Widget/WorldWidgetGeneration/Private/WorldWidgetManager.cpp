@@ -6,13 +6,13 @@
 #include "ScreenWidgetManager.h"
 #include "WorldWidget.h"
 #include "WorldWidgetPoint.h"
+#include "Animation/WidgetAnimationEvent.h"
 #include "Blueprint/WidgetLayoutLibrary.h"
 #include "Components/CanvasPanel.h"
 #include "Components/CanvasPanelSlot.h"
-#include "Kismet/GameplayStatics.h"
 #include "Manager/ManagerGlobal.h"
+#include "Procedure/ProcedureManager.h"
 #include "Widget/TagNameSlot.h"
-#include "Widgets/Layout/SConstraintCanvas.h"
 
 
 UWorldWidgetPanel::UWorldWidgetPanel(const FObjectInitializer& ObjectInitializer)
@@ -31,11 +31,19 @@ void UWorldWidgetPanel::NativeOnRefresh()
 
 	if (!IsValid(Panel) || !IsValid(GetWorld()))
 	{
+		DEBUG(Debug_UI, Error, TEXT("Panel/World Is NULL"))
 		return;
 	}
 
 	for (const auto& WorldWidget : WorldWidgets)
 	{
+		/* 跳过非激活UI */
+		if (!WorldWidget.Value->GetIsActive())
+		{
+			continue;
+		}
+
+		/* 跳过隐藏的UI */
 		if (WorldWidget.Key->IsHidden())
 		{
 			WorldWidget.Value->SetVisibility(ESlateVisibility::Collapsed);
@@ -47,6 +55,7 @@ void UWorldWidgetPanel::NativeOnRefresh()
 			FVector2D ScreenPosition;
 			APlayerController* PlayerController = Iterator->Get();
 
+			/* 映射位置到所有PlayerController */
 			if (UWidgetLayoutLibrary::ProjectWorldLocationToWidgetPosition(PlayerController, WorldWidget.Key->GetActorLocation(), ScreenPosition, false))
 			{
 				if (UCanvasPanelSlot* CanvasPanelSlot = UWidgetLayoutLibrary::SlotAsCanvasSlot(WorldWidget.Value))
@@ -128,7 +137,16 @@ void UWorldWidgetPanel::AddWorldWidget(AWorldWidgetPoint* InWorldWidgetPoint)
 
 			/* 创建，但未打开，只在需要的时候显示 */
 			DuplicateWorldWidget->NativeOnCreate();
-			DuplicateWorldWidget->SetVisibility(ESlateVisibility::Collapsed);
+
+			/* 自动激活 */
+			if (InWorldWidgetPoint->bIsAutoActived)
+			{
+				DuplicateWorldWidget->NativeOnActived();
+			}
+			else
+			{
+				DuplicateWorldWidget->SetVisibility(ESlateVisibility::Collapsed);
+			}
 		}
 	}
 }
@@ -149,15 +167,133 @@ void UWorldWidgetPanel::ClearWorldWidget()
 	WorldWidgets.Reset();
 }
 
+void UWorldWidgetPanel::ActiveWorldWidget(const AWorldWidgetPoint* InWorldWidgetPoint)
+{
+	if (!IsValid(InWorldWidgetPoint))
+	{
+		DEBUG(Debug_UI, Error, TEXT("InWorldWidgetPoint Is NULL"))
+		return;
+	}
+
+	if (WorldWidgets.Contains(InWorldWidgetPoint))
+	{
+		UWorldWidget* ActiveWidget = WorldWidgets.FindRef(InWorldWidgetPoint);
+		ActiveWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+		GetManager<UProcedureManager>()->RegisterProcedureHandle(GetManager<UScreenWidgetManager>()->GetProcedureInterfaceHandles(ActiveWidget, true));
+	}
+}
+
+void UWorldWidgetPanel::InactiveWorldWidget(AWorldWidgetPoint* InWorldWidgetPoint)
+{
+	if (!IsValid(InWorldWidgetPoint))
+	{
+		DEBUG(Debug_UI, Error, TEXT("InWorldWidgetPoint Is NULL"))
+		return;
+	}
+
+	if (WorldWidgets.Contains(InWorldWidgetPoint))
+	{
+		UWorldWidget* InactiveWidget = WorldWidgets.FindRef(InWorldWidgetPoint);
+
+		FSimpleMulticastDelegate OnFinish;
+		OnFinish.AddLambda([&InactiveWidget]()
+			{
+				InactiveWidget->SetVisibility(ESlateVisibility::Collapsed);
+			}
+		);
+
+		GetManager<UProcedureManager>()->RegisterProcedureHandle(GetManager<UScreenWidgetManager>()->GetProcedureInterfaceHandles(InactiveWidget, false), OnFinish);
+	}
+}
+
+void UWorldWidgetPanel::ActiveWorldWidgets(TArray<AWorldWidgetPoint*> InWorldWidgetPoints)
+{
+	for (const auto& InWorldWidgetPoint : InWorldWidgetPoints)
+	{
+		ActiveWorldWidget(InWorldWidgetPoint);
+	}
+
+	/*TArray<int32> Order;
+	int32 OrderIndex = 0;
+	
+	/* 获取所有的顺序 #1#
+	for (const auto& WorldWidgetPoint : InWorldWidgetPoints)
+	{
+		if (!Order.Contains(WorldWidgetPoint->Order))
+		{
+			Order.Add(WorldWidgetPoint->Order);
+		}
+	}
+	
+	/* 单次的处理 #1#
+	auto HandleOnce = [this, &Order, &OrderIndex, &InWorldWidgetPoints]()
+	{
+		/* 激活的一组WorldWidget会根据AWorldWidgetPoint::Order进行顺序激活，Order越小越先被激活 #1#
+		if (Order.IsValidIndex(OrderIndex))
+		{
+			float MaxDuration = 0.f;
+			const TArray<AWorldWidgetPoint*> HandlePoints = UWorldWidgetManager::GetWorldWidgetPointsByOrder(InWorldWidgetPoints, Order[OrderIndex]);
+			TArray<UWorldWidget*> HandleWidgets = GetWorldWidgetsByPoints(HandlePoints);
+			for (const auto& HandleWidget : HandleWidgets)
+			{
+				if (IsValid(HandleWidget) && IsValid(HandleWidget->AnimationEvent))
+				{
+					MaxDuration = FMath::Max(MaxDuration, HandleWidget->AnimationEvent->GetAnimationDuration());
+				}
+			}
+	
+			/* 取动画的最大持续时间作为这一阶段的结束 #1#
+			FTimerHandle Handle;
+			GetWorld()->GetTimerManager().SetTimer
+			(
+				Handle,
+				FTimerDelegate::CreateLambda([&OrderIndex]()
+					{
+						OrderIndex++;
+						// HandleOnce();
+					}
+				),
+				MaxDuration,
+				false
+			);
+	
+			/* 激活UI #1#
+			for (const auto& HandleWidget : HandleWidgets)
+			{
+				HandleWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+				HandleWidget->NativeOnActived();
+			}
+		}
+	};*/
+}
+
+void UWorldWidgetPanel::InactiveWorldWidgets(TArray<AWorldWidgetPoint*> InWorldWidgetPoints)
+{
+	for (const auto& InWorldWidgetPoint : InWorldWidgetPoints)
+	{
+		InactiveWorldWidget(InWorldWidgetPoint);
+	}
+}
+
 #define LOCTEXT_NAMESPACE "UWorldWidgetManager"
+
+TArray<UWorldWidget*> UWorldWidgetPanel::GetWorldWidgetsByPoints(TArray<AWorldWidgetPoint*> InPoints)
+{
+	TArray<UWorldWidget*> OutWorldWidgets;
+	for (const auto& InPoint : InPoints)
+	{
+		if (!WorldWidgets.Contains(InPoint))
+		{
+			continue;;
+		}
+
+		OutWorldWidgets.Add(WorldWidgets.FindRef(InPoint));
+	}
+	return OutWorldWidgets;
+}
 
 UWorldWidgetManager::UWorldWidgetManager()
 {
-}
-
-FText UWorldWidgetManager::GetManagerDisplayName()
-{
-	return LOCTEXT("DisplayName", "World Widget Manager");
 }
 
 void UWorldWidgetManager::Tick(float DeltaTime)
@@ -186,16 +322,94 @@ void UWorldWidgetManager::NativeOnRefresh()
 void UWorldWidgetManager::NativeOnActived()
 {
 	Super::NativeOnActived();
-
-	FScreenWidgetDelegates::OnHUDCreated.AddUObject(this, &UWorldWidgetManager::GenerateWorldWidgetPanel);
 }
 
 void UWorldWidgetManager::NativeOnInactived()
 {
 	Super::NativeOnInactived();
+}
+
+FText UWorldWidgetManager::GetManagerDisplayName()
+{
+	return LOCTEXT("DisplayName", "World Widget Manager");
+}
+
+void UWorldWidgetManager::NativeOnBeginPlay()
+{
+	Super::NativeOnBeginPlay();
+
+	WorldWidgetPoints.Reset();
+	GenerateWorldWidgetPanel();
+}
+
+void UWorldWidgetManager::NativeOnEndPlay()
+{
+	Super::NativeOnEndPlay();
 
 	WorldWidgetPoints.Reset();
 	ClearupWorldWidgetPanel();
+}
+
+void UWorldWidgetManager::ActiveWorldWidgetPoint(AWorldWidgetPoint* InPoint)
+{
+	for (const auto& WorldWidgetPanel : WorldWidgetPanels)
+	{
+		WorldWidgetPanel->ActiveWorldWidget(InPoint);
+	}
+}
+
+void UWorldWidgetManager::ActiveWorldWidgetPointByTag(FGameplayTag InPointTag)
+{
+	if (!InPointTag.IsValid())
+	{
+		DEBUG(Debug_UI, Error, TEXT("InPointTag Is NULL"))
+		return;
+	}
+
+	for (const auto& WorldWidgetPanel : WorldWidgetPanels)
+	{
+		WorldWidgetPanel->ActiveWorldWidgets(GetWorldWidgetPointsByTag(InPointTag));
+	}
+}
+
+void UWorldWidgetManager::InactiveWorldWidgetPoint(AWorldWidgetPoint* InPoint)
+{
+	for (const auto& WorldWidgetPanel : WorldWidgetPanels)
+	{
+		WorldWidgetPanel->InactiveWorldWidget(InPoint);
+	}
+}
+
+void UWorldWidgetManager::InactiveWorldWidgetPointByTag(FGameplayTag InPointTag)
+{
+	if (!InPointTag.IsValid())
+	{
+		DEBUG(Debug_UI, Error, TEXT("InPointTag Is NULL"))
+		return;
+	}
+
+	for (const auto& WorldWidgetPanel : WorldWidgetPanels)
+	{
+		WorldWidgetPanel->InactiveWorldWidgets(GetWorldWidgetPointsByTag(InPointTag));
+	}
+}
+
+TArray<AWorldWidgetPoint*> UWorldWidgetManager::GetWorldWidgetPoints() const
+{
+	return WorldWidgetPoints;
+}
+
+TArray<AWorldWidgetPoint*> UWorldWidgetManager::GetWorldWidgetPointsByTag(FGameplayTag InPointTag) const
+{
+	TArray<AWorldWidgetPoint*> Points;
+	for (auto& WorldWidgetPoint : GetWorldWidgetPoints())
+	{
+		if (WorldWidgetPoint->PointTag == InPointTag)
+		{
+			Points.Add(WorldWidgetPoint);
+		}
+	}
+	return Points;
 }
 
 void UWorldWidgetManager::GenerateWorldWidgetPanel()

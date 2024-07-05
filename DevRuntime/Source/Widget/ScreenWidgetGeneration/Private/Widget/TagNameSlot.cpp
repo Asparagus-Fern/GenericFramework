@@ -11,11 +11,6 @@ UTagNameSlot::UTagNameSlot(const FObjectInitializer& ObjectInitializer)
 	SetClipping(EWidgetClipping::ClipToBounds);
 }
 
-void UTagNameSlot::ReleaseSlateResources(bool bReleaseChildren)
-{
-	Super::ReleaseSlateResources(bReleaseChildren);
-}
-
 TSharedRef<SWidget> UTagNameSlot::RebuildWidget()
 {
 	if (IsDesignTime())
@@ -33,4 +28,9 @@ TSharedRef<SWidget> UTagNameSlot::RebuildWidget()
 		GetManager<UScreenWidgetManager>()->RegisterSlot(this);
 		return Super::RebuildWidget();
 	}
+}
+
+void UTagNameSlot::ReleaseSlateResources(bool bReleaseChildren)
+{
+	Super::ReleaseSlateResources(bReleaseChildren);
 }

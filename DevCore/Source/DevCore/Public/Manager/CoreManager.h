@@ -7,6 +7,7 @@
 #include "ManagerType.h"
 #include "Config/ConfigInterface.h"
 #include "Debug/DebugType.h"
+#include "Procedure/ProcedureBaseInterface.h"
 #include "Procedure/ProcedureInterface.h"
 #include "CoreManager.generated.h"
 
@@ -47,4 +48,9 @@ public:
 public:
 	virtual void NativeOnActived() override;
 	virtual void NativeOnInactived() override;
+
+	/* IManagerInterface */
+public:
+	virtual void NativeOnBeginPlay() override;
+	virtual void NativeOnEndPlay() override;
 };

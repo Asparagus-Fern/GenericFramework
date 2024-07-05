@@ -93,5 +93,3 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditConditionHides, EditCondition = "BoderBrushResource == EBorderBrushResource::Texture2D"))
 	UTexture2D* Texture2D = nullptr;
 };
-
-

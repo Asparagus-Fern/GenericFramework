@@ -13,41 +13,20 @@ UCameraHandle_Default::UCameraHandle_Default()
 	ViewTargetTransitionParams.bLockOutgoing = false;
 }
 
-void UCameraHandle_Default::HandleSwitchToCameraPoint_Implementation(APlayerController* InPlayerController, ACameraPointBase* InCameraPoint)
+bool UCameraHandle_Default::HandleSwitchToCameraPoint_Implementation(APlayerController* InPlayerController, ACameraPointBase* InCameraPoint)
 {
-	if (!InPlayerController)
+	if (Super::HandleSwitchToCameraPoint_Implementation(InPlayerController, InCameraPoint))
 	{
-		DEBUG(Debug_Viewport, Error, TEXT("PlayerController Is NULL"))
-		return;
+		GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &UCameraHandle_Default::OnSwitchToCameraPointFinish, ViewTargetTransitionParams.BlendTime);
+		OwnerPlayerController->PlayerCameraManager->SetViewTarget(TargetCameraPoint, ViewTargetTransitionParams);
+		return true;
 	}
 
-	if (!InCameraPoint)
-	{
-		DEBUG(Debug_Viewport, Error, TEXT("CameraPoint Is NULL"))
-		return;
-	}
-
-	Super::HandleSwitchToCameraPoint_Implementation(InPlayerController, InCameraPoint);
-
-	/* Create Camera Point For Blend View Target */
-	if (!IsValid(PreviewCameraPoint))
-	{
-		PreviewCameraPoint = GetWorld()->SpawnActor<ACameraPointBase>();
-		PreviewCameraPoint->SetActorLabel("CameraPoint_Preview");
-	}
-
-	PreviewCameraPoint->SetActorLocation(InPlayerController->PlayerCameraManager->GetCameraLocation());
-	PreviewCameraPoint->SetActorRotation(InPlayerController->PlayerCameraManager->GetCameraRotation());
-	InPlayerController->PlayerCameraManager->SetViewTarget(PreviewCameraPoint);
-	InPlayerController->PlayerCameraManager->SetViewTarget(InCameraPoint, ViewTargetTransitionParams);
+	return false;
 }
 
-void UCameraHandle_Default::OnSwitchToCameraPointFinish_Implementation()
+void UCameraHandle_Default::OnSwitchToCameraPointFinish()
 {
-	Super::OnSwitchToCameraPointFinish_Implementation();
-
-	if (!bLockCamera)
-	{
-		OwnerPlayerController->PlayerCameraManager->SetViewTarget(OwnerPlayerController->GetPawn());
-	}
+	Super::OnSwitchToCameraPointFinish();
+	TimerHandle.Invalidate();
 }

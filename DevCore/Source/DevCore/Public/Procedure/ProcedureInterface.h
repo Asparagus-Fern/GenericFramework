@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ProcedureBaseInterface.h"
 #include "UObject/Interface.h"
 #include "ProcedureInterface.generated.h"
 
@@ -36,13 +35,13 @@ public:
 
 public:
 	virtual int32 GetProcedureOrder() { return 0; }
-	virtual bool GetIsAsync() { return bIsAsync; }
+	virtual bool GetIsAsync() { return false; }
 	virtual bool GetIsActive() { return bIsActive; }
-	FProcedureDelegate GetActivateFinishDelegate() { return OnActivedFinish; }
-	FProcedureDelegate GetInactivateFinishDelegate() { return OnInactivedFinish; }
+	virtual void SetIsActive(bool InActive);
+	FProcedureDelegate& GetActivateFinishDelegate() { return OnActivedFinish; }
+	FProcedureDelegate& GetInactivateFinishDelegate() { return OnInactivedFinish; }
 
 protected:
-	bool bIsAsync = false;
 	bool bIsActive = false;
 
 	FProcedureDelegate OnActivedFinish;

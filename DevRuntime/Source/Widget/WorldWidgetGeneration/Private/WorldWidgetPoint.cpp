@@ -43,3 +43,15 @@ void AWorldWidgetPoint::Destroyed()
 	Super::Destroyed();
 	FWorldWidgetDelegates::OnWorldWidgetPointDestroy.Broadcast(this);
 }
+
+void AWorldWidgetPoint::SetIsActive(const bool InActive)
+{
+	if (InActive)
+	{
+		GetManager<UWorldWidgetManager>()->ActiveWorldWidgetPoint(this);
+	}
+	else
+	{
+		GetManager<UWorldWidgetManager>()->ActiveWorldWidgetPoint(this);
+	}
+}

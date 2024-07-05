@@ -3,9 +3,9 @@
 
 #include "CameraManager.h"
 
-#include "CameraHandle.h"
 #include "CameraSystemType.h"
 #include "CameraPoint/CameraPointBase.h"
+#include "Handle/CameraHandle.h"
 
 #define LOCTEXT_NAMESPACE "UCoreManager"
 
@@ -57,7 +57,7 @@ void UCameraManager::SwitchToCamera(FGameplayTag InCameraTag)
 {
 	if (!InCameraTag.IsValid())
 	{
-		DEBUG(Debug_Viewport, Error, TEXT("CameraTag Is NULL"))
+		DEBUG(Debug_Camera, Error, TEXT("CameraTag Is NULL"))
 		return;
 	}
 
@@ -76,13 +76,13 @@ void UCameraManager::SwitchToCameraByPlayerController(FGameplayTag InCameraTag, 
 	/* Check */
 	if (!InCameraTag.IsValid())
 	{
-		DEBUG(Debug_Viewport, Error, TEXT("CameraTag Is NULL"))
+		DEBUG(Debug_Camera, Error, TEXT("CameraTag Is NULL"))
 		return;
 	}
 
 	if (!PlayerController)
 	{
-		DEBUG(Debug_Viewport, Error, TEXT("PlayerController Is NULL"))
+		DEBUG(Debug_Camera, Error, TEXT("PlayerController Is NULL"))
 		return;
 	}
 

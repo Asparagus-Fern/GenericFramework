@@ -2,6 +2,7 @@
 
 #include "NativeGameplayTags.h"
 #include "ProcedureInterface.h"
+#include "ProcedureType.generated.h"
 
 class UCoreManager;
 
@@ -28,12 +29,14 @@ enum class EGameplayProcedure : uint8
 /**
  * 流程处理句柄
  */
+USTRUCT(BlueprintType)
 struct DEVCORE_API FProcedureInterfaceHandle
 {
+	GENERATED_BODY()
+
 public:
 	FProcedureInterfaceHandle();
 	FProcedureInterfaceHandle(IProcedureInterface* InInterface, bool InTargetActiveState);
-	
 
 public:
 	bool operator==(const FProcedureInterfaceHandle& Other) const

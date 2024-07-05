@@ -18,7 +18,6 @@ UCLASS()
 class WORLDWIDGETGENERATION_API UWorldWidgetPanel : public UObject, public IProcedureBaseInterface, public IProcedureInterface
 {
 	GENERATED_UCLASS_BODY()
-	
 	/* IProcedureBaseInterface */
 public:
 	virtual void NativeOnCreate() override;
@@ -43,8 +42,16 @@ public:
 	virtual void RemoveWorldWidget(AWorldWidgetPoint* InWorldWidgetPoint);
 	virtual void ClearWorldWidget();
 
+	virtual void ActiveWorldWidget(const AWorldWidgetPoint* InWorldWidgetPoint);
+	virtual void InactiveWorldWidget(AWorldWidgetPoint* InWorldWidgetPoint);
+	virtual void ActiveWorldWidgets(TArray<AWorldWidgetPoint*> InWorldWidgetPoints);
+	virtual void InactiveWorldWidgets(TArray<AWorldWidgetPoint*> InWorldWidgetPoints);
+
 	virtual UCanvasPanel* GetPanel() { return Panel; }
 	TMap<AWorldWidgetPoint*, UWorldWidget*>& GetWorldWidgets() { return WorldWidgets; }
+
+protected:
+	virtual TArray<UWorldWidget*> GetWorldWidgetsByPoints(TArray<AWorldWidgetPoint*> InPoints);
 };
 
 
@@ -59,10 +66,6 @@ class WORLDWIDGETGENERATION_API UWorldWidgetManager : public UCoreManager
 public:
 	UWorldWidgetManager();
 
-	/* IManagerInterface */
-public:
-	virtual FText GetManagerDisplayName() override;
-	
 	/* FTickableGameObject */
 public:
 	virtual bool IsTickable() const override { return true; }
@@ -77,10 +80,35 @@ public:
 	virtual void NativeOnActived() override;
 	virtual void NativeOnInactived() override;
 
+	/* IManagerInterface */
+public:
+	virtual FText GetManagerDisplayName() override;
+	virtual void NativeOnBeginPlay() override;
+	virtual void NativeOnEndPlay() override;
+
 	/* UWorldWidgetManager */
 public:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Transient)
+	UPROPERTY(Transient, VisibleAnywhere, Getter, BlueprintGetter="GetWorldWidgetPoints")
 	TArray<AWorldWidgetPoint*> WorldWidgetPoints;
+
+public:
+	UFUNCTION(BlueprintCallable)
+	void ActiveWorldWidgetPoint(AWorldWidgetPoint* InPoint);
+
+	UFUNCTION(BlueprintCallable)
+	void ActiveWorldWidgetPointByTag(FGameplayTag InPointTag);
+
+	UFUNCTION(BlueprintCallable)
+	void InactiveWorldWidgetPoint(AWorldWidgetPoint* InPoint);
+
+	UFUNCTION(BlueprintCallable)
+	void InactiveWorldWidgetPointByTag(FGameplayTag InPointTag);
+
+	UFUNCTION(BlueprintPure)
+	TArray<AWorldWidgetPoint*> GetWorldWidgetPoints() const;
+
+	UFUNCTION(BlueprintPure)
+	TArray<AWorldWidgetPoint*> GetWorldWidgetPointsByTag(FGameplayTag InPointTag) const;
 
 protected:
 	virtual void GenerateWorldWidgetPanel();

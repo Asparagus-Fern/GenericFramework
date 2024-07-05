@@ -42,11 +42,7 @@ void ULevelStreamingHandleBase::HandleUnloadLevels(TArray<FUnloadLevelStreamingS
 void ULevelStreamingHandleBase::HandleSetLevelVisibility(FLevelStreamingVisibilitySetting InLevelStreamingVisibilitySetting, FOnFinish InOnFinishDelegate)
 {
 	OnFinishDelegate = InOnFinishDelegate;
-
-	TScriptDelegate<FLevelStreamingVisibilityStatus::ThreadSafetyMode> Callback;
-	Callback.BindUFunction(this, "OnFinish");
-
-	SetLevelVisibility(InLevelStreamingVisibilitySetting.LevelStreaming, InLevelStreamingVisibilitySetting.bVisible, Callback);
+	SetLevelVisibility(InLevelStreamingVisibilitySetting.LevelStreaming, InLevelStreamingVisibilitySetting.bVisible);
 }
 
 void ULevelStreamingHandleBase::HandleSetLevelsVisibility(TArray<FLevelStreamingVisibilitySetting> InLevelStreamingVisibilitySettings, FOnOnceFinish InOnOnceFinishDelegate, FOnFinish InOnFinishDelegate)
@@ -56,12 +52,8 @@ void ULevelStreamingHandleBase::HandleSetLevelsVisibility(TArray<FLevelStreaming
 
 	if (InLevelStreamingVisibilitySettings.IsValidIndex(Index))
 	{
-		FLevelStreamingVisibilitySetting LevelStreamingVisibilitySetting = InLevelStreamingVisibilitySettings[Index];
-
-		TScriptDelegate<FLevelStreamingVisibilityStatus::ThreadSafetyMode> Callback;
-		Callback.BindUFunction(this, "OnOnceFinish");
-
-		SetLevelVisibility(LevelStreamingVisibilitySetting.LevelStreaming, LevelStreamingVisibilitySetting.bVisible, Callback);
+		const FLevelStreamingVisibilitySetting LevelStreamingVisibilitySetting = InLevelStreamingVisibilitySettings[Index];
+		SetLevelVisibility(LevelStreamingVisibilitySetting.LevelStreaming, LevelStreamingVisibilitySetting.bVisible);
 	}
 }
 
@@ -77,13 +69,17 @@ void ULevelStreamingHandleBase::Unload(const TSoftObjectPtr<UWorld>& Level, cons
 	UGameplayStatics::UnloadStreamLevelBySoftObjectPtr(this, Level, LatentActionInfo, bShouldBlockOnUnload);
 }
 
-void ULevelStreamingHandleBase::SetLevelVisibility(ULevelStreaming* LevelStreaming, bool bVisible, TScriptDelegate<FLevelStreamingVisibilityStatus::ThreadSafetyMode> Callback)
+void ULevelStreamingHandleBase::SetLevelVisibility(ULevelStreaming* LevelStreaming, bool bVisible)
 {
-	LevelStreaming->OnLevelShown.RemoveAll(this);
-	LevelStreaming->OnLevelHidden.RemoveAll(this);
+	if (LevelStreaming->IsLevelVisible() == bVisible)
+	{
+		OnOnceFinish();
+		return;
+	}
 
-	LevelStreaming->OnLevelShown.Add(Callback);
-	LevelStreaming->OnLevelHidden.Add(Callback);
+	LevelStreaming->OnLevelShown.AddUniqueDynamic(this, &ULevelStreamingHandleBase::OnOnceFinish);
+	LevelStreaming->OnLevelHidden.AddUniqueDynamic(this, &ULevelStreamingHandleBase::OnOnceFinish);
+
 	LevelStreaming->SetShouldBeVisible(bVisible);
 }
 
@@ -171,11 +167,7 @@ void ULevelStreamingVisibilityHandle::OnOnceFinish()
 	if (LevelStreamingVisibilitySettings.IsValidIndex(Index))
 	{
 		const FLevelStreamingVisibilitySetting LevelStreamingVisibilitySetting = LevelStreamingVisibilitySettings[Index];
-
-		TScriptDelegate<FLevelStreamingVisibilityStatus::ThreadSafetyMode> Callback;
-		Callback.BindUFunction(this, "OnOnceFinish");
-
-		SetLevelVisibility(LevelStreamingVisibilitySetting.LevelStreaming, LevelStreamingVisibilitySetting.bVisible, Callback);
+		SetLevelVisibility(LevelStreamingVisibilitySetting.LevelStreaming, LevelStreamingVisibilitySetting.bVisible);
 	}
 	else
 	{

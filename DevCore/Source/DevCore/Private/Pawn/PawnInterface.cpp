@@ -3,5 +3,26 @@
 
 #include "Pawn/PawnInterface.h"
 
+IPawnInterface::IPawnInterface()
+	: bLock(false),
+	  bLockLocation(false),
+	  bLockRotation(false)
+{
+}
 
-// Add default functionality here for any IIPawnInterface functions that are not pure virtual.
+void IPawnInterface::SetLockState(const bool InLock, const bool InLockLocation, const bool InLockRotation)
+{
+	bLock = InLock;
+	bLockLocation = InLockLocation;
+	bLockRotation = InLockRotation;
+}
+
+bool IPawnInterface::CanMove()
+{
+	return !bLock && !bLockLocation;
+}
+
+bool IPawnInterface::CanTurn()
+{
+	return !bLock && !bLockRotation;
+}

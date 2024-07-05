@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "ScreenWidgetType.h"
 #include "Group/CommonButton.h"
-#include "UserWidget/Base/UserWidgetInterface.h"
 #include "MenuStyle.generated.h"
 
 /**
