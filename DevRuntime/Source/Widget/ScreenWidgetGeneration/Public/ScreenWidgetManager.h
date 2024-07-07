@@ -58,7 +58,7 @@ public:
 	UFUNCTION(BlueprintPure)
 	UUserWidgetBase* GetSlotWidget(FGameplayTag InSlotTag) const;
 
-	UFUNCTION(BlueprintPure, meta = ( DeterminesOutputType = "InClass"), Category="Slot Manager")
+	UFUNCTION(BlueprintPure, meta = ( DeterminesOutputType = "InClass"))
 	UUserWidgetBase* GetSlotUserWidgetByClass(FGameplayTag InSlotTag, TSubclassOf<UUserWidgetBase> InClass) const;
 
 	/* Game HUD */
@@ -90,15 +90,21 @@ public:
 	UPROPERTY(BlueprintReadOnly, Transient)
 	UGameMenuSetting* GameMenu = nullptr;
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly, Transient)
 	TArray<FMenuGenerateInfo> MenuGenerateInfos;
 
 public:
 	UFUNCTION(BlueprintCallable)
 	void SwitchGameMenu(UGameMenuSetting* InGameMenuSetting);
 
+	UFUNCTION(BlueprintCallable)
+	void SelectMenu(FGameplayTag InMenuTag);
+
+	UFUNCTION(BlueprintCallable)
+	void DeselectMenu(FGameplayTag InMenuTag);
+
 protected:
 	FDelegateHandle MenuSelectionChangedHandle;
-	virtual void GenerateMenu(const FMenuContainerInfo& InMenuContainerInfo);
+	virtual void GenerateMenu(FMenuContainerInfo InMenuContainerInfo);
 	virtual void OnMenuSelectionChanged(FMenuInfo InMenuInfo, bool bSelection);
 };

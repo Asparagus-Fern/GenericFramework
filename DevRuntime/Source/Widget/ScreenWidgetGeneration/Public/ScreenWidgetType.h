@@ -113,7 +113,7 @@ struct FMenuGenerateInfo
 
 public:
 	FMenuGenerateInfo();
-	FMenuGenerateInfo(UCommonButtonGroup* InCommonButtonGroup, FMenuContainerInfo InMenuContainerInfo);
+	FMenuGenerateInfo(UCommonButtonGroup* InCommonButtonGroup, const FMenuContainerInfo& InMenuContainerInfo);
 
 public:
 	bool operator==(FGameplayTag InContainerTag) const
@@ -131,6 +131,12 @@ public:
 		return MenuContainerInfo.ContainerTag == InMenuGenerateInfo.MenuContainerInfo.ContainerTag;
 	}
 
+	bool HasMenuInfo(FGameplayTag InMenuTag);
+
+	void SelectMenu(FGameplayTag InMenuTag);
+
+	void DeselectMenu(FGameplayTag InMenuTag);
+
 public:
 	UPROPERTY(BlueprintReadOnly)
 	UCommonButtonGroup* CommonButtonGroup = nullptr;
@@ -139,7 +145,7 @@ public:
 	FMenuContainerInfo MenuContainerInfo;
 
 	UPROPERTY(BlueprintReadOnly)
-	TArray<UMenuStyle*> ActivedMenuStyles;
+	TArray<UMenuStyle*> MenuInfos;
 };
 
 /**

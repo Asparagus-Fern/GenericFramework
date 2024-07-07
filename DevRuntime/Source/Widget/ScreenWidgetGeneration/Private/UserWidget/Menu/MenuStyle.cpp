@@ -40,3 +40,8 @@ void UMenuStyle::NativeConstructMenuStyle(FMenuInfo InMenuInfo)
 	MenuInfo = InMenuInfo;
 	ConstructMenuStyle(InMenuInfo);
 }
+
+FMenuInfo UMenuStyle::GetMenuInfo() const
+{
+	return MenuInfo;
+}

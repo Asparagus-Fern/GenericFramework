@@ -15,9 +15,12 @@ void UProcedurePlay::NativeOnActived()
 
 	GetManager<UScreenWidgetManager>()->OpenUserWidget(DefaultOpenWidgets);
 	GetManager<UScreenWidgetManager>()->SwitchGameMenu(GameMenuSetting);
+
+	RequestActivateFinish();
 }
 
 void UProcedurePlay::NativeOnInactived()
 {
 	Super::NativeOnInactived();
+	RequestInactivateFinish();
 }

@@ -7,6 +7,8 @@
 #include "Debug/DebugType.h"
 #include "UserWidget/Menu/MenuContainer.h"
 
+#if WITH_EDITOR
+
 void UGameMenuSetting::GenerateMenu()
 {
 	if (!IsValid(MenuTagTable))
@@ -63,6 +65,8 @@ void UGameMenuSetting::GenerateMenu()
 
 	Modify();
 }
+
+#endif
 
 FMenuContainerInfo* UGameMenuSetting::GetRootContainerInfo()
 {

@@ -6,7 +6,6 @@
 #include "Animation/WidgetAnimationEvent.h"
 #include "Blueprint/WidgetTree.h"
 #include "DataAsset/GameMenuSetting.h"
-#include "Event/CommonButtonEvent.h"
 #include "Group/CommonButtonGroup.h"
 #include "Manager/ManagerGlobal.h"
 #include "Procedure/ProcedureManager.h"
@@ -215,15 +214,15 @@ void UScreenWidgetManager::CloseUserWidget(const FGameplayTag InSlotTag, FSimple
 		if (IsValid(RemoveWidget))
 		{
 			FSimpleMulticastDelegate OnHandleFinish;
-			OnHandleFinish.AddLambda([this, &Slot, &RemoveWidget, OnFinish]()
+			OnHandleFinish.AddLambda([this, OnFinish]()
 				{
-					Slot->RemoveChild(RemoveWidget);
-					SlotWidgets.Remove(RemoveWidget->SlotTag);
 					OnFinish.Broadcast();
 				}
 			);
 
 			InactiveWidget(RemoveWidget, OnHandleFinish);
+			Slot->RemoveChild(RemoveWidget);
+			SlotWidgets.Remove(RemoveWidget->SlotTag);
 		}
 	}
 }
@@ -316,102 +315,87 @@ void UScreenWidgetManager::SwitchGameMenu(UGameMenuSetting* InGameMenuSetting)
 	}
 }
 
-void UScreenWidgetManager::GenerateMenu(const FMenuContainerInfo& InMenuContainerInfo)
+void UScreenWidgetManager::SelectMenu(const FGameplayTag InMenuTag)
 {
-	/* 如果从没生成过，创建菜单信息 */
-	if (!MenuGenerateInfos.Contains(InMenuContainerInfo))
+	for (auto& MenuGenerateInfo : MenuGenerateInfos)
 	{
-		/* 创建按钮组管理状态的切换 */
-		UCommonButtonGroup* CommonButtonGroup = NewObject<UCommonButtonGroup>(this);
-		const FMenuGenerateInfo NewMenuGenerateInfo = FMenuGenerateInfo(CommonButtonGroup, InMenuContainerInfo);
-		MenuGenerateInfos.Add(NewMenuGenerateInfo);
-
-		for (auto& MenuInfo : InMenuContainerInfo.MenuInfos)
+		if (MenuGenerateInfo.HasMenuInfo(InMenuTag))
 		{
-			for (auto& Event : MenuInfo.Events)
-			{
-				if (IsValid(Event))
-				{
-					Event->SetIsActive(false);
-				}
-			}
+			MenuGenerateInfo.SelectMenu(InMenuTag);
+			return;
 		}
 	}
+}
 
-	/* 查找有效的菜单信息 */
-	if (FMenuGenerateInfo* FoundMenuGenerateInfo = MenuGenerateInfos.FindByKey(InMenuContainerInfo))
+void UScreenWidgetManager::DeselectMenu(const FGameplayTag InMenuTag)
+{
+	for (auto& MenuGenerateInfo : MenuGenerateInfos)
 	{
-		UMenuContainer* MenuContainer = FoundMenuGenerateInfo->MenuContainerInfo.MenuContainer;
-		if (IsValid(MenuContainer))
+		if (MenuGenerateInfo.HasMenuInfo(InMenuTag))
 		{
-			/* 先添加到屏幕，初始化容器 */
-			OpenUserWidget(MenuContainer);
+			MenuGenerateInfo.DeselectMenu(InMenuTag);
+			return;
+		}
+	}
+}
 
-			/* 构建菜单样式 */
+void UScreenWidgetManager::GenerateMenu(FMenuContainerInfo InMenuContainerInfo)
+{
+	UMenuContainer* MenuContainer = InMenuContainerInfo.MenuContainer;
+	if (IsValid(MenuContainer))
+	{
+		/* 创建按钮组管理状态的切换 */
+		UCommonButtonGroup* NewCommonButtonGroup = NewObject<UCommonButtonGroup>(this);
+		FMenuGenerateInfo NewMenuGenerateInfo = FMenuGenerateInfo(NewCommonButtonGroup, InMenuContainerInfo);
+
+		/* 先添加到屏幕，初始化容器 */
+		OpenUserWidget(MenuContainer);
+
+		/* 构建菜单样式 */
+		MenuContainer->PreConstructMenuStyle(InMenuContainerInfo.MenuInfos);
+
+		TArray<UMenuStyle*> MenuStyleArr;
+		for (const auto& MenuInfo : InMenuContainerInfo.MenuInfos)
+		{
+			/* MenuInfo的按钮样式将覆盖MenuContainer的按钮样式 */
+			UMenuStyle* MenuStyle = nullptr;
+			if (IsValid(InMenuContainerInfo.MenuStyle))
 			{
-				MenuContainer->PreConstructMenuStyle(FoundMenuGenerateInfo->MenuContainerInfo.MenuInfos);
+				MenuStyle = CreateWidget<UMenuStyle>(GetWorld(), InMenuContainerInfo.MenuStyle);
+			}
+			else if (IsValid(MenuInfo.MenuStyleOverride))
+			{
+				MenuStyle = DuplicateObject(MenuInfo.MenuStyleOverride, MenuInfo.MenuStyleOverride->GetOuter());
+			}
 
-				const bool bGenerateMenuStyle = FoundMenuGenerateInfo->ActivedMenuStyles.IsEmpty();
+			/* 只有当样式有效，才添加该按钮 */
+			if (IsValid(MenuStyle))
+			{
+				NewMenuGenerateInfo.MenuInfos.Add(MenuStyle);
+				MenuStyle->NativeOnCreate();
 
-				TArray<UMenuStyle*> MenuStyleArr;
-				for (const auto& MenuInfo : FoundMenuGenerateInfo->MenuContainerInfo.MenuInfos)
-				{
-					/* MenuInfo的按钮样式将覆盖MenuContainer的按钮样式 */
-					UMenuStyle* MenuStyle = nullptr;
+				/* Add Button To Group */
+				NewMenuGenerateInfo.CommonButtonGroup->AddWidget(MenuStyle);
 
-					if (bGenerateMenuStyle)
-					{
-						if (IsValid(InMenuContainerInfo.MenuStyle))
-						{
-							MenuStyle = CreateWidget<UMenuStyle>(GetWorld(), InMenuContainerInfo.MenuStyle);
-						}
-						else if (IsValid(MenuInfo.MenuStyleOverride))
-						{
-							MenuStyle = MenuInfo.MenuStyleOverride;
-						}
+				/* Set Button Event */
+				MenuStyle->SetEvents(MenuInfo.Events);
 
-						FoundMenuGenerateInfo->ActivedMenuStyles.Add(MenuStyle);
-					}
-					else
-					{
-						MenuStyle = *FoundMenuGenerateInfo->ActivedMenuStyles.FindByPredicate([MenuInfo](const UMenuStyle* InMenuInfo)
-							{
-								return InMenuInfo->MenuInfo == MenuInfo;
-							}
-						);
-					}
+				/* Construct And Add In The Container */
+				MenuContainer->ConstructMenuStyle(MenuStyle);
+				MenuStyle->NativeConstructMenuStyle(MenuInfo);
+				MenuStyle->NativeOnActived();
 
-					/* 只有当样式有效，才添加该按钮 */
-					if (IsValid(MenuStyle))
-					{
-						if (bGenerateMenuStyle)
-						{
-							/* Call On Create First */
-							MenuStyle->NativeOnCreate();
-
-							/* Add Button To Group */
-							FoundMenuGenerateInfo->CommonButtonGroup->AddWidget(MenuStyle);
-						}
-
-						/* Set Button Event */
-						MenuStyle->SetEvents(MenuInfo.Events);
-
-						/* Construct And Add In The Container */
-						MenuContainer->ConstructMenuStyle(MenuStyle);
-						MenuStyle->NativeConstructMenuStyle(MenuInfo);
-						MenuStyle->NativeOnActived();
-
-						MenuStyleArr.Add(MenuStyle);
-					}
-				}
-
-				MenuContainer->PostConstructMenuStyle(MenuStyleArr);
+				MenuStyleArr.Add(MenuStyle);
 			}
 		}
-		else
-		{
-			DEBUG(Debug_UI, Error, TEXT("MenuContainer Is NULL"))
-		}
+
+		MenuContainer->PostConstructMenuStyle(MenuStyleArr);
+
+		MenuGenerateInfos.Add(NewMenuGenerateInfo);
+	}
+	else
+	{
+		DEBUG(Debug_UI, Error, TEXT("MenuContainer Is NULL"))
 	}
 }
 
@@ -428,15 +412,25 @@ void UScreenWidgetManager::OnMenuSelectionChanged(FMenuInfo InMenuInfo, bool bSe
 	}
 	else
 	{
-		if (const FMenuGenerateInfo* FoundMenuGenerateInfo = MenuGenerateInfos.FindByKey(InMenuInfo.MenuTag))
+		TArray<FMenuGenerateInfo> CurrentMenuGenerateInfos = MenuGenerateInfos;
+		for (auto& MenuGenerateInfo : CurrentMenuGenerateInfos)
 		{
-			FoundMenuGenerateInfo->CommonButtonGroup->DeselectAll();
-			
-			if (IsValid(FoundMenuGenerateInfo->MenuContainerInfo.MenuContainer))
+			if (MenuGenerateInfo.MenuContainerInfo.ContainerTag == InMenuInfo.MenuTag)
 			{
-				CloseUserWidget(FoundMenuGenerateInfo->MenuContainerInfo.MenuContainer);
+				MenuGenerateInfo.CommonButtonGroup->DeselectAll();
+
+				CloseUserWidget(MenuGenerateInfo.MenuContainerInfo.MenuContainer);
+				MenuGenerateInfos.Remove(MenuGenerateInfo);
 			}
 		}
+
+		// if (const FMenuGenerateInfo* FoundMenuGenerateInfo = MenuGenerateInfos.FindByKey(InMenuInfo.MenuTag))
+		// {
+		// 	FoundMenuGenerateInfo->CommonButtonGroup->DeselectAll();
+		//
+		// 	CloseUserWidget(FoundMenuGenerateInfo->MenuContainerInfo.MenuContainer);
+		// 	MenuGenerateInfos.Remove(*FoundMenuGenerateInfo);
+		// }
 	}
 }
 

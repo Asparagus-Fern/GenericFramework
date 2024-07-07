@@ -17,7 +17,15 @@ void ULevelStreamingHandleBase::HandleLoadLevels(TArray<FLoadLevelStreamingSetti
 	if (LoadLevelStreamingSettings.IsValidIndex(Index))
 	{
 		const FLoadLevelStreamingSetting LoadLevelStreamingSetting = LoadLevelStreamingSettings[Index];
-		Load(LoadLevelStreamingSetting.Level, LoadLevelStreamingSetting.bMakeVisibleAfterLoad, LoadLevelStreamingSetting.bShouldBlockOnLoad,TEXT("OnOnceFinish"), this);
+
+		if (LoadLevelStreamingSetting.Level.IsNull())
+		{
+			OnOnceFinish();
+		}
+		else
+		{
+			Load(LoadLevelStreamingSetting.Level, LoadLevelStreamingSetting.bMakeVisibleAfterLoad, LoadLevelStreamingSetting.bShouldBlockOnLoad,TEXT("OnOnceFinish"), this);
+		}
 	}
 }
 
@@ -35,7 +43,15 @@ void ULevelStreamingHandleBase::HandleUnloadLevels(TArray<FUnloadLevelStreamingS
 	if (InUnloadLevelStreamingSettings.IsValidIndex(Index))
 	{
 		const FUnloadLevelStreamingSetting UnloadLevelStreamingSetting = InUnloadLevelStreamingSettings[Index];
-		Unload(UnloadLevelStreamingSetting.Level, UnloadLevelStreamingSetting.bShouldBlockOnUnload,TEXT("OnOnceFinish"), this);
+
+		if (UnloadLevelStreamingSetting.Level.IsNull())
+		{
+			OnOnceFinish();
+		}
+		else
+		{
+			Unload(UnloadLevelStreamingSetting.Level, UnloadLevelStreamingSetting.bShouldBlockOnUnload,TEXT("OnOnceFinish"), this);
+		}
 	}
 }
 
@@ -71,6 +87,12 @@ void ULevelStreamingHandleBase::Unload(const TSoftObjectPtr<UWorld>& Level, cons
 
 void ULevelStreamingHandleBase::SetLevelVisibility(ULevelStreaming* LevelStreaming, bool bVisible)
 {
+	if (!IsValid(LevelStreaming))
+	{
+		OnOnceFinish();
+		return;
+	}
+
 	if (LevelStreaming->IsLevelVisible() == bVisible)
 	{
 		OnOnceFinish();

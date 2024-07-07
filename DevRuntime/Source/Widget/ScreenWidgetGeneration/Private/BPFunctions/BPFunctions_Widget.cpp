@@ -3,10 +3,12 @@
 
 #include "BPFunctions/BPFunctions_Widget.h"
 
+#include "ScreenWidgetManager.h"
 #include "Components/Border.h"
 #include "Components/Image.h"
 #include "Debug/DebugType.h"
 #include "Engine/Texture2DDynamic.h"
+#include "Manager/ManagerGlobal.h"
 #include "Slate/SlateBrushAsset.h"
 
 bool UBPFunctions_Widget::IsValid_ImageBrush(const FImageBrush& InImageBrush)
@@ -124,4 +126,19 @@ void UBPFunctions_Widget::SetBorderBrush(UBorder* InBorder, FBorderBrush InBorde
 		InBorder->SetBrushFromTexture(InBorderBrush.Texture2D);
 		break;
 	}
+}
+
+void UBPFunctions_Widget::SwitchGameMenu(UGameMenuSetting* InGameMenuSetting)
+{
+	GetManager<UScreenWidgetManager>()->SwitchGameMenu(InGameMenuSetting);
+}
+
+void UBPFunctions_Widget::SelectMenu(const FGameplayTag InMenuTag)
+{
+	GetManager<UScreenWidgetManager>()->SelectMenu(InMenuTag);
+}
+
+void UBPFunctions_Widget::DeselectMenu(const FGameplayTag InMenuTag)
+{
+	GetManager<UScreenWidgetManager>()->DeselectMenu(InMenuTag);
 }

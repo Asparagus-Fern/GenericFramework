@@ -13,7 +13,7 @@ void UCBE_OpenUserWidget::NativeOnActived()
 
 	// FSimpleMulticastDelegate OnFinish;
 	// OnFinish.AddUObject(this, &UCBE_OpenUserWidget::OnOpenFinish);
-	GetManager<UScreenWidgetManager>()->OpenUserWidget(HandleWidget);
+	GetManager<UScreenWidgetManager>()->OpenUserWidget(DuplicateObject(HandleWidget,HandleWidget->GetOuter()));
 }
 
 void UCBE_OpenUserWidget::NativeOnInactived()

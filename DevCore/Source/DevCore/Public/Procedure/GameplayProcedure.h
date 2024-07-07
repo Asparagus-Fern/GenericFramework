@@ -20,6 +20,7 @@ class DEVCORE_API UGameplayProcedure : public UObject, public IProcedureBaseInte
 
 public:
 	UGameplayProcedure();
+	virtual bool GetIsAsync() override { return true; }
 	virtual void NativeOnCreate() override;
 	virtual void NativeOnDestroy() override;
 	virtual void NativeOnRefresh() override;

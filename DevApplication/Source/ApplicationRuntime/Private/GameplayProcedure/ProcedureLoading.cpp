@@ -20,6 +20,18 @@ void UProcedureLoading::NativeOnActived()
 {
 	Super::NativeOnActived();
 
+	if (bActiveLoadingWidget && DefaultLoadingTag.IsValid())
+	{
+		for (const auto& LoadingWidget : LoadingWidgets)
+		{
+			if (LoadingWidget->SelfTag == DefaultLoadingTag)
+			{
+				GetManager<UScreenWidgetManager>()->OpenUserWidget(LoadingWidget);
+				break;
+			}
+		}
+	}
+	
 	if (bIsWorldPartition)
 	{
 	}
@@ -42,34 +54,12 @@ void UProcedureLoading::NativeOnActived()
 			}
 		}
 	}
-
-	if (bActiveLoadingWidget && DefaultLoadingTag.IsValid())
-	{
-		for (const auto& LoadingWidget : LoadingWidgets)
-		{
-			if (LoadingWidget->SelfTag == DefaultLoadingTag)
-			{
-				GetManager<UScreenWidgetManager>()->OpenUserWidget(LoadingWidget);
-				break;
-			}
-		}
-	}
 }
 
 void UProcedureLoading::NativeOnInactived()
 {
 	Super::NativeOnInactived();
-
-	if (bActiveLoadingWidget && DefaultLoadingTag.IsValid())
-	{
-		for (const auto& LoadingWidget : LoadingWidgets)
-		{
-			if (LoadingWidget->SelfTag == DefaultLoadingTag)
-			{
-				GetManager<UScreenWidgetManager>()->CloseUserWidget(LoadingWidget);
-			}
-		}
-	}
+	RequestInactivateFinish();
 }
 
 void UProcedureLoading::OnLoadAllLevelStreamingOnceFinish()
@@ -92,5 +82,22 @@ void UProcedureLoading::OnLevelsToLoadOnceFinish()
 
 void UProcedureLoading::OnLevelsToLoadFinish()
 {
-	GetManager<UProcedureManager>()->SwitchProcedure(NextProcedureTag);
+	if (bActiveLoadingWidget && DefaultLoadingTag.IsValid())
+	{
+		for (const auto& LoadingWidget : LoadingWidgets)
+		{
+			if (LoadingWidget->SelfTag == DefaultLoadingTag)
+			{
+				FSimpleMulticastDelegate OnFinish;
+				OnFinish.AddLambda([this]()
+					{
+						RequestActivateFinish();
+						GetManager<UProcedureManager>()->SwitchProcedure(NextProcedureTag);
+					}
+				);
+
+				GetManager<UScreenWidgetManager>()->CloseUserWidget(LoadingWidget, OnFinish);
+			}
+		}
+	}
 }

@@ -29,6 +29,10 @@ public:
 	virtual void NativeConstructMenuStyle(FMenuInfo InMenuInfo);
 
 public:
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(Getter, BlueprintGetter="GetMenuInfo")
 	FMenuInfo MenuInfo;
+
+public:
+	UFUNCTION(BlueprintPure)
+	FMenuInfo GetMenuInfo() const;
 };

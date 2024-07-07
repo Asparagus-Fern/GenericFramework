@@ -12,8 +12,11 @@
 ACameraPointBase::ACameraPointBase()
 {
 	CameraHandle = CreateDefaultSubobject<UCameraHandle_Default>("CameraHandle");
-	bIsSpatiallyLoaded = true;
 	PrimaryActorTick.bCanEverTick = true;
+
+#if WITH_EDITORONLY_DATA
+	bIsSpatiallyLoaded = true;
+#endif
 }
 
 void ACameraPointBase::BeginPlay()
