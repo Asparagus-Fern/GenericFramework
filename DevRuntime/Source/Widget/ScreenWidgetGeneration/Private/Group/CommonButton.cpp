@@ -81,8 +81,8 @@ void UCommonButton::NativeOnSelected(bool bBroadcast)
 
 void UCommonButton::NativeOnDeselected(bool bBroadcast)
 {
-	ResponseButtonEvent(ECommonButtonResponseEvent::OnDeselected);
 	Super::NativeOnDeselected(bBroadcast);
+	ResponseButtonEvent(ECommonButtonResponseEvent::OnDeselected);
 }
 
 void UCommonButton::NativeOnActived()
@@ -137,10 +137,11 @@ void UCommonButton::SetEvents(TArray<UCommonButtonEvent*> InEvents)
 	Events = InEvents;
 }
 
-void UCommonButton::ResponseButtonEvent(ECommonButtonResponseEvent InResponseEvent)
+void UCommonButton::ResponseButtonEvent(ECommonButtonResponseEvent InResponseEvent, const FSimpleMulticastDelegate& OnFinish)
 {
 	if (Events.IsEmpty())
 	{
+		OnFinish.Broadcast();
 		return;
 	}
 
@@ -164,8 +165,8 @@ void UCommonButton::ResponseButtonEvent(ECommonButtonResponseEvent InResponseEve
 		{
 			ActiveProcedureHandle->Reset();
 		}
-		
-		ActiveProcedureHandle = GetManager<UProcedureManager>()->RegisterProcedureHandle(ProcedureInterfaceHandles);
+
+		ActiveProcedureHandle = GetManager<UProcedureManager>()->RegisterProcedureHandle(ProcedureInterfaceHandles, OnFinish);
 	}
 }
 

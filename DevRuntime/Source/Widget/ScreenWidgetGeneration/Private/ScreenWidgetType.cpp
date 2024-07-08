@@ -47,7 +47,7 @@ FMenuGenerateInfo::FMenuGenerateInfo(UCommonButtonGroup* InCommonButtonGroup, co
 
 bool FMenuGenerateInfo::HasMenuInfo(const FGameplayTag InMenuTag)
 {
-	for (auto& MenuStyle : MenuInfos)
+	for (const auto& MenuStyle : MenuStyles)
 	{
 		if (MenuStyle->GetMenuInfo() == InMenuTag)
 		{
@@ -62,9 +62,9 @@ void FMenuGenerateInfo::SelectMenu(const FGameplayTag InMenuTag)
 {
 	if (IsValid(CommonButtonGroup) && HasMenuInfo(InMenuTag))
 	{
-		for (int32 Index = 0; Index != MenuInfos.Num(); ++Index)
+		for (int32 Index = 0; Index != MenuStyles.Num(); ++Index)
 		{
-			if (MenuInfos[Index]->GetMenuInfo() == InMenuTag)
+			if (MenuStyles[Index]->GetMenuInfo() == InMenuTag)
 			{
 				CommonButtonGroup->SelectButtonAtIndex(Index);
 			}
@@ -78,4 +78,20 @@ void FMenuGenerateInfo::DeselectMenu(const FGameplayTag InMenuTag)
 	{
 		CommonButtonGroup->DeselectAll();
 	}
+}
+
+UMenuStyle* FMenuGenerateInfo::GetMenuStyle(const FGameplayTag InMenuTag)
+{
+	if (HasMenuInfo(InMenuTag))
+	{
+		for (const auto& MenuStyle : MenuStyles)
+		{
+			if (MenuStyle->GetMenuInfo() == InMenuTag)
+			{
+				return MenuStyle;
+			}
+		}
+	}
+
+	return nullptr;
 }

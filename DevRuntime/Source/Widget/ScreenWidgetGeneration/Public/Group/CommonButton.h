@@ -70,8 +70,8 @@ protected:
 	UPROPERTY(BlueprintAssignable)
 	FOnButtonEventHandleFinish OnButtonEventHandleFinish;
 
-protected:
-	void ResponseButtonEvent(ECommonButtonResponseEvent InResponseEvent);
+public:
+	void ResponseButtonEvent(ECommonButtonResponseEvent InResponseEvent, const FSimpleMulticastDelegate& OnFinish = FSimpleMulticastDelegate());
 
 	/* Widget Animation */
 public:

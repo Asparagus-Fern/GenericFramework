@@ -14,7 +14,7 @@
 UCLASS(Abstract, Blueprintable, EditInlineNew)
 class SCREENWIDGETGENERATION_API UCommonButtonEvent : public UObject, public IProcedureInterface
 {
-	GENERATED_BODY()
+	GENERATED_UCLASS_BODY()
 
 public:
 	/* true则为激活，表示在该条件下激活按钮 */

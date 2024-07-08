@@ -136,9 +136,12 @@ UGameplayProcedure* UProcedureManager::GetGameplayProcedure(FGameplayTag InProce
 			if (!FoundGameplayProcedureClass.IsNull())
 			{
 				UGameplayProcedure* LoadGameplayProcedure = FStaticFunctions_Object::LoadObject<UGameplayProcedure>(FoundGameplayProcedureClass);
-				GameplayProcedure.Add(InProcedureTag, LoadGameplayProcedure);
-				LoadGameplayProcedure->NativeOnCreate();
-				return LoadGameplayProcedure;
+				if (IsValid(LoadGameplayProcedure))
+				{
+					GameplayProcedure.Add(InProcedureTag, LoadGameplayProcedure);
+					LoadGameplayProcedure->NativeOnCreate();
+					return LoadGameplayProcedure;
+				}
 			}
 			else
 			{

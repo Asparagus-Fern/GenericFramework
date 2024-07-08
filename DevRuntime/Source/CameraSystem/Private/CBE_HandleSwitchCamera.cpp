@@ -11,21 +11,40 @@ void UCBE_HandleSwitchCamera::NativeOnActived()
 {
 	Super::NativeOnActived();
 
-	if (CameraTag.IsValid())
+	if (ActiveSwitchCameraTag.IsValid())
 	{
-		SwitchCameraFinishHandle = FCameraSystemDelegates::OnSwitchCameraFinish.AddUObject(this, &UCBE_HandleSwitchCamera::OnSwitchCameraFinish);
-		GetManager<UCameraManager>()->SwitchToCamera(CameraTag);
+		SwitchCameraFinishHandle = FCameraSystemDelegates::OnSwitchCameraFinish.AddUObject(this, &UCBE_HandleSwitchCamera::OnActiveSwitchCameraFinish);
+		GetManager<UCameraManager>()->SwitchToCamera(ActiveSwitchCameraTag);
+	}
+	else
+	{
+		RequestActivateFinish();
 	}
 }
 
 void UCBE_HandleSwitchCamera::NativeOnInactived()
 {
 	Super::NativeOnInactived();
-	RequestInactivateFinish();
+
+	if (InactiveSwitchCameraTag.IsValid())
+	{
+		SwitchCameraFinishHandle = FCameraSystemDelegates::OnSwitchCameraFinish.AddUObject(this, &UCBE_HandleSwitchCamera::OnInactiveSwitchCameraFinish);
+		GetManager<UCameraManager>()->SwitchToCamera(InactiveSwitchCameraTag);
+	}
+	else
+	{
+		RequestInactivateFinish();
+	}
 }
 
-void UCBE_HandleSwitchCamera::OnSwitchCameraFinish(UCameraHandle* InCameraHandle)
+void UCBE_HandleSwitchCamera::OnActiveSwitchCameraFinish(UCameraHandle* InCameraHandle)
 {
 	SwitchCameraFinishHandle.Reset();
 	RequestActivateFinish();
+}
+
+void UCBE_HandleSwitchCamera::OnInactiveSwitchCameraFinish(UCameraHandle* InCameraHandle)
+{
+	SwitchCameraFinishHandle.Reset();
+	RequestInactivateFinish();
 }

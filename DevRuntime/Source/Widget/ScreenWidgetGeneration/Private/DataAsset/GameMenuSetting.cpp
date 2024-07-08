@@ -81,11 +81,24 @@ FMenuContainerInfo* UGameMenuSetting::GetRootContainerInfo()
 	return nullptr;
 }
 
-FMenuContainerInfo* UGameMenuSetting::GetContainerInfo(FGameplayTag InContainerTag)
+FMenuContainerInfo* UGameMenuSetting::GetContainerInfo(FGameplayTag InMenuTag)
 {
 	for (auto& MenuContainerInfo : MenuContainerInfos)
 	{
-		if (MenuContainerInfo.ContainerTag == InContainerTag)
+		if (MenuContainerInfo.ContainerTag == InMenuTag)
+		{
+			return &MenuContainerInfo;
+		}
+	}
+
+	return nullptr;
+}
+
+FMenuContainerInfo* UGameMenuSetting::GetParentContainerInfo(FGameplayTag InMenuTag)
+{
+	for (auto& MenuContainerInfo : MenuContainerInfos)
+	{
+		if (MenuContainerInfo.ContainerTag == InMenuTag.RequestDirectParent())
 		{
 			return &MenuContainerInfo;
 		}

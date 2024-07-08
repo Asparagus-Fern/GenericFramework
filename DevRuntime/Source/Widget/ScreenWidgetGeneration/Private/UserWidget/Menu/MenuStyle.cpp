@@ -25,13 +25,13 @@ void UMenuStyle::NativeOnClicked()
 
 void UMenuStyle::NativeOnSelected(bool bBroadcast)
 {
-	Super::NativeOnSelected(bBroadcast);
+	UCommonButtonBase::NativeOnSelected(bBroadcast);
 	FScreenWidgetDelegates::OnMenuSelectionChanged.Broadcast(MenuInfo, true);
 }
 
 void UMenuStyle::NativeOnDeselected(bool bBroadcast)
 {
-	Super::NativeOnDeselected(bBroadcast);
+	UCommonButtonBase::NativeOnDeselected(bBroadcast);
 	FScreenWidgetDelegates::OnMenuSelectionChanged.Broadcast(MenuInfo, false);
 }
 

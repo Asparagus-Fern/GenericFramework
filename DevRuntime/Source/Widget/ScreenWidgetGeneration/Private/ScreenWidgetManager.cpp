@@ -42,6 +42,9 @@ void UScreenWidgetManager::NativeOnInactived()
 	GameMenu = nullptr;
 	MenuGenerateInfos.Reset();
 
+	TargetMenuSelection.Reset();
+	TargetMenuSelectionIndex = 0;
+
 	FScreenWidgetDelegates::OnMenuSelectionChanged.Remove(MenuSelectionChangedHandle);
 }
 
@@ -339,9 +342,73 @@ void UScreenWidgetManager::DeselectMenu(const FGameplayTag InMenuTag)
 	}
 }
 
+bool UScreenWidgetManager::GetMenuContainerInfo(const FGameplayTag InMenuTag, FMenuContainerInfo& OutMenuContainerInfo)
+{
+	if (const FMenuContainerInfo* MenuContainerInfo = GameMenu->GetContainerInfo(InMenuTag))
+	{
+		OutMenuContainerInfo = *MenuContainerInfo;
+		return true;
+	}
+
+	return false;
+}
+
+bool UScreenWidgetManager::GetMenuParentContainerInfo(FGameplayTag InMenuTag, FMenuContainerInfo& OutMenuContainerInfo)
+{
+	if (const FMenuContainerInfo* MenuContainerInfo = GameMenu->GetParentContainerInfo(InMenuTag))
+	{
+		OutMenuContainerInfo = *MenuContainerInfo;
+		return true;
+	}
+
+	return false;
+}
+
+bool UScreenWidgetManager::GetMenuGenerateInfo(const FGameplayTag InMenuTag, FMenuGenerateInfo& OutMenuGenerateInfo)
+{
+	if (const FMenuContainerInfo* MenuContainerInfo = GameMenu->GetContainerInfo(InMenuTag))
+	{
+		if (const FMenuGenerateInfo* FoundMenuGenerateInfo = MenuGenerateInfos.FindByKey(*MenuContainerInfo))
+		{
+			OutMenuGenerateInfo = *FoundMenuGenerateInfo;
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool UScreenWidgetManager::GetMenuParentGenerateInfo(FGameplayTag InMenuTag, FMenuGenerateInfo& OutMenuGenerateInfo)
+{
+	if (const FMenuContainerInfo* MenuContainerInfo = GameMenu->GetParentContainerInfo(InMenuTag))
+	{
+		if (const FMenuGenerateInfo* FoundMenuGenerateInfo = MenuGenerateInfos.FindByKey(*MenuContainerInfo))
+		{
+			OutMenuGenerateInfo = *FoundMenuGenerateInfo;
+			return true;
+		}
+	}
+
+	return false;
+}
+
+UMenuStyle* UScreenWidgetManager::GetMenuStyle(const FGameplayTag InMenuTag)
+{
+	FMenuGenerateInfo FoundMenuGenerateInfo;
+	if (GetMenuParentGenerateInfo(InMenuTag, FoundMenuGenerateInfo))
+	{
+		if (UMenuStyle* FoundMenuStyle = FoundMenuGenerateInfo.GetMenuStyle(InMenuTag))
+		{
+			return FoundMenuStyle;
+		}
+	}
+
+	return nullptr;
+}
+
 void UScreenWidgetManager::GenerateMenu(FMenuContainerInfo InMenuContainerInfo)
 {
-	UMenuContainer* MenuContainer = InMenuContainerInfo.MenuContainer;
+	UMenuContainer* MenuContainer = DuplicateObject(InMenuContainerInfo.MenuContainer, InMenuContainerInfo.MenuContainer->GetOuter());
 	if (IsValid(MenuContainer))
 	{
 		/* 创建按钮组管理状态的切换 */
@@ -371,16 +438,16 @@ void UScreenWidgetManager::GenerateMenu(FMenuContainerInfo InMenuContainerInfo)
 			/* 只有当样式有效，才添加该按钮 */
 			if (IsValid(MenuStyle))
 			{
-				NewMenuGenerateInfo.MenuInfos.Add(MenuStyle);
+				NewMenuGenerateInfo.MenuStyles.Add(MenuStyle);
 				MenuStyle->NativeOnCreate();
 
-				/* Add Button To Group */
+				/* 添加到CommonButtonGroup */
 				NewMenuGenerateInfo.CommonButtonGroup->AddWidget(MenuStyle);
 
-				/* Set Button Event */
+				/* 设置按钮事件 */
 				MenuStyle->SetEvents(MenuInfo.Events);
 
-				/* Construct And Add In The Container */
+				/* 构建按钮容器 */
 				MenuContainer->ConstructMenuStyle(MenuStyle);
 				MenuStyle->NativeConstructMenuStyle(MenuInfo);
 				MenuStyle->NativeOnActived();
@@ -403,7 +470,28 @@ void UScreenWidgetManager::OnMenuSelectionChanged(FMenuInfo InMenuInfo, bool bSe
 {
 	DEBUG(Debug_UI, Log, TEXT("MenuInfo : %s,Seletion : %d"), *InMenuInfo.MenuMainName.ToString(), bSelection)
 
+	if (TargetMenuSelection.IsEmpty())
+	{
+		GetWorld()->GetTimerManager().SetTimerForNextTick(this, &UScreenWidgetManager::HandleMenuSelectionChanged);
+	}
+
 	if (bSelection)
+	{
+		TargetMenuSelection.Add(InMenuInfo.MenuTag, true);
+	}
+	else
+	{
+		FMenuGenerateInfo MenuGenerateInfo;
+		if (GetMenuGenerateInfo(InMenuInfo.MenuTag, MenuGenerateInfo))
+		{
+			MenuGenerateInfo.CommonButtonGroup->DeselectAll();
+		}
+
+		TargetMenuSelection.Add(InMenuInfo.MenuTag, false);
+	}
+
+
+	/*if (bSelection)
 	{
 		if (const FMenuContainerInfo* MenuContainerInfo = GameMenu->GetContainerInfo(InMenuInfo.MenuTag))
 		{
@@ -417,20 +505,74 @@ void UScreenWidgetManager::OnMenuSelectionChanged(FMenuInfo InMenuInfo, bool bSe
 		{
 			if (MenuGenerateInfo.MenuContainerInfo.ContainerTag == InMenuInfo.MenuTag)
 			{
-				MenuGenerateInfo.CommonButtonGroup->DeselectAll();
-
+				if (MenuGenerateInfo.CommonButtonGroup->IsSelected())
+				{
+					MenuGenerateInfo.CommonButtonGroup->DeselectAll();
+				}
+	
 				CloseUserWidget(MenuGenerateInfo.MenuContainerInfo.MenuContainer);
 				MenuGenerateInfos.Remove(MenuGenerateInfo);
 			}
 		}
+	}*/
+}
 
-		// if (const FMenuGenerateInfo* FoundMenuGenerateInfo = MenuGenerateInfos.FindByKey(InMenuInfo.MenuTag))
-		// {
-		// 	FoundMenuGenerateInfo->CommonButtonGroup->DeselectAll();
-		//
-		// 	CloseUserWidget(FoundMenuGenerateInfo->MenuContainerInfo.MenuContainer);
-		// 	MenuGenerateInfos.Remove(*FoundMenuGenerateInfo);
-		// }
+void UScreenWidgetManager::HandleMenuSelectionChanged()
+{
+	TArray<FGameplayTag> MenuTags;
+	TargetMenuSelection.GenerateKeyArray(MenuTags);
+
+	if (MenuTags.IsValidIndex(TargetMenuSelectionIndex))
+	{
+		const FGameplayTag MenuTag = MenuTags[TargetMenuSelectionIndex];
+		const bool bSelection = TargetMenuSelection.FindRef(MenuTag);
+
+		if (UMenuStyle* MenuStyle = GetMenuStyle(MenuTag))
+		{
+			if (bSelection)
+			{
+				MenuStyle->ResponseButtonEvent(ECommonButtonResponseEvent::OnSelected);
+
+				if (const FMenuContainerInfo* MenuContainerInfo = GameMenu->GetContainerInfo(MenuTag))
+				{
+					GenerateMenu(*GameMenu->GetContainerInfo(MenuTag));
+				}
+
+				HandleMenuSelectionChangedOnceFinish();
+			}
+			else
+			{
+				FSimpleMulticastDelegate OnFinish;
+				OnFinish.AddLambda([this, &MenuTag]()
+					{
+						FMenuGenerateInfo MenuGenerateInfo;
+						if (GetMenuGenerateInfo(MenuTag, MenuGenerateInfo))
+						{
+							CloseUserWidget(MenuGenerateInfo.MenuContainerInfo.MenuContainer);
+							MenuGenerateInfos.Remove(MenuGenerateInfo);
+						}
+
+						HandleMenuSelectionChangedOnceFinish();
+					}
+				);
+
+				MenuStyle->ResponseButtonEvent(ECommonButtonResponseEvent::OnDeselected, OnFinish);
+			}
+		}
+	}
+}
+
+void UScreenWidgetManager::HandleMenuSelectionChangedOnceFinish()
+{
+	TargetMenuSelectionIndex++;
+	if (TargetMenuSelectionIndex < TargetMenuSelection.GetMaxIndex())
+	{
+		HandleMenuSelectionChanged();
+	}
+	else
+	{
+		TargetMenuSelection.Reset();
+		TargetMenuSelectionIndex = 0;
 	}
 }
 

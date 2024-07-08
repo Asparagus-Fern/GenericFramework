@@ -35,7 +35,7 @@
     {
       "Name": "SlateWidgetGeneration",
       "Type": "Runtime",
-      "LoadingPhase": "Default"
+      "LoadingPhase": "PreDefault"
     },
     {
       "Name": "LevelStreaming",
@@ -64,6 +64,11 @@
     },
     {
       "Name": "CameraSystem",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
+    },
+    {
+      "Name": "MediaPlaySystem",
       "Type": "Runtime",
       "LoadingPhase": "Default"
     }

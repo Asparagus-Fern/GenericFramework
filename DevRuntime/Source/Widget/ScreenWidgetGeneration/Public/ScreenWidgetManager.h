@@ -102,9 +102,30 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void DeselectMenu(FGameplayTag InMenuTag);
+	
+	UFUNCTION(BlueprintPure)
+	virtual bool GetMenuContainerInfo(FGameplayTag InMenuTag, FMenuContainerInfo& OutMenuContainerInfo);
+
+	UFUNCTION(BlueprintPure)
+	virtual bool GetMenuParentContainerInfo(FGameplayTag InMenuTag, FMenuContainerInfo& OutMenuContainerInfo);
+
+	UFUNCTION(BlueprintPure)
+	virtual bool GetMenuGenerateInfo(FGameplayTag InMenuTag, FMenuGenerateInfo& OutMenuGenerateInfo);
+
+	UFUNCTION(BlueprintPure)
+	virtual bool GetMenuParentGenerateInfo(FGameplayTag InMenuTag, FMenuGenerateInfo& OutMenuGenerateInfo);
+
+	UFUNCTION(BlueprintPure)
+	virtual UMenuStyle* GetMenuStyle(FGameplayTag InMenuTag);
 
 protected:
 	FDelegateHandle MenuSelectionChangedHandle;
 	virtual void GenerateMenu(FMenuContainerInfo InMenuContainerInfo);
 	virtual void OnMenuSelectionChanged(FMenuInfo InMenuInfo, bool bSelection);
+
+private:
+	TMap<FGameplayTag, bool> TargetMenuSelection;
+	int32 TargetMenuSelectionIndex = 0;
+	virtual void HandleMenuSelectionChanged();
+	virtual void HandleMenuSelectionChangedOnceFinish();
 };

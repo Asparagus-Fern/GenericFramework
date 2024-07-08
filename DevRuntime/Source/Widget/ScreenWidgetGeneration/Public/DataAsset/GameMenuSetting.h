@@ -30,5 +30,6 @@ public:
 
 public:
 	FMenuContainerInfo* GetRootContainerInfo();
-	FMenuContainerInfo* GetContainerInfo(FGameplayTag InContainerTag);
+	FMenuContainerInfo* GetContainerInfo(FGameplayTag InMenuTag);
+	FMenuContainerInfo* GetParentContainerInfo(FGameplayTag InMenuTag);
 };

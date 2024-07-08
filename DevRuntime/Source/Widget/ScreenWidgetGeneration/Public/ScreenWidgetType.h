@@ -137,6 +137,8 @@ public:
 
 	void DeselectMenu(FGameplayTag InMenuTag);
 
+	UMenuStyle* GetMenuStyle(FGameplayTag InMenuTag);
+
 public:
 	UPROPERTY(BlueprintReadOnly)
 	UCommonButtonGroup* CommonButtonGroup = nullptr;
@@ -145,7 +147,7 @@ public:
 	FMenuContainerInfo MenuContainerInfo;
 
 	UPROPERTY(BlueprintReadOnly)
-	TArray<UMenuStyle*> MenuInfos;
+	TArray<UMenuStyle*> MenuStyles;
 };
 
 /**

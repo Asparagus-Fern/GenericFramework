@@ -23,9 +23,13 @@ public:
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="Camera"))
-	FGameplayTag CameraTag;
+	FGameplayTag ActiveSwitchCameraTag;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="Camera"))
+	FGameplayTag InactiveSwitchCameraTag;
 
 protected:
 	FDelegateHandle SwitchCameraFinishHandle;
-	void OnSwitchCameraFinish(UCameraHandle* InCameraHandle);
+	void OnActiveSwitchCameraFinish(UCameraHandle* InCameraHandle);
+	void OnInactiveSwitchCameraFinish(UCameraHandle* InCameraHandle);
 };
