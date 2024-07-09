@@ -18,10 +18,6 @@
 
 #define LOCTEXT_NAMESPACE "UScreenWidgetManager"
 
-UScreenWidgetManager::UScreenWidgetManager()
-{
-}
-
 void UScreenWidgetManager::NativeOnActived()
 {
 	Super::NativeOnActived();
@@ -543,7 +539,7 @@ void UScreenWidgetManager::HandleMenuSelectionChanged()
 			else
 			{
 				FSimpleMulticastDelegate OnFinish;
-				OnFinish.AddLambda([this, &MenuTag]()
+				OnFinish.AddLambda([this, MenuTag]()
 					{
 						FMenuGenerateInfo MenuGenerateInfo;
 						if (GetMenuGenerateInfo(MenuTag, MenuGenerateInfo))

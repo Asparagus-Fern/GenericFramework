@@ -133,6 +133,7 @@ void UWorldWidgetPanel::AddWorldWidget(AWorldWidgetPoint* InWorldWidgetPoint)
 				CanvasPanelSlot->SetAnchors(FAnchors());
 				CanvasPanelSlot->SetAlignment(FVector2D());
 				CanvasPanelSlot->SetOffsets(FMargin());
+				CanvasPanelSlot->SetZOrder(DuplicateWorldWidget->ZOrder);
 			}
 
 			/* 创建，但未打开，只在需要的时候显示 */

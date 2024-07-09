@@ -19,6 +19,10 @@ struct SLATEWIDGETGENERATION_API FLinePoint
 	GENERATED_BODY()
 
 public:
+	FLinePoint();
+	FLinePoint(float InAngle, float InLength);
+
+public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(ClampMin = -180.f, ClampMax = 180.f))
 	float Angle = 0.f;
 

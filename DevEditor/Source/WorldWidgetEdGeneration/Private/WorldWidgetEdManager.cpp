@@ -160,6 +160,7 @@ void UEditorWorldWidgetPanel::AddWorldWidget(AWorldWidgetPoint* InWorldWidgetPoi
 			.Anchors(FAnchors())
 			.Alignment(FVector2D())
 			.Offset(FMargin())
+			.ZOrder(DuplicateWorldWidget->ZOrder)
 			[
 				DuplicateWorldWidget->TakeWidget()
 			];

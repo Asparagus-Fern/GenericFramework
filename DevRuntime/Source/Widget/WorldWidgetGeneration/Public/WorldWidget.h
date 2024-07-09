@@ -17,10 +17,13 @@ class WORLDWIDGETGENERATION_API UWorldWidget : public UCommonButton
 public:
 	UWorldWidget(const FObjectInitializer& ObjectInitializer);
 	virtual void NativePreConstruct() override;
-	
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FVector2D Anchor = FVector2D(.5f, 0.f);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 ZOrder = 0;
 
 public:
 	UFUNCTION(BlueprintPure)

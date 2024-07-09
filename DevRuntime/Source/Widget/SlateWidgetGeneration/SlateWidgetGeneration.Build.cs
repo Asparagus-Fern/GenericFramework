@@ -9,7 +9,7 @@ public class SlateWidgetGeneration : ModuleRules
 		PublicDependencyModuleNames.AddRange(
 			new string[]
 			{
-				"Core",
+				"Core", 
 			}
 		);
 
@@ -21,7 +21,8 @@ public class SlateWidgetGeneration : ModuleRules
 				"Slate",
 				"SlateCore",
 
-				"UMG"
+				"UMG",
+				"CommonUI"
 			}
 		);
 	}

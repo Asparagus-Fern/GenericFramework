@@ -26,10 +26,7 @@ UCLASS()
 class SCREENWIDGETGENERATION_API UScreenWidgetManager : public UCoreManager
 {
 	GENERATED_BODY()
-
-public:
-	UScreenWidgetManager();
-
+	
 	/* IProcedureInterface */
 public:
 	virtual void NativeOnActived() override;

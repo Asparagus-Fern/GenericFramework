@@ -9,9 +9,12 @@
 TSharedRef<SWidget> ULine::RebuildWidget()
 {
 	MyLine = SNew(SLine)
-		.Anchor(Anchor)
 		.Thickness(Thickness)
-		.LinePoint(LinePoints);
+		.Duration(Duration)
+		.CurveType(CurveType)
+		.Anchor(Anchor)
+		.LinePoint(LinePoints)
+		.OnTransitionFinish_UObject(this, &ULine::HandleTransitionFinish);
 
 	if (GetChildrenCount() > 0)
 	{
@@ -59,20 +62,6 @@ void ULine::OnSlotRemoved(UPanelSlot* InSlot)
 	}
 }
 
-FVector2D ULine::GetAnchor() const
-{
-	return Anchor;
-}
-
-void ULine::SetAnchor(const FVector2D InAnchor)
-{
-	Anchor = InAnchor;
-	if (MyLine.IsValid())
-	{
-		MyLine->SetAnchor(Anchor);
-	}
-}
-
 float ULine::GetThickness() const
 {
 	return Thickness;
@@ -84,6 +73,48 @@ void ULine::SetThickness(const float InThickness)
 	if (MyLine.IsValid())
 	{
 		MyLine->SetThickness(Thickness);
+	}
+}
+
+float ULine::GetDuration() const
+{
+	return Duration;
+}
+
+void ULine::SetDuration(const float InDuration)
+{
+	Duration = InDuration;
+	if (MyLine.IsValid())
+	{
+		MyLine->SetTransition(Duration, CurveType);
+	}
+}
+
+ETransitionCurve ULine::GetCurveType() const
+{
+	return CurveType;
+}
+
+void ULine::SetCurveType(const ETransitionCurve InCurveType)
+{
+	CurveType = InCurveType;
+	if (MyLine.IsValid())
+	{
+		MyLine->SetTransition(Duration, CurveType);
+	}
+}
+
+FVector2D ULine::GetAnchor() const
+{
+	return Anchor;
+}
+
+void ULine::SetAnchor(const FVector2D InAnchor)
+{
+	Anchor = InAnchor;
+	if (MyLine.IsValid())
+	{
+		MyLine->SetAnchor(Anchor);
 	}
 }
 
@@ -113,4 +144,17 @@ void ULine::SetLinePoints(const TArray<FLinePoint> InLinePoints)
 	{
 		MyLine->SetLinePoints(LinePoints);
 	}
+}
+
+void ULine::PlayTransition(const bool bForward)
+{
+	if (MyLine.IsValid())
+	{
+		MyLine->PlayTransition(bForward);
+	}
+}
+
+void ULine::HandleTransitionFinish()
+{
+	OnTransitionFinish.Broadcast();
 }
