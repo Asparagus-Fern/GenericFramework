@@ -50,19 +50,39 @@ FGameplayTag UUserWidgetBase::GetSlotTag() const
 	return SlotTag;
 }
 
-UWidgetAnimationEvent* UUserWidgetBase::GetAnimationEvent() const
+UWidgetAnimationEvent* UUserWidgetBase::GetAnimationEvent_Implementation() const
 {
 	return AnimationEvent;
 }
 
-void UUserWidgetBase::SetAnimationEvent(UWidgetAnimationEvent* InAnimationEvent)
+void UUserWidgetBase::SetAnimationEvent_Implementation(UWidgetAnimationEvent* InAnimationEvent)
 {
+	IWidgetAnimationInterface::SetAnimationEvent_Implementation(InAnimationEvent);
 	AnimationEvent = InAnimationEvent;
 }
 
-bool UUserWidgetBase::HasAnimationEvent() const
+bool UUserWidgetBase::HasAnimationEvent_Implementation() const
 {
 	return IsValid(AnimationEvent);
+}
+
+void UUserWidgetBase::PlayAnimationEvent_Implementation(bool InIsActive)
+{
+	IWidgetAnimationInterface::PlayAnimationEvent_Implementation(InIsActive);
+
+	if (IsValid(AnimationEvent))
+	{
+		AnimationEvent->SetTargetWidget(this);
+
+		if (InIsActive)
+		{
+			AnimationEvent->NativeOnActived();
+		}
+		else
+		{
+			AnimationEvent->NativeOnInactived();
+		}
+	}
 }
 
 void UUserWidgetBase::NativeOnActived()
@@ -70,11 +90,7 @@ void UUserWidgetBase::NativeOnActived()
 	IProcedureInterface::NativeOnActived();
 	IProcedureInterface::Execute_OnActived(this);
 
-	if (IsValid(AnimationEvent))
-	{
-		AnimationEvent->SetTargetWidget(this);
-		AnimationEvent->NativeOnActived();
-	}
+	Execute_PlayAnimationEvent(this, true);
 }
 
 void UUserWidgetBase::NativeOnInactived()
@@ -82,11 +98,7 @@ void UUserWidgetBase::NativeOnInactived()
 	IProcedureInterface::NativeOnInactived();
 	IProcedureInterface::Execute_OnInactived(this);
 
-	if (IsValid(AnimationEvent))
-	{
-		AnimationEvent->SetTargetWidget(this);
-		AnimationEvent->NativeOnInactived();
-	}
+	Execute_PlayAnimationEvent(this, false);
 }
 
 void UUserWidgetBase::NativeOnCreate()

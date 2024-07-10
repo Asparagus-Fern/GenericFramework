@@ -96,6 +96,15 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void PlayTransition(bool bForward);
 
+	UFUNCTION(BlueprintPure)
+	TArray<FVector2D> GetPoints() const;
+
+	UFUNCTION(BlueprintPure)
+	TArray<FVector2D> GetPointsByAlpha(float Alpha) const;
+
+	UFUNCTION(BlueprintPure)
+	float GetLength() const;
+
 protected:
 	TSharedPtr<SLine> MyLine;
 

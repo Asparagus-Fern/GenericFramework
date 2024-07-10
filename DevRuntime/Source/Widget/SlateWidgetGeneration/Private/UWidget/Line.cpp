@@ -154,6 +154,33 @@ void ULine::PlayTransition(const bool bForward)
 	}
 }
 
+TArray<FVector2D> ULine::GetPoints() const
+{
+	if (MyLine.IsValid())
+	{
+		return MyLine->CalculatePoints();
+	}
+	return TArray<FVector2D>{};
+}
+
+TArray<FVector2D> ULine::GetPointsByAlpha(const float Alpha) const
+{
+	if (MyLine.IsValid())
+	{
+		return MyLine->CalculatePoints(Alpha);
+	}
+	return TArray<FVector2D>{};
+}
+
+float ULine::GetLength() const
+{
+	if (MyLine.IsValid())
+	{
+		return MyLine->GetLength();
+	}
+	return -1.f;
+}
+
 void ULine::HandleTransitionFinish()
 {
 	OnTransitionFinish.Broadcast();

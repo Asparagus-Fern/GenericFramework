@@ -119,6 +119,7 @@ TArray<FVector2D> SLine::CalculatePoints() const
 	FVector2D LastPointPosition = FVector2D::Zero();
 	Points.Add(LastPointPosition);
 
+	/* 计算每个点连接上一个点后的位置 */
 	for (auto& LinePoint : LinePoints)
 	{
 		FVector2D PointPositon = CalculatePoint(LinePoint);
@@ -133,33 +134,39 @@ TArray<FVector2D> SLine::CalculatePoints() const
 
 TArray<FVector2D> SLine::CalculatePoints(const float Alpha) const
 {
+	/* 约束到 0~1 */
+	const float ClampAlpha = FMath::Clamp(Alpha, 0.f, 1.f);
+
+	/* 最后计算完返回的点 */
 	TArray<FVector2D> TargetPoints;
 	TargetPoints.Add(FVector2D::Zero());
 
+	/* 获取所有线段总长度，用Alpha计算出需要的长度 */
 	const float Length = GetLength();
-	const float TargetLength = FMath::Lerp(0.f, Length, Alpha);
+	const float TargetLength = FMath::Lerp(0.f, Length, ClampAlpha);
 
 	float CurrentLength = 0.f;
-	FVector2D LastPointPosition = FVector2D::Zero();
+	FVector2D CurrentPointPosition = FVector2D::Zero();
 
 	for (auto& LinePoint : LinePoints)
 	{
+		/* 所需长度介于当前点和上一个点之间 */
 		if (CurrentLength + LinePoint.Length > TargetLength)
 		{
-			LastPointPosition += CalculatePoint(FLinePoint(LinePoint.Angle, TargetLength));
-			TargetPoints.Add(LastPointPosition);
+			/* 使用当前点的角度和超出上一个点的长度计算最后一个点的位置 */
+			CurrentPointPosition += CalculatePoint(FLinePoint(LinePoint.Angle, TargetLength - CurrentLength));
+			TargetPoints.Add(CurrentPointPosition);
 			break;
 		}
+		/* 所需长度已经超出这个点的长度 */
 		else
 		{
-			LastPointPosition += CalculatePoint(LinePoint);
+			/* 计算这个点的位置 */
+			CurrentPointPosition += CalculatePoint(LinePoint);
 			CurrentLength += LinePoint.Length;
-			TargetPoints.Add(LastPointPosition);
+			TargetPoints.Add(CurrentPointPosition);
 		}
 	}
-
-	UE_LOG(LogTemp, Warning, TEXT("%s"), *TargetPoints[0].ToString())
-
 
 	return TargetPoints;
 }
@@ -167,6 +174,18 @@ TArray<FVector2D> SLine::CalculatePoints(const float Alpha) const
 FVector2D SLine::CalculatePoint(FLinePoint InLinePoint) const
 {
 	return FVector2D(InLinePoint.Length * FMath::Cos(UE_DOUBLE_PI / (180.0) * InLinePoint.Angle), InLinePoint.Length * FMath::Sin(UE_DOUBLE_PI / (180.0) * InLinePoint.Angle));
+}
+
+float SLine::GetLength() const
+{
+	float Length = 0.f;
+
+	for (auto& LinePoint : LinePoints)
+	{
+		Length += LinePoint.Length;
+	}
+
+	return Length;
 }
 
 void SLine::SetThickness(float InThickness)
@@ -209,55 +228,38 @@ void SLine::SetTransition(float Duration, ETransitionCurve Curve)
 	TransitionSequence = FCurveSequence(0.f, Duration, TransitionCurveToCurveEaseFunction(Curve));
 }
 
-float SLine::GetLength() const
-{
-	float Length = 0.f;
-
-	for (auto& LinePoint : LinePoints)
-	{
-		Length += LinePoint.Length;
-	}
-
-	return Length;
-}
-
 void SLine::PlayTransition(bool InForward)
 {
-	if (TransitionSequence.IsPlaying())
+	// if (TransitionSequence.IsPlaying())
+	// {
+	// }
+	// else
+	// {
+	// }
+
+	if (InForward)
 	{
+		TransitionSequence.Play(AsShared());
 	}
 	else
 	{
-		ChildSlot
-		[
-			SNullWidget::NullWidget
-		];
+		TransitionSequence.PlayReverse(AsShared());
+	}
 
-		if (InForward)
-		{
-			TransitionSequence.Play(AsShared());
-		}
-		else
-		{
-			TransitionSequence.PlayReverse(AsShared());
-		}
-
-		if (!bIsTransitionTimerRegistered)
-		{
-			bIsTransitionTimerRegistered = true;
-			RegisterActiveTimer(0.f, FWidgetActiveTimerDelegate::CreateSP(this, &SLine::UpdateTransition));
-		}
+	if (!bIsTransitionTimerRegistered)
+	{
+		bIsTransitionTimerRegistered = true;
+		TimerHandle = RegisterActiveTimer(0.f, FWidgetActiveTimerDelegate::CreateSP(this, &SLine::UpdateTransition));
 	}
 }
 
+
 EActiveTimerReturnType SLine::UpdateTransition(double InCurrentTime, float InDeltaTime)
 {
-	// Invalidate(EInvalidateWidgetReason::Paint);
-
 	if (!TransitionSequence.IsPlaying())
 	{
 		bIsTransitionTimerRegistered = false;
-		SetContent(Content.ToSharedRef());
+		UnRegisterActiveTimer(TimerHandle.ToSharedRef());
 		OnTransitionFinish.ExecuteIfBound();
 
 		return EActiveTimerReturnType::Stop;
@@ -265,5 +267,6 @@ EActiveTimerReturnType SLine::UpdateTransition(double InCurrentTime, float InDel
 
 	return EActiveTimerReturnType::Continue;
 }
+
 
 END_SLATE_FUNCTION_BUILD_OPTIMIZATION

@@ -90,11 +90,7 @@ void UCommonButton::NativeOnActived()
 	IProcedureInterface::NativeOnActived();
 	IProcedureInterface::Execute_OnActived(this);
 
-	if (IsValid(AnimationEvent))
-	{
-		AnimationEvent->SetTargetWidget(this);
-		AnimationEvent->NativeOnActived();
-	}
+	Execute_PlayAnimationEvent(this, true);
 }
 
 void UCommonButton::NativeOnInactived()
@@ -102,11 +98,7 @@ void UCommonButton::NativeOnInactived()
 	IProcedureInterface::NativeOnInactived();
 	IProcedureInterface::Execute_OnInactived(this);
 
-	if (IsValid(AnimationEvent))
-	{
-		AnimationEvent->SetTargetWidget(this);
-		AnimationEvent->NativeOnInactived();
-	}
+	Execute_PlayAnimationEvent(this, false);
 }
 
 void UCommonButton::NativeOnCreate()
@@ -170,17 +162,37 @@ void UCommonButton::ResponseButtonEvent(ECommonButtonResponseEvent InResponseEve
 	}
 }
 
-UWidgetAnimationEvent* UCommonButton::GetAnimationEvent() const
+UWidgetAnimationEvent* UCommonButton::GetAnimationEvent_Implementation() const
 {
 	return AnimationEvent;
 }
 
-void UCommonButton::SetAnimationEvent(UWidgetAnimationEvent* InAnimationEvent)
+void UCommonButton::SetAnimationEvent_Implementation(UWidgetAnimationEvent* InAnimationEvent)
 {
+	IWidgetAnimationInterface::SetAnimationEvent_Implementation(InAnimationEvent);
 	AnimationEvent = InAnimationEvent;
 }
 
-bool UCommonButton::HasAnimationEvent() const
+bool UCommonButton::HasAnimationEvent_Implementation() const
 {
-	return IsValid(AnimationEvent);;
+	return IsValid(AnimationEvent);
+}
+
+void UCommonButton::PlayAnimationEvent_Implementation(bool InIsActive)
+{
+	IWidgetAnimationInterface::PlayAnimationEvent_Implementation(InIsActive);
+
+	if (IsValid(AnimationEvent))
+	{
+		AnimationEvent->SetTargetWidget(this);
+
+		if (InIsActive)
+		{
+			AnimationEvent->NativeOnActived();
+		}
+		else
+		{
+			AnimationEvent->NativeOnInactived();
+		}
+	}
 }

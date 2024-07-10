@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
+#include "Animation/WidgetAnimationInterface.h"
 #include "Blueprint/UserWidget.h"
 #include "Procedure/ProcedureBaseInterface.h"
 #include "Procedure/ProcedureInterface.h"
@@ -17,7 +18,10 @@ class UWidgetAnimationEvent;
  * 
  */
 UCLASS(Abstract, HideCategories=(Appearance,Input,Interaction,Layout,Localization,Performance,Navigation,Designer))
-class SCREENWIDGETGENERATION_API UUserWidgetBase : public UUserWidget, public IProcedureInterface, public IProcedureBaseInterface
+class SCREENWIDGETGENERATION_API UUserWidgetBase : public UUserWidget
+                                                   , public IProcedureInterface
+                                                   , public IProcedureBaseInterface
+                                                   , public IWidgetAnimationInterface
 {
 	GENERATED_UCLASS_BODY()
 
@@ -47,19 +51,16 @@ public:
 	UFUNCTION(BlueprintPure)
 	FGameplayTag GetSlotTag() const;
 
-	/* Widget Animation */
+	/* IWidgetAnimationInterface */
 public:
-	UPROPERTY(EditAnywhere, Instanced, Getter, Setter, BlueprintGetter="GetAnimationEvent", BlueprintSetter="SetAnimationEvent")
+	virtual UWidgetAnimationEvent* GetAnimationEvent_Implementation() const override;
+	virtual void SetAnimationEvent_Implementation(UWidgetAnimationEvent* InAnimationEvent) override;
+	virtual bool HasAnimationEvent_Implementation() const override;
+	virtual void PlayAnimationEvent_Implementation(bool InIsActive) override;
+
+public:
+	UPROPERTY(EditAnywhere, Instanced)
 	UWidgetAnimationEvent* AnimationEvent = nullptr;
-
-	UFUNCTION(BlueprintPure)
-	UWidgetAnimationEvent* GetAnimationEvent() const;
-
-	UFUNCTION(BlueprintCallable)
-	void SetAnimationEvent(UWidgetAnimationEvent* InAnimationEvent);
-
-	UFUNCTION(BlueprintPure)
-	bool HasAnimationEvent() const;
 
 	/* IProcedureInterface */
 public:

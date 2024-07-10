@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "CommonButtonBase.h"
 #include "ScreenWidgetType.h"
+#include "Animation/WidgetAnimationInterface.h"
 #include "Procedure/ProcedureBaseInterface.h"
 #include "Procedure/ProcedureInterface.h"
 #include "CommonButton.generated.h"
@@ -19,7 +20,10 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnButtonEventHandleFinish);
  * 
  */
 UCLASS()
-class SCREENWIDGETGENERATION_API UCommonButton : public UCommonButtonBase, public IProcedureInterface, public IProcedureBaseInterface
+class SCREENWIDGETGENERATION_API UCommonButton : public UCommonButtonBase
+                                                 , public IProcedureInterface
+                                                 , public IProcedureBaseInterface
+                                                 , public IWidgetAnimationInterface
 {
 	GENERATED_BODY()
 
@@ -73,17 +77,14 @@ protected:
 public:
 	void ResponseButtonEvent(ECommonButtonResponseEvent InResponseEvent, const FSimpleMulticastDelegate& OnFinish = FSimpleMulticastDelegate());
 
-	/* Widget Animation */
+	/* IWidgetAnimationInterface */
 public:
-	UPROPERTY(EditAnywhere, Instanced, Getter, Setter, BlueprintGetter="GetAnimationEvent", BlueprintSetter="SetAnimationEvent")
+	virtual UWidgetAnimationEvent* GetAnimationEvent_Implementation() const override;
+	virtual void SetAnimationEvent_Implementation(UWidgetAnimationEvent* InAnimationEvent) override;
+	virtual bool HasAnimationEvent_Implementation() const override;
+	virtual void PlayAnimationEvent_Implementation(bool InIsActive) override;
+
+public:
+	UPROPERTY(EditAnywhere, Instanced)
 	UWidgetAnimationEvent* AnimationEvent = nullptr;
-
-	UFUNCTION(BlueprintPure)
-	UWidgetAnimationEvent* GetAnimationEvent() const;
-
-	UFUNCTION(BlueprintCallable)
-	void SetAnimationEvent(UWidgetAnimationEvent* InAnimationEvent);
-
-	UFUNCTION(BlueprintPure)
-	bool HasAnimationEvent() const;
 };

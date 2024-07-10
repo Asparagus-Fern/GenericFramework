@@ -38,10 +38,11 @@ public:
 	virtual int32 OnPaint(const FPaintArgs& Args, const FGeometry& AllottedGeometry, const FSlateRect& MyCullingRect, FSlateWindowElementList& OutDrawElements, int32 LayerId, const FWidgetStyle& InWidgetStyle, bool bParentEnabled) const override;
 	virtual FVector2D ComputeDesiredSize(float LayoutScaleMultiplier) const override;
 
-protected:
+public:
 	virtual TArray<FVector2D> CalculatePoints() const;
 	virtual TArray<FVector2D> CalculatePoints(float Alpha) const;
 	virtual FVector2D CalculatePoint(FLinePoint InLinePoint) const;
+	float GetLength() const;
 
 protected:
 	float Thickness = 1.f;
@@ -51,6 +52,7 @@ protected:
 	TSharedPtr<SWidget> Content;
 
 	bool bIsTransitionTimerRegistered = false;
+	TSharedPtr<FActiveTimerHandle> TimerHandle;
 	FCurveSequence TransitionSequence;
 	FSimpleDelegate OnTransitionFinish;
 
@@ -69,7 +71,6 @@ public:
 	void SetTransition(float Duration, ETransitionCurve Curve);
 
 public:
-	float GetLength() const;
 	void PlayTransition(bool InForward);
 
 protected:

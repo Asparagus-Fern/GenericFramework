@@ -204,8 +204,11 @@ void ULevelStreamingVisibilityHandle::OnFinish()
 	/* 清理回调 */
 	for (auto LevelStreamingVisibilitySetting : LevelStreamingVisibilitySettings)
 	{
-		LevelStreamingVisibilitySetting.LevelStreaming->OnLevelShown.RemoveAll(this);
-		LevelStreamingVisibilitySetting.LevelStreaming->OnLevelHidden.RemoveAll(this);
+		if (IsValid(LevelStreamingVisibilitySetting.LevelStreaming))
+		{
+			LevelStreamingVisibilitySetting.LevelStreaming->OnLevelShown.RemoveAll(this);
+			LevelStreamingVisibilitySetting.LevelStreaming->OnLevelHidden.RemoveAll(this);
+		}
 	}
 
 	Super::OnFinish();
