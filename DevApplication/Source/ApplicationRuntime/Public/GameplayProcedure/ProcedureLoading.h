@@ -10,6 +10,8 @@
 class UUserWidgetBase;
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_ProcedureLoading_Default);
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FLoadingWidgetDelegate, UUserWidgetBase*, OpenLoadingWidget);
+
 /**
  * 
  */
@@ -24,13 +26,17 @@ public:
 	virtual void NativeOnInactived() override;
 
 public:
-	/* 下一个流程的Tag */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(Categories="Procedure"))
-	FGameplayTag NextProcedureTag;
-
 	/* 是否有加载界面UMG */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Loading UMG")
 	bool bActiveLoadingWidget = true;
+
+	/* 在加载完关卡后是否关闭加载时打开的页面 */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Loading UMG")
+	bool bIsCloseLoadingWidgetOnLoadingLevelsFinish = true;
+
+	/* 在该流程退出时是否关闭加载时打开的页面 */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Loading UMG")
+	bool bIsCloseLoadingWidgetOnInactive = false;
 
 	/* 查找LoadingWidgets中的SelfTag来打开对应的UMG */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(Categories="UMG", EditConditionHides, EditCondition="bActiveLoadingWidget"), Category="Loading UMG")
@@ -40,6 +46,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Instanced, meta=(Categories="UMG", EditConditionHides, EditCondition="bActiveLoadingWidget"), Category="Loading UMG")
 	TArray<UUserWidgetBase*> LoadingWidgets;
 
+public:
 	/* 是否为大世界 */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Loading World")
 	bool bIsWorldPartition = false;
@@ -57,15 +64,19 @@ public:
 	TArray<TSoftObjectPtr<UWorld>> LevelsToLoad;
 
 public:
+	UPROPERTY(BlueprintAssignable)
+	FLoadingWidgetDelegate OnLoadingWidgetOpen;
+
+public:
 	UFUNCTION()
-	void OnLoadAllLevelStreamingOnceFinish();
+	virtual void OnLoadAllLevelStreamingOnceFinish();
 
 	UFUNCTION()
-	void OnLoadAllLevelStreamingFinish();
+	virtual void OnLoadAllLevelStreamingFinish();
 
 	UFUNCTION()
-	void OnLevelsToLoadOnceFinish();
+	virtual void OnLevelsToLoadOnceFinish();
 
 	UFUNCTION()
-	void OnLevelsToLoadFinish();
+	virtual void OnLevelsToLoadFinish();
 };

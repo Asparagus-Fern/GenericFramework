@@ -48,7 +48,7 @@ public:
 };
 
 /**
- * 
+ * 处理Widget的打开或关闭
  */
 UCLASS()
 class SCREENWIDGETGENERATION_API UCBE_HandleUserWidget : public UCommonButtonEvent

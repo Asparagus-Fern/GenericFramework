@@ -28,7 +28,7 @@ void UCommonSpringArmComponent::BeginPlay()
 void UCommonSpringArmComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	
+
 	UpdateTargetArmLength(DeltaTime);
 }
 

@@ -7,8 +7,25 @@
 #include "CommonSpringArmComponent.generated.h"
 
 
+// This class does not need to be modified.
+UINTERFACE(MinimalAPI)
+class USpringArmInterface : public UInterface
+{
+	GENERATED_BODY()
+};
+
+/**
+ * 
+ */
+class DEVCORE_API ISpringArmInterface
+{
+	GENERATED_BODY()
+
+public:
+};
+
 UCLASS(ClassGroup=(Camera), meta=(BlueprintSpawnableComponent))
-class DEVCORE_API UCommonSpringArmComponent : public USpringArmComponent
+class DEVCORE_API UCommonSpringArmComponent : public USpringArmComponent, public ISpringArmInterface
 {
 	GENERATED_BODY()
 

@@ -20,7 +20,7 @@ AThirdPersonPawn::AThirdPersonPawn()
 
 	Sphere = CreateDefaultSubobject<USphereComponent>("Root");
 	Sphere->InitSphereRadius(30.0f);
-	Sphere->SetCollisionProfileName(UCollisionProfile::Pawn_ProfileName);
+	Sphere->SetCollisionProfileName(UCollisionProfile::NoCollision_ProfileName);
 	Sphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	RootComponent = Sphere;
 
@@ -120,16 +120,15 @@ void AThirdPersonPawn::OnSwitchCameraFinish(UCameraHandle* InCameraHandle)
 	}
 	else
 	{
-		Execute_SetLocation(this, GetActiveCameraComponent()->GetForwardVector() * 1000 + Execute_GetLocation(this));
-		CommonSpringArmComponent->SetTargetArmLength(1000.f);
+		CommonSpringArmComponent->SetTargetArmLength(0.f);
 	}
 
-	SetLockState(InCameraHandle->bLockCamera, InCameraHandle->bLockLocation, InCameraHandle->bLockRotation);
+	UpdateLockState(InCameraHandle->bLock, InCameraHandle->bLockLocation, InCameraHandle->bLockRotation);
 }
 
 bool AThirdPersonPawn::GetHitResult(FHitResult& HitResult)
 {
 	const FVector Start = Execute_GetLocation(this);
 	const FVector End = GetActiveCameraComponent()->GetForwardVector() * UE_BIG_NUMBER + Start;
-	return GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Camera);
+	return GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility);
 }

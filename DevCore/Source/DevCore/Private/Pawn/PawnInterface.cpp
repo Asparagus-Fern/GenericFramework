@@ -10,7 +10,7 @@ IPawnInterface::IPawnInterface()
 {
 }
 
-void IPawnInterface::SetLockState(const bool InLock, const bool InLockLocation, const bool InLockRotation)
+void IPawnInterface::UpdateLockState(const bool InLock, const bool InLockLocation, const bool InLockRotation)
 {
 	bLock = InLock;
 	bLockLocation = InLockLocation;

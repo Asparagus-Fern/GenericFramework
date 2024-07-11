@@ -40,18 +40,34 @@ public:
 
 	/* UProcedureManager */
 public:
+	/* 默认激活的流程 */
 	UPROPERTY(GlobalConfig, EditAnywhere, BlueprintReadOnly, meta=(Categories="Procedure"))
 	FGameplayTag DefaultProcedureTag;
 
+	/* 所有可到达的流程 */
 	UPROPERTY(GlobalConfig, EditAnywhere, BlueprintReadWrite, meta=(Categories="Procedure"))
 	TMap<FGameplayTag, TSoftObjectPtr<UGameplayProcedure>> GameplayProcedureObjects;
 
 public:
+	/* 切换流程 */
 	UFUNCTION(BlueprintCallable)
 	void SwitchProcedure(FGameplayTag InProcedureTag, bool bForce = false);
 
-	UFUNCTION(BlueprintCallable)
+	/* 从标签获取流程数据 */
+	UFUNCTION(BlueprintPure)
 	UGameplayProcedure* GetGameplayProcedure(FGameplayTag InProcedureTag);
+
+	/* 获取上一个流程标签 */
+	UFUNCTION(BlueprintPure)
+	FGameplayTag GetLastProcedureTag() const;
+
+	/* 获取当前流程标签 */
+	UFUNCTION(BlueprintPure)
+	FGameplayTag GetCurrentProcedureTag() const;
+
+	/* 获取所有注册流程的映射 */
+	UFUNCTION(BlueprintPure)
+	TMap<FGameplayTag, UGameplayProcedure*>& GetGameplayProcedureMapping();
 
 protected:
 	FGameplayTag LastProcedureTag;
@@ -59,6 +75,10 @@ protected:
 	TMap<FGameplayTag, UGameplayProcedure*> GameplayProcedure;
 
 	/* Procedure Handle */
+public:
+	UFUNCTION(BlueprintCallable)
+	void SetActorActivateState(TSubclassOf<AActor> InActorClass, bool InActive);
+
 public:
 	virtual UProcedureHandle* RegisterProcedureHandle(const TArray<FProcedureInterfaceHandle>& InHandles, FSimpleMulticastDelegate OnHandleFinish = FSimpleMulticastDelegate(), FSimpleMulticastDelegate OnHandleReset = FSimpleMulticastDelegate());
 	virtual void ResetProcedureHandle(UProcedureHandle* InHandle);

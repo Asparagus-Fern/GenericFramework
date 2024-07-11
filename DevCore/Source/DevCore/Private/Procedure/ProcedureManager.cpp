@@ -3,6 +3,7 @@
 
 #include "Procedure/ProcedureManager.h"
 
+#include "EngineUtils.h"
 #include "Manager/ManagerGlobal.h"
 #include "Procedure/GameplayProcedure.h"
 #include "Procedure/ProcedureHandle.h"
@@ -155,6 +156,40 @@ UGameplayProcedure* UProcedureManager::GetGameplayProcedure(FGameplayTag InProce
 	}
 
 	return nullptr;
+}
+
+FGameplayTag UProcedureManager::GetLastProcedureTag() const
+{
+	return LastProcedureTag;
+}
+
+FGameplayTag UProcedureManager::GetCurrentProcedureTag() const
+{
+	return CurrentProcedureTag;
+}
+
+TMap<FGameplayTag, UGameplayProcedure*>& UProcedureManager::GetGameplayProcedureMapping()
+{
+	return GameplayProcedure;
+}
+
+void UProcedureManager::SetActorActivateState(TSubclassOf<AActor> InActorClass, bool InActive)
+{
+	for (TActorIterator<AActor> It(GetWorld(), InActorClass); It; ++It)
+	{
+		if (It->GetClass()->ImplementsInterface(UProcedureInterface::StaticClass()))
+		{
+			IProcedureInterface* Interface = Cast<IProcedureInterface>(*It);
+			if (InActive)
+			{
+				Interface->NativeOnActived();
+			}
+			else
+			{
+				Interface->NativeOnInactived();
+			}
+		}
+	}
 }
 
 UProcedureHandle* UProcedureManager::RegisterProcedureHandle(const TArray<FProcedureInterfaceHandle>& InHandles, FSimpleMulticastDelegate OnHandleFinish, FSimpleMulticastDelegate OnHandleReset)

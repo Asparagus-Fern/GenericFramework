@@ -7,7 +7,7 @@
 
 UCameraHandle::UCameraHandle()
 {
-	bLockCamera = false;
+	bLock = false;
 	bLockLocation = false;
 	bLockRotation = false;
 }
@@ -18,7 +18,6 @@ bool UCameraHandle::HandleSwitchToCameraPoint_Implementation(APlayerController* 
 	{
 		OwnerPlayerController = InPlayerController;
 		TargetCameraPoint = InCameraPoint;
-		// SwitchCameraPointHandle = InPlayerController->PlayerCameraManager->OnBlendComplete().AddUObject(this, &UCameraHandle::OnSwitchToCameraPointFinish);
 
 		return true;
 	}

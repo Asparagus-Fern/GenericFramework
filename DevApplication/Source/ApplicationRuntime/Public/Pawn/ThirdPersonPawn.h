@@ -48,7 +48,7 @@ public:
 	virtual void SetRotation_Implementation(FRotator InValue) override;
 	virtual FRotator GetRotation_Implementation() override;
 	virtual FRotator GetCameraRotation_Implementation() override;
-	
+
 	/* FCameraPointDelegates */
 public:
 	virtual void OnSwitchCameraFinish(UCameraHandle* InCameraHandle);

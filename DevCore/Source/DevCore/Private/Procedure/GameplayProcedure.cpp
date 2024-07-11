@@ -31,11 +31,30 @@ void UGameplayProcedure::NativeOnRefresh()
 void UGameplayProcedure::NativeOnActived()
 {
 	IProcedureInterface::NativeOnActived();
+	PreProcedureActived.Broadcast();
 	Execute_OnActived(this);
 }
 
 void UGameplayProcedure::NativeOnInactived()
 {
 	IProcedureInterface::NativeOnInactived();
+	PreProcedureInactived.Broadcast();
 	Execute_OnInactived(this);
+}
+
+void UGameplayProcedure::RequestProcedureActived_Implementation()
+{
+	RequestActivateFinish();
+	PostProcedureActived.Broadcast();
+
+	if (bIsAutoActivateNextProcedure)
+	{
+		GetManager<UProcedureManager>()->SwitchProcedure(NextProcedureTag);
+	}
+}
+
+void UGameplayProcedure::RequestProcedureInactived_Implementation()
+{
+	RequestInactivateFinish();
+	PostProcedureInactived.Broadcast();
 }

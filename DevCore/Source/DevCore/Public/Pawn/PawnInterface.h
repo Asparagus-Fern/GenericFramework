@@ -48,7 +48,7 @@ public:
 	FRotator GetCameraRotation();
 
 public:
-	void SetLockState(bool InLock, bool InLockLocation, bool InLockRotation);
+	void UpdateLockState(bool InLock, bool InLockLocation, bool InLockRotation);
 	bool IsLock() const { return bLock || (bLockLocation && bLockRotation); }
 	bool IsLockLocation() const { return bLock || bLockLocation; }
 	bool IsLockRotation() const { return bLock || bLockRotation; }

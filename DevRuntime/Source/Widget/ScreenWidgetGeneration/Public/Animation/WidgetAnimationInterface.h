@@ -22,17 +22,15 @@ class SCREENWIDGETGENERATION_API IWidgetAnimationInterface
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Widget Animation Interface")
 	bool HasAnimationEvent() const;
 
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Widget Animation Interface")
 	UWidgetAnimationEvent* GetAnimationEvent() const;
 
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Widget Animation Interface")
 	void SetAnimationEvent(UWidgetAnimationEvent* InAnimationEvent);
 
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Widget Animation Interface")
 	void PlayAnimationEvent(bool InIsActive);
-
-
 };

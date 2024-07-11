@@ -26,7 +26,8 @@ public class ScreenWidgetGeneration : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
-				"ActiveNodeSystem"
+				"ActiveNodeSystem",
+				"DBTween",
 			}
 		);
 	}

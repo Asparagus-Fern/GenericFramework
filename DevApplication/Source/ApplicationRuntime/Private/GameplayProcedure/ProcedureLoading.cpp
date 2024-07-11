@@ -20,6 +20,7 @@ void UProcedureLoading::NativeOnActived()
 {
 	Super::NativeOnActived();
 
+	/* 加载页面 */
 	if (bActiveLoadingWidget && DefaultLoadingTag.IsValid())
 	{
 		for (const auto& LoadingWidget : LoadingWidgets)
@@ -27,11 +28,11 @@ void UProcedureLoading::NativeOnActived()
 			if (LoadingWidget->SelfTag == DefaultLoadingTag)
 			{
 				GetManager<UScreenWidgetManager>()->OpenUserWidget(LoadingWidget);
-				break;
+				OnLoadingWidgetOpen.Broadcast(LoadingWidget);
 			}
 		}
 	}
-	
+
 	if (bIsWorldPartition)
 	{
 	}
@@ -59,7 +60,28 @@ void UProcedureLoading::NativeOnActived()
 void UProcedureLoading::NativeOnInactived()
 {
 	Super::NativeOnInactived();
-	RequestInactivateFinish();
+
+	if (bIsCloseLoadingWidgetOnInactive && bActiveLoadingWidget && DefaultLoadingTag.IsValid())
+	{
+		for (const auto& LoadingWidget : LoadingWidgets)
+		{
+			if (LoadingWidget->SelfTag == DefaultLoadingTag)
+			{
+				FSimpleMulticastDelegate OnFinish;
+				OnFinish.AddLambda([this]()
+					{
+						RequestProcedureInactived();
+					}
+				);
+
+				GetManager<UScreenWidgetManager>()->CloseUserWidget(LoadingWidget, OnFinish);
+			}
+		}
+	}
+	else
+	{
+		RequestProcedureInactived();
+	}
 }
 
 void UProcedureLoading::OnLoadAllLevelStreamingOnceFinish()
@@ -82,7 +104,7 @@ void UProcedureLoading::OnLevelsToLoadOnceFinish()
 
 void UProcedureLoading::OnLevelsToLoadFinish()
 {
-	if (bActiveLoadingWidget && DefaultLoadingTag.IsValid())
+	if (bIsCloseLoadingWidgetOnLoadingLevelsFinish && bActiveLoadingWidget && DefaultLoadingTag.IsValid())
 	{
 		for (const auto& LoadingWidget : LoadingWidgets)
 		{
@@ -91,13 +113,16 @@ void UProcedureLoading::OnLevelsToLoadFinish()
 				FSimpleMulticastDelegate OnFinish;
 				OnFinish.AddLambda([this]()
 					{
-						RequestActivateFinish();
-						GetManager<UProcedureManager>()->SwitchProcedure(NextProcedureTag);
+						RequestProcedureActived();
 					}
 				);
 
 				GetManager<UScreenWidgetManager>()->CloseUserWidget(LoadingWidget, OnFinish);
 			}
 		}
+	}
+	else
+	{
+		RequestProcedureActived();
 	}
 }

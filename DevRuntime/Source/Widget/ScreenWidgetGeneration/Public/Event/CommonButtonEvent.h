@@ -17,6 +17,9 @@ class SCREENWIDGETGENERATION_API UCommonButtonEvent : public UObject, public IPr
 	GENERATED_UCLASS_BODY()
 
 public:
+	virtual UWorld* GetWorld() const override;
+
+public:
 	/* true则为激活，表示在该条件下激活按钮 */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TMap<ECommonButtonResponseEvent, bool> ResponseEvent;

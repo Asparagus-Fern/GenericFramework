@@ -7,7 +7,7 @@
 #include "CBE_HandleLevelStreaming.generated.h"
 
 /**
- * 
+ * 处理流关卡的切换
  */
 UCLASS()
 class LEVELSTREAMING_API UCBE_HandleLevelStreaming : public UCommonButtonEvent

@@ -7,7 +7,7 @@ class ISlateTextureAtlasInterface;
 class USlateBrushAsset;
 
 UENUM(BlueprintType)
-enum class EImageBrushResource
+enum class EImageBrushResource :uint8
 {
 	SlateBrush,
 	SlateBrushAsset,

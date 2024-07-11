@@ -30,7 +30,7 @@ public:
 	virtual FRotator GetRotation_Implementation() override;
 	virtual FVector GetCameraLocation_Implementation() override;
 	virtual FRotator GetCameraRotation_Implementation() override;
-	
+
 	/* ADevPawn */
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

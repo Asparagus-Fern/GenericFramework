@@ -9,7 +9,7 @@
 class UCameraHandle;
 
 /**
- * 异步切换相机事件
+ * 处理相机的切换
  */
 UCLASS()
 class CAMERASYSTEM_API UCBE_HandleSwitchCamera : public UCommonButtonEvent
