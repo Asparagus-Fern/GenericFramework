@@ -15,7 +15,7 @@ public class ScreenWidgetGeneration : ModuleRules
 				"UMG",
 				"CommonUI",
 				"GameplayTags",
-				"SlateWidgetGeneration"
+				"SlateWidgetGeneration",
 			}
 		);
 
