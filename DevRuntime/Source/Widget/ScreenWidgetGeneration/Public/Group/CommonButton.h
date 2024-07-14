@@ -27,6 +27,8 @@ class SCREENWIDGETGENERATION_API UCommonButton : public UCommonButtonBase
 {
 	GENERATED_BODY()
 
+	friend UCommonButtonGroup;
+
 	/* UCommonButtonBase */
 public:
 	UCommonButton(const FObjectInitializer& ObjectInitializer);

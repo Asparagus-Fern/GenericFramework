@@ -35,13 +35,23 @@ void UMenuStyle::NativeOnDeselected(bool bBroadcast)
 	FScreenWidgetDelegates::OnMenuSelectionChanged.Broadcast(MenuInfo, false);
 }
 
-void UMenuStyle::NativeConstructMenuStyle(FMenuInfo InMenuInfo)
+void UMenuStyle::NativeOnCreate()
 {
-	MenuInfo = InMenuInfo;
-	ConstructMenuStyle(InMenuInfo);
+	Super::NativeOnCreate();
+}
+
+void UMenuStyle::NativeOnDestroy()
+{
+	Super::NativeOnDestroy();
 }
 
 FMenuInfo UMenuStyle::GetMenuInfo() const
 {
 	return MenuInfo;
+}
+
+void UMenuStyle::NativeConstructMenuStyle(FMenuInfo InMenuInfo)
+{
+	MenuInfo = InMenuInfo;
+	ConstructMenuStyle(InMenuInfo);
 }

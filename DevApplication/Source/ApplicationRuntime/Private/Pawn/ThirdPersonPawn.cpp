@@ -58,6 +58,12 @@ UCameraComponent* AThirdPersonPawn::GetActiveCameraComponent() const
 	return IsValid(CameraCacheComponent) ? (CameraCacheComponent->IsActive() ? CameraCacheComponent : CameraComponent) : CameraComponent;
 }
 
+void AThirdPersonPawn::OnRefresh_Implementation()
+{
+	Super::OnRefresh_Implementation();
+	RefreshSpringArmComponent();
+}
+
 void AThirdPersonPawn::AddLocation_Implementation(FVector2D InValue)
 {
 	if (CanMove())
@@ -124,6 +130,16 @@ void AThirdPersonPawn::OnSwitchCameraFinish(UCameraHandle* InCameraHandle)
 	}
 
 	UpdateLockState(InCameraHandle->bLock, InCameraHandle->bLockLocation, InCameraHandle->bLockRotation);
+}
+
+void AThirdPersonPawn::RefreshSpringArmComponent()
+{
+	FHitResult HitResult;
+	if (GetHitResult(HitResult))
+	{
+		Execute_SetLocation(this, HitResult.Location);
+		CommonSpringArmComponent->SetTargetArmLength(HitResult.Distance);
+	}
 }
 
 bool AThirdPersonPawn::GetHitResult(FHitResult& HitResult)

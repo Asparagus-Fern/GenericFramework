@@ -8,6 +8,7 @@
 #include "UserWidget/Base/UserWidgetType.h"
 #include "BPFunctions_Widget.generated.h"
 
+class UGameHUD;
 class UGameMenuSetting;
 class UBorder;
 class UImage;
@@ -44,4 +45,15 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="BPFunctions_Widget|Menu")
 	static void DeselectMenu(FGameplayTag InMenuTag);
+
+	/* HUD */
+public:
+	UFUNCTION(BlueprintPure)
+	static TArray<UGameHUD*> GetGameHUD();
+
+	UFUNCTION(BlueprintPure)
+	static TArray<UGameHUD*> GetGameHUDByTag(FGameplayTag InTag);
+
+	UFUNCTION(BlueprintCallable)
+	static void SetGameHUDVisibility(bool IsVisisble);
 };

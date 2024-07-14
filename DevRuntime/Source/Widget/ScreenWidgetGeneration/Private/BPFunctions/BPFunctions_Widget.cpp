@@ -142,3 +142,18 @@ void UBPFunctions_Widget::DeselectMenu(const FGameplayTag InMenuTag)
 {
 	GetManager<UScreenWidgetManager>()->DeselectMenu(InMenuTag);
 }
+
+TArray<UGameHUD*> UBPFunctions_Widget::GetGameHUD()
+{
+	return GetManager<UScreenWidgetManager>()->GetGameHUD();
+}
+
+TArray<UGameHUD*> UBPFunctions_Widget::GetGameHUDByTag(const FGameplayTag InTag)
+{
+	return GetManager<UScreenWidgetManager>()->GetGameHUDByTag(InTag);
+}
+
+void UBPFunctions_Widget::SetGameHUDVisibility(const bool IsVisisble)
+{
+	GetManager<UScreenWidgetManager>()->SetGameHUDVisibility(IsVisisble);
+}

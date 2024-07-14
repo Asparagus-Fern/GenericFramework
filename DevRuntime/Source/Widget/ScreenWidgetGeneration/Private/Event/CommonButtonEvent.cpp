@@ -29,3 +29,21 @@ void UCommonButtonEvent::NativeOnInactived()
 	IProcedureInterface::NativeOnInactived();
 	Execute_OnInactived(this);
 }
+
+void UCommonButtonEvent::NativeOnCreate()
+{
+	IProcedureBaseInterface::NativeOnCreate();
+	Execute_OnCreate(this);
+}
+
+void UCommonButtonEvent::NativeOnDestroy()
+{
+	IProcedureBaseInterface::NativeOnDestroy();
+	Execute_OnDestroy(this);
+}
+
+void UCommonButtonEvent::NativeOnRefresh()
+{
+	IProcedureBaseInterface::NativeOnRefresh();
+	Execute_OnRefresh(this);
+}

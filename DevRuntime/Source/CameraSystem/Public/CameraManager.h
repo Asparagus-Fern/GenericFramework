@@ -33,15 +33,10 @@ public:
 public:
 	virtual void AddCameraPoint(FGameplayTag InCameraTag, ACameraPointBase* InCameraPoint);
 	virtual void RemoveCameraPoint(FGameplayTag InCameraTag);
-
-public:
-	UFUNCTION(BlueprintPure)
 	ACameraPointBase* GetCameraPoint(FGameplayTag InCameraTag) const;
 
-	UFUNCTION(BlueprintCallable)
+	bool CanSwitchToCamera(FGameplayTag InCameraTag) const;
 	void SwitchToCamera(FGameplayTag InCameraTag);
-
-	UFUNCTION(BlueprintCallable)
 	void SwitchToCameraByPlayerController(FGameplayTag InCameraTag, APlayerController* PlayerController);
 
 public:

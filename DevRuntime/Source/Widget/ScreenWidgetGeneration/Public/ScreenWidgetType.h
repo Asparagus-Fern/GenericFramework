@@ -84,6 +84,18 @@ public:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
 	FGameplayTag ContainerTag;
 
+	/* 如果为true，表示这组按钮必须选中一个，将强制 bIsToggleable = false */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	bool bIsSelectionRequired = false;
+
+	/* 如果为true，表示这组按钮可以在选中时再次点击取消选中状态 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(EditConditionHides, EditCondition = "!bIsSelectionRequired"))
+	bool bIsToggleable = true;
+
+	/* 当 bIsSelectionRequired = true 时，默认选中的Index */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(EditConditionHides, EditCondition = "bIsSelectionRequired"))
+	int32 SelectionRequiredIndex = 0;
+
 	/* 按钮的样式类 */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TSubclassOf<UMenuStyle> MenuStyle = nullptr;

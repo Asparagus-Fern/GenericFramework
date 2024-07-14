@@ -53,6 +53,11 @@ ACameraPointBase* UCameraManager::GetCameraPoint(const FGameplayTag InCameraTag)
 	return nullptr;
 }
 
+bool UCameraManager::CanSwitchToCamera(const FGameplayTag InCameraTag) const
+{
+	return InCameraTag.IsValid() && IsValid(GetCameraPoint(InCameraTag));
+}
+
 void UCameraManager::SwitchToCamera(FGameplayTag InCameraTag)
 {
 	if (!InCameraTag.IsValid())
@@ -68,6 +73,10 @@ void UCameraManager::SwitchToCamera(FGameplayTag InCameraTag)
 			APlayerController* PlayerController = Iterator->Get();
 			SwitchToCameraByPlayerController(InCameraTag, PlayerController);
 		}
+	}
+	else
+	{
+		FCameraSystemDelegates::OnSwitchCameraFinish.Broadcast(nullptr);
 	}
 }
 

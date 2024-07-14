@@ -10,12 +10,12 @@
 /**
  * 
  */
-UCLASS(Abstract, BlueprintType, HideCategories=(Interaction,Layout,Localization,Performance,Rendering,Navigation,Designer))
+UCLASS(BlueprintType, HideCategories=(Interaction,Layout,Localization,Performance,Rendering,Navigation,Designer))
 class SCREENWIDGETGENERATION_API UMenuStyle : public UCommonButton
 {
 	GENERATED_BODY()
 
-	/* UMenuStyle */
+	/* UCommonButtonBase */
 public:
 	UMenuStyle(const FObjectInitializer& ObjectInitializer);
 	virtual void NativePreConstruct() override;
@@ -23,10 +23,10 @@ public:
 	virtual void NativeOnSelected(bool bBroadcast) override;
 	virtual void NativeOnDeselected(bool bBroadcast) override;
 
+	/* IProcedureBaseInterface */
 public:
-	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
-	void ConstructMenuStyle(FMenuInfo InMenuInfo);
-	virtual void NativeConstructMenuStyle(FMenuInfo InMenuInfo);
+	virtual void NativeOnCreate() override;
+	virtual void NativeOnDestroy() override;
 
 public:
 	UPROPERTY(Getter, BlueprintGetter="GetMenuInfo")
@@ -35,4 +35,8 @@ public:
 public:
 	UFUNCTION(BlueprintPure)
 	FMenuInfo GetMenuInfo() const;
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	void ConstructMenuStyle(FMenuInfo InMenuInfo);
+	virtual void NativeConstructMenuStyle(FMenuInfo InMenuInfo);
 };

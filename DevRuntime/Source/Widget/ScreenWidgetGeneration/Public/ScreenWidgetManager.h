@@ -26,7 +26,7 @@ UCLASS()
 class SCREENWIDGETGENERATION_API UScreenWidgetManager : public UCoreManager
 {
 	GENERATED_BODY()
-	
+
 	/* IProcedureInterface */
 public:
 	virtual void NativeOnActived() override;
@@ -60,8 +60,22 @@ public:
 
 	/* Game HUD */
 public:
-	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, DisplayName="Game HUD Classes")
+	UPROPERTY(Config, EditAnywhere, DisplayName="Game HUD Classes")
 	TArray<TSoftClassPtr<UGameHUD>> GameHUDClasses;
+
+protected:
+	UPROPERTY(Transient, Getter, BlueprintGetter="GetGameHUD")
+	TArray<UGameHUD*> GameHUD;
+
+public:
+	UFUNCTION(BlueprintPure)
+	TArray<UGameHUD*> GetGameHUD() const;
+
+	UFUNCTION(BlueprintPure)
+	TArray<UGameHUD*> GetGameHUDByTag(FGameplayTag InTag) const;
+
+	UFUNCTION(BlueprintCallable)
+	void SetGameHUDVisibility(bool IsVisisble);
 
 protected:
 	void CreateGameHUD();
@@ -99,7 +113,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void DeselectMenu(FGameplayTag InMenuTag);
-	
+
 	UFUNCTION(BlueprintPure)
 	virtual bool GetMenuContainerInfo(FGameplayTag InMenuTag, FMenuContainerInfo& OutMenuContainerInfo);
 
@@ -115,6 +129,9 @@ public:
 	UFUNCTION(BlueprintPure)
 	virtual UMenuStyle* GetMenuStyle(FGameplayTag InMenuTag);
 
+	UFUNCTION(BlueprintPure)
+	virtual UMenuStyle* GetParentMenuStyle(FGameplayTag InMenuTag);
+
 protected:
 	FDelegateHandle MenuSelectionChangedHandle;
 	virtual void GenerateMenu(FMenuContainerInfo InMenuContainerInfo);
@@ -125,4 +142,5 @@ private:
 	int32 TargetMenuSelectionIndex = 0;
 	virtual void HandleMenuSelectionChanged();
 	virtual void HandleMenuSelectionChangedOnceFinish();
+	virtual void HandleMenuSelectionChangedFinish();
 };

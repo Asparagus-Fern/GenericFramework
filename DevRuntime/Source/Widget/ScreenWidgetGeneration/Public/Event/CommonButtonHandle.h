@@ -16,7 +16,11 @@ class SCREENWIDGETGENERATION_API UCommonButtonHandle : public UObject
 	GENERATED_BODY()
 
 public:
-	/* 过渡时间，当 Duration=0 时，表示事件将马上触发，而不是进行过渡处理 */
+	/* 是否异步处理 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	bool bIsAsync = false;
+
+	/* 过渡时间 */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	float Duration = 0.f;
 

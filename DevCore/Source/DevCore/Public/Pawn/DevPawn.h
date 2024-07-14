@@ -5,12 +5,13 @@
 #include "CoreMinimal.h"
 #include "PawnInterface.h"
 #include "GameFramework/Pawn.h"
+#include "Procedure/ProcedureBaseInterface.h"
 #include "DevPawn.generated.h"
 
 class UFloatingPawnMovement;
 
 UCLASS()
-class DEVCORE_API ADevPawn : public APawn, public IPawnInterface
+class DEVCORE_API ADevPawn : public APawn, public IPawnInterface, public IProcedureBaseInterface
 {
 	GENERATED_BODY()
 
@@ -20,6 +21,12 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	/* IProcedureBaseInterface */
+public:
+	virtual void NativeOnCreate() override;
+	virtual void NativeOnDestroy() override;
+	virtual void NativeOnRefresh() override;
+	
 	/* IIPawnInterface */
 public:
 	virtual void AddLocation_Implementation(FVector2D InValue) override;

@@ -46,7 +46,7 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	FRotator GetCameraRotation();
-
+	
 public:
 	void UpdateLockState(bool InLock, bool InLockLocation, bool InLockRotation);
 	bool IsLock() const { return bLock || (bLockLocation && bLockRotation); }

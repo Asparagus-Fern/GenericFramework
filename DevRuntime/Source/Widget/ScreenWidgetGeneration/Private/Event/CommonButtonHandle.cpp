@@ -27,7 +27,7 @@ void UCommonButtonHandle::UpdateHandle(FSimpleMulticastDelegate OnFinish)
 
 bool UCommonButtonHandle::GetIsAsync()
 {
-	return Duration > 0.f;
+	return bIsAsync;
 }
 
 void UCommonButtonHandle::OnHandleUpdate(float InValue)

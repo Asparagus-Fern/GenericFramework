@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "ScreenWidgetType.h"
+#include "Procedure/ProcedureBaseInterface.h"
 #include "Procedure/ProcedureInterface.h"
 #include "UObject/Object.h"
 #include "CommonButtonEvent.generated.h"
@@ -12,7 +13,7 @@
  * 
  */
 UCLASS(Abstract, Blueprintable, EditInlineNew)
-class SCREENWIDGETGENERATION_API UCommonButtonEvent : public UObject, public IProcedureInterface
+class SCREENWIDGETGENERATION_API UCommonButtonEvent : public UObject, public IProcedureInterface, public IProcedureBaseInterface
 {
 	GENERATED_UCLASS_BODY()
 
@@ -28,4 +29,10 @@ public:
 public:
 	virtual void NativeOnActived() override;
 	virtual void NativeOnInactived() override;
+
+	/* IProcedureBaseInterface */
+public:
+	virtual void NativeOnCreate() override;
+	virtual void NativeOnDestroy() override;
+	virtual void NativeOnRefresh() override;
 };
