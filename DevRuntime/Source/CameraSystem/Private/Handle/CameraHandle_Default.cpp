@@ -28,5 +28,6 @@ bool UCameraHandle_Default::HandleSwitchToCameraPoint_Implementation(APlayerCont
 void UCameraHandle_Default::OnSwitchToCameraPointFinish()
 {
 	Super::OnSwitchToCameraPointFinish();
+	OwnerPlayerController->PlayerCameraManager->SetViewTarget(OwnerPlayerController->GetPawn());
 	TimerHandle.Invalidate();
 }

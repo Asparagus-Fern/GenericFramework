@@ -17,16 +17,23 @@ class CAMERASYSTEM_API UCBE_HandleSwitchCamera : public UCommonButtonEvent
 	GENERATED_BODY()
 
 public:
+	UCBE_HandleSwitchCamera();
 	virtual bool GetIsAsync() override { return true; }
 	virtual void NativeOnActived() override;
 	virtual void NativeOnInactived() override;
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="Camera"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="Camera"), Category="OnActived")
 	FGameplayTag ActiveSwitchCameraTag;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="Camera"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced, Category="OnActived")
+	UCameraHandle* ActiveSwitchCameraHandle = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="Camera"), Category="OnInactived")
 	FGameplayTag InactiveSwitchCameraTag;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced, Category="OnInactived")
+	UCameraHandle* InactiveSwitchCameraHandle = nullptr;
 
 protected:
 	FDelegateHandle SwitchCameraFinishHandle;

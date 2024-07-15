@@ -36,10 +36,10 @@ public:
 
 public:
 	/* 激活时需要处理的显隐状态 */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="OnActived")
 	TArray<FActorVisibilityHandle> ActiveVisibilityHandles;
 
 	/* 不激活时需要处理的显隐状态 */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="OnInactived")
 	TArray<FActorVisibilityHandle> InactiveVisibilityHandles;
 };

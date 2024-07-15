@@ -315,6 +315,11 @@ void ULevelStreamingManager::SetLevelsVisibility(TArray<TSoftObjectPtr<UWorld>> 
 		ValidLevels.Add(Level);
 	}
 
+	// LevelsVisibilityHandles.Add(FLevelsVisibilityHandle(ValidLevels, bVisible, OnOnceFinish, OnFinish));
+	// if (!HandleLevelsVisilibity.IsValid())
+	// {
+	// 	HandleLevelsVisilibity = GetWorld()->GetTimerManager().SetTimerForNextTick(this, &ULevelStreamingManager::HandleLevelsVisibility);
+	// }
 
 	/* 显示关卡时，需考虑关卡未被加载的情况 */
 	if (bVisible)
@@ -446,5 +451,49 @@ ULevelStreaming* ULevelStreamingManager::GetLevelStreaming(TSoftObjectPtr<UWorld
 
 	return LevelStreaming;
 }
+
+/*void ULevelStreamingManager::HandleLevelsVisibility()
+{
+	TArray<FLevelsVisibilityHandle> Handles = LevelsVisibilityHandles;
+
+	TSet<TSoftObjectPtr<UWorld>> VisibleLevels;
+	TSet<TSoftObjectPtr<UWorld>> HiddenLevels;
+
+	/* 列出显示和隐藏的关卡 #1#
+	for (auto& LevelsVisibilityHandle : Handles)
+	{
+		if (LevelsVisibilityHandle.bVisible)
+		{
+			VisibleLevels.Append(LevelsVisibilityHandle.Levels);
+		}
+		else
+		{
+			HiddenLevels.Append(LevelsVisibilityHandle.Levels);
+		}
+	}
+
+	/* 取得交集，即需要处理的重复关卡 #1#
+	TArray<TSoftObjectPtr<UWorld>> LevelsToHandle = VisibleLevels.Intersect(HiddenLevels).Array();
+
+	/* 处理重复的关卡，#1#
+	for (auto& LevelToHandle : LevelsToHandle)
+	{
+		bool bHasFound = false;
+		for (int Index = Handles.Num() - 1; Index >= 0; Index--)
+		{
+			if (Handles[Index].Levels.Contains(LevelToHandle))
+			{
+				if (!bHasFound)
+				{
+					bHasFound = true;
+				}
+				else
+				{
+					LevelsVisibilityHandles[Index].Levels.Remove(LevelToHandle);
+				}
+			}
+		}
+	}
+}*/
 
 #undef LOCTEXT

@@ -7,6 +7,7 @@
 #include "Manager/CoreManager.h"
 #include "CameraManager.generated.h"
 
+class UCameraHandle;
 class ACameraPointBase;
 
 /**
@@ -36,8 +37,8 @@ public:
 	ACameraPointBase* GetCameraPoint(FGameplayTag InCameraTag) const;
 
 	bool CanSwitchToCamera(FGameplayTag InCameraTag) const;
-	void SwitchToCamera(FGameplayTag InCameraTag);
-	void SwitchToCameraByPlayerController(FGameplayTag InCameraTag, APlayerController* PlayerController);
+	virtual void SwitchToCamera(FGameplayTag InCameraTag, UCameraHandle* SwitchCameraHandle);
+	virtual void SwitchToCamera(APlayerController* PlayerController, FGameplayTag InCameraTag, UCameraHandle* SwitchCameraHandle);
 
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)

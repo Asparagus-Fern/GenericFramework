@@ -56,16 +56,16 @@ class SCREENWIDGETGENERATION_API UCBE_HandleUserWidget : public UCommonButtonEve
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="OnActived")
 	TArray<FOpenUserWidgetHandle> ActiveOpenWidgets;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="OnActived")
 	TArray<FCloseUserWidgetHandle> ActiveCloseWidgets;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="OnInactived")
 	TArray<FOpenUserWidgetHandle> InactiveOpenWidgets;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="OnInactived")
 	TArray<FCloseUserWidgetHandle> InactiveCloseWidgets;
 
 public:

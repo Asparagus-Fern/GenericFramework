@@ -30,5 +30,4 @@ void UCameraHandle::OnSwitchToCameraPointFinish()
 	SwitchCameraPointHandle.Reset();
 	FCameraSystemDelegates::OnSwitchCameraFinish.Broadcast(this);
 	OnSwitchCameraFinish.Broadcast();
-	OwnerPlayerController->PlayerCameraManager->SetViewTarget(OwnerPlayerController->GetPawn());
 }

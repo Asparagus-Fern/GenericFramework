@@ -5,7 +5,13 @@
 
 #include "CameraManager.h"
 #include "CameraSystemType.h"
+#include "Handle/CameraHandle_Default.h"
 #include "Manager/ManagerGlobal.h"
+
+UCBE_HandleSwitchCamera::UCBE_HandleSwitchCamera()
+{
+	ActiveSwitchCameraHandle = CreateDefaultSubobject<UCameraHandle_Default>("CameraHandle");
+}
 
 void UCBE_HandleSwitchCamera::NativeOnActived()
 {
@@ -14,7 +20,7 @@ void UCBE_HandleSwitchCamera::NativeOnActived()
 	if (ActiveSwitchCameraTag.IsValid())
 	{
 		SwitchCameraFinishHandle = FCameraSystemDelegates::OnSwitchCameraFinish.AddUObject(this, &UCBE_HandleSwitchCamera::OnActiveSwitchCameraFinish);
-		GetManager<UCameraManager>()->SwitchToCamera(ActiveSwitchCameraTag);
+		GetManager<UCameraManager>()->SwitchToCamera(ActiveSwitchCameraTag, ActiveSwitchCameraHandle);
 	}
 	else
 	{
@@ -29,7 +35,7 @@ void UCBE_HandleSwitchCamera::NativeOnInactived()
 	if (InactiveSwitchCameraTag.IsValid())
 	{
 		SwitchCameraFinishHandle = FCameraSystemDelegates::OnSwitchCameraFinish.AddUObject(this, &UCBE_HandleSwitchCamera::OnInactiveSwitchCameraFinish);
-		GetManager<UCameraManager>()->SwitchToCamera(InactiveSwitchCameraTag);
+		GetManager<UCameraManager>()->SwitchToCamera(InactiveSwitchCameraTag, InactiveSwitchCameraHandle);
 	}
 	else
 	{

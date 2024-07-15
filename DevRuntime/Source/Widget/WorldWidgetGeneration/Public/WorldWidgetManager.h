@@ -88,27 +88,16 @@ public:
 
 	/* UWorldWidgetManager */
 public:
-	UPROPERTY(Transient, VisibleAnywhere, Getter, BlueprintGetter="GetWorldWidgetPoints")
+	UPROPERTY(Transient, VisibleAnywhere)
 	TArray<AWorldWidgetPoint*> WorldWidgetPoints;
 
 public:
-	UFUNCTION(BlueprintCallable)
 	void ActiveWorldWidgetPoint(AWorldWidgetPoint* InPoint);
-
-	UFUNCTION(BlueprintCallable)
-	void ActiveWorldWidgetPointByTag(FGameplayTag InPointTag);
-
-	UFUNCTION(BlueprintCallable)
+	void ActiveWorldWidgetPoint(FGameplayTag InPointTag);
 	void InactiveWorldWidgetPoint(AWorldWidgetPoint* InPoint);
-
-	UFUNCTION(BlueprintCallable)
-	void InactiveWorldWidgetPointByTag(FGameplayTag InPointTag);
-
-	UFUNCTION(BlueprintPure)
+	void InactiveWorldWidgetPoint(FGameplayTag InPointTag);
 	TArray<AWorldWidgetPoint*> GetWorldWidgetPoints() const;
-
-	UFUNCTION(BlueprintPure)
-	TArray<AWorldWidgetPoint*> GetWorldWidgetPointsByTag(FGameplayTag InPointTag) const;
+	TArray<AWorldWidgetPoint*> GetWorldWidgetPoints(FGameplayTag InPointTag) const;
 
 protected:
 	virtual void GenerateWorldWidgetPanel();

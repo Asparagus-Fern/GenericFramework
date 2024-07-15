@@ -74,4 +74,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="WorldManager|LevelStreaming")
 	ULevelStreaming* GetLevelStreaming(TSoftObjectPtr<UWorld> Level);
+
+// protected:
+// 	FTimerHandle HandleLevelsVisilibity;
+// 	TArray<FLevelsVisibilityHandle> LevelsVisibilityHandles;
+// 	void HandleLevelsVisibility();
 };

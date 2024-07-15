@@ -25,9 +25,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="Camera"), Category="Camera Point")
 	FGameplayTag CameraTag;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced, Category="Camera Point")
-	UCameraHandle* CameraHandle;
-
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintPure)
 	UCameraComponent* GetCameraComponent();

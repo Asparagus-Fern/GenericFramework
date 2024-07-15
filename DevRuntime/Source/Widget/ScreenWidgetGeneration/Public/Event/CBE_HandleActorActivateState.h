@@ -20,10 +20,10 @@ public:
 
 public:
 	/* 激活时需要处理的Actor的激活状态 */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="OnActived")
 	TMap<TSubclassOf<AActor>, bool> ActiveHandleActorState;
 
 	/* 不激活时需要处理的Actor的激活状态 */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="OnInactived")
 	TMap<TSubclassOf<AActor>, bool> InactiveHandleActorState;
 };

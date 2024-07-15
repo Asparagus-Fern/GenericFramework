@@ -6,6 +6,7 @@
 #include "Animation/WidgetAnimationEvent.h"
 #include "Blueprint/WidgetTree.h"
 #include "DataAsset/GameMenuSetting.h"
+#include "Event/CommonButtonEvent.h"
 #include "Group/CommonButtonGroup.h"
 #include "Manager/ManagerGlobal.h"
 #include "Procedure/ProcedureManager.h"
@@ -485,6 +486,10 @@ void UScreenWidgetManager::GenerateMenu(FMenuContainerInfo InMenuContainerInfo)
 
 				/* 设置按钮事件 */
 				MenuStyle->SetEvents(MenuInfo.Events);
+				for (auto& Event : MenuInfo.Events)
+				{
+					Event->NativeOnCreate();
+				}
 
 				/* 构建按钮容器 */
 				MenuContainer->ConstructMenuStyle(MenuStyle);
@@ -640,6 +645,13 @@ void UScreenWidgetManager::HandleMenuSelectionChanged()
 						FMenuGenerateInfo MenuGenerateInfo;
 						if (GetMenuGenerateInfo(MenuTag, MenuGenerateInfo))
 						{
+							for (const auto& GarbageMenuStyle : MenuGenerateInfo.MenuStyles)
+							{
+								GarbageMenuStyle->NativeOnDestroy();
+								GarbageMenuStyle->RemoveFromParent();
+								GarbageMenuStyle->MarkAsGarbage();
+							}
+
 							CloseUserWidget(MenuGenerateInfo.MenuContainerInfo.MenuContainer);
 							MenuGenerateInfos.Remove(MenuGenerateInfo);
 						}

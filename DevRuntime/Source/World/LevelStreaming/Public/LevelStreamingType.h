@@ -170,7 +170,20 @@ public:
 
 protected:
 	TArray<FLevelStreamingVisibilitySetting> LevelStreamingVisibilitySettings;
-	
+
 	virtual void OnOnceFinish() override;
 	virtual void OnFinish() override;
 };
+
+// struct FLevelsVisibilityHandle
+// {
+// public:
+// 	FLevelsVisibilityHandle();
+// 	FLevelsVisibilityHandle(TArray<TSoftObjectPtr<UWorld>> InLevels, bool InVisible, FOnOnceFinish InOnceFinish, FOnFinish InFinish);
+//
+// public:
+// 	TArray<TSoftObjectPtr<UWorld>> Levels;
+// 	bool bVisible;
+// 	FOnOnceFinish OnOnceFinish;
+// 	FOnFinish OnFinish;
+// };

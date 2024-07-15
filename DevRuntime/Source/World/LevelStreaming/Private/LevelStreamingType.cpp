@@ -213,3 +213,19 @@ void ULevelStreamingVisibilityHandle::OnFinish()
 
 	Super::OnFinish();
 }
+
+// FLevelsVisibilityHandle::FLevelsVisibilityHandle()
+// 	: Levels(),
+// 	  bVisible(false),
+// 	  OnOnceFinish(),
+// 	  OnFinish()
+// {
+// }
+//
+// FLevelsVisibilityHandle::FLevelsVisibilityHandle(TArray<TSoftObjectPtr<UWorld>> InLevels, bool InVisible, FOnOnceFinish InOnceFinish, FOnFinish InFinish)
+// 	: Levels(InLevels),
+// 	  bVisible(InVisible),
+// 	  OnOnceFinish(InOnceFinish),
+// 	  OnFinish(InFinish)
+// {
+// }

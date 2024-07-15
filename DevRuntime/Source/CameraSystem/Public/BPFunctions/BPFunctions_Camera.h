@@ -7,6 +7,7 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "BPFunctions_Camera.generated.h"
 
+class UCameraHandle;
 class ACameraPointBase;
 
 /**
@@ -31,8 +32,11 @@ public:
 	static bool CanSwitchToCamera(FGameplayTag InCameraTag);
 
 	UFUNCTION(BlueprintCallable)
-	static void SwitchToCamera(FGameplayTag InCameraTag);
+	static void SwitchToCameraByHandle(FGameplayTag InCameraTag, TSubclassOf<UCameraHandle> SwitchCameraHandleClass);
+	
+	UFUNCTION(BlueprintCallable)
+	static void SwitchToCamera(FGameplayTag InCameraTag, UCameraHandle* SwitchCameraHandle);
 
 	UFUNCTION(BlueprintCallable)
-	static void SwitchToCameraByPlayerController(FGameplayTag InCameraTag, APlayerController* PlayerController);
+	static void SwitchToCameraByPlayerController(APlayerController* PlayerController, FGameplayTag InCameraTag, UCameraHandle* SwitchCameraHandle);
 };

@@ -359,7 +359,7 @@ void UWorldWidgetManager::ActiveWorldWidgetPoint(AWorldWidgetPoint* InPoint)
 	}
 }
 
-void UWorldWidgetManager::ActiveWorldWidgetPointByTag(FGameplayTag InPointTag)
+void UWorldWidgetManager::ActiveWorldWidgetPoint(FGameplayTag InPointTag)
 {
 	if (!InPointTag.IsValid())
 	{
@@ -369,7 +369,7 @@ void UWorldWidgetManager::ActiveWorldWidgetPointByTag(FGameplayTag InPointTag)
 
 	for (const auto& WorldWidgetPanel : WorldWidgetPanels)
 	{
-		WorldWidgetPanel->ActiveWorldWidgets(GetWorldWidgetPointsByTag(InPointTag));
+		WorldWidgetPanel->ActiveWorldWidgets(GetWorldWidgetPoints(InPointTag));
 	}
 }
 
@@ -381,7 +381,7 @@ void UWorldWidgetManager::InactiveWorldWidgetPoint(AWorldWidgetPoint* InPoint)
 	}
 }
 
-void UWorldWidgetManager::InactiveWorldWidgetPointByTag(FGameplayTag InPointTag)
+void UWorldWidgetManager::InactiveWorldWidgetPoint(FGameplayTag InPointTag)
 {
 	if (!InPointTag.IsValid())
 	{
@@ -391,7 +391,7 @@ void UWorldWidgetManager::InactiveWorldWidgetPointByTag(FGameplayTag InPointTag)
 
 	for (const auto& WorldWidgetPanel : WorldWidgetPanels)
 	{
-		WorldWidgetPanel->InactiveWorldWidgets(GetWorldWidgetPointsByTag(InPointTag));
+		WorldWidgetPanel->InactiveWorldWidgets(GetWorldWidgetPoints(InPointTag));
 	}
 }
 
@@ -400,7 +400,7 @@ TArray<AWorldWidgetPoint*> UWorldWidgetManager::GetWorldWidgetPoints() const
 	return WorldWidgetPoints;
 }
 
-TArray<AWorldWidgetPoint*> UWorldWidgetManager::GetWorldWidgetPointsByTag(FGameplayTag InPointTag) const
+TArray<AWorldWidgetPoint*> UWorldWidgetManager::GetWorldWidgetPoints(FGameplayTag InPointTag) const
 {
 	TArray<AWorldWidgetPoint*> Points;
 	for (auto& WorldWidgetPoint : GetWorldWidgetPoints())

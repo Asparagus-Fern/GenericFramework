@@ -11,7 +11,6 @@
 
 ACameraPointBase::ACameraPointBase()
 {
-	CameraHandle = CreateDefaultSubobject<UCameraHandle_Default>("CameraHandle");
 	PrimaryActorTick.bCanEverTick = true;
 
 #if WITH_EDITORONLY_DATA

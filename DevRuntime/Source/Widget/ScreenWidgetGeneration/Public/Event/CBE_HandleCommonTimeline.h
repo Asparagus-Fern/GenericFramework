@@ -23,11 +23,11 @@ public:
 
 public:
 	/* 激活时触发的时间轴 */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced, Category="OnActived")
 	TArray<UCommonButtonHandle*> ActiveCommonButtonHandles;
 
 	/* 不激活时触发的时间轴 */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced, Category="OnInactived")
 	TArray<UCommonButtonHandle*> InactiveCommonButtonHandles;
 
 protected:

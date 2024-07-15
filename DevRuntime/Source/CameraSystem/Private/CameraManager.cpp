@@ -58,11 +58,12 @@ bool UCameraManager::CanSwitchToCamera(const FGameplayTag InCameraTag) const
 	return InCameraTag.IsValid() && IsValid(GetCameraPoint(InCameraTag));
 }
 
-void UCameraManager::SwitchToCamera(FGameplayTag InCameraTag)
+void UCameraManager::SwitchToCamera(const FGameplayTag InCameraTag, UCameraHandle* SwitchCameraHandle)
 {
-	if (!InCameraTag.IsValid())
+	if (!InCameraTag.IsValid() || !IsValid(SwitchCameraHandle))
 	{
-		DEBUG(Debug_Camera, Error, TEXT("CameraTag Is NULL"))
+		DEBUG(Debug_Camera, Error, TEXT("SwitchToCamera Fail"))
+		FCameraSystemDelegates::OnSwitchCameraFinish.Broadcast(nullptr);
 		return;
 	}
 
@@ -71,7 +72,7 @@ void UCameraManager::SwitchToCamera(FGameplayTag InCameraTag)
 		for (FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)
 		{
 			APlayerController* PlayerController = Iterator->Get();
-			SwitchToCameraByPlayerController(InCameraTag, PlayerController);
+			SwitchToCamera(PlayerController, InCameraTag, SwitchCameraHandle);
 		}
 	}
 	else
@@ -80,18 +81,12 @@ void UCameraManager::SwitchToCamera(FGameplayTag InCameraTag)
 	}
 }
 
-void UCameraManager::SwitchToCameraByPlayerController(FGameplayTag InCameraTag, APlayerController* PlayerController)
+void UCameraManager::SwitchToCamera(APlayerController* PlayerController, const FGameplayTag InCameraTag, UCameraHandle* SwitchCameraHandle)
 {
-	/* Check */
-	if (!InCameraTag.IsValid())
+	if (!InCameraTag.IsValid() || !PlayerController || !IsValid(SwitchCameraHandle))
 	{
-		DEBUG(Debug_Camera, Error, TEXT("CameraTag Is NULL"))
-		return;
-	}
-
-	if (!PlayerController)
-	{
-		DEBUG(Debug_Camera, Error, TEXT("PlayerController Is NULL"))
+		DEBUG(Debug_Camera, Error, TEXT("SwitchToCamera Fail"))
+		FCameraSystemDelegates::OnSwitchCameraFinish.Broadcast(nullptr);
 		return;
 	}
 
@@ -99,12 +94,7 @@ void UCameraManager::SwitchToCameraByPlayerController(FGameplayTag InCameraTag, 
 	if (ACameraPointBase* FoundCameraPoint = CameraPoints.FindRef(InCameraTag))
 	{
 		FCameraSystemDelegates::PreSwitchCamera.Broadcast(FoundCameraPoint);
-
-		if (IsValid(FoundCameraPoint->CameraHandle))
-		{
-			FoundCameraPoint->CameraHandle->HandleSwitchToCameraPoint(PlayerController, FoundCameraPoint);
-		}
-
+		SwitchCameraHandle->HandleSwitchToCameraPoint(PlayerController, FoundCameraPoint);
 		FCameraSystemDelegates::PostSwitchCamera.Broadcast(FoundCameraPoint);
 	}
 }

@@ -14,7 +14,7 @@ void UCBE_HandleWorldWidgetPoint::NativeOnActived()
 	{
 		if (ActiveHandle.Key.IsValid())
 		{
-			TArray<AWorldWidgetPoint*> WorldWidgetPoints = GetManager<UWorldWidgetManager>()->GetWorldWidgetPointsByTag(ActiveHandle.Key);
+			TArray<AWorldWidgetPoint*> WorldWidgetPoints = GetManager<UWorldWidgetManager>()->GetWorldWidgetPoints(ActiveHandle.Key);
 			for (const auto& WorldWidgetPoint : WorldWidgetPoints)
 			{
 				WorldWidgetPoint->SetIsActive(ActiveHandle.Value);
@@ -31,7 +31,7 @@ void UCBE_HandleWorldWidgetPoint::NativeOnInactived()
 	{
 		if (InactiveHandle.Key.IsValid())
 		{
-			TArray<AWorldWidgetPoint*> WorldWidgetPoints = GetManager<UWorldWidgetManager>()->GetWorldWidgetPointsByTag(InactiveHandle.Key);
+			TArray<AWorldWidgetPoint*> WorldWidgetPoints = GetManager<UWorldWidgetManager>()->GetWorldWidgetPoints(InactiveHandle.Key);
 			for (const auto& WorldWidgetPoint : WorldWidgetPoints)
 			{
 				WorldWidgetPoint->SetIsActive(InactiveHandle.Value);
