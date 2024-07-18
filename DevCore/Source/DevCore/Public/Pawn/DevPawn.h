@@ -3,12 +3,15 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "NativeGameplayTags.h"
 #include "PawnInterface.h"
 #include "GameFramework/Pawn.h"
 #include "Procedure/ProcedureBaseInterface.h"
 #include "DevPawn.generated.h"
 
 class UFloatingPawnMovement;
+
+UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Pawn);
 
 UCLASS()
 class DEVCORE_API ADevPawn : public APawn, public IPawnInterface, public IProcedureBaseInterface
@@ -18,15 +21,14 @@ class DEVCORE_API ADevPawn : public APawn, public IPawnInterface, public IProced
 public:
 	ADevPawn();
 	virtual void BeginPlay() override;
-	virtual void Tick(float DeltaTime) override;
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 	/* IProcedureBaseInterface */
 public:
 	virtual void NativeOnCreate() override;
 	virtual void NativeOnDestroy() override;
 	virtual void NativeOnRefresh() override;
-	
+
 	/* IIPawnInterface */
 public:
 	virtual void AddLocation_Implementation(FVector2D InValue) override;
@@ -38,11 +40,18 @@ public:
 	virtual FVector GetCameraLocation_Implementation() override;
 	virtual FRotator GetCameraRotation_Implementation() override;
 
+	virtual APawn* GetPawn() override;
+	virtual FGameplayTag GetPawnTag() override;
+
 	/* ADevPawn */
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="Pawn"))
+	FGameplayTag PawnTag;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UFloatingPawnMovement* FloatingPawnMovement;
 
+public:
 	UFUNCTION(BlueprintPure)
 	APlayerController* GetPlayerController() const;
 };

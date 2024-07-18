@@ -4,6 +4,10 @@
 
 #include "GameFramework/FloatingPawnMovement.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Manager/ManagerGlobal.h"
+#include "Pawn/PawnManager.h"
+
+UE_DEFINE_GAMEPLAY_TAG(TAG_Pawn, "Pawn");
 
 ADevPawn::ADevPawn()
 {
@@ -19,16 +23,13 @@ ADevPawn::ADevPawn()
 void ADevPawn::BeginPlay()
 {
 	Super::BeginPlay();
+	GetManager<UPawnManager>()->RegisterPawn(this);
 }
 
-void ADevPawn::Tick(float DeltaTime)
+void ADevPawn::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-	Super::Tick(DeltaTime);
-}
-
-void ADevPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
+	GetManager<UPawnManager>()->UnRegisterPawn(this);
+	Super::EndPlay(EndPlayReason);
 }
 
 void ADevPawn::NativeOnCreate()
@@ -101,6 +102,16 @@ FVector ADevPawn::GetCameraLocation_Implementation()
 FRotator ADevPawn::GetCameraRotation_Implementation()
 {
 	return GetPlayerController()->PlayerCameraManager->GetCameraRotation();
+}
+
+APawn* ADevPawn::GetPawn()
+{
+	return this;
+}
+
+FGameplayTag ADevPawn::GetPawnTag()
+{
+	return PawnTag;
 }
 
 APlayerController* ADevPawn::GetPlayerController() const

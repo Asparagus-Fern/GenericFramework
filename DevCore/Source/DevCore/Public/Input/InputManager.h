@@ -17,6 +17,13 @@ class DEVCORE_API UInputManager : public UCoreManager
 
 public:
 	UInputManager();
+
+	/* IManagerInterface */
+public:
+	virtual FText GetManagerDisplayName() override;
+
+	/* IProcedureInterface */
+public:
 	virtual void NativeOnActived() override;
 	virtual void NativeOnInactived() override;
 

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "UObject/Interface.h"
 #include "PawnInterface.generated.h"
 
@@ -23,30 +24,34 @@ class DEVCORE_API IPawnInterface
 public:
 	IPawnInterface();
 
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="PawnInterface")
 	void AddLocation(FVector2D InValue);
 
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="PawnInterface")
 	void AddRotation(FVector2D InValue);
 
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="PawnInterface")
 	void SetLocation(FVector InValue);
 
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="PawnInterface")
 	void SetRotation(FRotator InValue);
 
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="PawnInterface")
 	FVector GetLocation();
 
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="PawnInterface")
 	FRotator GetRotation();
 
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="PawnInterface")
 	FVector GetCameraLocation();
 
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="PawnInterface")
 	FRotator GetCameraRotation();
-	
+
+public:
+	virtual APawn* GetPawn();
+	virtual FGameplayTag GetPawnTag();
+
 public:
 	void UpdateLockState(bool InLock, bool InLockLocation, bool InLockRotation);
 	bool IsLock() const { return bLock || (bLockLocation && bLockRotation); }

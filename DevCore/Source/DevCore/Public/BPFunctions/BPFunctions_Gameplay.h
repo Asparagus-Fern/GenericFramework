@@ -35,4 +35,8 @@ public:
 
 	UFUNCTION(BlueprintPure, meta = (WorldContext = "WorldContextObject", DeterminesOutputType = "InClass"))
 	static APlayerState* GetPlayerStateByClass(const UObject* WorldContextObject, const TSubclassOf<APlayerState> InClass);
+
+public:
+	UFUNCTION(BlueprintPure, meta = (WorldContext = "WorldContextObject"))
+	static bool GetActorForwardHitResult(const UObject* WorldContextObject, AActor* InActor, FHitResult& HitResult);
 };

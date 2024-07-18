@@ -17,7 +17,7 @@ class UGameHUD;
 class UGameMenuSetting;
 class UUserWidgetBase;
 
-DECLARE_DYNAMIC_DELEGATE(FOnUserWidgetHandleFinish);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMenuGenerateInfoDelegate, FMenuGenerateInfo, MenuGenerateInfo);
 
 /**
  * 
@@ -64,18 +64,13 @@ public:
 	TArray<TSoftClassPtr<UGameHUD>> GameHUDClasses;
 
 protected:
-	UPROPERTY(Transient, Getter, BlueprintGetter="GetGameHUD")
+	UPROPERTY(Transient)
 	TArray<UGameHUD*> GameHUD;
 
 public:
-	UFUNCTION(BlueprintPure)
-	TArray<UGameHUD*> GetGameHUD() const;
-
-	UFUNCTION(BlueprintPure)
-	TArray<UGameHUD*> GetGameHUDByTag(FGameplayTag InTag) const;
-
-	UFUNCTION(BlueprintCallable)
-	void SetGameHUDVisibility(bool IsVisisble);
+	virtual TArray<UGameHUD*> GetGameHUD();
+	virtual TArray<UGameHUD*> GetGameHUDByTag(FGameplayTag InTag);
+	virtual void SetGameHUDVisibility(bool IsVisisble);
 
 protected:
 	void CreateGameHUD();
@@ -105,34 +100,26 @@ public:
 	TArray<FMenuGenerateInfo> MenuGenerateInfos;
 
 public:
-	UFUNCTION(BlueprintCallable)
-	void SwitchGameMenu(UGameMenuSetting* InGameMenuSetting);
+	UPROPERTY(BlueprintAssignable)
+	FMenuGenerateInfoDelegate OnMenuGenerate;
 
-	UFUNCTION(BlueprintCallable)
-	void SelectMenu(FGameplayTag InMenuTag);
-
-	UFUNCTION(BlueprintCallable)
-	void DeselectMenu(FGameplayTag InMenuTag);
-
-	UFUNCTION(BlueprintPure)
+public:
+	virtual void SwitchGameMenu(UGameMenuSetting* InGameMenuSetting);
+	virtual void SelectMenu(FGameplayTag InMenuTag);
+	virtual void DeselectMenu(FGameplayTag InMenuTag);
 	virtual bool GetMenuContainerInfo(FGameplayTag InMenuTag, FMenuContainerInfo& OutMenuContainerInfo);
-
-	UFUNCTION(BlueprintPure)
 	virtual bool GetMenuParentContainerInfo(FGameplayTag InMenuTag, FMenuContainerInfo& OutMenuContainerInfo);
-
-	UFUNCTION(BlueprintPure)
 	virtual bool GetMenuGenerateInfo(FGameplayTag InMenuTag, FMenuGenerateInfo& OutMenuGenerateInfo);
-
-	UFUNCTION(BlueprintPure)
 	virtual bool GetMenuParentGenerateInfo(FGameplayTag InMenuTag, FMenuGenerateInfo& OutMenuGenerateInfo);
-
-	UFUNCTION(BlueprintPure)
 	virtual UMenuStyle* GetMenuStyle(FGameplayTag InMenuTag);
-
-	UFUNCTION(BlueprintPure)
 	virtual UMenuStyle* GetParentMenuStyle(FGameplayTag InMenuTag);
+	virtual TArray<UMenuStyle*> GetAllMenuStyle();
+	virtual FGameplayTag GetLastActiveMenuTag() { return LastActiveMenuTag; }
+	virtual FGameplayTag GetCurrentActiveMenuTag() { return CurrentActiveMenuTag; }
 
 protected:
+	FGameplayTag LastActiveMenuTag;
+	FGameplayTag CurrentActiveMenuTag;
 	FDelegateHandle MenuSelectionChangedHandle;
 	virtual void GenerateMenu(FMenuContainerInfo InMenuContainerInfo);
 	virtual void OnMenuSelectionChanged(FMenuInfo InMenuInfo, bool bSelection);
@@ -140,6 +127,7 @@ protected:
 private:
 	TMap<FGameplayTag, bool> TargetMenuSelection;
 	int32 TargetMenuSelectionIndex = 0;
+	virtual void OnMenuSelectionChangedNextTick();
 	virtual void HandleMenuSelectionChanged();
 	virtual void HandleMenuSelectionChangedOnceFinish();
 	virtual void HandleMenuSelectionChangedFinish();

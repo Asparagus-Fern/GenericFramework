@@ -83,13 +83,17 @@ void ULevelStreamingManager::LoadLevels(TArray<TSoftObjectPtr<UWorld>> Levels, c
 			continue;
 		}
 
-		/* 以及加载且可视性已经是指定可视性 */
+		/* 已经加载且可视性已经是指定可视性 */
 		if (LevelStreaming->IsLevelLoaded() && LevelStreaming->ShouldBeVisible() == bMakeVisibleAfterLoad)
 		{
 			DEBUG(Debug_World, Warning, TEXT("Level Is Already Load"));
 			continue;
 		}
 
+		if (Level.IsPending())
+		{
+			Level.LoadSynchronous();
+		}
 		LoadLevelStreamingSettings.Add(FLoadLevelStreamingSetting(Level, bMakeVisibleAfterLoad, bShouldBlockOnLoad));
 	}
 
@@ -402,8 +406,8 @@ bool ULevelStreamingManager::IsCurrentWorldContainLevel(const TSoftObjectPtr<UWo
 		FString PackageName;
 		Level.GetLongPackageName().Split("/", &PackageName, nullptr, ESearchCase::IgnoreCase, ESearchDir::FromEnd);
 		PackageName += ("/" + Level.GetAssetName());
-
-		if (StreamingLevel->PackageNameToLoad == PackageName)
+		
+		if (StreamingLevel->GetWorldAssetPackageFName() == PackageName)
 		{
 			return true;
 		}

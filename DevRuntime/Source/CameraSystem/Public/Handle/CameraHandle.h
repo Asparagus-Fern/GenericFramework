@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Debug/DebugType.h"
-#include "UObject/Object.h"
+#include "Object/CommonObject.h"
 #include "CameraHandle.generated.h"
 
 class ACameraPointBase;
@@ -14,8 +14,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSwitchCameraFinish);
 /**
  * 
  */
-UCLASS(Abstract, Blueprintable)
-class CAMERASYSTEM_API UCameraHandle : public UObject
+UCLASS(Abstract, EditInlineNew)
+class CAMERASYSTEM_API UCameraHandle : public UCommonObject
 {
 	GENERATED_BODY()
 
@@ -26,10 +26,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	uint8 bLock : 1;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditConditionHides, EditCondition = "!bLockCamera"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditConditionHides, EditCondition = "!bLock"))
 	uint8 bLockLocation : 1;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditConditionHides, EditCondition = "!bLockCamera"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditConditionHides, EditCondition = "!bLock"))
 	uint8 bLockRotation : 1;
 
 public:

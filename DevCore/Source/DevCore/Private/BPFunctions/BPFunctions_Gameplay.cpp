@@ -91,3 +91,15 @@ APlayerState* UBPFunctions_Gameplay::GetPlayerStateByClass(const UObject* WorldC
 
 	return nullptr;
 }
+
+bool UBPFunctions_Gameplay::GetActorForwardHitResult(const UObject* WorldContextObject, AActor* InActor, FHitResult& HitResult)
+{
+	if (const UWorld* World = GEngine->GetWorldFromContextObjectChecked(WorldContextObject))
+	{
+	}
+	// const FVector Start = Execute_GetLocation(this);
+	// const FVector End = GetActiveCameraComponent()->GetForwardVector() * UE_BIG_NUMBER + Start;
+	// return GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility);
+
+	return false;
+}

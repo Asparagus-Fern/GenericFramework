@@ -10,6 +10,16 @@ IPawnInterface::IPawnInterface()
 {
 }
 
+APawn* IPawnInterface::GetPawn()
+{
+	return Cast<APawn>(this);
+}
+
+FGameplayTag IPawnInterface::GetPawnTag()
+{
+	return FGameplayTag::EmptyTag;
+}
+
 void IPawnInterface::UpdateLockState(const bool InLock, const bool InLockLocation, const bool InLockRotation)
 {
 	bLock = InLock;

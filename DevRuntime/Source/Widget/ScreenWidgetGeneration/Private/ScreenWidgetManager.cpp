@@ -117,12 +117,12 @@ UUserWidgetBase* UScreenWidgetManager::GetSlotUserWidgetByClass(FGameplayTag InS
 	return Cast<UUserWidgetBase>(GetSlotWidget(InSlotTag));
 }
 
-TArray<UGameHUD*> UScreenWidgetManager::GetGameHUD() const
+TArray<UGameHUD*> UScreenWidgetManager::GetGameHUD()
 {
 	return GameHUD;
 }
 
-TArray<UGameHUD*> UScreenWidgetManager::GetGameHUDByTag(const FGameplayTag InTag) const
+TArray<UGameHUD*> UScreenWidgetManager::GetGameHUDByTag(const FGameplayTag InTag)
 {
 	TArray<UGameHUD*> Result;
 	for (auto& HUD : GameHUD)
@@ -436,6 +436,16 @@ UMenuStyle* UScreenWidgetManager::GetParentMenuStyle(const FGameplayTag InMenuTa
 	return GetMenuStyle(InMenuTag.RequestDirectParent());
 }
 
+TArray<UMenuStyle*> UScreenWidgetManager::GetAllMenuStyle()
+{
+	TArray<UMenuStyle*> Result;
+	for (auto& MenuGenerateInfo : MenuGenerateInfos)
+	{
+		Result.Append(MenuGenerateInfo.MenuStyles);
+	}
+	return Result;
+}
+
 void UScreenWidgetManager::GenerateMenu(FMenuContainerInfo InMenuContainerInfo)
 {
 	UMenuContainer* MenuContainer = nullptr;
@@ -486,10 +496,6 @@ void UScreenWidgetManager::GenerateMenu(FMenuContainerInfo InMenuContainerInfo)
 
 				/* 设置按钮事件 */
 				MenuStyle->SetEvents(MenuInfo.Events);
-				for (auto& Event : MenuInfo.Events)
-				{
-					Event->NativeOnCreate();
-				}
 
 				/* 构建按钮容器 */
 				MenuContainer->ConstructMenuStyle(MenuStyle);
@@ -511,6 +517,8 @@ void UScreenWidgetManager::GenerateMenu(FMenuContainerInfo InMenuContainerInfo)
 		{
 			MenuStyle->SetIsToggleable(InMenuContainerInfo.bIsSelectionRequired ? false : InMenuContainerInfo.bIsToggleable);
 		}
+
+		OnMenuGenerate.Broadcast(NewMenuGenerateInfo);
 	}
 	else
 	{
@@ -524,7 +532,7 @@ void UScreenWidgetManager::OnMenuSelectionChanged(FMenuInfo InMenuInfo, bool bSe
 
 	if (TargetMenuSelection.IsEmpty())
 	{
-		GetWorld()->GetTimerManager().SetTimerForNextTick(this, &UScreenWidgetManager::HandleMenuSelectionChanged);
+		GetWorld()->GetTimerManager().SetTimerForNextTick(this, &UScreenWidgetManager::OnMenuSelectionChangedNextTick);
 	}
 
 	if (bSelection)
@@ -570,11 +578,56 @@ void UScreenWidgetManager::OnMenuSelectionChanged(FMenuInfo InMenuInfo, bool bSe
 	}*/
 }
 
-void UScreenWidgetManager::HandleMenuSelectionChanged()
+void UScreenWidgetManager::OnMenuSelectionChangedNextTick()
 {
 	if (TargetMenuSelection.IsEmpty())
 	{
+		HandleMenuSelectionChangedFinish();
 		return;
+	}
+
+	TArray<FGameplayTag> MenuTags;
+	TargetMenuSelection.GenerateKeyArray(MenuTags);
+
+	/* 处理 LastActiveMenuTag 和 CurrentActiveMenuTag 的转变 */
+	if (MenuTags.Num() == 1)
+	{
+		if (TargetMenuSelection.FindRef(MenuTags[0]))
+		{
+			LastActiveMenuTag = CurrentActiveMenuTag;
+			CurrentActiveMenuTag = MenuTags[0];
+		}
+		else
+		{
+			LastActiveMenuTag = CurrentActiveMenuTag;
+			CurrentActiveMenuTag = FGameplayTag::EmptyTag;
+		}
+	}
+	else
+	{
+		LastActiveMenuTag = MenuTags[0];
+
+		const FGameplayTag LastMenuTag;
+		MenuTags.FindLast(LastMenuTag);
+		if (TargetMenuSelection.FindRef(LastMenuTag))
+		{
+			CurrentActiveMenuTag = LastMenuTag;
+		}
+		else
+		{
+			CurrentActiveMenuTag = FGameplayTag::EmptyTag;
+		}
+	}
+
+	/* 处理按钮事件的切换 */
+	HandleMenuSelectionChanged();
+}
+
+void UScreenWidgetManager::HandleMenuSelectionChanged()
+{
+	for (const auto& Menu : GetAllMenuStyle())
+	{
+		Menu->SetEnableInteraction(false);
 	}
 
 	TArray<FGameplayTag> MenuTags;
@@ -590,34 +643,7 @@ void UScreenWidgetManager::HandleMenuSelectionChanged()
 			/* 选中 */
 			if (bSelection)
 			{
-				/* 不激活直属父级的事件 */
-				if (UMenuStyle* ParentMenuStyle = GetParentMenuStyle(MenuTag))
-				{
-					FSimpleMulticastDelegate OnDeselectedFinish;
-					OnDeselectedFinish.AddLambda([this, MenuStyle, MenuTag]()
-						{
-							FSimpleMulticastDelegate OnSelectedFinish;
-							OnSelectedFinish.AddLambda([this]()
-								{
-									HandleMenuSelectionChangedOnceFinish();
-								}
-							);
-
-							/* 激活自身的事件 */
-							MenuStyle->ResponseButtonEvent(ECommonButtonResponseEvent::OnSelected, OnSelectedFinish);
-
-							/* 生成下一级按钮组 */
-							if (const FMenuContainerInfo* MenuContainerInfo = GameMenu->GetContainerInfo(MenuTag))
-							{
-								GenerateMenu(*GameMenu->GetContainerInfo(MenuTag));
-							}
-						}
-					);
-
-					ParentMenuStyle->ResponseButtonEvent(ECommonButtonResponseEvent::OnDeselected, OnDeselectedFinish);
-				}
-				/* 没有直属父级按钮 */
-				else
+				auto ActivateSelf = [this, MenuTag, MenuStyle]()
 				{
 					FSimpleMulticastDelegate OnFinish;
 					OnFinish.AddLambda([this, MenuTag]()
@@ -634,14 +660,42 @@ void UScreenWidgetManager::HandleMenuSelectionChanged()
 
 					/* 激活自身的事件 */
 					MenuStyle->ResponseButtonEvent(ECommonButtonResponseEvent::OnSelected, OnFinish);
+				};
+
+				/* 有直属父级按钮 */
+				if (UMenuStyle* ParentMenuStyle = GetParentMenuStyle(MenuTag))
+				{
+					/* 不激活直属父级的事件 */
+					FSimpleMulticastDelegate OnDeselectedFinish;
+					OnDeselectedFinish.AddLambda([this, ActivateSelf, MenuStyle]()
+						{
+							for (const auto& Event : MenuStyle->Events)
+							{
+								Event->NativeOnCreate();
+							}
+
+							ActivateSelf();
+						}
+					);
+
+					ParentMenuStyle->ResponseButtonEvent(ECommonButtonResponseEvent::OnDeselected, OnDeselectedFinish);
+					return;
 				}
+
+				for (const auto& Event : MenuStyle->Events)
+				{
+					Event->NativeOnCreate();
+				}
+
+				ActivateSelf();
 			}
 			/* 取消选中 */
 			else
 			{
 				FSimpleMulticastDelegate OnFinish;
-				OnFinish.AddLambda([this, MenuTag]()
+				OnFinish.AddLambda([this, MenuTag, MenuStyle]()
 					{
+						/* 清理子菜单 */
 						FMenuGenerateInfo MenuGenerateInfo;
 						if (GetMenuGenerateInfo(MenuTag, MenuGenerateInfo))
 						{
@@ -654,6 +708,12 @@ void UScreenWidgetManager::HandleMenuSelectionChanged()
 
 							CloseUserWidget(MenuGenerateInfo.MenuContainerInfo.MenuContainer);
 							MenuGenerateInfos.Remove(MenuGenerateInfo);
+						}
+
+						/* 清理自身的事件 */
+						for (const auto& Event : MenuStyle->Events)
+						{
+							Event->NativeOnDestroy();
 						}
 
 						HandleMenuSelectionChangedOnceFinish();
@@ -711,6 +771,11 @@ void UScreenWidgetManager::HandleMenuSelectionChangedFinish()
 {
 	TargetMenuSelection.Reset();
 	TargetMenuSelectionIndex = 0;
+
+	for (const auto& Menu : GetAllMenuStyle())
+	{
+		Menu->SetEnableInteraction(true);
+	}
 }
 
 #undef LOCTEXT_NAMESPACE

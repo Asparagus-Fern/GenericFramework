@@ -7,6 +7,7 @@
 #include "ManagerType.h"
 #include "Config/ConfigInterface.h"
 #include "Debug/DebugType.h"
+#include "Object/CommonObject.h"
 #include "Procedure/ProcedureBaseInterface.h"
 #include "Procedure/ProcedureInterface.h"
 #include "CoreManager.generated.h"
@@ -15,7 +16,7 @@
  * 
  */
 UCLASS(Abstract, Config = Manager, DefaultConfig)
-class DEVCORE_API UCoreManager : public UObject
+class DEVCORE_API UCoreManager : public UCommonObject
                                  , public FTickableGameObject
                                  , public IConfigInterface
                                  , public IProcedureBaseInterface
@@ -29,7 +30,6 @@ public:
 #if WITH_EDITOR
 	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
 #endif
-	virtual UWorld* GetWorld() const override;
 
 	/* FTickableGameObject */
 public:

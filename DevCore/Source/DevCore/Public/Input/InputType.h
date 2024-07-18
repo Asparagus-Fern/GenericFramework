@@ -10,10 +10,10 @@ struct FEnhanceInputMappingContext
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	UInputMappingContext* InputMappingContext;
+	UInputMappingContext* InputMappingContext = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	int32 Priority;
+	int32 Priority = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FModifyContextOptions ModifyContextOptions;

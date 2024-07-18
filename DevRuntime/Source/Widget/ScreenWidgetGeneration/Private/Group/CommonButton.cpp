@@ -119,6 +119,15 @@ void UCommonButton::NativeOnDestroy()
 	IProcedureBaseInterface::Execute_OnDestroy(this);
 }
 
+void UCommonButton::SetEnableInteraction(bool InEnableInteraction)
+{
+	bEnableInteraction = InEnableInteraction;
+	if (IsValid(GetRootWidget()))
+	{
+		GetRootWidget()->SetVisibility(bEnableInteraction ? ESlateVisibility::SelfHitTestInvisible : ESlateVisibility::HitTestInvisible);
+	}
+}
+
 TArray<UCommonButtonEvent*> UCommonButton::GetEvents() const
 {
 	return Events;

@@ -56,13 +56,16 @@ public:
 	virtual void NativeOnDestroy() override;
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	bool bEnableInteraction;
 
 	UPROPERTY(EditAnywhere, Instanced, Getter, Setter, BlueprintGetter="GetEvents", BlueprintSetter="SetEvents")
 	TArray<UCommonButtonEvent*> Events;
 
 public:
+	UFUNCTION(BlueprintCallable)
+	void SetEnableInteraction(bool InEnableInteraction);
+
 	UFUNCTION(BlueprintPure)
 	TArray<UCommonButtonEvent*> GetEvents() const;
 

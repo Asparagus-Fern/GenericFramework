@@ -52,6 +52,6 @@ void AWorldWidgetPoint::SetIsActive(const bool InActive)
 	}
 	else
 	{
-		GetManager<UWorldWidgetManager>()->ActiveWorldWidgetPoint(this);
+		GetManager<UWorldWidgetManager>()->InactiveWorldWidgetPoint(this);
 	}
 }

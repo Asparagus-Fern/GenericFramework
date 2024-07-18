@@ -13,6 +13,8 @@ class USphereComponent;
 class UCommonSpringArmComponent;
 class UCameraComponent;
 
+UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Pawn_TP);
+
 UCLASS()
 class APPLICATIONRUNTIME_API AThirdPersonPawn : public ADevPawn
 {
@@ -34,7 +36,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UCameraComponent* CameraComponent;
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UCameraComponent* CameraCacheComponent;
 
 public:

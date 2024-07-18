@@ -160,6 +160,8 @@ public:
 
 	UPROPERTY(BlueprintReadOnly)
 	TArray<UMenuStyle*> MenuStyles;
+
+public:
 };
 
 /**

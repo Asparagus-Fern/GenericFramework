@@ -14,14 +14,26 @@ class SCREENWIDGETGENERATION_API UCBE_HandlePossessPawn : public UCommonButtonEv
 {
 	GENERATED_BODY()
 
+	/* IProcedureBaseInterface */
+public:
+	virtual void NativeOnCreate() override;
+	virtual void NativeOnDestroy() override;
+
+	/* IProcedureInterface */
 public:
 	virtual void NativeOnActived() override;
 	virtual void NativeOnInactived() override;
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="OnActived")
-	TSubclassOf<APawn> ActivePossessPawn;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="Pawn"), Category="OnCreate")
+	TMap<int32, FGameplayTag> PawnTagsOnCreate;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="OnInactived")
-	TSubclassOf<APawn> InactivePossessPawn;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="Pawn"), Category="OnDestroy")
+	TMap<int32, FGameplayTag> PawnTagsOnDestroy;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="Pawn"), Category="OnActived")
+	TMap<int32, FGameplayTag> ActivePawnTags;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="Pawn"), Category="OnInactived")
+	TMap<int32, FGameplayTag> InactivePawnTags;
 };

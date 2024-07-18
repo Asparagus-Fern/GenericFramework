@@ -5,6 +5,7 @@
 
 #include "CameraManager.h"
 #include "CameraSystemType.h"
+#include "ScreenWidgetManager.h"
 #include "Handle/CameraHandle_Default.h"
 #include "Manager/ManagerGlobal.h"
 
@@ -17,10 +18,20 @@ void UCBE_HandleSwitchCamera::NativeOnActived()
 {
 	Super::NativeOnActived();
 
-	if (ActiveSwitchCameraTag.IsValid())
+	if (ActiveSwitchCameraTag.IsValid() && IsValid(ActiveSwitchCameraHandle))
 	{
+		UCameraHandle* CameraHandle = ActiveSwitchCameraHandle;
 		SwitchCameraFinishHandle = FCameraSystemDelegates::OnSwitchCameraFinish.AddUObject(this, &UCBE_HandleSwitchCamera::OnActiveSwitchCameraFinish);
-		GetManager<UCameraManager>()->SwitchToCamera(ActiveSwitchCameraTag, ActiveSwitchCameraHandle);
+
+		for (auto ActiveModifySwitchCameraHandle : ActiveModifySwitchCameraHandles)
+		{
+			if (ActiveModifySwitchCameraHandle.MenuTags.Contains(GetManager<UScreenWidgetManager>()->GetLastActiveMenuTag()) && IsValid(ActiveModifySwitchCameraHandle.ModifyHandle))
+			{
+				CameraHandle = ActiveModifySwitchCameraHandle.ModifyHandle;
+			}
+		}
+
+		GetManager<UCameraManager>()->SwitchToCamera(ActiveSwitchCameraTag, CameraHandle);
 	}
 	else
 	{
@@ -34,8 +45,18 @@ void UCBE_HandleSwitchCamera::NativeOnInactived()
 
 	if (InactiveSwitchCameraTag.IsValid())
 	{
+		UCameraHandle* CameraHandle = InactiveSwitchCameraHandle;
 		SwitchCameraFinishHandle = FCameraSystemDelegates::OnSwitchCameraFinish.AddUObject(this, &UCBE_HandleSwitchCamera::OnInactiveSwitchCameraFinish);
-		GetManager<UCameraManager>()->SwitchToCamera(InactiveSwitchCameraTag, InactiveSwitchCameraHandle);
+
+		for (auto InactiveModifySwitchCameraHandle : InactiveModifySwitchCameraHandles)
+		{
+			if (InactiveModifySwitchCameraHandle.MenuTags.Contains(GetManager<UScreenWidgetManager>()->GetLastActiveMenuTag()) && IsValid(InactiveModifySwitchCameraHandle.ModifyHandle))
+			{
+				CameraHandle = InactiveModifySwitchCameraHandle.ModifyHandle;
+			}
+		}
+
+		GetManager<UCameraManager>()->SwitchToCamera(InactiveSwitchCameraTag, CameraHandle);
 	}
 	else
 	{

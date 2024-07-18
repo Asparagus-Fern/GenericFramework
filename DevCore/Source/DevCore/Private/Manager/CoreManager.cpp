@@ -15,26 +15,16 @@ void UCoreManager::PostEditChangeProperty(FPropertyChangedEvent& PropertyChanged
 
 #endif
 
-UWorld* UCoreManager::GetWorld() const
-{
-	if (!HasAnyFlags(RF_ClassDefaultObject) && ensureMsgf(GetOuter(), TEXT("Manager: %s has a null OuterPrivate in UCoreManager::GetWorld()"), *GetFullName())
-		&& !GetOuter()->HasAnyFlags(RF_BeginDestroyed) && !GetOuter()->IsUnreachable())
-	{
-		return GetOuter()->GetWorld();
-	}
-	return nullptr;
-}
-
 void UCoreManager::NativeOnCreate()
 {
-	GConfig->Flush(false, *GetSaveIniPath());
+	GConfig->Flush(false, *GConfig->NormalizeConfigIniPath(GetSaveIniPath()));
 	LoadConfig(GetClass(), *GetSaveIniPath());
 
 	IProcedureBaseInterface::NativeOnCreate();
 	IProcedureBaseInterface::Execute_OnCreate(this);
+	DEBUG(Debug_Manager, Log, TEXT("On Created : %s"), *GetName());
 
 	TryUpdateDefaultConfigFile();
-	DEBUG(Debug_Manager, Log, TEXT("On Created : %s"), *GetName());
 }
 
 void UCoreManager::NativeOnRefresh()
@@ -49,7 +39,6 @@ void UCoreManager::NativeOnDestroy()
 
 	IProcedureBaseInterface::NativeOnDestroy();
 	IProcedureBaseInterface::Execute_OnDestroy(this);
-
 	DEBUG(Debug_Manager, Log, TEXT("On Destroy : %s"), *GetName());
 }
 
@@ -57,7 +46,6 @@ void UCoreManager::NativeOnActived()
 {
 	IProcedureInterface::NativeOnActived();
 	IProcedureInterface::Execute_OnActived(this);
-
 	DEBUG(Debug_Manager, Log, TEXT("On Actived : %s"), *GetName());
 }
 
@@ -65,18 +53,21 @@ void UCoreManager::NativeOnInactived()
 {
 	IProcedureInterface::NativeOnInactived();
 	IProcedureInterface::Execute_OnInactived(this);
-
 	DEBUG(Debug_Manager, Log, TEXT("On Inactived : %s"), *GetName());
 }
 
 void UCoreManager::NativeOnBeginPlay()
 {
+	IManagerInterface::NativeOnBeginPlay();
 	Execute_OnBeginPlay(this);
+	DEBUG(Debug_Manager, Log, TEXT("On BeginPlay : %s"), *GetName());
 }
 
 void UCoreManager::NativeOnEndPlay()
 {
+	IManagerInterface::NativeOnEndPlay();
 	Execute_OnEndPlay(this);
+	DEBUG(Debug_Manager, Log, TEXT("On EndPlay : %s"), *GetName());
 }
 
 #undef LOCTEXT_NAMESPACE

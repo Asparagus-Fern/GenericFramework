@@ -9,8 +9,11 @@
 
 UInputManager::UInputManager()
 {
-	// DisplayName = LOCTEXT("DisplayName", "Input Manager");
-	// ProcedureOrder = -1;
+}
+
+FText UInputManager::GetManagerDisplayName()
+{
+	return LOCTEXT("DisplayName", "Input Manager");
 }
 
 void UInputManager::NativeOnActived()

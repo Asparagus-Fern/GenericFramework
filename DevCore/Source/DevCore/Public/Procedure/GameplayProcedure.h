@@ -6,6 +6,7 @@
 #include "GameplayTagContainer.h"
 #include "ProcedureBaseInterface.h"
 #include "ProcedureInterface.h"
+#include "Object/CommonObject.h"
 #include "UObject/Object.h"
 #include "GameplayProcedure.generated.h"
 
@@ -17,7 +18,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FGameplayProcedureDelegate);
  * 
  */
 UCLASS(BlueprintType)
-class DEVCORE_API UGameplayProcedure : public UObject, public IProcedureBaseInterface, public IProcedureInterface
+class DEVCORE_API UGameplayProcedure : public UCommonObject, public IProcedureBaseInterface, public IProcedureInterface
 {
 	GENERATED_BODY()
 

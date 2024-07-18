@@ -27,8 +27,8 @@ public:
 	int32 ZOrder = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FVector2D Position;
-	
+	FVector2D Position = FVector2D::Zero();
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced)
 	UUserWidgetBase* Widget;
 };

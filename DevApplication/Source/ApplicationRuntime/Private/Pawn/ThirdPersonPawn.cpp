@@ -9,6 +9,9 @@
 #include "Component/CommonSpringArmComponent.h"
 #include "Components/SphereComponent.h"
 #include "Handle/CameraHandle.h"
+#include "Kismet/GameplayStatics.h"
+
+UE_DEFINE_GAMEPLAY_TAG(TAG_Pawn_TP, "Pawn.ThirdPerson");
 
 AThirdPersonPawn::AThirdPersonPawn()
 {
@@ -17,6 +20,8 @@ AThirdPersonPawn::AThirdPersonPawn()
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = false;
+
+	PawnTag = TAG_Pawn_TP;
 
 	Sphere = CreateDefaultSubobject<USphereComponent>("Root");
 	Sphere->InitSphereRadius(30.0f);
@@ -68,13 +73,20 @@ void AThirdPersonPawn::AddLocation_Implementation(FVector2D InValue)
 {
 	if (CanMove())
 	{
-		Super::AddLocation_Implementation(FVector2D(InValue.X * CommonSpringArmComponent->TargetArmLength, InValue.Y * CommonSpringArmComponent->TargetArmLength));
+		FVector2D Rate = InValue;
+
+		if (CommonSpringArmComponent->TargetArmLength != 0.f)
+		{
+			Rate *= CommonSpringArmComponent->TargetArmLength;
+		}
+
+		Super::AddLocation_Implementation(FVector2D(InValue.X * Rate.X, InValue.Y * Rate.Y));
 	}
 }
 
 void AThirdPersonPawn::AddRotation_Implementation(const FVector2D InValue)
 {
-	if (CanMove())
+	if (CanTurn())
 	{
 		AddActorWorldRotation(FRotator(0.f, InValue.X, 0.f));
 		CommonSpringArmComponent->AddRelativeRotation(FRotator(-InValue.Y, 0.f, 0.f));
@@ -108,11 +120,27 @@ void AThirdPersonPawn::OnSwitchCameraFinish(UCameraHandle* InCameraHandle)
 		return;
 	}
 
-	CameraCacheComponent = DuplicateObject<UCameraComponent>(InCameraHandle->TargetCameraPoint->GetCameraComponent(), this);
-	CameraCacheComponent->AttachToComponent(CommonSpringArmComponent, FAttachmentTransformRules::SnapToTargetIncludingScale);
+	/* todo:复制的CameraComponent无效 */
+	// CameraComponent = DuplicateObject<UCameraComponent>(InCameraHandle->TargetCameraPoint->GetCameraComponent(), this);
 
-	CameraComponent->SetActive(false);
-	CameraCacheComponent->SetActive(true);
+	CameraComponent->SetFieldOfView(InCameraHandle->TargetCameraPoint->GetCameraComponent()->FieldOfView);
+
+	// if (CameraComponent->IsActive())
+	// {
+	// CameraComponent->DetachFromComponent(FDetachmentTransformRules::KeepRelativeTransform);
+	// CameraComponent->SetActive(false);
+	// }
+
+	// CameraComponent->AttachToComponent(CommonSpringArmComponent, FAttachmentTransformRules::KeepRelativeTransform);
+
+	// UGameplayStatics::GetPlayerControllerFromID(GetWorld(), 0)->SetViewTarget(this);
+	// GetPlayerController()->SetViewTarget(this);
+
+	// CameraComponent->SetActive(false);
+	// CameraComponent->SetActiveFlag(true);
+	//
+	// CameraCacheComponent->SetActive(true);
+	// CameraCacheComponent->SetActiveFlag(true);
 
 	CommonSpringArmComponent->SetTargetArmLength(0.f);
 	Execute_SetLocation(this, InCameraHandle->TargetCameraPoint->GetActorLocation());

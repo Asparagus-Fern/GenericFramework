@@ -13,11 +13,6 @@ UCommonButtonEvent::UCommonButtonEvent(const FObjectInitializer& ObjectInitializ
 	ResponseEvent.Add(ECommonButtonResponseEvent::OnDeselected, false);
 }
 
-UWorld* UCommonButtonEvent::GetWorld() const
-{
-	return GetManager<UScreenWidgetManager>()->GetWorld();
-}
-
 void UCommonButtonEvent::NativeOnActived()
 {
 	IProcedureInterface::NativeOnActived();

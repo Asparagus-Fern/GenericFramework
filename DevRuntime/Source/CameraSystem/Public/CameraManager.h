@@ -41,6 +41,6 @@ public:
 	virtual void SwitchToCamera(APlayerController* PlayerController, FGameplayTag InCameraTag, UCameraHandle* SwitchCameraHandle);
 
 public:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Transient)
 	TMap<FGameplayTag, ACameraPointBase*> CameraPoints;
 };

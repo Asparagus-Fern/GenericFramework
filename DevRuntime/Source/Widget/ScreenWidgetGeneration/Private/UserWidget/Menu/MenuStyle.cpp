@@ -44,11 +44,6 @@ void UMenuStyle::NativeOnCreate()
 void UMenuStyle::NativeOnDestroy()
 {
 	Super::NativeOnDestroy();
-
-	for (const auto& Event : Events)
-	{
-		Event->NativeOnDestroy();
-	}
 }
 
 FMenuInfo UMenuStyle::GetMenuInfo() const

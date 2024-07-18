@@ -405,7 +405,7 @@ TArray<AWorldWidgetPoint*> UWorldWidgetManager::GetWorldWidgetPoints(FGameplayTa
 	TArray<AWorldWidgetPoint*> Points;
 	for (auto& WorldWidgetPoint : GetWorldWidgetPoints())
 	{
-		if (WorldWidgetPoint->PointTag == InPointTag)
+		if (WorldWidgetPoint->PointTag.MatchesTag(InPointTag))
 		{
 			Points.Add(WorldWidgetPoint);
 		}

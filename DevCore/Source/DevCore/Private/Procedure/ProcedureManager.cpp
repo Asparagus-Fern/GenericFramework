@@ -38,20 +38,6 @@ void UProcedureManager::NativeOnInactived()
 	LastProcedureTag = FGameplayTag::EmptyTag;
 	CurrentProcedureTag = FGameplayTag::EmptyTag;
 
-	// for (const auto& ActiveProcedureHandle : ActiveProcedureHandles)
-	// {
-	// 	ActiveProcedureHandle->Reset();
-	// 	ActiveProcedureHandle->MarkAsGarbage();
-	// }
-
-	for (const auto& Procedure : GameplayProcedure)
-	{
-		if (Procedure.Value->GetIsActive())
-		{
-			Procedure.Value->NativeOnInactived();
-		}
-	}
-
 	ActiveProcedureHandles.Reset();
 	GameplayProcedure.Reset();
 }

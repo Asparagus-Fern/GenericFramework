@@ -4,21 +4,19 @@
 
 #include "CoreMinimal.h"
 #include "ScreenWidgetType.h"
+#include "Object/CommonObject.h"
+#include "UObject/ObjectMacros.h"
 #include "Procedure/ProcedureBaseInterface.h"
 #include "Procedure/ProcedureInterface.h"
-#include "UObject/Object.h"
 #include "CommonButtonEvent.generated.h"
 
 /**
  * 
  */
-UCLASS(Abstract, Blueprintable, EditInlineNew)
-class SCREENWIDGETGENERATION_API UCommonButtonEvent : public UObject, public IProcedureInterface, public IProcedureBaseInterface
+UCLASS(Abstract, EditInlineNew)
+class SCREENWIDGETGENERATION_API UCommonButtonEvent : public UCommonObject, public IProcedureInterface, public IProcedureBaseInterface
 {
 	GENERATED_UCLASS_BODY()
-
-public:
-	virtual UWorld* GetWorld() const override;
 
 public:
 	/* true则为激活，表示在该条件下激活按钮 */
