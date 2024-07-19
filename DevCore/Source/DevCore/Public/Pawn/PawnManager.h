@@ -37,11 +37,20 @@ public:
 	virtual IPawnInterface* GetPawnInterface(FGameplayTag InPawnTag);
 	virtual APawn* GetPawn(FGameplayTag InPawnTag);
 
+public:	
+	UPROPERTY(GlobalConfig, EditAnywhere, BlueprintReadOnly, meta=(ClampMin = 0.1f, ClampMax = 2.f))
+	float MovementSpeed = 1.f;
+							
+	UPROPERTY(GlobalConfig, EditAnywhere, BlueprintReadOnly, meta=(ClampMin = 0.1f, ClampMax = 2.f))
+	float RotationSpeed = 1.f;
+
+	UPROPERTY(GlobalConfig, EditAnywhere, BlueprintReadOnly, meta=(ClampMin = -89.9f, ClampMax = 0.f))
+	float MinRotationPitch = -88.f;
+
+	UPROPERTY(GlobalConfig, EditAnywhere, BlueprintReadOnly, meta=(ClampMin = -89.9f, ClampMax = 0.f))
+	float MaxRotationPitch = -2.f;
+
 protected:
 	UPROPERTY(Transient)
 	TMap<FGameplayTag, IPawnInterface*> PawnMapping;
-
-	// protected:
-	// 	TMap<int32, FGameplayTag> LastPossessPawn;
-	// 	TMap<int32, FGameplayTag> CurrentPossessPawn;
 };

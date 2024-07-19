@@ -129,6 +129,12 @@ void UBPFunctions_Widget::SetBorderBrush(UBorder* InBorder, FBorderBrush InBorde
 	}
 }
 
+TArray<UWidget*> UBPFunctions_Widget::BP_FindWidgets(UUserWidget* InWidget, TSubclassOf<UWidget> InClass)
+{
+	ensure(InClass);
+	return FindWidgets<UWidget>(InWidget);
+}
+
 TArray<UGameHUD*> UBPFunctions_Widget::GetGameHUD()
 {
 	return GetManager<UScreenWidgetManager>()->GetGameHUD();

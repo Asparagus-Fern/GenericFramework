@@ -4,12 +4,16 @@
 #include "Pawn/ThirdPersonPawn.h"
 
 #include "CameraSystemType.h"
+#include "BPFunctions/BPFunctions_Gameplay.h"
 #include "Camera/CameraComponent.h"
 #include "CameraPoint/CameraPointBase.h"
 #include "Component/CommonSpringArmComponent.h"
 #include "Components/SphereComponent.h"
+#include "GameFramework/FloatingPawnMovement.h"
 #include "Handle/CameraHandle.h"
 #include "Kismet/GameplayStatics.h"
+#include "Manager/ManagerGlobal.h"
+#include "Pawn/PawnManager.h"
 
 UE_DEFINE_GAMEPLAY_TAG(TAG_Pawn_TP, "Pawn.ThirdPerson");
 
@@ -31,14 +35,14 @@ AThirdPersonPawn::AThirdPersonPawn()
 
 	CommonSpringArmComponent = CreateDefaultSubobject<UCommonSpringArmComponent>("CommonSpringArm");
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>("Camera");
-	CameraCacheComponent = CreateDefaultSubobject<UCameraComponent>("CameraCache");
+	// CameraCacheComponent = CreateDefaultSubobject<UCameraComponent>("CameraCache");
 
 	CommonSpringArmComponent->SetupAttachment(GetRootComponent());
 	CameraComponent->SetupAttachment(CommonSpringArmComponent);
-	CameraCacheComponent->SetupAttachment(CommonSpringArmComponent);
+	// CameraCacheComponent->SetupAttachment(CommonSpringArmComponent);
 
-	CameraComponent->SetActive(true);
-	CameraCacheComponent->SetActive(false);
+	// CameraComponent->SetActive(true);
+	// CameraCacheComponent->SetActive(false);
 }
 
 void AThirdPersonPawn::BeginPlay()
@@ -73,12 +77,31 @@ void AThirdPersonPawn::AddLocation_Implementation(FVector2D InValue)
 {
 	if (CanMove())
 	{
-		FVector2D Rate = InValue;
+		FVector2D Rate = FVector2D(1.f, 1.f);
+		float MaxSpeed = 1.f;
+		float Acceleration = 1.f;
+		float Deceleration = 1.f;
 
 		if (CommonSpringArmComponent->TargetArmLength != 0.f)
 		{
 			Rate *= CommonSpringArmComponent->TargetArmLength;
+			MaxSpeed *= CommonSpringArmComponent->TargetArmLength;
+			Acceleration *= CommonSpringArmComponent->TargetArmLength;
+			Deceleration *= CommonSpringArmComponent->TargetArmLength;
 		}
+
+		FHitResult HitResult;
+		if (UBPFunctions_Gameplay::GetComponentDownHitResult(GetActiveCameraComponent(), HitResult))
+		{
+			Rate += FVector2D(HitResult.Distance, HitResult.Distance);
+			MaxSpeed += HitResult.Distance * 3 / 4;
+			Acceleration += HitResult.Distance / 2;
+			Deceleration += HitResult.Distance * 2;
+		}
+
+		FloatingPawnMovement->MaxSpeed = MaxSpeed;
+		FloatingPawnMovement->Acceleration = Acceleration;
+		FloatingPawnMovement->Deceleration = Deceleration;
 
 		Super::AddLocation_Implementation(FVector2D(InValue.X * Rate.X, InValue.Y * Rate.Y));
 	}
@@ -89,7 +112,12 @@ void AThirdPersonPawn::AddRotation_Implementation(const FVector2D InValue)
 	if (CanTurn())
 	{
 		AddActorWorldRotation(FRotator(0.f, InValue.X, 0.f));
-		CommonSpringArmComponent->AddRelativeRotation(FRotator(-InValue.Y, 0.f, 0.f));
+
+		const FRotator TargetRotation = CommonSpringArmComponent->GetRelativeRotation() + FRotator(-InValue.Y, 0.f, 0.f);
+		if (TargetRotation.Pitch > GetManager<UPawnManager>()->MinRotationPitch && TargetRotation.Pitch < GetManager<UPawnManager>()->MaxRotationPitch)
+		{
+			CommonSpringArmComponent->AddRelativeRotation(FRotator(-InValue.Y, 0.f, 0.f));
+		}
 	}
 }
 

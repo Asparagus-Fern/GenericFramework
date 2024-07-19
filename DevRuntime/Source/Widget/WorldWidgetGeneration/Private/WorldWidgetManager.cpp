@@ -122,31 +122,30 @@ void UWorldWidgetPanel::AddWorldWidget(AWorldWidgetPoint* InWorldWidgetPoint)
 	{
 		if (IsValid(InWorldWidgetPoint->WorldWidget))
 		{
-			/* 直接使用该UMG会导致位置错误，因为会对所有的PlayerController进行位置更新，这就意味着他在不同player中看到的位置是不一样的 */
-			UWorldWidget* DuplicateWorldWidget = DuplicateObject(InWorldWidgetPoint->WorldWidget, InWorldWidgetPoint);
-			WorldWidgets.Add(InWorldWidgetPoint, DuplicateWorldWidget);
+			UWorldWidget* WorldWidget = InWorldWidgetPoint->WorldWidget;
+			WorldWidgets.Add(InWorldWidgetPoint, WorldWidget);
 
-			UPanelSlot* PanelSlot = Panel->AddChild(DuplicateWorldWidget);
+			UPanelSlot* PanelSlot = Panel->AddChild(WorldWidget);
 			if (UCanvasPanelSlot* CanvasPanelSlot = Cast<UCanvasPanelSlot>(PanelSlot))
 			{
 				CanvasPanelSlot->SetAutoSize(true);
 				CanvasPanelSlot->SetAnchors(FAnchors());
 				CanvasPanelSlot->SetAlignment(FVector2D());
 				CanvasPanelSlot->SetOffsets(FMargin());
-				CanvasPanelSlot->SetZOrder(DuplicateWorldWidget->ZOrder);
+				CanvasPanelSlot->SetZOrder(WorldWidget->ZOrder);
 			}
 
 			/* 创建，但未打开，只在需要的时候显示 */
-			DuplicateWorldWidget->NativeOnCreate();
+			WorldWidget->NativeOnCreate();
 
 			/* 自动激活 */
 			if (InWorldWidgetPoint->bIsAutoActived)
 			{
-				DuplicateWorldWidget->NativeOnActived();
+				WorldWidget->NativeOnActived();
 			}
 			else
 			{
-				DuplicateWorldWidget->SetVisibility(ESlateVisibility::Collapsed);
+				WorldWidget->SetVisibility(ESlateVisibility::Collapsed);
 			}
 		}
 	}

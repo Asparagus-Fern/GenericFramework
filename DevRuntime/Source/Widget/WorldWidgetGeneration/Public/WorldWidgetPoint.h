@@ -9,6 +9,10 @@
 
 class UWorldWidget;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPreActiveStateChange, AWorldWidgetPoint*, WorldWidgetPoint);
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnActiveStateChange, AWorldWidgetPoint*, WorldWidgetPoint, bool, IsActive);
+
 UCLASS(HideCategories=(Object,Actor,Collision,Physics,Networking,Input,LevelInstance,Cooking,HLOD,Replication))
 class WORLDWIDGETGENERATION_API AWorldWidgetPoint : public AActor
 {
@@ -43,6 +47,12 @@ public:
 	/* 点位UI */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced)
 	UWorldWidget* WorldWidget = nullptr;
+
+	UPROPERTY(BlueprintAssignable)
+	FPreActiveStateChange PreActiveStateChange;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnActiveStateChange OnActiveStateChange;
 
 public:
 	UFUNCTION(BlueprintCallable)

@@ -5,6 +5,7 @@
 
 #include "Animation/WidgetAnimationEvent.h"
 #include "Blueprint/WidgetTree.h"
+#include "BPFunctions/BPFunctions_Widget.h"
 #include "DataAsset/GameMenuSetting.h"
 #include "Event/CommonButtonEvent.h"
 #include "Group/CommonButtonGroup.h"
@@ -275,7 +276,7 @@ TArray<IProcedureInterface*> UScreenWidgetManager::GetProcedureInterfaceWidgets(
 	{
 		ProcedureInterfaces.Add(Cast<IProcedureInterface>(InWidget));
 	}
-
+	
 	/* 遍历所有使用了IProcedureInterface接口的Widget，并激活 */
 	InWidget->WidgetTree->ForEachWidget([&ProcedureInterfaces](UWidget* Widget)
 		{

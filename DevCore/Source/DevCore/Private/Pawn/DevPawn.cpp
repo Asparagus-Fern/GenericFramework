@@ -54,8 +54,10 @@ void ADevPawn::AddLocation_Implementation(FVector2D InValue)
 {
 	if (CanMove())
 	{
-		AddMovementInput(UKismetMathLibrary::GetRightVector(GetActorRotation()), InValue.X);
-		AddMovementInput(UKismetMathLibrary::GetForwardVector(GetActorRotation()), InValue.Y);
+		const FVector2D Movement = InValue * GetManager<UPawnManager>()->MovementSpeed;
+
+		AddMovementInput(UKismetMathLibrary::GetRightVector(GetActorRotation()), Movement.X);
+		AddMovementInput(UKismetMathLibrary::GetForwardVector(GetActorRotation()), Movement.Y);
 	}
 }
 
@@ -63,8 +65,10 @@ void ADevPawn::AddRotation_Implementation(FVector2D InValue)
 {
 	if (CanTurn())
 	{
-		AddControllerYawInput(InValue.X);
-		AddControllerPitchInput(InValue.Y);
+		const FVector2D Rotation = InValue * GetManager<UPawnManager>()->RotationSpeed;
+
+		AddControllerYawInput(Rotation.X);
+		AddControllerPitchInput(Rotation.Y);
 	}
 }
 

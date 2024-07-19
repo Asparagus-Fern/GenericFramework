@@ -17,4 +17,5 @@ class CAMERASYSTEM_API UCameraHandle_Teleport : public UCameraHandle
 public:
 	UCameraHandle_Teleport();
 	virtual bool HandleSwitchToCameraPoint_Implementation(APlayerController* InPlayerController, ACameraPointBase* InCameraPoint) override;
+	virtual void OnSwitchToCameraPointFinish() override;
 };

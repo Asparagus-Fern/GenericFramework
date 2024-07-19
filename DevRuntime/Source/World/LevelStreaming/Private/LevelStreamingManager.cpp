@@ -406,8 +406,8 @@ bool ULevelStreamingManager::IsCurrentWorldContainLevel(const TSoftObjectPtr<UWo
 		FString PackageName;
 		Level.GetLongPackageName().Split("/", &PackageName, nullptr, ESearchCase::IgnoreCase, ESearchDir::FromEnd);
 		PackageName += ("/" + Level.GetAssetName());
-		
-		if (StreamingLevel->GetWorldAssetPackageFName() == PackageName)
+
+		if (StreamingLevel->GetWorldAssetPackageFName() == PackageName || StreamingLevel->PackageNameToLoad == PackageName)
 		{
 			return true;
 		}

@@ -17,12 +17,12 @@ class CAMERASYSTEM_API UCameraHandle_Default : public UCameraHandle
 public:
 	UCameraHandle_Default();
 	virtual bool HandleSwitchToCameraPoint_Implementation(APlayerController* InPlayerController, ACameraPointBase* InCameraPoint) override;
+	virtual void OnSwitchToCameraPointFinish() override;
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FViewTargetTransitionParams ViewTargetTransitionParams;
 
-public:
+protected:
 	FTimerHandle TimerHandle;
-	virtual void OnSwitchToCameraPointFinish() override;
 };

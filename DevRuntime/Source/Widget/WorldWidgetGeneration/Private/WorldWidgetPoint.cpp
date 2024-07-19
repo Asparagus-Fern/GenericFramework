@@ -46,6 +46,7 @@ void AWorldWidgetPoint::Destroyed()
 
 void AWorldWidgetPoint::SetIsActive(const bool InActive)
 {
+	PreActiveStateChange.Broadcast(this);
 	if (InActive)
 	{
 		GetManager<UWorldWidgetManager>()->ActiveWorldWidgetPoint(this);
@@ -54,4 +55,5 @@ void AWorldWidgetPoint::SetIsActive(const bool InActive)
 	{
 		GetManager<UWorldWidgetManager>()->InactiveWorldWidgetPoint(this);
 	}
+	OnActiveStateChange.Broadcast(this, InActive);
 }

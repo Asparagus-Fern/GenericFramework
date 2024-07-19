@@ -92,14 +92,74 @@ APlayerState* UBPFunctions_Gameplay::GetPlayerStateByClass(const UObject* WorldC
 	return nullptr;
 }
 
-bool UBPFunctions_Gameplay::GetActorForwardHitResult(const UObject* WorldContextObject, AActor* InActor, FHitResult& HitResult)
+bool UBPFunctions_Gameplay::GetActorForwardHitResult(const AActor* InActor, FHitResult& HitResult, const ECollisionChannel TraceChannel)
 {
-	if (const UWorld* World = GEngine->GetWorldFromContextObjectChecked(WorldContextObject))
+	if (const UWorld* World = GEngine->GetWorldFromContextObjectChecked(InActor))
 	{
+		const FVector Start = InActor->GetActorLocation();
+		const FVector End = InActor->GetActorForwardVector() * UE_BIG_NUMBER + Start;
+		return World->LineTraceSingleByChannel(HitResult, Start, End, TraceChannel);
 	}
-	// const FVector Start = Execute_GetLocation(this);
-	// const FVector End = GetActiveCameraComponent()->GetForwardVector() * UE_BIG_NUMBER + Start;
-	// return GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility);
+
+	return false;
+}
+
+bool UBPFunctions_Gameplay::GetActorRightHitResult(const AActor* InActor, FHitResult& HitResult, const ECollisionChannel TraceChannel)
+{
+	if (const UWorld* World = GEngine->GetWorldFromContextObjectChecked(InActor))
+	{
+		const FVector Start = InActor->GetActorLocation();
+		const FVector End = InActor->GetActorRightVector() * UE_BIG_NUMBER + Start;
+		return World->LineTraceSingleByChannel(HitResult, Start, End, TraceChannel);
+	}
+
+	return false;
+}
+
+bool UBPFunctions_Gameplay::GetActorDownHitResult(const AActor* InActor, FHitResult& HitResult, const ECollisionChannel TraceChannel)
+{
+	if (const UWorld* World = GEngine->GetWorldFromContextObjectChecked(InActor))
+	{
+		const FVector Start = InActor->GetActorLocation();
+		const FVector End = FVector(0.f, 0.f, -1.f) * UE_BIG_NUMBER + Start;
+		return World->LineTraceSingleByChannel(HitResult, Start, End, TraceChannel);
+	}
+
+	return false;
+}
+
+bool UBPFunctions_Gameplay::GetComponentForwardHitResult(const USceneComponent* InComponent, FHitResult& HitResult, const ECollisionChannel TraceChannel)
+{
+	if (const UWorld* World = GEngine->GetWorldFromContextObjectChecked(InComponent))
+	{
+		const FVector Start = InComponent->GetComponentLocation();
+		const FVector End = InComponent->GetForwardVector() * UE_BIG_NUMBER + Start;
+		return World->LineTraceSingleByChannel(HitResult, Start, End, TraceChannel);
+	}
+
+	return false;
+}
+
+bool UBPFunctions_Gameplay::GetComponentRightHitResult(const USceneComponent* InComponent, FHitResult& HitResult, const ECollisionChannel TraceChannel)
+{
+	if (const UWorld* World = GEngine->GetWorldFromContextObjectChecked(InComponent))
+	{
+		const FVector Start = InComponent->GetComponentLocation();
+		const FVector End = InComponent->GetRightVector() * UE_BIG_NUMBER + Start;
+		return World->LineTraceSingleByChannel(HitResult, Start, End, TraceChannel);
+	}
+
+	return false;
+}
+
+bool UBPFunctions_Gameplay::GetComponentDownHitResult(const USceneComponent* InComponent, FHitResult& HitResult, const ECollisionChannel TraceChannel)
+{
+	if (const UWorld* World = GEngine->GetWorldFromContextObjectChecked(InComponent))
+	{
+		const FVector Start = InComponent->GetComponentLocation();
+		const FVector End = FVector(0.f, 0.f, -1.f) * UE_BIG_NUMBER + Start;
+		return World->LineTraceSingleByChannel(HitResult, Start, End, TraceChannel);
+	}
 
 	return false;
 }

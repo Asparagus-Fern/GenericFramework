@@ -37,6 +37,21 @@ public:
 	static APlayerState* GetPlayerStateByClass(const UObject* WorldContextObject, const TSubclassOf<APlayerState> InClass);
 
 public:
-	UFUNCTION(BlueprintPure, meta = (WorldContext = "WorldContextObject"))
-	static bool GetActorForwardHitResult(const UObject* WorldContextObject, AActor* InActor, FHitResult& HitResult);
+	UFUNCTION(BlueprintPure, meta=(AdvancedDisplay = 2))
+	static bool GetActorForwardHitResult(const AActor* InActor, FHitResult& HitResult, ECollisionChannel TraceChannel = ECC_Camera);
+
+	UFUNCTION(BlueprintPure, meta=(AdvancedDisplay = 2))
+	static bool GetActorRightHitResult(const AActor* InActor, FHitResult& HitResult, ECollisionChannel TraceChannel = ECC_Camera);
+
+	UFUNCTION(BlueprintPure, meta=(AdvancedDisplay = 2))
+	static bool GetActorDownHitResult(const AActor* InActor, FHitResult& HitResult, ECollisionChannel TraceChannel = ECC_Camera);
+
+	UFUNCTION(BlueprintPure, meta=(AdvancedDisplay = 2))
+	static bool GetComponentForwardHitResult(const USceneComponent* InComponent, FHitResult& HitResult, ECollisionChannel TraceChannel = ECC_Camera);
+
+	UFUNCTION(BlueprintPure, meta=(AdvancedDisplay = 2))
+	static bool GetComponentRightHitResult(const USceneComponent* InComponent, FHitResult& HitResult, ECollisionChannel TraceChannel = ECC_Camera);
+
+	UFUNCTION(BlueprintPure, meta=(AdvancedDisplay = 2))
+	static bool GetComponentDownHitResult(const USceneComponent* InComponent, FHitResult& HitResult, ECollisionChannel TraceChannel = ECC_Camera);
 };

@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
 #include "ScreenWidgetManager.h"
+#include "Blueprint/UserWidget.h"
+#include "Blueprint/WidgetTree.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "UserWidget/Base/UserWidgetType.h"
 #include "BPFunctions_Widget.generated.h"
@@ -39,6 +41,28 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="BPFunctions_Widget|UWidget")
 	static void SetBorderBrush(UBorder* InBorder, FBorderBrush InBorderBrush);
+
+public:
+	template <typename T>
+	static TArray<T*> FindWidgets(UUserWidget* InWidget)
+	{
+		TArray<T*> Result;
+		if (IsValid(InWidget) && IsValid(InWidget->WidgetTree))
+		{
+			InWidget->WidgetTree->ForEachWidget([&Result](UWidget* Widget)
+				{
+					if (Widget->GetClass() == T::StaticClass() || Widget->GetClass()->IsChildOf(T::StaticClass()))
+					{
+						Result.Add(Cast<T>(Widget));
+					}
+				}
+			);
+		}
+		return Result;
+	}
+
+	UFUNCTION(BlueprintPure, meta = (DeterminesOutputType = "InClass"), DisplayName="FindWidgets")
+	static TArray<UWidget*> BP_FindWidgets(UUserWidget* InWidget, TSubclassOf<UWidget> InClass);
 
 	/* HUD */
 public:
