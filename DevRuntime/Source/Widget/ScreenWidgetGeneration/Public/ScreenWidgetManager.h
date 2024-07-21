@@ -82,11 +82,12 @@ public:
 	virtual void OpenUserWidget(TArray<UUserWidgetBase*> InWidgets);
 	virtual void OpenUserWidget(UUserWidgetBase* InWidget, FSimpleMulticastDelegate OnFinish = FSimpleMulticastDelegate());
 	virtual void CloseUserWidget(const UUserWidgetBase* InWidget, const FSimpleMulticastDelegate& OnFinish = FSimpleMulticastDelegate());
+	virtual void CloseUserWidget(TArray<UUserWidgetBase*> InWidgets);
 	virtual void CloseUserWidget(FGameplayTag InSlotTag, FSimpleMulticastDelegate OnFinish = FSimpleMulticastDelegate());
 
 	TArray<FProcedureInterfaceHandle> GetProcedureInterfaceHandles(UUserWidget* InWidget, bool TargetActiveState);
 	virtual TArray<IProcedureInterface*> GetProcedureInterfaceWidgets(UUserWidget* InWidget);
-	
+
 protected:
 	virtual void ActiveWidget(UUserWidgetBase* InWidget, FSimpleMulticastDelegate OnFinish = FSimpleMulticastDelegate());
 	virtual void InactiveWidget(UUserWidgetBase* InWidget, FSimpleMulticastDelegate OnFinish = FSimpleMulticastDelegate());
@@ -126,8 +127,9 @@ protected:
 
 private:
 	TMap<FGameplayTag, bool> TargetMenuSelection;
+	bool bHandlingMenuSelection = false;
 	int32 TargetMenuSelectionIndex = 0;
-	virtual void OnMenuSelectionChangedNextTick();
+	virtual void UpdateActiveMenutag();
 	virtual void HandleMenuSelectionChanged();
 	virtual void HandleMenuSelectionChangedOnceFinish();
 	virtual void HandleMenuSelectionChangedFinish();

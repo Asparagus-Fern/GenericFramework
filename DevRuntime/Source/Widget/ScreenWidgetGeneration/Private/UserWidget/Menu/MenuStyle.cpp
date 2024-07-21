@@ -54,5 +54,7 @@ FMenuInfo UMenuStyle::GetMenuInfo() const
 void UMenuStyle::NativeConstructMenuStyle(FMenuInfo InMenuInfo)
 {
 	MenuInfo = InMenuInfo;
+	Events = MenuInfo.Events;
+	ModifyEvents = MenuInfo.ModifyEvents;
 	ConstructMenuStyle(InMenuInfo);
 }

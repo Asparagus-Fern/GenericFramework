@@ -234,6 +234,14 @@ void UScreenWidgetManager::CloseUserWidget(const UUserWidgetBase* InWidget, cons
 	CloseUserWidget(InWidget->SlotTag, OnFinish);
 }
 
+void UScreenWidgetManager::CloseUserWidget(TArray<UUserWidgetBase*> InWidgets)
+{
+	for (const auto& InWidget : InWidgets)
+	{
+		GetManager<UScreenWidgetManager>()->CloseUserWidget(InWidget);
+	}
+}
+
 void UScreenWidgetManager::CloseUserWidget(const FGameplayTag InSlotTag, FSimpleMulticastDelegate OnFinish)
 {
 	UTagNameSlot* Slot = GetSlot(InSlotTag);
@@ -276,7 +284,7 @@ TArray<IProcedureInterface*> UScreenWidgetManager::GetProcedureInterfaceWidgets(
 	{
 		ProcedureInterfaces.Add(Cast<IProcedureInterface>(InWidget));
 	}
-	
+
 	/* 遍历所有使用了IProcedureInterface接口的Widget，并激活 */
 	InWidget->WidgetTree->ForEachWidget([&ProcedureInterfaces](UWidget* Widget)
 		{
@@ -449,10 +457,14 @@ TArray<UMenuStyle*> UScreenWidgetManager::GetAllMenuStyle()
 
 void UScreenWidgetManager::GenerateMenu(FMenuContainerInfo InMenuContainerInfo)
 {
-	UMenuContainer* MenuContainer = nullptr;
+	UMenuContainer* MenuContainer;
 	if (InMenuContainerInfo.MenuContainer)
 	{
 		MenuContainer = DuplicateObject(InMenuContainerInfo.MenuContainer, InMenuContainerInfo.MenuContainer->GetOuter());
+	}
+	else
+	{
+		MenuContainer = CreateWidget<UMenuContainer>(GetWorld());
 	}
 
 	if (IsValid(MenuContainer))
@@ -495,14 +507,14 @@ void UScreenWidgetManager::GenerateMenu(FMenuContainerInfo InMenuContainerInfo)
 				/* 添加到CommonButtonGroup */
 				NewMenuGenerateInfo.CommonButtonGroup->AddWidget(MenuStyle);
 
-				/* 设置按钮事件 */
-				MenuStyle->SetEvents(MenuInfo.Events);
-
 				/* 构建按钮容器 */
-				MenuContainer->ConstructMenuStyle(MenuStyle);
+				if (!MenuInfo.bIsHidden)
+				{
+					MenuContainer->ConstructMenuStyle(MenuStyle);
+				}
+
 				MenuStyle->NativeConstructMenuStyle(MenuInfo);
 				MenuStyle->NativeOnActived();
-
 				MenuStyleArr.Add(MenuStyle);
 			}
 		}
@@ -531,11 +543,6 @@ void UScreenWidgetManager::OnMenuSelectionChanged(FMenuInfo InMenuInfo, bool bSe
 {
 	DEBUG(Debug_UI, Log, TEXT("MenuInfo : %s,Seletion : %d"), *InMenuInfo.MenuMainName.ToString(), bSelection)
 
-	if (TargetMenuSelection.IsEmpty())
-	{
-		GetWorld()->GetTimerManager().SetTimerForNextTick(this, &UScreenWidgetManager::OnMenuSelectionChangedNextTick);
-	}
-
 	if (bSelection)
 	{
 		TargetMenuSelection.Add(InMenuInfo.MenuTag, true);
@@ -552,45 +559,21 @@ void UScreenWidgetManager::OnMenuSelectionChanged(FMenuInfo InMenuInfo, bool bSe
 		TargetMenuSelection.Add(InMenuInfo.MenuTag, false);
 	}
 
+	UpdateActiveMenutag();
 
-	/*if (bSelection)
+	if (!bHandlingMenuSelection && !TargetMenuSelection.IsEmpty())
 	{
-		if (const FMenuContainerInfo* MenuContainerInfo = GameMenu->GetContainerInfo(InMenuInfo.MenuTag))
-		{
-			GenerateMenu(*MenuContainerInfo);
-		}
+		bHandlingMenuSelection = true;
+		HandleMenuSelectionChanged();
 	}
-	else
-	{
-		TArray<FMenuGenerateInfo> CurrentMenuGenerateInfos = MenuGenerateInfos;
-		for (auto& MenuGenerateInfo : CurrentMenuGenerateInfos)
-		{
-			if (MenuGenerateInfo.MenuContainerInfo.ContainerTag == InMenuInfo.MenuTag)
-			{
-				if (MenuGenerateInfo.CommonButtonGroup->IsSelected())
-				{
-					MenuGenerateInfo.CommonButtonGroup->DeselectAll();
-				}
-	
-				CloseUserWidget(MenuGenerateInfo.MenuContainerInfo.MenuContainer);
-				MenuGenerateInfos.Remove(MenuGenerateInfo);
-			}
-		}
-	}*/
 }
 
-void UScreenWidgetManager::OnMenuSelectionChangedNextTick()
+void UScreenWidgetManager::UpdateActiveMenutag()
 {
-	if (TargetMenuSelection.IsEmpty())
-	{
-		HandleMenuSelectionChangedFinish();
-		return;
-	}
-
 	TArray<FGameplayTag> MenuTags;
 	TargetMenuSelection.GenerateKeyArray(MenuTags);
 
-	/* 处理 LastActiveMenuTag 和 CurrentActiveMenuTag 的转变 */
+	/* 处理 LastActiveMenuTag 和 CurrentActiveMenuTag 的更新 */
 	if (MenuTags.Num() == 1)
 	{
 		if (TargetMenuSelection.FindRef(MenuTags[0]))
@@ -608,8 +591,7 @@ void UScreenWidgetManager::OnMenuSelectionChangedNextTick()
 	{
 		LastActiveMenuTag = MenuTags[0];
 
-		const FGameplayTag LastMenuTag;
-		MenuTags.FindLast(LastMenuTag);
+		const FGameplayTag LastMenuTag = MenuTags.Last();
 		if (TargetMenuSelection.FindRef(LastMenuTag))
 		{
 			CurrentActiveMenuTag = LastMenuTag;
@@ -619,9 +601,6 @@ void UScreenWidgetManager::OnMenuSelectionChangedNextTick()
 			CurrentActiveMenuTag = FGameplayTag::EmptyTag;
 		}
 	}
-
-	/* 处理按钮事件的切换 */
-	HandleMenuSelectionChanged();
 }
 
 void UScreenWidgetManager::HandleMenuSelectionChanged()
@@ -646,15 +625,20 @@ void UScreenWidgetManager::HandleMenuSelectionChanged()
 			{
 				auto ActivateSelf = [this, MenuTag, MenuStyle]()
 				{
+					for (const auto& Event : MenuStyle->Events)
+					{
+						Event->NativeOnCreate();
+					}
+
+					/* 生成下一级按钮组 */
+					if (const FMenuContainerInfo* MenuContainerInfo = GameMenu->GetContainerInfo(MenuTag))
+					{
+						GenerateMenu(*GameMenu->GetContainerInfo(MenuTag));
+					}
+
 					FSimpleMulticastDelegate OnFinish;
 					OnFinish.AddLambda([this, MenuTag]()
 						{
-							/* 生成下一级按钮组 */
-							if (const FMenuContainerInfo* MenuContainerInfo = GameMenu->GetContainerInfo(MenuTag))
-							{
-								GenerateMenu(*GameMenu->GetContainerInfo(MenuTag));
-							}
-
 							HandleMenuSelectionChangedOnceFinish();
 						}
 					);
@@ -668,13 +652,8 @@ void UScreenWidgetManager::HandleMenuSelectionChanged()
 				{
 					/* 不激活直属父级的事件 */
 					FSimpleMulticastDelegate OnDeselectedFinish;
-					OnDeselectedFinish.AddLambda([this, ActivateSelf, MenuStyle]()
+					OnDeselectedFinish.AddLambda([this, ActivateSelf]()
 						{
-							for (const auto& Event : MenuStyle->Events)
-							{
-								Event->NativeOnCreate();
-							}
-
 							ActivateSelf();
 						}
 					);
@@ -683,38 +662,38 @@ void UScreenWidgetManager::HandleMenuSelectionChanged()
 					return;
 				}
 
-				for (const auto& Event : MenuStyle->Events)
-				{
-					Event->NativeOnCreate();
-				}
-
 				ActivateSelf();
 			}
 			/* 取消选中 */
 			else
 			{
+				/* 清理子菜单 */
+				FMenuGenerateInfo MenuGenerateInfo;
+				if (GetMenuGenerateInfo(MenuTag, MenuGenerateInfo))
+				{
+					for (const auto& GarbageMenuStyle : MenuGenerateInfo.MenuStyles)
+					{
+						GarbageMenuStyle->NativeOnDestroy();
+						GarbageMenuStyle->RemoveFromParent();
+						GarbageMenuStyle->MarkAsGarbage();
+					}
+
+					CloseUserWidget(MenuGenerateInfo.MenuContainerInfo.MenuContainer);
+				}
+
 				FSimpleMulticastDelegate OnFinish;
 				OnFinish.AddLambda([this, MenuTag, MenuStyle]()
 					{
-						/* 清理子菜单 */
-						FMenuGenerateInfo MenuGenerateInfo;
-						if (GetMenuGenerateInfo(MenuTag, MenuGenerateInfo))
-						{
-							for (const auto& GarbageMenuStyle : MenuGenerateInfo.MenuStyles)
-							{
-								GarbageMenuStyle->NativeOnDestroy();
-								GarbageMenuStyle->RemoveFromParent();
-								GarbageMenuStyle->MarkAsGarbage();
-							}
-
-							CloseUserWidget(MenuGenerateInfo.MenuContainerInfo.MenuContainer);
-							MenuGenerateInfos.Remove(MenuGenerateInfo);
-						}
-
 						/* 清理自身的事件 */
 						for (const auto& Event : MenuStyle->Events)
 						{
 							Event->NativeOnDestroy();
+						}
+
+						FMenuGenerateInfo MenuGenerateInfo;
+						if (GetMenuGenerateInfo(MenuTag, MenuGenerateInfo))
+						{
+							MenuGenerateInfos.Remove(MenuGenerateInfo);
 						}
 
 						HandleMenuSelectionChangedOnceFinish();
@@ -729,6 +708,11 @@ void UScreenWidgetManager::HandleMenuSelectionChanged()
 
 void UScreenWidgetManager::HandleMenuSelectionChangedOnceFinish()
 {
+	for (const auto& Menu : GetAllMenuStyle())
+	{
+		Menu->SetEnableInteraction(false);
+	}
+
 	TargetMenuSelectionIndex++;
 	if (TargetMenuSelectionIndex < TargetMenuSelection.GetMaxIndex())
 	{
@@ -772,6 +756,7 @@ void UScreenWidgetManager::HandleMenuSelectionChangedFinish()
 {
 	TargetMenuSelection.Reset();
 	TargetMenuSelectionIndex = 0;
+	bHandlingMenuSelection = false;
 
 	for (const auto& Menu : GetAllMenuStyle())
 	{

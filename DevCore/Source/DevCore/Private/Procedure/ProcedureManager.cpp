@@ -62,7 +62,7 @@ void UProcedureManager::NativeOnEndPlay()
 	Super::NativeOnEndPlay();
 }
 
-void UProcedureManager::SwitchProcedure(FGameplayTag InProcedureTag, bool bForce)
+void UProcedureManager::SwitchProcedure(FGameplayTag InProcedureTag, bool bForce, FSimpleMulticastDelegate OnFinish)
 {
 	TArray<FProcedureInterfaceHandle> ProcedureInterfaceHandles;
 
@@ -104,7 +104,7 @@ void UProcedureManager::SwitchProcedure(FGameplayTag InProcedureTag, bool bForce
 
 	LastProcedureTag = CurrentProcedureTag;
 	CurrentProcedureTag = InProcedureTag;
-	RegisterProcedureHandle(ProcedureInterfaceHandles);
+	RegisterProcedureHandle(ProcedureInterfaceHandles, OnFinish);
 }
 
 UGameplayProcedure* UProcedureManager::GetGameplayProcedure(FGameplayTag InProcedureTag)
@@ -144,12 +144,12 @@ UGameplayProcedure* UProcedureManager::GetGameplayProcedure(FGameplayTag InProce
 	return nullptr;
 }
 
-FGameplayTag UProcedureManager::GetLastProcedureTag() const
+FGameplayTag UProcedureManager::GetLastProcedureTag()
 {
 	return LastProcedureTag;
 }
 
-FGameplayTag UProcedureManager::GetCurrentProcedureTag() const
+FGameplayTag UProcedureManager::GetCurrentProcedureTag()
 {
 	return CurrentProcedureTag;
 }
@@ -157,25 +157,6 @@ FGameplayTag UProcedureManager::GetCurrentProcedureTag() const
 TMap<FGameplayTag, UGameplayProcedure*>& UProcedureManager::GetGameplayProcedureMapping()
 {
 	return GameplayProcedure;
-}
-
-void UProcedureManager::SetActorActivateState(TSubclassOf<AActor> InActorClass, bool InActive)
-{
-	for (TActorIterator<AActor> It(GetWorld(), InActorClass); It; ++It)
-	{
-		if (It->GetClass()->ImplementsInterface(UProcedureInterface::StaticClass()))
-		{
-			IProcedureInterface* Interface = Cast<IProcedureInterface>(*It);
-			if (InActive)
-			{
-				Interface->NativeOnActived();
-			}
-			else
-			{
-				Interface->NativeOnInactived();
-			}
-		}
-	}
 }
 
 UProcedureHandle* UProcedureManager::RegisterProcedureHandle(const TArray<FProcedureInterfaceHandle>& InHandles, FSimpleMulticastDelegate OnHandleFinish, FSimpleMulticastDelegate OnHandleReset)

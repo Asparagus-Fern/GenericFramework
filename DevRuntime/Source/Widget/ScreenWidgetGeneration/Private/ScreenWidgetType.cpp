@@ -1,7 +1,9 @@
 #include "ScreenWidgetType.h"
 
+#include "ScreenWidgetManager.h"
 #include "Group/CommonButtonGroup.h"
 #include "Groups/CommonButtonGroupBase.h"
+#include "Manager/ManagerGlobal.h"
 #include "UserWidget/Menu/MenuStyle.h"
 
 UE_DEFINE_GAMEPLAY_TAG(TAG_UMG, "UMG");
@@ -16,6 +18,29 @@ FScreenWidgetDelegates::FUserWidgetDelegate FScreenWidgetDelegates::OnWidgetClos
 FScreenWidgetDelegates::FMenuDelegate FScreenWidgetDelegates::OnMenuClicked;
 FScreenWidgetDelegates::FMenuSelectionDelegate FScreenWidgetDelegates::OnMenuSelectionChanged;
 FScreenWidgetDelegates::FWidgetAnimationDelegate FScreenWidgetDelegates::OnWidgetAnimationFinish;
+
+bool FCommonButtonEventModify::CanModify()
+{
+	if (bMatch)
+	{
+		for (auto& MenuTag : MenuTags)
+		{
+			if (GetManager<UScreenWidgetManager>()->GetLastActiveMenuTag().MatchesTag(MenuTag) || GetManager<UScreenWidgetManager>()->GetLastActiveMenuTag() == MenuTag)
+			{
+				return true;
+			}
+		}
+	}
+	else
+	{
+		if (MenuTags.Contains(GetManager<UScreenWidgetManager>()->GetLastActiveMenuTag()))
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
 
 FMenuInfo::FMenuInfo()
 {

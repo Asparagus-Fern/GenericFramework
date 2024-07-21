@@ -22,5 +22,8 @@ void UProcedurePlay::NativeOnActived()
 void UProcedurePlay::NativeOnInactived()
 {
 	Super::NativeOnInactived();
+	
+	GetManager<UScreenWidgetManager>()->CloseUserWidget(DefaultOpenWidgets);
+	
 	RequestInactivateFinish();
 }

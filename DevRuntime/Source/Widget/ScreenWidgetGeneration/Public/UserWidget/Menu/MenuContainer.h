@@ -13,7 +13,7 @@ class UCommonButtonGroupBase;
 /**
  * 
  */
-UCLASS(Abstract)
+UCLASS()
 class SCREENWIDGETGENERATION_API UMenuContainer : public UUserWidgetBase
 {
 	GENERATED_BODY()

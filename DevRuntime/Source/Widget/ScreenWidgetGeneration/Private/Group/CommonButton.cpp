@@ -3,6 +3,7 @@
 
 #include "Group/CommonButton.h"
 
+#include "ScreenWidgetManager.h"
 #include "Animation/WidgetAnimationEvent.h"
 #include "Debug/DebugType.h"
 #include "Event/CommonButtonEvent.h"
@@ -128,16 +129,6 @@ void UCommonButton::SetEnableInteraction(bool InEnableInteraction)
 	}
 }
 
-TArray<UCommonButtonEvent*> UCommonButton::GetEvents() const
-{
-	return Events;
-}
-
-void UCommonButton::SetEvents(TArray<UCommonButtonEvent*> InEvents)
-{
-	Events = InEvents;
-}
-
 void UCommonButton::ResponseButtonEvent(ECommonButtonResponseEvent InResponseEvent, const FSimpleMulticastDelegate& OnFinish)
 {
 	if (Events.IsEmpty())
@@ -147,15 +138,39 @@ void UCommonButton::ResponseButtonEvent(ECommonButtonResponseEvent InResponseEve
 	}
 
 	bool bNeedProcedureHandle = false;
+	bool bIsModify = false;
 	TArray<FProcedureInterfaceHandle> ProcedureInterfaceHandles;
-	for (const auto& Event : Events)
+
+	if (!ModifyEvents.IsEmpty())
 	{
-		if (IsValid(Event))
+		for (auto& ModifyEvent : ModifyEvents)
 		{
-			if (Event->ResponseEvent.Contains(InResponseEvent))
+			if (ModifyEvent.CanModify())
 			{
-				bNeedProcedureHandle = true;
-				ProcedureInterfaceHandles.Add(FProcedureInterfaceHandle(Event, Event->ResponseEvent.FindRef(InResponseEvent)));
+				for (const auto& Event : ModifyEvent.ModifyEvent)
+				{
+					if (Event->ResponseEvent.Contains(InResponseEvent))
+					{
+						bIsModify = true;
+						bNeedProcedureHandle = true;
+						ProcedureInterfaceHandles.Add(FProcedureInterfaceHandle(Event, Event->ResponseEvent.FindRef(InResponseEvent)));
+					}
+				}
+			}
+		}
+	}
+
+	if (!bIsModify)
+	{
+		for (const auto& Event : Events)
+		{
+			if (IsValid(Event))
+			{
+				if (Event->ResponseEvent.Contains(InResponseEvent))
+				{
+					bNeedProcedureHandle = true;
+					ProcedureInterfaceHandles.Add(FProcedureInterfaceHandle(Event, Event->ResponseEvent.FindRef(InResponseEvent)));
+				}
 			}
 		}
 	}

@@ -59,18 +59,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	bool bEnableInteraction;
 
-	UPROPERTY(EditAnywhere, Instanced, Getter, Setter, BlueprintGetter="GetEvents", BlueprintSetter="SetEvents")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Instanced)
 	TArray<UCommonButtonEvent*> Events;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<FCommonButtonEventModify> ModifyEvents;
 
 public:
 	UFUNCTION(BlueprintCallable)
 	void SetEnableInteraction(bool InEnableInteraction);
-
-	UFUNCTION(BlueprintPure)
-	TArray<UCommonButtonEvent*> GetEvents() const;
-
-	UFUNCTION(BlueprintCallable)
-	void SetEvents(TArray<UCommonButtonEvent*> InEvents);
 
 protected:
 	UPROPERTY(Transient)

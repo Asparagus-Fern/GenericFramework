@@ -16,6 +16,31 @@ UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_HUD);
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Menu);
 
 /**
+ * 对特定的MenuTag进行特定的处理
+ */
+USTRUCT(BlueprintType)
+struct FCommonButtonEventModify
+{
+	GENERATED_BODY()
+
+public:
+	/* 标签匹配是否使用Match */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	bool bMatch = false;
+
+	/* 需要修正的菜单标签 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="Menu"))
+	TArray<FGameplayTag> MenuTags;
+
+	/* 修正处理 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced)
+	TArray<UCommonButtonEvent*> ModifyEvent;
+
+public:
+	bool CanModify();
+};
+
+/**
  * 表示一个按钮
  */
 USTRUCT(BlueprintType)
@@ -51,9 +76,16 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced)
 	UMenuStyle* MenuStyleOverride = nullptr;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	bool bIsHidden = false;
+
 	/* 按钮事件 */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced)
 	TArray<UCommonButtonEvent*> Events;
+
+	/* 事件修正 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TArray<FCommonButtonEventModify> ModifyEvents;
 
 public:
 	bool operator==(const FMenuInfo InMenuInfo) const

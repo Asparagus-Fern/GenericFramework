@@ -372,7 +372,14 @@ void ULevelStreamingManager::LoadCurrentWorldLevelStreaming(FOnOnceFinish OnOnce
 		WorldToLoad.Add(StreamingLevel->GetWorldAsset());
 	}
 
-	LoadLevels(WorldToLoad, false, false, OnOnceFinish, OnFinish);
+	if (!WorldToLoad.IsEmpty())
+	{
+		LoadLevels(WorldToLoad, false, false, OnOnceFinish, OnFinish);
+	}
+	else
+	{
+		OnFinish.ExecuteIfBound();
+	}
 }
 
 void ULevelStreamingManager::UnLoadCurrentWorldLevelStreaming(FOnOnceFinish OnOnceFinish, FOnFinish OnFinish)

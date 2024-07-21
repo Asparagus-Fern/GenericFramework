@@ -10,8 +10,6 @@
 class UUserWidgetBase;
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_ProcedureLoading_Default);
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FLoadingWidgetDelegate, UUserWidgetBase*, OpenLoadingWidget);
-
 /**
  * 
  */
@@ -38,10 +36,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Loading UMG")
 	bool bIsCloseLoadingWidgetOnInactive = false;
 
-	/* 查找LoadingWidgets中的SelfTag来打开对应的UMG */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(Categories="UMG", EditConditionHides, EditCondition="bActiveLoadingWidget"), Category="Loading UMG")
-	FGameplayTag DefaultLoadingTag;
-
 	/* 加载界面UMG列表 */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Instanced, meta=(Categories="UMG", EditConditionHides, EditCondition="bActiveLoadingWidget"), Category="Loading UMG")
 	TArray<UUserWidgetBase*> LoadingWidgets;
@@ -64,8 +58,8 @@ public:
 	TArray<TSoftObjectPtr<UWorld>> LevelsToLoad;
 
 public:
-	UPROPERTY(BlueprintAssignable)
-	FLoadingWidgetDelegate OnLoadingWidgetOpen;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="Camera"), Category="Seartup")
+	FGameplayTag StartupCameraTag;
 
 public:
 	UFUNCTION()
@@ -73,6 +67,12 @@ public:
 
 	UFUNCTION()
 	virtual void OnLoadAllLevelStreamingFinish();
+
+	UFUNCTION()
+	virtual void OnSetLevelsVisibilityOnceFinish();
+
+	UFUNCTION()
+	virtual void OnSetLevelsVisibilityFinish();
 
 	UFUNCTION()
 	virtual void OnLevelsToLoadOnceFinish();
