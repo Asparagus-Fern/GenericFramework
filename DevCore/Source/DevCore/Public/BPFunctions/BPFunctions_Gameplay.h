@@ -36,7 +36,20 @@ public:
 	UFUNCTION(BlueprintPure, meta = (WorldContext = "WorldContextObject", DeterminesOutputType = "InClass"))
 	static APlayerState* GetPlayerStateByClass(const UObject* WorldContextObject, const TSubclassOf<APlayerState> InClass);
 
+	/* Actor */
 public:
+	UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject"))
+	static void SetAllActorsVisibility(const UObject* WorldContextObject, TSubclassOf<AActor> InClass, bool bIsHiddenInGame);
+
+	UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject"))
+	static void SetAllActorsVisibilityWithInterface(const UObject* WorldContextObject, TSubclassOf<UInterface> Interface, bool bIsHiddenInGame);
+
+	UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject"), DisplayName="SetAllActorsVisibilityWithTag(Class)")
+	static void SetAllActorsVisibilityWithTag_Class(const UObject* WorldContextObject, TSubclassOf<AActor> InClass, FName InTag, bool bIsHiddenInGame);
+
+	UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject"), DisplayName="SetAllActorsVisibilityWithTag(Interface)")
+	static void SetAllActorsVisibilityWithTag_Interface(const UObject* WorldContextObject, TSubclassOf<UInterface> Interface, FName InTag, bool bIsHiddenInGame);
+
 	UFUNCTION(BlueprintPure, meta=(AdvancedDisplay = 2))
 	static bool GetActorForwardHitResult(const AActor* InActor, FHitResult& HitResult, ECollisionChannel TraceChannel = ECC_Camera);
 
@@ -46,6 +59,8 @@ public:
 	UFUNCTION(BlueprintPure, meta=(AdvancedDisplay = 2))
 	static bool GetActorDownHitResult(const AActor* InActor, FHitResult& HitResult, ECollisionChannel TraceChannel = ECC_Camera);
 
+	/* Component */
+public:
 	UFUNCTION(BlueprintPure, meta=(AdvancedDisplay = 2))
 	static bool GetComponentForwardHitResult(const USceneComponent* InComponent, FHitResult& HitResult, ECollisionChannel TraceChannel = ECC_Camera);
 

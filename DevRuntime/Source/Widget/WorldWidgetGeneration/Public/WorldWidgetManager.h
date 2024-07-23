@@ -15,7 +15,7 @@ class AWorldWidgetPoint;
  * 
  */
 UCLASS()
-class WORLDWIDGETGENERATION_API UWorldWidgetPanel : public UObject, public IProcedureBaseInterface, public IProcedureInterface
+class WORLDWIDGETGENERATION_API UWorldWidgetPanel : public UObject, public IProcedureInterface
 {
 	GENERATED_UCLASS_BODY()
 	/* IProcedureBaseInterface */

@@ -6,22 +6,6 @@
 #include "LevelStreamingManager.h"
 #include "Manager/ManagerGlobal.h"
 
-void UCBE_HandleLevelStreaming::NativeOnCreate()
-{
-	Super::NativeOnCreate();
-
-	GetManager<ULevelStreamingManager>()->SetLevelsVisibility(VisibleLevelsOnCreated, true, FOnOnceFinish(), FOnFinish());
-	GetManager<ULevelStreamingManager>()->SetLevelsVisibility(HiddenLevelsOnCreated, false, FOnOnceFinish(), FOnFinish());
-}
-
-void UCBE_HandleLevelStreaming::NativeOnDestroy()
-{
-	Super::NativeOnDestroy();
-
-	GetManager<ULevelStreamingManager>()->SetLevelsVisibility(VisibleLevelsOnDestroy, true, FOnOnceFinish(), FOnFinish());
-	GetManager<ULevelStreamingManager>()->SetLevelsVisibility(HiddenLevelsOnDestroy, false, FOnOnceFinish(), FOnFinish());
-}
-
 void UCBE_HandleLevelStreaming::NativeOnActived()
 {
 	Super::NativeOnActived();

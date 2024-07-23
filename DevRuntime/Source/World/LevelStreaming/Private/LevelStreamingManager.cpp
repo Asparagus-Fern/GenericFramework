@@ -319,36 +319,14 @@ void ULevelStreamingManager::SetLevelsVisibility(TArray<TSoftObjectPtr<UWorld>> 
 		ValidLevels.Add(Level);
 	}
 
-	// LevelsVisibilityHandles.Add(FLevelsVisibilityHandle(ValidLevels, bVisible, OnOnceFinish, OnFinish));
-	// if (!HandleLevelsVisilibity.IsValid())
-	// {
-	// 	HandleLevelsVisilibity = GetWorld()->GetTimerManager().SetTimerForNextTick(this, &ULevelStreamingManager::HandleLevelsVisibility);
-	// }
-
-	/* 显示关卡时，需考虑关卡未被加载的情况 */
-	if (bVisible)
+	TArray<FLevelStreamingVisibilitySetting> LevelStreamingVisibilitySettings;
+	for (const auto& Level : Levels)
 	{
-		TArray<FLoadLevelStreamingSetting> LoadLevelStreamingSettings;
-		for (auto& Level : Levels)
-		{
-			LoadLevelStreamingSettings.Add(FLoadLevelStreamingSetting(Level, bVisible, false));
-		}
-
-		ULoadLevelStreamingHandle* LoadLevelStreamingHandle = NewObject<ULoadLevelStreamingHandle>(this);
-		LoadLevelStreamingHandle->HandleLoadLevels(LoadLevelStreamingSettings, OnOnceFinish, OnFinish);
+		LevelStreamingVisibilitySettings.Add(FLevelStreamingVisibilitySetting(GetLevelStreaming(Level), bVisible));
 	}
-	/* 隐藏关卡时，关卡必定已经被加载 */
-	else
-	{
-		TArray<FLevelStreamingVisibilitySetting> LevelStreamingVisibilitySettings;
-		for (const auto& Level : Levels)
-		{
-			LevelStreamingVisibilitySettings.Add(FLevelStreamingVisibilitySetting(GetLevelStreaming(Level), bVisible));
-		}
 
-		ULevelStreamingVisibilityHandle* LevelStreamingVisibilityHandle = NewObject<ULevelStreamingVisibilityHandle>(this);
-		LevelStreamingVisibilityHandle->HandleSetLevelsVisibility(LevelStreamingVisibilitySettings, OnOnceFinish, OnFinish);
-	}
+	ULevelStreamingVisibilityHandle* LevelStreamingVisibilityHandle = NewObject<ULevelStreamingVisibilityHandle>(this);
+	LevelStreamingVisibilityHandle->HandleSetLevelsVisibility(LevelStreamingVisibilitySettings, OnOnceFinish, OnFinish);
 }
 
 void ULevelStreamingManager::LoadCurrentWorldLevelStreaming(FOnOnceFinish OnOnceFinish, FOnFinish OnFinish)

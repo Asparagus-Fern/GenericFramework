@@ -18,7 +18,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FGameplayProcedureDelegate);
  * 
  */
 UCLASS(BlueprintType)
-class DEVCORE_API UGameplayProcedure : public UCommonObject, public IProcedureBaseInterface, public IProcedureInterface
+class DEVCORE_API UGameplayProcedure : public UCommonObject, public IProcedureInterface
 {
 	GENERATED_BODY()
 

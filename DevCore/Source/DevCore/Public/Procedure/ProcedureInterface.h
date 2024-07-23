@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ProcedureBaseInterface.h"
 #include "UObject/Interface.h"
 #include "ProcedureInterface.generated.h"
 
@@ -12,7 +13,7 @@ DECLARE_MULTICAST_DELEGATE(FProcedureDelegate);
  * 
  */
 UINTERFACE(MinimalAPI)
-class UProcedureInterface : public UInterface
+class UProcedureInterface : public UProcedureBaseInterface
 {
 	GENERATED_BODY()
 };
@@ -20,7 +21,7 @@ class UProcedureInterface : public UInterface
 /**
  * 
  */
-class DEVCORE_API IProcedureInterface : public IInterface
+class DEVCORE_API IProcedureInterface : public IProcedureBaseInterface
 {
 	GENERATED_BODY()
 

@@ -93,10 +93,10 @@ void AThirdPersonPawn::AddLocation_Implementation(FVector2D InValue)
 		FHitResult HitResult;
 		if (UBPFunctions_Gameplay::GetComponentDownHitResult(GetActiveCameraComponent(), HitResult))
 		{
-			Rate += FVector2D(HitResult.Distance, HitResult.Distance);
+			Rate += FVector2D(HitResult.Distance, HitResult.Distance) * 1.5;
 			MaxSpeed += HitResult.Distance * 3 / 4;
-			Acceleration += HitResult.Distance / 2;
-			Deceleration += HitResult.Distance * 2;
+			Acceleration += HitResult.Distance * 1 / 2;
+			Deceleration += HitResult.Distance;
 		}
 
 		FloatingPawnMovement->MaxSpeed = MaxSpeed;

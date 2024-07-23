@@ -9,8 +9,8 @@
 UCommonButtonEvent::UCommonButtonEvent(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
-	ResponseEvent.Add(ECommonButtonResponseEvent::OnSelected, true);
-	ResponseEvent.Add(ECommonButtonResponseEvent::OnDeselected, false);
+	Response.Add(ECommonButtonResponseEvent::OnSelected, true);
+	Response.Add(ECommonButtonResponseEvent::OnDeselected, false);
 }
 
 void UCommonButtonEvent::NativeOnActived()

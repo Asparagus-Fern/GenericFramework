@@ -3,6 +3,7 @@
 
 #include "BPFunctions/BPFunctions_Gameplay.h"
 
+#include "EngineUtils.h"
 #include "GameFramework/GameModeBase.h"
 #include "GameFramework/GameStateBase.h"
 #include "GameFramework/HUD.h"
@@ -90,6 +91,66 @@ APlayerState* UBPFunctions_Gameplay::GetPlayerStateByClass(const UObject* WorldC
 	}
 
 	return nullptr;
+}
+
+void UBPFunctions_Gameplay::SetAllActorsVisibility(const UObject* WorldContextObject, const TSubclassOf<AActor> InClass, const bool bIsHiddenInGame)
+{
+	if (const UWorld* World = GEngine->GetWorldFromContextObjectChecked(WorldContextObject))
+	{
+		for (TActorIterator<AActor> It(World, InClass); It; ++It)
+		{
+			AActor* Actor = *It;
+			if (IsValid(Actor))
+			{
+				Actor->SetActorHiddenInGame(bIsHiddenInGame);
+			}
+		}
+	}
+}
+
+void UBPFunctions_Gameplay::SetAllActorsVisibilityWithInterface(const UObject* WorldContextObject, const TSubclassOf<UInterface> Interface, const bool bIsHiddenInGame)
+{
+	if (const UWorld* World = GEngine->GetWorldFromContextObjectChecked(WorldContextObject))
+	{
+		for (TActorIterator<AActor> It(World); It; ++It)
+		{
+			AActor* Actor = *It;
+			if (IsValid(Actor) && Actor->GetClass()->ImplementsInterface(Interface))
+			{
+				Actor->SetActorHiddenInGame(bIsHiddenInGame);
+			}
+		}
+	}
+}
+
+void UBPFunctions_Gameplay::SetAllActorsVisibilityWithTag_Class(const UObject* WorldContextObject, const TSubclassOf<AActor> InClass, const FName InTag, const bool bIsHiddenInGame)
+{
+	if (const UWorld* World = GEngine->GetWorldFromContextObjectChecked(WorldContextObject))
+	{
+		for (TActorIterator<AActor> It(World, InClass); It; ++It)
+		{
+			AActor* Actor = *It;
+			if (IsValid(Actor) && Actor->ActorHasTag(InTag))
+			{
+				Actor->SetActorHiddenInGame(bIsHiddenInGame);
+			}
+		}
+	}
+}
+
+void UBPFunctions_Gameplay::SetAllActorsVisibilityWithTag_Interface(const UObject* WorldContextObject, const TSubclassOf<UInterface> Interface, const FName InTag, const bool bIsHiddenInGame)
+{
+	if (const UWorld* World = GEngine->GetWorldFromContextObjectChecked(WorldContextObject))
+	{
+		for (TActorIterator<AActor> It(World); It; ++It)
+		{
+			AActor* Actor = *It;
+			if (IsValid(Actor) && Actor->GetClass()->ImplementsInterface(Interface) && Actor->ActorHasTag(InTag))
+			{
+				Actor->SetActorHiddenInGame(bIsHiddenInGame);
+			}
+		}
+	}
 }
 
 bool UBPFunctions_Gameplay::GetActorForwardHitResult(const AActor* InActor, FHitResult& HitResult, const ECollisionChannel TraceChannel)

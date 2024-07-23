@@ -18,11 +18,11 @@ class DEVCORE_API UBPFunctions_Procedure : public UBlueprintFunctionLibrary
 
 public:
 	/* 切换流程 */
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, meta=(GameplayTagFilter="Procedure"))
 	static void SwitchProcedure(FGameplayTag InProcedureTag, bool bForce = false);
 
 	/* 从标签获取流程数据 */
-	UFUNCTION(BlueprintPure)
+	UFUNCTION(BlueprintPure, meta=(GameplayTagFilter="Procedure"))
 	static UGameplayProcedure* GetGameplayProcedure(FGameplayTag InProcedureTag);
 
 	/* 获取上一个流程标签 */

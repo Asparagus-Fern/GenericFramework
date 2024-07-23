@@ -14,14 +14,18 @@
  * 
  */
 UCLASS(Abstract, EditInlineNew)
-class SCREENWIDGETGENERATION_API UCommonButtonEvent : public UCommonObject, public IProcedureInterface, public IProcedureBaseInterface
+class SCREENWIDGETGENERATION_API UCommonButtonEvent : public UCommonObject, public IProcedureInterface
 {
 	GENERATED_UCLASS_BODY()
 
 public:
+	/* 如果为真，则该事件不跟随激活状态而改变，而是会持续激活至按钮被销毁 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	bool bPersistent = false;
+
 	/* true则为激活，表示在该条件下激活按钮 */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TMap<ECommonButtonResponseEvent, bool> ResponseEvent;
+	TMap<ECommonButtonResponseEvent, bool> Response;
 
 	/* IProcedureInterface */
 public:

@@ -121,16 +121,22 @@ public:
 protected:
 	FGameplayTag LastActiveMenuTag;
 	FGameplayTag CurrentActiveMenuTag;
-	FDelegateHandle MenuSelectionChangedHandle;
 	virtual void GenerateMenu(FMenuContainerInfo InMenuContainerInfo);
-	virtual void OnMenuSelectionChanged(FMenuInfo InMenuInfo, bool bSelection);
 
-private:
+protected:
+	FDelegateHandle MenuSelectionChangedHandle;
 	TMap<FGameplayTag, bool> TargetMenuSelection;
-	bool bHandlingMenuSelection = false;
+	FTimerHandle UpdateMenuSelectionHandle;
 	int32 TargetMenuSelectionIndex = 0;
+
+	virtual void OnMenuSelectionChanged(FMenuInfo InMenuInfo, bool bSelection);
 	virtual void UpdateActiveMenutag();
+	virtual void HandleMenuSelectionChangedNextTick();
 	virtual void HandleMenuSelectionChanged();
+	virtual void ActiveMenu(FGameplayTag InMenuTag, FSimpleMulticastDelegate OnFinish = FSimpleMulticastDelegate());
+	virtual void InactiveMenu(FGameplayTag InMenuTag, FSimpleMulticastDelegate OnFinish = FSimpleMulticastDelegate());
+	virtual void ActiveParentMenu(FGameplayTag InMenuTag, FSimpleMulticastDelegate OnFinish = FSimpleMulticastDelegate());
+	virtual void InactiveParentMenu(FGameplayTag InMenuTag, FSimpleMulticastDelegate OnFinish = FSimpleMulticastDelegate());
 	virtual void HandleMenuSelectionChangedOnceFinish();
 	virtual void HandleMenuSelectionChangedFinish();
 };

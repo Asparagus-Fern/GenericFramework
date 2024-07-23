@@ -20,18 +20,18 @@ public:
 	UFUNCTION(BlueprintCallable)
 	static void ActiveWorldWidgetPoint(AWorldWidgetPoint* InPoint);
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, meta=(GameplayTagFilter="Point"))
 	static void ActiveWorldWidgetPointByTag(FGameplayTag InPointTag);
 
 	UFUNCTION(BlueprintCallable)
 	static void InactiveWorldWidgetPoint(AWorldWidgetPoint* InPoint);
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, meta=(GameplayTagFilter="Point"))
 	static void InactiveWorldWidgetPointByTag(FGameplayTag InPointTag);
 
 	UFUNCTION(BlueprintPure)
 	static TArray<AWorldWidgetPoint*> GetWorldWidgetPoints();
 
-	UFUNCTION(BlueprintPure)
+	UFUNCTION(BlueprintPure, meta=(GameplayTagFilter="Point"))
 	static TArray<AWorldWidgetPoint*> GetWorldWidgetPointsByTag(FGameplayTag InPointTag);
 };

@@ -69,7 +69,7 @@ public:
 	UFUNCTION(BlueprintPure, Category="BPFunctions_Widget|HUD")
 	static TArray<UGameHUD*> GetGameHUD();
 
-	UFUNCTION(BlueprintPure, Category="BPFunctions_Widget|HUD")
+	UFUNCTION(BlueprintPure, Category="BPFunctions_Widget|HUD", meta=(GameplayTagFilter="HUD"))
 	static TArray<UGameHUD*> GetGameHUDByTag(FGameplayTag InTag);
 
 	UFUNCTION(BlueprintCallable, Category="BPFunctions_Widget|HUD")
@@ -92,7 +92,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category="BPFunctions_Widget|UserWidgetBase")
 	static void CloseUserWidget(const UUserWidgetBase* InWidget, const FUserWidgetBaseDelegate& OnFinish);
 
-	UFUNCTION(BlueprintCallable, Category="BPFunctions_Widget|UserWidgetBase")
+	UFUNCTION(BlueprintCallable, Category="BPFunctions_Widget|UserWidgetBase", meta=(GameplayTagFilter="HUD"))
 	static void CloseUserWidgetByTag(FGameplayTag InSlotTag, FUserWidgetBaseDelegate OnFinish);
 
 	/* Menu */
@@ -100,28 +100,28 @@ public:
 	UFUNCTION(BlueprintCallable, Category="BPFunctions_Widget|Menu")
 	static void SwitchGameMenu(UGameMenuSetting* InGameMenuSetting);
 
-	UFUNCTION(BlueprintCallable, Category="BPFunctions_Widget|Menu")
+	UFUNCTION(BlueprintCallable, Category="BPFunctions_Widget|Menu", meta=(GameplayTagFilter="Menu"))
 	static void SelectMenu(FGameplayTag InMenuTag);
 
-	UFUNCTION(BlueprintCallable, Category="BPFunctions_Widget|Menu")
+	UFUNCTION(BlueprintCallable, Category="BPFunctions_Widget|Menu", meta=(GameplayTagFilter="Menu"))
 	static void DeselectMenu(FGameplayTag InMenuTag);
 
-	UFUNCTION(BlueprintPure, Category="BPFunctions_Widget|Menu")
+	UFUNCTION(BlueprintPure, Category="BPFunctions_Widget|Menu", meta=(GameplayTagFilter="Menu"))
 	static bool GetMenuContainerInfo(FGameplayTag InMenuTag, FMenuContainerInfo& OutMenuContainerInfo);
 
-	UFUNCTION(BlueprintPure, Category="BPFunctions_Widget|Menu")
+	UFUNCTION(BlueprintPure, Category="BPFunctions_Widget|Menu", meta=(GameplayTagFilter="Menu"))
 	static bool GetMenuParentContainerInfo(FGameplayTag InMenuTag, FMenuContainerInfo& OutMenuContainerInfo);
 
-	UFUNCTION(BlueprintPure, Category="BPFunctions_Widget|Menu")
+	UFUNCTION(BlueprintPure, Category="BPFunctions_Widget|Menu", meta=(GameplayTagFilter="Menu"))
 	static bool GetMenuGenerateInfo(FGameplayTag InMenuTag, FMenuGenerateInfo& OutMenuGenerateInfo);
 
-	UFUNCTION(BlueprintPure, Category="BPFunctions_Widget|Menu")
+	UFUNCTION(BlueprintPure, Category="BPFunctions_Widget|Menu", meta=(GameplayTagFilter="Menu"))
 	static bool GetMenuParentGenerateInfo(FGameplayTag InMenuTag, FMenuGenerateInfo& OutMenuGenerateInfo);
 
-	UFUNCTION(BlueprintPure, Category="BPFunctions_Widget|Menu")
+	UFUNCTION(BlueprintPure, Category="BPFunctions_Widget|Menu", meta=(GameplayTagFilter="Menu"))
 	static UMenuStyle* GetMenuStyle(FGameplayTag InMenuTag);
 
-	UFUNCTION(BlueprintPure, Category="BPFunctions_Widget|Menu")
+	UFUNCTION(BlueprintPure, Category="BPFunctions_Widget|Menu", meta=(GameplayTagFilter="Menu"))
 	static UMenuStyle* GetParentMenuStyle(FGameplayTag InMenuTag);
 
 	UFUNCTION(BlueprintPure, Category="BPFunctions_Widget|Menu")

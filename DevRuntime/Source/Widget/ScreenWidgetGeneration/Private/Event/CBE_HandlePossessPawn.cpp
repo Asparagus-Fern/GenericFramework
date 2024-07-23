@@ -6,26 +6,6 @@
 #include "Manager/ManagerGlobal.h"
 #include "Pawn/PawnManager.h"
 
-void UCBE_HandlePossessPawn::NativeOnCreate()
-{
-	Super::NativeOnCreate();
-
-	for (const auto& PawnTag : PawnTagsOnCreate)
-	{
-		GetManager<UPawnManager>()->PossessPawn(PawnTag.Key, PawnTag.Value);
-	}
-}
-
-void UCBE_HandlePossessPawn::NativeOnDestroy()
-{
-	Super::NativeOnDestroy();
-
-	for (const auto& PawnTag : PawnTagsOnDestroy)
-	{
-		GetManager<UPawnManager>()->PossessPawn(PawnTag.Key, PawnTag.Value);
-	}
-}
-
 void UCBE_HandlePossessPawn::NativeOnActived()
 {
 	Super::NativeOnActived();

@@ -17,19 +17,6 @@ class LEVELSTREAMING_API UCBE_HandleLevelStreaming : public UCommonButtonEvent
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="OnCreated")
-	TArray<TSoftObjectPtr<UWorld>> VisibleLevelsOnCreated;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="OnCreated")
-	TArray<TSoftObjectPtr<UWorld>> HiddenLevelsOnCreated;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="OnDestroy")
-	TArray<TSoftObjectPtr<UWorld>> VisibleLevelsOnDestroy;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="OnDestroy")
-	TArray<TSoftObjectPtr<UWorld>> HiddenLevelsOnDestroy;
-
-public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="OnActived")
 	TArray<TSoftObjectPtr<UWorld>> ActivateVisibleLevels;
 
@@ -41,11 +28,6 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="OnInactived")
 	TArray<TSoftObjectPtr<UWorld>> InactivateHiddenLevels;
-
-	/* IProcedureBaseInterface */
-public:
-	virtual void NativeOnCreate() override;
-	virtual void NativeOnDestroy() override;
 
 	/* IProcedureInterface */
 public:

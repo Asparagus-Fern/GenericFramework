@@ -19,7 +19,6 @@ UCLASS(Abstract, Config = Manager, DefaultConfig)
 class DEVCORE_API UCoreManager : public UCommonObject
                                  , public FTickableGameObject
                                  , public IConfigInterface
-                                 , public IProcedureBaseInterface
                                  , public IProcedureInterface
                                  , public IManagerInterface
 {

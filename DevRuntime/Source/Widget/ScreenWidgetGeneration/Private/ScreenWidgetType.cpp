@@ -21,21 +21,32 @@ FScreenWidgetDelegates::FWidgetAnimationDelegate FScreenWidgetDelegates::OnWidge
 
 bool FCommonButtonEventModify::CanModify()
 {
+	const FGameplayTag LastActiveMenuTag = GetManager<UScreenWidgetManager>()->GetLastActiveMenuTag();
+	const FGameplayTag CurrentActiveMenuTag = GetManager<UScreenWidgetManager>()->GetCurrentActiveMenuTag();
+
 	if (bMatch)
 	{
-		for (auto& MenuTag : MenuTags)
+		for (const auto& MenuTag : MenuTags)
 		{
-			if (GetManager<UScreenWidgetManager>()->GetLastActiveMenuTag().MatchesTag(MenuTag) || GetManager<UScreenWidgetManager>()->GetLastActiveMenuTag() == MenuTag)
+			if (LastActiveMenuTag.IsValid())
 			{
-				return true;
+				return LastActiveMenuTag.MatchesTag(MenuTag);
+			}
+			else
+			{
+				return CurrentActiveMenuTag.MatchesTag(MenuTag);
 			}
 		}
 	}
 	else
 	{
-		if (MenuTags.Contains(GetManager<UScreenWidgetManager>()->GetLastActiveMenuTag()))
+		if (LastActiveMenuTag.IsValid())
 		{
-			return true;
+			return MenuTags.Contains(LastActiveMenuTag);
+		}
+		else
+		{
+			return MenuTags.Contains(CurrentActiveMenuTag);
 		}
 	}
 

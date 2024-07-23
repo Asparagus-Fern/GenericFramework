@@ -20,7 +20,6 @@ class UWidgetAnimationEvent;
 UCLASS(Abstract, HideCategories=(Appearance,Input,Interaction,Layout,Localization,Performance,Navigation,Designer))
 class SCREENWIDGETGENERATION_API UUserWidgetBase : public UUserWidget
                                                    , public IProcedureInterface
-                                                   , public IProcedureBaseInterface
                                                    , public IWidgetAnimationInterface
 {
 	GENERATED_UCLASS_BODY()

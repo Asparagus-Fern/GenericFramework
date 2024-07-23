@@ -28,6 +28,7 @@ public:
 	virtual void NativeOnCreate() override;
 	virtual void NativeOnDestroy() override;
 
+	/* UMenuStyle */
 public:
 	UPROPERTY(Getter, BlueprintGetter="GetMenuInfo")
 	FMenuInfo MenuInfo;

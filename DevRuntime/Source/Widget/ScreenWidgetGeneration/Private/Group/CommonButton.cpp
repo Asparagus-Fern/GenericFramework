@@ -47,43 +47,43 @@ void UCommonButton::NativeDestruct()
 void UCommonButton::NativeOnHovered()
 {
 	Super::NativeOnHovered();
-	ResponseButtonEvent(ECommonButtonResponseEvent::OnHovered);
+	ResponseButtonEvent(false, ECommonButtonResponseEvent::OnHovered);
 }
 
 void UCommonButton::NativeOnUnhovered()
 {
 	Super::NativeOnUnhovered();
-	ResponseButtonEvent(ECommonButtonResponseEvent::OnUnHovered);
+	ResponseButtonEvent(false, ECommonButtonResponseEvent::OnUnHovered);
 }
 
 void UCommonButton::NativeOnClicked()
 {
 	Super::NativeOnClicked();
-	ResponseButtonEvent(ECommonButtonResponseEvent::OnClick);
+	ResponseButtonEvent(false, ECommonButtonResponseEvent::OnClick);
 }
 
 void UCommonButton::NativeOnPressed()
 {
 	Super::NativeOnPressed();
-	ResponseButtonEvent(ECommonButtonResponseEvent::OnPressed);
+	ResponseButtonEvent(false, ECommonButtonResponseEvent::OnPressed);
 }
 
 void UCommonButton::NativeOnReleased()
 {
 	Super::NativeOnReleased();
-	ResponseButtonEvent(ECommonButtonResponseEvent::OnReleased);
+	ResponseButtonEvent(false, ECommonButtonResponseEvent::OnReleased);
 }
 
 void UCommonButton::NativeOnSelected(bool bBroadcast)
 {
 	Super::NativeOnSelected(bBroadcast);
-	ResponseButtonEvent(ECommonButtonResponseEvent::OnSelected);
+	ResponseButtonEvent(false, ECommonButtonResponseEvent::OnSelected);
 }
 
 void UCommonButton::NativeOnDeselected(bool bBroadcast)
 {
 	Super::NativeOnDeselected(bBroadcast);
-	ResponseButtonEvent(ECommonButtonResponseEvent::OnDeselected);
+	ResponseButtonEvent(false, ECommonButtonResponseEvent::OnDeselected);
 }
 
 void UCommonButton::NativeOnActived()
@@ -129,7 +129,7 @@ void UCommonButton::SetEnableInteraction(bool InEnableInteraction)
 	}
 }
 
-void UCommonButton::ResponseButtonEvent(ECommonButtonResponseEvent InResponseEvent, const FSimpleMulticastDelegate& OnFinish)
+void UCommonButton::ResponseButtonEvent(bool IsCheckPersistent, ECommonButtonResponseEvent InResponseEvent, const FSimpleMulticastDelegate& OnFinish)
 {
 	if (Events.IsEmpty())
 	{
@@ -137,9 +137,102 @@ void UCommonButton::ResponseButtonEvent(ECommonButtonResponseEvent InResponseEve
 		return;
 	}
 
-	bool bNeedProcedureHandle = false;
-	bool bIsModify = false;
+	const TArray<FProcedureInterfaceHandle> ProcedureInterfaceHandles = GetResponseProcedureInterfaceHandles(IsCheckPersistent, InResponseEvent);
+	if (!ProcedureInterfaceHandles.IsEmpty())
+	{
+		if (IsValid(ActiveProcedureHandle))
+		{
+			ActiveProcedureHandle->Reset();
+		}
+
+		ActiveProcedureHandle = GetManager<UProcedureManager>()->RegisterProcedureHandle(ProcedureInterfaceHandles, OnFinish);
+		return;
+	}
+
+	OnFinish.Broadcast();
+}
+
+TArray<FProcedureInterfaceHandle> UCommonButton::GetResponseProcedureInterfaceHandles(bool IsCheckPersistent, ECommonButtonResponseEvent InResponseEvent)
+{
+	if (IsCheckPersistent)
+	{
+		TArray<FProcedureInterfaceHandle> ProcedureInterfaceHandles;
+
+		TArray<UCommonButtonEvent*> ResultEvents;
+		TArray<UCommonButtonEvent*> FoundEvents = GetResponseModifyEvents(InResponseEvent);
+		if (FoundEvents.IsEmpty())
+		{
+			FoundEvents = GetResponseEvents(InResponseEvent);
+		}
+
+		for (auto& FoundEvent : FoundEvents)
+		{
+			if (!FoundEvent->bPersistent)
+			{
+				ResultEvents.Add(FoundEvent);
+			}
+		}
+
+		for (const auto& Event : ResultEvents)
+		{
+			ProcedureInterfaceHandles.Add(FProcedureInterfaceHandle(Event, Event->Response.FindRef(InResponseEvent)));
+		}
+
+		return ProcedureInterfaceHandles;
+	}
+	else
+	{
+		TArray<FProcedureInterfaceHandle> ProcedureInterfaceHandles = GetResponseModifyEventHandles(InResponseEvent);
+		if (ProcedureInterfaceHandles.IsEmpty())
+		{
+			ProcedureInterfaceHandles = GetResponseEventHandles(InResponseEvent);
+		}
+		return ProcedureInterfaceHandles;
+	}
+}
+
+TArray<FProcedureInterfaceHandle> UCommonButton::GetResponseEventHandles(ECommonButtonResponseEvent InResponseEvent)
+{
 	TArray<FProcedureInterfaceHandle> ProcedureInterfaceHandles;
+
+	for (const auto& ResponseEvent : GetResponseEvents(InResponseEvent))
+	{
+		ProcedureInterfaceHandles.Add(FProcedureInterfaceHandle(ResponseEvent, ResponseEvent->Response.FindRef(InResponseEvent)));
+	}
+
+	return ProcedureInterfaceHandles;
+}
+
+TArray<FProcedureInterfaceHandle> UCommonButton::GetResponseModifyEventHandles(ECommonButtonResponseEvent InResponseEvent)
+{
+	TArray<FProcedureInterfaceHandle> ProcedureInterfaceHandles;
+
+	for (const auto& ResponseModifyEvent : GetResponseModifyEvents(InResponseEvent))
+	{
+		ProcedureInterfaceHandles.Add(FProcedureInterfaceHandle(ResponseModifyEvent, ResponseModifyEvent->Response.FindRef(InResponseEvent)));
+	}
+
+	return ProcedureInterfaceHandles;
+}
+
+TArray<UCommonButtonEvent*> UCommonButton::GetResponseEvents(const ECommonButtonResponseEvent InResponseEvent)
+{
+	TArray<UCommonButtonEvent*> ResponseEvents;
+	
+	for (const auto& Event : Events)
+	{
+		if (Event->Response.Contains(InResponseEvent))
+		{
+			ResponseEvents.Add(Event);
+		}
+	}
+	
+	return ResponseEvents;
+}
+
+TArray<UCommonButtonEvent*> UCommonButton::GetResponseModifyEvents(ECommonButtonResponseEvent InResponseEvent)
+{
+	TArray<UCommonButtonEvent*> ResponseEvents;
 
 	if (!ModifyEvents.IsEmpty())
 	{
@@ -149,41 +242,16 @@ void UCommonButton::ResponseButtonEvent(ECommonButtonResponseEvent InResponseEve
 			{
 				for (const auto& Event : ModifyEvent.ModifyEvent)
 				{
-					if (Event->ResponseEvent.Contains(InResponseEvent))
+					if (Event->Response.Contains(InResponseEvent))
 					{
-						bIsModify = true;
-						bNeedProcedureHandle = true;
-						ProcedureInterfaceHandles.Add(FProcedureInterfaceHandle(Event, Event->ResponseEvent.FindRef(InResponseEvent)));
+						ResponseEvents.Add(Event);
 					}
 				}
 			}
 		}
 	}
 
-	if (!bIsModify)
-	{
-		for (const auto& Event : Events)
-		{
-			if (IsValid(Event))
-			{
-				if (Event->ResponseEvent.Contains(InResponseEvent))
-				{
-					bNeedProcedureHandle = true;
-					ProcedureInterfaceHandles.Add(FProcedureInterfaceHandle(Event, Event->ResponseEvent.FindRef(InResponseEvent)));
-				}
-			}
-		}
-	}
-
-	if (bNeedProcedureHandle)
-	{
-		if (IsValid(ActiveProcedureHandle))
-		{
-			ActiveProcedureHandle->Reset();
-		}
-
-		ActiveProcedureHandle = GetManager<UProcedureManager>()->RegisterProcedureHandle(ProcedureInterfaceHandles, OnFinish);
-	}
+	return ResponseEvents;
 }
 
 UWidgetAnimationEvent* UCommonButton::GetAnimationEvent_Implementation() const

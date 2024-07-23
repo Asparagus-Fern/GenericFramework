@@ -18,9 +18,9 @@ class DEVCORE_API UBPFunctions_Pawn : public UBlueprintFunctionLibrary
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, meta=(GameplayTagFilter="Pawn"))
 	static void PossessPawn(int32 PlayerIndex, FGameplayTag InPawnTag);
 
-	UFUNCTION(BlueprintPure)
+	UFUNCTION(BlueprintPure, meta=(GameplayTagFilter="Pawn"))
 	static APawn* GetPawn(FGameplayTag InPawnTag);
 };

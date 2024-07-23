@@ -8,6 +8,7 @@
 #include "Animation/WidgetAnimationInterface.h"
 #include "Procedure/ProcedureBaseInterface.h"
 #include "Procedure/ProcedureInterface.h"
+#include "Procedure/ProcedureType.h"
 #include "CommonButton.generated.h"
 
 class UWidgetAnimationEvent;
@@ -22,7 +23,6 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnButtonEventHandleFinish);
 UCLASS()
 class SCREENWIDGETGENERATION_API UCommonButton : public UCommonButtonBase
                                                  , public IProcedureInterface
-                                                 , public IProcedureBaseInterface
                                                  , public IWidgetAnimationInterface
 {
 	GENERATED_BODY()
@@ -77,7 +77,14 @@ protected:
 	FOnButtonEventHandleFinish OnButtonEventHandleFinish;
 
 public:
-	void ResponseButtonEvent(ECommonButtonResponseEvent InResponseEvent, const FSimpleMulticastDelegate& OnFinish = FSimpleMulticastDelegate());
+	void ResponseButtonEvent(bool IsCheckPersistent, ECommonButtonResponseEvent InResponseEvent, const FSimpleMulticastDelegate& OnFinish = FSimpleMulticastDelegate());
+
+protected:
+	TArray<FProcedureInterfaceHandle> GetResponseProcedureInterfaceHandles(bool IsCheckPersistent, ECommonButtonResponseEvent InResponseEvent);
+	TArray<FProcedureInterfaceHandle> GetResponseEventHandles(ECommonButtonResponseEvent InResponseEvent);
+	TArray<FProcedureInterfaceHandle> GetResponseModifyEventHandles(ECommonButtonResponseEvent InResponseEvent);
+	TArray<UCommonButtonEvent*> GetResponseEvents(ECommonButtonResponseEvent InResponseEvent);
+	TArray<UCommonButtonEvent*> GetResponseModifyEvents(ECommonButtonResponseEvent InResponseEvent);
 
 	/* IWidgetAnimationInterface */
 public:
