@@ -25,9 +25,20 @@ bool UCameraHandle::HandleSwitchToCameraPoint_Implementation(APlayerController* 
 	return false;
 }
 
-void UCameraHandle::OnSwitchToCameraPointFinish()
+void UCameraHandle::OnSwitchToCameraPointFinish_Implementation()
 {
-	SwitchCameraPointHandle.Reset();
+}
+
+void UCameraHandle::NativeOnSwitchToCameraPointFinish()
+{
 	FCameraSystemDelegates::OnSwitchCameraFinish.Broadcast(this);
-	OnSwitchCameraFinish.Broadcast();
+	OnSwitchToCameraPointFinish();
+	
+	if (!TargetCameraPoint->CameraTag.IsValid())
+	{
+		TargetCameraPoint->Destroy();
+	}
+
+	OwnerPlayerController = nullptr;
+	TargetCameraPoint = nullptr;
 }

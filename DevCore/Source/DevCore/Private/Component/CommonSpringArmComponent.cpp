@@ -3,6 +3,7 @@
 
 #include "Component/CommonSpringArmComponent.h"
 
+#include "BPFunctions/BPFunctions_Gameplay.h"
 #include "Debug/DebugType.h"
 #include "Kismet/GameplayStatics.h"
 #include "PhysicsEngine/PhysicsSettings.h"
@@ -41,6 +42,15 @@ void UCommonSpringArmComponent::AddTargetArmLength(const float InValue)
 	CosValue = FMath::GetMappedRangeValueClamped(FVector2D(0.f, 1.f), FVector2D(0.1f, 0.9f), CosValue);
 
 	DesiredArmLength += (TargetArmLength / 10.f * CosValue * ArmZoomSpeedRate * InValue);
+	if (DesiredArmLength <= 0)
+	{
+		FHitResult HitResult;
+		if (UBPFunctions_Gameplay::GetActorDownHitResult(GetOwner(), HitResult))
+		{
+			DesiredArmLength += HitResult.Distance;
+		}
+	}
+
 	DesiredArmLength = FMath::Clamp(DesiredArmLength, MinArmLength, MaxArmLength);
 }
 

@@ -7,16 +7,6 @@
 #include "Handle/CameraHandle.h"
 #include "Manager/ManagerGlobal.h"
 
-void UBPFunctions_Camera::AddCameraPoint(const FGameplayTag InCameraTag, ACameraPointBase* InCameraPoint)
-{
-	GetManager<UCameraManager>()->AddCameraPoint(InCameraTag, InCameraPoint);
-}
-
-void UBPFunctions_Camera::RemoveCameraPoint(const FGameplayTag InCameraTag)
-{
-	GetManager<UCameraManager>()->RemoveCameraPoint(InCameraTag);
-}
-
 ACameraPointBase* UBPFunctions_Camera::GetCameraPoint(const FGameplayTag InCameraTag)
 {
 	return GetManager<UCameraManager>()->GetCameraPoint(InCameraTag);
@@ -27,17 +17,22 @@ bool UBPFunctions_Camera::CanSwitchToCamera(const FGameplayTag InCameraTag)
 	return GetManager<UCameraManager>()->CanSwitchToCamera(InCameraTag);
 }
 
-void UBPFunctions_Camera::SwitchToCameraByHandle(FGameplayTag InCameraTag, TSubclassOf<UCameraHandle> SwitchCameraHandleClass)
+void UBPFunctions_Camera::SwitchToCameraByComponentClass(UCameraComponent* InComponent, TSubclassOf<UCameraHandle> SwitchCameraHandleClass)
 {
-	SwitchToCamera(InCameraTag, NewObject<UCameraHandle>(GetManager<UCameraManager>(), SwitchCameraHandleClass));
+	GetManager<UCameraManager>()->SwitchToCamera(InComponent, NewObject<UCameraHandle>(GetManager<UCameraManager>(), SwitchCameraHandleClass));
 }
 
-void UBPFunctions_Camera::SwitchToCamera(const FGameplayTag InCameraTag, UCameraHandle* SwitchCameraHandle)
+void UBPFunctions_Camera::SwitchToCameraByComponent(UCameraComponent* InComponent, UCameraHandle* SwitchCameraHandle)
+{
+	GetManager<UCameraManager>()->SwitchToCamera(InComponent, SwitchCameraHandle);
+}
+
+void UBPFunctions_Camera::SwitchToCameraByHandleClass(FGameplayTag InCameraTag, TSubclassOf<UCameraHandle> SwitchCameraHandleClass)
+{
+	GetManager<UCameraManager>()->SwitchToCamera(InCameraTag, SwitchCameraHandleClass);
+}
+
+void UBPFunctions_Camera::SwitchToCameraByHandle(const FGameplayTag InCameraTag, UCameraHandle* SwitchCameraHandle)
 {
 	GetManager<UCameraManager>()->SwitchToCamera(InCameraTag, SwitchCameraHandle);
-}
-
-void UBPFunctions_Camera::SwitchToCameraByPlayerController(APlayerController* PlayerController, FGameplayTag InCameraTag, UCameraHandle* SwitchCameraHandle)
-{
-	GetManager<UCameraManager>()->SwitchToCamera(PlayerController, InCameraTag, SwitchCameraHandle);
 }

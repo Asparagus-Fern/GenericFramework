@@ -38,7 +38,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Spring Arm")
 	float ArmZoomSpeedRate = 1.f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Spring Arm")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Spring Arm", meta=(ClampMin = 0.f))
 	float MinArmLength = 0.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Spring Arm")

@@ -4,7 +4,10 @@
 #include "CameraManager.h"
 
 #include "CameraSystemType.h"
+#include "CineCameraComponent.h"
+#include "CameraPoint/CameraPoint.h"
 #include "CameraPoint/CameraPointBase.h"
+#include "CameraPoint/CineCameraPoint.h"
 #include "Handle/CameraHandle.h"
 
 #define LOCTEXT_NAMESPACE "UCoreManager"
@@ -58,6 +61,53 @@ bool UCameraManager::CanSwitchToCamera(const FGameplayTag InCameraTag) const
 	return InCameraTag.IsValid() && IsValid(GetCameraPoint(InCameraTag));
 }
 
+void UCameraManager::SwitchToCamera(UCameraComponent* InCameraComponent, TSubclassOf<UCameraHandle> InCameraHandleClass)
+{
+	SwitchToCamera(InCameraComponent, NewObject<UCameraHandle>(this, InCameraHandleClass));
+}
+
+void UCameraManager::SwitchToCamera(UCameraComponent* InCameraComponent, UCameraHandle* SwitchCameraHandle)
+{
+	if (!IsValid(InCameraComponent) || !IsValid(SwitchCameraHandle))
+	{
+		DEBUG(Debug_Camera, Error, TEXT("SwitchToCamera Fail"))
+		FCameraSystemDelegates::OnSwitchCameraFinish.Broadcast(nullptr);
+		return;
+	}
+
+	FVector a = InCameraComponent->GetComponentLocation();
+	FRotator b = InCameraComponent->GetComponentRotation();
+	
+	ACameraPointBase* SpawnCameraPoint;
+	if (Cast<UCineCameraComponent>(InCameraComponent))
+	{
+		SpawnCameraPoint = GetWorld()->SpawnActor<ACineCameraPoint>(InCameraComponent->GetComponentLocation(), InCameraComponent->GetComponentRotation());
+	}
+	else
+	{
+		SpawnCameraPoint = GetWorld()->SpawnActor<ACameraPoint>(InCameraComponent->GetComponentLocation(), InCameraComponent->GetComponentRotation());
+	}
+
+	//DuplicateObject(InCameraComponent, SpawnCameraPoint)
+
+	SpawnCameraPoint->SetCameraComponent(InCameraComponent);
+	SwitchToCamera(SpawnCameraPoint, SwitchCameraHandle);
+
+	// DEBUG_LOG(Debug_Default, Log, TEXT("%s"), *SpawnCameraPoint->GetActorLocation().ToString())
+}
+
+void UCameraManager::SwitchToCamera(FGameplayTag InCameraTag, TSubclassOf<UCameraHandle> InCameraHandleClass)
+{
+	if (InCameraHandleClass)
+	{
+		SwitchToCamera(InCameraTag, NewObject<UCameraHandle>(this, InCameraHandleClass));
+	}
+	else
+	{
+		FCameraSystemDelegates::OnSwitchCameraFinish.Broadcast(nullptr);
+	}
+}
+
 void UCameraManager::SwitchToCamera(const FGameplayTag InCameraTag, UCameraHandle* SwitchCameraHandle)
 {
 	if (!InCameraTag.IsValid() || !IsValid(SwitchCameraHandle))
@@ -69,11 +119,7 @@ void UCameraManager::SwitchToCamera(const FGameplayTag InCameraTag, UCameraHandl
 
 	if (ACameraPointBase* FoundCameraPoint = GetCameraPoint(InCameraTag))
 	{
-		for (FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)
-		{
-			APlayerController* PlayerController = Iterator->Get();
-			SwitchToCamera(PlayerController, InCameraTag, SwitchCameraHandle);
-		}
+		SwitchToCamera(FoundCameraPoint, SwitchCameraHandle);
 	}
 	else
 	{
@@ -81,22 +127,75 @@ void UCameraManager::SwitchToCamera(const FGameplayTag InCameraTag, UCameraHandl
 	}
 }
 
-void UCameraManager::SwitchToCamera(APlayerController* PlayerController, const FGameplayTag InCameraTag, UCameraHandle* SwitchCameraHandle)
+void UCameraManager::SwitchToCamera(ACameraPointBase* InCameraPoint, TSubclassOf<UCameraHandle> InCameraHandleClass)
 {
-	if (!InCameraTag.IsValid() || !PlayerController || !IsValid(SwitchCameraHandle))
+	if (InCameraHandleClass)
+	{
+		SwitchToCamera(InCameraPoint, NewObject<UCameraHandle>(this, InCameraHandleClass));
+	}
+	else
+	{
+		FCameraSystemDelegates::OnSwitchCameraFinish.Broadcast(nullptr);
+	}
+}
+
+void UCameraManager::SwitchToCamera(ACameraPointBase* InCameraPoint, UCameraHandle* SwitchCameraHandle)
+{
+	if (!IsValid(InCameraPoint) || !IsValid(SwitchCameraHandle))
 	{
 		DEBUG(Debug_Camera, Error, TEXT("SwitchToCamera Fail"))
 		FCameraSystemDelegates::OnSwitchCameraFinish.Broadcast(nullptr);
 		return;
 	}
 
-	/* Switch */
-	if (ACameraPointBase* FoundCameraPoint = CameraPoints.FindRef(InCameraTag))
+	for (FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)
 	{
-		FCameraSystemDelegates::PreSwitchCamera.Broadcast(FoundCameraPoint);
-		SwitchCameraHandle->HandleSwitchToCameraPoint(PlayerController, FoundCameraPoint);
-		FCameraSystemDelegates::PostSwitchCamera.Broadcast(FoundCameraPoint);
+		APlayerController* PlayerController = Iterator->Get();
+		SwitchToCamera(PlayerController, InCameraPoint, SwitchCameraHandle);
 	}
+}
+
+void UCameraManager::SwitchToCamera(APlayerController* PlayerController, FGameplayTag InCameraTag, TSubclassOf<UCameraHandle> InCameraHandleClass)
+{
+	if (IsValid(InCameraHandleClass))
+	{
+		SwitchToCamera(PlayerController, GetCameraPoint(InCameraTag), NewObject<UCameraHandle>(this, InCameraHandleClass));
+	}
+	else
+	{
+		FCameraSystemDelegates::OnSwitchCameraFinish.Broadcast(nullptr);
+	}
+}
+
+void UCameraManager::SwitchToCamera(APlayerController* PlayerController, FGameplayTag InCameraTag, UCameraHandle* SwitchCameraHandle)
+{
+	SwitchToCamera(PlayerController, GetCameraPoint(InCameraTag), SwitchCameraHandle);
+}
+
+void UCameraManager::SwitchToCamera(APlayerController* PlayerController, ACameraPointBase* InCameraPoint, TSubclassOf<UCameraHandle> InCameraHandleClass)
+{
+	if (IsValid(InCameraHandleClass))
+	{
+		SwitchToCamera(PlayerController, InCameraPoint, NewObject<UCameraHandle>(this, InCameraHandleClass));
+	}
+	else
+	{
+		FCameraSystemDelegates::OnSwitchCameraFinish.Broadcast(nullptr);
+	}
+}
+
+void UCameraManager::SwitchToCamera(APlayerController* PlayerController, ACameraPointBase* InCameraPoint, UCameraHandle* SwitchCameraHandle)
+{
+	if (!PlayerController || !IsValid(InCameraPoint) || !IsValid(SwitchCameraHandle))
+	{
+		DEBUG(Debug_Camera, Error, TEXT("SwitchToCamera Fail"))
+		FCameraSystemDelegates::OnSwitchCameraFinish.Broadcast(nullptr);
+		return;
+	}
+
+	FCameraSystemDelegates::PreSwitchCamera.Broadcast(InCameraPoint);
+	SwitchCameraHandle->HandleSwitchToCameraPoint(PlayerController, InCameraPoint);
+	FCameraSystemDelegates::PostSwitchCamera.Broadcast(InCameraPoint);
 }
 
 #undef LOCTEXT_NAMESPACE

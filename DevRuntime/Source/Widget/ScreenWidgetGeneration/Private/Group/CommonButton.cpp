@@ -47,43 +47,43 @@ void UCommonButton::NativeDestruct()
 void UCommonButton::NativeOnHovered()
 {
 	Super::NativeOnHovered();
-	ResponseButtonEvent(false, ECommonButtonResponseEvent::OnHovered);
+	ResponseButtonEvent(ECommonButtonResponseEvent::OnHovered);
 }
 
 void UCommonButton::NativeOnUnhovered()
 {
 	Super::NativeOnUnhovered();
-	ResponseButtonEvent(false, ECommonButtonResponseEvent::OnUnHovered);
+	ResponseButtonEvent(ECommonButtonResponseEvent::OnUnHovered);
 }
 
 void UCommonButton::NativeOnClicked()
 {
 	Super::NativeOnClicked();
-	ResponseButtonEvent(false, ECommonButtonResponseEvent::OnClick);
+	ResponseButtonEvent(ECommonButtonResponseEvent::OnClick);
 }
 
 void UCommonButton::NativeOnPressed()
 {
 	Super::NativeOnPressed();
-	ResponseButtonEvent(false, ECommonButtonResponseEvent::OnPressed);
+	ResponseButtonEvent(ECommonButtonResponseEvent::OnPressed);
 }
 
 void UCommonButton::NativeOnReleased()
 {
 	Super::NativeOnReleased();
-	ResponseButtonEvent(false, ECommonButtonResponseEvent::OnReleased);
+	ResponseButtonEvent(ECommonButtonResponseEvent::OnReleased);
 }
 
 void UCommonButton::NativeOnSelected(bool bBroadcast)
 {
 	Super::NativeOnSelected(bBroadcast);
-	ResponseButtonEvent(false, ECommonButtonResponseEvent::OnSelected);
+	ResponseButtonEvent(ECommonButtonResponseEvent::OnSelected);
 }
 
 void UCommonButton::NativeOnDeselected(bool bBroadcast)
 {
 	Super::NativeOnDeselected(bBroadcast);
-	ResponseButtonEvent(false, ECommonButtonResponseEvent::OnDeselected);
+	ResponseButtonEvent(ECommonButtonResponseEvent::OnDeselected);
 }
 
 void UCommonButton::NativeOnActived()
@@ -129,7 +129,7 @@ void UCommonButton::SetEnableInteraction(bool InEnableInteraction)
 	}
 }
 
-void UCommonButton::ResponseButtonEvent(bool IsCheckPersistent, ECommonButtonResponseEvent InResponseEvent, const FSimpleMulticastDelegate& OnFinish)
+void UCommonButton::ResponseButtonEvent(ECommonButtonResponseEvent InResponseEvent, const FSimpleMulticastDelegate& OnFinish)
 {
 	if (Events.IsEmpty())
 	{
@@ -137,7 +137,12 @@ void UCommonButton::ResponseButtonEvent(bool IsCheckPersistent, ECommonButtonRes
 		return;
 	}
 
-	const TArray<FProcedureInterfaceHandle> ProcedureInterfaceHandles = GetResponseProcedureInterfaceHandles(IsCheckPersistent, InResponseEvent);
+	TArray<FProcedureInterfaceHandle> ProcedureInterfaceHandles = GetResponseModifyEventHandles(InResponseEvent);;
+	if (ProcedureInterfaceHandles.IsEmpty())
+	{
+		ProcedureInterfaceHandles = GetResponseEventHandles(InResponseEvent);
+	}
+
 	if (!ProcedureInterfaceHandles.IsEmpty())
 	{
 		if (IsValid(ActiveProcedureHandle))
@@ -150,45 +155,6 @@ void UCommonButton::ResponseButtonEvent(bool IsCheckPersistent, ECommonButtonRes
 	}
 
 	OnFinish.Broadcast();
-}
-
-TArray<FProcedureInterfaceHandle> UCommonButton::GetResponseProcedureInterfaceHandles(bool IsCheckPersistent, ECommonButtonResponseEvent InResponseEvent)
-{
-	if (IsCheckPersistent)
-	{
-		TArray<FProcedureInterfaceHandle> ProcedureInterfaceHandles;
-
-		TArray<UCommonButtonEvent*> ResultEvents;
-		TArray<UCommonButtonEvent*> FoundEvents = GetResponseModifyEvents(InResponseEvent);
-		if (FoundEvents.IsEmpty())
-		{
-			FoundEvents = GetResponseEvents(InResponseEvent);
-		}
-
-		for (auto& FoundEvent : FoundEvents)
-		{
-			if (!FoundEvent->bPersistent)
-			{
-				ResultEvents.Add(FoundEvent);
-			}
-		}
-
-		for (const auto& Event : ResultEvents)
-		{
-			ProcedureInterfaceHandles.Add(FProcedureInterfaceHandle(Event, Event->Response.FindRef(InResponseEvent)));
-		}
-
-		return ProcedureInterfaceHandles;
-	}
-	else
-	{
-		TArray<FProcedureInterfaceHandle> ProcedureInterfaceHandles = GetResponseModifyEventHandles(InResponseEvent);
-		if (ProcedureInterfaceHandles.IsEmpty())
-		{
-			ProcedureInterfaceHandles = GetResponseEventHandles(InResponseEvent);
-		}
-		return ProcedureInterfaceHandles;
-	}
 }
 
 TArray<FProcedureInterfaceHandle> UCommonButton::GetResponseEventHandles(ECommonButtonResponseEvent InResponseEvent)
@@ -218,7 +184,7 @@ TArray<FProcedureInterfaceHandle> UCommonButton::GetResponseModifyEventHandles(E
 TArray<UCommonButtonEvent*> UCommonButton::GetResponseEvents(const ECommonButtonResponseEvent InResponseEvent)
 {
 	TArray<UCommonButtonEvent*> ResponseEvents;
-	
+
 	for (const auto& Event : Events)
 	{
 		if (Event->Response.Contains(InResponseEvent))
@@ -226,19 +192,20 @@ TArray<UCommonButtonEvent*> UCommonButton::GetResponseEvents(const ECommonButton
 			ResponseEvents.Add(Event);
 		}
 	}
-	
+
 	return ResponseEvents;
 }
 
 TArray<UCommonButtonEvent*> UCommonButton::GetResponseModifyEvents(ECommonButtonResponseEvent InResponseEvent)
 {
 	TArray<UCommonButtonEvent*> ResponseEvents;
-
+	
+	TArray<FCommonButtonEventModify> ModifyEvents = GetSelected() ? ModifyPushEvents : ModifyPopEvents;
 	if (!ModifyEvents.IsEmpty())
 	{
 		for (auto& ModifyEvent : ModifyEvents)
 		{
-			if (ModifyEvent.CanModify())
+			if (ModifyEvent.CanModify(GetSelected()))
 			{
 				for (const auto& Event : ModifyEvent.ModifyEvent)
 				{

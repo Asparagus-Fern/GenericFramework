@@ -17,7 +17,7 @@ bool UCameraHandle_Default::HandleSwitchToCameraPoint_Implementation(APlayerCont
 {
 	if (Super::HandleSwitchToCameraPoint_Implementation(InPlayerController, InCameraPoint))
 	{
-		GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &UCameraHandle_Default::OnSwitchToCameraPointFinish, ViewTargetTransitionParams.BlendTime);
+		GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &UCameraHandle_Default::NativeOnSwitchToCameraPointFinish, ViewTargetTransitionParams.BlendTime);
 		OwnerPlayerController->PlayerCameraManager->SetViewTarget(TargetCameraPoint, ViewTargetTransitionParams);
 		return true;
 	}
@@ -25,9 +25,9 @@ bool UCameraHandle_Default::HandleSwitchToCameraPoint_Implementation(APlayerCont
 	return false;
 }
 
-void UCameraHandle_Default::OnSwitchToCameraPointFinish()
+void UCameraHandle_Default::OnSwitchToCameraPointFinish_Implementation()
 {
-	Super::OnSwitchToCameraPointFinish();
+	Super::OnSwitchToCameraPointFinish_Implementation();
 	OwnerPlayerController->PlayerCameraManager->SetViewTarget(OwnerPlayerController->GetPawn());
 	TimerHandle.Invalidate();
 }

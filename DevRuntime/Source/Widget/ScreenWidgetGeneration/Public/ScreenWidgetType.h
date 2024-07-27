@@ -37,7 +37,7 @@ public:
 	TArray<UCommonButtonEvent*> ModifyEvent;
 
 public:
-	bool CanModify();
+	bool CanModify(bool bSelected);
 };
 
 /**
@@ -76,16 +76,18 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced)
 	UMenuStyle* MenuStyleOverride = nullptr;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	bool bIsHidden = false;
+	// UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	// bool bIsHidden = false;
 
 	/* 按钮事件 */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced)
 	TArray<UCommonButtonEvent*> Events;
 
-	/* 事件修正 */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TArray<FCommonButtonEventModify> ModifyEvents;
+	TArray<FCommonButtonEventModify> ModifyPushEvents;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TArray<FCommonButtonEventModify> ModifyPopEvents;
 
 public:
 	bool operator==(const FMenuInfo InMenuInfo) const

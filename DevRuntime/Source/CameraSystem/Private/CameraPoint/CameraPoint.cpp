@@ -18,5 +18,10 @@ UCameraComponent* ACameraPoint::GetCameraComponent_Implementation()
 
 void ACameraPoint::SetCameraComponent_Implementation(UCameraComponent* InCameraComponent)
 {
+	FVector a = InCameraComponent->GetComponentLocation();
+	FRotator b = InCameraComponent->GetComponentRotation();
+
 	CameraComponent = InCameraComponent;
+	// SetActorLocation(InCameraComponent->GetComponentLocation());
+	// CameraComponent->SetRelativeRotation(InCameraComponent->GetComponentRotation());
 }

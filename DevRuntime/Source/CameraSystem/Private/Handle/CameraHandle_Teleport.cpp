@@ -11,13 +11,13 @@ bool UCameraHandle_Teleport::HandleSwitchToCameraPoint_Implementation(APlayerCon
 {
 	if (Super::HandleSwitchToCameraPoint_Implementation(InPlayerController, InCameraPoint))
 	{
-		OnSwitchToCameraPointFinish();
+		NativeOnSwitchToCameraPointFinish();
 	}
 
 	return false;
 }
 
-void UCameraHandle_Teleport::OnSwitchToCameraPointFinish()
+void UCameraHandle_Teleport::OnSwitchToCameraPointFinish_Implementation()
 {
-	Super::OnSwitchToCameraPointFinish();
+	Super::OnSwitchToCameraPointFinish_Implementation();
 }

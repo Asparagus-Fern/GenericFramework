@@ -26,11 +26,18 @@ void AWorldWidgetPoint::BeginPlay()
 	{
 		WorldWidgetManager->AddWorldWidgetPoint(this);
 	}
+
+	if (bIsAutoActived)
+	{
+		SetIsActive(true);
+	}
 }
 
 void AWorldWidgetPoint::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
+
+	SetIsActive(false);
 
 	if (UWorldWidgetManager* WorldWidgetManager = GetManager<UWorldWidgetManager>())
 	{

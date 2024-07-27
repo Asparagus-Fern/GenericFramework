@@ -41,11 +41,15 @@ void UScreenWidgetManager::NativeOnInactived()
 	MenuGenerateInfos.Reset();
 	GameHUD.Reset();
 
+	CurrentActiveMenuTag = FGameplayTag::EmptyTag;
+	LastActiveMenuTag = FGameplayTag::EmptyTag;
+
+	MenuSelectionChangedHandle.Reset();
 	TargetMenuSelection.Reset();
 	UpdateMenuSelectionHandle.Invalidate();
 	TargetMenuSelectionIndex = 0;
 
-	FScreenWidgetDelegates::OnMenuSelectionChanged.Remove(MenuSelectionChangedHandle);
+	FScreenWidgetDelegates::OnMenuSelectionChanged.RemoveAll(this);
 }
 
 FText UScreenWidgetManager::GetManagerDisplayName()
@@ -325,8 +329,21 @@ void UScreenWidgetManager::SwitchGameMenu(UGameMenuSetting* InGameMenuSetting)
 
 	if (IsValid(GameMenu))
 	{
-		//todo:清除
-		FScreenWidgetDelegates::OnMenuSelectionChanged.Remove(MenuSelectionChangedHandle);
+		for (const auto& Slot : Slots)
+		{
+			Slot.Value->ClearChildren();
+		}
+
+		MenuGenerateInfos.Reset();
+		CurrentActiveMenuTag = FGameplayTag::EmptyTag;
+		LastActiveMenuTag = FGameplayTag::EmptyTag;
+
+		MenuSelectionChangedHandle.Reset();
+		TargetMenuSelection.Reset();
+		UpdateMenuSelectionHandle.Invalidate();
+		TargetMenuSelectionIndex = 0;
+
+		FScreenWidgetDelegates::OnMenuSelectionChanged.RemoveAll(this);
 		FScreenWidgetDelegates::OnMenuCleanup.Broadcast();
 	}
 
@@ -493,12 +510,7 @@ void UScreenWidgetManager::GenerateMenu(FMenuContainerInfo InMenuContainerInfo)
 			/* 添加到CommonButtonGroup */
 			NewMenuGenerateInfo.CommonButtonGroup->AddWidget(MenuStyle);
 
-			/* 构建按钮容器 */
-			if (!MenuInfo.bIsHidden)
-			{
-				MenuContainer->ConstructMenuStyle(MenuStyle);
-			}
-
+			MenuContainer->ConstructMenuStyle(MenuStyle);
 			MenuStyle->NativeConstructMenuStyle(MenuInfo);
 			MenuStyle->NativeOnActived();
 			MenuStyleArr.Add(MenuStyle);
@@ -520,9 +532,53 @@ void UScreenWidgetManager::GenerateMenu(FMenuContainerInfo InMenuContainerInfo)
 	OnMenuGenerate.Broadcast(NewMenuGenerateInfo);
 }
 
+void UScreenWidgetManager::UpdateActiveMenutag()
+{
+	TArray<FGameplayTag> MenuTags;
+	TargetMenuSelection.GenerateKeyArray(MenuTags);
+
+	/* 处理 LastActiveMenuTag 和 CurrentActiveMenuTag 的更新 */
+	if (MenuTags.Num() == 1)
+	{
+		if (TargetMenuSelection.FindRef(MenuTags[0]))
+		{
+			LastActiveMenuTag = CurrentActiveMenuTag;
+			CurrentActiveMenuTag = MenuTags[0];
+		}
+		else
+		{
+			LastActiveMenuTag = CurrentActiveMenuTag;
+
+			if (GetParentMenuStyle(MenuTags[0]))
+			{
+				const FGameplayTag ParentMenuTag = GetParentMenuStyle(MenuTags[0])->GetMenuInfo().MenuTag;
+				CurrentActiveMenuTag = ParentMenuTag.IsValid() ? ParentMenuTag : FGameplayTag::EmptyTag;
+			}
+			else
+			{
+				CurrentActiveMenuTag = FGameplayTag::EmptyTag;
+			}
+		}
+	}
+	else
+	{
+		LastActiveMenuTag = MenuTags[0];
+
+		const FGameplayTag LastMenuTag = MenuTags.Last();
+		if (TargetMenuSelection.FindRef(LastMenuTag))
+		{
+			CurrentActiveMenuTag = LastMenuTag;
+		}
+		else
+		{
+			CurrentActiveMenuTag = FGameplayTag::EmptyTag;
+		}
+	}
+}
+
 void UScreenWidgetManager::OnMenuSelectionChanged(FMenuInfo InMenuInfo, bool bSelection)
 {
-	DEBUG(Debug_UI, Log, TEXT("MenuInfo : %s,Seletion : %d"), *InMenuInfo.MenuMainName.ToString(), bSelection)
+	DEBUG(Debug_UI, Warning, TEXT("MenuInfo : %s,Seletion : %d"), *InMenuInfo.MenuMainName.ToString(), bSelection)
 
 	if (bSelection)
 	{
@@ -546,41 +602,6 @@ void UScreenWidgetManager::OnMenuSelectionChanged(FMenuInfo InMenuInfo, bool bSe
 	}
 }
 
-void UScreenWidgetManager::UpdateActiveMenutag()
-{
-	TArray<FGameplayTag> MenuTags;
-	TargetMenuSelection.GenerateKeyArray(MenuTags);
-
-	/* 处理 LastActiveMenuTag 和 CurrentActiveMenuTag 的更新 */
-	if (MenuTags.Num() == 1)
-	{
-		if (TargetMenuSelection.FindRef(MenuTags[0]))
-		{
-			LastActiveMenuTag = CurrentActiveMenuTag;
-			CurrentActiveMenuTag = MenuTags[0];
-		}
-		else
-		{
-			LastActiveMenuTag = CurrentActiveMenuTag;
-			CurrentActiveMenuTag = FGameplayTag::EmptyTag;
-		}
-	}
-	else
-	{
-		LastActiveMenuTag = MenuTags[0];
-
-		const FGameplayTag LastMenuTag = MenuTags.Last();
-		if (TargetMenuSelection.FindRef(LastMenuTag))
-		{
-			CurrentActiveMenuTag = LastMenuTag;
-		}
-		else
-		{
-			CurrentActiveMenuTag = FGameplayTag::EmptyTag;
-		}
-	}
-}
-
 void UScreenWidgetManager::HandleMenuSelectionChangedNextTick()
 {
 	UpdateActiveMenutag();
@@ -590,21 +611,7 @@ void UScreenWidgetManager::HandleMenuSelectionChangedNextTick()
 		Menu->SetEnableInteraction(false);
 	}
 
-	TArray<FGameplayTag> MenuTags;
-	TargetMenuSelection.GenerateKeyArray(MenuTags);
-	if (TargetMenuSelection.FindRef(MenuTags[0]))
-	{
-		FSimpleMulticastDelegate OnHandleMenuFinish;
-		OnHandleMenuFinish.AddLambda([this]()
-			{
-				HandleMenuSelectionChanged();
-			}
-		);
-
-		InactiveParentMenu(MenuTags[0], OnHandleMenuFinish);
-		return;
-	}
-
+	DEBUG(Debug_UI, Warning, TEXT("CurrentActiveMenuTag : %s , LastActiveMenuTag : %s"), *CurrentActiveMenuTag.ToString(), *LastActiveMenuTag.ToString())
 	HandleMenuSelectionChanged();
 }
 
@@ -633,11 +640,11 @@ void UScreenWidgetManager::HandleMenuSelectionChanged()
 		{
 			InactiveMenu(MenuTag, OnHandleMenuFinish);
 		}
-
-		return;
 	}
-
-	HandleMenuSelectionChangedOnceFinish();
+	else
+	{
+		HandleMenuSelectionChangedOnceFinish();
+	}
 }
 
 void UScreenWidgetManager::ActiveMenu(FGameplayTag InMenuTag, FSimpleMulticastDelegate OnFinish)
@@ -645,6 +652,11 @@ void UScreenWidgetManager::ActiveMenu(FGameplayTag InMenuTag, FSimpleMulticastDe
 	if (const FMenuContainerInfo* MenuContainerInfo = GameMenu->GetContainerInfo(InMenuTag))
 	{
 		GenerateMenu(*GameMenu->GetContainerInfo(InMenuTag));
+	}
+
+	for (const auto& Menu : GetAllMenuStyle())
+	{
+		Menu->SetEnableInteraction(false);
 	}
 
 	if (UMenuStyle* MenuStyle = GetMenuStyle(InMenuTag))
@@ -656,7 +668,7 @@ void UScreenWidgetManager::ActiveMenu(FGameplayTag InMenuTag, FSimpleMulticastDe
 			}
 		);
 
-		MenuStyle->ResponseButtonEvent(false, ECommonButtonResponseEvent::OnSelected, OnHandleFinish);
+		MenuStyle->ResponseButtonEvent(ECommonButtonResponseEvent::OnSelected, OnHandleFinish);
 		return;
 	}
 
@@ -676,60 +688,12 @@ void UScreenWidgetManager::InactiveMenu(FGameplayTag InMenuTag, FSimpleMulticast
 		}
 
 		CloseUserWidget(MenuGenerateInfo.MenuContainerInfo.MenuContainer);
+		MenuGenerateInfos.Remove(MenuGenerateInfo);
 	}
 
 	if (UMenuStyle* MenuStyle = GetMenuStyle(InMenuTag))
 	{
-		FSimpleMulticastDelegate OnHandleFinish;
-		OnHandleFinish.AddLambda([this, InMenuTag, MenuStyle, OnFinish]()
-			{
-				FMenuGenerateInfo MenuGenerateInfo;
-				if (GetMenuGenerateInfo(InMenuTag, MenuGenerateInfo))
-				{
-					MenuGenerateInfos.Remove(MenuGenerateInfo);
-				}
-
-				OnFinish.Broadcast();
-			}
-		);
-
-		MenuStyle->ResponseButtonEvent(false, ECommonButtonResponseEvent::OnDeselected, OnHandleFinish);
-		return;
-	}
-
-	OnFinish.Broadcast();
-}
-
-void UScreenWidgetManager::ActiveParentMenu(FGameplayTag InMenuTag, FSimpleMulticastDelegate OnFinish)
-{
-	if (UMenuStyle* ParentMenuStyle = GetParentMenuStyle(InMenuTag))
-	{
-		FSimpleMulticastDelegate OnHandleFinish;
-		OnHandleFinish.AddLambda([OnFinish]()
-			{
-				OnFinish.Broadcast();
-			}
-		);
-
-		ParentMenuStyle->ResponseButtonEvent(true, ECommonButtonResponseEvent::OnSelected, OnHandleFinish);
-		return;
-	}
-
-	OnFinish.Broadcast();
-}
-
-void UScreenWidgetManager::InactiveParentMenu(FGameplayTag InMenuTag, FSimpleMulticastDelegate OnFinish)
-{
-	if (UMenuStyle* ParentMenuStyle = GetParentMenuStyle(InMenuTag))
-	{
-		FSimpleMulticastDelegate OnHandleFinish;
-		OnHandleFinish.AddLambda([OnFinish]()
-			{
-				OnFinish.Broadcast();
-			}
-		);
-
-		ParentMenuStyle->ResponseButtonEvent(true, ECommonButtonResponseEvent::OnDeselected, OnHandleFinish);
+		MenuStyle->ResponseButtonEvent(ECommonButtonResponseEvent::OnDeselected, OnFinish);
 		return;
 	}
 
@@ -738,10 +702,12 @@ void UScreenWidgetManager::InactiveParentMenu(FGameplayTag InMenuTag, FSimpleMul
 
 void UScreenWidgetManager::HandleMenuSelectionChangedOnceFinish()
 {
-	for (const auto& Menu : GetAllMenuStyle())
+	if (!UpdateMenuSelectionHandle.IsValid())
 	{
-		Menu->SetEnableInteraction(false);
+		return;
 	}
+
+	DEBUG(Debug_UI, Warning, TEXT(""))
 
 	TargetMenuSelectionIndex++;
 	if (TargetMenuSelectionIndex < TargetMenuSelection.GetMaxIndex())
@@ -750,24 +716,6 @@ void UScreenWidgetManager::HandleMenuSelectionChangedOnceFinish()
 	}
 	else
 	{
-		TArray<FGameplayTag> MenuTags;
-		TargetMenuSelection.GenerateKeyArray(MenuTags);
-		if (!MenuTags.IsEmpty())
-		{
-			if (!TargetMenuSelection.FindRef(MenuTags.Last()))
-			{
-				FSimpleMulticastDelegate OnHandleMenuFinish;
-				OnHandleMenuFinish.AddLambda([this]()
-					{
-						HandleMenuSelectionChangedFinish();
-					}
-				);
-
-				ActiveParentMenu(MenuTags.Last(), OnHandleMenuFinish);
-				return;
-			}
-		}
-
 		HandleMenuSelectionChangedFinish();
 	}
 }
@@ -782,6 +730,9 @@ void UScreenWidgetManager::HandleMenuSelectionChangedFinish()
 	{
 		Menu->SetEnableInteraction(true);
 	}
+
+	DEBUG(Debug_UI, Warning, TEXT(""))
+	DEBUG(Debug_UI, Warning, TEXT("===================="))
 }
 
 #undef LOCTEXT_NAMESPACE

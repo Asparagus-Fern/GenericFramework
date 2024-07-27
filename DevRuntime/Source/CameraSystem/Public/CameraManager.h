@@ -7,6 +7,7 @@
 #include "Manager/CoreManager.h"
 #include "CameraManager.generated.h"
 
+class UCameraComponent;
 class UCameraHandle;
 class ACameraPointBase;
 
@@ -37,8 +38,16 @@ public:
 	ACameraPointBase* GetCameraPoint(FGameplayTag InCameraTag) const;
 
 	bool CanSwitchToCamera(FGameplayTag InCameraTag) const;
+	virtual void SwitchToCamera(UCameraComponent* InCameraComponent, TSubclassOf<UCameraHandle> InCameraHandleClass);
+	virtual void SwitchToCamera(UCameraComponent* InCameraComponent, UCameraHandle* SwitchCameraHandle);
+	virtual void SwitchToCamera(FGameplayTag InCameraTag, TSubclassOf<UCameraHandle> InCameraHandleClass);
 	virtual void SwitchToCamera(FGameplayTag InCameraTag, UCameraHandle* SwitchCameraHandle);
+	virtual void SwitchToCamera(ACameraPointBase* InCameraPoint, TSubclassOf<UCameraHandle> InCameraHandleClass);
+	virtual void SwitchToCamera(ACameraPointBase* InCameraPoint, UCameraHandle* SwitchCameraHandle);
+	virtual void SwitchToCamera(APlayerController* PlayerController, FGameplayTag InCameraTag, TSubclassOf<UCameraHandle> InCameraHandleClass);
 	virtual void SwitchToCamera(APlayerController* PlayerController, FGameplayTag InCameraTag, UCameraHandle* SwitchCameraHandle);
+	virtual void SwitchToCamera(APlayerController* PlayerController, ACameraPointBase* InCameraPoint, TSubclassOf<UCameraHandle> InCameraHandleClass);
+	virtual void SwitchToCamera(APlayerController* PlayerController, ACameraPointBase* InCameraPoint, UCameraHandle* SwitchCameraHandle);
 
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Transient)

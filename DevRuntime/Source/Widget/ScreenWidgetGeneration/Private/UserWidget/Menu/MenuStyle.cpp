@@ -55,6 +55,7 @@ void UMenuStyle::NativeConstructMenuStyle(FMenuInfo InMenuInfo)
 {
 	MenuInfo = InMenuInfo;
 	Events = MenuInfo.Events;
-	ModifyEvents = MenuInfo.ModifyEvents;
+	ModifyPushEvents = MenuInfo.ModifyPushEvents;
+	ModifyPopEvents = MenuInfo.ModifyPopEvents;
 	ConstructMenuStyle(InMenuInfo);
 }

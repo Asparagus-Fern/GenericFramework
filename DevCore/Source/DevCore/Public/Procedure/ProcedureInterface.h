@@ -33,7 +33,7 @@ public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Procedure Interface")
 	void OnInactived();
 	virtual void NativeOnInactived();
-
+	
 public:
 	virtual int32 GetProcedureOrder() { return 0; }
 	virtual bool GetIsAsync() { return false; }

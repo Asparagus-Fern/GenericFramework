@@ -19,35 +19,27 @@ FScreenWidgetDelegates::FMenuDelegate FScreenWidgetDelegates::OnMenuClicked;
 FScreenWidgetDelegates::FMenuSelectionDelegate FScreenWidgetDelegates::OnMenuSelectionChanged;
 FScreenWidgetDelegates::FWidgetAnimationDelegate FScreenWidgetDelegates::OnWidgetAnimationFinish;
 
-bool FCommonButtonEventModify::CanModify()
+bool FCommonButtonEventModify::CanModify(bool bSelected)
 {
 	const FGameplayTag LastActiveMenuTag = GetManager<UScreenWidgetManager>()->GetLastActiveMenuTag();
 	const FGameplayTag CurrentActiveMenuTag = GetManager<UScreenWidgetManager>()->GetCurrentActiveMenuTag();
+	const FGameplayTag CompareMenuTag = bSelected ? (LastActiveMenuTag.IsValid() ? LastActiveMenuTag : CurrentActiveMenuTag) : CurrentActiveMenuTag;
+
+	if (!CompareMenuTag.IsValid())
+	{
+		return false;
+	}
 
 	if (bMatch)
 	{
 		for (const auto& MenuTag : MenuTags)
 		{
-			if (LastActiveMenuTag.IsValid())
-			{
-				return LastActiveMenuTag.MatchesTag(MenuTag);
-			}
-			else
-			{
-				return CurrentActiveMenuTag.MatchesTag(MenuTag);
-			}
+			return CompareMenuTag.MatchesTag(MenuTag);
 		}
 	}
 	else
 	{
-		if (LastActiveMenuTag.IsValid())
-		{
-			return MenuTags.Contains(LastActiveMenuTag);
-		}
-		else
-		{
-			return MenuTags.Contains(CurrentActiveMenuTag);
-		}
+		return MenuTags.Contains(CompareMenuTag);
 	}
 
 	return false;

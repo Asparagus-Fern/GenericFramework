@@ -11,7 +11,7 @@
 
 ACameraPointBase::ACameraPointBase()
 {
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 #if WITH_EDITORONLY_DATA
 	bIsSpatiallyLoaded = true;
@@ -21,12 +21,20 @@ ACameraPointBase::ACameraPointBase()
 void ACameraPointBase::BeginPlay()
 {
 	Super::BeginPlay();
-	GetManager<UCameraManager>()->AddCameraPoint(CameraTag, this);
+
+	if (CameraTag.IsValid())
+	{
+		GetManager<UCameraManager>()->AddCameraPoint(CameraTag, this);
+	}
 }
 
 void ACameraPointBase::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-	GetManager<UCameraManager>()->RemoveCameraPoint(CameraTag);
+	if (CameraTag.IsValid())
+	{
+		GetManager<UCameraManager>()->RemoveCameraPoint(CameraTag);
+	}
+
 	Super::EndPlay(EndPlayReason);
 }
 

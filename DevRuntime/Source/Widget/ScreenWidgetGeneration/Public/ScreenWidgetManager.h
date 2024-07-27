@@ -129,14 +129,13 @@ protected:
 	FTimerHandle UpdateMenuSelectionHandle;
 	int32 TargetMenuSelectionIndex = 0;
 
-	virtual void OnMenuSelectionChanged(FMenuInfo InMenuInfo, bool bSelection);
 	virtual void UpdateActiveMenutag();
+	virtual void OnMenuSelectionChanged(FMenuInfo InMenuInfo, bool bSelection);
+
 	virtual void HandleMenuSelectionChangedNextTick();
 	virtual void HandleMenuSelectionChanged();
 	virtual void ActiveMenu(FGameplayTag InMenuTag, FSimpleMulticastDelegate OnFinish = FSimpleMulticastDelegate());
 	virtual void InactiveMenu(FGameplayTag InMenuTag, FSimpleMulticastDelegate OnFinish = FSimpleMulticastDelegate());
-	virtual void ActiveParentMenu(FGameplayTag InMenuTag, FSimpleMulticastDelegate OnFinish = FSimpleMulticastDelegate());
-	virtual void InactiveParentMenu(FGameplayTag InMenuTag, FSimpleMulticastDelegate OnFinish = FSimpleMulticastDelegate());
 	virtual void HandleMenuSelectionChangedOnceFinish();
 	virtual void HandleMenuSelectionChangedFinish();
 };

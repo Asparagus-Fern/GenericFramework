@@ -7,6 +7,7 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "BPFunctions_Camera.generated.h"
 
+class UCameraComponent;
 class UCameraHandle;
 class ACameraPointBase;
 
@@ -19,12 +20,6 @@ class CAMERASYSTEM_API UBPFunctions_Camera : public UBlueprintFunctionLibrary
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintCallable, meta=(GameplayTagFilter="Camera"))
-	static void AddCameraPoint(FGameplayTag InCameraTag, ACameraPointBase* InCameraPoint);
-
-	UFUNCTION(BlueprintCallable, meta=(GameplayTagFilter="Camera"))
-	static void RemoveCameraPoint(FGameplayTag InCameraTag);
-
 	UFUNCTION(BlueprintPure, meta=(GameplayTagFilter="Camera"))
 	static ACameraPointBase* GetCameraPoint(FGameplayTag InCameraTag);
 
@@ -32,11 +27,14 @@ public:
 	static bool CanSwitchToCamera(FGameplayTag InCameraTag);
 
 	UFUNCTION(BlueprintCallable, meta=(GameplayTagFilter="Camera"))
-	static void SwitchToCameraByHandle(FGameplayTag InCameraTag, TSubclassOf<UCameraHandle> SwitchCameraHandleClass);
+	static void SwitchToCameraByComponentClass(UCameraComponent* InComponent, TSubclassOf<UCameraHandle> SwitchCameraHandleClass);
 
 	UFUNCTION(BlueprintCallable, meta=(GameplayTagFilter="Camera"))
-	static void SwitchToCamera(FGameplayTag InCameraTag, UCameraHandle* SwitchCameraHandle);
+	static void SwitchToCameraByComponent(UCameraComponent* InComponent, UCameraHandle* SwitchCameraHandle);
+	
+	UFUNCTION(BlueprintCallable, meta=(GameplayTagFilter="Camera"))
+	static void SwitchToCameraByHandleClass(FGameplayTag InCameraTag, TSubclassOf<UCameraHandle> SwitchCameraHandleClass);
 
 	UFUNCTION(BlueprintCallable, meta=(GameplayTagFilter="Camera"))
-	static void SwitchToCameraByPlayerController(APlayerController* PlayerController, FGameplayTag InCameraTag, UCameraHandle* SwitchCameraHandle);
+	static void SwitchToCameraByHandle(FGameplayTag InCameraTag, UCameraHandle* SwitchCameraHandle);
 };

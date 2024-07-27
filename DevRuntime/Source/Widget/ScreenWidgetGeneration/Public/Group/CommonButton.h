@@ -63,7 +63,10 @@ public:
 	TArray<UCommonButtonEvent*> Events;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<FCommonButtonEventModify> ModifyEvents;
+	TArray<FCommonButtonEventModify> ModifyPushEvents;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<FCommonButtonEventModify> ModifyPopEvents;
 
 public:
 	UFUNCTION(BlueprintCallable)
@@ -77,14 +80,13 @@ protected:
 	FOnButtonEventHandleFinish OnButtonEventHandleFinish;
 
 public:
-	void ResponseButtonEvent(bool IsCheckPersistent, ECommonButtonResponseEvent InResponseEvent, const FSimpleMulticastDelegate& OnFinish = FSimpleMulticastDelegate());
+	void ResponseButtonEvent(ECommonButtonResponseEvent InResponseEvent, const FSimpleMulticastDelegate& OnFinish = FSimpleMulticastDelegate());
 
 protected:
-	TArray<FProcedureInterfaceHandle> GetResponseProcedureInterfaceHandles(bool IsCheckPersistent, ECommonButtonResponseEvent InResponseEvent);
-	TArray<FProcedureInterfaceHandle> GetResponseEventHandles(ECommonButtonResponseEvent InResponseEvent);
-	TArray<FProcedureInterfaceHandle> GetResponseModifyEventHandles(ECommonButtonResponseEvent InResponseEvent);
-	TArray<UCommonButtonEvent*> GetResponseEvents(ECommonButtonResponseEvent InResponseEvent);
-	TArray<UCommonButtonEvent*> GetResponseModifyEvents(ECommonButtonResponseEvent InResponseEvent);
+	virtual TArray<FProcedureInterfaceHandle> GetResponseEventHandles(ECommonButtonResponseEvent InResponseEvent);
+	virtual TArray<FProcedureInterfaceHandle> GetResponseModifyEventHandles(ECommonButtonResponseEvent InResponseEvent);
+	virtual TArray<UCommonButtonEvent*> GetResponseEvents(ECommonButtonResponseEvent InResponseEvent);
+	virtual TArray<UCommonButtonEvent*> GetResponseModifyEvents(ECommonButtonResponseEvent InResponseEvent);
 
 	/* IWidgetAnimationInterface */
 public:
