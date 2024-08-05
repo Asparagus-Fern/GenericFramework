@@ -26,10 +26,16 @@ public:
 	bool HasAnimationEvent() const;
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Widget Animation Interface")
-	UWidgetAnimationEvent* GetAnimationEvent() const;
+	UWidgetAnimationEvent* GetActiveAnimationEvent() const;
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Widget Animation Interface")
-	void SetAnimationEvent(UWidgetAnimationEvent* InAnimationEvent);
+	void SetActiveAnimationEvent(UWidgetAnimationEvent* InAnimationEvent);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Widget Animation Interface")
+	UWidgetAnimationEvent* GetInactiveAnimationEvent() const;
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Widget Animation Interface")
+	void SetInactiveAnimationEvent(UWidgetAnimationEvent* InAnimationEvent);
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Widget Animation Interface")
 	void PlayAnimationEvent(bool InIsActive);

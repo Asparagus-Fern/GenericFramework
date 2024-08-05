@@ -29,18 +29,9 @@
 		{
 			"Name": "ModularGameplay",
 			"Enabled": true
-		},
-		{
-			"Name": "UltraDynamicSky",
-			"Enabled": true
 		}
 	],
 	"Modules": [
-		{
-			"Name": "SlateWidgetGeneration",
-			"Type": "Runtime",
-			"LoadingPhase": "PreDefault"
-		},
 		{
 			"Name": "LevelStreaming",
 			"Type": "Runtime",

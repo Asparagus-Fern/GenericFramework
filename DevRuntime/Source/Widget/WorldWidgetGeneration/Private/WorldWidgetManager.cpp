@@ -12,8 +12,7 @@
 #include "Components/CanvasPanelSlot.h"
 #include "Manager/ManagerGlobal.h"
 #include "Procedure/ProcedureManager.h"
-#include "Widget/TagNameSlot.h"
-
+#include "UWidget/GameplayTagSlot.h"
 
 UWorldWidgetPanel::UWorldWidgetPanel(const FObjectInitializer& ObjectInitializer)
 {
@@ -414,7 +413,7 @@ TArray<AWorldWidgetPoint*> UWorldWidgetManager::GetWorldWidgetPoints(FGameplayTa
 
 void UWorldWidgetManager::GenerateWorldWidgetPanel()
 {
-	UTagNameSlot* Slot = GetManager<UScreenWidgetManager>()->GetSlot(FGameplayTag::RequestGameplayTag(FName("HUD.Main.WorldWidget")));
+	UGameplayTagSlot* Slot = GetManager<UScreenWidgetManager>()->GetSlot(FGameplayTag::RequestGameplayTag(FName("HUD.Main.WorldWidget")));
 	if (IsValid(Slot))
 	{
 		UWorldWidgetPanel* NewWorldWidgetPanel = CreateWorldWidgetPanel();

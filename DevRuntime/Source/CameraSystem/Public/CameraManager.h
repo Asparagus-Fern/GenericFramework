@@ -37,6 +37,7 @@ public:
 	virtual void RemoveCameraPoint(FGameplayTag InCameraTag);
 	ACameraPointBase* GetCameraPoint(FGameplayTag InCameraTag) const;
 
+	/* todo: GC Error */
 	bool CanSwitchToCamera(FGameplayTag InCameraTag) const;
 	virtual void SwitchToCamera(UCameraComponent* InCameraComponent, TSubclassOf<UCameraHandle> InCameraHandleClass);
 	virtual void SwitchToCamera(UCameraComponent* InCameraComponent, UCameraHandle* SwitchCameraHandle);

@@ -10,28 +10,6 @@
  * 
  */
 USTRUCT(BlueprintType)
-struct FOpenUserWidgetHandle
-{
-	GENERATED_BODY()
-
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	bool bInstance = false;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditConditionHides, EditCondition = "!bInstance"))
-	TSubclassOf<UUserWidgetBase> WidgetClass = nullptr;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Instanced, meta=(EditConditionHides, EditCondition = "bInstance"))
-	UUserWidgetBase* Widget = nullptr;
-
-public:
-	UUserWidgetBase* GetOpenWidget() const;
-};
-
-/**
- * 
- */
-USTRUCT(BlueprintType)
 struct FCloseUserWidgetHandle
 {
 	GENERATED_BODY()
@@ -57,13 +35,13 @@ class SCREENWIDGETGENERATION_API UCBE_HandleUserWidget : public UCommonButtonEve
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="OnActived")
-	TArray<FOpenUserWidgetHandle> ActiveOpenWidgets;
+	TArray<FWidgetContainer> ActiveOpenWidgets;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="OnActived")
 	TArray<FCloseUserWidgetHandle> ActiveCloseWidgets;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="OnInactived")
-	TArray<FOpenUserWidgetHandle> InactiveOpenWidgets;
+	TArray<FWidgetContainer> InactiveOpenWidgets;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="OnInactived")
 	TArray<FCloseUserWidgetHandle> InactiveCloseWidgets;

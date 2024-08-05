@@ -16,7 +16,7 @@
 #include "UserWidget/HUD/GameHUD.h"
 #include "UserWidget/Menu/MenuContainer.h"
 #include "UserWidget/Menu/MenuStyle.h"
-#include "Widget/TagNameSlot.h"
+#include "UWidget/GameplayTagSlot.h"
 
 #define LOCTEXT_NAMESPACE "UScreenWidgetManager"
 
@@ -57,7 +57,7 @@ FText UScreenWidgetManager::GetManagerDisplayName()
 	return LOCTEXT("DisplayName", "Screen Widget Manager");
 }
 
-void UScreenWidgetManager::RegisterSlot(UTagNameSlot* InSlot)
+void UScreenWidgetManager::RegisterSlot(UGameplayTagSlot* InSlot)
 {
 	if (!IsValid(InSlot) || !InSlot->SlotTag.IsValid() || Slots.Contains(InSlot->SlotTag))
 	{
@@ -67,7 +67,7 @@ void UScreenWidgetManager::RegisterSlot(UTagNameSlot* InSlot)
 	Slots.Add(InSlot->SlotTag, InSlot);
 }
 
-void UScreenWidgetManager::UnRegisterSlot(const UTagNameSlot* InSlot)
+void UScreenWidgetManager::UnRegisterSlot(const UGameplayTagSlot* InSlot)
 {
 	if (!IsValid(InSlot) || !InSlot->SlotTag.IsValid() || !Slots.Contains(InSlot->SlotTag))
 	{
@@ -83,7 +83,7 @@ void UScreenWidgetManager::UnRegisterSlot(const UTagNameSlot* InSlot)
 	Slots.Remove(InSlot->SlotTag);
 }
 
-UTagNameSlot* UScreenWidgetManager::GetSlot(const FGameplayTag InSlotTag) const
+UGameplayTagSlot* UScreenWidgetManager::GetSlot(const FGameplayTag InSlotTag) const
 {
 	if (!InSlotTag.IsValid())
 	{
@@ -202,7 +202,7 @@ void UScreenWidgetManager::OpenUserWidget(UUserWidgetBase* InWidget, FSimpleMult
 	}
 
 	const FGameplayTag SlotTag = InWidget->SlotTag;
-	UTagNameSlot* Slot = GetSlot(SlotTag);
+	UGameplayTagSlot* Slot = GetSlot(SlotTag);
 	if (IsValid(Slot))
 	{
 		/* 如果是在同一个Slot */
@@ -239,7 +239,7 @@ void UScreenWidgetManager::CloseUserWidget(TArray<UUserWidgetBase*> InWidgets)
 
 void UScreenWidgetManager::CloseUserWidget(const FGameplayTag InSlotTag, FSimpleMulticastDelegate OnFinish)
 {
-	UTagNameSlot* Slot = GetSlot(InSlotTag);
+	UGameplayTagSlot* Slot = GetSlot(InSlotTag);
 	if (IsValid(Slot))
 	{
 		UUserWidgetBase* RemoveWidget = GetSlotWidget(InSlotTag);
@@ -582,7 +582,7 @@ void UScreenWidgetManager::OnMenuSelectionChanged(FMenuInfo InMenuInfo, bool bSe
 
 	if (bSelection)
 	{
-		TargetMenuSelection.Add(InMenuInfo.MenuTag, true);
+		TargetMenuSelection.FindOrAdd(InMenuInfo.MenuTag) = true;
 	}
 	else
 	{
@@ -593,7 +593,7 @@ void UScreenWidgetManager::OnMenuSelectionChanged(FMenuInfo InMenuInfo, bool bSe
 			MenuGenerateInfo.CommonButtonGroup->DeselectAll();
 		}
 
-		TargetMenuSelection.Add(InMenuInfo.MenuTag, false);
+		TargetMenuSelection.FindOrAdd(InMenuInfo.MenuTag) = false;
 	}
 
 	if (!UpdateMenuSelectionHandle.IsValid() && !TargetMenuSelection.IsEmpty())
@@ -677,23 +677,30 @@ void UScreenWidgetManager::ActiveMenu(FGameplayTag InMenuTag, FSimpleMulticastDe
 
 void UScreenWidgetManager::InactiveMenu(FGameplayTag InMenuTag, FSimpleMulticastDelegate OnFinish)
 {
-	FMenuGenerateInfo MenuGenerateInfo;
-	if (GetMenuGenerateInfo(InMenuTag, MenuGenerateInfo))
-	{
-		for (const auto& GarbageMenuStyle : MenuGenerateInfo.MenuStyles)
-		{
-			GarbageMenuStyle->NativeOnDestroy();
-			GarbageMenuStyle->RemoveFromParent();
-			GarbageMenuStyle->MarkAsGarbage();
-		}
-
-		CloseUserWidget(MenuGenerateInfo.MenuContainerInfo.MenuContainer);
-		MenuGenerateInfos.Remove(MenuGenerateInfo);
-	}
-
 	if (UMenuStyle* MenuStyle = GetMenuStyle(InMenuTag))
 	{
-		MenuStyle->ResponseButtonEvent(ECommonButtonResponseEvent::OnDeselected, OnFinish);
+		FSimpleMulticastDelegate OnHandleFinish;
+		OnHandleFinish.AddLambda([this,OnFinish,InMenuTag]()
+			{
+				FMenuGenerateInfo MenuGenerateInfo;
+				if (GetMenuGenerateInfo(InMenuTag, MenuGenerateInfo))
+				{
+					for (const auto& GarbageMenuStyle : MenuGenerateInfo.MenuStyles)
+					{
+						GarbageMenuStyle->NativeOnDestroy();
+						GarbageMenuStyle->RemoveFromParent();
+						GarbageMenuStyle->MarkAsGarbage();
+					}
+
+					CloseUserWidget(MenuGenerateInfo.MenuContainerInfo.MenuContainer);
+					MenuGenerateInfos.Remove(MenuGenerateInfo);
+				}
+
+				OnFinish.Broadcast();
+			}
+		);
+
+		MenuStyle->ResponseButtonEvent(ECommonButtonResponseEvent::OnDeselected, OnHandleFinish);
 		return;
 	}
 

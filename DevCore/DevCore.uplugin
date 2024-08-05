@@ -17,9 +17,18 @@
     {
       "Name": "EnhancedInput",
       "Enabled": true
+    },
+    {
+      "Name": "CommonUI",
+      "Enabled": true
     }
   ],
   "Modules": [
+    {
+      "Name": "DevSlateCore",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
+    },
     {
       "Name": "DevCore",
       "Type": "Runtime",

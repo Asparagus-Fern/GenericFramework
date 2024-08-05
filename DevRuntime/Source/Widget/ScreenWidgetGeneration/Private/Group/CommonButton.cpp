@@ -91,7 +91,7 @@ void UCommonButton::NativeOnActived()
 	IProcedureInterface::NativeOnActived();
 	IProcedureInterface::Execute_OnActived(this);
 
-	Execute_PlayAnimationEvent(this, true);
+	// Execute_PlayAnimationEvent(this, true);
 }
 
 void UCommonButton::NativeOnInactived()
@@ -99,7 +99,7 @@ void UCommonButton::NativeOnInactived()
 	IProcedureInterface::NativeOnInactived();
 	IProcedureInterface::Execute_OnInactived(this);
 
-	Execute_PlayAnimationEvent(this, false);
+	// Execute_PlayAnimationEvent(this, false);
 }
 
 void UCommonButton::NativeOnCreate()
@@ -145,6 +145,7 @@ void UCommonButton::ResponseButtonEvent(ECommonButtonResponseEvent InResponseEve
 
 	if (!ProcedureInterfaceHandles.IsEmpty())
 	{
+		/* todo:当事件被重置时，ScreenWidgetManager仍在等待完成 */
 		if (IsValid(ActiveProcedureHandle))
 		{
 			ActiveProcedureHandle->Reset();
@@ -221,37 +222,37 @@ TArray<UCommonButtonEvent*> UCommonButton::GetResponseModifyEvents(ECommonButton
 	return ResponseEvents;
 }
 
-UWidgetAnimationEvent* UCommonButton::GetAnimationEvent_Implementation() const
-{
-	return AnimationEvent;
-}
-
-void UCommonButton::SetAnimationEvent_Implementation(UWidgetAnimationEvent* InAnimationEvent)
-{
-	IWidgetAnimationInterface::SetAnimationEvent_Implementation(InAnimationEvent);
-	AnimationEvent = InAnimationEvent;
-}
-
-bool UCommonButton::HasAnimationEvent_Implementation() const
-{
-	return IsValid(AnimationEvent);
-}
-
-void UCommonButton::PlayAnimationEvent_Implementation(bool InIsActive)
-{
-	IWidgetAnimationInterface::PlayAnimationEvent_Implementation(InIsActive);
-
-	if (IsValid(AnimationEvent))
-	{
-		AnimationEvent->SetTargetWidget(this);
-
-		if (InIsActive)
-		{
-			AnimationEvent->NativeOnActived();
-		}
-		else
-		{
-			AnimationEvent->NativeOnInactived();
-		}
-	}
-}
+// UWidgetAnimationEvent* UCommonButton::GetAnimationEvent_Implementation() const
+// {
+// 	return AnimationEvent;
+// }
+//
+// void UCommonButton::SetAnimationEvent_Implementation(UWidgetAnimationEvent* InAnimationEvent)
+// {
+// 	IWidgetAnimationInterface::SetAnimationEvent_Implementation(InAnimationEvent);
+// 	AnimationEvent = InAnimationEvent;
+// }
+//
+// bool UCommonButton::HasAnimationEvent_Implementation() const
+// {
+// 	return IsValid(AnimationEvent);
+// }
+//
+// void UCommonButton::PlayAnimationEvent_Implementation(bool InIsActive)
+// {
+// 	IWidgetAnimationInterface::PlayAnimationEvent_Implementation(InIsActive);
+//
+// 	if (IsValid(AnimationEvent))
+// 	{
+// 		AnimationEvent->SetTargetWidget(this);
+//
+// 		if (InIsActive)
+// 		{
+// 			AnimationEvent->NativeOnActived();
+// 		}
+// 		else
+// 		{
+// 			AnimationEvent->NativeOnInactived();
+// 		}
+// 	}
+// }

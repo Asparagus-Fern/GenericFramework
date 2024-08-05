@@ -23,7 +23,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnButtonEventHandleFinish);
 UCLASS()
 class SCREENWIDGETGENERATION_API UCommonButton : public UCommonButtonBase
                                                  , public IProcedureInterface
-                                                 , public IWidgetAnimationInterface
+	// , public IWidgetAnimationInterface
 {
 	GENERATED_BODY()
 
@@ -82,6 +82,7 @@ protected:
 public:
 	void ResponseButtonEvent(ECommonButtonResponseEvent InResponseEvent, const FSimpleMulticastDelegate& OnFinish = FSimpleMulticastDelegate());
 
+	/* todo:修正事件可以为空，不能以数组是否为空来判断是否被修正 */
 protected:
 	virtual TArray<FProcedureInterfaceHandle> GetResponseEventHandles(ECommonButtonResponseEvent InResponseEvent);
 	virtual TArray<FProcedureInterfaceHandle> GetResponseModifyEventHandles(ECommonButtonResponseEvent InResponseEvent);
@@ -90,10 +91,10 @@ protected:
 
 	/* IWidgetAnimationInterface */
 public:
-	virtual UWidgetAnimationEvent* GetAnimationEvent_Implementation() const override;
-	virtual void SetAnimationEvent_Implementation(UWidgetAnimationEvent* InAnimationEvent) override;
-	virtual bool HasAnimationEvent_Implementation() const override;
-	virtual void PlayAnimationEvent_Implementation(bool InIsActive) override;
+	// virtual UWidgetAnimationEvent* GetAnimationEvent_Implementation() const override;
+	// virtual void SetAnimationEvent_Implementation(UWidgetAnimationEvent* InAnimationEvent) override;
+	// virtual bool HasAnimationEvent_Implementation() const override;
+	// virtual void PlayAnimationEvent_Implementation(bool InIsActive) override;
 
 public:
 	UPROPERTY(EditAnywhere, Instanced)

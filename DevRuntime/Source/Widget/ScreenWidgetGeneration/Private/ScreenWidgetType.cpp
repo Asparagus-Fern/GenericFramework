@@ -4,10 +4,10 @@
 #include "Group/CommonButtonGroup.h"
 #include "Groups/CommonButtonGroupBase.h"
 #include "Manager/ManagerGlobal.h"
+#include "UserWidget/Base/UserWidgetBase.h"
 #include "UserWidget/Menu/MenuStyle.h"
 
 UE_DEFINE_GAMEPLAY_TAG(TAG_UMG, "UMG");
-UE_DEFINE_GAMEPLAY_TAG(TAG_HUD, "HUD");
 UE_DEFINE_GAMEPLAY_TAG(TAG_Menu, "Menu");
 
 FSimpleMulticastDelegate FScreenWidgetDelegates::OnHUDCreated;
@@ -18,6 +18,26 @@ FScreenWidgetDelegates::FUserWidgetDelegate FScreenWidgetDelegates::OnWidgetClos
 FScreenWidgetDelegates::FMenuDelegate FScreenWidgetDelegates::OnMenuClicked;
 FScreenWidgetDelegates::FMenuSelectionDelegate FScreenWidgetDelegates::OnMenuSelectionChanged;
 FScreenWidgetDelegates::FWidgetAnimationDelegate FScreenWidgetDelegates::OnWidgetAnimationFinish;
+
+UUserWidgetBase* FWidgetContainer::GetWidget() const
+{
+	if (bInstance)
+	{
+		if (IsValid(Widget))
+		{
+			return Widget;
+		}
+	}
+	else
+	{
+		if (WidgetClass)
+		{
+			return CreateWidget<UUserWidgetBase>(GetManager<UScreenWidgetManager>()->GetWorld(), WidgetClass);
+		}
+	}
+
+	return nullptr;
+}
 
 bool FCommonButtonEventModify::CanModify(bool bSelected)
 {
@@ -34,7 +54,10 @@ bool FCommonButtonEventModify::CanModify(bool bSelected)
 	{
 		for (const auto& MenuTag : MenuTags)
 		{
-			return CompareMenuTag.MatchesTag(MenuTag);
+			if (CompareMenuTag.MatchesTag(MenuTag))
+			{
+				return true;
+			}
 		}
 	}
 	else

@@ -40,65 +40,18 @@ void UUserWidgetBase::NativeDestruct()
 	Super::NativeDestruct();
 }
 
-FGameplayTag UUserWidgetBase::GetSelfTag() const
-{
-	return SelfTag;
-}
-
-FGameplayTag UUserWidgetBase::GetSlotTag() const
-{
-	return SlotTag;
-}
-
-UWidgetAnimationEvent* UUserWidgetBase::GetAnimationEvent_Implementation() const
-{
-	return AnimationEvent;
-}
-
-void UUserWidgetBase::SetAnimationEvent_Implementation(UWidgetAnimationEvent* InAnimationEvent)
-{
-	IWidgetAnimationInterface::SetAnimationEvent_Implementation(InAnimationEvent);
-	AnimationEvent = InAnimationEvent;
-}
-
-bool UUserWidgetBase::HasAnimationEvent_Implementation() const
-{
-	return IsValid(AnimationEvent);
-}
-
-void UUserWidgetBase::PlayAnimationEvent_Implementation(bool InIsActive)
-{
-	IWidgetAnimationInterface::PlayAnimationEvent_Implementation(InIsActive);
-
-	if (IsValid(AnimationEvent))
-	{
-		AnimationEvent->SetTargetWidget(this);
-
-		if (InIsActive)
-		{
-			AnimationEvent->NativeOnActived();
-		}
-		else
-		{
-			AnimationEvent->NativeOnInactived();
-		}
-	}
-}
-
 void UUserWidgetBase::NativeOnActived()
 {
 	IProcedureInterface::NativeOnActived();
 	IProcedureInterface::Execute_OnActived(this);
-
-	Execute_PlayAnimationEvent(this, true);
+	IWidgetAnimationInterface::Execute_PlayAnimationEvent(this, true);
 }
 
 void UUserWidgetBase::NativeOnInactived()
 {
 	IProcedureInterface::NativeOnInactived();
 	IProcedureInterface::Execute_OnInactived(this);
-
-	Execute_PlayAnimationEvent(this, false);
+	IWidgetAnimationInterface::Execute_PlayAnimationEvent(this, false);
 }
 
 void UUserWidgetBase::NativeOnCreate()
@@ -117,4 +70,48 @@ void UUserWidgetBase::NativeOnRefresh()
 {
 	IProcedureBaseInterface::NativeOnRefresh();
 	Execute_OnRefresh(this);
+}
+
+bool UUserWidgetBase::HasAnimationEvent_Implementation() const
+{
+	return IsValid(ActiveAnimationEvent) || IsValid(InactiveAnimationEvent);
+}
+
+UWidgetAnimationEvent* UUserWidgetBase::GetActiveAnimationEvent_Implementation() const
+{
+	return ActiveAnimationEvent;
+}
+
+void UUserWidgetBase::SetActiveAnimationEvent_Implementation(UWidgetAnimationEvent* InAnimationEvent)
+{
+	IWidgetAnimationInterface::SetActiveAnimationEvent_Implementation(InAnimationEvent);
+	ActiveAnimationEvent = InAnimationEvent;
+}
+
+UWidgetAnimationEvent* UUserWidgetBase::GetInactiveAnimationEvent_Implementation() const
+{
+	return InactiveAnimationEvent;
+}
+
+void UUserWidgetBase::SetInactiveAnimationEvent_Implementation(UWidgetAnimationEvent* InAnimationEvent)
+{
+	IWidgetAnimationInterface::SetInactiveAnimationEvent_Implementation(InAnimationEvent);
+	InactiveAnimationEvent = InAnimationEvent;
+}
+
+void UUserWidgetBase::PlayAnimationEvent_Implementation(bool InIsActive)
+{
+	IWidgetAnimationInterface::PlayAnimationEvent_Implementation(InIsActive);
+
+	if (IsValid(ActiveAnimationEvent))
+	{
+		if (InIsActive)
+		{
+			ActiveAnimationEvent->PlayAnimation(this);
+		}
+		else
+		{
+			InactiveAnimationEvent->PlayAnimation(this);
+		}
+	}
 }

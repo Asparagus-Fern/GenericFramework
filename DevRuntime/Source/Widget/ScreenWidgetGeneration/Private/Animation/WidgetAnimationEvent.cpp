@@ -5,38 +5,6 @@
 
 #include "ScreenWidgetType.h"
 
-void UWidgetAnimationEvent::NativeOnActived()
+void UWidgetAnimationEvent::PlayAnimation_Implementation(UWidget* TargetWidget)
 {
-	IProcedureInterface::NativeOnActived();
-	IProcedureInterface::Execute_OnActived(this);
-}
-
-void UWidgetAnimationEvent::NativeOnInactived()
-{
-	IProcedureInterface::NativeOnInactived();
-	IProcedureInterface::Execute_OnInactived(this);
-}
-
-void UWidgetAnimationEvent::RequestAnimationFinish()
-{
-	if (GetIsActive())
-	{
-		RequestActivateFinish();
-	}
-	else
-	{
-		RequestInactivateFinish();
-	}
-
-	FScreenWidgetDelegates::OnWidgetAnimationFinish.Broadcast(TargetWidget);
-}
-
-UWidget* UWidgetAnimationEvent::GetTargetWidget() const
-{
-	return TargetWidget;
-}
-
-void UWidgetAnimationEvent::SetTargetWidget(UWidget* InWidget)
-{
-	TargetWidget = InWidget;
 }

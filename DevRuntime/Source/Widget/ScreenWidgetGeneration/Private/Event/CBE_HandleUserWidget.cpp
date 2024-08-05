@@ -7,26 +7,6 @@
 #include "Manager/ManagerGlobal.h"
 #include "UserWidget/Base/UserWidgetBase.h"
 
-UUserWidgetBase* FOpenUserWidgetHandle::GetOpenWidget() const
-{
-	if (bInstance)
-	{
-		if (IsValid(Widget))
-		{
-			return Widget;
-		}
-	}
-	else
-	{
-		if (WidgetClass)
-		{
-			return CreateWidget<UUserWidgetBase>(GetManager<UScreenWidgetManager>()->GetWorld(), WidgetClass);
-		}
-	}
-
-	return nullptr;
-}
-
 FGameplayTag FCloseUserWidgetHandle::GetCloseWidgetSlotTag() const
 {
 	if (SlotTag.IsValid())
@@ -60,7 +40,7 @@ void UCBE_HandleUserWidget::NativeOnActived()
 
 	for (auto& ActiveOpenWidget : ActiveOpenWidgets)
 	{
-		UUserWidgetBase* OpenWidget = ActiveOpenWidget.GetOpenWidget();
+		UUserWidgetBase* OpenWidget = ActiveOpenWidget.GetWidget();
 		if (IsValid(OpenWidget))
 		{
 			GetManager<UScreenWidgetManager>()->OpenUserWidget(OpenWidget);
@@ -83,7 +63,7 @@ void UCBE_HandleUserWidget::NativeOnInactived()
 
 	for (auto& ActiveOpenWidget : InactiveOpenWidgets)
 	{
-		UUserWidgetBase* OpenWidget = ActiveOpenWidget.GetOpenWidget();
+		UUserWidgetBase* OpenWidget = ActiveOpenWidget.GetWidget();
 		if (IsValid(OpenWidget))
 		{
 			GetManager<UScreenWidgetManager>()->OpenUserWidget(OpenWidget);

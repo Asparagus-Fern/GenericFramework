@@ -9,8 +9,8 @@
 #include "Procedure/ProcedureType.h"
 #include "ScreenWidgetManager.generated.h"
 
+class UGameplayTagSlot;
 class UWidget;
-class UTagNameSlot;
 class UGameWidgetSetting;
 class UGameLoading;
 class UGameHUD;
@@ -36,21 +36,21 @@ public:
 public:
 	virtual FText GetManagerDisplayName() override;
 
-	/* UTagNameSlot */
+	/* UGameplayTagSlot */
 protected:
 	UPROPERTY()
-	TMap<FGameplayTag, UTagNameSlot*> Slots;
+	TMap<FGameplayTag, UGameplayTagSlot*> Slots;
 
 	UPROPERTY(BlueprintReadOnly, Transient)
 	TMap<FGameplayTag, UUserWidgetBase*> SlotWidgets;
 
 public:
-	void RegisterSlot(UTagNameSlot* InSlot);
-	void UnRegisterSlot(const UTagNameSlot* InSlot);
+	void RegisterSlot(UGameplayTagSlot* InSlot);
+	void UnRegisterSlot(const UGameplayTagSlot* InSlot);
 
 public:
 	UFUNCTION(BlueprintPure)
-	UTagNameSlot* GetSlot(FGameplayTag InSlotTag) const;
+	UGameplayTagSlot* GetSlot(FGameplayTag InSlotTag) const;
 
 	UFUNCTION(BlueprintPure)
 	UUserWidgetBase* GetSlotWidget(FGameplayTag InSlotTag) const;

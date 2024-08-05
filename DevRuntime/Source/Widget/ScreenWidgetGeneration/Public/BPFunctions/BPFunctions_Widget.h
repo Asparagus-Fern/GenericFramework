@@ -8,7 +8,6 @@
 #include "Blueprint/UserWidget.h"
 #include "Blueprint/WidgetTree.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
-#include "UserWidget/Base/UserWidgetType.h"
 #include "BPFunctions_Widget.generated.h"
 
 class UMenuStyle;
@@ -29,19 +28,6 @@ class SCREENWIDGETGENERATION_API UBPFunctions_Widget : public UBlueprintFunction
 	GENERATED_BODY()
 
 	/* UWidget */
-public:
-	UFUNCTION(BlueprintPure, DisplayName="IsValid(ImageBrush)", meta=(CompactNodeTitle = "IsValid"), Category="BPFunctions_Widget|UWidget")
-	static bool IsValid_ImageBrush(const FImageBrush& InImageBrush);
-
-	UFUNCTION(BlueprintCallable, Category="BPFunctions_Widget|UWidget")
-	static void SetImageBrush(UImage* InImage, FImageBrush InImageBrush);
-
-	UFUNCTION(BlueprintPure, DisplayName="IsValid(BorderBrush)", meta=(CompactNodeTitle = "IsValid"), Category="BPFunctions_Widget|UWidget")
-	static bool IsValid_BorderBrush(const FBorderBrush& InBorderBrush);
-
-	UFUNCTION(BlueprintCallable, Category="BPFunctions_Widget|UWidget")
-	static void SetBorderBrush(UBorder* InBorder, FBorderBrush InBorderBrush);
-
 public:
 	template <typename T>
 	static TArray<T*> FindWidgets(UUserWidget* InWidget)

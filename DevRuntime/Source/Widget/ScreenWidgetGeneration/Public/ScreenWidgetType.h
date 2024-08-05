@@ -12,8 +12,29 @@ class UMenuStyle;
 class UMenuContainer;
 
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_UMG);
-UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_HUD);
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Menu);
+
+/**
+ * 一个在类和实例间切换的Widget容器
+ */
+USTRUCT(BlueprintType)
+struct FWidgetContainer
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	bool bInstance = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditConditionHides, EditCondition = "!bInstance"))
+	TSubclassOf<UUserWidgetBase> WidgetClass = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Instanced, meta=(EditConditionHides, EditCondition = "bInstance"))
+	UUserWidgetBase* Widget = nullptr;
+
+public:
+	UUserWidgetBase* GetWidget() const;
+};
 
 /**
  * 对特定的MenuTag进行特定的处理

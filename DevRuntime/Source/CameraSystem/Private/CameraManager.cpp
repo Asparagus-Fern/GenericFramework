@@ -77,7 +77,7 @@ void UCameraManager::SwitchToCamera(UCameraComponent* InCameraComponent, UCamera
 
 	FVector a = InCameraComponent->GetComponentLocation();
 	FRotator b = InCameraComponent->GetComponentRotation();
-	
+
 	ACameraPointBase* SpawnCameraPoint;
 	if (Cast<UCineCameraComponent>(InCameraComponent))
 	{
@@ -87,13 +87,9 @@ void UCameraManager::SwitchToCamera(UCameraComponent* InCameraComponent, UCamera
 	{
 		SpawnCameraPoint = GetWorld()->SpawnActor<ACameraPoint>(InCameraComponent->GetComponentLocation(), InCameraComponent->GetComponentRotation());
 	}
-
-	//DuplicateObject(InCameraComponent, SpawnCameraPoint)
-
+	
 	SpawnCameraPoint->SetCameraComponent(InCameraComponent);
 	SwitchToCamera(SpawnCameraPoint, SwitchCameraHandle);
-
-	// DEBUG_LOG(Debug_Default, Log, TEXT("%s"), *SpawnCameraPoint->GetActorLocation().ToString())
 }
 
 void UCameraManager::SwitchToCamera(FGameplayTag InCameraTag, TSubclassOf<UCameraHandle> InCameraHandleClass)
