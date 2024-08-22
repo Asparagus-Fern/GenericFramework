@@ -2,11 +2,11 @@
 
 #define LOCTEXT_NAMESPACE "FMapSystemModule"
 
-void FMapSystemModule::GetRegisterManager(TArray<TSubclassOf<UCoreManager>>& InRegisterManagerClasses)
+void FMapSystemModule::StartupModule()
 {
-	ICommonModuleInterface::GetRegisterManager(InRegisterManagerClasses);
+	ICommonModuleInterface::StartupModule();
 }
 
 #undef LOCTEXT_NAMESPACE
-    
+
 IMPLEMENT_MODULE(FMapSystemModule, MapSystem)

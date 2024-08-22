@@ -80,12 +80,6 @@ public:
 	virtual void NativeOnActived() override;
 	virtual void NativeOnInactived() override;
 
-	/* IManagerInterface */
-public:
-	virtual FText GetManagerDisplayName() override;
-	virtual void NativeOnBeginPlay() override;
-	virtual void NativeOnEndPlay() override;
-
 	/* UWorldWidgetManager */
 public:
 	UPROPERTY(Transient, VisibleAnywhere)

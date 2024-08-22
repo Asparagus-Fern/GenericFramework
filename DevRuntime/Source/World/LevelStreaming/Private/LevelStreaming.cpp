@@ -10,12 +10,6 @@ void FLevelStreamingModule::LoadDependentModule(TArray<FName>& InDependentModule
 	InDependentModuleName.Add("DevCore");
 }
 
-void FLevelStreamingModule::GetRegisterManager(TArray<TSubclassOf<UCoreManager>>& InRegisterManagerClasses)
-{
-	ICommonModuleInterface::GetRegisterManager(InRegisterManagerClasses);
-	InRegisterManagerClasses.Add(ULevelStreamingManager::StaticClass());
-}
-
 #undef LOCTEXT_NAMESPACE
 
 IMPLEMENT_MODULE(FLevelStreamingModule, LevelStreaming)

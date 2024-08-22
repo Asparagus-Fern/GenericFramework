@@ -3,36 +3,129 @@
 
 #include "BPFunctions/BPFunctions_Camera.h"
 
+#include "CameraHandle.h"
 #include "CameraManager.h"
-#include "Handle/CameraHandle.h"
 #include "Manager/ManagerGlobal.h"
 
-ACameraPointBase* UBPFunctions_Camera::GetCameraPoint(const FGameplayTag InCameraTag)
+ACameraPointBase* UBPFunctions_Camera::GetCameraPoint(const UObject* WorldContextObject, const FGameplayTag InCameraTag)
 {
-	return GetManager<UCameraManager>()->GetCameraPoint(InCameraTag);
+	if (const UWorld* World = GEngine->GetWorldFromContextObjectChecked(WorldContextObject))
+	{
+		if (const UCameraManager* CameraManager = GetManager<UCameraManager>(World))
+		{
+			return CameraManager->GetCameraPoint(InCameraTag);
+		}
+	}
+
+	return nullptr;
 }
 
-bool UBPFunctions_Camera::CanSwitchToCamera(const FGameplayTag InCameraTag)
+void UBPFunctions_Camera::SwitchToCamera_Transform_HandleClass(const UObject* WorldContextObject, int32 InPlayerIndex, FVector Location, FRotator Rotation, const TSubclassOf<UCameraHandle> InCameraHandleClass)
 {
-	return GetManager<UCameraManager>()->CanSwitchToCamera(InCameraTag);
+	if (const UWorld* World = GEngine->GetWorldFromContextObjectChecked(WorldContextObject))
+	{
+		if (UCameraManager* CameraManager = GetManager<UCameraManager>(World))
+		{
+			CameraManager->SwitchToCamera(InPlayerIndex, Location, Rotation, InCameraHandleClass);
+		}
+	}
 }
 
-void UBPFunctions_Camera::SwitchToCameraByComponentClass(UCameraComponent* InComponent, TSubclassOf<UCameraHandle> SwitchCameraHandleClass)
+void UBPFunctions_Camera::SwitchToCamera_Transform_Handle(const UObject* WorldContextObject, int32 InPlayerIndex, FVector Location, FRotator Rotation, UCameraHandle* InCameraHandle)
 {
-	GetManager<UCameraManager>()->SwitchToCamera(InComponent, NewObject<UCameraHandle>(GetManager<UCameraManager>(), SwitchCameraHandleClass));
+	if (const UWorld* World = GEngine->GetWorldFromContextObjectChecked(WorldContextObject))
+	{
+		if (UCameraManager* CameraManager = GetManager<UCameraManager>(World))
+		{
+			CameraManager->SwitchToCamera(InPlayerIndex, Location, Rotation, InCameraHandle);
+		}
+	}
 }
 
-void UBPFunctions_Camera::SwitchToCameraByComponent(UCameraComponent* InComponent, UCameraHandle* SwitchCameraHandle)
+void UBPFunctions_Camera::SwitchToCamera_Actor_HandleClass(const UObject* WorldContextObject, const int32 InPlayerIndex, ACameraActor* InCameraActor, const TSubclassOf<UCameraHandle> InCameraHandleClass)
 {
-	GetManager<UCameraManager>()->SwitchToCamera(InComponent, SwitchCameraHandle);
+	if (const UWorld* World = GEngine->GetWorldFromContextObjectChecked(WorldContextObject))
+	{
+		if (UCameraManager* CameraManager = GetManager<UCameraManager>(World))
+		{
+			CameraManager->SwitchToCamera(InPlayerIndex, InCameraActor, InCameraHandleClass);
+		}
+	}
 }
 
-void UBPFunctions_Camera::SwitchToCameraByHandleClass(FGameplayTag InCameraTag, TSubclassOf<UCameraHandle> SwitchCameraHandleClass)
+void UBPFunctions_Camera::SwitchToCamera_Actor_Handle(const UObject* WorldContextObject, const int32 InPlayerIndex, ACameraActor* InCameraActor, UCameraHandle* InCameraHandle)
 {
-	GetManager<UCameraManager>()->SwitchToCamera(InCameraTag, SwitchCameraHandleClass);
+	if (const UWorld* World = GEngine->GetWorldFromContextObjectChecked(WorldContextObject))
+	{
+		if (UCameraManager* CameraManager = GetManager<UCameraManager>(World))
+		{
+			CameraManager->SwitchToCamera(InPlayerIndex, InCameraActor, InCameraHandle);
+		}
+	}
 }
 
-void UBPFunctions_Camera::SwitchToCameraByHandle(const FGameplayTag InCameraTag, UCameraHandle* SwitchCameraHandle)
+void UBPFunctions_Camera::SwitchToCamera_Component_HandleClass(const UObject* WorldContextObject, const int32 InPlayerIndex, UCameraComponent* InCameraComponent, const TSubclassOf<UCameraHandle> InCameraHandleClass)
 {
-	GetManager<UCameraManager>()->SwitchToCamera(InCameraTag, SwitchCameraHandle);
+	if (const UWorld* World = GEngine->GetWorldFromContextObjectChecked(WorldContextObject))
+	{
+		if (UCameraManager* CameraManager = GetManager<UCameraManager>(World))
+		{
+			CameraManager->SwitchToCamera(InPlayerIndex, InCameraComponent, InCameraHandleClass);
+		}
+	}
+}
+
+void UBPFunctions_Camera::SwitchToCamera_Component_Handle(const UObject* WorldContextObject, const int32 InPlayerIndex, UCameraComponent* InCameraComponent, UCameraHandle* InCameraHandle)
+{
+	if (const UWorld* World = GEngine->GetWorldFromContextObjectChecked(WorldContextObject))
+	{
+		if (UCameraManager* CameraManager = GetManager<UCameraManager>(World))
+		{
+			CameraManager->SwitchToCamera(InPlayerIndex, InCameraComponent, InCameraHandle);
+		}
+	}
+}
+
+void UBPFunctions_Camera::SwitchToCamera_Tag_HandleClass(const UObject* WorldContextObject, const int32 InPlayerIndex, const FGameplayTag InCameraTag, const TSubclassOf<UCameraHandle> InCameraHandleClass)
+{
+	if (const UWorld* World = GEngine->GetWorldFromContextObjectChecked(WorldContextObject))
+	{
+		if (UCameraManager* CameraManager = GetManager<UCameraManager>(World))
+		{
+			CameraManager->SwitchToCamera(InPlayerIndex, InCameraTag, InCameraHandleClass);
+		}
+	}
+}
+
+void UBPFunctions_Camera::SwitchToCamera_Tag_Handle(const UObject* WorldContextObject, const int32 InPlayerIndex, const FGameplayTag InCameraTag, UCameraHandle* InCameraHandle)
+{
+	if (const UWorld* World = GEngine->GetWorldFromContextObjectChecked(WorldContextObject))
+	{
+		if (UCameraManager* CameraManager = GetManager<UCameraManager>(World))
+		{
+			CameraManager->SwitchToCamera(InPlayerIndex, InCameraTag, InCameraHandle);
+		}
+	}
+}
+
+void UBPFunctions_Camera::SwitchToCamera_CameraPoint_HandleClass(const UObject* WorldContextObject, const int32 InPlayerIndex, ACameraPointBase* InCameraPoint, const TSubclassOf<UCameraHandle> InCameraHandleClass)
+{
+	if (const UWorld* World = GEngine->GetWorldFromContextObjectChecked(WorldContextObject))
+	{
+		if (UCameraManager* CameraManager = GetManager<UCameraManager>(World))
+		{
+			CameraManager->SwitchToCamera(InPlayerIndex, InCameraPoint, InCameraHandleClass);
+		}
+	}
+}
+
+void UBPFunctions_Camera::SwitchToCamera_CameraPoint_Handle(const UObject* WorldContextObject, const int32 InPlayerIndex, ACameraPointBase* InCameraPoint, UCameraHandle* InCameraHandle)
+{
+	if (const UWorld* World = GEngine->GetWorldFromContextObjectChecked(WorldContextObject))
+	{
+		if (UCameraManager* CameraManager = GetManager<UCameraManager>(World))
+		{
+			CameraManager->SwitchToCamera(InPlayerIndex, InCameraPoint, InCameraHandle);
+		}
+	}
 }

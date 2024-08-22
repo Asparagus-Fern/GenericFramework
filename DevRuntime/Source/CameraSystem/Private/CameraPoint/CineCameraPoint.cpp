@@ -21,8 +21,4 @@ void ACineCameraPoint::SetCameraComponent_Implementation(UCameraComponent* InCam
 	{
 		CineCameraComponent = CastComponent;
 	}
-	else
-	{
-		Super::SetCameraComponent_Implementation(InCameraComponent);
-	}
 }

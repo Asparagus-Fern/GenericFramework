@@ -4,10 +4,9 @@
 
 #define LOCTEXT_NAMESPACE "FMediaPlaySystemModule"
 
-void FMediaPlaySystemModule::GetRegisterManager(TArray<TSubclassOf<UCoreManager>>& InRegisterManagerClasses)
+void FMediaPlaySystemModule::StartupModule()
 {
-	ICommonModuleInterface::GetRegisterManager(InRegisterManagerClasses);
-	InRegisterManagerClasses.Add(UMediaPlayManager::StaticClass());
+	ICommonModuleInterface::StartupModule();
 }
 
 #undef LOCTEXT_NAMESPACE

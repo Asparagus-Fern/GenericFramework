@@ -2,40 +2,21 @@
 
 #include "ActiveNodeSubsystem.h"
 #include "ActiveNode.h"
-#include "ActiveNodeComponent.h"
-#include "ActiveNodeManager.h"
+#include "ActiveNodeSettings.h"
 #include "EngineUtils.h"
-#include "Components/GameFrameworkComponent.h"
-#include "Manager/ManagerGlobal.h"
 
 UE_DEFINE_GAMEPLAY_TAG(TAG_ActiveNode, "ActiveNode");
 
 UActiveNodeSubsystem::UActiveNodeSubsystem()
 	: Super()
-	  , bBreathe(false)
+	, bBreathe(false)
 {
 }
 
-UActiveNodeSubsystem::ThisClass* UActiveNodeSubsystem::Get(const UObject* WorldContextObject)
+UActiveNodeSubsystem::ThisClass* UActiveNodeSubsystem::Get(const UWorld* InWorld)
 {
-	const UWorld* World = GEngine->GetWorldFromContextObjectChecked(WorldContextObject);
-	return World->GetSubsystem<ThisClass>();
-}
-
-void UActiveNodeSubsystem::OnWorldMatchStarting()
-{
-	// todo : 没有收集到活跃点, 但还有一种可能 : 如果是后期动态 Spawn Register 进来的  (但现在还没有为该系统提供 Register 相关的接口...)
-	if (NodeMappings.IsEmpty())
-		return;
-
-	if (GetManager<UActiveNodeManager>()->bAutoLogin)
-	{
-		check(CurrentNode == nullptr);
-
-		// todo : 确定要进行登录的 Tag... , 还需要一个重载Tag的配置来覆盖默认节点Tag
-		FGameplayTag LoginTag;
-		Entry(LoginTag);
-	}
+	check(InWorld);
+	return InWorld->GetSubsystem<ThisClass>();
 }
 
 bool UActiveNodeSubsystem::ShouldCreateSubsystem(UObject* Outer) const
@@ -43,12 +24,12 @@ bool UActiveNodeSubsystem::ShouldCreateSubsystem(UObject* Outer) const
 	// 如果有项目通过这个类进行了派生, 我们就不在创建这个类.
 	TArray<UClass*> DerivedClasses;
 	GetDerivedClasses(GetClass(), DerivedClasses);
-
-	if (!DerivedClasses.IsEmpty())
+	
+	if(!DerivedClasses.IsEmpty())
 	{
 		return false;
 	}
-
+	
 	return Super::ShouldCreateSubsystem(Outer);
 }
 
@@ -57,14 +38,12 @@ void UActiveNodeSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 	Super::Initialize(Collection);
 
 	// 这个时候 UWorld 还没有完全初始化..
-
-	// FWorldDelegates::LevelAddedToWorld.AddRaw(this, &UActiveNodeSubsystem::HandleOnActorAddToWorld);
 }
 
 void UActiveNodeSubsystem::Deinitialize()
 {
 	Super::Deinitialize();
-
+	
 	Exit();
 	NodeMappings.Empty();
 }
@@ -72,19 +51,15 @@ void UActiveNodeSubsystem::Deinitialize()
 void UActiveNodeSubsystem::PostInitialize()
 {
 	Super::PostInitialize();
+
+	// todo : 在这里工作 TActorIterator 访问不到 LevelInstance 所带来的所有Actor对象 -> 移动到 OnWorldBeginPlay 阶段
 }
 
 void UActiveNodeSubsystem::OnWorldBeginPlay(UWorld& InWorld)
 {
 	Super::OnWorldBeginPlay(InWorld);
-
-	// 绑定世界确定性开始的代理, 这将发生在 所有 Actor BeginPlay 之后, 稍后将处理具体的登录活跃节点.
-	InWorld.OnWorldMatchStarting.AddUObject(this, &ThisClass::OnWorldMatchStarting);
-
-	// 收集所有已知的活跃节点.
-
-	// todo @ChangQing : 2024.03.08， 修复大世界加载子世界问题...
-	/*for(TActorIterator<AActiveNode> It(&InWorld); It; ++It)
+	
+	for(TActorIterator<AActiveNode> It(&InWorld); It; ++It)
 	{
 		FGameplayTag NodeTag = It->NodeTag;
 		
@@ -93,24 +68,29 @@ void UActiveNodeSubsystem::OnWorldBeginPlay(UWorld& InWorld)
 			if(ensureMsgf(!NodeMappings.Contains(NodeTag), TEXT("Multiple active nodes with Tag '%s' detected"), *NodeTag.ToString()))
 			{
 				auto Node = NodeMappings.Emplace(NodeTag, *It);
-
-				// 处理所有活跃节点组件的登记事务.
-				ProcessingNodeInterfaceComponents(Node, [](UActiveNodeComponent* Component)  {
-					IActiveNodeInterface::Execute_RegisterNode(Component);
-				});
-
-				// 处理活跃节点的登记事务.
-				IActiveNodeInterface::Execute_RegisterNode(Node);
-				
 				// todo : 预留 Game Feature 动态插件的能力.
 			}
 		}
-	}*/
+	}
+
+	// todo : 没有收集到活跃点, 但还有一种可能 : 如果是后期动态 Spawn Register 进来的  (但现在还没有为该系统提供 Register 相关的接口...) 
+	if(NodeMappings.IsEmpty())
+		return;
+	
+	if(UActiveNodeSettings::Get()->bAutoLogin)
+	{
+		check(CurrentNode == nullptr);
+		
+		// todo : 确定要进行登录的 Tag... , 还需要一个重载Tag的配置来覆盖默认节点Tag
+		FGameplayTag LoginTag;
+		Entry(LoginTag);
+	}
 }
 
 void UActiveNodeSubsystem::OnWorldComponentsUpdated(UWorld& World)
 {
 	Super::OnWorldComponentsUpdated(World);
+	
 }
 
 void UActiveNodeSubsystem::UpdateStreamingState()
@@ -133,49 +113,46 @@ void UActiveNodeSubsystem::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (IsValid(CurrentNode))
+	if(IsValid(CurrentNode))
 	{
 		bBreathe = true;
 	}
 
-	if (!bBreathe)
+	if(!bBreathe)
 		return;
 
-	if (!IsValid(CurrentNode) && !IsValid(AccessibleNode))
+	if(!IsValid(CurrentNode) && !IsValid(AccessibleNode))
 	{
 		Exit();
 	}
-
-	if (IsCurrentNodeActive() && !GetManager<UActiveNodeManager>()->bBlockUpdate)
+	else if(IsCurrentNodeActive())
 	{
-		if (!CurrentNode->bAlwaysUpdate)
-			return;
-
-		if (CurrentNode->bComponentUpdate)
+		if(CurrentNode->bAlwaysUpdate)
 		{
-			ProcessingNodeInterfaceComponents
-			(
-				CurrentNode,
-				[&DeltaTime](UActiveNodeComponent* InComponent)
+			ProcessingNodeInterfaceComponents(CurrentNode, [&DeltaTime](UActorComponent* InComponent)
+			{
+				if(IActiveNodeInterface::Execute_CanUpdate(InComponent))
 				{
-					if (IActiveNodeInterface::Execute_CanUpdate(InComponent))
-					{
-						IActiveNodeInterface::Execute_UpdateNode(InComponent, DeltaTime);
-					}
+					IActiveNodeInterface::Execute_UpdateNode(InComponent, DeltaTime);
 				}
-			);
-		}
+			});
+			
+			if(CurrentNode->CanUpdate())
+			{
+				CurrentNode->Update(DeltaTime);
+			}
 
-		if (IActiveNodeInterface::Execute_CanUpdate(CurrentNode))
-		{
-			IActiveNodeInterface::Execute_UpdateNode(CurrentNode, DeltaTime);
+			if(CurrentNode->K2_CanUpdate())
+			{
+				CurrentNode->K2_Update(DeltaTime);
+			}
 		}
 	}
 }
 
 bool UActiveNodeSubsystem::IsTickable() const
 {
-	return true;
+	return Super::IsTickable() && UActiveNodeSettings::Get()->bBlockUpdate;
 }
 
 AActiveNode* UActiveNodeSubsystem::GetCurrentActiveNode() const
@@ -183,95 +160,35 @@ AActiveNode* UActiveNodeSubsystem::GetCurrentActiveNode() const
 	return CurrentNode;
 }
 
-FGameplayTag UActiveNodeSubsystem::GetCurrentActiveNodeTag()
+AActiveNode* UActiveNodeSubsystem::ChangeActiveNodeTo(const UObject* WorldContextObject, FGameplayTag InTag, bool& bSucceed, const TSubclassOf<AActiveNode> InClass, bool bReInit)
 {
-	return CurrentNode->NodeTag;
-}
-
-TMap<FGameplayTag, TObjectPtr<AActiveNode>> UActiveNodeSubsystem::GetNodeMappings() const
-{
-	return NodeMappings;
-}
-
-void UActiveNodeSubsystem::RegisterNode(FGameplayTag InTag, AActiveNode* InNode)
-{
-	if (InTag.IsValid())
+	const UWorld* World = GEngine->GetWorldFromContextObjectChecked(WorldContextObject);
+	AActiveNode* ChangeNode = ThisClass::Get(World)->ChangeNode(InTag, bReInit, bSucceed);
+	if(ChangeNode && ChangeNode->IsA(InClass))
 	{
-		if (!NodeMappings.Contains(InTag))
-		{
-			const auto Node = NodeMappings.Emplace(InTag, InNode);
-
-			ProcessingNodeInterfaceComponents
-			(
-				Node,
-				[](UActiveNodeComponent* Component)
-				{
-					IActiveNodeInterface::Execute_RegisterNode(Component);
-				}
-			);
-
-			IActiveNodeInterface::Execute_RegisterNode(Node);
-
-			UE_LOG(LogActiveNodeSystem, Log, TEXT("Active Node Register : [%s]"), *InTag.ToString());
-
-			if (OnActionNodeRegister.IsBound())
-			{
-				OnActionNodeRegister.Broadcast(InTag);
-			}
-		}
+		return ChangeNode;
 	}
+	return nullptr;
 }
 
-void UActiveNodeSubsystem::UnRegisterNode(FGameplayTag InTag)
+AActiveNode* UActiveNodeSubsystem::FindActiveNode(const UObject* WorldContextObject, FGameplayTag InTag, const TSubclassOf<AActiveNode> InClass)
 {
-	if (InTag.IsValid())
+	const UWorld* World = GEngine->GetWorldFromContextObjectChecked(WorldContextObject);
+	
+	if(AActiveNode* FoundNode = ThisClass::Get(World)->FindActiveNode(InTag))
 	{
-		if (const auto Node = NodeMappings.Find(InTag))
-		{
-			ProcessingNodeInterfaceComponents
-			(
-				*Node,
-				[](UActiveNodeComponent* Component)
-				{
-					IActiveNodeInterface::Execute_UnRegisterNode(Component);
-				}
-			);
-
-			IActiveNodeInterface::Execute_UnRegisterNode(*Node);
-
-			NodeMappings.Remove(InTag);
-
-			UE_LOG(LogActiveNodeSystem, Log, TEXT("Active node Unregister : [%s]"), *InTag.ToString());
-
-			if (OnActionNodeUnRegister.IsBound())
-			{
-				OnActionNodeUnRegister.Broadcast(InTag);
-			}
-		}
-	}
-}
-
-bool UActiveNodeSubsystem::ChangeActiveNodeTo(const UObject* WorldContextObject, FGameplayTag InTag, bool bReInit)
-{
-	return ThisClass::Get(WorldContextObject)->ChangeNode(InTag, bReInit);
-}
-
-AActiveNode* UActiveNodeSubsystem::FindActiveNode(const UObject* WorldContextObject, const FGameplayTag InTag, const TSubclassOf<AActiveNode> InClass)
-{
-	if (AActiveNode* FoundNode = ThisClass::Get(WorldContextObject)->FindActiveNode(InTag))
-	{
-		if (FoundNode->IsA(InClass))
+		if(FoundNode->IsA(InClass))
 		{
 			return FoundNode;
 		}
 	}
-
+	
 	return nullptr;
 }
 
 AActiveNode* UActiveNodeSubsystem::FindActiveNode(const FGameplayTag& InTag)
 {
-	if (CheckTag(InTag))
+	if(CheckTag(InTag))
 	{
 		return NodeMappings.Contains(InTag) ? NodeMappings[InTag] : nullptr;
 	}
@@ -279,94 +196,23 @@ AActiveNode* UActiveNodeSubsystem::FindActiveNode(const FGameplayTag& InTag)
 	return nullptr;
 }
 
-bool UActiveNodeSubsystem::ChangeNode(const FGameplayTag& InTag, bool bReInit)
+AActiveNode* UActiveNodeSubsystem::Entry(bool& bSucceed, const FGameplayTag& InTag)
 {
-	if (!CheckTag(InTag))
-	{
-		return false;
-	}
-
-	// 如果当前没有可用的活跃点, 那么尝试进入这个指定 Tag 的活跃点.
-	if (!IsValid(CurrentNode))
-	{
-		UE_LOG(LogActiveNodeSystem, Log, TEXT("There is no active node at the moment, go directly to the '%s' node"), *InTag.ToString())
-		return Entry(InTag);
-	}
-
-	if (InTag == CurrentNode->NodeTag)
-	{
-		ReLoginNode();
-		return true;
-	}
-
-	AActiveNode* ChangeNode = FindActiveNode(InTag);
-
-	if (!ensureMsgf(ChangeNode, TEXT("Change active node faild. not found '%s' node"), *InTag.ToString()))
-	{
-		return false;
-	}
-
-	// 这是一个可达的目标节点, 确保执行 LogoutNode 不会进行完全登出(Exit).
-	AccessibleNode = ChangeNode;
-
-	// 处理即将切换的节点所有组件的预切换接口事件.
-	ProcessingNodeInterfaceComponents
-	(
-		ChangeNode,
-		[this](UActiveNodeComponent* Component)
-		{
-			IActiveNodeInterface::Execute_PreChangeNode(Component, CurrentNode);
-		}
-	);
-
-	IActiveNodeInterface::Execute_PreChangeNode(ChangeNode, ChangeNode);
-	ChangeNode->OnNodePreChanged.Broadcast(ChangeNode, CurrentNode);
-	OnActiveNodePreChange.Broadcast(ChangeNode, CurrentNode, bReInit);
-
-	// 登出当前的节点.
-	LogoutNode();
-
-	// 登录目标节点.
-	if (LoginNode(ChangeNode, bReInit))
-	{
-		AccessibleNode = nullptr;
-
-		// 处理即将切换的节点所有组件的预切换接口事件.
-		ProcessingNodeInterfaceComponents
-		(
-			ChangeNode,
-			[](UActiveNodeComponent* Component)
-			{
-				IActiveNodeInterface::Execute_PostChangeNode(Component);
-			}
-		);
-
-		IActiveNodeInterface::Execute_PostChangeNode(ChangeNode);
-		ChangeNode->OnNodePostChanged.Broadcast(ChangeNode);
-		OnActiveNodePostChange.Broadcast(ChangeNode);
-		return true;
-	}
-
-	AccessibleNode = nullptr;
-	return false;
-}
-
-bool UActiveNodeSubsystem::Entry(const FGameplayTag& InTag)
-{
+	bSucceed = false;
 	FGameplayTag LoginTag = InTag;
 
-	if (!LoginTag.IsValid())
+	if(!LoginTag.IsValid())
 	{
-		LoginTag = GetManager<UActiveNodeManager>()->DefaultNodeTag;
+		LoginTag = UActiveNodeSettings::Get()->DefaultNodeTag;
 	}
 
 #if WITH_EDITOR
 	// 没有合适 LoginTag , 如果是 PIE, 简单处理一下.
-	if (!LoginTag.IsValid())
+	if(!LoginTag.IsValid())
 	{
 		TArray<FGameplayTag> NodeTags;
 		NodeMappings.GetKeys(NodeTags);
-		if (!NodeTags.IsEmpty())
+		if(!NodeTags.IsEmpty())
 		{
 			LoginTag = NodeTags[0];
 			UE_LOG(LogActiveNodeSystem, Error, TEXT("There is no valid default active node tag, please check the default/override active node configuration"));
@@ -375,33 +221,34 @@ bool UActiveNodeSubsystem::Entry(const FGameplayTag& InTag)
 	}
 #endif
 
-	if (!LoginTag.IsValid())
+	if(!LoginTag.IsValid())
 	{
 		ensureMsgf(false, TEXT("Try to enter the active point, but there are no active points available"));
-		return false;
+		return nullptr;
 	}
 
 	AActiveNode* FoundNode = FindActiveNode(LoginTag);
-
-	if (ensureMsgf(IsValid(FoundNode), TEXT("Entry active node faild. not found '%s' node"), *LoginTag.ToString()))
+	
+	if(ensureMsgf(IsValid(FoundNode), TEXT("Entry active node faild. not found '%s' node"), *LoginTag.ToString()))
 	{
-		if (LoginNode(FoundNode))
+		if(LoginNode(FoundNode))
 		{
 			OnEntryActiveNodeSystem.Broadcast();
-			return true;
+			bSucceed = true;
+			return FoundNode;
 		}
 	}
-
-	return false;
+	
+	return nullptr;
 }
 
 void UActiveNodeSubsystem::Exit()
 {
-	if (IsValid(CurrentNode))
+	if(IsValid(CurrentNode))
 	{
 		LogoutNode();
 	}
-
+	
 	bBreathe = false;
 
 	// 通知所有的活跃点都已经退出了.
@@ -413,127 +260,186 @@ void UActiveNodeSubsystem::InitNode(AActiveNode* InNode, bool bReInit)
 	ensure(InNode);
 
 	// 阻止活跃中的节点.
-	if (ensureMsgf(!InNode->bActive, TEXT("Attempt to initialize the node '%s'"), *InNode->NodeTag.ToString()))
+	if(ensureMsgf(!InNode->bActive, TEXT("Attempt to initialize the node '%s'"), *InNode->NodeTag.ToString()))
 	{
 		// 对于没有初始化的节点强制该节点进行初始化操作.
-		if (bReInit || !InNode->bInitialized)
+		if(bReInit || !InNode->bInitialized)
 		{
 			InNode->bInitialized = false;
-
+			
 			// 处理这个节点所有组件的初始化接口事件.
-			ProcessingNodeInterfaceComponents(InNode, [](UActiveNodeComponent* InComponent)
-			                                  {
-				                                  IActiveNodeInterface::Execute_InitNode(InComponent);
-			                                  }
-			);
-
-			IActiveNodeInterface::Execute_InitNode(InNode);
+			ProcessingNodeInterfaceComponents(InNode, [](UActorComponent* InComponent)
+            {
+            	IActiveNodeInterface::Execute_InitNode(InComponent);
+            });
+			
+            InNode->Init();
+			InNode->K2_Init();
 			InNode->bInitialized = true;
-			InNode->OnNodeInit.Broadcast(InNode);
+            InNode->OnNodeInit.Broadcast(InNode);
 		}
 	}
 }
 
 bool UActiveNodeSubsystem::LoginNode(AActiveNode* InNode, bool bReInit)
 {
-	if (!ensureMsgf(InNode, (TEXT("Login failed, there are no valid login node"))))
+	if(!ensureMsgf(InNode, (TEXT("Login failed, there are no valid login node"))))
 		return false;
 
 	InitNode(InNode, bReInit);
-
+	
 	// 处理这个节点所有组件的登录接口事件.
-	ProcessingNodeInterfaceComponents(InNode, [](UActiveNodeComponent* InComponent)
-	                                  {
-		                                  IActiveNodeInterface::Execute_LoginNode(InComponent);
-	                                  }
-	);
+	ProcessingNodeInterfaceComponents(InNode, [](UActorComponent* InComponent)
+	{
+		IActiveNodeInterface::Execute_LoginNode(InComponent);
+	});
 
 	CurrentNode = InNode;
-	IActiveNodeInterface::Execute_LoginNode(InNode);
+	InNode->Login();
+	InNode->K2_Login();
 	InNode->OnNodeLogin.Broadcast(InNode);
-	OnActiveNodeLogin.Broadcast(InNode);
 	InNode->bActive = true;
 	return true;
 }
 
 void UActiveNodeSubsystem::LogoutNode()
 {
-	if (IsValid(CurrentNode))
+	ensure(IsValid(CurrentNode));
+	
+	// 先让这个节点失去活跃, 不再检查它的更新操作.
+	CurrentNode->bActive = false;
+		
+	// 处理这个节点所有组件的登出接口事件.
+	ProcessingNodeInterfaceComponents(CurrentNode, [](UActorComponent* InComponent)
 	{
-		// 先让这个节点失去活跃, 不再检查它的更新操作.
-		CurrentNode->bActive = false;
+		IActiveNodeInterface::Execute_LogoutNode(InComponent);
+	});
 
-		// 处理这个节点所有组件的登出接口事件.
-		ProcessingNodeInterfaceComponents
-		(
-			CurrentNode,
-			[](UActiveNodeComponent* InComponent)
-			{
-				IActiveNodeInterface::Execute_LogoutNode(InComponent);
-			}
-		);
-
-		IActiveNodeInterface::Execute_LogoutNode(CurrentNode);
-		CurrentNode->OnNodeLogout.Broadcast(CurrentNode);
-		CurrentNode = nullptr;
-	}
+	CurrentNode->Logout();
+	CurrentNode->K2_Logout();
+	CurrentNode->OnNodeLogout.Broadcast(CurrentNode);
+	CurrentNode = nullptr;
 }
 
-void UActiveNodeSubsystem::ReLoginNode(const UObject* WorldContextObject, bool bReInit)
+AActiveNode* UActiveNodeSubsystem::ChangeNode(const FGameplayTag& InTag, bool bReInit, bool& bSucceed)
 {
-	ThisClass::Get(WorldContextObject)->ReLoginNode(bReInit);
+	bSucceed = false;
+	
+	if(!CheckTag(InTag))
+	{
+		bSucceed = false;
+		return nullptr;
+	}
+	
+	// 如果当前没有可用的活跃点, 那么尝试进入这个指定 Tag 的活跃点.
+	if(!IsValid(CurrentNode))
+	{
+		UE_LOG(LogActiveNodeSystem, Log, TEXT("There is no active node at the moment, go directly to the '%s' node"), *InTag.ToString())
+		return Entry(bSucceed, InTag);
+	}
+
+	AActiveNode* ChangeNode = FindActiveNode(InTag);
+	
+	if(!ensureMsgf(ChangeNode, TEXT("Change active node faild. not found '%s' node"), *InTag.ToString()))
+	{
+		return nullptr;
+	}
+
+	// 这是一个可达的目标节点, 确保执行 LogoutNode 不会进行完全登出(Exit).
+	AccessibleNode = ChangeNode;
+	
+	// 处理即将切换的节点所有组件的预切换接口事件.
+	ProcessingNodeInterfaceComponents(ChangeNode, [this](UActorComponent* Component)
+	{
+		IActiveNodeInterface::Execute_PreChangeNode(Component, CurrentNode);
+	});
+
+	ChangeNode->PreChanged(ChangeNode);
+	ChangeNode->K2_PreChanged(ChangeNode);
+	ChangeNode->OnNodePreChanged.Broadcast(ChangeNode, CurrentNode);
+	
+	// 登出当前的节点.
+	LogoutNode();
+
+	// 登录目标节点.
+	if(LoginNode(ChangeNode, bReInit))
+	{
+		// 处理即将切换的节点所有组件的预切换接口事件.
+		ProcessingNodeInterfaceComponents(ChangeNode, [](UActorComponent* Component)
+		{
+			IActiveNodeInterface::Execute_PostChangeNode(Component);
+		});
+
+		ChangeNode->PostChanged();
+		ChangeNode->K2_PostChanged();
+		ChangeNode->OnNodePostChanged.Broadcast(ChangeNode);
+		bSucceed = true;
+		return ChangeNode;
+	}
+
+	AccessibleNode = nullptr;
+	return nullptr;
+}
+
+void UActiveNodeSubsystem::ReLogin(const UObject* WorldContextObject, bool bReInit)
+{
+	const UWorld* World = GEngine->GetWorldFromContextObjectChecked(WorldContextObject);
+	ThisClass::Get(World)->ReLoginNode(bReInit);
 }
 
 void UActiveNodeSubsystem::ReLoginNode(bool bReInit)
 {
-	if (IsValid(CurrentNode))
+	if(IsValid(CurrentNode))
 	{
 		AccessibleNode = CurrentNode;
-
+		
 		LogoutNode();
 
 		// 永不失败!
 		check(LoginNode(AccessibleNode, bReInit));
 
 		// 处理这个节点所有组件的重新登录接口事件.
-		ProcessingNodeInterfaceComponents(CurrentNode, [](UActiveNodeComponent* InComponent)
-		                                  {
-			                                  IActiveNodeInterface::Execute_ReLoginNode(InComponent);
-		                                  }
-		);
+		ProcessingNodeInterfaceComponents(CurrentNode, [](UActorComponent* InComponent)
+		{
+			IActiveNodeInterface::Execute_ReLoginNode(InComponent);
+		});
 
-		IActiveNodeInterface::Execute_ReLoginNode(CurrentNode);
+		CurrentNode->ReLogin();
+		CurrentNode->K2_ReLogin();
 		CurrentNode->OnNodeReLogin.Broadcast(CurrentNode);
+
 		AccessibleNode = nullptr;
 	}
 }
 
-void UActiveNodeSubsystem::LogOut(const UObject* WorldContextObject)
+void UActiveNodeSubsystem::ProcessingNodeInterfaceComponents(const AActiveNode* InNode, const TFunctionRef<void(UActorComponent* InComponent)>& InterfaceCall)
 {
-	UActiveNodeSubsystem* ActiveNodeSubsystem = UActiveNodeSubsystem::Get(WorldContextObject);
-	check(ActiveNodeSubsystem);
-	ActiveNodeSubsystem->LogoutNode();
-}
-
-void UActiveNodeSubsystem::ProcessingNodeInterfaceComponents(AActiveNode* InNode, const TFunctionRef<void(UActiveNodeComponent* InComponent)>& InterfaceCall)
-{
-	for (TComponentIterator<UActiveNodeComponent> CompIt(InNode); CompIt; ++CompIt)
+	TArray<UActorComponent*> Components = InNode->GetComponentsByInterface(UActiveNodeInterface::StaticClass());
+	
+	for(const auto Component : Components)
 	{
-		if (CompIt->IsRegistered() && CompIt->IsActive())
+		if(Component->IsRegistered() && Component->IsActive())
 		{
-			InterfaceCall(*CompIt);
+			InterfaceCall(Component);
 		}
 	}
 }
 
-bool UActiveNodeSubsystem::CheckTag(const FGameplayTag& InTag) const
+bool UActiveNodeSubsystem::Entry(const FGameplayTag& InTag)
 {
-	if (!InTag.IsValid() || !InTag.MatchesTag(TAG_ActiveNode))
+	bool Result = false;
+	Entry(Result, InTag);
+	return Result;
+}
+
+bool UActiveNodeSubsystem::CheckTag(const FGameplayTag& InTag)
+{
+	if(!InTag.IsValid() || !InTag.MatchesTag(TAG_ActiveNode))
 	{
 		UE_LOG(LogActiveNodeSystem, Error, TEXT("ActiveNodeSystem -> invalide tag!"))
 		return false;
 	}
-
+	
 	return true;
 }
 

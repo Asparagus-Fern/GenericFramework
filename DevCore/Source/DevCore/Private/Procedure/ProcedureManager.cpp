@@ -6,65 +6,47 @@
 #include "EngineUtils.h"
 #include "Manager/ManagerGlobal.h"
 #include "Procedure/GameplayProcedure.h"
-#include "Procedure/ProcedureHandle.h"
+#include "Procedure/ProcedureManagerSetting.h"
+#include "Procedure/ProcedureProxy.h"
 #include "StaticFunctions/StaticFunctions_Object.h"
 
 #define LOCTEXT_NAMESPACE "UProcedureManager"
 
-UProcedureManager::UProcedureManager()
-{
-}
-
 void UProcedureManager::NativeOnCreate()
 {
 	Super::NativeOnCreate();
+	FProcedureDelegates::OnProxyHandleBegin.AddUObject(this, &UProcedureManager::OnProcedureProxyHandleBegin);
+	FProcedureDelegates::OnProxyHandlePause.AddUObject(this, &UProcedureManager::OnProcedureProxyHandlePause);
+	FProcedureDelegates::OnProxyHandleContinue.AddUObject(this, &UProcedureManager::OnProcedureProxyHandleContinue);
+	FProcedureDelegates::OnProxyHandleStop.AddUObject(this, &UProcedureManager::OnProcedureProxyHandleStop);
+	FProcedureDelegates::OnProxyHandleFinish.AddUObject(this, &UProcedureManager::OnProcedureProxyHandleFinish);
+	
+	LoadGameplayProcedure();
 }
 
 void UProcedureManager::NativeOnDestroy()
 {
 	Super::NativeOnDestroy();
-	GameplayProcedure.Reset();
+	FProcedureDelegates::OnProxyHandleBegin.RemoveAll(this);
+	FProcedureDelegates::OnProxyHandlePause.RemoveAll(this);
+	FProcedureDelegates::OnProxyHandleContinue.RemoveAll(this);
+	FProcedureDelegates::OnProxyHandleStop.RemoveAll(this);
+	FProcedureDelegates::OnProxyHandleFinish.RemoveAll(this);
 }
 
-void UProcedureManager::NativeOnActived()
+void UProcedureManager::OnWorldMatchStarting_Implementation()
 {
-	Super::NativeOnActived();
-}
+	Super::OnWorldMatchStarting_Implementation();
 
-void UProcedureManager::NativeOnInactived()
-{
-	Super::NativeOnInactived();
-
-	LastProcedureTag = FGameplayTag::EmptyTag;
-	CurrentProcedureTag = FGameplayTag::EmptyTag;
-
-	ActiveProcedureHandles.Reset();
-	GameplayProcedure.Reset();
-}
-
-FText UProcedureManager::GetManagerDisplayName()
-{
-	return LOCTEXT("DisplayName", "Procedure Manager");
-}
-
-void UProcedureManager::NativeOnBeginPlay()
-{
-	Super::NativeOnBeginPlay();
-
-	if (DefaultProcedureTag.IsValid())
+	if (UProcedureManagerSetting::Get()->DefaultProcedureTag.IsValid())
 	{
-		SwitchProcedure(DefaultProcedureTag);
+		SwitchProcedure(UProcedureManagerSetting::Get()->DefaultProcedureTag);
 	}
 }
 
-void UProcedureManager::NativeOnEndPlay()
+void UProcedureManager::SwitchProcedure(const FGameplayTag InProcedureTag, const bool bForce)
 {
-	Super::NativeOnEndPlay();
-}
-
-void UProcedureManager::SwitchProcedure(FGameplayTag InProcedureTag, bool bForce, FSimpleMulticastDelegate OnFinish)
-{
-	TArray<FProcedureInterfaceHandle> ProcedureInterfaceHandles;
+	FProcedureHandleGroup ProcedureHandleGroup;
 
 	if (CurrentProcedureTag.IsValid())
 	{
@@ -83,13 +65,13 @@ void UProcedureManager::SwitchProcedure(FGameplayTag InProcedureTag, bool bForce
 			/* 退出上一个流程 */
 			if (IsValid(GetGameplayProcedure(CurrentProcedureTag)))
 			{
-				ProcedureInterfaceHandles.Add(FProcedureInterfaceHandle(GetGameplayProcedure(CurrentProcedureTag), false));
+				ProcedureHandleGroup.ProcedureHandles.Add(FProcedureHandle(GetGameplayProcedure(CurrentProcedureTag), false));
 			}
 
 			/* 进入下一个流程 */
 			if (IsValid(GetGameplayProcedure(InProcedureTag)))
 			{
-				ProcedureInterfaceHandles.Add(FProcedureInterfaceHandle(GetGameplayProcedure(InProcedureTag), true));
+				ProcedureHandleGroup.ProcedureHandles.Add(FProcedureHandle(GetGameplayProcedure(InProcedureTag), true));
 			}
 		}
 	}
@@ -98,50 +80,15 @@ void UProcedureManager::SwitchProcedure(FGameplayTag InProcedureTag, bool bForce
 		/* 进入首个流程 */
 		if (IsValid(GetGameplayProcedure(InProcedureTag)))
 		{
-			ProcedureInterfaceHandles.Add(FProcedureInterfaceHandle(GetGameplayProcedure(InProcedureTag), true));
+			ProcedureHandleGroup.ProcedureHandles.Add(FProcedureHandle(GetGameplayProcedure(InProcedureTag), true));
 		}
 	}
 
 	LastProcedureTag = CurrentProcedureTag;
 	CurrentProcedureTag = InProcedureTag;
-	RegisterProcedureHandle(ProcedureInterfaceHandles, OnFinish);
-}
+	FProcedureDelegates::OnGameplayProcedureSwitch.Broadcast(GetGameplayProcedure(LastProcedureTag), GetGameplayProcedure(CurrentProcedureTag));
 
-UGameplayProcedure* UProcedureManager::GetGameplayProcedure(FGameplayTag InProcedureTag)
-{
-	/* 返回缓存 */
-	if (GameplayProcedure.Contains(InProcedureTag))
-	{
-		return GameplayProcedure.FindRef(InProcedureTag);
-	}
-	else
-	{
-		/* 软引用加载 */
-		if (GameplayProcedureObjects.Contains(InProcedureTag))
-		{
-			const TSoftObjectPtr<UGameplayProcedure> FoundGameplayProcedureClass = GameplayProcedureObjects.FindRef(InProcedureTag);
-			if (!FoundGameplayProcedureClass.IsNull())
-			{
-				UGameplayProcedure* LoadGameplayProcedure = FStaticFunctions_Object::LoadObject<UGameplayProcedure>(FoundGameplayProcedureClass);
-				if (IsValid(LoadGameplayProcedure))
-				{
-					GameplayProcedure.Add(InProcedureTag, LoadGameplayProcedure);
-					LoadGameplayProcedure->NativeOnCreate();
-					return LoadGameplayProcedure;
-				}
-			}
-			else
-			{
-				DEBUG(Debug_Procedure, Warning, TEXT("GameplayProcedureClass is NULL"))
-			}
-		}
-		else
-		{
-			DEBUG(Debug_Procedure, Warning, TEXT("GameplayProcedureClass is Not Contain ProcedureTag : %s"), *InProcedureTag.ToString())
-		}
-	}
-
-	return nullptr;
+	RegisterProcedureHandle(ProcedureHandleGroup);
 }
 
 FGameplayTag UProcedureManager::GetLastProcedureTag()
@@ -154,41 +101,79 @@ FGameplayTag UProcedureManager::GetCurrentProcedureTag()
 	return CurrentProcedureTag;
 }
 
-TMap<FGameplayTag, UGameplayProcedure*>& UProcedureManager::GetGameplayProcedureMapping()
+UGameplayProcedure* UProcedureManager::GetGameplayProcedure(const FGameplayTag InProcedureTag)
 {
-	return GameplayProcedure;
+	return GameplayProcedures.FindRef(InProcedureTag);
 }
 
-UProcedureHandle* UProcedureManager::RegisterProcedureHandle(const TArray<FProcedureInterfaceHandle>& InHandles, FSimpleMulticastDelegate OnHandleFinish, FSimpleMulticastDelegate OnHandleReset)
+TMap<FGameplayTag, UGameplayProcedure*>& UProcedureManager::GetGameplayProcedures()
 {
-	UProcedureHandle* NewProcedureHandle = NewObject<UProcedureHandle>(this);
-	ActiveProcedureHandles.Add(NewProcedureHandle);
+	return GameplayProcedures;
+}
 
-	FSimpleMulticastDelegate OnFinish;
-	OnFinish.AddLambda([this, NewProcedureHandle, OnHandleFinish]()
-		{
-			ActiveProcedureHandles.Remove(NewProcedureHandle);
-			OnHandleFinish.Broadcast();
-			NewProcedureHandle->MarkAsGarbage();
-		}
-	);
+void UProcedureManager::LoadGameplayProcedure()
+{
+	for (auto& GameplayProcedure : UProcedureManagerSetting::Get()->GameplayProcedures)
+	{
+		UGameplayProcedure* LoadGameplayProcedure = FStaticFunctions_Object::LoadObject<UGameplayProcedure>(GameplayProcedure.Value);
+		GameplayProcedures.Add(GameplayProcedure.Key, LoadGameplayProcedure);
+	}
+}
 
-	FSimpleMulticastDelegate OnReset;
-	OnReset.AddLambda([this, NewProcedureHandle, OnHandleReset]()
-		{
-			OnHandleReset.Broadcast();
-			ActiveProcedureHandles.Remove(NewProcedureHandle);
-			NewProcedureHandle->MarkAsGarbage();
-		}
-	);
+UProcedureProxy* UProcedureManager::RegisterProcedureHandle(TArray<UProcedureObject*> InProcedureObjects, const bool InTargetActiveState, const FSimpleDelegate OnFinish)
+{
+	TArray<FProcedureHandle> ProcedureHandles;
 
-	NewProcedureHandle->Handle(InHandles, OnFinish, OnReset);
+	for (const auto& ProcedureObject : InProcedureObjects)
+	{
+		ProcedureHandles.Add(FProcedureHandle(ProcedureObject, InTargetActiveState));
+	}
+
+	return RegisterProcedureHandle(ProcedureHandles, OnFinish);
+}
+
+UProcedureProxy* UProcedureManager::RegisterProcedureHandle(const TArray<FProcedureHandle> InProcedureHandles, const FSimpleDelegate OnFinish)
+{
+	FProcedureHandleGroup NewProcedureHandleGroup;
+
+	NewProcedureHandleGroup.ProcedureHandles = InProcedureHandles;
+	NewProcedureHandleGroup.OnFinish = OnFinish;
+
+	return RegisterProcedureHandle(NewProcedureHandleGroup);
+}
+
+UProcedureProxy* UProcedureManager::RegisterProcedureHandle(const FProcedureHandleGroup InHandleGroup)
+{
+	UProcedureProxy* NewProcedureHandle = NewObject<UProcedureProxy>(this);
+	ActivatedProcedureProxy.Add(NewProcedureHandle);
+	NewProcedureHandle->Handle(InHandleGroup);
+
 	return NewProcedureHandle;
 }
 
-void UProcedureManager::ResetProcedureHandle(UProcedureHandle* InHandle)
+void UProcedureManager::OnProcedureProxyHandleBegin(UProcedureProxy* InProcedureProxy)
 {
-	InHandle->Reset();
+}
+
+void UProcedureManager::OnProcedureProxyHandlePause(UProcedureProxy* InProcedureProxy)
+{
+}
+
+void UProcedureManager::OnProcedureProxyHandleContinue(UProcedureProxy* InProcedureProxy)
+{
+}
+
+void UProcedureManager::OnProcedureProxyHandleStop(UProcedureProxy* InProcedureProxy)
+{
+}
+
+void UProcedureManager::OnProcedureProxyHandleFinish(UProcedureProxy* InProcedureProxy)
+{
+	if (ActivatedProcedureProxy.Contains(InProcedureProxy))
+	{
+		ActivatedProcedureProxy.Remove(InProcedureProxy);
+		InProcedureProxy->MarkAsGarbage();
+	}
 }
 
 #undef LOCTEXT_NAMESPACE

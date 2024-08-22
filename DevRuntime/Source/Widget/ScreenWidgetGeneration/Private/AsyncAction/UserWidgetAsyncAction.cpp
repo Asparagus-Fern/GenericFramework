@@ -12,7 +12,7 @@ UUserWidgetAsyncAction* UUserWidgetAsyncAction::AsyncOpenUserWidget(UUserWidgetB
 
 	FSimpleMulticastDelegate OnHandleFinish;
 	OnHandleFinish.AddUObject(NewAction, &UUserWidgetAsyncAction::OnHandleFinish);
-	GetManager<UScreenWidgetManager>()->OpenUserWidget(InWidget, OnHandleFinish);
+	// GetManager<UScreenWidgetManager>()->OpenUserWidget(InWidget, OnHandleFinish);
 
 	return NewAction;
 }
@@ -20,11 +20,11 @@ UUserWidgetAsyncAction* UUserWidgetAsyncAction::AsyncOpenUserWidget(UUserWidgetB
 UUserWidgetAsyncAction* UUserWidgetAsyncAction::AsyncOpenUserWidgetByClass(TSubclassOf<UUserWidgetBase> InWidgetClass, UUserWidgetBase*& NewWidget)
 {
 	UUserWidgetAsyncAction* NewAction = NewObject<UUserWidgetAsyncAction>();
-	NewWidget = GetManager<UScreenWidgetManager>()->CreateUserWidget(InWidgetClass);
+	// NewWidget = GetManager<UScreenWidgetManager>()->CreateUserWidget(InWidgetClass);
 
 	FSimpleMulticastDelegate OnHandleFinish;
 	OnHandleFinish.AddUObject(NewAction, &UUserWidgetAsyncAction::OnHandleFinish);
-	GetManager<UScreenWidgetManager>()->OpenUserWidget(InWidgetClass, OnHandleFinish);
+	// GetManager<UScreenWidgetManager>()->OpenUserWidget(InWidgetClass, OnHandleFinish);
 
 	return NewAction;
 }
@@ -35,7 +35,7 @@ UUserWidgetAsyncAction* UUserWidgetAsyncAction::AsyncCloseUserWidget(UUserWidget
 
 	FSimpleMulticastDelegate OnHandleFinish;
 	OnHandleFinish.AddUObject(NewAction, &UUserWidgetAsyncAction::OnHandleFinish);
-	GetManager<UScreenWidgetManager>()->CloseUserWidget(InWidget, OnHandleFinish);
+	// GetManager<UScreenWidgetManager>()->CloseUserWidget(InWidget, OnHandleFinish);
 
 	return NewAction;
 }
@@ -46,7 +46,7 @@ UUserWidgetAsyncAction* UUserWidgetAsyncAction::AsyncCloseUserWidgetByTag(FGamep
 
 	FSimpleMulticastDelegate OnHandleFinish;
 	OnHandleFinish.AddUObject(NewAction, &UUserWidgetAsyncAction::OnHandleFinish);
-	GetManager<UScreenWidgetManager>()->CloseUserWidget(InSlotTag, OnHandleFinish);
+	// GetManager<UScreenWidgetManager>()->CloseUserWidget(InSlotTag, OnHandleFinish);
 
 	return NewAction;
 }

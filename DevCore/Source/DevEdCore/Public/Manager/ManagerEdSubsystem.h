@@ -18,30 +18,12 @@ class DEVEDCORE_API UManagerEdSubsystem : public UEditorSubsystem
 	GENERATED_BODY()
 
 public:
-	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
-	virtual void Deinitialize() override;
 	static UManagerEdSubsystem* Get();
-	virtual UWorld* GetWorld() const override;
 
 protected:
 	FDelegateHandle LevelEditorCreatedHandle;
 	virtual void OnLevelEditorCreated(TSharedPtr<ILevelEditor> LevelEditor);
-
-	FDelegateHandle MapChangedHandle;
-	virtual void OnMapChanged(UWorld* InWorld, EMapChangeType InMapChangeType);
-
-	FDelegateHandle PIEBeginHandle;
-	virtual void OnPIEBegin(const bool bIsSimulating);
-
-	FDelegateHandle PIEEndHandle;
-	virtual void OnPIEEnd(const bool bIsSimulating);
-
-	FDelegateHandle PostManagerInActivedHandle;
-	virtual void PostManagerInActived();
-
-	FDelegateHandle EditorCloseHandle;
-	virtual void OnEditorClose();
 
 protected:
 	virtual void ExtendEditor();
@@ -51,11 +33,7 @@ protected:
 	virtual void RegisterEditorToolBarOptionMenu(UToolMenu* InToolMenu);
 
 protected:
-	FName MenuBarSectionName = "DevEdMenuBar";
-	FName ToolBarSectionName = "DevEdTooBar";
+	static FName MenuBarSectionName;
+	static FName ToolBarSectionName;
 	TSharedPtr<FUICommandList> CommandList = nullptr;
-
-protected:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	UWorld* EditorWorld;
 };

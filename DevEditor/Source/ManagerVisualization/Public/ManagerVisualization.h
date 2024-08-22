@@ -6,7 +6,6 @@
 class FManagerVisualizationModule : public ICommonEdModuleInterface
 {
 protected:
-	virtual void GetRegisterManager(TArray<TSubclassOf<UCoreManager>>& InRegisterManagerClasses) override;
 	virtual void RegisterCommand() override;
 	virtual void UnRegisterCommand() override;
 };

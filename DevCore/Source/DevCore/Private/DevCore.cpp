@@ -8,12 +8,9 @@
 
 #define LOCTEXT_NAMESPACE "FDevCoreModule"
 
-void FDevCoreModule::GetRegisterManager(TArray<TSubclassOf<UCoreManager>>& InRegisterManagerClasses)
+void FDevCoreModule::StartupModule()
 {
-	ICommonModuleInterface::GetRegisterManager(InRegisterManagerClasses);
-	InRegisterManagerClasses.Add(UProcedureManager::StaticClass());
-	InRegisterManagerClasses.Add(UInputManager::StaticClass());
-	InRegisterManagerClasses.Add(UPawnManager::StaticClass());
+	ICommonModuleInterface::StartupModule();
 }
 
 #undef LOCTEXT_NAMESPACE

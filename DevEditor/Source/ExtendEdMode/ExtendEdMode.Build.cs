@@ -11,6 +11,7 @@ public class ExtendEdMode : ModuleRules
 			{
 				"Core",
 				"DevEdCore",
+				"DevSlateCore",
 			}
 		);
 

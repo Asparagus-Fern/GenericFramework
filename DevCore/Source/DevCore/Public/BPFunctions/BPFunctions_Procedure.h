@@ -18,22 +18,22 @@ class DEVCORE_API UBPFunctions_Procedure : public UBlueprintFunctionLibrary
 
 public:
 	/* 切换流程 */
-	UFUNCTION(BlueprintCallable, meta=(GameplayTagFilter="Procedure"))
-	static void SwitchProcedure(FGameplayTag InProcedureTag, bool bForce = false);
+	UFUNCTION(BlueprintCallable, meta=(WorldContext = "WorldContextObject", GameplayTagFilter="Procedure"))
+	static void SwitchProcedure(const UObject* WorldContextObject, FGameplayTag InProcedureTag, bool bForce = false);
 
 	/* 从标签获取流程数据 */
-	UFUNCTION(BlueprintPure, meta=(GameplayTagFilter="Procedure"))
-	static UGameplayProcedure* GetGameplayProcedure(FGameplayTag InProcedureTag);
+	UFUNCTION(BlueprintPure, meta=(WorldContext = "WorldContextObject", GameplayTagFilter="Procedure"))
+	static UGameplayProcedure* GetGameplayProcedure(const UObject* WorldContextObject, FGameplayTag InProcedureTag);
 
 	/* 获取上一个流程标签 */
-	UFUNCTION(BlueprintPure)
-	static FGameplayTag GetLastProcedureTag();
+	UFUNCTION(BlueprintPure, meta=(WorldContext = "WorldContextObject"))
+	static FGameplayTag GetLastProcedureTag(const UObject* WorldContextObject);
 
 	/* 获取当前流程标签 */
-	UFUNCTION(BlueprintPure)
-	static FGameplayTag GetCurrentProcedureTag();
+	UFUNCTION(BlueprintPure, meta=(WorldContext = "WorldContextObject"))
+	static FGameplayTag GetCurrentProcedureTag(const UObject* WorldContextObject);
 
 	/* 获取所有注册流程的映射 */
-	UFUNCTION(BlueprintPure)
-	static TMap<FGameplayTag, UGameplayProcedure*>& GetGameplayProcedureMapping();
+	UFUNCTION(BlueprintPure, meta=(WorldContext = "WorldContextObject"))
+	static bool GetGameplayProcedures(const UObject* WorldContextObject, TMap<FGameplayTag, UGameplayProcedure*>& GameplayProcedures);
 };

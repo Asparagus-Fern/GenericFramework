@@ -63,15 +63,17 @@ class WORLDWIDGETEDGENERATION_API UWorldWidgetEdManager : public UWorldWidgetMan
 
 public:
 	UWorldWidgetEdManager();
+	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
+	virtual bool DoesSupportWorldType(const EWorldType::Type WorldType) const override;
 
 	/* FTickableGameObject */
 public:
 	virtual bool IsTickableInEditor() const override { return true; }
 
 	/* IManagerInterface */
-public:
-	virtual FText GetManagerDisplayName() override;
-	virtual bool DoesSupportWorldType(EWorldType::Type InWorldType) override;
+	// public:
+	// 	virtual FText GetManagerDisplayName() override;
+	// 	virtual bool DoesSupportWorldType(EWorldType::Type InWorldType) override;
 
 	/* IProcedureBaseInterface */
 public:
@@ -80,9 +82,9 @@ public:
 	virtual void NativeOnRefresh() override;
 
 	/* IManagerEdInterface */
-public:
-	virtual void NativeOnEditorActived() override;
-	virtual void NativeOnEditorInactived() override;
+	// public:
+	// virtual void NativeOnEditorActived() override;
+	// virtual void NativeOnEditorInactived() override;
 
 	/* UWorldWidgetEdManager */
 protected:

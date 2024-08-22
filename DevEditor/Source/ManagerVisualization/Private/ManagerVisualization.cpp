@@ -5,12 +5,6 @@
 
 #define LOCTEXT_NAMESPACE "FManagerVisualizationModule"
 
-void FManagerVisualizationModule::GetRegisterManager(TArray<TSubclassOf<UCoreManager>>& InRegisterManagerClasses)
-{
-	ICommonEdModuleInterface::GetRegisterManager(InRegisterManagerClasses);
-	InRegisterManagerClasses.Add(UManagerEditor::StaticClass());
-}
-
 void FManagerVisualizationModule::RegisterCommand()
 {
 	FManagerEditorCommands::Register();

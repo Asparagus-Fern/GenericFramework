@@ -23,7 +23,7 @@ class SCREENWIDGETGENERATION_API IWidgetAnimationInterface
 
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Widget Animation Interface")
-	bool HasAnimationEvent() const;
+	bool HasAnimationEvent(bool InIsActive) const;
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Widget Animation Interface")
 	UWidgetAnimationEvent* GetActiveAnimationEvent() const;
@@ -39,4 +39,7 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Widget Animation Interface")
 	void PlayAnimationEvent(bool InIsActive);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Widget Animation Interface")
+	float GetAnimationDuration(bool InIsActive);
 };

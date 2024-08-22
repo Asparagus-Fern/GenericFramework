@@ -6,6 +6,7 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "Manager/ManagerGlobal.h"
 #include "Pawn/PawnManager.h"
+#include "Pawn/PawnManagerSetting.h"
 
 UE_DEFINE_GAMEPLAY_TAG(TAG_Pawn, "Pawn");
 
@@ -23,49 +24,39 @@ ADevPawn::ADevPawn()
 void ADevPawn::BeginPlay()
 {
 	Super::BeginPlay();
-	GetManager<UPawnManager>()->RegisterPawn(this);
+
+	if (UPawnManager* PawnManager = GetManager<UPawnManager>(this))
+	{
+		PawnManager->RegisterPawn(this);
+	}
 }
 
 void ADevPawn::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-	GetManager<UPawnManager>()->UnRegisterPawn(this);
+	if (UPawnManager* PawnManager = GetManager<UPawnManager>(this))
+	{
+		PawnManager->UnRegisterPawn(this);
+	}
+
 	Super::EndPlay(EndPlayReason);
 }
 
-void ADevPawn::NativeOnCreate()
+void ADevPawn::AddLocation_Implementation(const FVector2D InValue)
 {
-	IProcedureBaseInterface::NativeOnCreate();
-	Execute_OnCreate(this);
-}
-
-void ADevPawn::NativeOnDestroy()
-{
-	IProcedureBaseInterface::NativeOnDestroy();
-	Execute_OnDestroy(this);
-}
-
-void ADevPawn::NativeOnRefresh()
-{
-	IProcedureBaseInterface::NativeOnRefresh();
-	Execute_OnRefresh(this);
-}
-
-void ADevPawn::AddLocation_Implementation(FVector2D InValue)
-{
-	if (CanMove())
+	if (PawnLockingState.CanMove(GetActorLocation()))
 	{
-		const FVector2D Movement = InValue * GetManager<UPawnManager>()->MovementSpeed;
+		const FVector2D Movement = InValue * UPawnManagerSetting::Get()->MovementSpeed;
 
 		AddMovementInput(UKismetMathLibrary::GetRightVector(GetActorRotation()), Movement.X);
 		AddMovementInput(UKismetMathLibrary::GetForwardVector(GetActorRotation()), Movement.Y);
 	}
 }
 
-void ADevPawn::AddRotation_Implementation(FVector2D InValue)
+void ADevPawn::AddRotation_Implementation(const FVector2D InValue)
 {
-	if (CanTurn())
+	if (PawnLockingState.CanTurn(GetActorRotation()))
 	{
-		const FVector2D Rotation = InValue * GetManager<UPawnManager>()->RotationSpeed;
+		const FVector2D Rotation = InValue * UPawnManagerSetting::Get()->RotationSpeed;
 
 		AddControllerYawInput(Rotation.X);
 		AddControllerPitchInput(Rotation.Y);
@@ -74,7 +65,7 @@ void ADevPawn::AddRotation_Implementation(FVector2D InValue)
 
 void ADevPawn::SetLocation_Implementation(const FVector InValue)
 {
-	if (CanMove())
+	if (PawnLockingState.CanMove(GetActorLocation()))
 	{
 		SetActorLocation(InValue);
 	}
@@ -82,7 +73,7 @@ void ADevPawn::SetLocation_Implementation(const FVector InValue)
 
 void ADevPawn::SetRotation_Implementation(const FRotator InValue)
 {
-	if (CanTurn())
+	if (PawnLockingState.CanTurn(GetActorRotation()))
 	{
 		SetActorRotation(InValue);
 	}

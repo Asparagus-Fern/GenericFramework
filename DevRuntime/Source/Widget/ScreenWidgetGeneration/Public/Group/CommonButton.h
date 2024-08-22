@@ -5,14 +5,11 @@
 #include "CoreMinimal.h"
 #include "CommonButtonBase.h"
 #include "ScreenWidgetType.h"
-#include "Animation/WidgetAnimationInterface.h"
-#include "Procedure/ProcedureBaseInterface.h"
 #include "Procedure/ProcedureInterface.h"
-#include "Procedure/ProcedureType.h"
 #include "CommonButton.generated.h"
 
-class UWidgetAnimationEvent;
-class UProcedureHandle;
+class UScreenWidgetManager;
+class UInteractableUserWidgetBase;
 class UCommonButtonEvent;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnButtonEventHandleFinish);
@@ -20,14 +17,18 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnButtonEventHandleFinish);
 /**
  * 
  */
-UCLASS()
+UCLASS(HideCategories=(Appearance,Interaction,Layout,Localization,Performance,Navigation,Designer,Rendering,RenderTransform,Behavior))
 class SCREENWIDGETGENERATION_API UCommonButton : public UCommonButtonBase
                                                  , public IProcedureInterface
-	// , public IWidgetAnimationInterface
 {
 	GENERATED_BODY()
 
 	friend UCommonButtonGroup;
+	friend UInteractableUserWidgetBase;
+	friend UScreenWidgetManager;
+
+public:
+	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnButtonResponse, UCommonButton*, ECommonButtonResponseEvent)
 
 	/* UCommonButtonBase */
 public:
@@ -55,48 +56,7 @@ public:
 	virtual void NativeOnRefresh() override;
 	virtual void NativeOnDestroy() override;
 
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	bool bEnableInteraction;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Instanced)
-	TArray<UCommonButtonEvent*> Events;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<FCommonButtonEventModify> ModifyPushEvents;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<FCommonButtonEventModify> ModifyPopEvents;
-
-public:
-	UFUNCTION(BlueprintCallable)
-	void SetEnableInteraction(bool InEnableInteraction);
-
 protected:
-	UPROPERTY(Transient)
-	UProcedureHandle* ActiveProcedureHandle = nullptr;
-
-	UPROPERTY(BlueprintAssignable)
-	FOnButtonEventHandleFinish OnButtonEventHandleFinish;
-
-public:
-	void ResponseButtonEvent(ECommonButtonResponseEvent InResponseEvent, const FSimpleMulticastDelegate& OnFinish = FSimpleMulticastDelegate());
-
-	/* todo:修正事件可以为空，不能以数组是否为空来判断是否被修正 */
-protected:
-	virtual TArray<FProcedureInterfaceHandle> GetResponseEventHandles(ECommonButtonResponseEvent InResponseEvent);
-	virtual TArray<FProcedureInterfaceHandle> GetResponseModifyEventHandles(ECommonButtonResponseEvent InResponseEvent);
-	virtual TArray<UCommonButtonEvent*> GetResponseEvents(ECommonButtonResponseEvent InResponseEvent);
-	virtual TArray<UCommonButtonEvent*> GetResponseModifyEvents(ECommonButtonResponseEvent InResponseEvent);
-
-	/* IWidgetAnimationInterface */
-public:
-	// virtual UWidgetAnimationEvent* GetAnimationEvent_Implementation() const override;
-	// virtual void SetAnimationEvent_Implementation(UWidgetAnimationEvent* InAnimationEvent) override;
-	// virtual bool HasAnimationEvent_Implementation() const override;
-	// virtual void PlayAnimationEvent_Implementation(bool InIsActive) override;
-
-public:
-	UPROPERTY(EditAnywhere, Instanced)
-	UWidgetAnimationEvent* AnimationEvent = nullptr;
+	FOnButtonResponse OnButtonResponse;
+	void HandleResponse(ECommonButtonResponseEvent InResponseEvent);
 };

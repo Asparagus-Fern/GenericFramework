@@ -5,6 +5,12 @@
 
 #include "ScreenWidgetType.h"
 
-void UWidgetAnimationEvent::PlayAnimation_Implementation(UWidget* TargetWidget)
+void UWidgetAnimationEvent::PlayAnimation_Implementation()
 {
+}
+
+void UWidgetAnimationEvent::NativePlayAnimation(UWidget* InTargetWidget)
+{
+	TargetWidget = InTargetWidget;
+	PlayAnimation();
 }

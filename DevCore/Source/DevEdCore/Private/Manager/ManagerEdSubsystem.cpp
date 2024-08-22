@@ -3,17 +3,14 @@
 
 #include "Manager/ManagerEdSubsystem.h"
 
-#include "DevEdCoreStyle.h"
 #include "LevelEditor.h"
 #include "Manager/ManagerEdInterface.h"
 #include "Manager/ManagerGlobal.h"
 
 #define LOCTEXT_NAMESPACE "UManagerEdSubsystem"
 
-bool UManagerEdSubsystem::ShouldCreateSubsystem(UObject* Outer) const
-{
-	return Super::ShouldCreateSubsystem(Outer);
-}
+FName UManagerEdSubsystem::MenuBarSectionName = "DevEdMenuBar";
+FName UManagerEdSubsystem::ToolBarSectionName = "DevEdTooBar";
 
 void UManagerEdSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
@@ -21,17 +18,6 @@ void UManagerEdSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 
 	FLevelEditorModule& LevelEditorModule = FModuleManager::Get().GetModuleChecked<FLevelEditorModule>("LevelEditor");
 	LevelEditorCreatedHandle = LevelEditorModule.OnLevelEditorCreated().AddUObject(this, &UManagerEdSubsystem::OnLevelEditorCreated);
-	MapChangedHandle = LevelEditorModule.OnMapChanged().AddUObject(this, &UManagerEdSubsystem::OnMapChanged);
-
-	PIEBeginHandle = FEditorDelegates::BeginPIE.AddUObject(this, &UManagerEdSubsystem::OnPIEBegin);
-	PIEEndHandle = FEditorDelegates::EndPIE.AddUObject(this, &UManagerEdSubsystem::OnPIEEnd);
-
-	EditorCloseHandle = GEditor->OnEditorClose().AddUObject(this, &UManagerEdSubsystem::OnEditorClose);
-}
-
-void UManagerEdSubsystem::Deinitialize()
-{
-	Super::Deinitialize();
 }
 
 UManagerEdSubsystem* UManagerEdSubsystem::Get()
@@ -39,107 +25,9 @@ UManagerEdSubsystem* UManagerEdSubsystem::Get()
 	return GEditor->GetEditorSubsystem<UManagerEdSubsystem>();
 }
 
-UWorld* UManagerEdSubsystem::GetWorld() const
-{
-	if (!HasAnyFlags(RF_ClassDefaultObject) && ensureMsgf(GetOuter(), TEXT("Manager: %s has a null OuterPrivate in UCoreManager::GetWorld()"), *GetFullName())
-		&& !GetOuter()->HasAnyFlags(RF_BeginDestroyed) && !GetOuter()->IsUnreachable())
-	{
-		return EditorWorld;
-	}
-	return Super::GetWorld();
-}
-
 void UManagerEdSubsystem::OnLevelEditorCreated(TSharedPtr<ILevelEditor> LevelEditor)
 {
-	ExtendEditor();
-}
-
-void UManagerEdSubsystem::OnMapChanged(UWorld* InWorld, EMapChangeType InMapChangeType)
-{
-	if (InWorld->WorldType == EWorldType::Editor || InWorld->WorldType == EWorldType::EditorPreview)
-	{
-		if (InMapChangeType == EMapChangeType::LoadMap || InMapChangeType == EMapChangeType::NewMap)
-		{
-			EditorWorld = InWorld;
-
-			ProcessManagerInterfacesInOrder<IManagerEdInterface>
-			(
-				true, [this](IManagerEdInterface* Interface)
-				{
-					if (!Interface->GetIsEditorActived())
-					{
-						Interface->NativeOnEditorActived();
-					}
-				}
-			);
-		}
-		else if (InMapChangeType == EMapChangeType::TearDownWorld)
-		{
-			ProcessManagerInterfacesInOrder<IManagerEdInterface>
-			(
-				false, [this](IManagerEdInterface* Interface)
-				{
-					if (Interface->GetIsEditorActived())
-					{
-						Interface->NativeOnEditorInactived();
-					}
-				}
-			);
-
-			EditorWorld = nullptr;
-		}
-	}
-}
-
-void UManagerEdSubsystem::OnPIEBegin(const bool bIsSimulating)
-{
-	ProcessManagerInterfacesInOrder<IManagerEdInterface>
-	(
-		false, [this](IManagerEdInterface* Interface)
-		{
-			if (Interface->GetIsEditorActived())
-			{
-				Interface->NativeOnEditorInactived();
-			}
-		}
-	);
-}
-
-void UManagerEdSubsystem::OnPIEEnd(const bool bIsSimulating)
-{
-	PostManagerInActivedHandle = FManagerDelegates::PostManagerInActived.AddUObject(this, &UManagerEdSubsystem::PostManagerInActived);
-}
-
-void UManagerEdSubsystem::PostManagerInActived()
-{
-	FManagerDelegates::PostManagerInActived.Remove(PostManagerInActivedHandle);
-
-	ProcessManagerInterfacesInOrder<IManagerEdInterface>
-	(
-		true, [this](IManagerEdInterface* Interface)
-		{
-			if (!Interface->GetIsEditorActived())
-			{
-				Interface->NativeOnEditorActived();
-			}
-		}
-	);
-}
-
-void UManagerEdSubsystem::OnEditorClose()
-{
-	ProcessManagerInterfacesInOrder<IManagerEdInterface>
-	(
-		false, [this](IManagerEdInterface* Interface)
-		{
-			if (Interface->GetIsEditorActived())
-			{
-				Interface->NativeOnEditorInactived();
-			}
-		}
-	);
-
-	EditorWorld = nullptr;
+	// ExtendEditor();
 }
 
 void UManagerEdSubsystem::ExtendEditor()
@@ -149,12 +37,12 @@ void UManagerEdSubsystem::ExtendEditor()
 	/* 扩展 ToolBar */
 	UToolMenu* ToolBar = UToolMenus::Get()->ExtendMenu("LevelEditor.LevelEditorToolBar.User");
 	FToolMenuSection& ToolBarSection = ToolBar->FindOrAddSection(ToolBarSectionName);
-
+	
 	/* IManagerEdInterface 扩展 ToolBar 接口 */
-	for (const auto& Interface : GetManagersWithInterface<IManagerEdInterface>())
+	for (const auto& Interface : GetManagersWithInterface<IManagerEdInterface>(this))
 	{
 		Interface->InitCommandList(CommandList);
-		Interface->ExtendToolBar(ToolBarSection);
+		IManagerEdInterface::Execute_ExtendToolBar(Cast<UCoreManager>(Interface), ToolBarSection);
 	}
 
 	for (auto& Block : ToolBarSection.Blocks)
@@ -166,8 +54,11 @@ void UManagerEdSubsystem::ExtendEditor()
 	UToolMenu* AssetToolbar = UToolMenus::Get()->ExtendMenu("AssetEditor.DefaultToolBar");
 	FToolMenuSection& AssetToolbarSection = AssetToolbar->FindOrAddSection(ToolBarSectionName);
 	AssetToolbarSection = ToolBarSection;
-
+	
+	/* 扩展MenuBar */
 	RegisterEditorMenuBar();
+
+	/* 扩展ToolBar */
 	RegisterEditorToolBarOption();
 }
 
@@ -189,9 +80,9 @@ void UManagerEdSubsystem::RegisterEditorMenuBar()
 void UManagerEdSubsystem::RegisterEditorMenuBarMenu(UToolMenu* InToolMenu)
 {
 	/* IManagerEdInterface 扩展 MenuBar 接口 */
-	for (const auto& Interface : GetManagersWithInterface<IManagerEdInterface>())
+	for (const auto& Interface : GetManagersWithInterface<IManagerEdInterface>(this))
 	{
-		Interface->ExtendMenu(InToolMenu);
+		IManagerEdInterface::Execute_ExtendMenu(Cast<UCoreManager>(Interface), InToolMenu);
 	}
 }
 
@@ -223,9 +114,9 @@ void UManagerEdSubsystem::RegisterEditorToolBarOption()
 void UManagerEdSubsystem::RegisterEditorToolBarOptionMenu(UToolMenu* InToolMenu)
 {
 	/* IManagerEdInterface 扩展 ToolBar选项卡 接口 */
-	for (const auto& Interface : GetManagersWithInterface<IManagerEdInterface>())
+	for (const auto& Interface : GetManagersWithInterface<IManagerEdInterface>(this))
 	{
-		Interface->ExtendToolBarMenu(InToolMenu);
+		IManagerEdInterface::Execute_ExtendToolBarMenu(Cast<UCoreManager>(Interface), InToolMenu);
 	}
 }
 

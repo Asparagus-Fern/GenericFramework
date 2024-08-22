@@ -7,12 +7,16 @@
 #include "LevelEditorSubsystem.h"
 #include "LevelEditorViewport.h"
 #include "CameraPoint/CameraPointBase.h"
-#include "Manager/ManagerEdGlobal.h"
 
 #define LOCTEXT_NAMESPACE "UCameraEdManager"
 
 UCameraEdManager::UCameraEdManager()
 {
+}
+
+bool UCameraEdManager::DoesSupportWorldType(const EWorldType::Type WorldType) const
+{
+	return WorldType == EWorldType::Editor;
 }
 
 void UCameraEdManager::NativeOnCreate()
@@ -26,31 +30,14 @@ void UCameraEdManager::NativeOnCreate()
 void UCameraEdManager::NativeOnDestroy()
 {
 	Super::NativeOnDestroy();
-}
 
-void UCameraEdManager::NativeOnActived()
-{
-	Super::NativeOnActived();
-}
-
-void UCameraEdManager::NativeOnInactived()
-{
-	Super::NativeOnInactived();
-}
-
-FText UCameraEdManager::GetManagerDisplayName()
-{
-	return LOCTEXT("DisplayName", "Camera Editor Manager");
-}
-
-bool UCameraEdManager::DoesSupportWorldType(EWorldType::Type InWorldType)
-{
-	return Super::DoesSupportWorldType(InWorldType) || InWorldType == EWorldType::Editor;
+	FCameraSystemDelegates::OnCopyViewportCamera.RemoveAll(this);
+	FCameraSystemDelegates::OnCameraPointPilotStateChanged.RemoveAll(this);
 }
 
 void UCameraEdManager::OnCopyViewportCamera(ACameraPointBase* InCameraPoint)
 {
-	if (!IsValid(GetWorld()) && IsValid(FManagerEdGlobal::GetEditorWorld()))
+	if (!IsValid(GetWorld()))
 	{
 		InCameraPoint->Modify();
 		InCameraPoint->SetActorLocation(GCurrentLevelEditingViewportClient->GetViewLocation());

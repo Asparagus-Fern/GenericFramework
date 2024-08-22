@@ -5,20 +5,21 @@
 #include "Components/Widget.h"
 #include "ScreenWidgetType.generated.h"
 
+class UInteractableUserWidgetBase;
 class UUserWidgetBase;
 class UCommonButtonEvent;
 class UCommonButtonGroup;
 class UMenuStyle;
 class UMenuContainer;
 
-UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_UMG);
+UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_HUD);
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Menu);
 
 /**
  * 一个在类和实例间切换的Widget容器
  */
 USTRUCT(BlueprintType)
-struct FWidgetContainer
+struct SCREENWIDGETGENERATION_API FWidgetContainer
 {
 	GENERATED_BODY()
 
@@ -37,28 +38,19 @@ public:
 };
 
 /**
- * 对特定的MenuTag进行特定的处理
+ * 表示按钮的激活条件
  */
-USTRUCT(BlueprintType)
-struct FCommonButtonEventModify
+UENUM(BlueprintType)
+enum class ECommonButtonResponseEvent
 {
-	GENERATED_BODY()
-
-public:
-	/* 标签匹配是否使用Match */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	bool bMatch = false;
-
-	/* 需要修正的菜单标签 */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="Menu"))
-	TArray<FGameplayTag> MenuTags;
-
-	/* 修正处理 */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced)
-	TArray<UCommonButtonEvent*> ModifyEvent;
-
-public:
-	bool CanModify(bool bSelected);
+	None,
+	OnSelected,
+	OnDeselected,
+	OnClick,
+	OnHovered,
+	OnUnHovered,
+	OnPressed,
+	OnReleased
 };
 
 /**
@@ -93,22 +85,43 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UTexture2D* Icon = nullptr;
 
-	/* 覆盖样式类 */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced)
-	UMenuStyle* MenuStyleOverride = nullptr;
-
-	// UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	// bool bIsHidden = false;
-
-	/* 按钮事件 */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced)
-	TArray<UCommonButtonEvent*> Events;
-
+	/* 隐藏，完全不可视 */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TArray<FCommonButtonEventModify> ModifyPushEvents;
+	bool bHidden = false;
 
+	/* 可视，但是否无效化，当为false时，所有的交互将无效化 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(EditConditionHides, EditCondition = "!bHidden"))
+	bool bIsEnable = true;
+
+	/* 可视，是否可被选择，当为false时，OnSelected/OnDeselected不再有效 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(EditConditionHides, EditCondition = "!bHidden && bIsEnable"))
+	bool bSelectable = true;
+
+	/* 是否在选中时再次点击取消选中 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(EditConditionHides, EditCondition = "!bHidden && bIsEnable && bSelectable"))
+	bool bToggleable = false;
+
+	/* 是否默认选中 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(EditConditionHides, EditCondition = "!bHidden && bIsEnable && bSelectable"))
+	bool bIsSelected = false;
+
+	/* 菜单容器 */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TArray<FCommonButtonEventModify> ModifyPopEvents;
+	TSubclassOf<UMenuContainer> Container;
+
+	/* 菜单样式 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TSubclassOf<UMenuStyle> Style;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced)
+	TArray<UCommonButtonEvent*> ActivedEvents;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced)
+	TArray<UCommonButtonEvent*> InactivedEvents;
+
+	/* true则为激活，表示在该条件下激活按钮 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TMap<ECommonButtonResponseEvent, bool> ResponseState;
 
 public:
 	bool operator==(const FMenuInfo InMenuInfo) const
@@ -123,55 +136,7 @@ public:
 };
 
 /**
- * 表示一个按钮组
- */
-USTRUCT(BlueprintType)
-struct FMenuContainerInfo
-{
-	GENERATED_BODY()
-
-public:
-	FMenuContainerInfo();
-	FMenuContainerInfo(FGameplayTag InContainerTag);
-
-public:
-	/* Ex:如果有A.1和A.2，那么ContainerTag是A */
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
-	FGameplayTag ContainerTag;
-
-	/* 如果为true，表示这组按钮必须选中一个，将强制 bIsToggleable = false */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	bool bIsSelectionRequired = false;
-
-	/* 如果为true，表示这组按钮可以在选中时再次点击取消选中状态 */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(EditConditionHides, EditCondition = "!bIsSelectionRequired"))
-	bool bIsToggleable = true;
-
-	/* 当 bIsSelectionRequired = true 时，默认选中的Index */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(EditConditionHides, EditCondition = "bIsSelectionRequired"))
-	int32 SelectionRequiredIndex = 0;
-
-	/* 按钮的样式类 */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TSubclassOf<UMenuStyle> MenuStyle = nullptr;
-
-	/* 按钮的容器，覆盖MenuContainer的ConstructMenuStyle将按钮添加进控件 */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced)
-	UMenuContainer* MenuContainer = nullptr;
-
-	/* 按钮信息 */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (TitleProperty = "MenuTag"))
-	TArray<FMenuInfo> MenuInfos;
-
-public:
-	bool operator==(const FGameplayTag InContainerTag) const
-	{
-		return ContainerTag == InContainerTag;
-	}
-};
-
-/**
- * 表示一个按钮组的生成信息
+ * 表示一个按钮的生成信息
  */
 USTRUCT(BlueprintType)
 struct FMenuGenerateInfo
@@ -180,43 +145,31 @@ struct FMenuGenerateInfo
 
 public:
 	FMenuGenerateInfo();
-	FMenuGenerateInfo(UCommonButtonGroup* InCommonButtonGroup, const FMenuContainerInfo& InMenuContainerInfo);
+	FMenuGenerateInfo(UMenuContainer* InMenuContainer);
 
 public:
-	bool operator==(FGameplayTag InContainerTag) const
-	{
-		return MenuContainerInfo.ContainerTag == InContainerTag;
-	}
-
-	bool operator==(const FMenuContainerInfo& InContainerInfo) const
-	{
-		return MenuContainerInfo.ContainerTag == InContainerInfo.ContainerTag;
-	}
-
-	bool operator==(const FMenuGenerateInfo InMenuGenerateInfo) const
-	{
-		return MenuContainerInfo.ContainerTag == InMenuGenerateInfo.MenuContainerInfo.ContainerTag;
-	}
-
-	bool HasMenuInfo(FGameplayTag InMenuTag);
-
-	void SelectMenu(FGameplayTag InMenuTag);
-
-	void DeselectMenu(FGameplayTag InMenuTag);
-
-	UMenuStyle* GetMenuStyle(FGameplayTag InMenuTag);
+	bool operator==(const FMenuGenerateInfo& OtherGenerateInfo) const;
+	bool operator==(const TSubclassOf<UMenuContainer> OtherMenuContainerClass) const;
+	bool operator==(UMenuStyle* MenuStyle) const;
+	bool operator==(const FMenuInfo& MenuInfo) const;
+	bool operator==(FGameplayTag MenuTag) const;
 
 public:
-	UPROPERTY(BlueprintReadOnly)
-	UCommonButtonGroup* CommonButtonGroup = nullptr;
+	UPROPERTY(BlueprintReadOnly, Transient)
+	UMenuContainer* MenuContainer = nullptr;
 
-	UPROPERTY(BlueprintReadOnly)
-	FMenuContainerInfo MenuContainerInfo;
-
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly, Transient)
 	TArray<UMenuStyle*> MenuStyles;
 
 public:
+	bool GetIsValid() const;
+	UMenuStyle* GetMenuStyle(FGameplayTag MenuTag);
+	void MarkMenuStyleAsGarbage(UMenuStyle* InMenuStyle);
+	void ClearupGarbageMenuStyle();
+
+protected:
+	UPROPERTY(BlueprintReadOnly, Transient)
+	TArray<UMenuStyle*> GarbageMenuStyles;
 };
 
 /**
@@ -242,20 +195,4 @@ public:
 
 	DECLARE_MULTICAST_DELEGATE_OneParam(FWidgetAnimationDelegate, UWidget*)
 	static FWidgetAnimationDelegate OnWidgetAnimationFinish;
-};
-
-/**
- * 表示按钮的激活条件
- */
-UENUM(BlueprintType)
-enum class ECommonButtonResponseEvent
-{
-	None,
-	OnSelected,
-	OnDeselected,
-	OnClick,
-	OnHovered,
-	OnUnHovered,
-	OnPressed,
-	OnReleased
 };

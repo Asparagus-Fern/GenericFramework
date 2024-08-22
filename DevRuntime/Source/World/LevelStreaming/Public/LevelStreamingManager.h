@@ -18,10 +18,6 @@ class LEVELSTREAMING_API ULevelStreamingManager : public UCoreManager
 public:
 	ULevelStreamingManager();
 
-	/* IManagerInterface */
-public:
-	virtual FText GetManagerDisplayName() override;
-
 	/* IProcedureBaseInterface */
 public:
 	virtual void NativeOnCreate() override;

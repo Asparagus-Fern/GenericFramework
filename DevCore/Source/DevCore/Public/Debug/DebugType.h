@@ -5,8 +5,6 @@
 
 DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(Debug_Default, Log, All);
 
-DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(Debug_Module, Log, All);
-
 DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(Debug_Manager, Log, All);
 
 DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(Debug_Procedure, Log, All);
@@ -17,10 +15,10 @@ DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(Debug_Camera, Log, All);
 
 DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(Debug_World, Log, All);
 
-#define DEBUG(CategoryName, Verbosity, Format, ...) \
+#define LOG(CategoryName, Verbosity, Format, ...) \
 UE_LOG(CategoryName, Verbosity, TEXT("(%s) %s"), ANSI_TO_TCHAR(__FUNCTION__), *FString::Printf(Format,##__VA_ARGS__))
 
-#define LOG(Verbosity, Format, ...) \
+#define PRINT(Verbosity, Format, ...) \
 if(IsValid(GEngine)){ \
 if (::ELogVerbosity::Verbosity == ::ELogVerbosity::Error){ \
 GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red,FString::Printf(Format,##__VA_ARGS__)); \
@@ -33,23 +31,15 @@ GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Green,FString::Printf(Format,
 } \
 }
 
-#define Notify(Format, ...) \
+#define NOTIFY(Format, ...) \
 { \
 FNotificationInfo NotificationInfo(FText::FromString(FString::Printf(TEXT("%s"),ANSI_TO_TCHAR(__FUNCTION__)))); \
 NotificationInfo.SubText = FText::FromString(FString::Printf(Format,##__VA_ARGS__)); \
 NotificationInfo.FadeInDuration = .5f; \
 NotificationInfo.FadeOutDuration = .5f; \
-NotificationInfo.ExpireDuration = 4.f; \
+NotificationInfo.ExpireDuration = 8.f; \
 FSlateNotificationManager::Get().AddNotification(NotificationInfo); \
 }
-
-#define DEBUG_LOG(CategoryName, Verbosity, Format, ...) \
-UE_LOG(CategoryName, Verbosity, TEXT("(%s) %s"), ANSI_TO_TCHAR(__FUNCTION__), *FString::Printf(Format,##__VA_ARGS__)) \
-LOG(Verbosity, Format, ##__VA_ARGS__)
-
-#define DEBUG_Notify(CategoryName, Verbosity, Format, ...) \
-UE_LOG(CategoryName, Verbosity, TEXT("(%s) %s"), ANSI_TO_TCHAR(__FUNCTION__), *FString::Printf(Format,##__VA_ARGS__)) \
-Notify(Format, ##__VA_ARGS__)
 
 /* FNotificationInfo :
 

@@ -10,8 +10,9 @@ public class ManagerVisualization : ModuleRules
 			new string[]
 			{
 				"Core",
+				"DevSlateCore",
 				"DevCore",
-				"DevEdCore",
+				"DevEdCore", 
 			}
 		);
 

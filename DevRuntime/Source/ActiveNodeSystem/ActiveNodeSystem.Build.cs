@@ -10,7 +10,7 @@ public class ActiveNodeSystem : ModuleRules
 			new string[]
 			{
 				"Core",
-				"DevCore", 
+				"DevCore",
 				"ModularGameplay",
 			}
 		);
@@ -22,7 +22,8 @@ public class ActiveNodeSystem : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
-				"GameplayTags"
+				"GameplayTags",
+				"DeveloperSettings"
 			}
 		);
 	}

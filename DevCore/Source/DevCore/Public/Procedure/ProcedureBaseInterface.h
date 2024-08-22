@@ -33,4 +33,7 @@ public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Procedure Base Interface")
 	void OnRefresh();
 	virtual void NativeOnRefresh();
+
+public:
+	virtual int32 GetProcedureOrder() { return 0; }
 };

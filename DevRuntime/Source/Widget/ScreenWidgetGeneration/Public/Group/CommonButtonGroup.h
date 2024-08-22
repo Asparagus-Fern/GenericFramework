@@ -20,16 +20,4 @@ class SCREENWIDGETGENERATION_API UCommonButtonGroup : public UCommonButtonGroupB
 
 	/* UCommonButtonGroupBase */
 public:
-	UPROPERTY(EditAnywhere, Getter, Setter, BlueprintGetter="GetSelectionRequiredIndex", BlueprintSetter="SetSelectionRequiredIndex")
-	int32 SelectionRequiredIndex = 0;
-
-public:
-	UFUNCTION(BlueprintPure)
-	int32 GetSelectionRequiredIndex() const;
-
-	UFUNCTION(BlueprintCallable)
-	void SetSelectionRequiredIndex(int32 InIndex);
-
-	UFUNCTION(BlueprintCallable)
-	void UpdateSelectionRequired(bool bRequireSelection);
 };

@@ -1,7 +1,6 @@
 ﻿#include "DevEdModeCommands.h"
 
-#include "DevEdCoreStyle.h"
-
+#include "DevCoreStyle.h"
 
 #define LOCTEXT_NAMESPACE "DevCommonEdModeCommands"
 
@@ -10,7 +9,7 @@ FDevEdModeCommands::FDevEdModeCommands()
 		"DevEdModeCommands",
 		LOCTEXT("Tooltip", "Dev Editor Mode"),
 		NAME_None,
-		FDevEdCoreStyle::GetStyleSetName()
+		FDevCoreStyle::GetStyleSetName()
 	)
 {
 }

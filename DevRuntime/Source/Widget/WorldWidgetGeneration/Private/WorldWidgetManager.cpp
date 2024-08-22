@@ -30,17 +30,17 @@ void UWorldWidgetPanel::NativeOnRefresh()
 
 	if (!IsValid(Panel) || !IsValid(GetWorld()))
 	{
-		DEBUG(Debug_UI, Error, TEXT("Panel/World Is NULL"))
+		LOG(Debug_UI, Error, TEXT("Panel/World Is NULL"))
 		return;
 	}
 
 	for (const auto& WorldWidget : WorldWidgets)
 	{
 		/* 跳过非激活UI */
-		if (!WorldWidget.Value->GetIsActive())
-		{
-			continue;
-		}
+		// if (!WorldWidget.Value->GetIsActive())
+		// {
+		// 	continue;
+		// }
 
 		/* 跳过隐藏的UI */
 		if (WorldWidget.Key->IsHidden())
@@ -170,7 +170,7 @@ void UWorldWidgetPanel::ActiveWorldWidget(const AWorldWidgetPoint* InWorldWidget
 {
 	if (!IsValid(InWorldWidgetPoint))
 	{
-		DEBUG(Debug_UI, Error, TEXT("InWorldWidgetPoint Is NULL"))
+		LOG(Debug_UI, Error, TEXT("InWorldWidgetPoint Is NULL"))
 		return;
 	}
 
@@ -178,7 +178,7 @@ void UWorldWidgetPanel::ActiveWorldWidget(const AWorldWidgetPoint* InWorldWidget
 	{
 		UWorldWidget* ActiveWidget = WorldWidgets.FindRef(InWorldWidgetPoint);
 		ActiveWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-		GetManager<UProcedureManager>()->RegisterProcedureHandle(GetManager<UScreenWidgetManager>()->GetProcedureInterfaceHandles(ActiveWidget, true));
+		// GetManager<UProcedureManager>()->RegisterProcedureHandle(GetManager<UScreenWidgetManager>()->GetProcedureInterfaceHandles(ActiveWidget, true));
 	}
 }
 
@@ -186,7 +186,7 @@ void UWorldWidgetPanel::InactiveWorldWidget(AWorldWidgetPoint* InWorldWidgetPoin
 {
 	if (!IsValid(InWorldWidgetPoint))
 	{
-		DEBUG(Debug_UI, Error, TEXT("InWorldWidgetPoint Is NULL"))
+		LOG(Debug_UI, Error, TEXT("InWorldWidgetPoint Is NULL"))
 		return;
 	}
 
@@ -201,7 +201,7 @@ void UWorldWidgetPanel::InactiveWorldWidget(AWorldWidgetPoint* InWorldWidgetPoin
 			}
 		);
 
-		GetManager<UProcedureManager>()->RegisterProcedureHandle(GetManager<UScreenWidgetManager>()->GetProcedureInterfaceHandles(InactiveWidget, false), OnFinish);
+		// GetManager<UProcedureManager>()->RegisterProcedureHandle(GetManager<UScreenWidgetManager>()->GetProcedureInterfaceHandles(InactiveWidget, false), OnFinish);
 	}
 }
 
@@ -310,10 +310,10 @@ void UWorldWidgetManager::NativeOnRefresh()
 	{
 		for (const auto& WorldWidgetPanel : WorldWidgetPanels)
 		{
-			if (WorldWidgetPanel->GetIsActive())
-			{
-				WorldWidgetPanel->NativeOnRefresh();
-			}
+			// if (WorldWidgetPanel->GetIsActive())
+			// {
+			// 	WorldWidgetPanel->NativeOnRefresh();
+			// }
 		}
 	}
 }
@@ -328,26 +328,21 @@ void UWorldWidgetManager::NativeOnInactived()
 	Super::NativeOnInactived();
 }
 
-FText UWorldWidgetManager::GetManagerDisplayName()
-{
-	return LOCTEXT("DisplayName", "World Widget Manager");
-}
-
-void UWorldWidgetManager::NativeOnBeginPlay()
-{
-	Super::NativeOnBeginPlay();
-
-	WorldWidgetPoints.Reset();
-	GenerateWorldWidgetPanel();
-}
-
-void UWorldWidgetManager::NativeOnEndPlay()
-{
-	Super::NativeOnEndPlay();
-
-	WorldWidgetPoints.Reset();
-	ClearupWorldWidgetPanel();
-}
+// void UWorldWidgetManager::NativeOnBeginPlay()
+// {
+// 	Super::NativeOnBeginPlay();
+//
+// 	WorldWidgetPoints.Reset();
+// 	GenerateWorldWidgetPanel();
+// }
+//
+// void UWorldWidgetManager::NativeOnEndPlay()
+// {
+// 	Super::NativeOnEndPlay();
+//
+// 	WorldWidgetPoints.Reset();
+// 	ClearupWorldWidgetPanel();
+// }
 
 void UWorldWidgetManager::ActiveWorldWidgetPoint(AWorldWidgetPoint* InPoint)
 {
@@ -361,7 +356,7 @@ void UWorldWidgetManager::ActiveWorldWidgetPoint(FGameplayTag InPointTag)
 {
 	if (!InPointTag.IsValid())
 	{
-		DEBUG(Debug_UI, Error, TEXT("InPointTag Is NULL"))
+		LOG(Debug_UI, Error, TEXT("InPointTag Is NULL"))
 		return;
 	}
 
@@ -383,7 +378,7 @@ void UWorldWidgetManager::InactiveWorldWidgetPoint(FGameplayTag InPointTag)
 {
 	if (!InPointTag.IsValid())
 	{
-		DEBUG(Debug_UI, Error, TEXT("InPointTag Is NULL"))
+		LOG(Debug_UI, Error, TEXT("InPointTag Is NULL"))
 		return;
 	}
 
@@ -413,22 +408,22 @@ TArray<AWorldWidgetPoint*> UWorldWidgetManager::GetWorldWidgetPoints(FGameplayTa
 
 void UWorldWidgetManager::GenerateWorldWidgetPanel()
 {
-	UGameplayTagSlot* Slot = GetManager<UScreenWidgetManager>()->GetSlot(FGameplayTag::RequestGameplayTag(FName("HUD.Main.WorldWidget")));
-	if (IsValid(Slot))
-	{
-		UWorldWidgetPanel* NewWorldWidgetPanel = CreateWorldWidgetPanel();
-		Slot->SetContent(NewWorldWidgetPanel->GetPanel());
-		NewWorldWidgetPanel->NativeOnActived();
-
-		RefreshAllPanelWorldWidgetPoint();
-	}
+	// UGameplayTagSlot* Slot = GetManager<UScreenWidgetManager>()->GetSlot(FGameplayTag::RequestGameplayTag(FName("HUD.Main.WorldWidget")));
+	// if (IsValid(Slot))
+	// {
+	// 	UWorldWidgetPanel* NewWorldWidgetPanel = CreateWorldWidgetPanel();
+	// 	Slot->SetContent(NewWorldWidgetPanel->GetPanel());
+	// 	NewWorldWidgetPanel->NativeOnActived();
+	//
+	// 	RefreshAllPanelWorldWidgetPoint();
+	// }
 }
 
 void UWorldWidgetManager::AddWorldWidgetPoint(AWorldWidgetPoint* InWorldWidgetPoint)
 {
 	if (!InWorldWidgetPoint)
 	{
-		DEBUG(Debug_UI, Error, TEXT("InWorldWidgetPoint Is NULL"))
+		LOG(Debug_UI, Error, TEXT("InWorldWidgetPoint Is NULL"))
 		return;
 	}
 
@@ -445,7 +440,7 @@ void UWorldWidgetManager::RemoveWorldWidgetPoint(AWorldWidgetPoint* InWorldWidge
 {
 	if (!InWorldWidgetPoint)
 	{
-		DEBUG(Debug_UI, Error, TEXT("InWorldWidgetPoint Is NULL"))
+		LOG(Debug_UI, Error, TEXT("InWorldWidgetPoint Is NULL"))
 		return;
 	}
 

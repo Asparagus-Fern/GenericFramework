@@ -19,7 +19,7 @@ public:
 	static bool GetCurrentEditorProjectionData(FSceneViewProjectionData& ProjectionData);
 	static bool GetEditorProjectionData(FLevelEditorViewportClient* InLevelEditorViewportClient, FSceneViewProjectionData& ProjectionData);
 
-	/* Level Editor Viewport Widget */
+	/* Level Editor Viewport Widget */                                                                   
 public:
 	static TSharedPtr<SLevelViewport> GetEditorViewportWidget(const FLevelEditorViewportClient* InLevelEditorViewportClient);
 	static bool AddToViewport(const FLevelEditorViewportClient* InLevelEditorViewportClient, const TSharedRef<SWidget>& InWidget);

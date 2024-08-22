@@ -10,8 +10,8 @@ FManagerListViewItem::FManagerListViewItem()
 
 TSharedRef<SWidget> FManagerListViewItem::MakeWidget()
 {
-	FManagerListViewInfoPtr ManagerListViewInfo = GetManager<UManagerEditor>()->GetManagerListView()->GetInfo(SharedThis(this));
-	FString ManagerName = ManagerListViewInfo->CoreManager->GetClass()->GetName();
+	// FManagerListViewInfoPtr ManagerListViewInfo = GetManager<UManagerEditor>()->GetManagerListView()->GetInfo(SharedThis(this));
+	// FString ManagerName = ManagerListViewInfo->CoreManager->GetClass()->GetName();
 
 	return SNew(SBox)
 		.HeightOverride(30.f)
@@ -19,14 +19,14 @@ TSharedRef<SWidget> FManagerListViewItem::MakeWidget()
 		.VAlign(VAlign_Fill)
 		[
 			SNew(SOverlay)
-			+ SOverlay::Slot()
-			.HAlign(HAlign_Left)
-			.VAlign(VAlign_Center)
-			.Padding(10.f, 0.f)
-			[
-				SNew(STextBlock)
-				.Text(FText::FromString(ManagerName))
-			]
+			// + SOverlay::Slot()
+			// .HAlign(HAlign_Left)
+			// .VAlign(VAlign_Center)
+			// .Padding(10.f, 0.f)
+			// [
+			// 	SNew(STextBlock)
+			// 	.Text(FText::FromString(ManagerName))
+			// ]
 		];
 }
 

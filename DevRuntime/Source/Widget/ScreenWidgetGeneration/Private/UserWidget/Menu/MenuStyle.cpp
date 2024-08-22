@@ -3,59 +3,44 @@
 
 #include "UserWidget/Menu/MenuStyle.h"
 
-#include "Debug/DebugType.h"
 #include "Event/CommonButtonEvent.h"
 #include "UserWidget/Base/UserWidgetBase.h"
 
-UMenuStyle::UMenuStyle(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+void UMenuStyle::PreConstructMenuStyle_Implementation(FMenuInfo InMenuInfo)
 {
-	bToggleable = true;
 }
 
-void UMenuStyle::NativePreConstruct()
+void UMenuStyle::NativePreConstructMenuStyle(FMenuInfo InMenuInfo)
 {
-	Super::NativePreConstruct();
+	MenuInfo = InMenuInfo;
+	ActivedEvents = MenuInfo.ActivedEvents;
+	InactivedEvents = MenuInfo.InactivedEvents;
+	ResponseState = MenuInfo.ResponseState;
+
+	PreConstructMenuStyle(InMenuInfo);
 }
 
-void UMenuStyle::NativeOnClicked()
+void UMenuStyle::ConstructMenuStyle_Implementation(FMenuInfo InMenuInfo)
 {
-	Super::NativeOnClicked();
-	FScreenWidgetDelegates::OnMenuClicked.Broadcast(MenuInfo);
-}
-
-void UMenuStyle::NativeOnSelected(bool bBroadcast)
-{
-	UCommonButtonBase::NativeOnSelected(bBroadcast);
-	FScreenWidgetDelegates::OnMenuSelectionChanged.Broadcast(MenuInfo, true);
-}
-
-void UMenuStyle::NativeOnDeselected(bool bBroadcast)
-{
-	UCommonButtonBase::NativeOnDeselected(bBroadcast);
-	FScreenWidgetDelegates::OnMenuSelectionChanged.Broadcast(MenuInfo, false);
-}
-
-void UMenuStyle::NativeOnCreate()
-{
-	Super::NativeOnCreate();
-}
-
-void UMenuStyle::NativeOnDestroy()
-{
-	Super::NativeOnDestroy();
-}
-
-FMenuInfo UMenuStyle::GetMenuInfo() const
-{
-	return MenuInfo;
 }
 
 void UMenuStyle::NativeConstructMenuStyle(FMenuInfo InMenuInfo)
 {
-	MenuInfo = InMenuInfo;
-	Events = MenuInfo.Events;
-	ModifyPushEvents = MenuInfo.ModifyPushEvents;
-	ModifyPopEvents = MenuInfo.ModifyPopEvents;
 	ConstructMenuStyle(InMenuInfo);
+	
+	if (IsValid(CommonButton))
+	{
+		if (!MenuInfo.bHidden)
+		{
+			CommonButton->SetIsEnabled(MenuInfo.bIsEnable);
+			CommonButton->SetIsSelectable(MenuInfo.bSelectable);
+			CommonButton->SetIsToggleable(MenuInfo.bToggleable);
+		}
+	}
+	else
+	{
+		LOG(Debug_UI, Error, TEXT("CommonButton Is NULL"))
+	}
+
+	SetVisibility(MenuInfo.bHidden ? ESlateVisibility::Collapsed : ESlateVisibility::SelfHitTestInvisible);
 }

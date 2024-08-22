@@ -15,21 +15,9 @@ ADevCharacter::ADevCharacter()
 void ADevCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	GetManager<UPawnManager>()->RegisterPawn(this);
 }
 
 void ADevCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-	GetManager<UPawnManager>()->UnRegisterPawn(this);
 	Super::EndPlay(EndPlayReason);
-}
-
-APawn* ADevCharacter::GetPawn()
-{
-	return this;
-}
-
-FGameplayTag ADevCharacter::GetPawnTag()
-{
-	return PawnTag;
 }

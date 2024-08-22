@@ -14,10 +14,6 @@ class MEDIAPLAYSYSTEM_API UMediaPlayManager : public UCoreManager
 {
 	GENERATED_BODY()
 
-	/* IManagerInterface  */
-public:
-	virtual FText GetManagerDisplayName() override;
-
 	/* IProcedureInterface */
 public:
 	virtual void NativeOnActived() override;

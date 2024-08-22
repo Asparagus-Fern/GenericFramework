@@ -13,18 +13,38 @@ class UCommonButtonGroupBase;
 /**
  * 
  */
-UCLASS()
+UCLASS(Abstract)
 class SCREENWIDGETGENERATION_API UMenuContainer : public UUserWidgetBase
 {
-	GENERATED_BODY()
+	GENERATED_UCLASS_BODY()
 
 public:
-	UFUNCTION(BlueprintImplementableEvent)
-	void PreConstructMenuStyle(const TArray<FMenuInfo>& InMenuInfos);
+	UPROPERTY(Transient, Getter, BlueprintGetter="GetCommonButtonGroup")
+	UCommonButtonGroup* CommonButtonGroup = nullptr;
 
-	UFUNCTION(BlueprintImplementableEvent)
-	void ConstructMenuStyle(UMenuStyle* InMenuStyle);
+	UPROPERTY(Transient, Getter, BlueprintGetter="GetMenuStyles")
+	TArray<UMenuStyle*> MenuStyles;
 
-	UFUNCTION(BlueprintImplementableEvent)
-	void PostConstructMenuStyle(const TArray<UMenuStyle*>& InMenuStyleArr);
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	bool bIsManagedByGroup = true;
+
+public:
+	UFUNCTION(BlueprintNativeEvent)
+	void ConstructMenuContainer(UMenuStyle* MenuStyle, int32 Index);
+	virtual void NativeConstructMenuContainer(UMenuStyle* MenuStyle, int32 Index);
+
+	UFUNCTION(BlueprintNativeEvent)
+	void DestructMenuContainer(UMenuStyle* MenuStyle);
+	virtual void NativeDestructMenuContainer(UMenuStyle* MenuStyle);
+
+	UFUNCTION(BlueprintNativeEvent)
+	void PostConstructMenuContainer();
+	virtual void NativePostConstructMenuContainer();
+
+public:
+	UFUNCTION(BlueprintPure)
+	UCommonButtonGroup* GetCommonButtonGroup() const { return CommonButtonGroup; }
+
+	UFUNCTION(BlueprintPure)
+	TArray<UMenuStyle*> GetMenuStyles() const { return MenuStyles; }
 };

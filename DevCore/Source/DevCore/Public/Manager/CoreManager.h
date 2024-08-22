@@ -5,37 +5,35 @@
 #include "CoreMinimal.h"
 #include "ManagerInterface.h"
 #include "ManagerType.h"
-#include "Config/ConfigInterface.h"
 #include "Debug/DebugType.h"
 #include "Object/CommonObject.h"
 #include "Procedure/ProcedureBaseInterface.h"
 #include "Procedure/ProcedureInterface.h"
 #include "CoreManager.generated.h"
 
+
 /**
  * 
  */
-UCLASS(Abstract, Config = Manager, DefaultConfig)
-class DEVCORE_API UCoreManager : public UCommonObject
-                                 , public FTickableGameObject
-                                 , public IConfigInterface
-                                 , public IProcedureInterface
-                                 , public IManagerInterface
+UCLASS(Abstract, BlueprintType)
+class DEVCORE_API UCoreManager : public UTickableWorldSubsystem, public IProcedureInterface
 {
-	GENERATED_BODY()
+	GENERATED_UCLASS_BODY()
 
-	/* UObject */
 public:
-#if WITH_EDITOR
-	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
-#endif
+	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
+	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+	virtual void OnWorldBeginPlay(UWorld& InWorld) override;
+	virtual void Deinitialize() override;
+	virtual void BeginDestroy() override;
+	virtual bool DoesSupportWorldType(const EWorldType::Type WorldType) const override;
 
 	/* FTickableGameObject */
 public:
 	virtual TStatId GetStatId() const override { return UObject::GetStatID(); }
-	virtual bool IsTickable() const override { return false; }
-	virtual bool IsTickableInEditor() const override { return false; }
-	virtual void Tick(float DeltaSeconds) override { return; }
+	virtual bool IsTickable() const override { return bTickable; }
+	virtual bool IsTickableInEditor() const override { return bTickableInEditor; }
+	virtual void Tick(float DeltaSeconds) override { NativeOnRefresh(); }
 
 	/* IProcedureBaseInterface */
 public:
@@ -48,8 +46,14 @@ public:
 	virtual void NativeOnActived() override;
 	virtual void NativeOnInactived() override;
 
-	/* IManagerInterface */
+	/* UCoreManager */
 public:
-	virtual void NativeOnBeginPlay() override;
-	virtual void NativeOnEndPlay() override;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bTickable = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bTickableInEditor = false;
+
+	UFUNCTION(BlueprintNativeEvent)
+	void OnWorldMatchStarting();
 };

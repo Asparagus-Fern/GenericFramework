@@ -13,6 +13,7 @@ public class ScreenWidgetGeneration : ModuleRules
 				"DevCore",
 				"DevSlateCore",
 				"CommonUI",
+				"DBTween",
 			}
 		);
 
@@ -23,10 +24,9 @@ public class ScreenWidgetGeneration : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
-				"ActiveNodeSystem",
-				"DBTween",
+
+				"DeveloperSettings",
 				"UMG",
-				"CommonUI",
 				"GameplayTags"
 			}
 		);

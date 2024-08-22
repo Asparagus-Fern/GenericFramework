@@ -8,29 +8,9 @@
 
 #define LOCTEXT_NAMESPACE "UPawnManager"
 
-UPawnManager::UPawnManager()
-{
-}
-
-FText UPawnManager::GetManagerDisplayName()
-{
-	return LOCTEXT("DisplayName", "Pawn Manager");
-}
-
 void UPawnManager::NativeOnActived()
 {
 	Super::NativeOnActived();
-
-	// for (FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)
-	// {
-	// 	if (const APlayerController* PlayerController = Iterator->Get())
-	// 	{
-	// 		if (PlayerController->GetPawn()->GetClass()->ImplementsInterface(UPawnInterface::StaticClass()))
-	// 		{
-	// 			CurrentPossessPawn.Add(PlayerController->GetLocalPlayer()->GetLocalPlayerIndex(), Cast<IPawnInterface>(PlayerController->GetPawn())->GetPawnTag());
-	// 		}
-	// 	}
-	// }
 }
 
 void UPawnManager::NativeOnInactived()
@@ -38,8 +18,6 @@ void UPawnManager::NativeOnInactived()
 	Super::NativeOnInactived();
 
 	PawnMapping.Reset();
-	// LastPossessPawn.Reset();
-	// CurrentPossessPawn.Reset();
 }
 
 void UPawnManager::RegisterPawn(IPawnInterface* InPawnInterface)
@@ -64,12 +42,6 @@ void UPawnManager::PossessPawn(const int32 PlayerIndex, const FGameplayTag InPaw
 	{
 		if (IPawnInterface* PawnInterface = PawnMapping.FindRef(InPawnTag))
 		{
-			// if (CurrentPossessPawn.Contains(PC->GetLocalPlayer()->GetLocalPlayerIndex()))
-			// {
-			// 	LastPossessPawn.Add(PC->GetLocalPlayer()->GetLocalPlayerIndex(), CurrentPossessPawn.FindRef(PC->GetLocalPlayer()->GetLocalPlayerIndex()));
-			// }
-			// CurrentPossessPawn.Add(PC->GetLocalPlayer()->GetLocalPlayerIndex(), PawnInterface->GetPawnTag());
-
 			PC->Possess(PawnInterface->GetPawn());
 		}
 	}

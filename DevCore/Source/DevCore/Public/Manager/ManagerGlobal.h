@@ -4,102 +4,32 @@
 
 #include "CoreMinimal.h"
 #include "CoreManager.h"
-#include "ManagerSubsystem.h"
 
-template <typename ManagerClass>
-static ManagerClass* GetManager()
+template <class ManagerType>
+static ManagerType* GetManager(const UObject* WorldContextObject)
 {
-	UCoreManager* Manager = UManagerSubsystem::Get()->GetManager(ManagerClass::StaticClass());
-	if (IsValid(Manager))
+	if (const UWorld* World = GEngine->GetWorldFromContextObjectChecked(WorldContextObject))
 	{
-		return Cast<ManagerClass>(Manager);
+		return World->GetSubsystem<ManagerType>();
 	}
-
 	return nullptr;
 }
 
 template <typename InterfaceClass>
-static TArray<InterfaceClass*> GetManagersWithInterface()
+static TArray<InterfaceClass*> GetManagersWithInterface(const UObject* WorldContextObject)
 {
 	TArray<InterfaceClass*> Managers;
-	for (const auto& Manager : UManagerSubsystem::Get()->GetManagers())
+	
+	if (const UWorld* World = GEngine->GetWorldFromContextObjectChecked(WorldContextObject))
 	{
-		if (Manager->GetClass()->ImplementsInterface(InterfaceClass::UClassType::StaticClass()))
+		for (const auto& Manager : World->GetSubsystemArray<UCoreManager>())
 		{
-			Managers.Add(Cast<InterfaceClass>(Manager));
-		}
-	}
-	return Managers;
-}
-
-/**
- * 
- * @param Exec 
- */
-static void ProcessManagers(const TFunctionRef<void(UCoreManager* InManager)>& Exec)
-{
-	for (const auto& Manager : UManagerSubsystem::Get()->GetManagers())
-	{
-		Exec(Manager);
-	}
-}
-
-/**
- * 
- * @param bAscending true则为按ProcedureOrder升序执行
- * @param Exec 
- */
-static void ProcessManagersInOrder(bool bAscending, const TFunctionRef<void(UCoreManager* InCoreManager)>& Exec)
-{
-	TArray<FManagerOrder> ManagerOrders;
-	for (auto& Manager : UManagerSubsystem::Get()->GetManagers())
-	{
-		if (!ManagerOrders.Contains(Manager->GetProcedureOrder()))
-		{
-			FManagerOrder NewManagerOrder = FManagerOrder(Manager->GetProcedureOrder());
-			NewManagerOrder.Managers.Add(Manager);
-			ManagerOrders.Add(NewManagerOrder);
-		}
-		else
-		{
-			FManagerOrder& FindManagerOrder = *ManagerOrders.FindByKey(Manager->GetProcedureOrder());
-			FindManagerOrder.Managers.Add(Manager);
-		}
-	}
-
-	ManagerOrders.Sort
-	([bAscending](const FManagerOrder& A, const FManagerOrder& B)
-		{
-			return bAscending ? (A.Order < B.Order) : (A.Order > B.Order);
-		}
-	);
-
-	for (auto& ManagerOrder : ManagerOrders)
-	{
-		for (const auto& Manager : ManagerOrder.Managers)
-		{
-			Exec(Manager);
-		}
-	}
-}
-
-/**
- * 
- * @tparam InterfaceClass 
- * @param bAscending 
- * @param Exec 
- */
-template <typename InterfaceClass>
-static void ProcessManagerInterfacesInOrder(bool bAscending, const TFunctionRef<void(InterfaceClass* Interface)>& Exec)
-{
-	ProcessManagersInOrder
-	(
-		bAscending, [Exec](UCoreManager* ProcessCoreManager)
-		{
-			if (ProcessCoreManager->GetClass()->ImplementsInterface(InterfaceClass::UClassType::StaticClass()))
+			if (Manager->GetClass()->ImplementsInterface(InterfaceClass::UClassType::StaticClass()))
 			{
-				Exec(Cast<InterfaceClass>(ProcessCoreManager));
+				Managers.Add(Cast<InterfaceClass>(Manager));
 			}
 		}
-	);
+	}
+
+	return Managers;
 }

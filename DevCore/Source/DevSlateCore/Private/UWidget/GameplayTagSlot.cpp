@@ -3,6 +3,9 @@
 
 #include "UWidget/GameplayTagSlot.h"
 
+UGameplayTagSlot::FGameplayTagSlotDelegate UGameplayTagSlot::OnGameplayTagSlotBuild;
+UGameplayTagSlot::FGameplayTagSlotDelegate UGameplayTagSlot::OnGameplayTagSlotDestroy;
+
 TSharedRef<SWidget> UGameplayTagSlot::RebuildWidget()
 {
 	if (IsDesignTime())

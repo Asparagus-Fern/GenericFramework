@@ -15,9 +15,9 @@ class DEVEDCORE_API ICommonEdModuleInterface : public ICommonModuleInterface
 {
 	/* ICommonModuleInterface */
 protected:
-	virtual void PostStartupModule() override;
+	virtual void StartupModule() override;
 	virtual void LoadDependentModule(TArray<FName>& InDependentModuleName) override;
-	virtual void PreShutdownModule() override;
+	virtual void ShutdownModule() override;
 
 	/* ICommonEdModuleInterface */
 protected:

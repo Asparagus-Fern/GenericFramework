@@ -51,19 +51,4 @@ public:
 public:
 	virtual APawn* GetPawn();
 	virtual FGameplayTag GetPawnTag();
-
-public:
-	void UpdateLockState(bool InLock, bool InLockLocation, bool InLockRotation);
-	bool IsLock() const { return bLock || (bLockLocation && bLockRotation); }
-	bool IsLockLocation() const { return bLock || bLockLocation; }
-	bool IsLockRotation() const { return bLock || bLockRotation; }
-
-protected:
-	uint8 bLock : 1;
-	uint8 bLockLocation : 1;
-	uint8 bLockRotation : 1;
-
-protected:
-	virtual bool CanMove();
-	virtual bool CanTurn();
 };

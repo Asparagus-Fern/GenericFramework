@@ -6,30 +6,22 @@
 #include "GameplayTagContainer.h"
 #include "ProcedureBaseInterface.h"
 #include "ProcedureInterface.h"
+#include "ProcedureObject.h"
 #include "Object/CommonObject.h"
 #include "UObject/Object.h"
 #include "GameplayProcedure.generated.h"
-
-class UTimelineComponent;
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FGameplayProcedureDelegate);
 
 /**
  * 
  */
 UCLASS(BlueprintType)
-class DEVCORE_API UGameplayProcedure : public UCommonObject, public IProcedureInterface
+class DEVCORE_API UGameplayProcedure : public UProcedureObject
 {
 	GENERATED_BODY()
 
 public:
-	UGameplayProcedure();
-	virtual bool GetIsAsync() override { return true; }
-	virtual void NativeOnCreate() override;
-	virtual void NativeOnDestroy() override;
-	virtual void NativeOnRefresh() override;
-	virtual void NativeOnActived() override;
-	virtual void NativeOnInactived() override;
+	virtual void MarkAsActivedFinish_Implementation() override;
+	virtual void MarkAsInactivedFinish_Implementation() override;
 
 public:
 	/* 是否自动激活下个流程 */
@@ -39,24 +31,4 @@ public:
 	/* 下一个流程的Tag */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(Categories="Procedure"))
 	FGameplayTag NextProcedureTag;
-
-public:
-	UPROPERTY(BlueprintAssignable)
-	FGameplayProcedureDelegate PreProcedureActived;
-
-	UPROPERTY(BlueprintAssignable)
-	FGameplayProcedureDelegate PostProcedureActived;
-
-	UPROPERTY(BlueprintAssignable)
-	FGameplayProcedureDelegate PreProcedureInactived;
-
-	UPROPERTY(BlueprintAssignable)
-	FGameplayProcedureDelegate PostProcedureInactived;
-
-public:
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	void RequestProcedureActived();
-
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	void RequestProcedureInactived();
 };

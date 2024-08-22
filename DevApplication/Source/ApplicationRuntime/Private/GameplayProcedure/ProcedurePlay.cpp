@@ -13,17 +13,17 @@ void UProcedurePlay::NativeOnActived()
 {
 	Super::NativeOnActived();
 
-	GetManager<UScreenWidgetManager>()->OpenUserWidget(DefaultOpenWidgets);
-	GetManager<UScreenWidgetManager>()->SwitchGameMenu(GameMenuSetting);
+	// GetManager<UScreenWidgetManager>()->OpenUserWidget(DefaultOpenWidgets);
+	// GetManager<UScreenWidgetManager>()->SwitchGameMenu(GameMenuSetting);
 
-	RequestActivateFinish();
+	// RequestActivateFinish();
 }
 
 void UProcedurePlay::NativeOnInactived()
 {
 	Super::NativeOnInactived();
 	
-	GetManager<UScreenWidgetManager>()->CloseUserWidget(DefaultOpenWidgets);
+	// GetManager<UScreenWidgetManager>()->CloseUserWidget(DefaultOpenWidgets);
 	
-	RequestInactivateFinish();
+	// RequestInactivateFinisheFinish();
 }

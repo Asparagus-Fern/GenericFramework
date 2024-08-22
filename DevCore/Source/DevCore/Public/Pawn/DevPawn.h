@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "NativeGameplayTags.h"
 #include "PawnInterface.h"
+#include "PawnType.h"
 #include "GameFramework/Pawn.h"
 #include "Procedure/ProcedureBaseInterface.h"
 #include "DevPawn.generated.h"
@@ -14,7 +15,7 @@ class UFloatingPawnMovement;
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Pawn);
 
 UCLASS()
-class DEVCORE_API ADevPawn : public APawn, public IPawnInterface, public IProcedureBaseInterface
+class DEVCORE_API ADevPawn : public APawn, public IPawnInterface
 {
 	GENERATED_BODY()
 
@@ -22,12 +23,6 @@ public:
 	ADevPawn();
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
-
-	/* IProcedureBaseInterface */
-public:
-	virtual void NativeOnCreate() override;
-	virtual void NativeOnDestroy() override;
-	virtual void NativeOnRefresh() override;
 
 	/* IIPawnInterface */
 public:
@@ -45,13 +40,15 @@ public:
 
 	/* ADevPawn */
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="Pawn"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="Pawn", ExposeOnSpawn))
 	FGameplayTag PawnTag;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FPawnLockingState PawnLockingState;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UFloatingPawnMovement* FloatingPawnMovement;
 
 public:
-	UFUNCTION(BlueprintPure)
 	APlayerController* GetPlayerController() const;
 };

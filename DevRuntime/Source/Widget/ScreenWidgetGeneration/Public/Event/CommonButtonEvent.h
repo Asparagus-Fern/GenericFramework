@@ -8,29 +8,27 @@
 #include "UObject/ObjectMacros.h"
 #include "Procedure/ProcedureBaseInterface.h"
 #include "Procedure/ProcedureInterface.h"
+#include "Procedure/ProcedureObject.h"
 #include "CommonButtonEvent.generated.h"
 
+class UCommonButtonCondition;
 /**
- * 
+ * 按钮状态发生更改执行的事件
  */
 UCLASS(Abstract, EditInlineNew)
-class SCREENWIDGETGENERATION_API UCommonButtonEvent : public UCommonObject, public IProcedureInterface
+class SCREENWIDGETGENERATION_API UCommonButtonEvent : public UProcedureObject
 {
-	GENERATED_UCLASS_BODY()
-
-public:
-	/* true则为激活，表示在该条件下激活按钮 */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TMap<ECommonButtonResponseEvent, bool> Response;
+	GENERATED_BODY()
 
 	/* IProcedureInterface */
 public:
 	virtual void NativeOnActived() override;
-	virtual void NativeOnInactived() override;
 
-	/* IProcedureBaseInterface */
 public:
-	virtual void NativeOnCreate() override;
-	virtual void NativeOnDestroy() override;
-	virtual void NativeOnRefresh() override;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced)
+	TArray<UCommonButtonCondition*> CommonButtonConditions;
+
+public:
+	UFUNCTION(BlueprintNativeEvent)
+	void ExecuteButtonEvent();
 };

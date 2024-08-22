@@ -4,17 +4,9 @@
 #include "Input/InputManager.h"
 
 #include "EnhancedInputSubsystems.h"
+#include "Input/InputManagerSetting.h"
 
 #define LOCTEXT_NAMESPACE "UInputManager"
-
-UInputManager::UInputManager()
-{
-}
-
-FText UInputManager::GetManagerDisplayName()
-{
-	return LOCTEXT("DisplayName", "Input Manager");
-}
 
 void UInputManager::NativeOnActived()
 {
@@ -24,7 +16,7 @@ void UInputManager::NativeOnActived()
 	{
 		if (UEnhancedInputLocalPlayerSubsystem* EnhancedInputLocalPlayerSubsystem = PC->GetLocalPlayer()->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
 		{
-			for (auto& EnhanceInputMappingContext : EnhanceInputMappingContexts)
+			for (auto& EnhanceInputMappingContext : UInputManagerSetting::Get()->EnhanceInputMappingContexts)
 			{
 				EnhancedInputLocalPlayerSubsystem->AddMappingContext(EnhanceInputMappingContext.InputMappingContext, EnhanceInputMappingContext.Priority, EnhanceInputMappingContext.ModifyContextOptions);
 			}

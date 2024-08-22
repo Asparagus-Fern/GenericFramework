@@ -8,6 +8,7 @@
 #include "GameFramework/GameStateBase.h"
 #include "GameFramework/HUD.h"
 #include "GameFramework/PlayerState.h"
+#include "Kismet/GameplayStatics.h"
 
 UGameInstance* UBPFunctions_Gameplay::GetGameInstanceByClass(const UObject* WorldContextObject, const TSubclassOf<UGameInstance> InClass)
 {
@@ -49,7 +50,7 @@ AHUD* UBPFunctions_Gameplay::GetHUDByClass(const UObject* WorldContextObject, co
 {
 	ensure(InClass);
 
-	if (const APlayerController* PC = GetPlayerControllerByClass(WorldContextObject, APlayerController::StaticClass()))
+	if (const APlayerController* PC = GetFirstPlayerControllerByClass(WorldContextObject, APlayerController::StaticClass()))
 	{
 		return PC->GetHUD<AHUD>();
 	}
@@ -61,7 +62,7 @@ APawn* UBPFunctions_Gameplay::GetPawnByClass(const UObject* WorldContextObject, 
 {
 	ensure(InClass);
 
-	if (const APlayerController* PC = GetPlayerControllerByClass(WorldContextObject, APlayerController::StaticClass()))
+	if (const APlayerController* PC = GetFirstPlayerControllerByClass(WorldContextObject, APlayerController::StaticClass()))
 	{
 		return PC->GetPawn<APawn>();
 	}
@@ -69,7 +70,7 @@ APawn* UBPFunctions_Gameplay::GetPawnByClass(const UObject* WorldContextObject, 
 	return nullptr;
 }
 
-APlayerController* UBPFunctions_Gameplay::GetPlayerControllerByClass(const UObject* WorldContextObject, const TSubclassOf<APlayerController> InClass)
+APlayerController* UBPFunctions_Gameplay::GetFirstPlayerControllerByClass(const UObject* WorldContextObject, const TSubclassOf<APlayerController> InClass)
 {
 	ensure(InClass);
 
@@ -81,11 +82,18 @@ APlayerController* UBPFunctions_Gameplay::GetPlayerControllerByClass(const UObje
 	return nullptr;
 }
 
+APlayerController* UBPFunctions_Gameplay::GetPlayerControllerByClass(const UObject* WorldContextObject, const TSubclassOf<APlayerController> InClass, int32 InIndex)
+{
+	ensure(InClass);
+
+	return UGameplayStatics::GetPlayerController(WorldContextObject, InIndex);
+}
+
 APlayerState* UBPFunctions_Gameplay::GetPlayerStateByClass(const UObject* WorldContextObject, const TSubclassOf<APlayerState> InClass)
 {
 	ensure(InClass);
 
-	if (const APlayerController* PC = GetPlayerControllerByClass(WorldContextObject, APlayerController::StaticClass()))
+	if (const APlayerController* PC = GetFirstPlayerControllerByClass(WorldContextObject, APlayerController::StaticClass()))
 	{
 		return PC->GetPlayerState<APlayerState>();
 	}

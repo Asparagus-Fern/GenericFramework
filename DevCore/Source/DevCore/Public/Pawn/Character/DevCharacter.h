@@ -8,7 +8,7 @@
 #include "DevCharacter.generated.h"
 
 UCLASS()
-class DEVCORE_API ADevCharacter : public ACharacter, public IPawnInterface
+class DEVCORE_API ADevCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
@@ -16,14 +16,4 @@ public:
 	ADevCharacter();
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
-
-	/* IIPawnInterface */
-public:
-	virtual APawn* GetPawn() override;
-	virtual FGameplayTag GetPawnTag() override;
-
-	/* ADevCharacter */
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(Categories="Pawn"))
-	FGameplayTag PawnTag;
 };

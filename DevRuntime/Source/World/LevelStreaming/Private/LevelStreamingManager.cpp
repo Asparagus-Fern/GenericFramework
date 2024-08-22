@@ -12,11 +12,6 @@ ULevelStreamingManager::ULevelStreamingManager()
 {
 }
 
-FText ULevelStreamingManager::GetManagerDisplayName()
-{
-	return LOCTEXT("DisplayName", "Level Streaming Manager");
-}
-
 void ULevelStreamingManager::NativeOnCreate()
 {
 	Super::NativeOnCreate();
@@ -32,21 +27,21 @@ void ULevelStreamingManager::LoadLevel(TSoftObjectPtr<UWorld> Level, const bool 
 	/* Check */
 	if (!CheckLevel(Level))
 	{
-		DEBUG(Debug_World, Warning, TEXT("InValid Level"))
+		LOG(Debug_World, Warning, TEXT("InValid Level"))
 		return;
 	}
 
 	ULevelStreaming* LevelStreaming = GetLevelStreaming(Level);
 	if (!IsValid(LevelStreaming))
 	{
-		DEBUG(Debug_World, Warning, TEXT("Level Streaming Is Not Found"));
+		LOG(Debug_World, Warning, TEXT("Level Streaming Is Not Found"));
 		return;
 	}
 
 	if (LevelStreaming->IsLevelLoaded())
 	{
 		OnFinish.ExecuteIfBound();
-		DEBUG(Debug_World, Warning, TEXT("Level Is Already Load"));
+		LOG(Debug_World, Warning, TEXT("Level Is Already Load"));
 		return;
 	}
 
@@ -60,7 +55,7 @@ void ULevelStreamingManager::LoadLevels(TArray<TSoftObjectPtr<UWorld>> Levels, c
 	/* Make Sure Levels Is Not Empty */
 	if (Levels.IsEmpty())
 	{
-		DEBUG(Debug_World, Warning, TEXT("Levels Is Empty"))
+		LOG(Debug_World, Warning, TEXT("Levels Is Empty"))
 		OnFinish.ExecuteIfBound();
 		return;
 	}
@@ -72,21 +67,21 @@ void ULevelStreamingManager::LoadLevels(TArray<TSoftObjectPtr<UWorld>> Levels, c
 		/* Check */
 		if (!CheckLevel(Level))
 		{
-			DEBUG(Debug_World, Warning, TEXT("InValid Level"))
+			LOG(Debug_World, Warning, TEXT("InValid Level"))
 			continue;
 		}
 
 		const ULevelStreaming* LevelStreaming = GetLevelStreaming(Level);
 		if (!IsValid(LevelStreaming))
 		{
-			DEBUG(Debug_World, Warning, TEXT("Level Streaming Is Not Found"));
+			LOG(Debug_World, Warning, TEXT("Level Streaming Is Not Found"));
 			continue;
 		}
 
 		/* 已经加载且可视性已经是指定可视性 */
 		if (LevelStreaming->IsLevelLoaded() && LevelStreaming->ShouldBeVisible() == bMakeVisibleAfterLoad)
 		{
-			DEBUG(Debug_World, Warning, TEXT("Level Is Already Load"));
+			LOG(Debug_World, Warning, TEXT("Level Is Already Load"));
 			continue;
 		}
 
@@ -113,7 +108,7 @@ void ULevelStreamingManager::LoadLevelsBySetting(TArray<FLoadLevelStreamingSetti
 	/* Make Sure Settings Is Not Empty */
 	if (LoadLevelStreamingSettings.IsEmpty())
 	{
-		DEBUG(Debug_World, Warning, TEXT("Settings Is Empty"))
+		LOG(Debug_World, Warning, TEXT("Settings Is Empty"))
 		OnFinish.ExecuteIfBound();
 		return;
 	}
@@ -124,7 +119,7 @@ void ULevelStreamingManager::LoadLevelsBySetting(TArray<FLoadLevelStreamingSetti
 	{
 		if (LoadLevelStreamingSetting.Level.IsNull())
 		{
-			DEBUG(Debug_World, Warning, TEXT("InValid Level"))
+			LOG(Debug_World, Warning, TEXT("InValid Level"))
 		}
 		else
 		{
@@ -148,21 +143,21 @@ void ULevelStreamingManager::UnloadLevel(TSoftObjectPtr<UWorld> Level, const boo
 	/* Check */
 	if (!CheckLevel(Level))
 	{
-		DEBUG(Debug_World, Warning, TEXT("InValid Level"))
+		LOG(Debug_World, Warning, TEXT("InValid Level"))
 		return;
 	}
 
 	ULevelStreaming* LevelStreaming = GetLevelStreaming(Level);
 	if (!IsValid(LevelStreaming))
 	{
-		DEBUG(Debug_World, Warning, TEXT("Level Streaming Is Not Found"));
+		LOG(Debug_World, Warning, TEXT("Level Streaming Is Not Found"));
 		return;
 	}
 
 	if (!LevelStreaming->IsLevelLoaded())
 	{
 		OnFinish.ExecuteIfBound();
-		DEBUG(Debug_World, Warning, TEXT("Level Is Already Load"));
+		LOG(Debug_World, Warning, TEXT("Level Is Already Load"));
 		return;
 	}
 
@@ -176,7 +171,7 @@ void ULevelStreamingManager::UnloadLevels(TArray<TSoftObjectPtr<UWorld>> Levels,
 	/* Make Sure Levels Is Not Empty */
 	if (Levels.IsEmpty())
 	{
-		DEBUG(Debug_World, Warning, TEXT("Levels Is Empty"))
+		LOG(Debug_World, Warning, TEXT("Levels Is Empty"))
 		OnFinish.ExecuteIfBound();
 		return;
 	}
@@ -188,20 +183,20 @@ void ULevelStreamingManager::UnloadLevels(TArray<TSoftObjectPtr<UWorld>> Levels,
 		/* Check */
 		if (!CheckLevel(Level))
 		{
-			DEBUG(Debug_World, Warning, TEXT("InValid Level"))
+			LOG(Debug_World, Warning, TEXT("InValid Level"))
 			continue;
 		}
 
 		ULevelStreaming* LevelStreaming = GetLevelStreaming(Level);
 		if (!IsValid(LevelStreaming))
 		{
-			DEBUG(Debug_World, Warning, TEXT("Level Streaming Is Not Found"));
+			LOG(Debug_World, Warning, TEXT("Level Streaming Is Not Found"));
 			continue;
 		}
 
 		if (!LevelStreaming->IsLevelLoaded())
 		{
-			DEBUG(Debug_World, Warning, TEXT("Level Is Already Load"));
+			LOG(Debug_World, Warning, TEXT("Level Is Already Load"));
 			continue;
 		}
 
@@ -232,7 +227,7 @@ void ULevelStreamingManager::UnloadLevelsBySetting(TArray<FUnloadLevelStreamingS
 	TArray<FUnloadLevelStreamingSetting> CheckUnloadLevelStreamingSettings;
 	for (auto UnloadLevelStreamingSetting : UnloadLevelStreamingSettings)
 	{
-		if (UnloadLevelStreamingSetting.Level.IsNull()) { DEBUG(Debug_World, Warning, TEXT("InValid Level")) }
+		if (UnloadLevelStreamingSetting.Level.IsNull()) { LOG(Debug_World, Warning, TEXT("InValid Level")) }
 		else { CheckUnloadLevelStreamingSettings.Add(UnloadLevelStreamingSetting); }
 	}
 
@@ -266,7 +261,7 @@ void ULevelStreamingManager::SetLevelVisibility(TSoftObjectPtr<UWorld> Level, bo
 		/* 已经是指定的可视性 */
 		if (bVisible == LevelStreaming->IsLevelVisible())
 		{
-			DEBUG(Debug_World, Warning, TEXT("Level Streaming Is Not Found"));
+			LOG(Debug_World, Warning, TEXT("Level Streaming Is Not Found"));
 			OnFinish.ExecuteIfBound();
 			return;
 		}
@@ -281,7 +276,7 @@ void ULevelStreamingManager::SetLevelsVisibility(TArray<TSoftObjectPtr<UWorld>> 
 {
 	if (Levels.IsEmpty())
 	{
-		DEBUG(Debug_World, Warning, TEXT("Levels Is Empty"))
+		LOG(Debug_World, Warning, TEXT("Levels Is Empty"))
 		OnFinish.ExecuteIfBound();
 		return;
 	}
@@ -293,14 +288,14 @@ void ULevelStreamingManager::SetLevelsVisibility(TArray<TSoftObjectPtr<UWorld>> 
 		/* Check */
 		if (!CheckLevel(Level))
 		{
-			DEBUG(Debug_World, Warning, TEXT("InValid Level"))
+			LOG(Debug_World, Warning, TEXT("InValid Level"))
 			continue;
 		}
 
 		const ULevelStreaming* LevelStreaming = GetLevelStreaming(Level);
 		if (!IsValid(LevelStreaming))
 		{
-			DEBUG(Debug_World, Warning, TEXT("Level Streaming Is Not Found"));
+			LOG(Debug_World, Warning, TEXT("Level Streaming Is Not Found"));
 			continue;
 		}
 
@@ -404,13 +399,13 @@ bool ULevelStreamingManager::CheckLevel(TSoftObjectPtr<UWorld> Level)
 {
 	if (Level.IsNull())
 	{
-		DEBUG(Debug_World, Warning, TEXT("InValid Level"))
+		LOG(Debug_World, Warning, TEXT("InValid Level"))
 		return false;
 	}
 
 	if (!IsCurrentWorldContainLevel(Level))
 	{
-		DEBUG(Debug_World, Warning, TEXT("Current World Not Contain Level : %s"), *Level.ToString());
+		LOG(Debug_World, Warning, TEXT("Current World Not Contain Level : %s"), *Level.ToString());
 		return false;
 	}
 
@@ -427,14 +422,14 @@ ULevelStreaming* ULevelStreamingManager::GetLevelStreaming(TSoftObjectPtr<UWorld
 	const FString PackageName = FPackageName::ObjectPathToPackageName(Level.ToString());
 	if (PackageName.IsEmpty())
 	{
-		DEBUG(Debug_World, Warning, TEXT("Level Is Not Found"))
+		LOG(Debug_World, Warning, TEXT("Level Is Not Found"))
 		return nullptr;
 	}
 
 	ULevelStreaming* LevelStreaming = UGameplayStatics::GetStreamingLevel(this, FName(*PackageName));
 	if (!IsValid(LevelStreaming))
 	{
-		DEBUG(Debug_World, Warning, TEXT("Level Streaming Is Not Found"));
+		LOG(Debug_World, Warning, TEXT("Level Streaming Is Not Found"));
 		return nullptr;
 	}
 

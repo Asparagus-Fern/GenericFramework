@@ -4,10 +4,9 @@
 
 #define LOCTEXT_NAMESPACE "FScreenWidgetGenerationModule"
 
-void FScreenWidgetGenerationModule::GetRegisterManager(TArray<TSubclassOf<UCoreManager>>& InRegisterManagerClasses)
+void FScreenWidgetGenerationModule::StartupModule()
 {
-	ICommonModuleInterface::GetRegisterManager(InRegisterManagerClasses);
-	InRegisterManagerClasses.Add(UScreenWidgetManager::StaticClass());
+	ICommonModuleInterface::StartupModule();
 }
 
 #undef LOCTEXT_NAMESPACE

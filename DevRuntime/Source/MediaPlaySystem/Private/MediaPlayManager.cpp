@@ -5,11 +5,6 @@
 
 #define LOCTEXT_NAMESPACE "UMediaPlayManager"
 
-FText UMediaPlayManager::GetManagerDisplayName()
-{
-	return LOCTEXT("DisplayName", "Media Play Manager");
-}
-
 void UMediaPlayManager::NativeOnActived()
 {
 	Super::NativeOnActived();

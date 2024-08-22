@@ -26,7 +26,8 @@ public class ApplicationRuntime : ModuleRules
 				"ScreenWidgetGeneration",
 				"CameraSystem",
 				"LevelStreaming",
-				"WorldPartition"
+				"WorldPartition",
+				"DBTween"
 			}
 		);
 	}

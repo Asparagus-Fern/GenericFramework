@@ -6,8 +6,6 @@
 #include "UObject/Interface.h"
 #include "ActiveNodeInterface.generated.h"
 
-class AActiveNode;
-
 // This class does not need to be modified.
 UINTERFACE()
 class UActiveNodeInterface : public UInterface
@@ -24,12 +22,6 @@ class ACTIVENODESYSTEM_API IActiveNodeInterface
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
-	// 登记节点, 在这个节点被节点世界子系统登记时调用. 在 node PostComponentInit 阶段 之前
-	UFUNCTION(BlueprintNativeEvent, Category = ActiveNodeInterface)
-	void RegisterNode();
-
-	UFUNCTION(BlueprintNativeEvent, Category = ActiveNodeInterface)
-	void UnRegisterNode();
 
 	// 初始化节点
 	UFUNCTION(BlueprintNativeEvent, Category = ActiveNodeInterface)
@@ -57,7 +49,7 @@ public:
 
 	// 准备从上一个活跃点切换至此活跃点, 在该活跃点初始化之前调用.
 	UFUNCTION(BlueprintNativeEvent, Category = ActiveNodeInterface)
-	void PreChangeNode(const AActiveNode* FromNode);
+	void PreChangeNode(const TScriptInterface<IActiveNodeInterface>& FromNode);
 
 	// 准备从上一个活跃点切换至此活跃点, 在该活跃点初始化之后调用.
 	UFUNCTION(BlueprintNativeEvent, Category = ActiveNodeInterface)

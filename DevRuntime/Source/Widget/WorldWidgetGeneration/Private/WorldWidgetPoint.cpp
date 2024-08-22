@@ -22,10 +22,10 @@ void AWorldWidgetPoint::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (UWorldWidgetManager* WorldWidgetManager = GetManager<UWorldWidgetManager>())
-	{
-		WorldWidgetManager->AddWorldWidgetPoint(this);
-	}
+	// if (UWorldWidgetManager* WorldWidgetManager = GetManager<UWorldWidgetManager>())
+	// {
+	// 	WorldWidgetManager->AddWorldWidgetPoint(this);
+	// }
 
 	if (bIsAutoActived)
 	{
@@ -39,10 +39,10 @@ void AWorldWidgetPoint::EndPlay(const EEndPlayReason::Type EndPlayReason)
 
 	SetIsActive(false);
 
-	if (UWorldWidgetManager* WorldWidgetManager = GetManager<UWorldWidgetManager>())
-	{
-		WorldWidgetManager->RemoveWorldWidgetPoint(this);
-	}
+	// if (UWorldWidgetManager* WorldWidgetManager = GetManager<UWorldWidgetManager>())
+	// {
+	// 	WorldWidgetManager->RemoveWorldWidgetPoint(this);
+	// }
 }
 
 void AWorldWidgetPoint::Destroyed()
@@ -56,11 +56,11 @@ void AWorldWidgetPoint::SetIsActive(const bool InActive)
 	PreActiveStateChange.Broadcast(this);
 	if (InActive)
 	{
-		GetManager<UWorldWidgetManager>()->ActiveWorldWidgetPoint(this);
+		// GetManager<UWorldWidgetManager>()->ActiveWorldWidgetPoint(this);
 	}
 	else
 	{
-		GetManager<UWorldWidgetManager>()->InactiveWorldWidgetPoint(this);
+		// GetManager<UWorldWidgetManager>()->InactiveWorldWidgetPoint(this);
 	}
 	OnActiveStateChange.Broadcast(this, InActive);
 }

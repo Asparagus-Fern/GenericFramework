@@ -27,41 +27,33 @@ class SCREENWIDGETGENERATION_API UBPFunctions_Widget : public UBlueprintFunction
 {
 	GENERATED_BODY()
 
-	/* UWidget */
-public:
-	template <typename T>
-	static TArray<T*> FindWidgets(UUserWidget* InWidget)
-	{
-		TArray<T*> Result;
-		if (IsValid(InWidget) && IsValid(InWidget->WidgetTree))
-		{
-			InWidget->WidgetTree->ForEachWidget([&Result](UWidget* Widget)
-				{
-					if (Widget->GetClass() == T::StaticClass() || Widget->GetClass()->IsChildOf(T::StaticClass()))
-					{
-						Result.Add(Cast<T>(Widget));
-					}
-				}
-			);
-		}
-		return Result;
-	}
-
-	UFUNCTION(BlueprintPure, meta = (DeterminesOutputType = "InClass"), DisplayName="FindWidgets")
-	static TArray<UWidget*> BP_FindWidgets(UUserWidget* InWidget, TSubclassOf<UWidget> InClass);
-
 	/* HUD */
 public:
-	UFUNCTION(BlueprintPure, Category="BPFunctions_Widget|HUD")
-	static TArray<UGameHUD*> GetGameHUD();
+	UFUNCTION(BlueprintPure, meta=(WorldContext = "WorldContextObject"), Category="BPFunctions_Widget|HUD")
+	static bool GetGameHUDs(const UObject* WorldContextObject, TArray<UGameHUD*>& GameHUDs);
 
-	UFUNCTION(BlueprintPure, Category="BPFunctions_Widget|HUD", meta=(GameplayTagFilter="HUD"))
-	static TArray<UGameHUD*> GetGameHUDByTag(FGameplayTag InTag);
+	UFUNCTION(BlueprintPure, meta=(WorldContext = "WorldContextObject"), Category="BPFunctions_Widget|HUD")
+	static bool GetGameHUDByTag(const UObject* WorldContextObject, FGameplayTag InTag, TArray<UGameHUD*>& GameHUDs);
 
-	UFUNCTION(BlueprintCallable, Category="BPFunctions_Widget|HUD")
-	static void SetGameHUDVisibility(bool IsVisisble);
+	UFUNCTION(BlueprintCallable, meta=(WorldContext = "WorldContextObject"), Category="BPFunctions_Widget|HUD")
+	static void SetAllGameHUDVisibility(const UObject* WorldContextObject, bool IsVisisble);
 
-	/* User Widget Base */
+	UFUNCTION(BlueprintCallable, meta=(WorldContext = "WorldContextObject"), Category="BPFunctions_Widget|HUD")
+	static void SetGameHUDVisibility(const UObject* WorldContextObject, UGameHUD* GameHUD, bool IsVisisble);
+
+	UFUNCTION(BlueprintCallable, meta=(WorldContext = "WorldContextObject"), Category="BPFunctions_Widget|HUD")
+	static void SetGameHUDVisibilityByTag(const UObject* WorldContextObject, FGameplayTag InTag, bool IsVisisble);
+
+	/*
+	/* Slot #1#
+public:
+	UFUNCTION(BlueprintPure, Category="BPFunctions_Widget|Slot", meta=(GameplayTagFilter="HUD"))
+	static UGameplayTagSlot* GetSlot(FGameplayTag InSlotTag);
+
+	UFUNCTION(BlueprintPure, Category="BPFunctions_Widget|Slot", meta=(GameplayTagFilter="HUD", DeterminesOutputType = "InClass"))
+	static UUserWidgetBase* GetSlotWidget(FGameplayTag InSlotTag, TSubclassOf<UUserWidgetBase> InClass);
+
+	/* User Widget Base #1#
 public:
 	UFUNCTION(BlueprintCallable, meta = (DeterminesOutputType = "InWidgetClass"), Category="BPFunctions_Widget|UserWidgetBase")
 	static UUserWidgetBase* CreateUserWidget(TSubclassOf<UUserWidgetBase> InWidgetClass);
@@ -81,7 +73,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category="BPFunctions_Widget|UserWidgetBase", meta=(GameplayTagFilter="HUD"))
 	static void CloseUserWidgetByTag(FGameplayTag InSlotTag, FUserWidgetBaseDelegate OnFinish);
 
-	/* Menu */
+	/* Menu #1#
 public:
 	UFUNCTION(BlueprintCallable, Category="BPFunctions_Widget|Menu")
 	static void SwitchGameMenu(UGameMenuSetting* InGameMenuSetting);
@@ -117,5 +109,5 @@ public:
 	static FGameplayTag GetLastActiveMenuTag();
 
 	UFUNCTION(BlueprintPure, Category="BPFunctions_Widget|Menu")
-	static FGameplayTag GetCurrentActiveMenuTag();
+	static FGameplayTag GetCurrentActiveMenuTag();*/
 };

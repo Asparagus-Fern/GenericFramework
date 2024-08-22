@@ -7,8 +7,6 @@
 #include "UObject/Interface.h"
 #include "ProcedureInterface.generated.h"
 
-DECLARE_MULTICAST_DELEGATE(FProcedureDelegate);
-
 /**
  * 
  */
@@ -33,21 +31,4 @@ public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Procedure Interface")
 	void OnInactived();
 	virtual void NativeOnInactived();
-	
-public:
-	virtual int32 GetProcedureOrder() { return 0; }
-	virtual bool GetIsAsync() { return false; }
-	virtual bool GetIsActive() { return bIsActive; }
-	virtual void SetIsActive(bool InActive);
-	FProcedureDelegate& GetActivateFinishDelegate() { return OnActivedFinish; }
-	FProcedureDelegate& GetInactivateFinishDelegate() { return OnInactivedFinish; }
-
-protected:
-	bool bIsActive = false;
-
-	FProcedureDelegate OnActivedFinish;
-	FProcedureDelegate OnInactivedFinish;
-
-	void RequestActivateFinish() const;
-	void RequestInactivateFinish() const;
 };

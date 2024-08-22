@@ -6,9 +6,7 @@
 #include "CameraManager.h"
 #include "LevelStreamingManager.h"
 #include "ScreenWidgetManager.h"
-#include "Handle/CameraHandle_Teleport.h"
 #include "Manager/ManagerGlobal.h"
-#include "Manager/ManagerSubsystem.h"
 #include "Procedure/ProcedureManager.h"
 #include "UserWidget/Base/UserWidgetBase.h"
 
@@ -27,7 +25,7 @@ void UProcedureLoading::NativeOnActived()
 	{
 		for (const auto& LoadingWidget : LoadingWidgets)
 		{
-			GetManager<UScreenWidgetManager>()->OpenUserWidget(LoadingWidget);
+			// GetManager<UScreenWidgetManager>()->OpenUserWidget(LoadingWidget);
 		}
 	}
 
@@ -45,7 +43,7 @@ void UProcedureLoading::NativeOnActived()
 				FOnFinish OnFinish;
 				OnFinish.BindDynamic(this, &UProcedureLoading::OnLoadAllLevelStreamingFinish);
 
-				GetManager<ULevelStreamingManager>()->LoadCurrentWorldLevelStreaming(OnOnceFinish, OnFinish);
+				// GetManager<ULevelStreamingManager>()->LoadCurrentWorldLevelStreaming(OnOnceFinish, OnFinish);
 			}
 			else
 			{
@@ -63,18 +61,18 @@ void UProcedureLoading::NativeOnInactived()
 	{
 		for (const auto& LoadingWidget : LoadingWidgets)
 		{
-			FSimpleMulticastDelegate OnFinish;
-			OnFinish.AddLambda([this]()
-				{
-					RequestProcedureInactived();
-				}
-			);
-
-			GetManager<UScreenWidgetManager>()->CloseUserWidget(LoadingWidget, OnFinish);
+			// FSimpleMulticastDelegate OnFinish;
+			// OnFinish.AddLambda([this]()
+			// 	{
+			// 		RequestProcedureInactived();
+			// 	}
+			// );
+			//
+			// GetManager<UScreenWidgetManager>()->CloseUserWidget(LoadingWidget, OnFinish);
 		}
 	}
 
-	RequestProcedureInactived();
+	// RequestProcedureInactived();
 }
 
 void UProcedureLoading::OnLoadAllLevelStreamingOnceFinish()
@@ -101,7 +99,7 @@ void UProcedureLoading::OnLoadAllLevelStreamingFinish()
 			FOnFinish OnFinish;
 			OnFinish.BindDynamic(this, &UProcedureLoading::OnLevelsToLoadFinish);
 
-			GetManager<ULevelStreamingManager>()->LoadLevels(LevelsToLoad, true, false, OnOnceFinish, OnFinish);
+			// GetManager<ULevelStreamingManager>()->LoadLevels(LevelsToLoad, true, false, OnOnceFinish, OnFinish);
 		}
 		else
 		{
@@ -115,7 +113,7 @@ void UProcedureLoading::OnLoadAllLevelStreamingFinish()
 		FOnFinish OnFinish;
 		OnFinish.BindDynamic(this, &UProcedureLoading::OnSetLevelsVisibilityFinish);
 
-		GetManager<ULevelStreamingManager>()->SetLevelsVisibility(HiddenLevels, false, OnOnceFinish, OnFinish);
+		// GetManager<ULevelStreamingManager>()->SetLevelsVisibility(HiddenLevels, false, OnOnceFinish, OnFinish);
 	}
 }
 
@@ -132,7 +130,7 @@ void UProcedureLoading::OnSetLevelsVisibilityFinish()
 		FOnFinish OnFinish;
 		OnFinish.BindDynamic(this, &UProcedureLoading::OnLevelsToLoadFinish);
 
-		GetManager<ULevelStreamingManager>()->LoadLevels(LevelsToLoad, true, false, OnOnceFinish, OnFinish);
+		// GetManager<ULevelStreamingManager>()->LoadLevels(LevelsToLoad, true, false, OnOnceFinish, OnFinish);
 	}
 	else
 	{
@@ -148,23 +146,23 @@ void UProcedureLoading::OnLevelsToLoadFinish()
 {
 	if (StartupCameraTag.IsValid())
 	{
-		GetManager<UCameraManager>()->SwitchToCamera(StartupCameraTag, NewObject<UCameraHandle_Teleport>(this));
+		// GetManager<UCameraManager>()->SwitchToCamera(StartupCameraTag, NewObject<UCameraHandle_Teleport>(this));
 	}
 	
 	if (bIsCloseLoadingWidgetOnLoadingLevelsFinish && bActiveLoadingWidget)
 	{
-		for (const auto& LoadingWidget : LoadingWidgets)
-		{
-			FSimpleMulticastDelegate OnFinish;
-			OnFinish.AddLambda([this]()
-				{
-					RequestProcedureActived();
-				}
-			);
-
-			GetManager<UScreenWidgetManager>()->CloseUserWidget(LoadingWidget, OnFinish);
-		}
+		// for (const auto& LoadingWidget : LoadingWidgets)
+		// {
+		// 	FSimpleMulticastDelegate OnFinish;
+		// 	OnFinish.AddLambda([this]()
+		// 		{
+		// 			RequestProcedureActived();
+		// 		}
+		// 	);
+		//
+		// 	GetManager<UScreenWidgetManager>()->CloseUserWidget(LoadingWidget, OnFinish);
+		// }
 	}
 
-	RequestProcedureActived();
+	// RequestProcedureActived();
 }

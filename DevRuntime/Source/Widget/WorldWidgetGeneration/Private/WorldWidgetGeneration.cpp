@@ -11,12 +11,6 @@ void FWorldWidgetGenerationModule::LoadDependentModule(TArray<FName>& InDependen
 	InDependentModuleName.Add("ScreenWidgetGeneration");
 }
 
-void FWorldWidgetGenerationModule::GetRegisterManager(TArray<TSubclassOf<UCoreManager>>& InRegisterManagerClasses)
-{
-	ICommonModuleInterface::GetRegisterManager(InRegisterManagerClasses);
-	InRegisterManagerClasses.Add(UWorldWidgetManager::StaticClass());
-}
-
 #undef LOCTEXT_NAMESPACE
 
 IMPLEMENT_MODULE(FWorldWidgetGenerationModule, WorldWidgetGeneration)

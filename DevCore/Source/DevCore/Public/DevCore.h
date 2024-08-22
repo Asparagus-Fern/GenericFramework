@@ -8,5 +8,5 @@
 class FDevCoreModule : public ICommonModuleInterface
 {
 public:
-	virtual void GetRegisterManager(TArray<TSubclassOf<UCoreManager>>& InRegisterManagerClasses) override;
+	virtual void StartupModule() override;
 };

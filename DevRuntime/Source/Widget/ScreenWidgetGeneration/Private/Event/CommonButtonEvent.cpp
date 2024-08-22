@@ -3,42 +3,28 @@
 
 #include "Event/CommonButtonEvent.h"
 
-#include "ScreenWidgetManager.h"
-#include "Manager/ManagerGlobal.h"
-
-UCommonButtonEvent::UCommonButtonEvent(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
-{
-	Response.Add(ECommonButtonResponseEvent::OnSelected, true);
-	Response.Add(ECommonButtonResponseEvent::OnDeselected, false);
-}
+#include "Event/CommonButtonCondition.h"
 
 void UCommonButtonEvent::NativeOnActived()
 {
-	IProcedureInterface::NativeOnActived();
-	Execute_OnActived(this);
+	Super::NativeOnActived();
+
+	bool IsConditionPass = true;
+	for (const auto& Condition : CommonButtonConditions)
+	{
+		if (!Condition->IsConditionPass())
+		{
+			IsConditionPass = false;
+			break;
+		}
+	}
+
+	if (IsConditionPass)
+	{
+		ExecuteButtonEvent();
+	}
 }
 
-void UCommonButtonEvent::NativeOnInactived()
+void UCommonButtonEvent::ExecuteButtonEvent_Implementation()
 {
-	IProcedureInterface::NativeOnInactived();
-	Execute_OnInactived(this);
-}
-
-void UCommonButtonEvent::NativeOnCreate()
-{
-	IProcedureBaseInterface::NativeOnCreate();
-	Execute_OnCreate(this);
-}
-
-void UCommonButtonEvent::NativeOnDestroy()
-{
-	IProcedureBaseInterface::NativeOnDestroy();
-	Execute_OnDestroy(this);
-}
-
-void UCommonButtonEvent::NativeOnRefresh()
-{
-	IProcedureBaseInterface::NativeOnRefresh();
-	Execute_OnRefresh(this);
 }

@@ -6,7 +6,6 @@
 UWorldWidget::UWorldWidget(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
-	bEnableInteraction = false;
 }
 
 void UWorldWidget::NativePreConstruct()

@@ -1,0 +1,29 @@
+﻿// Fill out your copyright notice in the Description page of Project Settings.
+
+
+#include "CameraHandle/CameraHandle_Teleport.h"
+
+#include "CameraManagerSetting.h"
+
+UCameraHandle_Teleport::UCameraHandle_Teleport()
+{
+}
+
+bool UCameraHandle_Teleport::HandleSwitchToCameraPoint_Implementation(APlayerController* InPlayerController, ACameraPointBase* InCameraPoint)
+{
+	if (Super::HandleSwitchToCameraPoint_Implementation(InPlayerController, InCameraPoint))
+	{
+		bUpdatePawnCenterPointAfterSwitchFinish = UCameraManagerSetting::Get()->bUpdatePawnCenterPointAfterSwitchFinish;
+		UCameraManagerSetting::Get()->bUpdatePawnCenterPointAfterSwitchFinish = true;
+		NativeOnSwitchToCameraPointFinish();
+		return true;
+	}
+
+	return false;
+}
+
+void UCameraHandle_Teleport::OnSwitchToCameraPointFinish_Implementation()
+{
+	Super::OnSwitchToCameraPointFinish_Implementation();
+	UCameraManagerSetting::Get()->bUpdatePawnCenterPointAfterSwitchFinish = bUpdatePawnCenterPointAfterSwitchFinish;
+}

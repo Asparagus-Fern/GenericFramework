@@ -10,12 +10,6 @@ void FCameraEdSystemModule::LoadDependentModule(TArray<FName>& InDependentModule
 	InDependentModuleName.Add("CameraSystem");
 }
 
-void FCameraEdSystemModule::GetRegisterManager(TArray<TSubclassOf<UCoreManager>>& InRegisterManagerClasses)
-{
-	ICommonEdModuleInterface::GetRegisterManager(InRegisterManagerClasses);
-	InRegisterManagerClasses.Add(UCameraEdManager::StaticClass());
-}
-
 #undef LOCTEXT_NAMESPACE
 
 IMPLEMENT_MODULE(FCameraEdSystemModule, CameraEdSystem)

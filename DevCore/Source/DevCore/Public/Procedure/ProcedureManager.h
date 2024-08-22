@@ -8,7 +8,7 @@
 #include "Manager/CoreManager.h"
 #include "ProcedureManager.generated.h"
 
-class UProcedureHandle;
+class UProcedureProxy;
 class UGameplayProcedure;
 
 /**
@@ -19,53 +19,51 @@ class DEVCORE_API UProcedureManager : public UCoreManager
 {
 	GENERATED_BODY()
 
-public:
-	UProcedureManager();
-
 	/* IProcedureBaseInterface */
 public:
 	virtual void NativeOnCreate() override;
 	virtual void NativeOnDestroy() override;
 
-	/* IProcedureInterface */
+	/* UCoreManager */
 public:
-	virtual void NativeOnActived() override;
-	virtual void NativeOnInactived() override;
-
-	/* IManagerInterface */
-public:
-	virtual FText GetManagerDisplayName() override;
-	virtual void NativeOnBeginPlay() override;
-	virtual void NativeOnEndPlay() override;
+	virtual void OnWorldMatchStarting_Implementation() override;
 
 	/* UProcedureManager */
 public:
-	/* 默认激活的流程 */
-	UPROPERTY(GlobalConfig, EditAnywhere, BlueprintReadOnly, meta=(Categories="Procedure"))
-	FGameplayTag DefaultProcedureTag;
+	virtual void SwitchProcedure(FGameplayTag InProcedureTag, bool bForce = false);
 
-	/* 所有可到达的流程 */
-	UPROPERTY(GlobalConfig, EditAnywhere, BlueprintReadWrite, meta=(Categories="Procedure"))
-	TMap<FGameplayTag, TSoftObjectPtr<UGameplayProcedure>> GameplayProcedureObjects;
-
-public:
-	virtual void SwitchProcedure(FGameplayTag InProcedureTag, bool bForce = false, FSimpleMulticastDelegate OnFinish = FSimpleMulticastDelegate());
-	virtual UGameplayProcedure* GetGameplayProcedure(FGameplayTag InProcedureTag);
 	virtual FGameplayTag GetLastProcedureTag();
 	virtual FGameplayTag GetCurrentProcedureTag();
-	virtual TMap<FGameplayTag, UGameplayProcedure*>& GetGameplayProcedureMapping();
+	virtual UGameplayProcedure* GetGameplayProcedure(FGameplayTag InProcedureTag);
+	virtual TMap<FGameplayTag, UGameplayProcedure*>& GetGameplayProcedures();
+
+public:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Transient)
+	FGameplayTag LastProcedureTag;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Transient)
+	FGameplayTag CurrentProcedureTag;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Transient)
+	TMap<FGameplayTag, UGameplayProcedure*> GameplayProcedures;
 
 protected:
-	FGameplayTag LastProcedureTag;
-	FGameplayTag CurrentProcedureTag;
-	TMap<FGameplayTag, UGameplayProcedure*> GameplayProcedure;
+	virtual void LoadGameplayProcedure();
 
 	/* Procedure Handle */
 public:
-	virtual UProcedureHandle* RegisterProcedureHandle(const TArray<FProcedureInterfaceHandle>& InHandles, FSimpleMulticastDelegate OnHandleFinish = FSimpleMulticastDelegate(), FSimpleMulticastDelegate OnHandleReset = FSimpleMulticastDelegate());
-	virtual void ResetProcedureHandle(UProcedureHandle* InHandle);
+	virtual UProcedureProxy* RegisterProcedureHandle(TArray<UProcedureObject*> InProcedureObjects, bool InTargetActiveState, FSimpleDelegate OnFinish = FSimpleDelegate());
+	virtual UProcedureProxy* RegisterProcedureHandle(TArray<FProcedureHandle> InProcedureHandles, FSimpleDelegate OnFinish = FSimpleDelegate());
+	virtual UProcedureProxy* RegisterProcedureHandle(FProcedureHandleGroup InHandleGroup);
 
 protected:
-	UPROPERTY()
-	TArray<UProcedureHandle*> ActiveProcedureHandles;
+	virtual void OnProcedureProxyHandleBegin(UProcedureProxy* InProcedureProxy);
+	virtual void OnProcedureProxyHandlePause(UProcedureProxy* InProcedureProxy);
+	virtual void OnProcedureProxyHandleContinue(UProcedureProxy* InProcedureProxy);
+	virtual void OnProcedureProxyHandleStop(UProcedureProxy* InProcedureProxy);
+	virtual void OnProcedureProxyHandleFinish(UProcedureProxy* InProcedureProxy);
+
+protected:
+	UPROPERTY(Transient)
+	TArray<UProcedureProxy*> ActivatedProcedureProxy;
 };

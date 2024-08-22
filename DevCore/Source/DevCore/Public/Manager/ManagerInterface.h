@@ -6,6 +6,7 @@
 #include "UObject/Interface.h"
 #include "ManagerInterface.generated.h"
 
+class UManagerProxy;
 /**
  * 
  */
@@ -24,15 +25,14 @@ class DEVCORE_API IManagerInterface
 
 public:
 	virtual FText GetManagerDisplayName();
-	virtual bool IsEditorManager() ;
-	virtual bool DoesSupportWorldType(EWorldType::Type InWorldType) ;
+	virtual bool IsEditorManager();
+	virtual bool DoesSupportWorldType(EWorldType::Type InWorldType);
 
-public:
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Procedure Interface")
 	void OnBeginPlay();
 	virtual void NativeOnBeginPlay();
-	
+
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Procedure Interface")
 	void OnEndPlay();
 	virtual void NativeOnEndPlay();

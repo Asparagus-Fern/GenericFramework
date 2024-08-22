@@ -1,7 +1,6 @@
 ﻿#include "ManagerEditorCommands.h"
 
-#include "DevEdCoreStyle.h"
-
+#include "DevCoreStyle.h"
 
 #define LOCTEXT_NAMESPACE "FManagerEditorCommands"
 
@@ -10,7 +9,7 @@ FManagerEditorCommands::FManagerEditorCommands()
 		"ManagerEditorCommands",
 		LOCTEXT("Tooltip", "Manager Editor"),
 		NAME_None,
-		FDevEdCoreStyle::GetStyleSetName()
+		FDevCoreStyle::GetStyleSetName()
 	)
 {
 }

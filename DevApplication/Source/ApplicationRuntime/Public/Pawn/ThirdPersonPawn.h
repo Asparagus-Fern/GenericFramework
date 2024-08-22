@@ -43,10 +43,6 @@ public:
 	UFUNCTION(BlueprintPure)
 	UCameraComponent* GetActiveCameraComponent() const;
 
-	/* IProcedureBaseInterface */
-public:
-	virtual void OnRefresh_Implementation() override;
-
 	/* IIPawnInterface */
 public:
 	virtual void AddLocation_Implementation(FVector2D InValue) override;

@@ -20,6 +20,7 @@ public class DevSlateCore : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
+				"Projects",
 				"UMG",
 				"CommonUI",
 				"GameplayTags"

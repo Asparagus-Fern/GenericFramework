@@ -13,96 +13,161 @@ void UGameMenuSetting::GenerateMenu()
 {
 	if (!IsValid(MenuTagTable))
 	{
-		DEBUG_Notify(Debug_UI, Error, TEXT("MenuTagTable is NULL"))
+		NOTIFY(TEXT("MenuTagTable is NULL"))
 		return;
 	}
 
 	if (!MenuTagTable->RowStruct->IsChildOf(FGameplayTagTableRow::StaticStruct()))
 	{
-		DEBUG_Notify(Debug_UI, Error, TEXT("MenuTagTable is Not GameplayTag Table"))
+		NOTIFY(TEXT("MenuTagTable is Not GameplayTag Table"))
 		return;
 	}
 
-	// TSubclassOf<UMenuContainer> MenuContainerClass = LoadClass<UMenuContainer>(nullptr,TEXT("/Script/UMGEditor.WidgetBlueprint'/DevRuntime/ScreenWidgetGeneration/Widget/MenuContainerTemplate/WBP_ContainerTemplate_StackBox.WBP_ContainerTemplate_StackBox_C'"));
+	Modify();
+
+	GameplayTagContainer = FGameplayTagContainer();
+
 	MenuTagTable->ForeachRow<FGameplayTagTableRow>
 	("", [this](FName Key, const FGameplayTagTableRow& Value)
 	 {
 		 const FGameplayTag MenuTag = FGameplayTag::RequestGameplayTag(Value.Tag);
+		 GameplayTagContainer.AddTag(MenuTag);
 
 		 /* 跳过根节点 */
-		 if (MenuTag.RequestDirectParent() == TAG_Menu)
+		 if (MenuTag == TAG_Menu)
 		 {
 			 return;
 		 }
 
-		 /* 生成新的组 */
-		 if (!MenuContainerInfos.Contains(MenuTag.RequestDirectParent()))
+		 /* 不在UI.Menu子项下 */
+		 if (!MenuTag.GetGameplayTagParents().HasTag(TAG_Menu))
 		 {
-			 MenuContainerInfos.Add(FMenuContainerInfo(MenuTag.RequestDirectParent()));
+			 return;
 		 }
 
-		 FMenuContainerInfo* FoundMenuContainerInfo = MenuContainerInfos.FindByKey(MenuTag.RequestDirectParent());
-		 if (FoundMenuContainerInfo)
+		 /* 跳过已存在MenuInfo */
+		 if (MenuInfos.Contains(MenuTag))
 		 {
-			 /* 跳过已生成的 */
-			 if (FoundMenuContainerInfo->MenuInfos.Contains(MenuTag))
-			 {
-				 return;
-			 }
-		 }
-		 else
-		 {
-			 DEBUG_Notify(Debug_UI, Error, TEXT("Unknown Error"))
 			 return;
 		 }
 
 		 /* 添加新的MenuInfo */
 		 FMenuInfo* NewMenuInfo = new FMenuInfo(MenuTag);
 		 NewMenuInfo->MenuMainName = FText::FromString(Value.DevComment);
-		 FoundMenuContainerInfo->MenuInfos.Add(*NewMenuInfo);
+		 MenuInfos.Add(*NewMenuInfo);
 	 }
 	);
 
-	Modify();
+	NOTIFY(TEXT("Menu Generate Finish"))
 }
 
 #endif
 
-FMenuContainerInfo* UGameMenuSetting::GetRootContainerInfo()
+bool UGameMenuSetting::GetMenuInfo(FGameplayTag InMenuTag, FMenuInfo& OutMenuInfo)
 {
-	for (auto& MenuContainerInfo : MenuContainerInfos)
+	for (auto& MenuInfo : MenuInfos)
 	{
-		if (MenuContainerInfo.ContainerTag.RequestDirectParent() == TAG_Menu)
+		if (MenuInfo.MenuTag == InMenuTag)
 		{
-			return &MenuContainerInfo;
+			OutMenuInfo = MenuInfo;
+			return true;
 		}
 	}
 
-	return nullptr;
+	return false;
 }
 
-FMenuContainerInfo* UGameMenuSetting::GetContainerInfo(FGameplayTag InMenuTag)
+TArray<FMenuInfo> UGameMenuSetting::GetMenuInfos(const TArray<FGameplayTag>& InMenuTags)
 {
-	for (auto& MenuContainerInfo : MenuContainerInfos)
+	TArray<FMenuInfo> OutMenuInfos;
+
+	for (auto& MenuInfo : MenuInfos)
 	{
-		if (MenuContainerInfo.ContainerTag == InMenuTag)
+		if (InMenuTags.Contains(MenuInfo.MenuTag))
 		{
-			return &MenuContainerInfo;
+			OutMenuInfos.Add(MenuInfo);
 		}
 	}
 
-	return nullptr;
+	return OutMenuInfos;
 }
 
-FMenuContainerInfo* UGameMenuSetting::GetParentContainerInfo(FGameplayTag InMenuTag)
+TArray<FGameplayTag> UGameMenuSetting::GetChildMenuTags(const FGameplayTag InMenuTag, const bool bIsContainOriginal)
 {
-	for (auto& MenuContainerInfo : MenuContainerInfos)
+	TArray<FGameplayTag> OutMenuTags;
+	if (bIsContainOriginal)
 	{
-		if (MenuContainerInfo.ContainerTag == InMenuTag.RequestDirectParent())
-		{
-			return &MenuContainerInfo;
-		}
+		OutMenuTags.Add(InMenuTag);
 	}
 
-	return nullptr;
+	TArray<FGameplayTag> ChildTags;
+	UGameplayTagsManager::Get().RequestGameplayTagChildren(InMenuTag).GetGameplayTagArray(ChildTags);
+
+	OutMenuTags.Append(ChildTags);
+	return OutMenuTags;
+}
+
+TArray<FMenuInfo> UGameMenuSetting::GetChildMenuInfos(const FGameplayTag InMenuTag, const bool bIsContainOriginal)
+{
+	return GetMenuInfos(GetChildMenuTags(InMenuTag, bIsContainOriginal));
+}
+
+TArray<FGameplayTag> UGameMenuSetting::GetChildMenuTagsInDictionary(const FGameplayTag InMenuTag, const bool bIsContainOriginal)
+{
+	TArray<FGameplayTag> OutMenuTags;
+	if (bIsContainOriginal)
+	{
+		OutMenuTags.Add(InMenuTag);
+	}
+
+	TArray<FGameplayTag> ChildTags;
+	UGameplayTagsManager::Get().RequestGameplayTagChildrenInDictionary(InMenuTag).GetGameplayTagArray(ChildTags);
+
+	OutMenuTags.Append(ChildTags);
+	return OutMenuTags;
+}
+
+TArray<FMenuInfo> UGameMenuSetting::GetChildMenuInfosInDictionary(const FGameplayTag InMenuTag, const bool bIsContainOriginal)
+{
+	return GetMenuInfos(GetChildMenuTagsInDictionary(InMenuTag, bIsContainOriginal));
+}
+
+TArray<FGameplayTag> UGameMenuSetting::GetParentMenuTags(const FGameplayTag InMenuTag, const bool bIsContainOriginal)
+{
+	TArray<FGameplayTag> OutMenuTags;
+	if (bIsContainOriginal)
+	{
+		OutMenuTags.Add(InMenuTag);
+	}
+
+	TArray<FGameplayTag> ChildTags;
+	UGameplayTagsManager::Get().RequestGameplayTagParents(InMenuTag).GetGameplayTagArray(ChildTags);
+
+	OutMenuTags.Append(ChildTags);
+	return OutMenuTags;
+}
+
+TArray<FMenuInfo> UGameMenuSetting::GetParentMenuInfos(const FGameplayTag InMenuTag, const bool bIsContainOriginal)
+{
+	return GetMenuInfos(GetParentMenuTags(InMenuTag, bIsContainOriginal));
+}
+
+FGameplayTag UGameMenuSetting::GetDirectParentMenuTag(const FGameplayTag InMenuTag)
+{
+	return UGameplayTagsManager::Get().RequestGameplayTagDirectParent(InMenuTag);
+}
+
+bool UGameMenuSetting::GetDirectParentMenuInfo(const FGameplayTag InMenuTag, FMenuInfo& OutMenuInfo)
+{
+	return GetMenuInfo(GetDirectParentMenuTag(InMenuTag), OutMenuInfo);
+}
+
+FGameplayTag UGameMenuSetting::GetRootMenuTag() const
+{
+	return RootMenuTag.IsValid() ? RootMenuTag : (GameplayTagContainer.IsValid() ? GameplayTagContainer.First() : FGameplayTag::EmptyTag);
+}
+
+TArray<FMenuInfo> UGameMenuSetting::GetRootMenuInfos()
+{
+	return GetChildMenuInfos(GetRootMenuTag());
 }

@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "InputType.h"
 #include "Manager/CoreManager.h"
 #include "InputManager.generated.h"
 
@@ -14,20 +13,9 @@ UCLASS()
 class DEVCORE_API UInputManager : public UCoreManager
 {
 	GENERATED_BODY()
-
-public:
-	UInputManager();
-
-	/* IManagerInterface */
-public:
-	virtual FText GetManagerDisplayName() override;
-
+	
 	/* IProcedureInterface */
 public:
 	virtual void NativeOnActived() override;
 	virtual void NativeOnInactived() override;
-
-public:
-	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly)
-	TArray<FEnhanceInputMappingContext> EnhanceInputMappingContexts;
 };

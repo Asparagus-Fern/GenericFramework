@@ -8,50 +8,28 @@
 AActiveNode::AActiveNode(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 	, bAlwaysUpdate(true)
-	, bComponentUpdate(true)
+	, bComponentUpdate(false)
 	, bInitialized(false)
 	, bActive(false)
 {
-	RootComponent = CreateDefaultSubobject<USceneComponent>(USceneComponent::GetDefaultSceneRootVariableName());
 	
 #if WITH_EDITORONLY_DATA
 	bIsSpatiallyLoaded = false;
 #endif
+
+	SetHidden(false);
 	PrimaryActorTick.bCanEverTick = true;
 }
 
-void AActiveNode::PostInitializeComponents()
+bool AActiveNode::IsActivationNode() const
 {
-	Super::PostInitializeComponents();
-
-	if(UActiveNodeSubsystem* ActiveNodeSubsystem = UActiveNodeSubsystem::Get(this))
+	const UWorld* World = GetWorld();
+	if(World != nullptr)
 	{
-		ActiveNodeSubsystem->RegisterNode(NodeTag, this);
+		if(const UActiveNodeSubsystem* ActiveNodeSubsystem =  UActiveNodeSubsystem::Get(World))
+		{
+			return ActiveNodeSubsystem->GetCurrentActiveNode() == this && bInitialized && bActive ;
+		}
 	}
-}
-
-void AActiveNode::EndPlay(const EEndPlayReason::Type EndPlayReason)
-{
-	Super::EndPlay(EndPlayReason);
-
-	if(UActiveNodeSubsystem* ActiveNodeSubsystem = UActiveNodeSubsystem::Get(this))
-	{
-		ActiveNodeSubsystem->UnRegisterNode(NodeTag);
-	}
-}
-
-bool AActiveNode::Login(const UObject* WorldContextObject, bool bReInit)
-{
-	if(bActive)
-	{
-		ReLogin(WorldContextObject, bReInit);
-		return true;
-	}
-	
-	return UActiveNodeSubsystem::Get(WorldContextObject)->ChangeNode(NodeTag, bReInit);
-}
-
-void AActiveNode::ReLogin(const UObject* WorldContextObject, bool bReInit)
-{
-	return UActiveNodeSubsystem::Get(WorldContextObject)->ReLoginNode(bReInit);
+	return false;
 }

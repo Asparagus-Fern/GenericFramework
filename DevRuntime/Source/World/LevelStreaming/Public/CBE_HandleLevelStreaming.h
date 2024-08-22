@@ -33,7 +33,7 @@ public:
 public:
 	virtual void NativeOnActived() override;
 	virtual void NativeOnInactived() override;
-	virtual bool GetIsAsync() override { return true; }
+	// virtual bool GetIsAsync() override { return true; }
 
 public:
 	UFUNCTION()

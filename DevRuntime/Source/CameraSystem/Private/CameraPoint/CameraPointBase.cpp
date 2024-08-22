@@ -5,7 +5,6 @@
 
 #include "CameraManager.h"
 #include "CameraSystemType.h"
-#include "Handle/CameraHandle_Default.h"
 #include "Manager/ManagerGlobal.h"
 
 
@@ -24,7 +23,7 @@ void ACameraPointBase::BeginPlay()
 
 	if (CameraTag.IsValid())
 	{
-		GetManager<UCameraManager>()->AddCameraPoint(CameraTag, this);
+		GetManager<UCameraManager>(this)->AddCameraPoint(CameraTag, this);
 	}
 }
 
@@ -32,7 +31,7 @@ void ACameraPointBase::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	if (CameraTag.IsValid())
 	{
-		GetManager<UCameraManager>()->RemoveCameraPoint(CameraTag);
+		GetManager<UCameraManager>(this)->RemoveCameraPoint(CameraTag);
 	}
 
 	Super::EndPlay(EndPlayReason);

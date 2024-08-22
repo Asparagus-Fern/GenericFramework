@@ -3,19 +3,19 @@
 
 #include "ManagerEditor.h"
 
-#include "DevEdCoreStyle.h"
+#include "DevCoreStyle.h"
 #include "LevelEditor.h"
 #include "ManagerEditorCommands.h"
 #include "ToolMenuSection.h"
-#include "Manager/ManagerSubsystem.h"
 #include "Slate/SManagerEditor.h"
 
 #define LOCTEXT_NAMESPACE "UManagerEditor"
 
 FName UManagerEditor::ManagerEditorTabName = "ManagerEditor";
 
-UManagerEditor::UManagerEditor()
+bool UManagerEditor::DoesSupportWorldType(const EWorldType::Type WorldType) const
 {
+	return WorldType == EWorldType::Editor;
 }
 
 void UManagerEditor::NativeOnCreate()
@@ -28,7 +28,7 @@ void UManagerEditor::NativeOnCreate()
 	FGlobalTabmanager::Get()->RegisterNomadTabSpawner(ManagerEditorTabName, FOnSpawnTab::CreateUObject(this, &UManagerEditor::SpawnManagerEditorTab))
 		.SetDisplayName(LOCTEXT("ManagerEditorTitle", "Manager Editor"))
 		.SetTooltipText(LOCTEXT("ManagerEditorTooltip", "Open Manager Editor Window."))
-		.SetIcon(FSlateIcon(FDevEdCoreStyle::GetStyleSetName(), "Manager.ToolbarButton.Small"));
+		.SetIcon(FSlateIcon(FDevCoreStyle::GetStyleSetName(), "Manager.ToolbarButton.Small"));
 }
 
 void UManagerEditor::NativeOnDestroy()
@@ -38,16 +38,6 @@ void UManagerEditor::NativeOnDestroy()
 	FGlobalTabmanager::Get()->UnregisterNomadTabSpawner(ManagerEditorTabName);
 }
 
-FText UManagerEditor::GetManagerDisplayName()
-{
-	return LOCTEXT("DisplayName", "Manager Editor");
-}
-
-bool UManagerEditor::DoesSupportWorldType(EWorldType::Type InWorldType)
-{
-	return Super::DoesSupportWorldType(InWorldType) || InWorldType == EWorldType::Editor;
-}
-
 void UManagerEditor::InitCommandList(TSharedPtr<FUICommandList>& InCommandList)
 {
 	const FManagerEditorCommands& Commands = FManagerEditorCommands::Get();
@@ -55,8 +45,10 @@ void UManagerEditor::InitCommandList(TSharedPtr<FUICommandList>& InCommandList)
 	InCommandList->MapAction(Commands.OpenManagerEditor, FExecuteAction::CreateStatic(&UManagerEditor::OpenManagerEditor));
 }
 
-void UManagerEditor::ExtendToolBar(FToolMenuSection& InSection)
+void UManagerEditor::ExtendToolBar_Implementation(FToolMenuSection& InSection)
 {
+	IManagerEdInterface::ExtendToolBar_Implementation(InSection);
+
 	InSection.AddEntry
 	(
 		FToolMenuEntry::InitToolBarButton
@@ -64,7 +56,7 @@ void UManagerEditor::ExtendToolBar(FToolMenuSection& InSection)
 			FManagerEditorCommands::Get().OpenManagerEditor,
 			FText::GetEmpty(),
 			TAttribute<FText>(),
-			FSlateIcon(FDevEdCoreStyle::GetStyleSetName(), "Manager.ToolbarButton", "Manager.ToolbarButton.Small")
+			FSlateIcon(FDevCoreStyle::GetStyleSetName(), "Manager.ToolbarButton", "Manager.ToolbarButton.Small")
 		)
 	);
 }
@@ -72,16 +64,16 @@ void UManagerEditor::ExtendToolBar(FToolMenuSection& InSection)
 void UManagerEditor::OnLevelEditorCreated(TSharedPtr<ILevelEditor> LevelEditor)
 {
 	ManagerListView = FListViewBase<FManagerListViewInfo, FManagerListViewItem>::New();
-	for (const auto& Manager : UManagerSubsystem::Get()->GetManagers())
-	{
-		ManagerListView->ListViewMap.Add(MakeShareable(new FManagerListViewInfo(Manager)), MakeShareable(new FManagerListViewItem()));
-	}
+	// for (const auto& Manager : UManagerSubsystem::Get()->GetManagers())
+	// {
+	// 	ManagerListView->ListViewMap.Add(MakeShareable(new FManagerListViewInfo(Manager)), MakeShareable(new FManagerListViewItem()));
+	// }
 }
 
 void UManagerEditor::OpenManagerEditor()
 {
 	FGlobalTabmanager::Get()->TryInvokeTab(ManagerEditorTabName);
-	DEBUG(Debug_Manager, Log, TEXT("Open Manager Editor"))
+	LOG(Debug_Manager, Log, TEXT("Open Manager Editor"))
 }
 
 TSharedRef<SDockTab> UManagerEditor::SpawnManagerEditorTab(const FSpawnTabArgs& Args)

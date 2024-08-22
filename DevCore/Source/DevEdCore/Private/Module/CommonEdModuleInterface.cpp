@@ -7,8 +7,10 @@
 
 #define LOCTEXT_NAMESPACE "ICommonEdModuleInterface"
 
-void ICommonEdModuleInterface::PostStartupModule()
+void ICommonEdModuleInterface::StartupModule()
 {
+	ICommonModuleInterface::StartupModule();
+
 	RegisterStyle();
 	RegisterCommand();
 	
@@ -27,8 +29,10 @@ void ICommonEdModuleInterface::LoadDependentModule(TArray<FName>& InDependentMod
 	InDependentModuleName.Add("DevEdCore");
 }
 
-void ICommonEdModuleInterface::PreShutdownModule()
+void ICommonEdModuleInterface::ShutdownModule()
 {
+	ICommonModuleInterface::ShutdownModule();
+
 	FModuleStatus OutModuleStatus;
 	if (FModuleManager::Get().QueryModule("AssetTools", OutModuleStatus))
 	{

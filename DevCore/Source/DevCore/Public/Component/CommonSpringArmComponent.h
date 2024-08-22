@@ -6,26 +6,8 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "CommonSpringArmComponent.generated.h"
 
-
-// This class does not need to be modified.
-UINTERFACE(MinimalAPI)
-class USpringArmInterface : public UInterface
-{
-	GENERATED_BODY()
-};
-
-/**
- * 
- */
-class DEVCORE_API ISpringArmInterface
-{
-	GENERATED_BODY()
-
-public:
-};
-
 UCLASS(ClassGroup=(Camera), meta=(BlueprintSpawnableComponent))
-class DEVCORE_API UCommonSpringArmComponent : public USpringArmComponent, public ISpringArmInterface
+class DEVCORE_API UCommonSpringArmComponent : public USpringArmComponent
 {
 	GENERATED_BODY()
 
@@ -38,11 +20,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Spring Arm")
 	float ArmZoomSpeedRate = 1.f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Spring Arm", meta=(ClampMin = 0.f))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Spring Arm", meta=(ClampMin = 0.f, UIMin = 0.f))
 	float MinArmLength = 0.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Spring Arm")
-	float MaxArmLength = 5000000.f;
+	float MaxArmLength = 500000000.f;
 
 public:
 	UFUNCTION(BlueprintCallable)

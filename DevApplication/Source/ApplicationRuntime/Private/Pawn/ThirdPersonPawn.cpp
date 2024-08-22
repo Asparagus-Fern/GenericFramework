@@ -10,7 +10,6 @@
 #include "Component/CommonSpringArmComponent.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/FloatingPawnMovement.h"
-#include "Handle/CameraHandle.h"
 #include "Kismet/GameplayStatics.h"
 #include "Manager/ManagerGlobal.h"
 #include "Pawn/PawnManager.h"
@@ -67,15 +66,15 @@ UCameraComponent* AThirdPersonPawn::GetActiveCameraComponent() const
 	return IsValid(CameraCacheComponent) ? (CameraCacheComponent->IsActive() ? CameraCacheComponent : CameraComponent) : CameraComponent;
 }
 
-void AThirdPersonPawn::OnRefresh_Implementation()
-{
-	Super::OnRefresh_Implementation();
-	RefreshSpringArmComponent();
-}
+// void AThirdPersonPawn::OnRefresh_Implementation()
+// {
+// 	Super::OnRefresh_Implementation();
+// 	RefreshSpringArmComponent();
+// }
 
 void AThirdPersonPawn::AddLocation_Implementation(FVector2D InValue)
 {
-	if (CanMove())
+	// if (CanMove())
 	{
 		FVector2D Rate = FVector2D(1.f, 1.f);
 		float MaxSpeed = 1.f;
@@ -109,12 +108,12 @@ void AThirdPersonPawn::AddLocation_Implementation(FVector2D InValue)
 
 void AThirdPersonPawn::AddRotation_Implementation(const FVector2D InValue)
 {
-	if (CanTurn())
+	// if (CanTurn())
 	{
 		AddActorWorldRotation(FRotator(0.f, InValue.X, 0.f));
 
 		const FRotator TargetRotation = CommonSpringArmComponent->GetRelativeRotation() + FRotator(-InValue.Y, 0.f, 0.f);
-		if (TargetRotation.Pitch > GetManager<UPawnManager>()->MinRotationPitch && TargetRotation.Pitch < GetManager<UPawnManager>()->MaxRotationPitch)
+		// if (TargetRotation.Pitch > GetManager<UPawnManager>()->MinRotationPitch && TargetRotation.Pitch < GetManager<UPawnManager>()->MaxRotationPitch)
 		{
 			CommonSpringArmComponent->AddRelativeRotation(FRotator(-InValue.Y, 0.f, 0.f));
 		}
@@ -123,7 +122,7 @@ void AThirdPersonPawn::AddRotation_Implementation(const FVector2D InValue)
 
 void AThirdPersonPawn::SetRotation_Implementation(const FRotator InValue)
 {
-	if (CanTurn())
+	// if (CanTurn())
 	{
 		SetActorRotation(FRotator(0.f, InValue.Yaw, 0.f));
 		CommonSpringArmComponent->SetRelativeRotation(FRotator(InValue.Pitch, 0.f, 0.f), true);
@@ -142,16 +141,16 @@ FRotator AThirdPersonPawn::GetCameraRotation_Implementation()
 
 void AThirdPersonPawn::OnSwitchCameraFinish(UCameraHandle* InCameraHandle)
 {
-	if (!IsValid(InCameraHandle) || !IsValid(InCameraHandle->TargetCameraPoint) || !IsValid(InCameraHandle->TargetCameraPoint->GetCameraComponent()))
-	{
-		DEBUG(Debug_Camera, Error, TEXT("InCameraPoint/InCameraPoint CameraComponent Is NULL"))
-		return;
-	}
+	// if (!IsValid(InCameraHandle) || !IsValid(InCameraHandle->TargetCameraPoint) || !IsValid(InCameraHandle->TargetCameraPoint->GetCameraComponent()))
+	// {
+	// 	LOG(Debug_Camera, Error, TEXT("InCameraPoint/InCameraPoint CameraComponent Is NULL"))
+	// 	return;
+	// }
 
 	/* todo:复制的CameraComponent无效 */
 	// CameraComponent = DuplicateObject<UCameraComponent>(InCameraHandle->TargetCameraPoint->GetCameraComponent(), this);
 
-	CameraComponent->SetFieldOfView(InCameraHandle->TargetCameraPoint->GetCameraComponent()->FieldOfView);
+	// CameraComponent->SetFieldOfView(InCameraHandle->TargetCameraPoint->GetCameraComponent()->FieldOfView);
 
 	// if (CameraComponent->IsActive())
 	// {
@@ -171,8 +170,8 @@ void AThirdPersonPawn::OnSwitchCameraFinish(UCameraHandle* InCameraHandle)
 	// CameraCacheComponent->SetActiveFlag(true);
 
 	CommonSpringArmComponent->SetTargetArmLength(0.f);
-	Execute_SetLocation(this, InCameraHandle->TargetCameraPoint->GetActorLocation());
-	Execute_SetRotation(this, InCameraHandle->TargetCameraPoint->GetActorRotation());
+	// Execute_SetLocation(this, InCameraHandle->TargetCameraPoint->GetActorLocation());
+	// Execute_SetRotation(this, InCameraHandle->TargetCameraPoint->GetActorRotation());
 
 	FHitResult HitResult;
 	if (GetHitResult(HitResult))
@@ -185,7 +184,7 @@ void AThirdPersonPawn::OnSwitchCameraFinish(UCameraHandle* InCameraHandle)
 		CommonSpringArmComponent->SetTargetArmLength(0.f);
 	}
 
-	UpdateLockState(InCameraHandle->bLock, InCameraHandle->bLockLocation, InCameraHandle->bLockRotation);
+	// UpdateLockState(InCameraHandle->bLock, InCameraHandle->bLockLocation, InCameraHandle->bLockRotation);
 }
 
 void AThirdPersonPawn::RefreshSpringArmComponent()

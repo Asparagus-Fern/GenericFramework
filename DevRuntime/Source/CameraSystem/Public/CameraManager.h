@@ -20,11 +20,7 @@ class CAMERASYSTEM_API UCameraManager : public UCoreManager
 	GENERATED_BODY()
 
 public:
-	UCameraManager();
-
-	/* IManagerInterface */
-public:
-	virtual FText GetManagerDisplayName() override;
+	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
 
 	/* IProcedureInterface */
 public:
@@ -37,20 +33,33 @@ public:
 	virtual void RemoveCameraPoint(FGameplayTag InCameraTag);
 	ACameraPointBase* GetCameraPoint(FGameplayTag InCameraTag) const;
 
-	/* todo: GC Error */
+public:
 	bool CanSwitchToCamera(FGameplayTag InCameraTag) const;
-	virtual void SwitchToCamera(UCameraComponent* InCameraComponent, TSubclassOf<UCameraHandle> InCameraHandleClass);
-	virtual void SwitchToCamera(UCameraComponent* InCameraComponent, UCameraHandle* SwitchCameraHandle);
-	virtual void SwitchToCamera(FGameplayTag InCameraTag, TSubclassOf<UCameraHandle> InCameraHandleClass);
-	virtual void SwitchToCamera(FGameplayTag InCameraTag, UCameraHandle* SwitchCameraHandle);
-	virtual void SwitchToCamera(ACameraPointBase* InCameraPoint, TSubclassOf<UCameraHandle> InCameraHandleClass);
-	virtual void SwitchToCamera(ACameraPointBase* InCameraPoint, UCameraHandle* SwitchCameraHandle);
-	virtual void SwitchToCamera(APlayerController* PlayerController, FGameplayTag InCameraTag, TSubclassOf<UCameraHandle> InCameraHandleClass);
-	virtual void SwitchToCamera(APlayerController* PlayerController, FGameplayTag InCameraTag, UCameraHandle* SwitchCameraHandle);
-	virtual void SwitchToCamera(APlayerController* PlayerController, ACameraPointBase* InCameraPoint, TSubclassOf<UCameraHandle> InCameraHandleClass);
-	virtual void SwitchToCamera(APlayerController* PlayerController, ACameraPointBase* InCameraPoint, UCameraHandle* SwitchCameraHandle);
+
+	virtual UCameraHandle* SwitchToCamera(const int32 InPlayerIndex, FVector Location, FRotator Rotation, TSubclassOf<UCameraHandle> InCameraHandleClass, FSimpleDelegate OnFinish = FSimpleDelegate());
+	virtual UCameraHandle* SwitchToCamera(const int32 InPlayerIndex, FVector Location, FRotator Rotation, UCameraHandle* SwitchCameraHandle, FSimpleDelegate OnFinish = FSimpleDelegate());
+
+	virtual UCameraHandle* SwitchToCamera(const int32 InPlayerIndex, ACameraActor* InCameraActor, TSubclassOf<UCameraHandle> InCameraHandleClass, FSimpleDelegate OnFinish = FSimpleDelegate());
+	virtual UCameraHandle* SwitchToCamera(const int32 InPlayerIndex, ACameraActor* InCameraActor, UCameraHandle* SwitchCameraHandle, FSimpleDelegate OnFinish = FSimpleDelegate());
+
+	virtual UCameraHandle* SwitchToCamera(const int32 InPlayerIndex, UCameraComponent* InCameraComponent, TSubclassOf<UCameraHandle> InCameraHandleClass, FSimpleDelegate OnFinish = FSimpleDelegate());
+	virtual UCameraHandle* SwitchToCamera(const int32 InPlayerIndex, UCameraComponent* InCameraComponent, UCameraHandle* SwitchCameraHandle, FSimpleDelegate OnFinish = FSimpleDelegate());
+
+	virtual UCameraHandle* SwitchToCamera(const int32 InPlayerIndex, FGameplayTag InCameraTag, TSubclassOf<UCameraHandle> InCameraHandleClass, FSimpleDelegate OnFinish = FSimpleDelegate());
+	virtual UCameraHandle* SwitchToCamera(const int32 InPlayerIndex, FGameplayTag InCameraTag, UCameraHandle* SwitchCameraHandle, FSimpleDelegate OnFinish = FSimpleDelegate());
+
+	virtual UCameraHandle* SwitchToCamera(const int32 InPlayerIndex, ACameraPointBase* InCameraPoint, TSubclassOf<UCameraHandle> InCameraHandleClass, FSimpleDelegate OnFinish = FSimpleDelegate());
+	virtual UCameraHandle* SwitchToCamera(const int32 InPlayerIndex, ACameraPointBase* InCameraPoint, UCameraHandle* SwitchCameraHandle, FSimpleDelegate OnFinish = FSimpleDelegate());
 
 public:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Transient)
+	UPROPERTY(BlueprintReadOnly, Transient)
 	TMap<FGameplayTag, ACameraPointBase*> CameraPoints;
+
+	UPROPERTY(BlueprintReadOnly, Transient)
+	TArray<UCameraHandle*> CurrentCameraHandles;
+
+protected:
+	bool CheckIsSwitching(const APlayerController* InPlayerController);
+	UCameraHandle* GetCameraHandle(const APlayerController* InPlayerController);
+	void HandleSwitchToCameraFinish(UCameraHandle* InCameraHandle);
 };

@@ -9,9 +9,6 @@
 
 class UGameplayTagSlot;
 
-DECLARE_MULTICAST_DELEGATE_OneParam(FGameplayTagSlotDelegate, UGameplayTagSlot*)
-static FGameplayTagSlotDelegate OnGameplayTagSlotBuild;
-static FGameplayTagSlotDelegate OnGameplayTagSlotDestroy;
 
 /**
  * 带GameplayTag的插槽
@@ -22,10 +19,18 @@ class DEVSLATECORE_API UGameplayTagSlot : public UNamedSlot
 	GENERATED_BODY()
 
 protected:
+#if WITH_EDITOR
+	virtual const FText GetPaletteCategory() override { return NSLOCTEXT("DevWidget", "Common", "Dev Widget"); }
+#endif
 	virtual TSharedRef<SWidget> RebuildWidget() override;
 	virtual void BeginDestroy() override;
 
 public:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, meta=(Categories="HUD"))
 	FGameplayTag SlotTag;
+
+public:
+	DECLARE_MULTICAST_DELEGATE_OneParam(FGameplayTagSlotDelegate, UGameplayTagSlot*)
+	static FGameplayTagSlotDelegate OnGameplayTagSlotBuild;
+	static FGameplayTagSlotDelegate OnGameplayTagSlotDestroy;
 };

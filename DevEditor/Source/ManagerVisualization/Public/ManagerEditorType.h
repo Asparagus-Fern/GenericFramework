@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "Slate/CommonSlateType.h"
+#include "SlateType.h"
 
 
 class UCoreManager;

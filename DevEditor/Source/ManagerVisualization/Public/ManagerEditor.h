@@ -20,22 +20,17 @@ class MANAGERVISUALIZATION_API UManagerEditor : public UCoreManager, public IMan
 	GENERATED_BODY()
 
 public:
-	UManagerEditor();
+	virtual bool DoesSupportWorldType(const EWorldType::Type WorldType) const override;
 
 	/* IProcedureBaseInterface */
 public:
 	virtual void NativeOnCreate() override;
 	virtual void NativeOnDestroy() override;
 
-	/* IManagerInterface */
-public:
-	virtual FText GetManagerDisplayName() override;
-	virtual bool DoesSupportWorldType(EWorldType::Type InWorldType) override;
-
 	/* IEdManagerInterface */
 public:
 	virtual void InitCommandList(TSharedPtr<FUICommandList>& InCommandList) override;
-	virtual void ExtendToolBar(FToolMenuSection& InSection) override;
+	virtual void ExtendToolBar_Implementation(FToolMenuSection& InSection) override;
 
 	/* UManagerEditor */
 protected:

@@ -6,55 +6,17 @@
 #include "Manager/ManagerGlobal.h"
 #include "Procedure/ProcedureManager.h"
 
-UGameplayProcedure::UGameplayProcedure()
+void UGameplayProcedure::MarkAsActivedFinish_Implementation()
 {
-}
-
-void UGameplayProcedure::NativeOnCreate()
-{
-	IProcedureBaseInterface::NativeOnCreate();
-	Execute_OnCreate(this);
-}
-
-void UGameplayProcedure::NativeOnDestroy()
-{
-	IProcedureBaseInterface::NativeOnDestroy();
-	Execute_OnDestroy(this);
-}
-
-void UGameplayProcedure::NativeOnRefresh()
-{
-	IProcedureBaseInterface::NativeOnRefresh();
-	Execute_OnRefresh(this);
-}
-
-void UGameplayProcedure::NativeOnActived()
-{
-	IProcedureInterface::NativeOnActived();
-	PreProcedureActived.Broadcast();
-	Execute_OnActived(this);
-}
-
-void UGameplayProcedure::NativeOnInactived()
-{
-	IProcedureInterface::NativeOnInactived();
-	PreProcedureInactived.Broadcast();
-	Execute_OnInactived(this);
-}
-
-void UGameplayProcedure::RequestProcedureActived_Implementation()
-{
-	RequestActivateFinish();
-	PostProcedureActived.Broadcast();
+	Super::MarkAsActivedFinish_Implementation();
 
 	if (bIsAutoActivateNextProcedure)
 	{
-		GetManager<UProcedureManager>()->SwitchProcedure(NextProcedureTag);
+		GetManager<UProcedureManager>(this)->SwitchProcedure(NextProcedureTag);
 	}
 }
 
-void UGameplayProcedure::RequestProcedureInactived_Implementation()
+void UGameplayProcedure::MarkAsInactivedFinish_Implementation()
 {
-	RequestInactivateFinish();
-	PostProcedureInactived.Broadcast();
+	Super::MarkAsInactivedFinish_Implementation();
 }

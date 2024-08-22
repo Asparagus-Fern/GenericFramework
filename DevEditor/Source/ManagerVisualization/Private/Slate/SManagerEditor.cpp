@@ -2,7 +2,7 @@
 
 #include "Slate/SManagerEditor.h"
 
-#include "DevEdCoreStyle.h"
+#include "DevCoreStyle.h"
 #include "LevelEditorActions.h"
 #include "ManagerEditor.h"
 #include "ManagerEditorType.h"
@@ -22,15 +22,15 @@ void SManagerEditor::Construct(const FArguments& InArgs, const TSharedRef<SDockT
 {
 	ParentDockTab = InDockTab;
 	TabManager = FGlobalTabmanager::Get()->NewTabManager(InDockTab);
-	ManagerListViewItems = GetManager<UManagerEditor>()->GetManagerListView()->GetItems();
+	// ManagerListViewItems = GetManager<UManagerEditor>()->GetManagerListView()->GetItems();
 
 	TabManager->RegisterTabSpawner(ManagerListTabID, FOnSpawnTab::CreateSP(this, &SManagerEditor::SpawnManagerListTab))
 		.SetDisplayName(LOCTEXT("ManagerListTitle", "Manager List"))
-		.SetIcon(FSlateIcon(FDevEdCoreStyle::GetStyleSetName(), "Manager.ToolbarButton.Small"));
+		.SetIcon(FSlateIcon(FDevCoreStyle::GetStyleSetName(), "Manager.ToolbarButton.Small"));
 
 	TabManager->RegisterTabSpawner(ManagerDetailTabID, FOnSpawnTab::CreateSP(this, &SManagerEditor::SpawnManagerDetailTab))
 		.SetDisplayName(LOCTEXT("ManagerDetailTitle", "Manager Detail"))
-		.SetIcon(FSlateIcon(FDevEdCoreStyle::GetStyleSetName(), "Manager.ToolbarButton.Small"));
+		.SetIcon(FSlateIcon(FDevCoreStyle::GetStyleSetName(), "Manager.ToolbarButton.Small"));
 
 	TSharedRef<FTabManager::FLayout> Layout = []()
 	{
@@ -159,8 +159,8 @@ void SManagerEditor::OnSelectionChanged(FManagerListViewItemPtr InItem, ESelectI
 {
 	if (DetailsView.IsValid() && InItem.IsValid())
 	{
-		FManagerListViewInfoPtr ManagerListViewInfo = GetManager<UManagerEditor>()->GetManagerListView()->GetInfo(InItem.ToSharedRef());
-		DetailsView->SetObject(ManagerListViewInfo->CoreManager);
+		// FManagerListViewInfoPtr ManagerListViewInfo = GetManager<UManagerEditor>()->GetManagerListView()->GetInfo(InItem.ToSharedRef());
+		// DetailsView->SetObject(ManagerListViewInfo->CoreManager);
 	}
 	else
 	{

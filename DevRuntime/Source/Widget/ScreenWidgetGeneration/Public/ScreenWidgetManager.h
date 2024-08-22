@@ -7,8 +7,11 @@
 #include "ScreenWidgetType.h"
 #include "Manager/CoreManager.h"
 #include "Procedure/ProcedureType.h"
+#include "UserWidget/Base/UserWidgetBase.h"
 #include "ScreenWidgetManager.generated.h"
 
+class UCommonButtonBase;
+class UInstanceUserWidgetBase;
 class UGameplayTagSlot;
 class UWidget;
 class UGameWidgetSetting;
@@ -17,80 +20,123 @@ class UGameHUD;
 class UGameMenuSetting;
 class UUserWidgetBase;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMenuGenerateInfoDelegate, FMenuGenerateInfo, MenuGenerateInfo);
-
 /**
  * 
  */
 UCLASS()
 class SCREENWIDGETGENERATION_API UScreenWidgetManager : public UCoreManager
 {
-	GENERATED_BODY()
+	GENERATED_UCLASS_BODY()
+
+public:
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FScreenWidgetDelegate);
+
+	/* IProcedureBaseInterface */
+public:
+	virtual void NativeOnRefresh() override;
 
 	/* IProcedureInterface */
 public:
 	virtual void NativeOnActived() override;
 	virtual void NativeOnInactived() override;
 
-	/* IManagerInterface  */
+	/* Interactable Widget Group */
 public:
-	virtual FText GetManagerDisplayName() override;
+	void AddInteractableWidget(UInteractableUserWidgetBase* InteractableWidget, FString GroupName);
+	void RemoveInteractableWidget(UInteractableUserWidgetBase* InteractableWidget, FString GroupName);
+	void ClearupInteractableWidgetGroup(const FString& GroupName, bool DeselectAll);
+	bool FindInteractableWidgetGroup(const FString& GroupName, UCommonButtonGroup*& Group) const;
 
-	/* UGameplayTagSlot */
 protected:
-	UPROPERTY()
-	TMap<FGameplayTag, UGameplayTagSlot*> Slots;
-
-	UPROPERTY(BlueprintReadOnly, Transient)
-	TMap<FGameplayTag, UUserWidgetBase*> SlotWidgets;
-
-public:
-	void RegisterSlot(UGameplayTagSlot* InSlot);
-	void UnRegisterSlot(const UGameplayTagSlot* InSlot);
-
-public:
-	UFUNCTION(BlueprintPure)
-	UGameplayTagSlot* GetSlot(FGameplayTag InSlotTag) const;
-
-	UFUNCTION(BlueprintPure)
-	UUserWidgetBase* GetSlotWidget(FGameplayTag InSlotTag) const;
-
-	UFUNCTION(BlueprintPure, meta = ( DeterminesOutputType = "InClass"))
-	UUserWidgetBase* GetSlotUserWidgetByClass(FGameplayTag InSlotTag, TSubclassOf<UUserWidgetBase> InClass) const;
+	TMap<FString, UCommonButtonGroup*> InteractableWidgetGroups;
 
 	/* Game HUD */
 public:
-	UPROPERTY(Config, EditAnywhere, DisplayName="Game HUD Classes")
-	TArray<TSoftClassPtr<UGameHUD>> GameHUDClasses;
-
-protected:
-	UPROPERTY(Transient)
-	TArray<UGameHUD*> GameHUD;
+	UPROPERTY(Transient, BlueprintReadOnly)
+	TArray<UGameHUD*> GameHUDs;
 
 public:
-	virtual TArray<UGameHUD*> GetGameHUD();
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FHUDDelegate, UGameHUD*, HUD);
+
+	UPROPERTY(BlueprintAssignable)
+	FScreenWidgetDelegate PreHUDCreated;
+
+	UPROPERTY(BlueprintAssignable)
+	FHUDDelegate OnHUDCreated;
+
+	UPROPERTY(BlueprintAssignable)
+	FScreenWidgetDelegate PostHUDCreated;
+
+	UPROPERTY(BlueprintAssignable)
+	FScreenWidgetDelegate PreHUDDestroyed;
+
+	UPROPERTY(BlueprintAssignable)
+	FHUDDelegate OnHUDDestroyed;
+
+	UPROPERTY(BlueprintAssignable)
+	FScreenWidgetDelegate PostHUDDestroyed;
+
+public:
+	void CreateGameHUDs();
+	void CreateGameHUD(UGameHUD* GameHUD);
+	void ClearupGameHUDs();
+	void RemoveGameHUD(UGameHUD* GameHUD);
+	void RemoveGameHUD(FGameplayTag InTag);
+
 	virtual TArray<UGameHUD*> GetGameHUDByTag(FGameplayTag InTag);
 	virtual void SetGameHUDVisibility(bool IsVisisble);
+	virtual void SetGameHUDVisibility(UGameHUD* GameHUD, bool IsVisisble);
+	virtual void SetGameHUDVisibility(FGameplayTag InTag, bool IsVisisble);
 
 protected:
-	void CreateGameHUD();
+	void AddTemporaryGameHUD(UUserWidgetBase* InWidget);
+	void RemoveTemporaryGameHUD(UUserWidgetBase* InWidget);
+
+	/* UGameplayTagSlot */
+protected:
+	UPROPERTY(BlueprintReadOnly, Transient)
+	TArray<UGameplayTagSlot*> Slots;
+
+protected:
+	void RegisterSlot(UGameplayTagSlot* InSlot);
+	void UnRegisterSlot(UGameplayTagSlot* InSlot);
+
+public:
+	UGameplayTagSlot* GetSlot(FGameplayTag InSlotTag) const;
+	void ClearupSlots();
 
 	/* User Widget Base */
 public:
-	virtual UUserWidgetBase* CreateUserWidget(TSubclassOf<UUserWidgetBase> InWidgetClass);
-	virtual UUserWidgetBase* OpenUserWidget(TSubclassOf<UUserWidgetBase> InWidgetClass, FSimpleMulticastDelegate OnFinish = FSimpleMulticastDelegate());
-	virtual void OpenUserWidget(TArray<UUserWidgetBase*> InWidgets);
-	virtual void OpenUserWidget(UUserWidgetBase* InWidget, FSimpleMulticastDelegate OnFinish = FSimpleMulticastDelegate());
-	virtual void CloseUserWidget(const UUserWidgetBase* InWidget, const FSimpleMulticastDelegate& OnFinish = FSimpleMulticastDelegate());
-	virtual void CloseUserWidget(TArray<UUserWidgetBase*> InWidgets);
-	virtual void CloseUserWidget(FGameplayTag InSlotTag, FSimpleMulticastDelegate OnFinish = FSimpleMulticastDelegate());
+	DECLARE_DELEGATE_OneParam(FOnWidgetActiveStateChanged, UUserWidgetBase*);
 
-	TArray<FProcedureInterfaceHandle> GetProcedureInterfaceHandles(UUserWidget* InWidget, bool TargetActiveState);
-	virtual TArray<IProcedureInterface*> GetProcedureInterfaceWidgets(UUserWidget* InWidget);
+	virtual UUserWidgetBase* OpenUserWidget(TSubclassOf<UUserWidgetBase> InWidgetClass, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged());
+	virtual void OpenUserWidget(UUserWidgetBase* InWidget, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged());
+
+	virtual void CloseUserWidget(UUserWidgetBase* InWidget, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged());
+	virtual void CloseUserWidget(FGameplayTag InSlotTag, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged());
 
 protected:
-	virtual void ActiveWidget(UUserWidgetBase* InWidget, FSimpleMulticastDelegate OnFinish = FSimpleMulticastDelegate());
-	virtual void InactiveWidget(UUserWidgetBase* InWidget, FSimpleMulticastDelegate OnFinish = FSimpleMulticastDelegate());
+	virtual void ActiveWidget(UUserWidgetBase* InWidget, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged());
+	virtual void ActiveWidget(UUserWidgetBase* InWidget, bool bIsInstant, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged());
+	virtual void InactiveWidget(UUserWidgetBase* InWidget, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged());
+	virtual void InactiveWidget(UUserWidgetBase* InWidget, bool bIsInstant, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged());
+
+public:
+	UPROPERTY(BlueprintReadOnly, Transient)
+	TArray<UUserWidgetBase*> ActivedWidgets;
+
+public:
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FUserWidgetBaseDelegate, UUserWidgetBase*, UserWidgetBase);
+
+	UPROPERTY(BlueprintAssignable)
+	FUserWidgetBaseDelegate OnWidgetOpen;
+
+	UPROPERTY(BlueprintAssignable)
+	FUserWidgetBaseDelegate OnWidgetClose;
+
+protected:
+	UPROPERTY(Transient)
+	TMap<UUserWidgetBase*, FTimerHandle> WidgetTimerHandles;
 
 	/* Game Menu */
 public:
@@ -101,41 +147,22 @@ public:
 	TArray<FMenuGenerateInfo> MenuGenerateInfos;
 
 public:
-	UPROPERTY(BlueprintAssignable)
-	FMenuGenerateInfoDelegate OnMenuGenerate;
-
-public:
 	virtual void SwitchGameMenu(UGameMenuSetting* InGameMenuSetting);
 	virtual void SelectMenu(FGameplayTag InMenuTag);
 	virtual void DeselectMenu(FGameplayTag InMenuTag);
-	virtual bool GetMenuContainerInfo(FGameplayTag InMenuTag, FMenuContainerInfo& OutMenuContainerInfo);
-	virtual bool GetMenuParentContainerInfo(FGameplayTag InMenuTag, FMenuContainerInfo& OutMenuContainerInfo);
-	virtual bool GetMenuGenerateInfo(FGameplayTag InMenuTag, FMenuGenerateInfo& OutMenuGenerateInfo);
-	virtual bool GetMenuParentGenerateInfo(FGameplayTag InMenuTag, FMenuGenerateInfo& OutMenuGenerateInfo);
-	virtual UMenuStyle* GetMenuStyle(FGameplayTag InMenuTag);
-	virtual UMenuStyle* GetParentMenuStyle(FGameplayTag InMenuTag);
-	virtual TArray<UMenuStyle*> GetAllMenuStyle();
-	virtual FGameplayTag GetLastActiveMenuTag() { return LastActiveMenuTag; }
-	virtual FGameplayTag GetCurrentActiveMenuTag() { return CurrentActiveMenuTag; }
+	TArray<UMenuStyle*> GetMenuStyles();
 
 protected:
-	FGameplayTag LastActiveMenuTag;
-	FGameplayTag CurrentActiveMenuTag;
-	virtual void GenerateMenu(FMenuContainerInfo InMenuContainerInfo);
+	virtual void GenerateMenu(FGameplayTag InMenuTag);
+	virtual void GenerateMenu(TArray<FGameplayTag> InMenuTags);
+	virtual void DestroyMenu(FGameplayTag InMenuTag);
+	virtual void DestroyMenu(TArray<FGameplayTag> InMenuTags);
 
 protected:
-	FDelegateHandle MenuSelectionChangedHandle;
-	TMap<FGameplayTag, bool> TargetMenuSelection;
-	FTimerHandle UpdateMenuSelectionHandle;
-	int32 TargetMenuSelectionIndex = 0;
+	TMap<UMenuStyle*, bool> TargetMenuSelection;
+	bool bProcessingMenuSelection = false;
+	int32 ProcessingIndex = 0;
 
-	virtual void UpdateActiveMenutag();
-	virtual void OnMenuSelectionChanged(FMenuInfo InMenuInfo, bool bSelection);
-
-	virtual void HandleMenuSelectionChangedNextTick();
-	virtual void HandleMenuSelectionChanged();
-	virtual void ActiveMenu(FGameplayTag InMenuTag, FSimpleMulticastDelegate OnFinish = FSimpleMulticastDelegate());
-	virtual void InactiveMenu(FGameplayTag InMenuTag, FSimpleMulticastDelegate OnFinish = FSimpleMulticastDelegate());
-	virtual void HandleMenuSelectionChangedOnceFinish();
-	virtual void HandleMenuSelectionChangedFinish();
+	virtual FReply OnMenuResponseStateChanged(UInteractableUserWidgetBase* InteractableWidget, bool TargetEventState);
+	virtual void HandleMenuResponseStateChanged();
 };
