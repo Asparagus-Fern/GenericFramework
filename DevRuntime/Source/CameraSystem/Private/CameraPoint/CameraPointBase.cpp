@@ -23,7 +23,7 @@ void ACameraPointBase::BeginPlay()
 
 	if (CameraTag.IsValid())
 	{
-		GetManager<UCameraManager>(this)->AddCameraPoint(CameraTag, this);
+		GetManager<UCameraManager>()->AddCameraPoint(CameraTag, this);
 	}
 }
 
@@ -31,7 +31,7 @@ void ACameraPointBase::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	if (CameraTag.IsValid())
 	{
-		GetManager<UCameraManager>(this)->RemoveCameraPoint(CameraTag);
+		GetManager<UCameraManager>()->RemoveCameraPoint(CameraTag);
 	}
 
 	Super::EndPlay(EndPlayReason);

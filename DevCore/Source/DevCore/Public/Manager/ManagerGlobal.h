@@ -6,11 +6,11 @@
 #include "CoreManager.h"
 
 template <class ManagerType>
-static ManagerType* GetManager(const UObject* WorldContextObject)
+static ManagerType* GetManager()
 {
-	if (const UWorld* World = GEngine->GetWorldFromContextObjectChecked(WorldContextObject))
+	if (ManagerType::StaticClass()->IsChildOf(UCoreManager::StaticClass()))
 	{
-		return World->GetSubsystem<ManagerType>();
+		return ManagerType::GetStaticWorld()->GetSubsystem<ManagerType>();
 	}
 	return nullptr;
 }
@@ -19,7 +19,7 @@ template <typename InterfaceClass>
 static TArray<InterfaceClass*> GetManagersWithInterface(const UObject* WorldContextObject)
 {
 	TArray<InterfaceClass*> Managers;
-	
+
 	if (const UWorld* World = GEngine->GetWorldFromContextObjectChecked(WorldContextObject))
 	{
 		for (const auto& Manager : World->GetSubsystemArray<UCoreManager>())

@@ -20,26 +20,6 @@ FScreenWidgetDelegates::FMenuDelegate FScreenWidgetDelegates::OnMenuClicked;
 FScreenWidgetDelegates::FMenuSelectionDelegate FScreenWidgetDelegates::OnMenuSelectionChanged;
 FScreenWidgetDelegates::FWidgetAnimationDelegate FScreenWidgetDelegates::OnWidgetAnimationFinish;
 
-UUserWidgetBase* FWidgetContainer::GetWidget() const
-{
-	if (bInstance)
-	{
-		if (IsValid(Widget))
-		{
-			return Widget;
-		}
-	}
-	else
-	{
-		if (WidgetClass)
-		{
-			// return CreateWidget<UUserWidgetBase>(GetManager<UScreenWidgetManager>()->GetWorld(), WidgetClass);
-		}
-	}
-
-	return nullptr;
-}
-
 FMenuInfo::FMenuInfo()
 {
 	ResponseState.Add(ECommonButtonResponseEvent::OnSelected, true);

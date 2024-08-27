@@ -32,9 +32,6 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Instanced, meta=(EditConditionHides, EditCondition = "bInstance"))
 	UUserWidgetBase* Widget = nullptr;
-
-public:
-	UUserWidgetBase* GetWidget() const;
 };
 
 /**

@@ -3,6 +3,7 @@
 
 #include "ScreenWidgetManager.h"
 
+#include "DBTweenUpdateManager.h"
 #include "ScreenWidgetManagerSetting.h"
 #include "Blueprint/WidgetTree.h"
 #include "BPFunctions/BPFunctions_Widget.h"
@@ -17,6 +18,27 @@
 #include "UWidget/GameplayTagSlot.h"
 
 #define LOCTEXT_NAMESPACE "UScreenWidgetManager"
+
+FWidgetAnimationTimerHandle::FWidgetAnimationTimerHandle()
+{
+}
+
+FWidgetAnimationTimerHandle::FWidgetAnimationTimerHandle(FTimerHandle InTimerHandle, UUserWidgetBase* InWidget, const FOnWidgetActiveStateChanged& Finish)
+	: TimerHandle(InTimerHandle),
+	  Widget(InWidget),
+	  OnFinish(Finish)
+{
+}
+
+bool FWidgetAnimationTimerHandle::operator==(const FWidgetAnimationTimerHandle& Other) const
+{
+	return Widget == Other.Widget;
+}
+
+bool FWidgetAnimationTimerHandle::operator==(const UUserWidgetBase* OtherWidget) const
+{
+	return Widget == OtherWidget;
+}
 
 UScreenWidgetManager::UScreenWidgetManager(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -54,25 +76,6 @@ void UScreenWidgetManager::NativeOnActived()
 
 	UGameplayTagSlot::OnGameplayTagSlotBuild.AddUObject(this, &UScreenWidgetManager::RegisterSlot);
 	UGameplayTagSlot::OnGameplayTagSlotDestroy.AddUObject(this, &UScreenWidgetManager::UnRegisterSlot);
-
-	if (UScreenWidgetManagerSetting::Get()->AutoCreateGameHUD)
-	{
-		PreHUDCreated.Broadcast();
-		CreateGameHUDs();
-		PostHUDCreated.Broadcast();
-	}
-
-	if (UScreenWidgetManagerSetting::Get()->AutoCreateMenu)
-	{
-		if (!UScreenWidgetManagerSetting::Get()->DefaultGameMenuSetting.IsNull())
-		{
-			UGameMenuSetting* DefaultGameMenuSetting = FStaticFunctions_Object::LoadObject<UGameMenuSetting>(UScreenWidgetManagerSetting::Get()->DefaultGameMenuSetting);
-			if (IsValid(DefaultGameMenuSetting))
-			{
-				SwitchGameMenu(DefaultGameMenuSetting);
-			}
-		}
-	}
 }
 
 void UScreenWidgetManager::NativeOnInactived()
@@ -96,6 +99,30 @@ void UScreenWidgetManager::NativeOnInactived()
 
 	UInteractableUserWidgetBase::AddInteractableWidget.RemoveAll(this);
 	UInteractableUserWidgetBase::RemoveInteractableWidget.RemoveAll(this);
+}
+
+void UScreenWidgetManager::OnWorldMatchStarting_Implementation()
+{
+	Super::OnWorldMatchStarting_Implementation();
+
+	if (UScreenWidgetManagerSetting::Get()->AutoCreateGameHUD)
+	{
+		PreHUDCreated.Broadcast();
+		CreateGameHUDs();
+		PostHUDCreated.Broadcast();
+	}
+
+	if (UScreenWidgetManagerSetting::Get()->AutoCreateMenu)
+	{
+		if (!UScreenWidgetManagerSetting::Get()->DefaultGameMenuSetting.IsNull())
+		{
+			UGameMenuSetting* DefaultGameMenuSetting = FStaticFunctions_Object::LoadObject<UGameMenuSetting>(UScreenWidgetManagerSetting::Get()->DefaultGameMenuSetting);
+			if (IsValid(DefaultGameMenuSetting))
+			{
+				SwitchGameMenu(DefaultGameMenuSetting);
+			}
+		}
+	}
 }
 
 /* ==================== Interactable Widget Group ==================== */
@@ -181,14 +208,18 @@ void UScreenWidgetManager::CreateGameHUDs()
 	}
 }
 
-void UScreenWidgetManager::CreateGameHUD(UGameHUD* GameHUD)
+void UScreenWidgetManager::CreateGameHUD(UGameHUD* GameHUD, bool bAddToViewport)
 {
 	if (!GameHUDs.Contains(GameHUD))
 	{
 		GameHUDs.Add(GameHUD);
-		GameHUD->AddToViewport(GameHUD->ViewportZOrder);
-
 		ActiveWidget(GameHUD);
+
+		if (bAddToViewport)
+		{
+			GameHUD->AddToViewport(GameHUD->ViewportZOrder);
+		}
+
 		OnHUDCreated.Broadcast(GameHUD);
 	}
 }
@@ -238,25 +269,25 @@ TArray<UGameHUD*> UScreenWidgetManager::GetGameHUDByTag(const FGameplayTag InTag
 	return Result;
 }
 
-void UScreenWidgetManager::SetGameHUDVisibility(const bool IsVisisble)
+void UScreenWidgetManager::SetGameHUDActiveState(const bool IsActived)
 {
 	for (const auto& GameHUD : GameHUDs)
 	{
-		SetGameHUDVisibility(GameHUD, IsVisisble);
+		SetGameHUDActiveState(GameHUD, IsActived);
 	}
 }
 
-void UScreenWidgetManager::SetGameHUDVisibility(UGameHUD* GameHUD, const bool IsVisisble)
+void UScreenWidgetManager::SetGameHUDActiveState(UGameHUD* GameHUD, const bool IsActived)
 {
-	GameHUD->PlayAnimationEvent(IsVisisble);
-	GameHUD->SetIsActived(IsVisisble);
+	GameHUD->PlayAnimationEvent(IsActived);
+	GameHUD->SetIsActived(IsActived);
 }
 
-void UScreenWidgetManager::SetGameHUDVisibility(const FGameplayTag InTag, const bool IsVisisble)
+void UScreenWidgetManager::SetGameHUDActiveState(const FGameplayTag InTag, const bool IsActived)
 {
 	for (const auto& GameHUD : GetGameHUDByTag(InTag))
 	{
-		SetGameHUDVisibility(GameHUD, IsVisisble);
+		SetGameHUDActiveState(GameHUD, IsActived);
 	}
 }
 
@@ -274,7 +305,7 @@ void UScreenWidgetManager::AddTemporaryGameHUD(UUserWidgetBase* InWidget)
 		if (!GameHUDClasses.Contains(TemporaryHUDClass))
 		{
 			UGameHUD* NewTemporaryHUD = CreateWidget<UGameHUD>(GetWorld(), TemporaryHUDClass);
-			CreateGameHUD(NewTemporaryHUD);
+			CreateGameHUD(NewTemporaryHUD, false);
 		}
 	}
 }
@@ -338,6 +369,48 @@ void UScreenWidgetManager::RemoveTemporaryGameHUD(UUserWidgetBase* InWidget)
 
 /* ==================== UGameplayTagSlot ==================== */
 
+UGameplayTagSlot* UScreenWidgetManager::GetSlot(const FGameplayTag InSlotTag) const
+{
+	if (!InSlotTag.IsValid())
+	{
+		return nullptr;
+	}
+
+	for (const auto& Slot : Slots)
+	{
+		if (Slot->SlotTag == InSlotTag)
+		{
+			return Slot;
+		}
+	}
+
+	return nullptr;
+}
+
+UUserWidgetBase* UScreenWidgetManager::GetSlotWidget(const FGameplayTag InSlotTag)
+{
+	for (const auto& ActivedWidget : ActivedWidgets)
+	{
+		if (ActivedWidget->SlotTag == InSlotTag)
+		{
+			return ActivedWidget;
+		}
+	}
+
+	return nullptr;
+}
+
+void UScreenWidgetManager::ClearupSlots()
+{
+	TArray<UUserWidgetBase*> TempActivedWidgets = ActivedWidgets;
+	for (const auto& TempActivedWidget : TempActivedWidgets)
+	{
+		InactiveWidget(TempActivedWidget, true);
+	}
+
+	Slots.Reset();
+}
+
 void UScreenWidgetManager::RegisterSlot(UGameplayTagSlot* InSlot)
 {
 	if (!IsValid(InSlot) || !InSlot->SlotTag.IsValid() || Slots.Contains(InSlot))
@@ -361,37 +434,21 @@ void UScreenWidgetManager::UnRegisterSlot(UGameplayTagSlot* InSlot)
 	Slots.Remove(InSlot);
 }
 
-UGameplayTagSlot* UScreenWidgetManager::GetSlot(const FGameplayTag InSlotTag) const
-{
-	if (!InSlotTag.IsValid())
-	{
-		LOG(Debug_UI, Error, TEXT("InSlotTag Is NULL"))
-		return nullptr;
-	}
+/* ==================== User Widget Base ==================== */
 
-	for (const auto& Slot : Slots)
+UUserWidgetBase* UScreenWidgetManager::GetContainerWidget(const FWidgetContainer& WidgetContainer)
+{
+	if (WidgetContainer.bInstance && IsValid(WidgetContainer.Widget))
 	{
-		if (Slot->SlotTag == InSlotTag)
-		{
-			return Slot;
-		}
+		return DuplicateObject<UUserWidgetBase>(WidgetContainer.Widget, GetStaticWorld());
+	}
+	else if (!WidgetContainer.bInstance && IsValid(WidgetContainer.WidgetClass))
+	{
+		return CreateWidget<UUserWidgetBase>(GetStaticWorld(), WidgetContainer.WidgetClass);
 	}
 
 	return nullptr;
 }
-
-void UScreenWidgetManager::ClearupSlots()
-{
-	TArray<UUserWidgetBase*> TempActivedWidgets = ActivedWidgets;
-	for (const auto& TempActivedWidget : TempActivedWidgets)
-	{
-		InactiveWidget(TempActivedWidget, true);
-	}
-
-	Slots.Reset();
-}
-
-/* ==================== User Widget Base ==================== */
 
 UUserWidgetBase* UScreenWidgetManager::OpenUserWidget(const TSubclassOf<UUserWidgetBase> InWidgetClass, const FOnWidgetActiveStateChanged OnFinish)
 {
@@ -408,10 +465,12 @@ void UScreenWidgetManager::OpenUserWidget(UUserWidgetBase* InWidget, FOnWidgetAc
 		return;
 	}
 
+	AddTemporaryGameHUD(InWidget);
+
 	const UGameplayTagSlot* Slot = GetSlot(InWidget->SlotTag);
 	if (IsValid(Slot))
 	{
-		/* 当前插槽是否已有其他Widget */
+		/* 查找当前插槽是否已有其他Widget */
 		UUserWidgetBase* RemoveWidget = nullptr;
 		for (const auto& ActivedWidget : ActivedWidgets)
 		{
@@ -459,12 +518,27 @@ void UScreenWidgetManager::CloseUserWidget(const FGameplayTag InSlotTag, const F
 		return;
 	}
 
-	for (const auto& ActivedWidget : ActivedWidgets)
+	bool bHasWidgetClose = false;;
+	TArray<UUserWidgetBase*> TempActivedWidgets = ActivedWidgets;
+
+	/* 查找是否有与插槽标签匹配的Widget */
+	for (const auto& TempActivedWidget : TempActivedWidgets)
 	{
-		if (ActivedWidget->SlotTag == InSlotTag)
+		if (TempActivedWidget->SlotTag == InSlotTag)
 		{
-			CloseUserWidget(ActivedWidget, OnFinish);
+			if (!bHasWidgetClose)
+			{
+				bHasWidgetClose = true;
+			}
+
+			CloseUserWidget(TempActivedWidget, OnFinish);
 		}
+	}
+
+	/* 当前没有指定插槽标签的Widget */
+	if (!bHasWidgetClose)
+	{
+		OnFinish.ExecuteIfBound(nullptr);
 	}
 }
 
@@ -486,30 +560,28 @@ void UScreenWidgetManager::ActiveWidget(UUserWidgetBase* InWidget, FOnWidgetActi
 
 	InWidget->NativeOnCreate();
 	ActivedWidgets.Add(InWidget);
+	OnWidgetOpen.Broadcast(InWidget);
 
 	if (IWidgetAnimationInterface::Execute_HasAnimationEvent(InWidget, true))
 	{
 		IWidgetAnimationInterface::Execute_PlayAnimationEvent(InWidget, true);
 
-		/* 在动画结束之后广播完成 */
 		if (IWidgetAnimationInterface::Execute_GetAnimationDuration(InWidget, true) > 0.f)
 		{
-			FTimerHandle TimerHandle;
-			WidgetTimerHandles.Add(InWidget, TimerHandle);
-
-			auto OnActiveStateChangedFinish = [this, &InWidget, &OnFinish]()
+			auto OnActiveStateChangedFinish = [this, &InWidget]()
 			{
-				WidgetTimerHandles.Remove(InWidget);
-				OnFinish.ExecuteIfBound(InWidget);
+				if (const FWidgetAnimationTimerHandle* Found = WidgetAnimationTimerHandles.FindByKey(InWidget))
+				{
+					Found->OnFinish.ExecuteIfBound(Found->Widget);
+					WidgetAnimationTimerHandles.Remove(*Found);
+				}
 			};
 
+			FTimerHandle TimerHandle;
+			WidgetAnimationTimerHandles.Add(FWidgetAnimationTimerHandle(TimerHandle, InWidget, OnFinish));
 			GetWorld()->GetTimerManager().SetTimer(TimerHandle, FTimerDelegate::CreateLambda(OnActiveStateChangedFinish), IWidgetAnimationInterface::Execute_GetAnimationDuration(InWidget, true), false);
-			return;
 		}
 	}
-
-	OnFinish.ExecuteIfBound(InWidget);
-	OnWidgetOpen.Broadcast(InWidget);
 }
 
 void UScreenWidgetManager::ActiveWidget(UUserWidgetBase* InWidget, const bool bIsInstant, const FOnWidgetActiveStateChanged OnFinish)
@@ -542,6 +614,31 @@ void UScreenWidgetManager::InactiveWidget(UUserWidgetBase* InWidget, FOnWidgetAc
 
 	InWidget->NativeOnDestroy();
 
+	auto OnActiveStateChangedFinish = [this, &InWidget, &OnFinish]()
+	{
+		if (UGameplayTagSlot* Slot = GetSlot(InWidget->SlotTag))
+		{
+			Slot->RemoveChild(InWidget);
+		}
+
+		ActivedWidgets.Remove(InWidget);
+		OnWidgetClose.Broadcast(InWidget);
+
+		if (const FWidgetAnimationTimerHandle* Found = WidgetAnimationTimerHandles.FindByKey(InWidget))
+		{
+			Found->OnFinish.ExecuteIfBound(Found->Widget);
+			WidgetAnimationTimerHandles.Remove(*Found);
+		}
+		else
+		{
+			OnFinish.ExecuteIfBound(InWidget);
+		}
+
+		RemoveTemporaryGameHUD(InWidget);
+
+		InWidget->MarkAsGarbage();
+	};
+
 	if (IWidgetAnimationInterface::Execute_HasAnimationEvent(InWidget, false))
 	{
 		IWidgetAnimationInterface::Execute_PlayAnimationEvent(InWidget, false);
@@ -550,32 +647,13 @@ void UScreenWidgetManager::InactiveWidget(UUserWidgetBase* InWidget, FOnWidgetAc
 		if (IWidgetAnimationInterface::Execute_GetAnimationDuration(InWidget, false) > 0.f)
 		{
 			FTimerHandle TimerHandle;
-			WidgetTimerHandles.Add(InWidget, TimerHandle);
-
-			auto OnActiveStateChangedFinish = [this, &InWidget, &OnFinish]()
-			{
-				if (UGameplayTagSlot* Slot = GetSlot(InWidget->SlotTag))
-				{
-					Slot->RemoveChild(InWidget);
-				}
-
-				ActivedWidgets.Remove(InWidget);
-				WidgetTimerHandles.Remove(InWidget);
-				OnWidgetClose.Broadcast(InWidget);
-				OnFinish.ExecuteIfBound(InWidget);
-
-				RemoveTemporaryGameHUD(InWidget);
-
-				InWidget->MarkAsGarbage();
-			};
-
-			GetWorld()->GetTimerManager().SetTimer(TimerHandle, FTimerDelegate::CreateLambda(OnActiveStateChangedFinish), IWidgetAnimationInterface::Execute_GetAnimationDuration(InWidget, true), false);
+			WidgetAnimationTimerHandles.Add(FWidgetAnimationTimerHandle(TimerHandle, InWidget, OnFinish));
+			GetWorld()->GetTimerManager().SetTimer(TimerHandle, OnActiveStateChangedFinish, IWidgetAnimationInterface::Execute_GetAnimationDuration(InWidget, true), false);
 			return;
 		}
 	}
 
-	ActivedWidgets.Remove(InWidget);
-	OnFinish.ExecuteIfBound(InWidget);
+	OnActiveStateChangedFinish();
 }
 
 void UScreenWidgetManager::InactiveWidget(UUserWidgetBase* InWidget, const bool bIsInstant, const FOnWidgetActiveStateChanged OnFinish)
@@ -627,7 +705,8 @@ void UScreenWidgetManager::SelectMenu(const FGameplayTag InMenuTag)
 	if (FMenuGenerateInfo* MenuGenerateInfo = MenuGenerateInfos.FindByKey(InMenuTag))
 	{
 		const UMenuStyle* MenuStyle = MenuGenerateInfo->GetMenuStyle(InMenuTag);
-		if (IsValid(MenuStyle->CommonButton))
+
+		if (IsValid(MenuStyle) && IsValid(MenuStyle->CommonButton) && ActivedWidgets.Contains(MenuGenerateInfo->MenuContainer) && ActivedWidgets.Contains(MenuStyle))
 		{
 			if (MenuGenerateInfo->MenuContainer->bIsManagedByGroup)
 			{
@@ -646,30 +725,25 @@ void UScreenWidgetManager::DeselectMenu(const FGameplayTag InMenuTag)
 	if (FMenuGenerateInfo* MenuGenerateInfo = MenuGenerateInfos.FindByKey(InMenuTag))
 	{
 		const UMenuStyle* MenuStyle = MenuGenerateInfo->GetMenuStyle(InMenuTag);
-		if (IsValid(MenuStyle) && IsValid(MenuStyle->CommonButton))
+		if (IsValid(MenuStyle) && IsValid(MenuStyle->CommonButton) && ActivedWidgets.Contains(MenuGenerateInfo->MenuContainer) && ActivedWidgets.Contains(MenuStyle))
 		{
-			MenuStyle->CommonButton->SetSelectedInternal(false);
+			if (MenuGenerateInfo->MenuContainer->bIsManagedByGroup)
+			{
+				MenuGenerateInfo->MenuContainer->CommonButtonGroup->DeselectAll();
+			}
+			else
+			{
+				MenuStyle->CommonButton->SetSelectedInternal(false);
+			}
 		}
 	}
-}
-
-TArray<UMenuStyle*> UScreenWidgetManager::GetMenuStyles()
-{
-	TArray<UMenuStyle*> MenuStyles;
-
-	for (auto& MenuGenerateInfo : MenuGenerateInfos)
-	{
-		MenuStyles.Append(MenuGenerateInfo.MenuStyles);
-	}
-
-	return MenuStyles;
 }
 
 void UScreenWidgetManager::GenerateMenu(const FGameplayTag InMenuTag)
 {
 	if (InMenuTag.IsValid())
 	{
-		GenerateMenu(GameMenu->GetChildMenuTags(InMenuTag));
+		GenerateMenu(GameMenu->GetDirectChildMenuTags(InMenuTag));
 	}
 	else
 	{
@@ -728,7 +802,7 @@ void UScreenWidgetManager::GenerateMenu(TArray<FGameplayTag> InMenuTags)
 
 		/* 再次查找 */
 		FoundMenuGenerateInfo = MenuGenerateInfos.FindByKey(MenuInfo.Container);
-		if (FoundMenuGenerateInfo)
+		if (FoundMenuGenerateInfo && ActivedWidgets.Contains(FoundMenuGenerateInfo->MenuContainer))
 		{
 			MenuContainers.Add(FoundMenuGenerateInfo->MenuContainer);
 
@@ -779,7 +853,7 @@ void UScreenWidgetManager::GenerateMenu(TArray<FGameplayTag> InMenuTags)
 
 void UScreenWidgetManager::DestroyMenu(FGameplayTag InMenuTag)
 {
-	DestroyMenu(GameMenu->GetChildMenuTags(InMenuTag));
+	DestroyMenu(GameMenu->GetDirectChildMenuTags(InMenuTag));
 }
 
 void UScreenWidgetManager::DestroyMenu(TArray<FGameplayTag> InMenuTags)
@@ -803,6 +877,18 @@ void UScreenWidgetManager::DestroyMenu(TArray<FGameplayTag> InMenuTags)
 	}
 }
 
+TArray<UMenuStyle*> UScreenWidgetManager::GetMenuStyles()
+{
+	TArray<UMenuStyle*> MenuStyles;
+
+	for (auto& MenuGenerateInfo : MenuGenerateInfos)
+	{
+		MenuStyles.Append(MenuGenerateInfo.MenuStyles);
+	}
+
+	return MenuStyles;
+}
+
 FReply UScreenWidgetManager::OnMenuResponseStateChanged(UInteractableUserWidgetBase* InteractableWidget, bool TargetEventState)
 {
 	if (UMenuStyle* TargetMenuStyle = Cast<UMenuStyle>(InteractableWidget))
@@ -821,7 +907,7 @@ FReply UScreenWidgetManager::OnMenuResponseStateChanged(UInteractableUserWidgetB
 
 			/* 查找该菜单的子菜单信息 */
 			TArray<FMenuGenerateInfo*> ChildMenuGenerateInfos;
-			for (auto& MenuTag : GameMenu->GetChildMenuTags(TargetMenuStyle->GetMenuTag()))
+			for (auto& MenuTag : GameMenu->GetDirectChildMenuTags(TargetMenuStyle->GetMenuTag()))
 			{
 				if (FMenuGenerateInfo* ChildMenuGenerateInfo = MenuGenerateInfos.FindByKey(MenuTag))
 				{
@@ -871,7 +957,11 @@ void UScreenWidgetManager::HandleMenuResponseStateChanged()
 
 		if (!TargetMenuStyle->GetResponseEvents(TargetEventState).IsEmpty())
 		{
-			TargetMenuStyle->HandleButtonResponseEvent(TargetMenuStyle->GetResponseEvents(TargetEventState), TargetEventState, FSimpleDelegate::CreateUObject(this, &UScreenWidgetManager::HandleMenuResponseStateChanged));
+			if (UProcedureProxy* ProcedureProxy = TargetMenuStyle->HandleButtonResponseEvent(TargetMenuStyle->GetResponseEvents(TargetEventState), TargetEventState, FSimpleDelegate::CreateUObject(this, &UScreenWidgetManager::HandleMenuResponseStateChanged)))
+			{
+				ProcessingIndex++;
+				return;
+			}
 		}
 
 		ProcessingIndex++;

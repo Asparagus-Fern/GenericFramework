@@ -146,8 +146,14 @@ UProcedureProxy* UProcedureManager::RegisterProcedureHandle(const FProcedureHand
 {
 	UProcedureProxy* NewProcedureHandle = NewObject<UProcedureProxy>(this);
 	ActivatedProcedureProxy.Add(NewProcedureHandle);
-	NewProcedureHandle->Handle(InHandleGroup);
-
+	
+	auto HandleNextTick = [NewProcedureHandle, InHandleGroup]()
+	{
+		NewProcedureHandle->Handle(InHandleGroup);
+	};
+	
+	GetWorld()->GetTimerManager().SetTimerForNextTick(HandleNextTick);
+	
 	return NewProcedureHandle;
 }
 

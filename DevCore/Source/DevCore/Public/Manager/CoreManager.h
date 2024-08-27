@@ -56,4 +56,10 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent)
 	void OnWorldMatchStarting();
+
+public:
+	static UWorld* GetStaticWorld() { return StaticWorld; }
+
+private:
+	static UWorld* StaticWorld;
 };

@@ -101,7 +101,7 @@ TArray<FGameplayTag> UGameMenuSetting::GetChildMenuTags(const FGameplayTag InMen
 	}
 
 	TArray<FGameplayTag> ChildTags;
-	UGameplayTagsManager::Get().RequestGameplayTagChildren(InMenuTag).GetGameplayTagArray(ChildTags);
+	UGameplayTagsManager::Get().RequestGameplayTagChildrenInDictionary(InMenuTag).GetGameplayTagArray(ChildTags);
 
 	OutMenuTags.Append(ChildTags);
 	return OutMenuTags;
@@ -112,24 +112,28 @@ TArray<FMenuInfo> UGameMenuSetting::GetChildMenuInfos(const FGameplayTag InMenuT
 	return GetMenuInfos(GetChildMenuTags(InMenuTag, bIsContainOriginal));
 }
 
-TArray<FGameplayTag> UGameMenuSetting::GetChildMenuTagsInDictionary(const FGameplayTag InMenuTag, const bool bIsContainOriginal)
+TArray<FGameplayTag> UGameMenuSetting::GetDirectChildMenuTags(const FGameplayTag InMenuTag, const bool bIsContainOriginal)
 {
-	TArray<FGameplayTag> OutMenuTags;
+	TArray<FGameplayTag> ChildTags;
 	if (bIsContainOriginal)
 	{
-		OutMenuTags.Add(InMenuTag);
+		ChildTags.Add(InMenuTag);
 	}
 
-	TArray<FGameplayTag> ChildTags;
-	UGameplayTagsManager::Get().RequestGameplayTagChildrenInDictionary(InMenuTag).GetGameplayTagArray(ChildTags);
+	for (auto& MenuInfo : MenuInfos)
+	{
+		if (MenuInfo.MenuTag.RequestDirectParent() == InMenuTag)
+		{
+			ChildTags.Add(MenuInfo.MenuTag);
+		}
+	}
 
-	OutMenuTags.Append(ChildTags);
-	return OutMenuTags;
+	return ChildTags;
 }
 
-TArray<FMenuInfo> UGameMenuSetting::GetChildMenuInfosInDictionary(const FGameplayTag InMenuTag, const bool bIsContainOriginal)
+TArray<FMenuInfo> UGameMenuSetting::GetDirectChildMenuInfos(const FGameplayTag InMenuTag, const bool bIsContainOriginal)
 {
-	return GetMenuInfos(GetChildMenuTagsInDictionary(InMenuTag, bIsContainOriginal));
+	return GetMenuInfos(GetDirectChildMenuTags(InMenuTag, bIsContainOriginal));
 }
 
 TArray<FGameplayTag> UGameMenuSetting::GetParentMenuTags(const FGameplayTag InMenuTag, const bool bIsContainOriginal)
@@ -169,5 +173,5 @@ FGameplayTag UGameMenuSetting::GetRootMenuTag() const
 
 TArray<FMenuInfo> UGameMenuSetting::GetRootMenuInfos()
 {
-	return GetChildMenuInfos(GetRootMenuTag());
+	return GetDirectChildMenuInfos(GetRootMenuTag());
 }

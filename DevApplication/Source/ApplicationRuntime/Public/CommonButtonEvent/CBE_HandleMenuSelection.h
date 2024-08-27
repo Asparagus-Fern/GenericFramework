@@ -7,27 +7,22 @@
 #include "CBE_HandleMenuSelection.generated.h"
 
 /**
- * 
+ * 处理菜单的选中状态
  */
 UCLASS()
 class APPLICATIONRUNTIME_API UCBE_HandleMenuSelection : public UCommonButtonEvent
 {
 	GENERATED_BODY()
 
+	/* CommonButtonEvent */
 public:
-	virtual void NativeOnActived() override;
-	virtual void NativeOnInactived() override;
+	virtual bool CanExecuteButtonEvent_Implementation() override;
+	virtual void ExecuteButtonEvent_Implementation() override;
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="Menu"), Category="OnActived")
-	FGameplayTag ActiveSelectMenuTag;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="Menu"))
+	FGameplayTag TargetMenuTag;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="Menu"), Category="OnActived")
-	FGameplayTag ActiveDeselectMenuTag;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="Menu"), Category="OnInactived")
-	FGameplayTag InactiveSelectMenuTag;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="Menu"), Category="OnInactived")
-	FGameplayTag InactiveDeselectMenuTag;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	bool TargetState = false;
 };

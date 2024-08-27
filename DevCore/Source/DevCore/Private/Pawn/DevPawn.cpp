@@ -25,7 +25,7 @@ void ADevPawn::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (UPawnManager* PawnManager = GetManager<UPawnManager>(this))
+	if (UPawnManager* PawnManager = GetManager<UPawnManager>())
 	{
 		PawnManager->RegisterPawn(this);
 	}
@@ -33,7 +33,7 @@ void ADevPawn::BeginPlay()
 
 void ADevPawn::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-	if (UPawnManager* PawnManager = GetManager<UPawnManager>(this))
+	if (UPawnManager* PawnManager = GetManager<UPawnManager>())
 	{
 		PawnManager->UnRegisterPawn(this);
 	}

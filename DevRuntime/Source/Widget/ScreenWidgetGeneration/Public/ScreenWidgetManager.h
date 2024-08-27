@@ -20,6 +20,31 @@ class UGameHUD;
 class UGameMenuSetting;
 class UUserWidgetBase;
 
+DECLARE_DELEGATE_OneParam(FOnWidgetActiveStateChanged, UUserWidgetBase*);
+
+USTRUCT()
+struct FWidgetAnimationTimerHandle
+{
+	GENERATED_BODY()
+
+public:
+	FWidgetAnimationTimerHandle();
+	FWidgetAnimationTimerHandle(FTimerHandle InTimerHandle, UUserWidgetBase* InWidget, const FOnWidgetActiveStateChanged& Finish);
+
+	bool operator==(const FWidgetAnimationTimerHandle& Other) const;
+	bool operator==(const UUserWidgetBase* OtherWidget) const;
+
+public:
+	UPROPERTY()
+	FTimerHandle TimerHandle;
+
+	UPROPERTY()
+	UUserWidgetBase* Widget = nullptr;
+
+public:
+	FOnWidgetActiveStateChanged OnFinish;
+};
+
 /**
  * 
  */
@@ -40,6 +65,10 @@ public:
 	virtual void NativeOnActived() override;
 	virtual void NativeOnInactived() override;
 
+	/* UCoreManager */
+public:
+	virtual void OnWorldMatchStarting_Implementation() override;
+
 	/* Interactable Widget Group */
 public:
 	void AddInteractableWidget(UInteractableUserWidgetBase* InteractableWidget, FString GroupName);
@@ -47,11 +76,14 @@ public:
 	void ClearupInteractableWidgetGroup(const FString& GroupName, bool DeselectAll);
 	bool FindInteractableWidgetGroup(const FString& GroupName, UCommonButtonGroup*& Group) const;
 
-protected:
+public:
+	/* 当前管理的所有按钮组 */
+	UPROPERTY(Transient, BlueprintReadOnly)
 	TMap<FString, UCommonButtonGroup*> InteractableWidgetGroups;
 
 	/* Game HUD */
 public:
+	/* 当前视口所有创建的HUD */
 	UPROPERTY(Transient, BlueprintReadOnly)
 	TArray<UGameHUD*> GameHUDs;
 
@@ -78,37 +110,49 @@ public:
 
 public:
 	void CreateGameHUDs();
-	void CreateGameHUD(UGameHUD* GameHUD);
+	void CreateGameHUD(UGameHUD* GameHUD, bool bAddToViewport = true);
 	void ClearupGameHUDs();
 	void RemoveGameHUD(UGameHUD* GameHUD);
 	void RemoveGameHUD(FGameplayTag InTag);
-
+	
 	virtual TArray<UGameHUD*> GetGameHUDByTag(FGameplayTag InTag);
-	virtual void SetGameHUDVisibility(bool IsVisisble);
-	virtual void SetGameHUDVisibility(UGameHUD* GameHUD, bool IsVisisble);
-	virtual void SetGameHUDVisibility(FGameplayTag InTag, bool IsVisisble);
+
+	/* 设置所有HUD的显隐 */
+	virtual void SetGameHUDActiveState(bool IsActived);
+
+	/* 设置指定HUD的显隐 */
+	virtual void SetGameHUDActiveState(UGameHUD* GameHUD, bool IsActived);
+
+	/* 从标签查找HUD并设置显隐 */
+	virtual void SetGameHUDActiveState(FGameplayTag InTag, bool IsActived);
 
 protected:
+	/* 创建该Widget的临时HUD，在移除该Widget时将，如果其他Widget没有使用到该临时HUD，将被移除 */
 	void AddTemporaryGameHUD(UUserWidgetBase* InWidget);
+
+	/* 移除该Widget的临时HUD，如果有其他Widget正在使用该临时HUD，将不被移除 */
 	void RemoveTemporaryGameHUD(UUserWidgetBase* InWidget);
 
 	/* UGameplayTagSlot */
-protected:
+public:
+	/* 当前视口所有以注册的插槽 */
 	UPROPERTY(BlueprintReadOnly, Transient)
 	TArray<UGameplayTagSlot*> Slots;
+
+public:
+	UGameplayTagSlot* GetSlot(FGameplayTag InSlotTag) const;
+	UUserWidgetBase* GetSlotWidget(FGameplayTag InSlotTag);
+	void ClearupSlots();
 
 protected:
 	void RegisterSlot(UGameplayTagSlot* InSlot);
 	void UnRegisterSlot(UGameplayTagSlot* InSlot);
 
-public:
-	UGameplayTagSlot* GetSlot(FGameplayTag InSlotTag) const;
-	void ClearupSlots();
-
 	/* User Widget Base */
 public:
-	DECLARE_DELEGATE_OneParam(FOnWidgetActiveStateChanged, UUserWidgetBase*);
+	static UUserWidgetBase* GetContainerWidget(const FWidgetContainer& WidgetContainer);
 
+public:
 	virtual UUserWidgetBase* OpenUserWidget(TSubclassOf<UUserWidgetBase> InWidgetClass, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged());
 	virtual void OpenUserWidget(UUserWidgetBase* InWidget, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged());
 
@@ -122,6 +166,7 @@ protected:
 	virtual void InactiveWidget(UUserWidgetBase* InWidget, bool bIsInstant, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged());
 
 public:
+	/* 当前显示在屏幕上的所有UI */
 	UPROPERTY(BlueprintReadOnly, Transient)
 	TArray<UUserWidgetBase*> ActivedWidgets;
 
@@ -136,13 +181,15 @@ public:
 
 protected:
 	UPROPERTY(Transient)
-	TMap<UUserWidgetBase*, FTimerHandle> WidgetTimerHandles;
+	TArray<FWidgetAnimationTimerHandle> WidgetAnimationTimerHandles;
 
 	/* Game Menu */
 public:
+	/* 当前菜单数据 */
 	UPROPERTY(BlueprintReadOnly, Transient)
 	UGameMenuSetting* GameMenu = nullptr;
 
+	/* 所有由菜单数据创建的已被指定Style和Container的菜单 */
 	UPROPERTY(BlueprintReadOnly, Transient)
 	TArray<FMenuGenerateInfo> MenuGenerateInfos;
 
@@ -150,13 +197,14 @@ public:
 	virtual void SwitchGameMenu(UGameMenuSetting* InGameMenuSetting);
 	virtual void SelectMenu(FGameplayTag InMenuTag);
 	virtual void DeselectMenu(FGameplayTag InMenuTag);
-	TArray<UMenuStyle*> GetMenuStyles();
 
 protected:
 	virtual void GenerateMenu(FGameplayTag InMenuTag);
 	virtual void GenerateMenu(TArray<FGameplayTag> InMenuTags);
 	virtual void DestroyMenu(FGameplayTag InMenuTag);
 	virtual void DestroyMenu(TArray<FGameplayTag> InMenuTags);
+
+	TArray<UMenuStyle*> GetMenuStyles();
 
 protected:
 	TMap<UMenuStyle*, bool> TargetMenuSelection;

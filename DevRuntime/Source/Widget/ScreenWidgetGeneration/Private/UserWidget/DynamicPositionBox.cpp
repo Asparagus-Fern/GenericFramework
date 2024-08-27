@@ -3,16 +3,17 @@
 
 #include "UserWidget/DynamicPositionBox.h"
 
+#include "ScreenWidgetManager.h"
 #include "Components/CanvasPanel.h"
 
 void UDynamicPositionBox::NativePreConstruct()
 {
 	Super::NativePreConstruct();
-	
+
 	if (IsValid(CanvasPanel))
 	{
 		CanvasPanel->ClearChildren();
-		
+
 		for (auto& CanvasPanelWidget : CanvasPanelWidgets)
 		{
 			if (IsDesignTime())
@@ -29,9 +30,10 @@ void UDynamicPositionBox::NativePreConstruct()
 			}
 			else
 			{
-				if (IsValid(CanvasPanelWidget.WidgetContainer.GetWidget()))
+				UUserWidgetBase* ContainerWidget = UScreenWidgetManager::GetContainerWidget(CanvasPanelWidget.WidgetContainer);
+				if (IsValid(ContainerWidget))
 				{
-					UCanvasPanelSlot* CanvasPanelSlot = CanvasPanel->AddChildToCanvas(CanvasPanelWidget.WidgetContainer.GetWidget());
+					UCanvasPanelSlot* CanvasPanelSlot = CanvasPanel->AddChildToCanvas(ContainerWidget);
 					CanvasPanelSlot->SetLayout(CanvasPanelWidget.LayoutData);
 					CanvasPanelSlot->SetAutoSize(CanvasPanelWidget.bAutoSize);
 					CanvasPanelSlot->SetZOrder(CanvasPanelWidget.ZOrder);

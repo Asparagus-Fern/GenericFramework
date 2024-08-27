@@ -9,7 +9,6 @@
 class UCameraHandle;
 
 
-
 /**
  * 处理相机的切换
  */
@@ -20,29 +19,19 @@ class APPLICATIONRUNTIME_API UCBE_HandleSwitchCamera : public UCommonButtonEvent
 
 public:
 	UCBE_HandleSwitchCamera();
-	// virtual bool GetIsAsync() override { return true; }
-	virtual void NativeOnActived() override;
-	virtual void NativeOnInactived() override;
+
+	/* CommonButtonEvent */
+public:
+	virtual bool CanExecuteButtonEvent_Implementation() override;
+	virtual void ExecuteButtonEvent_Implementation() override;
 
 public:
-	/* 激活时需要切换的相机标签 */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="Camera"), Category="OnActived")
-	FGameplayTag ActiveSwitchCameraTag;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	int32 TargetPlayerIndex = 0;
 
-	/* 激活时切换相机的默认处理 */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced, Category="OnActived")
-	UCameraHandle* ActiveSwitchCameraHandle = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="Camera"))
+	FGameplayTag TargetCameraTag;
 
-	/* 不激活时需要切换的相机标签 */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="Camera"), Category="OnInactived")
-	FGameplayTag InactiveSwitchCameraTag;
-
-	/* 不激活时切换相机的默认处理 */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced, Category="OnInactived")
-	UCameraHandle* InactiveSwitchCameraHandle = nullptr;
-
-protected:
-	FDelegateHandle SwitchCameraFinishHandle;
-	void OnActiveSwitchCameraFinish(UCameraHandle* InCameraHandle);
-	void OnInactiveSwitchCameraFinish(UCameraHandle* InCameraHandle);
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced)
+	UCameraHandle* TargetCameraHandle = nullptr;
 };

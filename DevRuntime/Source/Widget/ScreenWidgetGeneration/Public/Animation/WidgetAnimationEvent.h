@@ -34,6 +34,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	EaseType EaseType = EaseType::Linear;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly, Transient)
 	UWidget* TargetWidget;
 };

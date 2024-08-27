@@ -29,7 +29,7 @@ public:
 	TArray<TSoftClassPtr<UGameHUD>> GameHUDClasses;
 
 public:
-	/* 在世界开始时，将GameHUDClasses创建到屏幕 */
+	/* 在世界开始时，创建DefaultGameMenuSetting菜单 */
 	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category="Menu")
 	bool AutoCreateMenu = false;
 

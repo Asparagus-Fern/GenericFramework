@@ -6,16 +6,23 @@
 #include "ScreenWidgetManager.h"
 #include "Manager/ManagerGlobal.h"
 
-void UCBE_HandleMenuSelection::NativeOnActived()
+bool UCBE_HandleMenuSelection::CanExecuteButtonEvent_Implementation()
 {
-	Super::NativeOnActived();
-	// GetManager<UScreenWidgetManager>()->DeselectMenu(ActiveDeselectMenuTag);
-	// GetManager<UScreenWidgetManager>()->SelectMenu(ActiveSelectMenuTag);
+	return TargetMenuTag.IsValid();
 }
 
-void UCBE_HandleMenuSelection::NativeOnInactived()
+void UCBE_HandleMenuSelection::ExecuteButtonEvent_Implementation()
 {
-	Super::NativeOnInactived();
-	// GetManager<UScreenWidgetManager>()->DeselectMenu(InactiveDeselectMenuTag);
-	// GetManager<UScreenWidgetManager>()->SelectMenu(InactiveSelectMenuTag);
+	Super::ExecuteButtonEvent_Implementation();
+
+	if (TargetState)
+		GetManager<UScreenWidgetManager>()->SelectMenu(TargetMenuTag);
+	else
+		GetManager<UScreenWidgetManager>()->DeselectMenu(TargetMenuTag);
+
+	/* todo:处理异步 */
+	if (bIsAsync)
+	{
+		MarkAsActivedFinish();
+	}
 }

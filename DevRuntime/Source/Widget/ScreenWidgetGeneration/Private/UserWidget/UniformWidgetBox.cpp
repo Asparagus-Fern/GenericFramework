@@ -3,6 +3,7 @@
 
 #include "UserWidget/UniformWidgetBox.h"
 
+#include "ScreenWidgetManager.h"
 #include "Components/UniformGridPanel.h"
 #include "Components/UniformGridSlot.h"
 
@@ -31,9 +32,10 @@ void UUniformWidgetBox::NativePreConstruct()
 			}
 			else
 			{
-				if (IsValid(UniformGridPanelWidget.WidgetContainer.GetWidget()))
+				UUserWidgetBase* ContainerWidget = UScreenWidgetManager::GetContainerWidget(UniformGridPanelWidget.WidgetContainer);
+				if (IsValid(ContainerWidget))
 				{
-					UUniformGridSlot* UniformGridSlot = UniformGridPanel->AddChildToUniformGrid(UniformGridPanelWidget.WidgetContainer.GetWidget(), UniformGridPanelWidget.Row, UniformGridPanelWidget.Colum);
+					UUniformGridSlot* UniformGridSlot = UniformGridPanel->AddChildToUniformGrid(ContainerWidget, UniformGridPanelWidget.Row, UniformGridPanelWidget.Colum);
 					UniformGridSlot->SetHorizontalAlignment(UniformGridPanelWidget.HorizontalAlignment);
 					UniformGridSlot->SetVerticalAlignment(UniformGridPanelWidget.VerticalAlignment);
 				}

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Manager/ManagerGlobal.h"
 #include "UObject/Object.h"
 #include "CommonObject.generated.h"
 

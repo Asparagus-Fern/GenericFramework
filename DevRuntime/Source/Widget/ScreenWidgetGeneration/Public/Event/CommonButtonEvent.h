@@ -4,16 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "ScreenWidgetType.h"
-#include "Object/CommonObject.h"
 #include "UObject/ObjectMacros.h"
-#include "Procedure/ProcedureBaseInterface.h"
-#include "Procedure/ProcedureInterface.h"
 #include "Procedure/ProcedureObject.h"
 #include "CommonButtonEvent.generated.h"
 
 class UCommonButtonCondition;
+
 /**
- * 按钮状态发生更改执行的事件
+ * 瞬发类型按钮事件
  */
 UCLASS(Abstract, EditInlineNew)
 class SCREENWIDGETGENERATION_API UCommonButtonEvent : public UProcedureObject
@@ -23,12 +21,17 @@ class SCREENWIDGETGENERATION_API UCommonButtonEvent : public UProcedureObject
 	/* IProcedureInterface */
 public:
 	virtual void NativeOnActived() override;
+	virtual void NativeOnInactived() override;
+
+	/* UCommonButtonEvent */
+public:
+	// UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced)
+	// TArray<UCommonButtonCondition*> CommonButtonConditions;
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced)
-	TArray<UCommonButtonCondition*> CommonButtonConditions;
+	UFUNCTION(BlueprintNativeEvent)
+	bool CanExecuteButtonEvent();
 
-public:
 	UFUNCTION(BlueprintNativeEvent)
 	void ExecuteButtonEvent();
 };

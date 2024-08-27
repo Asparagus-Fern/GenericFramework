@@ -12,7 +12,7 @@ void UGameplayProcedure::MarkAsActivedFinish_Implementation()
 
 	if (bIsAutoActivateNextProcedure)
 	{
-		GetManager<UProcedureManager>(this)->SwitchProcedure(NextProcedureTag);
+		GetManager<UProcedureManager>()->SwitchProcedure(NextProcedureTag);
 	}
 }
 

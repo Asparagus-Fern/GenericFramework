@@ -54,13 +54,34 @@ void UInteractableUserWidgetBase::NativeConstruct()
 {
 	Super::NativeConstruct();
 
+	/* 绑定按钮的所有响应 */
 	if (IsValid(CommonButton))
 	{
 		CommonButton->OnButtonResponse.AddUObject(this, &UInteractableUserWidgetBase::HandleButtonResponse);
 
+		/* 当GroupName不为空时，请求创建或添加到按钮组 */
 		if (!GroupName.IsEmpty())
 		{
 			AddInteractableWidget.Broadcast(this, GroupName);
+		}
+	}
+
+	/* 同步到按钮事件 */
+	{
+		for (const auto& ActivedEvent : ActivedEvents)
+		{
+			if (IsValid(ActivedEvent))
+			{
+				ActivedEvent->NativeOnCreate();
+			}
+		}
+
+		for (const auto& ActivedEvent : InactivedEvents)
+		{
+			if (IsValid(ActivedEvent))
+			{
+				ActivedEvent->NativeOnCreate();
+			}
 		}
 	}
 }
@@ -77,6 +98,25 @@ void UInteractableUserWidgetBase::NativeDestruct()
 		}
 
 		CommonButton->OnButtonResponse.RemoveAll(this);
+	}
+
+	/* 同步到按钮事件 */
+	{
+		for (const auto& ActivedEvent : ActivedEvents)
+		{
+			if (IsValid(ActivedEvent))
+			{
+				ActivedEvent->NativeOnDestroy();
+			}
+		}
+
+		for (const auto& ActivedEvent : InactivedEvents)
+		{
+			if (IsValid(ActivedEvent))
+			{
+				ActivedEvent->NativeOnDestroy();
+			}
+		}
 	}
 }
 
@@ -149,12 +189,20 @@ void UInteractableUserWidgetBase::HandleButtonResponse(UCommonButton* Button, EC
 
 UProcedureProxy* UInteractableUserWidgetBase::HandleButtonResponseEvent(TArray<UCommonButtonEvent*> TargetEvents, const bool TargetEventState, const FSimpleDelegate OnFinish)
 {
-	if (UProcedureManager* ProcedureManager = GetManager<UProcedureManager>(this))
+	if (UProcedureManager* ProcedureManager = GetManager<UProcedureManager>())
 	{
 		TArray<UProcedureObject*> ProcedureObjects;
 		for (const auto& TargetEvent : TargetEvents)
 		{
-			ProcedureObjects.Add(TargetEvent);
+			if (!IsValid(TargetEvent))
+			{
+				continue;
+			}
+
+			if (TargetEvent->CanExecuteButtonEvent())
+			{
+				ProcedureObjects.Add(TargetEvent);
+			}
 		}
 
 		if (!ProcedureObjects.IsEmpty())
@@ -165,6 +213,5 @@ UProcedureProxy* UInteractableUserWidgetBase::HandleButtonResponseEvent(TArray<U
 		}
 	}
 
-	OnFinish.ExecuteIfBound();
 	return nullptr;
 }

@@ -45,11 +45,11 @@ public:
 	TArray<FMenuInfo> GetChildMenuInfos(FGameplayTag InMenuTag, bool bIsContainOriginal = false);
 
 	UFUNCTION(BlueprintPure)
-	TArray<FGameplayTag> GetChildMenuTagsInDictionary(FGameplayTag InMenuTag, bool bIsContainOriginal = false);
+	TArray<FGameplayTag> GetDirectChildMenuTags(FGameplayTag InMenuTag, bool bIsContainOriginal = false);
 
 	UFUNCTION(BlueprintPure)
-	TArray<FMenuInfo> GetChildMenuInfosInDictionary(FGameplayTag InMenuTag, bool bIsContainOriginal = false);
-
+	TArray<FMenuInfo> GetDirectChildMenuInfos(FGameplayTag InMenuTag, bool bIsContainOriginal = false);
+	
 	UFUNCTION(BlueprintPure)
 	TArray<FGameplayTag> GetParentMenuTags(FGameplayTag InMenuTag, bool bIsContainOriginal = false);
 

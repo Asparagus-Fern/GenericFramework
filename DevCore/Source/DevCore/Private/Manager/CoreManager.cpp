@@ -7,6 +7,8 @@
 
 #define LOCTEXT_NAMESPACE "UCoreManager"
 
+UWorld* UCoreManager::StaticWorld = nullptr;
+
 UCoreManager::UCoreManager(const FObjectInitializer& ObjectInitializer)
 {
 }
@@ -17,14 +19,6 @@ bool UCoreManager::ShouldCreateSubsystem(UObject* Outer) const
 	{
 		return false;
 	}
-
-	// TArray<UClass*> DerivedClasses;
-	// GetDerivedClasses(GetClass(), DerivedClasses);
-	//
-	// if (!DerivedClasses.IsEmpty())
-	// {
-	// 	return false;
-	// }
 
 	return Super::ShouldCreateSubsystem(Outer);
 }
@@ -67,6 +61,8 @@ void UCoreManager::NativeOnCreate()
 {
 	IProcedureBaseInterface::NativeOnCreate();
 	IProcedureBaseInterface::Execute_OnCreate(this);
+
+	StaticWorld = GetWorld();
 	LOG(Debug_Manager, Log, TEXT("On Created : %s"), *GetName());
 }
 
@@ -79,6 +75,8 @@ void UCoreManager::NativeOnRefresh()
 void UCoreManager::NativeOnDestroy()
 {
 	IProcedureBaseInterface::NativeOnDestroy();
+
+	StaticWorld = nullptr;
 	LOG(Debug_Manager, Log, TEXT("On Destroy : %s"), *GetName());
 }
 
