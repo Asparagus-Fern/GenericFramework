@@ -17,7 +17,7 @@ class UWidgetAnimationEvent;
 /**
  * 
  */
-UCLASS(Abstract, HideCategories=(Performance,Localization))
+UCLASS(Abstract)
 class SCREENWIDGETGENERATION_API UUserWidgetBase : public UUserWidget
                                                    , public IWidgetAnimationInterface
                                                    , public IProcedureBaseInterface
@@ -31,6 +31,7 @@ protected:
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
 
+	/* IProcedureBaseInterface */
 public:
 	virtual void NativeOnCreate() override;
 	virtual void NativeOnRefresh() override;
@@ -55,7 +56,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TArray<TSubclassOf<UGameHUD>> TemporaryHUDs;
-	
+
 	UPROPERTY(EditAnywhere, Instanced)
 	UWidgetAnimationEvent* ActiveAnimationEvent = nullptr;
 
@@ -63,6 +64,20 @@ public:
 	UWidgetAnimationEvent* InactiveAnimationEvent = nullptr;
 
 public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, AdvancedDisplay)
+	FVector2D Anchor = FVector2D(.5f, 1.f);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, AdvancedDisplay)
+	int32 ZOrder = 0;
+
+public:
+	UFUNCTION(BlueprintPure)
+	FVector2D GetAnchorOffset() const;
+
+protected:
 	bool bIsActived = false;
+
+public:
+	bool GetIsActived() const { return bIsActived; }
 	void SetIsActived(const bool InActived) { bIsActived = InActived; }
 };

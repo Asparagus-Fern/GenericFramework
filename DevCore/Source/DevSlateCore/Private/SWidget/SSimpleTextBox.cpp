@@ -53,7 +53,8 @@ void SSimpleTextBox::Construct(const FArguments& InArgs)
 		.MinDesiredWidth(InArgs._MinDesiredWidth)
 		.LineHeightPercentage(InArgs._LineHeightPercentage)
 		.Margin(InArgs._TextMargin)
-		.OverflowPolicy(InArgs._OverflowPolicy);
+		.OverflowPolicy(InArgs._OverflowPolicy)
+		.Visibility(EVisibility::SelfHitTestInvisible);
 
 	ImagePtr = SNew(SImage)
 		.Image(InArgs._Image)

@@ -4,14 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
+#include "NativeGameplayTags.h"
 #include "GameFramework/Actor.h"
 #include "WorldWidgetPoint.generated.h"
 
-class UWorldWidget;
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPreActiveStateChange, AWorldWidgetPoint*, WorldWidgetPoint);
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnActiveStateChange, AWorldWidgetPoint*, WorldWidgetPoint, bool, IsActive);
+class UUserWidgetBase;
+UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Point);
 
 UCLASS(HideCategories=(Object,Actor,Collision,Physics,Networking,Input,LevelInstance,Cooking,HLOD,Replication))
 class WORLDWIDGETGENERATION_API AWorldWidgetPoint : public AActor
@@ -23,22 +21,21 @@ public:
 	virtual void OnConstruction(const FTransform& Transform) override;
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
-	virtual void Destroyed() override;
 
-	/* Preview */
 #if WITH_EDITORONLY_DATA
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="World Widget Point (Editor)")
+	/* 预览 */
+	UPROPERTY(EditAnywhere, Category="World Widget Point (Editor)")
 	bool bPreview = true;
 
 #endif
 
 	/* AWorldWidgetPoint */
 public:
-	/* 被添加进WorldWidgetManager时自动激活，显示到屏幕上，为false则为手动控制 */
+	/* 当为false时自动激活显示，为true则手动控制显示 */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	bool bIsAutoActived = true;
+	bool bIsManual = false;
 
 	/* 可通过标签获取到所有该标签点位 */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="Point"))
@@ -46,15 +43,11 @@ public:
 
 	/* 点位UI */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced)
-	UWorldWidget* WorldWidget = nullptr;
-
-	UPROPERTY(BlueprintAssignable)
-	FPreActiveStateChange PreActiveStateChange;
-
-	UPROPERTY(BlueprintAssignable)
-	FOnActiveStateChange OnActiveStateChange;
+	UUserWidgetBase* WorldWidget = nullptr;
 
 public:
-	UFUNCTION(BlueprintCallable)
-	void SetIsActive(bool InActive);
+	DECLARE_MULTICAST_DELEGATE_OneParam(FWorldWidgetPointDelegate, AWorldWidgetPoint*);
+	static FWorldWidgetPointDelegate OnWorldWidgetPointConstruct;
+	static FWorldWidgetPointDelegate OnWorldWidgetPointRegister;
+	static FWorldWidgetPointDelegate OnWorldWidgetPointUnRegister;
 };

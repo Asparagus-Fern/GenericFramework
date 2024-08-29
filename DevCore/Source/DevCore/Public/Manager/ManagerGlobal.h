@@ -3,14 +3,16 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "CoreManager.h"
 
 template <class ManagerType>
 static ManagerType* GetManager()
 {
 	if (ManagerType::StaticClass()->IsChildOf(UCoreManager::StaticClass()))
 	{
-		return ManagerType::GetStaticWorld()->GetSubsystem<ManagerType>();
+		if (const UWorld* World = ManagerType::GetStaticWorld())
+		{
+			return World->GetSubsystem<ManagerType>();
+		}
 	}
 	return nullptr;
 }

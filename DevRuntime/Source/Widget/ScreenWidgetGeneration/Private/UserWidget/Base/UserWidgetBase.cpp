@@ -110,3 +110,8 @@ float UUserWidgetBase::GetAnimationDuration_Implementation(const bool InIsActive
 
 	return 0.f;
 }
+
+FVector2D UUserWidgetBase::GetAnchorOffset() const
+{
+	return FVector2D(-(GetDesiredSize().X * Anchor.X), -(GetDesiredSize().Y * Anchor.Y));
+}

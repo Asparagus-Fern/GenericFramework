@@ -4,28 +4,20 @@
 
 #include "CoreMinimal.h"
 #include "Group/CommonButton.h"
+#include "UserWidget/Base/InteractableUserWidgetBase.h"
 #include "WorldWidget.generated.h"
 
 /**
  * 
  */
-UCLASS(Abstract, HideCategories=(Interaction,Layout,Localization,Performance,Rendering,Navigation,Designer,Locked,Input))
-class WORLDWIDGETGENERATION_API UWorldWidget : public UCommonButton
+UCLASS(Abstract)
+class WORLDWIDGETGENERATION_API UWorldWidget : public UInteractableUserWidgetBase
 {
 	GENERATED_BODY()
 
 public:
-	UWorldWidget(const FObjectInitializer& ObjectInitializer);
-	virtual void NativePreConstruct() override;
+
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FVector2D Anchor = FVector2D(.5f, 0.f);
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 ZOrder = 0;
-
-public:
-	UFUNCTION(BlueprintPure)
-	FVector2D GetAnchorOffset() const;
+	
 };

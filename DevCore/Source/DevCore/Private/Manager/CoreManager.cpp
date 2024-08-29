@@ -32,24 +32,28 @@ void UCoreManager::Initialize(FSubsystemCollectionBase& Collection)
 void UCoreManager::OnWorldBeginPlay(UWorld& InWorld)
 {
 	Super::OnWorldBeginPlay(InWorld);
+
+	FWorldDelegates::OnWorldBeginTearDown.AddUObject(this, &UCoreManager::OnWorldEndPlay);
 	InWorld.OnWorldMatchStarting.AddUFunction(this, "OnWorldMatchStarting");
+
 	NativeOnActived();
+}
+
+void UCoreManager::OnWorldEndPlay(UWorld* InWorld)
+{
+	FWorldDelegates::OnWorldBeginTearDown.RemoveAll(this);
+	NativeOnInactived();
 }
 
 void UCoreManager::Deinitialize()
 {
 	Super::Deinitialize();
-	NativeOnInactived();
-}
-
-void UCoreManager::BeginDestroy()
-{
 	NativeOnDestroy();
-	Super::BeginDestroy();
 }
 
 void UCoreManager::OnWorldMatchStarting_Implementation()
 {
+	GetWorld()->OnWorldMatchStarting.RemoveAll(this);
 }
 
 bool UCoreManager::DoesSupportWorldType(const EWorldType::Type WorldType) const

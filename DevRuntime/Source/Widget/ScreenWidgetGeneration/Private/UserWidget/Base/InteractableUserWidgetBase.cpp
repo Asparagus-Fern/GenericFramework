@@ -20,7 +20,7 @@ UInteractableUserWidgetBase::FBuildInteractableWidgetGroup UInteractableUserWidg
 UInteractableUserWidgetBase::UInteractableUserWidgetBase(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
-	CommonButton = CreateDefaultSubobject<UCommonButton>("CommonButton");
+	// CommonButton = CreateDefaultSubobject<UCommonButton>("CommonButton");
 
 	ResponseState.Add(ECommonButtonResponseEvent::OnSelected, true);
 	ResponseState.Add(ECommonButtonResponseEvent::OnDeselected, false);

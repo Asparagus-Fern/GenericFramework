@@ -6,11 +6,11 @@
 #include "DBTweenUpdateManager.h"
 #include "ScreenWidgetManagerSetting.h"
 #include "Blueprint/WidgetTree.h"
+#include "BPFunctions/BPFunctions_Object.h"
 #include "BPFunctions/BPFunctions_Widget.h"
 #include "DataAsset/GameMenuSetting.h"
 #include "Group/CommonButtonGroup.h"
 #include "Manager/ManagerGlobal.h"
-#include "StaticFunctions/StaticFunctions_Object.h"
 #include "UserWidget/Base/UserWidgetBase.h"
 #include "UserWidget/GameHUD.h"
 #include "UserWidget/Menu/MenuContainer.h"
@@ -116,7 +116,7 @@ void UScreenWidgetManager::OnWorldMatchStarting_Implementation()
 	{
 		if (!UScreenWidgetManagerSetting::Get()->DefaultGameMenuSetting.IsNull())
 		{
-			UGameMenuSetting* DefaultGameMenuSetting = FStaticFunctions_Object::LoadObject<UGameMenuSetting>(UScreenWidgetManagerSetting::Get()->DefaultGameMenuSetting);
+			UGameMenuSetting* DefaultGameMenuSetting = UBPFunctions_Object::LoadObject<UGameMenuSetting>(UScreenWidgetManagerSetting::Get()->DefaultGameMenuSetting);
 			if (IsValid(DefaultGameMenuSetting))
 			{
 				SwitchGameMenu(DefaultGameMenuSetting);
@@ -199,7 +199,7 @@ void UScreenWidgetManager::CreateGameHUDs()
 		if (GameHUDClasses.Contains(GameHUDClass))
 			continue;
 
-		TSubclassOf<UGameHUD> LoadHUDClass = FStaticFunctions_Object::LoadClass<UGameHUD>(GameHUDClass);
+		TSubclassOf<UGameHUD> LoadHUDClass = UBPFunctions_Object::LoadClass<UGameHUD>(GameHUDClass);
 		if (IsValid(LoadHUDClass))
 		{
 			UGameHUD* NewHUD = CreateWidget<UGameHUD>(GetWorld(), LoadHUDClass);

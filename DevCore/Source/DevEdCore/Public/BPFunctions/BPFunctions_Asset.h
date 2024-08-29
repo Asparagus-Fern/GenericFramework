@@ -18,8 +18,7 @@ class DEVEDCORE_API UBPFunctions_Asset : public UBlueprintFunctionLibrary
 public:
 	static FAssetData GetAssetData(const UObject* InAsset);
 	static TArray<FAssetData> GetAssetsDataByPath(const FString& InAssetPackagePath);
-
-	UFUNCTION(BlueprintPure)
+	
 	static FName GetAssetPackagePath(const UObject* InAsset); /*  /LayerWidget/MenuInfo  */
 	static FPackagePath GetAssetPackageName(const UObject* InAsset); /*  /LayerWidget/MenuInfo/ccc  */
 	static FString GetAssetLocalFullPath(const UObject* InAsset); /*  ../../../../../UEProject/DevProject/Plugins/DevPlugin/Runtime/LayerWidget/Content/MenuInfo/cccd.uasset  */

@@ -35,7 +35,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FString GroupName;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Instanced)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced)
 	UCommonButton* CommonButton = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced)

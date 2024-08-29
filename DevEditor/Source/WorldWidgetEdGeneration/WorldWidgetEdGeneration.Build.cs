@@ -25,6 +25,7 @@ public class WorldWidgetEdGeneration : ModuleRules
 				"UMG",
 				"LevelEditor",
 				"UnrealEd",
+				"ScreenWidgetGeneration",
 				"WorldWidgetGeneration",
 			}
 		);

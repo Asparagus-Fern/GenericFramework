@@ -26,6 +26,7 @@ public class WorldWidgetGeneration : ModuleRules
 				"UMG",
 				"CommonUI",
 				"GameplayTags",
+				"DeveloperSettings"
 			}
 		);
 	}

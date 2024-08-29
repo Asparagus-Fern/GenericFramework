@@ -7,6 +7,7 @@
 #include "Manager/ManagerEdInterface.h"
 #include "WorldWidgetEdManager.generated.h"
 
+class SWorldWidgetContainer;
 class UWorldWidgetEdManager;
 class AWorldWidgetPoint;
 class ILevelEditor;
@@ -21,10 +22,12 @@ class SLevelViewport;
  * 2. On Level Viewport Client List Changed
  * 3. On Editor Map Changed
  */
-UCLASS()
+UCLASS(MinimalAPI)
 class UEditorWorldWidgetPanel : public UWorldWidgetPanel
 {
 	GENERATED_BODY()
+
+	friend UWorldWidgetEdManager;
 
 	/* IProcedureBaseInterface */
 public:
@@ -32,25 +35,15 @@ public:
 	virtual void NativeOnRefresh() override;
 	virtual void NativeOnDestroy() override;
 
-	/* IProcedureInterface */
-public:
-	virtual void NativeOnActived() override;
-	virtual void NativeOnInactived() override;
-
 	/* FEditorWorldWidgetPanel */
 public:
-	TSharedPtr<SConstraintCanvas> ConstraintCanvas;
+	TSharedPtr<SConstraintCanvas> ConstraintCanvas = nullptr;
 	FLevelEditorViewportClient* LevelEditorViewportClient = nullptr;
+	TMap<AWorldWidgetPoint*, TSharedPtr<SWorldWidgetContainer>> WorldWidgetContainer;
 
 protected:
-	virtual bool AddPanelToViewport();
-	virtual bool RemovePanelFromViewport();
-
-	virtual void AddWorldWidget(AWorldWidgetPoint* InWorldWidgetPoint) override;
-	virtual void RemoveWorldWidget(AWorldWidgetPoint* InWorldWidgetPoint) override;
-
-private:
-	uint8 bRegisterInViewport : 1;
+	virtual void RefreshWorldWidgetPoint() override;
+	virtual void OnWorldWidgetDoubleClicked(TSharedPtr<SWorldWidgetContainer> DoubleClickedContainer);
 };
 
 /**
@@ -62,18 +55,11 @@ class WORLDWIDGETEDGENERATION_API UWorldWidgetEdManager : public UWorldWidgetMan
 	GENERATED_BODY()
 
 public:
-	UWorldWidgetEdManager();
-	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
 	virtual bool DoesSupportWorldType(const EWorldType::Type WorldType) const override;
 
 	/* FTickableGameObject */
 public:
 	virtual bool IsTickableInEditor() const override { return true; }
-
-	/* IManagerInterface */
-	// public:
-	// 	virtual FText GetManagerDisplayName() override;
-	// 	virtual bool DoesSupportWorldType(EWorldType::Type InWorldType) override;
 
 	/* IProcedureBaseInterface */
 public:
@@ -81,44 +67,34 @@ public:
 	virtual void NativeOnDestroy() override;
 	virtual void NativeOnRefresh() override;
 
-	/* IManagerEdInterface */
-	// public:
-	// virtual void NativeOnEditorActived() override;
-	// virtual void NativeOnEditorInactived() override;
-
-	/* UWorldWidgetEdManager */
 protected:
 	FDelegateHandle LevelEditorCreatedHandle;
 	void OnLevelEditorCreated(TSharedPtr<ILevelEditor> LevelEditor);
 
-	/* 为每个LevelViewportClient创建Panel */
-	FDelegateHandle LevelViewportClientListChangedHandle;
-	void OnLevelViewportClientListChanged();
+	FDelegateHandle LevelActorAddedHandle;
+	void OnLevelActorAdded(AActor* Actor);
 
-	FTimerHandle LevelViewportClientListChangedNextTickHandle;
-	void HandleLevelViewportClientListChangedNextTick();
+	FDelegateHandle ActorsMovedHandle;
+	void OnActorsMoved(TArray<AActor*>& Actors);
 
-	/* 蓝图编译时更新 */
-	FDelegateHandle BlueprintCompiledHandle;
-	void OnBlueprintCompiled();
-
-	/* 在Actor被删除时更新 */
 	FDelegateHandle LevelActorDeletedHandle;
 	void OnLevelActorDeleted(AActor* InActor);
 
-	/* 在WorldWidgetPoint属性改变时更新 */
-	FDelegateHandle WorldWidgetPointConstructionHandle;;
-	void OnWorldWidgetPointConstruction(AWorldWidgetPoint* InWorldWidgetPoint);
+	FDelegateHandle BlueprintCompiledHandle;
+	void OnBlueprintCompiled();
 
-	FDelegateHandle WorldWidgetPointDestroyedHandle;;
-	void OnWorldWidgetPointDestroyed(AWorldWidgetPoint* InWorldWidgetPoint);
+	FDelegateHandle BeginPIEHandle;
+	void BeginPIE(bool bIsSimulating);
+
+	FDelegateHandle EndPIEHandle;
+	void EndPIE(bool bIsSimulating);
+
+	FDelegateHandle WorldWidgetPointConstructHandle;
+	void OnWorldWidgetPointConstruct(AWorldWidgetPoint* WorldWidgetPoint);
 
 protected:
-	uint8 bInitializeEditorWorldWidgetPanel : 1;
-	TArray<FLevelEditorViewportClient*> HandleLevelEditorViewportClients;
-	TMap<FLevelEditorViewportClient*, UWorldWidgetPanel*> EditorWorldWidgetPanelMapping;
-	virtual void ReCreateEditorWorldWidgetPanel();
-	virtual UEditorWorldWidgetPanel* CreateEditorWorldWidgetPanel(FLevelEditorViewportClient* InLevelEditorViewportClient);
-	virtual void RemoveEditorWorldWidgetPanel(FLevelEditorViewportClient* InLevelEditorViewportClient);
-	virtual void CollectWorldWidgetPoints();
+	bool bIsGenerateWorldWidgetPanel = false;
+
+	virtual void GenerateWorldWidgetPanel() override;
+	virtual UWorldWidgetPanel* CreateWorldWidgetPanel() override;
 };

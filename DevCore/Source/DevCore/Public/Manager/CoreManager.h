@@ -15,7 +15,7 @@
 /**
  * 
  */
-UCLASS(Abstract, BlueprintType)
+UCLASS(Abstract, BlueprintType, Blueprintable)
 class DEVCORE_API UCoreManager : public UTickableWorldSubsystem, public IProcedureInterface
 {
 	GENERATED_UCLASS_BODY()
@@ -24,14 +24,14 @@ public:
 	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void OnWorldBeginPlay(UWorld& InWorld) override;
+	virtual void OnWorldEndPlay(UWorld* InWorld);
 	virtual void Deinitialize() override;
-	virtual void BeginDestroy() override;
 	virtual bool DoesSupportWorldType(const EWorldType::Type WorldType) const override;
 
 	/* FTickableGameObject */
 public:
 	virtual TStatId GetStatId() const override { return UObject::GetStatID(); }
-	virtual bool IsTickable() const override { return bTickable; }
+	virtual bool IsTickable() const override { return bTickableInEditor ? true : bTickable; }
 	virtual bool IsTickableInEditor() const override { return bTickableInEditor; }
 	virtual void Tick(float DeltaSeconds) override { NativeOnRefresh(); }
 
@@ -41,7 +41,7 @@ public:
 	virtual void NativeOnRefresh() override;
 	virtual void NativeOnDestroy() override;
 
-	/* IProcedureInterface */
+	/* IProcedureInterface，只会在运行时调用 */
 public:
 	virtual void NativeOnActived() override;
 	virtual void NativeOnInactived() override;
@@ -54,6 +54,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bTickableInEditor = false;
 
+public:
 	UFUNCTION(BlueprintNativeEvent)
 	void OnWorldMatchStarting();
 

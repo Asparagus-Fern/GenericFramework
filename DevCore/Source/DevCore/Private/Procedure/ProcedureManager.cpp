@@ -4,11 +4,11 @@
 #include "Procedure/ProcedureManager.h"
 
 #include "EngineUtils.h"
+#include "BPFunctions/BPFunctions_Object.h"
 #include "Manager/ManagerGlobal.h"
 #include "Procedure/GameplayProcedure.h"
 #include "Procedure/ProcedureManagerSetting.h"
 #include "Procedure/ProcedureProxy.h"
-#include "StaticFunctions/StaticFunctions_Object.h"
 
 #define LOCTEXT_NAMESPACE "UProcedureManager"
 
@@ -115,7 +115,7 @@ void UProcedureManager::LoadGameplayProcedure()
 {
 	for (auto& GameplayProcedure : UProcedureManagerSetting::Get()->GameplayProcedures)
 	{
-		UGameplayProcedure* LoadGameplayProcedure = FStaticFunctions_Object::LoadObject<UGameplayProcedure>(GameplayProcedure.Value);
+		UGameplayProcedure* LoadGameplayProcedure = UBPFunctions_Object::LoadObject<UGameplayProcedure>(GameplayProcedure.Value);
 		GameplayProcedures.Add(GameplayProcedure.Key, LoadGameplayProcedure);
 	}
 }

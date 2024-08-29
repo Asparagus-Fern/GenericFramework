@@ -7,60 +7,35 @@
 #include "WorldWidgetManager.h"
 #include "Manager/ManagerGlobal.h"
 
+UE_DEFINE_GAMEPLAY_TAG(TAG_Point, "Point");
+
+AWorldWidgetPoint::FWorldWidgetPointDelegate AWorldWidgetPoint::OnWorldWidgetPointConstruct;
+AWorldWidgetPoint::FWorldWidgetPointDelegate AWorldWidgetPoint::OnWorldWidgetPointRegister;
+AWorldWidgetPoint::FWorldWidgetPointDelegate AWorldWidgetPoint::OnWorldWidgetPointUnRegister;
+
 AWorldWidgetPoint::AWorldWidgetPoint(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
 	PrimaryActorTick.bCanEverTick = false;
+
+	USceneComponent* SceneComponent = CreateDefaultSubobject<USceneComponent>("SceneComponent");
+	RootComponent = SceneComponent;
 }
 
 void AWorldWidgetPoint::OnConstruction(const FTransform& Transform)
 {
-	FWorldWidgetDelegates::OnWorldWidgetPointConstruction.Broadcast(this);
+	Super::OnConstruction(Transform);
+	OnWorldWidgetPointConstruct.Broadcast(this);
 }
 
 void AWorldWidgetPoint::BeginPlay()
 {
 	Super::BeginPlay();
-
-	// if (UWorldWidgetManager* WorldWidgetManager = GetManager<UWorldWidgetManager>())
-	// {
-	// 	WorldWidgetManager->AddWorldWidgetPoint(this);
-	// }
-
-	if (bIsAutoActived)
-	{
-		SetIsActive(true);
-	}
+	OnWorldWidgetPointRegister.Broadcast(this);
 }
 
 void AWorldWidgetPoint::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
-
-	SetIsActive(false);
-
-	// if (UWorldWidgetManager* WorldWidgetManager = GetManager<UWorldWidgetManager>())
-	// {
-	// 	WorldWidgetManager->RemoveWorldWidgetPoint(this);
-	// }
-}
-
-void AWorldWidgetPoint::Destroyed()
-{
-	Super::Destroyed();
-	FWorldWidgetDelegates::OnWorldWidgetPointDestroy.Broadcast(this);
-}
-
-void AWorldWidgetPoint::SetIsActive(const bool InActive)
-{
-	PreActiveStateChange.Broadcast(this);
-	if (InActive)
-	{
-		// GetManager<UWorldWidgetManager>()->ActiveWorldWidgetPoint(this);
-	}
-	else
-	{
-		// GetManager<UWorldWidgetManager>()->InactiveWorldWidgetPoint(this);
-	}
-	OnActiveStateChange.Broadcast(this, InActive);
+	OnWorldWidgetPointUnRegister.Broadcast(this);
 }
