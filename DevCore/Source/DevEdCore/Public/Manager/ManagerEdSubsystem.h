@@ -26,14 +26,33 @@ protected:
 	virtual void OnLevelEditorCreated(TSharedPtr<ILevelEditor> LevelEditor);
 
 protected:
-	virtual void ExtendEditor();
-	virtual void RegisterEditorMenuBar();
-	virtual void RegisterEditorMenuBarMenu(UToolMenu* InToolMenu);
-	virtual void RegisterEditorToolBarOption();
-	virtual void RegisterEditorToolBarOptionMenu(UToolMenu* InToolMenu);
+	virtual void RegisterMenuBar();
+	virtual void RegisterMenu(UToolMenu* InToolMenu);
+	virtual void RegisterToolBar();
+	virtual void RegisterToolBarOption();
+	virtual void RegisterToolBarOptionMenu(UToolMenu* InToolMenu);
 
 protected:
 	static FName MenuBarSectionName;
 	static FName ToolBarSectionName;
 	TSharedPtr<FUICommandList> CommandList = nullptr;
+
+public:
+	DECLARE_MULTICAST_DELEGATE_OneParam(FOnCommandListInitialize, TSharedPtr<FUICommandList>&)
+	static FOnCommandListInitialize OnCommandListInitialize;
+
+	DECLARE_MULTICAST_DELEGATE_OneParam(FToolMenuDelegate, UToolMenu*)
+	DECLARE_MULTICAST_DELEGATE_OneParam(FFToolMenuSectionDelegate, FToolMenuSection&)
+
+	static FToolMenuDelegate OnMenuBarExtend;
+	static FToolMenuDelegate OnMenuExtend;
+
+	static FToolMenuDelegate OnToolBarExtend;
+	static FFToolMenuSectionDelegate OnToolBarSectionExtend;
+	static FToolMenuDelegate OnToolBarOptionExtend;
+
+protected:
+	virtual void RegisterToolBarManagerSettingCommand(TSharedPtr<FUICommandList>& InCommandList);
+	virtual void RegisterToolBarManagerSetting(FToolMenuSection& ToolMenuSection);
+	virtual void OpenToolBarManagerSetting();
 };

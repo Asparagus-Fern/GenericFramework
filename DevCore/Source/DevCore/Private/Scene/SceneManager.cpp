@@ -4,6 +4,7 @@
 #include "Scene/SceneManager.h"
 
 #include "Kismet/GameplayStatics.h"
+#include "Scene/SceneManagerSetting.h"
 
 FFindActorHandle::FFindActorHandle()
 	: ID(FGuid::NewGuid())
@@ -30,6 +31,11 @@ bool FHandleActor::GetIsValid() const
 	}
 
 	return !ValidHandleActorMethods.IsEmpty();
+}
+
+bool USceneManager::ShouldCreateSubsystem(UObject* Outer) const
+{
+	return Super::ShouldCreateSubsystem(Outer) && USceneManagerSetting::Get()->bEnableSubsystem;
 }
 
 void USceneManager::NativeOnActived()

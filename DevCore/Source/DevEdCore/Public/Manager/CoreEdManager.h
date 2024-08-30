@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ManagerEdInterface.h"
 #include "Manager/CoreManager.h"
 #include "CoreEdManager.generated.h"
 
@@ -11,7 +10,7 @@
  * 
  */
 UCLASS(Abstract)
-class DEVEDCORE_API UCoreEdManager : public UCoreManager, public IManagerEdInterface
+class DEVEDCORE_API UCoreEdManager : public UCoreManager
 {
 	GENERATED_BODY()
 

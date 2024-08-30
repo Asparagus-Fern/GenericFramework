@@ -3,11 +3,25 @@
 #include "CameraHandle.h"
 
 #include "CameraHandleInterface.h"
+#include "CameraManager.h"
 #include "CameraManagerSetting.h"
 #include "CameraPoint/CameraPointBase.h"
 #include "Kismet/GameplayStatics.h"
 
 UCameraHandle::FCameraHandleDelegate UCameraHandle::OnSwitchCameraFinish;
+
+UWorld* UCameraHandle::GetWorld() const
+{
+	if (!HasAnyFlags(RF_ClassDefaultObject) && ensureMsgf(GetOuter(), TEXT("CommonButtonEvent: %s has a null OuterPrivate in UCommonButtonEvent::GetWorld()"), *GetFullName())
+		&& !GetOuter()->HasAnyFlags(RF_BeginDestroyed) && !GetOuter()->IsUnreachable())
+	{
+		if (const UCameraManager* CameraManager = GetManager<UCameraManager>())
+		{
+			return CameraManager->GetWorld();
+		}
+	}
+	return nullptr;
+}
 
 void UCameraHandle::Reset()
 {
@@ -77,6 +91,4 @@ void UCameraHandle::NativeOnSwitchToCameraPointFinish()
 	OwnerPlayerController = nullptr;
 	TargetCameraPoint = nullptr;
 	OnHandleFinish.Unbind();
-
-	MarkAsGarbage();
 }

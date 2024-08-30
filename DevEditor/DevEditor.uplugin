@@ -29,11 +29,6 @@
   ],
   "Modules": [
     {
-      "Name": "ManagerVisualization",
-      "Type": "Editor",
-      "LoadingPhase": "PostDefault"
-    },
-    {
       "Name": "ExtendEdMode",
       "Type": "Editor",
       "LoadingPhase": "PostDefault"

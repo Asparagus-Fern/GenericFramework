@@ -11,7 +11,8 @@ public class DevEdCore : ModuleRules
 			{
 				"Core",
 				"DevCore",
-				"DeveloperSettings"
+				"DevSlateCore",
+				"DeveloperSettings",
 			}
 		);
 
@@ -29,7 +30,9 @@ public class DevEdCore : ModuleRules
 				"UnrealEd",
 				"LevelEditor",
 				"AssetTools",
-				"ClassViewer"
+				"ClassViewer",
+				"Settings", 
+				"SettingsEditor"
 			}
 		);
 	}

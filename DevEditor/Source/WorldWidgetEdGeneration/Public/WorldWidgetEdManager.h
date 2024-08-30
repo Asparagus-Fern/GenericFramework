@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "WorldWidgetManager.h"
-#include "Manager/ManagerEdInterface.h"
 #include "WorldWidgetEdManager.generated.h"
 
 class SWorldWidgetContainer;
@@ -50,7 +49,7 @@ protected:
  * 
  */
 UCLASS()
-class WORLDWIDGETEDGENERATION_API UWorldWidgetEdManager : public UWorldWidgetManager, public IManagerEdInterface
+class WORLDWIDGETEDGENERATION_API UWorldWidgetEdManager : public UWorldWidgetManager
 {
 	GENERATED_BODY()
 

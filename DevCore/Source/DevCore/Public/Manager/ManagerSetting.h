@@ -15,7 +15,9 @@ class DEVCORE_API UManagerSetting : public UDeveloperSettings
 	GENERATED_BODY()
 
 public:
+	virtual FName GetContainerName() const override;
 	virtual FName GetCategoryName() const override;
+	virtual FName GetSectionName() const override;
 
 public:
 	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly)

@@ -21,6 +21,9 @@ class CAMERASYSTEM_API UCameraHandle : public UCommonObject
 	GENERATED_BODY()
 
 public:
+	virtual UWorld* GetWorld() const override;
+	
+public:
 	UFUNCTION(BlueprintCallable)
 	void Reset();
 

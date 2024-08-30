@@ -38,14 +38,11 @@ void UCameraEdManager::NativeOnDestroy()
 
 void UCameraEdManager::OnCopyViewportCamera(ACameraPointBase* InCameraPoint)
 {
-	if (!IsValid(GetWorld()))
-	{
-		InCameraPoint->Modify();
-		InCameraPoint->SetActorLocation(GCurrentLevelEditingViewportClient->GetViewLocation());
-		InCameraPoint->SetActorRotation(GCurrentLevelEditingViewportClient->GetViewRotation());
+	InCameraPoint->Modify();
+	InCameraPoint->SetActorLocation(GCurrentLevelEditingViewportClient->GetViewLocation());
+	InCameraPoint->SetActorRotation(GCurrentLevelEditingViewportClient->GetViewRotation());
 
-		GEditor->RedrawLevelEditingViewports();
-	}
+	GEditor->RedrawLevelEditingViewports();
 }
 
 void UCameraEdManager::OnCameraPointPilotStateChanged(ACameraPointBase* InCameraPoint, bool bIsPilot)

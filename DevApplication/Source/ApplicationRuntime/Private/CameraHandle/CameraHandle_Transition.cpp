@@ -8,7 +8,7 @@
 UCameraHandle_Transition::UCameraHandle_Transition()
 {
 	ViewTargetTransitionParams.BlendTime = 1.f;
-	ViewTargetTransitionParams.BlendFunction = VTBlend_Linear;
+	ViewTargetTransitionParams.BlendFunction = VTBlend_Cubic;
 	ViewTargetTransitionParams.BlendExp = 0.f;
 	ViewTargetTransitionParams.bLockOutgoing = false;
 }
