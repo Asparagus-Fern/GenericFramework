@@ -5,8 +5,14 @@
 
 #include "Kismet/GameplayStatics.h"
 #include "Pawn/DevPawn.h"
+#include "Pawn/PawnManagerSetting.h"
 
 #define LOCTEXT_NAMESPACE "UPawnManager"
+
+bool UPawnManager::ShouldCreateSubsystem(UObject* Outer) const
+{
+	return Super::ShouldCreateSubsystem(Outer) && UPawnManagerSetting::Get()->bEnableSubsystem;
+}
 
 void UPawnManager::NativeOnActived()
 {

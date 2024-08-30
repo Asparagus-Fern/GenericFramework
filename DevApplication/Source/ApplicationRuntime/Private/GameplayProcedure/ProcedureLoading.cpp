@@ -38,10 +38,10 @@ void UProcedureLoading::NativeOnActived()
 		{
 			if (bIsAutoLoadAllLevelStreaming)
 			{
-				FOnOnceFinish OnOnceFinish;
-				OnOnceFinish.BindDynamic(this, &UProcedureLoading::UProcedureLoading::OnLoadAllLevelStreamingOnceFinish);
-				FOnFinish OnFinish;
-				OnFinish.BindDynamic(this, &UProcedureLoading::OnLoadAllLevelStreamingFinish);
+				// FOnHandleLevelStreamingOnceFinish OnOnceFinish;
+				// OnOnceFinish.BindDynamic(this, &UProcedureLoading::UProcedureLoading::OnLoadAllLevelStreamingOnceFinish);
+				// FOnHandleLevelStreamingFinish OnFinish;
+				// OnFinish.BindDynamic(this, &UProcedureLoading::OnLoadAllLevelStreamingFinish);
 
 				// GetManager<ULevelStreamingManager>()->LoadCurrentWorldLevelStreaming(OnOnceFinish, OnFinish);
 			}
@@ -94,10 +94,10 @@ void UProcedureLoading::OnLoadAllLevelStreamingFinish()
 	{
 		if (!LevelsToLoad.IsEmpty())
 		{
-			FOnOnceFinish OnOnceFinish;
-			OnOnceFinish.BindDynamic(this, &UProcedureLoading::UProcedureLoading::OnLevelsToLoadOnceFinish);
-			FOnFinish OnFinish;
-			OnFinish.BindDynamic(this, &UProcedureLoading::OnLevelsToLoadFinish);
+			// FOnHandleLevelStreamingOnceFinish OnOnceFinish;
+			// OnOnceFinish.BindDynamic(this, &UProcedureLoading::UProcedureLoading::OnLevelsToLoadOnceFinish);
+			// FOnHandleLevelStreamingFinish OnFinish;
+			// OnFinish.BindDynamic(this, &UProcedureLoading::OnLevelsToLoadFinish);
 
 			// GetManager<ULevelStreamingManager>()->LoadLevels(LevelsToLoad, true, false, OnOnceFinish, OnFinish);
 		}
@@ -108,10 +108,10 @@ void UProcedureLoading::OnLoadAllLevelStreamingFinish()
 	}
 	else
 	{
-		FOnOnceFinish OnOnceFinish;
-		OnOnceFinish.BindDynamic(this, &UProcedureLoading::UProcedureLoading::OnSetLevelsVisibilityOnceFinish);
-		FOnFinish OnFinish;
-		OnFinish.BindDynamic(this, &UProcedureLoading::OnSetLevelsVisibilityFinish);
+		// FOnHandleLevelStreamingOnceFinish OnOnceFinish;
+		// OnOnceFinish.BindDynamic(this, &UProcedureLoading::UProcedureLoading::OnSetLevelsVisibilityOnceFinish);
+		// FOnHandleLevelStreamingFinish OnFinish;
+		// OnFinish.BindDynamic(this, &UProcedureLoading::OnSetLevelsVisibilityFinish);
 
 		// GetManager<ULevelStreamingManager>()->SetLevelsVisibility(HiddenLevels, false, OnOnceFinish, OnFinish);
 	}
@@ -125,10 +125,10 @@ void UProcedureLoading::OnSetLevelsVisibilityFinish()
 {
 	if (!LevelsToLoad.IsEmpty())
 	{
-		FOnOnceFinish OnOnceFinish;
-		OnOnceFinish.BindDynamic(this, &UProcedureLoading::UProcedureLoading::OnLevelsToLoadOnceFinish);
-		FOnFinish OnFinish;
-		OnFinish.BindDynamic(this, &UProcedureLoading::OnLevelsToLoadFinish);
+		// FOnHandleLevelStreamingOnceFinish OnOnceFinish;
+		// OnOnceFinish.BindDynamic(this, &UProcedureLoading::UProcedureLoading::OnLevelsToLoadOnceFinish);
+		// FOnHandleLevelStreamingFinish OnFinish;
+		// OnFinish.BindDynamic(this, &UProcedureLoading::OnLevelsToLoadFinish);
 
 		// GetManager<ULevelStreamingManager>()->LoadLevels(LevelsToLoad, true, false, OnOnceFinish, OnFinish);
 	}

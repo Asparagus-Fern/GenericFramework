@@ -14,6 +14,7 @@ public class ScreenWidgetGeneration : ModuleRules
 				"DevSlateCore",
 				"CommonUI",
 				"DBTween",
+				"DeveloperSettings",
 			}
 		);
 
@@ -25,9 +26,9 @@ public class ScreenWidgetGeneration : ModuleRules
 				"Slate",
 				"SlateCore",
 
-				"DeveloperSettings",
 				"UMG",
-				"GameplayTags"
+				"GameplayTags",
+				"LevelStreaming"
 			}
 		);
 	}

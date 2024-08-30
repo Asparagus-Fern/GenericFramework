@@ -5,8 +5,6 @@
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
 #include "ScreenWidgetManager.h"
-#include "Blueprint/UserWidget.h"
-#include "Blueprint/WidgetTree.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "BPFunctions_Widget.generated.h"
 

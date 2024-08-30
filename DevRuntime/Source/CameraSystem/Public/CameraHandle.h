@@ -47,6 +47,10 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	ACameraPointBase* TargetCameraPoint = nullptr;
 
+public:
+	DECLARE_MULTICAST_DELEGATE_OneParam(FCameraHandleDelegate, UCameraHandle*)
+	static FCameraHandleDelegate OnSwitchCameraFinish;
+
 protected:
 	FSimpleDelegate OnHandleFinish;
 };

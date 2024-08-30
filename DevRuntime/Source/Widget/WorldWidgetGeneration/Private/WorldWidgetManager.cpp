@@ -5,6 +5,7 @@
 
 #include "ScreenWidgetManager.h"
 #include "WorldWidget.h"
+#include "WorldWidgetManagerSetting.h"
 #include "WorldWidgetPoint.h"
 #include "Animation/WidgetAnimationEvent.h"
 #include "Blueprint/WidgetLayoutLibrary.h"
@@ -111,6 +112,11 @@ void UWorldWidgetPanel::RefreshWorldWidgetPoint()
 		CanvasPanelSlot->SetOffsets(FMargin());
 		CanvasPanelSlot->SetZOrder(WorldWidget.Value->ZOrder);
 	}
+}
+
+bool UWorldWidgetManager::ShouldCreateSubsystem(UObject* Outer) const
+{
+	return Super::ShouldCreateSubsystem(Outer) && UWorldWidgetManagerSetting::Get()->bEnableSubsystem;
 }
 
 #define LOCTEXT_NAMESPACE "UWorldWidgetManager"

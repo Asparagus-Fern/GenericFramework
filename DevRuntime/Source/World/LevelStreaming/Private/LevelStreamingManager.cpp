@@ -3,26 +3,42 @@
 
 #include "LevelStreamingManager.h"
 
+#include "LevelStreamingManagerSetting.h"
 #include "Engine/LevelStreamingAlwaysLoaded.h"
 #include "Kismet/GameplayStatics.h"
 
 #define LOCTEXT_NAMESPACE "ULevelStreamingManager"
 
-ULevelStreamingManager::ULevelStreamingManager()
-{
-}
+ULevelStreamingManager::FWorldLevelStreamingDelegate ULevelStreamingManager::OnLoadWorldLevelStreamingBegin;
+ULevelStreamingManager::FWorldLevelStreamingDelegate ULevelStreamingManager::OnLoadWorldLevelStreamingEnd;
+ULevelStreamingManager::FLevelStreamingDelegate ULevelStreamingManager::OnLoadWorldLevelStreamingOnceFinish;
+ULevelStreamingManager::FLevelStreamingDelegate ULevelStreamingManager::OnLoadWorldLevelStreamingFinish;
 
-void ULevelStreamingManager::NativeOnCreate()
+bool ULevelStreamingManager::ShouldCreateSubsystem(UObject* Outer) const
 {
-	Super::NativeOnCreate();
+	return Super::ShouldCreateSubsystem(Outer) && ULevelStreamingManagerSetting::Get()->bEnableSubsystem;
 }
 
 void ULevelStreamingManager::NativeOnActived()
 {
 	Super::NativeOnActived();
+
+	if (ULevelStreamingManagerSetting::Get()->bAutoLoadWorldLevelStreaming)
+	{
+		OnLoadWorldLevelStreamingBegin.Broadcast(GetLoadWorldLevelStreamingNum());
+		LoadCurrentWorldLevelStreaming(FOnHandleLevelStreamingOnceFinish::CreateUObject(this, &ULevelStreamingManager::LoadWorldLevelStreamingOnceFinish), FOnHandleLevelStreamingFinish::CreateUObject(this, &ULevelStreamingManager::LoadWorldLevelStreamingFinish));
+	}
+	else
+	{
+		OnLoadWorldLevelStreamingEnd.Broadcast(GetLoadWorldLevelStreamingNum());
+	}
 }
 
-void ULevelStreamingManager::LoadLevel(TSoftObjectPtr<UWorld> Level, const bool bMakeVisibleAfterLoad, const bool bShouldBlockOnLoad, FOnFinish OnFinish)
+void ULevelStreamingManager::NativeOnInactived()
+{
+}
+
+void ULevelStreamingManager::LoadLevel(const TSoftObjectPtr<UWorld>& Level, const bool bMakeVisibleAfterLoad, const bool bShouldBlockOnLoad, const FOnHandleLevelStreamingFinish& OnFinish)
 {
 	/* Check */
 	if (!CheckLevel(Level))
@@ -31,7 +47,7 @@ void ULevelStreamingManager::LoadLevel(TSoftObjectPtr<UWorld> Level, const bool 
 		return;
 	}
 
-	ULevelStreaming* LevelStreaming = GetLevelStreaming(Level);
+	const ULevelStreaming* LevelStreaming = GetLevelStreaming(Level);
 	if (!IsValid(LevelStreaming))
 	{
 		LOG(Debug_World, Warning, TEXT("Level Streaming Is Not Found"));
@@ -50,7 +66,7 @@ void ULevelStreamingManager::LoadLevel(TSoftObjectPtr<UWorld> Level, const bool 
 	LoadLevelStreamingHandle->HandleLoadLevel(LoadLevelStreamingSetting, OnFinish);
 }
 
-void ULevelStreamingManager::LoadLevels(TArray<TSoftObjectPtr<UWorld>> Levels, const bool bMakeVisibleAfterLoad, const bool bShouldBlockOnLoad, FOnOnceFinish OnOnceFinish, FOnFinish OnFinish)
+void ULevelStreamingManager::LoadLevels(TArray<TSoftObjectPtr<UWorld>> Levels, const bool bMakeVisibleAfterLoad, const bool bShouldBlockOnLoad, const FOnHandleLevelStreamingOnceFinish& OnOnceFinish, const FOnHandleLevelStreamingFinish& OnFinish)
 {
 	/* Make Sure Levels Is Not Empty */
 	if (Levels.IsEmpty())
@@ -103,7 +119,7 @@ void ULevelStreamingManager::LoadLevels(TArray<TSoftObjectPtr<UWorld>> Levels, c
 	LoadLevelStreamingHandle->HandleLoadLevels(LoadLevelStreamingSettings, OnOnceFinish, OnFinish);
 }
 
-void ULevelStreamingManager::LoadLevelsBySetting(TArray<FLoadLevelStreamingSetting> LoadLevelStreamingSettings, FOnOnceFinish OnOnceFinish, FOnFinish OnFinish)
+void ULevelStreamingManager::LoadLevelsBySetting(TArray<FLoadLevelStreamingSetting> LoadLevelStreamingSettings, const FOnHandleLevelStreamingOnceFinish& OnOnceFinish, const FOnHandleLevelStreamingFinish& OnFinish)
 {
 	/* Make Sure Settings Is Not Empty */
 	if (LoadLevelStreamingSettings.IsEmpty())
@@ -138,7 +154,7 @@ void ULevelStreamingManager::LoadLevelsBySetting(TArray<FLoadLevelStreamingSetti
 	LoadLevelStreamingHandle->HandleLoadLevels(CheckLoadLevelStreamingSettings, OnOnceFinish, OnFinish);
 }
 
-void ULevelStreamingManager::UnloadLevel(TSoftObjectPtr<UWorld> Level, const bool bShouldBlockOnUnload, FOnFinish OnFinish)
+void ULevelStreamingManager::UnloadLevel(const TSoftObjectPtr<UWorld>& Level, const bool bShouldBlockOnUnload, const FOnHandleLevelStreamingFinish& OnFinish)
 {
 	/* Check */
 	if (!CheckLevel(Level))
@@ -147,7 +163,7 @@ void ULevelStreamingManager::UnloadLevel(TSoftObjectPtr<UWorld> Level, const boo
 		return;
 	}
 
-	ULevelStreaming* LevelStreaming = GetLevelStreaming(Level);
+	const ULevelStreaming* LevelStreaming = GetLevelStreaming(Level);
 	if (!IsValid(LevelStreaming))
 	{
 		LOG(Debug_World, Warning, TEXT("Level Streaming Is Not Found"));
@@ -166,7 +182,7 @@ void ULevelStreamingManager::UnloadLevel(TSoftObjectPtr<UWorld> Level, const boo
 	UnloadLevelStreamingHandle->HandleUnloadLevel(UnloadLevelStreamingSetting, OnFinish);
 }
 
-void ULevelStreamingManager::UnloadLevels(TArray<TSoftObjectPtr<UWorld>> Levels, const bool bShouldBlockOnUnload, FOnOnceFinish OnOnceFinish, FOnFinish OnFinish)
+void ULevelStreamingManager::UnloadLevels(TArray<TSoftObjectPtr<UWorld>> Levels, const bool bShouldBlockOnUnload, const FOnHandleLevelStreamingOnceFinish& OnOnceFinish, const FOnHandleLevelStreamingFinish& OnFinish)
 {
 	/* Make Sure Levels Is Not Empty */
 	if (Levels.IsEmpty())
@@ -187,7 +203,7 @@ void ULevelStreamingManager::UnloadLevels(TArray<TSoftObjectPtr<UWorld>> Levels,
 			continue;
 		}
 
-		ULevelStreaming* LevelStreaming = GetLevelStreaming(Level);
+		const ULevelStreaming* LevelStreaming = GetLevelStreaming(Level);
 		if (!IsValid(LevelStreaming))
 		{
 			LOG(Debug_World, Warning, TEXT("Level Streaming Is Not Found"));
@@ -214,7 +230,7 @@ void ULevelStreamingManager::UnloadLevels(TArray<TSoftObjectPtr<UWorld>> Levels,
 	UnloadLevelStreamingHandle->HandleUnloadLevels(UnloadLevelStreamingSettings, OnOnceFinish, OnFinish);
 }
 
-void ULevelStreamingManager::UnloadLevelsBySetting(TArray<FUnloadLevelStreamingSetting> UnloadLevelStreamingSettings, FOnOnceFinish OnOnceFinish, FOnFinish OnFinish)
+void ULevelStreamingManager::UnloadLevelsBySetting(TArray<FUnloadLevelStreamingSetting> UnloadLevelStreamingSettings, const FOnHandleLevelStreamingOnceFinish& OnOnceFinish, const FOnHandleLevelStreamingFinish& OnFinish)
 {
 	/* Make Sure Levels Is Not Empty */
 	if (UnloadLevelStreamingSettings.IsEmpty())
@@ -242,7 +258,7 @@ void ULevelStreamingManager::UnloadLevelsBySetting(TArray<FUnloadLevelStreamingS
 	UnloadLevelStreamingHandle->HandleUnloadLevels(CheckUnloadLevelStreamingSettings, OnOnceFinish, OnFinish);
 }
 
-void ULevelStreamingManager::SetLevelVisibility(TSoftObjectPtr<UWorld> Level, bool bVisible, FOnFinish OnFinish)
+void ULevelStreamingManager::SetLevelVisibility(const TSoftObjectPtr<UWorld>& Level, const bool bVisible, const FOnHandleLevelStreamingFinish& OnFinish)
 {
 	ULevelStreaming* LevelStreaming = GetLevelStreaming(Level);
 
@@ -272,7 +288,7 @@ void ULevelStreamingManager::SetLevelVisibility(TSoftObjectPtr<UWorld> Level, bo
 	}
 }
 
-void ULevelStreamingManager::SetLevelsVisibility(TArray<TSoftObjectPtr<UWorld>> Levels, bool bVisible, FOnOnceFinish OnOnceFinish, FOnFinish OnFinish)
+void ULevelStreamingManager::SetLevelsVisibility(TArray<TSoftObjectPtr<UWorld>> Levels, const bool bVisible, const FOnHandleLevelStreamingOnceFinish& OnOnceFinish, const FOnHandleLevelStreamingFinish& OnFinish)
 {
 	if (Levels.IsEmpty())
 	{
@@ -324,7 +340,7 @@ void ULevelStreamingManager::SetLevelsVisibility(TArray<TSoftObjectPtr<UWorld>> 
 	LevelStreamingVisibilityHandle->HandleSetLevelsVisibility(LevelStreamingVisibilitySettings, OnOnceFinish, OnFinish);
 }
 
-void ULevelStreamingManager::LoadCurrentWorldLevelStreaming(FOnOnceFinish OnOnceFinish, FOnFinish OnFinish)
+void ULevelStreamingManager::LoadCurrentWorldLevelStreaming(const FOnHandleLevelStreamingOnceFinish& OnOnceFinish, const FOnHandleLevelStreamingFinish& OnFinish)
 {
 	/* 获取需要加载的关卡 */
 	TArray<TSoftObjectPtr<UWorld>> WorldToLoad;
@@ -355,7 +371,7 @@ void ULevelStreamingManager::LoadCurrentWorldLevelStreaming(FOnOnceFinish OnOnce
 	}
 }
 
-void ULevelStreamingManager::UnLoadCurrentWorldLevelStreaming(FOnOnceFinish OnOnceFinish, FOnFinish OnFinish)
+void ULevelStreamingManager::UnLoadCurrentWorldLevelStreaming(const FOnHandleLevelStreamingOnceFinish& OnOnceFinish, const FOnHandleLevelStreamingFinish& OnFinish)
 {
 	/* 获取需要卸载的流关卡 */
 	TArray<TSoftObjectPtr<UWorld>> WorldToUnLoad;
@@ -395,7 +411,7 @@ bool ULevelStreamingManager::IsCurrentWorldContainLevel(const TSoftObjectPtr<UWo
 	return false;
 }
 
-bool ULevelStreamingManager::CheckLevel(TSoftObjectPtr<UWorld> Level)
+bool ULevelStreamingManager::CheckLevel(const TSoftObjectPtr<UWorld>& Level) const
 {
 	if (Level.IsNull())
 	{
@@ -412,7 +428,7 @@ bool ULevelStreamingManager::CheckLevel(TSoftObjectPtr<UWorld> Level)
 	return true;
 }
 
-ULevelStreaming* ULevelStreamingManager::GetLevelStreaming(TSoftObjectPtr<UWorld> Level)
+ULevelStreaming* ULevelStreamingManager::GetLevelStreaming(const TSoftObjectPtr<UWorld>& Level) const
 {
 	if (!CheckLevel(Level))
 	{
@@ -436,48 +452,30 @@ ULevelStreaming* ULevelStreamingManager::GetLevelStreaming(TSoftObjectPtr<UWorld
 	return LevelStreaming;
 }
 
-/*void ULevelStreamingManager::HandleLevelsVisibility()
+int32 ULevelStreamingManager::GetLoadWorldLevelStreamingNum()
 {
-	TArray<FLevelsVisibilityHandle> Handles = LevelsVisibilityHandles;
+	return GetWorld()->GetStreamingLevels().Num() + ULevelStreamingManagerSetting::Get()->VisibleLevels.Num();
+}
 
-	TSet<TSoftObjectPtr<UWorld>> VisibleLevels;
-	TSet<TSoftObjectPtr<UWorld>> HiddenLevels;
+void ULevelStreamingManager::LoadWorldLevelStreamingOnceFinish()
+{
+	OnLoadWorldLevelStreamingOnceFinish.Broadcast();
+}
 
-	/* 列出显示和隐藏的关卡 #1#
-	for (auto& LevelsVisibilityHandle : Handles)
-	{
-		if (LevelsVisibilityHandle.bVisible)
-		{
-			VisibleLevels.Append(LevelsVisibilityHandle.Levels);
-		}
-		else
-		{
-			HiddenLevels.Append(LevelsVisibilityHandle.Levels);
-		}
-	}
+void ULevelStreamingManager::LoadWorldLevelStreamingFinish()
+{
+	OnLoadWorldLevelStreamingFinish.Broadcast();
+	SetLevelsVisibility(ULevelStreamingManagerSetting::Get()->VisibleLevels, true, FOnHandleLevelStreamingOnceFinish::CreateUObject(this, &ULevelStreamingManager::MakeWorldLevelStreamingVisibleOnceFinish), FOnHandleLevelStreamingFinish::CreateUObject(this, &ULevelStreamingManager::MakeWorldLevelStreamingVisibleFinish));
+}
 
-	/* 取得交集，即需要处理的重复关卡 #1#
-	TArray<TSoftObjectPtr<UWorld>> LevelsToHandle = VisibleLevels.Intersect(HiddenLevels).Array();
+void ULevelStreamingManager::MakeWorldLevelStreamingVisibleOnceFinish()
+{
+	OnLoadWorldLevelStreamingOnceFinish.Broadcast();
+}
 
-	/* 处理重复的关卡，#1#
-	for (auto& LevelToHandle : LevelsToHandle)
-	{
-		bool bHasFound = false;
-		for (int Index = Handles.Num() - 1; Index >= 0; Index--)
-		{
-			if (Handles[Index].Levels.Contains(LevelToHandle))
-			{
-				if (!bHasFound)
-				{
-					bHasFound = true;
-				}
-				else
-				{
-					LevelsVisibilityHandles[Index].Levels.Remove(LevelToHandle);
-				}
-			}
-		}
-	}
-}*/
+void ULevelStreamingManager::MakeWorldLevelStreamingVisibleFinish()
+{
+	OnLoadWorldLevelStreamingEnd.Broadcast(GetLoadWorldLevelStreamingNum());
+}
 
 #undef LOCTEXT

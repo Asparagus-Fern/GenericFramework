@@ -56,6 +56,9 @@ class SCREENWIDGETGENERATION_API UScreenWidgetManager : public UCoreManager
 public:
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FScreenWidgetDelegate);
 
+public:
+	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
+	
 	/* IProcedureBaseInterface */
 public:
 	virtual void NativeOnRefresh() override;

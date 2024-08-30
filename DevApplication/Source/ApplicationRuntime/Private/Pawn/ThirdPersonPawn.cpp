@@ -3,7 +3,6 @@
 
 #include "Pawn/ThirdPersonPawn.h"
 
-#include "CameraSystemType.h"
 #include "BPFunctions/BPFunctions_Gameplay.h"
 #include "Camera/CameraComponent.h"
 #include "CameraPoint/CameraPointBase.h"
@@ -48,7 +47,7 @@ void AThirdPersonPawn::BeginPlay()
 {
 	Super::BeginPlay();
 
-	FCameraSystemDelegates::OnSwitchCameraFinish.AddUObject(this, &AThirdPersonPawn::OnSwitchCameraFinish);
+	// FCameraSystemDelegates::OnSwitchCameraFinish.AddUObject(this, &AThirdPersonPawn::OnSwitchCameraFinish);
 }
 
 void AThirdPersonPawn::Tick(float DeltaTime)

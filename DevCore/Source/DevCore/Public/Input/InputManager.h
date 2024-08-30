@@ -13,6 +13,9 @@ UCLASS()
 class DEVCORE_API UInputManager : public UCoreManager
 {
 	GENERATED_BODY()
+
+public:
+	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
 	
 	/* IProcedureInterface */
 public:

@@ -15,7 +15,7 @@ UCoreManager::UCoreManager(const FObjectInitializer& ObjectInitializer)
 
 bool UCoreManager::ShouldCreateSubsystem(UObject* Outer) const
 {
-	if (!UGlobalManagerSetting::Get()->bEnableManagerSubsystem)
+	if (!UGlobalManagerSetting::Get()->bEnableSubsystem)
 	{
 		return false;
 	}

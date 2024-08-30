@@ -20,12 +20,4 @@ class DEVCORE_API UProcedureManagerSetting : public UManagerSetting
 public:
 	static ThisClass* Get() { return GetMutableDefault<ThisClass>(); }
 
-public:
-	/* 默认激活的流程 */
-	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, meta=(Categories="Procedure"))
-	FGameplayTag DefaultProcedureTag;
-
-	/* 所有可到达的流程 */
-	UPROPERTY(Config, EditAnywhere, BlueprintReadWrite, meta=(Categories="Procedure"))
-	TMap<FGameplayTag, TSoftObjectPtr<UGameplayProcedure>> GameplayProcedures;
 };

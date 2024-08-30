@@ -17,6 +17,9 @@ class DEVCORE_API UPawnManager : public UCoreManager
 {
 	GENERATED_BODY()
 
+public:
+	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
+	
 	/* IProcedureInterface */
 public:
 	virtual void NativeOnActived() override;

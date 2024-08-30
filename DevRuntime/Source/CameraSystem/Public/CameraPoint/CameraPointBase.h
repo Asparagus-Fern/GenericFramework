@@ -45,5 +45,12 @@ public:
 	UFUNCTION(CallInEditor, BlueprintNativeEvent, Category="Camera Point (Editor)")
 	void StopPilotCamera();
 
+public:
+	DECLARE_MULTICAST_DELEGATE_OneParam(FOnCopyEditorViewportCamera, ACameraPointBase*)
+	static FOnCopyEditorViewportCamera OnCopyViewportCamera;
+
+	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnCameraPointPilotStateChanged, ACameraPointBase*, bool)
+	static FOnCameraPointPilotStateChanged OnCameraPointPilotStateChanged;
+
 #endif
 };

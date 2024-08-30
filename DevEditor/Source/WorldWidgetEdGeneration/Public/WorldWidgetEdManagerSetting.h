@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ManagerSetting.h"
-#include "GlobalManagerSetting.generated.h"
+#include "Manager/ManagerEdSetting.h"
+#include "WorldWidgetEdManagerSetting.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class DEVCORE_API UGlobalManagerSetting : public UManagerSetting
+class WORLDWIDGETEDGENERATION_API UWorldWidgetEdManagerSetting : public UManagerEdSetting
 {
 	GENERATED_BODY()
 

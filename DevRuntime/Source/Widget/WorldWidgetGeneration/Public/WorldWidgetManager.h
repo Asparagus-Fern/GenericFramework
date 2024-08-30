@@ -54,6 +54,9 @@ class WORLDWIDGETGENERATION_API UWorldWidgetManager : public UCoreManager
 {
 	GENERATED_BODY()
 
+public:
+	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
+
 	/* FTickableGameObject */
 public:
 	virtual bool IsTickable() const override { return true; }

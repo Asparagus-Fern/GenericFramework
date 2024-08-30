@@ -48,6 +48,11 @@ UScreenWidgetManager::UScreenWidgetManager(const FObjectInitializer& ObjectIniti
 
 /* ==================== IProcedureBaseInterface ==================== */
 
+bool UScreenWidgetManager::ShouldCreateSubsystem(UObject* Outer) const
+{
+	return Super::ShouldCreateSubsystem(Outer) && UScreenWidgetManagerSetting::Get()->bEnableSubsystem;
+}
+
 void UScreenWidgetManager::NativeOnRefresh()
 {
 	Super::NativeOnRefresh();

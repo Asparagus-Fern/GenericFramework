@@ -3,13 +3,13 @@
 #include "Kismet/GameplayStatics.h"
 
 
-void ULevelStreamingHandleBase::HandleLoadLevel(const FLoadLevelStreamingSetting& LoadLevelStreamingSetting, const FOnFinish InOnFinishDelegate)
+void ULevelStreamingHandleBase::HandleLoadLevel(const FLoadLevelStreamingSetting& LoadLevelStreamingSetting, const FOnHandleLevelStreamingFinish InOnFinishDelegate)
 {
 	OnFinishDelegate = InOnFinishDelegate;
 	Load(LoadLevelStreamingSetting.Level, LoadLevelStreamingSetting.bMakeVisibleAfterLoad, LoadLevelStreamingSetting.bShouldBlockOnLoad, "OnFinish", this);
 }
 
-void ULevelStreamingHandleBase::HandleLoadLevels(TArray<FLoadLevelStreamingSetting> LoadLevelStreamingSettings, const FOnOnceFinish InOnOnceFinishDelegate, const FOnFinish InOnFinishDelegate)
+void ULevelStreamingHandleBase::HandleLoadLevels(TArray<FLoadLevelStreamingSetting> LoadLevelStreamingSettings, const FOnHandleLevelStreamingOnceFinish InOnOnceFinishDelegate, const FOnHandleLevelStreamingFinish InOnFinishDelegate)
 {
 	OnOnceFinishDelegate = InOnOnceFinishDelegate;
 	OnFinishDelegate = InOnFinishDelegate;
@@ -29,13 +29,13 @@ void ULevelStreamingHandleBase::HandleLoadLevels(TArray<FLoadLevelStreamingSetti
 	}
 }
 
-void ULevelStreamingHandleBase::HandleUnloadLevel(const FUnloadLevelStreamingSetting& UnloadLevelStreamingSetting, const FOnFinish InOnFinishDelegate)
+void ULevelStreamingHandleBase::HandleUnloadLevel(const FUnloadLevelStreamingSetting& UnloadLevelStreamingSetting, const FOnHandleLevelStreamingFinish InOnFinishDelegate)
 {
 	OnFinishDelegate = InOnFinishDelegate;
 	Unload(UnloadLevelStreamingSetting.Level, UnloadLevelStreamingSetting.bShouldBlockOnUnload, "OnFinish", this);
 }
 
-void ULevelStreamingHandleBase::HandleUnloadLevels(TArray<FUnloadLevelStreamingSetting> InUnloadLevelStreamingSettings, const FOnOnceFinish InOnOnceFinishDelegate, const FOnFinish InOnFinishDelegate)
+void ULevelStreamingHandleBase::HandleUnloadLevels(TArray<FUnloadLevelStreamingSetting> InUnloadLevelStreamingSettings, const FOnHandleLevelStreamingOnceFinish InOnOnceFinishDelegate, const FOnHandleLevelStreamingFinish InOnFinishDelegate)
 {
 	OnOnceFinishDelegate = InOnOnceFinishDelegate;
 	OnFinishDelegate = InOnFinishDelegate;
@@ -55,13 +55,13 @@ void ULevelStreamingHandleBase::HandleUnloadLevels(TArray<FUnloadLevelStreamingS
 	}
 }
 
-void ULevelStreamingHandleBase::HandleSetLevelVisibility(FLevelStreamingVisibilitySetting InLevelStreamingVisibilitySetting, FOnFinish InOnFinishDelegate)
+void ULevelStreamingHandleBase::HandleSetLevelVisibility(FLevelStreamingVisibilitySetting InLevelStreamingVisibilitySetting, FOnHandleLevelStreamingFinish InOnFinishDelegate)
 {
 	OnFinishDelegate = InOnFinishDelegate;
 	SetLevelVisibility(InLevelStreamingVisibilitySetting.LevelStreaming, InLevelStreamingVisibilitySetting.bVisible);
 }
 
-void ULevelStreamingHandleBase::HandleSetLevelsVisibility(TArray<FLevelStreamingVisibilitySetting> InLevelStreamingVisibilitySettings, FOnOnceFinish InOnOnceFinishDelegate, FOnFinish InOnFinishDelegate)
+void ULevelStreamingHandleBase::HandleSetLevelsVisibility(TArray<FLevelStreamingVisibilitySetting> InLevelStreamingVisibilitySettings, FOnHandleLevelStreamingOnceFinish InOnOnceFinishDelegate, FOnHandleLevelStreamingFinish InOnFinishDelegate)
 {
 	OnOnceFinishDelegate = InOnOnceFinishDelegate;
 	OnFinishDelegate = InOnFinishDelegate;
@@ -105,14 +105,14 @@ void ULevelStreamingHandleBase::SetLevelVisibility(ULevelStreaming* LevelStreami
 	LevelStreaming->SetShouldBeVisible(bVisible);
 }
 
-void ULoadLevelStreamingHandle::HandleLoadLevel(const FLoadLevelStreamingSetting& LoadLevelStreamingSetting, const FOnFinish InOnFinishDelegate)
+void ULoadLevelStreamingHandle::HandleLoadLevel(const FLoadLevelStreamingSetting& LoadLevelStreamingSetting, const FOnHandleLevelStreamingFinish InOnFinishDelegate)
 {
 	LoadLevelStreamingSettings = TArray<FLoadLevelStreamingSetting>{LoadLevelStreamingSetting};
 	OnFinishDelegate = InOnFinishDelegate;
 	Load(LoadLevelStreamingSetting.Level, LoadLevelStreamingSetting.bMakeVisibleAfterLoad, LoadLevelStreamingSetting.bShouldBlockOnLoad, "OnFinish", this);
 }
 
-void ULoadLevelStreamingHandle::HandleLoadLevels(const TArray<FLoadLevelStreamingSetting> InLoadLevelStreamingSettings, const FOnOnceFinish InOnOnceFinishDelegate, const FOnFinish InOnFinishDelegate)
+void ULoadLevelStreamingHandle::HandleLoadLevels(const TArray<FLoadLevelStreamingSetting> InLoadLevelStreamingSettings, const FOnHandleLevelStreamingOnceFinish InOnOnceFinishDelegate, const FOnHandleLevelStreamingFinish InOnFinishDelegate)
 {
 	LoadLevelStreamingSettings = InLoadLevelStreamingSettings;
 	Super::HandleLoadLevels(InLoadLevelStreamingSettings, InOnOnceFinishDelegate, InOnFinishDelegate);
@@ -137,13 +137,13 @@ void ULoadLevelStreamingHandle::OnOnceFinish()
 	}
 }
 
-void UUnloadLevelStreamingHandle::HandleUnloadLevel(const FUnloadLevelStreamingSetting& UnloadLevelStreamingSetting, const FOnFinish InOnFinishDelegate)
+void UUnloadLevelStreamingHandle::HandleUnloadLevel(const FUnloadLevelStreamingSetting& UnloadLevelStreamingSetting, const FOnHandleLevelStreamingFinish InOnFinishDelegate)
 {
 	UnloadLevelStreamingSettings = TArray<FUnloadLevelStreamingSetting>{UnloadLevelStreamingSetting};
 	Super::HandleUnloadLevel(UnloadLevelStreamingSetting, InOnFinishDelegate);
 }
 
-void UUnloadLevelStreamingHandle::HandleUnloadLevels(const TArray<FUnloadLevelStreamingSetting> InUnloadLevelStreamingSettings, const FOnOnceFinish InOnOnceFinishDelegate, const FOnFinish InOnFinishDelegate)
+void UUnloadLevelStreamingHandle::HandleUnloadLevels(const TArray<FUnloadLevelStreamingSetting> InUnloadLevelStreamingSettings, const FOnHandleLevelStreamingOnceFinish InOnOnceFinishDelegate, const FOnHandleLevelStreamingFinish InOnFinishDelegate)
 {
 	UnloadLevelStreamingSettings = InUnloadLevelStreamingSettings;
 	Super::HandleUnloadLevels(InUnloadLevelStreamingSettings, InOnOnceFinishDelegate, InOnFinishDelegate);
@@ -168,13 +168,13 @@ void UUnloadLevelStreamingHandle::OnOnceFinish()
 	}
 }
 
-void ULevelStreamingVisibilityHandle::HandleSetLevelVisibility(FLevelStreamingVisibilitySetting InLevelStreamingVisibilitySetting, FOnFinish InOnFinishDelegate)
+void ULevelStreamingVisibilityHandle::HandleSetLevelVisibility(FLevelStreamingVisibilitySetting InLevelStreamingVisibilitySetting, FOnHandleLevelStreamingFinish InOnFinishDelegate)
 {
 	LevelStreamingVisibilitySettings = TArray<FLevelStreamingVisibilitySetting>{InLevelStreamingVisibilitySetting};
 	Super::HandleSetLevelVisibility(InLevelStreamingVisibilitySetting, InOnFinishDelegate);
 }
 
-void ULevelStreamingVisibilityHandle::HandleSetLevelsVisibility(TArray<FLevelStreamingVisibilitySetting> InLevelStreamingVisibilitySettings, FOnOnceFinish InOnOnceFinishDelegate, FOnFinish InOnFinishDelegate)
+void ULevelStreamingVisibilityHandle::HandleSetLevelsVisibility(TArray<FLevelStreamingVisibilitySetting> InLevelStreamingVisibilitySettings, FOnHandleLevelStreamingOnceFinish InOnOnceFinishDelegate, FOnHandleLevelStreamingFinish InOnFinishDelegate)
 {
 	LevelStreamingVisibilitySettings = InLevelStreamingVisibilitySettings;
 	Super::HandleSetLevelsVisibility(InLevelStreamingVisibilitySettings, InOnOnceFinishDelegate, InOnFinishDelegate);
@@ -202,7 +202,7 @@ void ULevelStreamingVisibilityHandle::OnOnceFinish()
 void ULevelStreamingVisibilityHandle::OnFinish()
 {
 	/* 清理回调 */
-	for (auto LevelStreamingVisibilitySetting : LevelStreamingVisibilitySettings)
+	for (const auto LevelStreamingVisibilitySetting : LevelStreamingVisibilitySettings)
 	{
 		if (IsValid(LevelStreamingVisibilitySetting.LevelStreaming))
 		{

@@ -12,6 +12,7 @@ public class WorldWidgetEdGeneration : ModuleRules
 				"Core",
 				"DevCore",
 				"DevEdCore",
+				"DeveloperSettings"
 			}
 		);
 

@@ -4,20 +4,17 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DeveloperSettings.h"
-#include "ManagerSetting.generated.h"
+#include "Manager/ManagerSetting.h"
+#include "ManagerEdSetting.generated.h"
 
 /**
  * 
  */
-UCLASS(Abstract, config=ManagerSettings, DefaultConfig)
-class DEVCORE_API UManagerSetting : public UDeveloperSettings
+UCLASS()
+class DEVEDCORE_API UManagerEdSetting : public UManagerSetting
 {
 	GENERATED_BODY()
 
 public:
 	virtual FName GetCategoryName() const override;
-
-public:
-	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly)
-	bool bEnableSubsystem = true;
 };

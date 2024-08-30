@@ -2,11 +2,11 @@
 
 #include "LevelStreamingType.generated.h"
 
-DECLARE_DYNAMIC_DELEGATE(FOnOnceFinish);
+DECLARE_DELEGATE(FOnHandleLevelStreamingOnceFinish);
 
-DECLARE_DYNAMIC_DELEGATE(FOnFinish);
+DECLARE_DELEGATE(FOnHandleLevelStreamingFinish);
 
-DECLARE_DYNAMIC_DELEGATE(FOnVisibilityChangedFinish);
+DECLARE_DELEGATE(FOnVisibilityChangedFinish);
 
 /**
  * 
@@ -93,17 +93,17 @@ class ULevelStreamingHandleBase : public UObject
 	GENERATED_BODY()
 
 public:
-	virtual void HandleLoadLevel(const FLoadLevelStreamingSetting& LoadLevelStreamingSetting, FOnFinish InOnFinishDelegate = FOnFinish());
-	virtual void HandleLoadLevels(TArray<FLoadLevelStreamingSetting> LoadLevelStreamingSettings, FOnOnceFinish InOnOnceFinishDelegate = FOnOnceFinish(), FOnFinish InOnFinishDelegate = FOnFinish());
-	virtual void HandleUnloadLevel(const FUnloadLevelStreamingSetting& UnloadLevelStreamingSetting, FOnFinish InOnFinishDelegate = FOnFinish());
-	virtual void HandleUnloadLevels(TArray<FUnloadLevelStreamingSetting> InUnloadLevelStreamingSettings, FOnOnceFinish InOnOnceFinishDelegate = FOnOnceFinish(), FOnFinish InOnFinishDelegate = FOnFinish());
-	virtual void HandleSetLevelVisibility(FLevelStreamingVisibilitySetting InLevelStreamingVisibilitySetting, FOnFinish InOnFinishDelegate = FOnFinish());
-	virtual void HandleSetLevelsVisibility(TArray<FLevelStreamingVisibilitySetting> InLevelStreamingVisibilitySettings, FOnOnceFinish InOnOnceFinishDelegate = FOnOnceFinish(), FOnFinish InOnFinishDelegate = FOnFinish());
+	virtual void HandleLoadLevel(const FLoadLevelStreamingSetting& LoadLevelStreamingSetting, FOnHandleLevelStreamingFinish InOnFinishDelegate = FOnHandleLevelStreamingFinish());
+	virtual void HandleLoadLevels(TArray<FLoadLevelStreamingSetting> LoadLevelStreamingSettings, FOnHandleLevelStreamingOnceFinish InOnOnceFinishDelegate = FOnHandleLevelStreamingOnceFinish(), FOnHandleLevelStreamingFinish InOnFinishDelegate = FOnHandleLevelStreamingFinish());
+	virtual void HandleUnloadLevel(const FUnloadLevelStreamingSetting& UnloadLevelStreamingSetting, FOnHandleLevelStreamingFinish InOnFinishDelegate = FOnHandleLevelStreamingFinish());
+	virtual void HandleUnloadLevels(TArray<FUnloadLevelStreamingSetting> InUnloadLevelStreamingSettings, FOnHandleLevelStreamingOnceFinish InOnOnceFinishDelegate = FOnHandleLevelStreamingOnceFinish(), FOnHandleLevelStreamingFinish InOnFinishDelegate = FOnHandleLevelStreamingFinish());
+	virtual void HandleSetLevelVisibility(FLevelStreamingVisibilitySetting InLevelStreamingVisibilitySetting, FOnHandleLevelStreamingFinish InOnFinishDelegate = FOnHandleLevelStreamingFinish());
+	virtual void HandleSetLevelsVisibility(TArray<FLevelStreamingVisibilitySetting> InLevelStreamingVisibilitySettings, FOnHandleLevelStreamingOnceFinish InOnOnceFinishDelegate = FOnHandleLevelStreamingOnceFinish(), FOnHandleLevelStreamingFinish InOnFinishDelegate = FOnHandleLevelStreamingFinish());
 
 protected:
 	int32 Index = 0;
-	FOnOnceFinish OnOnceFinishDelegate;
-	FOnFinish OnFinishDelegate;
+	FOnHandleLevelStreamingOnceFinish OnOnceFinishDelegate;
+	FOnHandleLevelStreamingFinish OnFinishDelegate;
 
 	virtual void Load(const TSoftObjectPtr<UWorld>& Level, bool bMakeVisibleAfterLoad, bool bShouldBlockOnLoad, const FString& CallbackName, UObject* CallbackObject) const;
 	virtual void Unload(const TSoftObjectPtr<UWorld>& Level, bool bShouldBlockOnUnload, const FString& CallbackName, UObject* CallbackObject) const;
@@ -127,8 +127,8 @@ class ULoadLevelStreamingHandle : public ULevelStreamingHandleBase
 	GENERATED_BODY()
 
 public:
-	virtual void HandleLoadLevel(const FLoadLevelStreamingSetting& LoadLevelStreamingSetting, FOnFinish InOnFinishDelegate = FOnFinish()) override;
-	virtual void HandleLoadLevels(TArray<FLoadLevelStreamingSetting> InLoadLevelStreamingSettings, FOnOnceFinish InOnOnceFinishDelegate = FOnOnceFinish(), FOnFinish InOnFinishDelegate = FOnFinish()) override;
+	virtual void HandleLoadLevel(const FLoadLevelStreamingSetting& LoadLevelStreamingSetting, FOnHandleLevelStreamingFinish InOnFinishDelegate = FOnHandleLevelStreamingFinish()) override;
+	virtual void HandleLoadLevels(TArray<FLoadLevelStreamingSetting> InLoadLevelStreamingSettings, FOnHandleLevelStreamingOnceFinish InOnOnceFinishDelegate = FOnHandleLevelStreamingOnceFinish(), FOnHandleLevelStreamingFinish InOnFinishDelegate = FOnHandleLevelStreamingFinish()) override;
 
 protected:
 	TArray<FLoadLevelStreamingSetting> LoadLevelStreamingSettings;
@@ -146,8 +146,8 @@ class UUnloadLevelStreamingHandle : public ULevelStreamingHandleBase
 	GENERATED_BODY()
 
 public:
-	virtual void HandleUnloadLevel(const FUnloadLevelStreamingSetting& UnloadLevelStreamingSetting, FOnFinish InOnFinishDelegate = FOnFinish()) override;
-	virtual void HandleUnloadLevels(TArray<FUnloadLevelStreamingSetting> InUnloadLevelStreamingSettings, FOnOnceFinish InOnOnceFinishDelegate = FOnOnceFinish(), FOnFinish InOnFinishDelegate = FOnFinish()) override;
+	virtual void HandleUnloadLevel(const FUnloadLevelStreamingSetting& UnloadLevelStreamingSetting, FOnHandleLevelStreamingFinish InOnFinishDelegate = FOnHandleLevelStreamingFinish()) override;
+	virtual void HandleUnloadLevels(TArray<FUnloadLevelStreamingSetting> InUnloadLevelStreamingSettings, FOnHandleLevelStreamingOnceFinish InOnOnceFinishDelegate = FOnHandleLevelStreamingOnceFinish(), FOnHandleLevelStreamingFinish InOnFinishDelegate = FOnHandleLevelStreamingFinish()) override;
 
 protected:
 	TArray<FUnloadLevelStreamingSetting> UnloadLevelStreamingSettings;
@@ -165,8 +165,8 @@ class ULevelStreamingVisibilityHandle : public ULevelStreamingHandleBase
 	GENERATED_BODY()
 
 public:
-	virtual void HandleSetLevelVisibility(FLevelStreamingVisibilitySetting InLevelStreamingVisibilitySetting, FOnFinish InOnFinishDelegate) override;
-	virtual void HandleSetLevelsVisibility(TArray<FLevelStreamingVisibilitySetting> InLevelStreamingVisibilitySettings, FOnOnceFinish InOnOnceFinishDelegate, FOnFinish InOnFinishDelegate) override;
+	virtual void HandleSetLevelVisibility(FLevelStreamingVisibilitySetting InLevelStreamingVisibilitySetting, FOnHandleLevelStreamingFinish InOnFinishDelegate) override;
+	virtual void HandleSetLevelsVisibility(TArray<FLevelStreamingVisibilitySetting> InLevelStreamingVisibilitySettings, FOnHandleLevelStreamingOnceFinish InOnOnceFinishDelegate, FOnHandleLevelStreamingFinish InOnFinishDelegate) override;
 
 protected:
 	TArray<FLevelStreamingVisibilitySetting> LevelStreamingVisibilitySettings;

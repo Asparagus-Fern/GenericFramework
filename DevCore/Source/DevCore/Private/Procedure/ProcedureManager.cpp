@@ -12,6 +12,11 @@
 
 #define LOCTEXT_NAMESPACE "UProcedureManager"
 
+bool UProcedureManager::ShouldCreateSubsystem(UObject* Outer) const
+{
+	return Super::ShouldCreateSubsystem(Outer) && UProcedureManagerSetting::Get()->bEnableSubsystem;
+}
+
 void UProcedureManager::NativeOnCreate()
 {
 	Super::NativeOnCreate();
@@ -20,7 +25,7 @@ void UProcedureManager::NativeOnCreate()
 	FProcedureDelegates::OnProxyHandleContinue.AddUObject(this, &UProcedureManager::OnProcedureProxyHandleContinue);
 	FProcedureDelegates::OnProxyHandleStop.AddUObject(this, &UProcedureManager::OnProcedureProxyHandleStop);
 	FProcedureDelegates::OnProxyHandleFinish.AddUObject(this, &UProcedureManager::OnProcedureProxyHandleFinish);
-	
+
 	LoadGameplayProcedure();
 }
 
@@ -37,11 +42,6 @@ void UProcedureManager::NativeOnDestroy()
 void UProcedureManager::OnWorldMatchStarting_Implementation()
 {
 	Super::OnWorldMatchStarting_Implementation();
-
-	if (UProcedureManagerSetting::Get()->DefaultProcedureTag.IsValid())
-	{
-		SwitchProcedure(UProcedureManagerSetting::Get()->DefaultProcedureTag);
-	}
 }
 
 void UProcedureManager::SwitchProcedure(const FGameplayTag InProcedureTag, const bool bForce)
@@ -113,11 +113,11 @@ TMap<FGameplayTag, UGameplayProcedure*>& UProcedureManager::GetGameplayProcedure
 
 void UProcedureManager::LoadGameplayProcedure()
 {
-	for (auto& GameplayProcedure : UProcedureManagerSetting::Get()->GameplayProcedures)
-	{
-		UGameplayProcedure* LoadGameplayProcedure = UBPFunctions_Object::LoadObject<UGameplayProcedure>(GameplayProcedure.Value);
-		GameplayProcedures.Add(GameplayProcedure.Key, LoadGameplayProcedure);
-	}
+	// for (auto& GameplayProcedure : UProcedureManagerSetting::Get()->GameplayProcedures)
+	// {
+	// 	UGameplayProcedure* LoadGameplayProcedure = UBPFunctions_Object::LoadObject<UGameplayProcedure>(GameplayProcedure.Value);
+	// 	GameplayProcedures.Add(GameplayProcedure.Key, LoadGameplayProcedure);
+	// }
 }
 
 UProcedureProxy* UProcedureManager::RegisterProcedureHandle(TArray<UProcedureObject*> InProcedureObjects, const bool InTargetActiveState, const FSimpleDelegate OnFinish)
@@ -146,14 +146,14 @@ UProcedureProxy* UProcedureManager::RegisterProcedureHandle(const FProcedureHand
 {
 	UProcedureProxy* NewProcedureHandle = NewObject<UProcedureProxy>(this);
 	ActivatedProcedureProxy.Add(NewProcedureHandle);
-	
+
 	auto HandleNextTick = [NewProcedureHandle, InHandleGroup]()
 	{
 		NewProcedureHandle->Handle(InHandleGroup);
 	};
-	
+
 	GetWorld()->GetTimerManager().SetTimerForNextTick(HandleNextTick);
-	
+
 	return NewProcedureHandle;
 }
 

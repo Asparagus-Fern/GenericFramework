@@ -3,15 +3,16 @@
 
 #include "CameraEdManager.h"
 
-#include "CameraSystemType.h"
+#include "CameraEdManagerSetting.h"
 #include "LevelEditorSubsystem.h"
 #include "LevelEditorViewport.h"
 #include "CameraPoint/CameraPointBase.h"
 
 #define LOCTEXT_NAMESPACE "UCameraEdManager"
 
-UCameraEdManager::UCameraEdManager()
+bool UCameraEdManager::ShouldCreateSubsystem(UObject* Outer) const
 {
+	return Super::ShouldCreateSubsystem(Outer) && UCameraEdManagerSetting::Get()->bEnableSubsystem;
 }
 
 bool UCameraEdManager::DoesSupportWorldType(const EWorldType::Type WorldType) const
@@ -23,16 +24,16 @@ void UCameraEdManager::NativeOnCreate()
 {
 	Super::NativeOnCreate();
 
-	FCameraSystemDelegates::OnCopyViewportCamera.AddUObject(this, &UCameraEdManager::OnCopyViewportCamera);
-	FCameraSystemDelegates::OnCameraPointPilotStateChanged.AddUObject(this, &UCameraEdManager::OnCameraPointPilotStateChanged);
+	ACameraPointBase::OnCopyViewportCamera.AddUObject(this, &UCameraEdManager::OnCopyViewportCamera);
+	ACameraPointBase::OnCameraPointPilotStateChanged.AddUObject(this, &UCameraEdManager::OnCameraPointPilotStateChanged);
 }
 
 void UCameraEdManager::NativeOnDestroy()
 {
 	Super::NativeOnDestroy();
 
-	FCameraSystemDelegates::OnCopyViewportCamera.RemoveAll(this);
-	FCameraSystemDelegates::OnCameraPointPilotStateChanged.RemoveAll(this);
+	ACameraPointBase::OnCopyViewportCamera.RemoveAll(this);
+	ACameraPointBase::OnCameraPointPilotStateChanged.RemoveAll(this);
 }
 
 void UCameraEdManager::OnCopyViewportCamera(ACameraPointBase* InCameraPoint)

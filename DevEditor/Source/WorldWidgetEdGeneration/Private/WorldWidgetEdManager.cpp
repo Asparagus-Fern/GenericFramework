@@ -8,6 +8,7 @@
 #include "SWorldWidgetContainer.h"
 #include "UnrealEdGlobals.h"
 #include "WorldWidget.h"
+#include "WorldWidgetEdManagerSetting.h"
 #include "WorldWidgetPoint.h"
 #include "BPFunctions/BPFunctions_EditorWidget.h"
 #include "Components/CanvasPanelSlot.h"
@@ -172,6 +173,11 @@ void UEditorWorldWidgetPanel::OnWorldWidgetDoubleClicked(TSharedPtr<SWorldWidget
 }
 
 #define LOCTEXT_NAMESPACE "UWorldWidgetManager"
+
+bool UWorldWidgetEdManager::ShouldCreateSubsystem(UObject* Outer) const
+{
+	return Super::ShouldCreateSubsystem(Outer) && UWorldWidgetEdManagerSetting::Get()->bEnableSubsystem;
+}
 
 bool UWorldWidgetEdManager::DoesSupportWorldType(const EWorldType::Type WorldType) const
 {

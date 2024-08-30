@@ -8,6 +8,11 @@
 
 #define LOCTEXT_NAMESPACE "UInputManager"
 
+bool UInputManager::ShouldCreateSubsystem(UObject* Outer) const
+{
+	return Super::ShouldCreateSubsystem(Outer) && UInputManagerSetting::Get()->bEnableSubsystem;
+}
+
 void UInputManager::NativeOnActived()
 {
 	Super::NativeOnActived();

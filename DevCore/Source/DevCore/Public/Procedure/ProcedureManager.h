@@ -19,6 +19,9 @@ class DEVCORE_API UProcedureManager : public UCoreManager
 {
 	GENERATED_BODY()
 
+public:
+	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
+	
 	/* IProcedureBaseInterface */
 public:
 	virtual void NativeOnCreate() override;

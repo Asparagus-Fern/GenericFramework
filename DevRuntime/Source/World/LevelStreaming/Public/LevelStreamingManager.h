@@ -16,63 +16,50 @@ class LEVELSTREAMING_API ULevelStreamingManager : public UCoreManager
 	GENERATED_BODY()
 
 public:
-	ULevelStreamingManager();
-
-	/* IProcedureBaseInterface */
-public:
-	virtual void NativeOnCreate() override;
-
+	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
+	
 	/* IProcedureInterface */
 public:
-	virtual int32 GetProcedureOrder() override { return -2; }
 	virtual void NativeOnActived() override;
+	virtual void NativeOnInactived() override;
+
+	/* ULevelStreamingManager */
+public:
+	void LoadLevel(const TSoftObjectPtr<UWorld>& Level, bool bMakeVisibleAfterLoad, bool bShouldBlockOnLoad, const FOnHandleLevelStreamingFinish& OnFinish = FOnHandleLevelStreamingFinish());
+	void LoadLevels(TArray<TSoftObjectPtr<UWorld>> Levels, bool bMakeVisibleAfterLoad, bool bShouldBlockOnLoad, const FOnHandleLevelStreamingOnceFinish& OnOnceFinish = FOnHandleLevelStreamingOnceFinish(), const FOnHandleLevelStreamingFinish& OnFinish = FOnHandleLevelStreamingFinish());
+	void LoadLevelsBySetting(TArray<FLoadLevelStreamingSetting> LoadLevelStreamingSettings, const FOnHandleLevelStreamingOnceFinish& OnOnceFinish = FOnHandleLevelStreamingOnceFinish(), const FOnHandleLevelStreamingFinish& OnFinish = FOnHandleLevelStreamingFinish());
+
+	void UnloadLevel(const TSoftObjectPtr<UWorld>& Level, bool bShouldBlockOnUnload, const FOnHandleLevelStreamingFinish& OnFinish = FOnHandleLevelStreamingFinish());
+	void UnloadLevels(TArray<TSoftObjectPtr<UWorld>> Levels, bool bShouldBlockOnUnload, const FOnHandleLevelStreamingOnceFinish& OnOnceFinish = FOnHandleLevelStreamingOnceFinish(), const FOnHandleLevelStreamingFinish& OnFinish = FOnHandleLevelStreamingFinish());
+	void UnloadLevelsBySetting(TArray<FUnloadLevelStreamingSetting> UnloadLevelStreamingSettings, const FOnHandleLevelStreamingOnceFinish& OnOnceFinish = FOnHandleLevelStreamingOnceFinish(), const FOnHandleLevelStreamingFinish& OnFinish = FOnHandleLevelStreamingFinish());
+
+	void SetLevelVisibility(const TSoftObjectPtr<UWorld>& Level, bool bVisible, const FOnHandleLevelStreamingFinish& OnFinish = FOnHandleLevelStreamingFinish());
+	void SetLevelsVisibility(TArray<TSoftObjectPtr<UWorld>> Levels, bool bVisible, const FOnHandleLevelStreamingOnceFinish& OnOnceFinish = FOnHandleLevelStreamingOnceFinish(), const FOnHandleLevelStreamingFinish& OnFinish = FOnHandleLevelStreamingFinish());
 
 public:
-	UFUNCTION(BlueprintCallable, Category="WorldManager|LevelStreaming")
-	void LoadLevel(TSoftObjectPtr<UWorld> Level, bool bMakeVisibleAfterLoad, bool bShouldBlockOnLoad, FOnFinish OnFinish);
+	void LoadCurrentWorldLevelStreaming(const FOnHandleLevelStreamingOnceFinish& OnOnceFinish = FOnHandleLevelStreamingOnceFinish(), const FOnHandleLevelStreamingFinish& OnFinish = FOnHandleLevelStreamingFinish());
+	void UnLoadCurrentWorldLevelStreaming(const FOnHandleLevelStreamingOnceFinish& OnOnceFinish = FOnHandleLevelStreamingOnceFinish(), const FOnHandleLevelStreamingFinish& OnFinish = FOnHandleLevelStreamingFinish());
 
-	UFUNCTION(BlueprintCallable, Category="WorldManager|LevelStreaming")
-	void LoadLevels(TArray<TSoftObjectPtr<UWorld>> Levels, bool bMakeVisibleAfterLoad, bool bShouldBlockOnLoad, FOnOnceFinish OnOnceFinish, FOnFinish OnFinish);
-
-	UFUNCTION(BlueprintCallable, Category="WorldManager|LevelStreaming")
-	void LoadLevelsBySetting(TArray<FLoadLevelStreamingSetting> LoadLevelStreamingSettings, FOnOnceFinish OnOnceFinish, FOnFinish OnFinish);
-
-	UFUNCTION(BlueprintCallable, Category="WorldManager|LevelStreaming")
-	void UnloadLevel(TSoftObjectPtr<UWorld> Level, bool bShouldBlockOnUnload, FOnFinish OnFinish);
-
-	UFUNCTION(BlueprintCallable, Category="WorldManager|LevelStreaming")
-	void UnloadLevels(TArray<TSoftObjectPtr<UWorld>> Levels, bool bShouldBlockOnUnload, FOnOnceFinish OnOnceFinish, FOnFinish OnFinish);
-
-	UFUNCTION(BlueprintCallable, Category="WorldManager|LevelStreaming")
-	void UnloadLevelsBySetting(TArray<FUnloadLevelStreamingSetting> UnloadLevelStreamingSettings, FOnOnceFinish OnOnceFinish, FOnFinish OnFinish);
-
-	UFUNCTION(BlueprintCallable, Category="WorldManager|LevelStreaming")
-	void SetLevelVisibility(TSoftObjectPtr<UWorld> Level, bool bVisible, FOnFinish OnFinish);
-
-	UFUNCTION(BlueprintCallable, Category="WorldManager|LevelStreaming")
-	void SetLevelsVisibility(TArray<TSoftObjectPtr<UWorld>> Levels, bool bVisible, FOnOnceFinish OnOnceFinish, FOnFinish OnFinish);
-
-public:
-	/* 加载当前世界的所有流关卡(只加载不显示) */
-	UFUNCTION(BlueprintCallable, Category="WorldManager|LevelStreaming")
-	void LoadCurrentWorldLevelStreaming(FOnOnceFinish OnOnceFinish, FOnFinish OnFinish);
-
-	/* 卸载当前世界的所有流关卡 */
-	UFUNCTION(BlueprintCallable, Category="WorldManager|LevelStreaming")
-	void UnLoadCurrentWorldLevelStreaming(FOnOnceFinish OnOnceFinish, FOnFinish OnFinish);
-
-	/* 当前世界是否包含指定关卡 */
-	UFUNCTION(BlueprintPure, Category="WorldManager|LevelStreaming")
 	bool IsCurrentWorldContainLevel(const TSoftObjectPtr<UWorld>& Level) const;
 
-	UFUNCTION(BlueprintCallable, Category="WorldManager|LevelStreaming")
-	bool CheckLevel(TSoftObjectPtr<UWorld> Level);
+protected:
+	bool CheckLevel(const TSoftObjectPtr<UWorld>& Level) const;
+	ULevelStreaming* GetLevelStreaming(const TSoftObjectPtr<UWorld>& Level) const;
 
-	UFUNCTION(BlueprintCallable, Category="WorldManager|LevelStreaming")
-	ULevelStreaming* GetLevelStreaming(TSoftObjectPtr<UWorld> Level);
+public:
+	DECLARE_MULTICAST_DELEGATE(FLevelStreamingDelegate);
+	DECLARE_MULTICAST_DELEGATE_OneParam(FWorldLevelStreamingDelegate, int32);
 
-// protected:
-// 	FTimerHandle HandleLevelsVisilibity;
-// 	TArray<FLevelsVisibilityHandle> LevelsVisibilityHandles;
-// 	void HandleLevelsVisibility();
+	static FWorldLevelStreamingDelegate OnLoadWorldLevelStreamingBegin;
+	static FWorldLevelStreamingDelegate OnLoadWorldLevelStreamingEnd;
+
+	static FLevelStreamingDelegate OnLoadWorldLevelStreamingOnceFinish;
+	static FLevelStreamingDelegate OnLoadWorldLevelStreamingFinish;
+
+protected:
+	virtual int32 GetLoadWorldLevelStreamingNum();
+	virtual void LoadWorldLevelStreamingOnceFinish();
+	virtual void LoadWorldLevelStreamingFinish();
+	virtual void MakeWorldLevelStreamingVisibleOnceFinish();
+	virtual void MakeWorldLevelStreamingVisibleFinish();
 };

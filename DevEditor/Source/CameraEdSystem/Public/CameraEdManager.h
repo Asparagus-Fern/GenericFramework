@@ -16,7 +16,7 @@ class CAMERAEDSYSTEM_API UCameraEdManager : public UCameraManager
 	GENERATED_BODY()
 
 public:
-	UCameraEdManager();
+	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
 	virtual bool DoesSupportWorldType(const EWorldType::Type WorldType) const override;
 
 	/* IProcedureBaseInterface*/

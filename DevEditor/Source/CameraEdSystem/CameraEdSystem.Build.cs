@@ -12,6 +12,7 @@ public class CameraEdSystem : ModuleRules
 				"Core",
 				"DevCore",
 				"DevEdCore",
+				"DeveloperSettings"
 			}
 		);
 

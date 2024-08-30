@@ -7,14 +7,17 @@ public class DevEdCore : ModuleRules
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 
 		PublicDependencyModuleNames.AddRange(
-			new string[] {
+			new string[]
+			{
 				"Core",
 				"DevCore",
+				"DeveloperSettings"
 			}
 		);
 
 		PrivateDependencyModuleNames.AddRange(
-			new string[] {
+			new string[]
+			{
 				"CoreUObject",
 				"Engine",
 				"Slate",

@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ManagerSetting.h"
-#include "GlobalManagerSetting.generated.h"
+#include "Manager/ManagerEdSetting.h"
+#include "CameraEdManagerSetting.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class DEVCORE_API UGlobalManagerSetting : public UManagerSetting
+class CAMERAEDSYSTEM_API UCameraEdManagerSetting : public UManagerEdSetting
 {
 	GENERATED_BODY()
 

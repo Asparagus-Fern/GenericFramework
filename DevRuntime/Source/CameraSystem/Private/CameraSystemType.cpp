@@ -1,9 +1,0 @@
-﻿#include "CameraSystemType.h"
-
-UE_DEFINE_GAMEPLAY_TAG(TAG_Camera, "Camera");
-
-FCameraSystemDelegates::FCameraPointDelegate FCameraSystemDelegates::OnCopyViewportCamera;
-FCameraSystemDelegates::FOnCameraPointPilotStateChanged FCameraSystemDelegates::OnCameraPointPilotStateChanged;
-FCameraSystemDelegates::FCameraPointDelegate FCameraSystemDelegates::PreSwitchCamera;
-FCameraSystemDelegates::FCameraPointDelegate FCameraSystemDelegates::PostSwitchCamera;
-FCameraSystemDelegates::FCameraHandleDelegate FCameraSystemDelegates::OnSwitchCameraFinish;

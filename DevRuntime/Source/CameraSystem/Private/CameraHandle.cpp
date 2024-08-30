@@ -4,9 +4,10 @@
 
 #include "CameraHandleInterface.h"
 #include "CameraManagerSetting.h"
-#include "CameraSystemType.h"
 #include "CameraPoint/CameraPointBase.h"
 #include "Kismet/GameplayStatics.h"
+
+UCameraHandle::FCameraHandleDelegate UCameraHandle::OnSwitchCameraFinish;
 
 void UCameraHandle::Reset()
 {
@@ -59,7 +60,7 @@ void UCameraHandle::NativeOnSwitchToCameraPointFinish()
 	OnSwitchToCameraPointFinish();
 
 	OnHandleFinish.ExecuteIfBound();
-	FCameraSystemDelegates::OnSwitchCameraFinish.Broadcast(this);
+	OnSwitchCameraFinish.Broadcast(this);
 
 	if (!TargetCameraPoint->CameraTag.IsValid() && UCameraManagerSetting::Get()->bDestroyEmptyCameraPointAfterSwitchFinish)
 	{

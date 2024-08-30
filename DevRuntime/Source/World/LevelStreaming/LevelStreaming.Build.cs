@@ -11,6 +11,7 @@ public class LevelStreaming : ModuleRules
 			{
 				"Core",
 				"DevCore",
+				"DeveloperSettings",
 			}
 		);
 
@@ -21,7 +22,6 @@ public class LevelStreaming : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
-				"ScreenWidgetGeneration"
 			}
 		);
 	}
