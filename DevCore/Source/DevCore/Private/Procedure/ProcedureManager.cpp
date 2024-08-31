@@ -3,12 +3,10 @@
 
 #include "Procedure/ProcedureManager.h"
 
-#include "EngineUtils.h"
 #include "BPFunctions/BPFunctions_Object.h"
-#include "Manager/ManagerGlobal.h"
-#include "Procedure/GameplayProcedure.h"
 #include "Procedure/ProcedureManagerSetting.h"
 #include "Procedure/ProcedureProxy.h"
+#include "Procedure/GameplayProcedure/GameplayProcedure.h"
 
 #define LOCTEXT_NAMESPACE "UProcedureManager"
 
@@ -42,6 +40,47 @@ void UProcedureManager::NativeOnDestroy()
 void UProcedureManager::OnWorldMatchStarting_Implementation()
 {
 	Super::OnWorldMatchStarting_Implementation();
+
+	for (auto& SoftGameplayProcedure : UProcedureManagerSetting::Get()->GameplayProcedures)
+	{
+		if (SoftGameplayProcedure.IsNull())
+		{
+			continue;
+		}
+
+		UGameplayProcedure* GameplayProcedure = UBPFunctions_Object::LoadObject<UGameplayProcedure>(SoftGameplayProcedure);
+		if (IsValid(GameplayProcedure) && GameplayProcedure->ProcedureTag.IsValid())
+		{
+			GameplayProcedures.FindOrAdd(GameplayProcedure->ProcedureTag, GameplayProcedure);
+		}
+	}
+
+	if (!UProcedureManagerSetting::Get()->DefaultGameplayProcedure.IsNull())
+	{
+		UGameplayProcedure* GameplayProcedure = UBPFunctions_Object::LoadObject<UGameplayProcedure>(UProcedureManagerSetting::Get()->DefaultGameplayProcedure);
+		if (IsValid(GameplayProcedure) && GameplayProcedure->ProcedureTag.IsValid())
+		{
+			if (!GameplayProcedures.Contains(GameplayProcedure->ProcedureTag))
+			{
+				GameplayProcedures.FindOrAdd(GameplayProcedure->ProcedureTag, GameplayProcedure);
+			}
+
+			SwitchProcedure(GameplayProcedure);
+		}
+	}
+}
+
+void UProcedureManager::SwitchProcedure(UGameplayProcedure* InProcedure, const bool bForce)
+{
+	if (IsValid(InProcedure) && InProcedure->ProcedureTag.IsValid())
+	{
+		if (!GameplayProcedures.Contains(InProcedure->ProcedureTag))
+		{
+			GameplayProcedures.FindOrAdd(InProcedure->ProcedureTag, InProcedure);
+		}
+
+		SwitchProcedure(InProcedure->ProcedureTag, bForce);
+	}
 }
 
 void UProcedureManager::SwitchProcedure(const FGameplayTag InProcedureTag, const bool bForce)
@@ -109,15 +148,6 @@ UGameplayProcedure* UProcedureManager::GetGameplayProcedure(const FGameplayTag I
 TMap<FGameplayTag, UGameplayProcedure*>& UProcedureManager::GetGameplayProcedures()
 {
 	return GameplayProcedures;
-}
-
-void UProcedureManager::LoadGameplayProcedure()
-{
-	// for (auto& GameplayProcedure : UProcedureManagerSetting::Get()->GameplayProcedures)
-	// {
-	// 	UGameplayProcedure* LoadGameplayProcedure = UBPFunctions_Object::LoadObject<UGameplayProcedure>(GameplayProcedure.Value);
-	// 	GameplayProcedures.Add(GameplayProcedure.Key, LoadGameplayProcedure);
-	// }
 }
 
 UProcedureProxy* UProcedureManager::RegisterProcedureHandle(TArray<UProcedureObject*> InProcedureObjects, const bool InTargetActiveState, const FSimpleDelegate OnFinish)

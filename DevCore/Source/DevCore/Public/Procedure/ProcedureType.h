@@ -10,12 +10,6 @@ class UProcedureObject;
 class UCoreManager;
 
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Procedure);
-UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_ProcedureLoading);
-UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_ProcedureMainMenu);
-UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_ProcedurePlay);
-UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_ProcedurePause);
-UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_ProcedureExit);
-
 
 struct DEVCORE_API FProcedureDelegates
 {

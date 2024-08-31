@@ -116,18 +116,6 @@ void UScreenWidgetManager::OnWorldMatchStarting_Implementation()
 		CreateGameHUDs();
 		PostHUDCreated.Broadcast();
 	}
-
-	if (UScreenWidgetManagerSetting::Get()->AutoCreateMenu)
-	{
-		if (!UScreenWidgetManagerSetting::Get()->DefaultGameMenuSetting.IsNull())
-		{
-			UGameMenuSetting* DefaultGameMenuSetting = UBPFunctions_Object::LoadObject<UGameMenuSetting>(UScreenWidgetManagerSetting::Get()->DefaultGameMenuSetting);
-			if (IsValid(DefaultGameMenuSetting))
-			{
-				SwitchGameMenu(DefaultGameMenuSetting);
-			}
-		}
-	}
 }
 
 /* ==================== Interactable Widget Group ==================== */
@@ -685,6 +673,7 @@ void UScreenWidgetManager::InactiveWidget(UUserWidgetBase* InWidget, const bool 
 
 void UScreenWidgetManager::SwitchGameMenu(UGameMenuSetting* InGameMenuSetting)
 {
+	/* todo:销毁菜单 */
 	if (IsValid(GameMenu))
 	{
 		// MenuGenerateInfos.Reset();
@@ -816,10 +805,7 @@ void UScreenWidgetManager::GenerateMenu(TArray<FGameplayTag> InMenuTags)
 			MenuStyle->MenuContainer = FoundMenuGenerateInfo->MenuContainer;
 
 			/* 接管菜单的响应处理 */
-			if (UScreenWidgetManagerSetting::Get()->ProcessingMenuSelection)
-			{
-				MenuStyle->OnResponseStateChanged.BindUObject(this, &UScreenWidgetManager::OnMenuResponseStateChanged);
-			}
+			MenuStyle->OnResponseStateChanged.BindUObject(this, &UScreenWidgetManager::OnMenuResponseStateChanged);
 
 			/* 构建菜单样式 */
 			MenuStyle->NativePreConstructMenuStyle(MenuInfo);

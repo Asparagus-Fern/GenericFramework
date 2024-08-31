@@ -3,7 +3,7 @@
 
 #include "Procedure/GameplayProcedureActions.h"
 
-#include "Procedure/GameplayProcedure.h"
+#include "Procedure/GameplayProcedure/GameplayProcedure.h"
 
 #define LOCTEXT_NAMESPACE "FGameplayProcedureActions"
 

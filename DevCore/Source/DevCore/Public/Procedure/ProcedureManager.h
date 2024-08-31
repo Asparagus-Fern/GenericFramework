@@ -21,7 +21,7 @@ class DEVCORE_API UProcedureManager : public UCoreManager
 
 public:
 	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
-	
+
 	/* IProcedureBaseInterface */
 public:
 	virtual void NativeOnCreate() override;
@@ -33,6 +33,7 @@ public:
 
 	/* UProcedureManager */
 public:
+	virtual void SwitchProcedure(UGameplayProcedure* InProcedure, bool bForce = false);
 	virtual void SwitchProcedure(FGameplayTag InProcedureTag, bool bForce = false);
 
 	virtual FGameplayTag GetLastProcedureTag();
@@ -49,9 +50,6 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Transient)
 	TMap<FGameplayTag, UGameplayProcedure*> GameplayProcedures;
-
-protected:
-	virtual void LoadGameplayProcedure();
 
 	/* Procedure Handle */
 public:

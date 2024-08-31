@@ -54,11 +54,8 @@ class SCREENWIDGETGENERATION_API UScreenWidgetManager : public UCoreManager
 	GENERATED_UCLASS_BODY()
 
 public:
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FScreenWidgetDelegate);
-
-public:
 	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
-	
+
 	/* IProcedureBaseInterface */
 public:
 	virtual void NativeOnRefresh() override;
@@ -74,10 +71,10 @@ public:
 
 	/* Interactable Widget Group */
 public:
-	void AddInteractableWidget(UInteractableUserWidgetBase* InteractableWidget, FString GroupName);
-	void RemoveInteractableWidget(UInteractableUserWidgetBase* InteractableWidget, FString GroupName);
-	void ClearupInteractableWidgetGroup(const FString& GroupName, bool DeselectAll);
-	bool FindInteractableWidgetGroup(const FString& GroupName, UCommonButtonGroup*& Group) const;
+	virtual void AddInteractableWidget(UInteractableUserWidgetBase* InteractableWidget, FString GroupName);
+	virtual void RemoveInteractableWidget(UInteractableUserWidgetBase* InteractableWidget, FString GroupName);
+	virtual void ClearupInteractableWidgetGroup(const FString& GroupName, bool DeselectAll);
+	virtual bool FindInteractableWidgetGroup(const FString& GroupName, UCommonButtonGroup*& Group) const;
 
 public:
 	/* 当前管理的所有按钮组 */
@@ -91,6 +88,8 @@ public:
 	TArray<UGameHUD*> GameHUDs;
 
 public:
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FScreenWidgetDelegate);
+
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FHUDDelegate, UGameHUD*, HUD);
 
 	UPROPERTY(BlueprintAssignable)
@@ -117,7 +116,7 @@ public:
 	void ClearupGameHUDs();
 	void RemoveGameHUD(UGameHUD* GameHUD);
 	void RemoveGameHUD(FGameplayTag InTag);
-	
+
 	virtual TArray<UGameHUD*> GetGameHUDByTag(FGameplayTag InTag);
 
 	/* 设置所有HUD的显隐 */

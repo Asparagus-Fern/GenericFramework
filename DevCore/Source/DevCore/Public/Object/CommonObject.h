@@ -10,7 +10,7 @@
 /**
  * 
  */
-UCLASS(Blueprintable, BlueprintType)
+UCLASS(Abstract, Blueprintable, BlueprintType)
 class DEVCORE_API UCommonObject : public UObject
 {
 	GENERATED_BODY()

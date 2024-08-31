@@ -16,11 +16,4 @@ class LEVELSTREAMING_API ULevelStreamingManagerSetting : public UManagerSetting
 
 public:
 	static ThisClass* Get() { return GetMutableDefault<ThisClass>(); }
-
-public:
-	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly)
-	bool bAutoLoadWorldLevelStreaming = true;
-
-	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly)
-	TArray<TSoftObjectPtr<UWorld>> VisibleLevels;
 };

@@ -17,7 +17,7 @@ class LEVELSTREAMING_API ULevelStreamingManager : public UCoreManager
 
 public:
 	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
-	
+
 	/* IProcedureInterface */
 public:
 	virtual void NativeOnActived() override;
@@ -46,20 +46,13 @@ protected:
 	bool CheckLevel(const TSoftObjectPtr<UWorld>& Level) const;
 	ULevelStreaming* GetLevelStreaming(const TSoftObjectPtr<UWorld>& Level) const;
 
-public:
-	DECLARE_MULTICAST_DELEGATE(FLevelStreamingDelegate);
-	DECLARE_MULTICAST_DELEGATE_OneParam(FWorldLevelStreamingDelegate, int32);
-
-	static FWorldLevelStreamingDelegate OnLoadWorldLevelStreamingBegin;
-	static FWorldLevelStreamingDelegate OnLoadWorldLevelStreamingEnd;
-
-	static FLevelStreamingDelegate OnLoadWorldLevelStreamingOnceFinish;
-	static FLevelStreamingDelegate OnLoadWorldLevelStreamingFinish;
-
-protected:
-	virtual int32 GetLoadWorldLevelStreamingNum();
-	virtual void LoadWorldLevelStreamingOnceFinish();
-	virtual void LoadWorldLevelStreamingFinish();
-	virtual void MakeWorldLevelStreamingVisibleOnceFinish();
-	virtual void MakeWorldLevelStreamingVisibleFinish();
+// public:
+// 	DECLARE_MULTICAST_DELEGATE(FLevelStreamingDelegate);
+// 	DECLARE_MULTICAST_DELEGATE_OneParam(FWorldLevelStreamingDelegate, int32);
+//
+// 	static FWorldLevelStreamingDelegate OnLoadWorldLevelStreamingBegin;
+// 	static FWorldLevelStreamingDelegate OnLoadWorldLevelStreamingEnd;
+//
+// 	static FLevelStreamingDelegate OnLoadWorldLevelStreamingOnceFinish;
+// 	static FLevelStreamingDelegate OnLoadWorldLevelStreamingFinish;
 };

@@ -10,7 +10,7 @@
 /**
  * 异步/同步流程处理的基类
  */
-UCLASS()
+UCLASS(Abstract)
 class DEVCORE_API UProcedureObject : public UCommonObject, public IProcedureInterface
 {
 	GENERATED_BODY()

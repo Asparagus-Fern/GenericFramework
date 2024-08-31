@@ -9,10 +9,10 @@
 
 #define LOCTEXT_NAMESPACE "ULevelStreamingManager"
 
-ULevelStreamingManager::FWorldLevelStreamingDelegate ULevelStreamingManager::OnLoadWorldLevelStreamingBegin;
-ULevelStreamingManager::FWorldLevelStreamingDelegate ULevelStreamingManager::OnLoadWorldLevelStreamingEnd;
-ULevelStreamingManager::FLevelStreamingDelegate ULevelStreamingManager::OnLoadWorldLevelStreamingOnceFinish;
-ULevelStreamingManager::FLevelStreamingDelegate ULevelStreamingManager::OnLoadWorldLevelStreamingFinish;
+// ULevelStreamingManager::FWorldLevelStreamingDelegate ULevelStreamingManager::OnLoadWorldLevelStreamingBegin;
+// ULevelStreamingManager::FWorldLevelStreamingDelegate ULevelStreamingManager::OnLoadWorldLevelStreamingEnd;
+// ULevelStreamingManager::FLevelStreamingDelegate ULevelStreamingManager::OnLoadWorldLevelStreamingOnceFinish;
+// ULevelStreamingManager::FLevelStreamingDelegate ULevelStreamingManager::OnLoadWorldLevelStreamingFinish;
 
 bool ULevelStreamingManager::ShouldCreateSubsystem(UObject* Outer) const
 {
@@ -22,20 +22,11 @@ bool ULevelStreamingManager::ShouldCreateSubsystem(UObject* Outer) const
 void ULevelStreamingManager::NativeOnActived()
 {
 	Super::NativeOnActived();
-
-	if (ULevelStreamingManagerSetting::Get()->bAutoLoadWorldLevelStreaming)
-	{
-		OnLoadWorldLevelStreamingBegin.Broadcast(GetLoadWorldLevelStreamingNum());
-		LoadCurrentWorldLevelStreaming(FOnHandleLevelStreamingOnceFinish::CreateUObject(this, &ULevelStreamingManager::LoadWorldLevelStreamingOnceFinish), FOnHandleLevelStreamingFinish::CreateUObject(this, &ULevelStreamingManager::LoadWorldLevelStreamingFinish));
-	}
-	else
-	{
-		OnLoadWorldLevelStreamingEnd.Broadcast(GetLoadWorldLevelStreamingNum());
-	}
 }
 
 void ULevelStreamingManager::NativeOnInactived()
 {
+	Super::NativeOnInactived();
 }
 
 void ULevelStreamingManager::LoadLevel(const TSoftObjectPtr<UWorld>& Level, const bool bMakeVisibleAfterLoad, const bool bShouldBlockOnLoad, const FOnHandleLevelStreamingFinish& OnFinish)
@@ -450,32 +441,6 @@ ULevelStreaming* ULevelStreamingManager::GetLevelStreaming(const TSoftObjectPtr<
 	}
 
 	return LevelStreaming;
-}
-
-int32 ULevelStreamingManager::GetLoadWorldLevelStreamingNum()
-{
-	return GetWorld()->GetStreamingLevels().Num() + ULevelStreamingManagerSetting::Get()->VisibleLevels.Num();
-}
-
-void ULevelStreamingManager::LoadWorldLevelStreamingOnceFinish()
-{
-	OnLoadWorldLevelStreamingOnceFinish.Broadcast();
-}
-
-void ULevelStreamingManager::LoadWorldLevelStreamingFinish()
-{
-	OnLoadWorldLevelStreamingFinish.Broadcast();
-	SetLevelsVisibility(ULevelStreamingManagerSetting::Get()->VisibleLevels, true, FOnHandleLevelStreamingOnceFinish::CreateUObject(this, &ULevelStreamingManager::MakeWorldLevelStreamingVisibleOnceFinish), FOnHandleLevelStreamingFinish::CreateUObject(this, &ULevelStreamingManager::MakeWorldLevelStreamingVisibleFinish));
-}
-
-void ULevelStreamingManager::MakeWorldLevelStreamingVisibleOnceFinish()
-{
-	OnLoadWorldLevelStreamingOnceFinish.Broadcast();
-}
-
-void ULevelStreamingManager::MakeWorldLevelStreamingVisibleFinish()
-{
-	OnLoadWorldLevelStreamingEnd.Broadcast(GetLoadWorldLevelStreamingNum());
 }
 
 #undef LOCTEXT

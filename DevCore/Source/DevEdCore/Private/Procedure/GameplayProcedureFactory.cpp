@@ -3,8 +3,7 @@
 
 #include "Procedure/GameplayProcedureFactory.h"
 
-#include "Kismet2/KismetEditorUtilities.h"
-#include "Procedure/GameplayProcedure.h"
+#include "Procedure/GameplayProcedure/GameplayProcedure.h"
 
 #define LOCTEXT_NAMESPACE "UGameplayProcedureFactory"
 
