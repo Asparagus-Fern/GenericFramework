@@ -3,6 +3,8 @@
 
 #include "UWidget/GameplayTagSlot.h"
 
+UE_DEFINE_GAMEPLAY_TAG(TAG_HUD, "UI.HUD");
+
 UGameplayTagSlot::FGameplayTagSlotDelegate UGameplayTagSlot::OnGameplayTagSlotBuild;
 UGameplayTagSlot::FGameplayTagSlotDelegate UGameplayTagSlot::OnGameplayTagSlotDestroy;
 

@@ -64,6 +64,7 @@ UCameraHandle* UCameraManager::SwitchToCamera(const int32 InPlayerIndex, const F
 	if (!InCameraHandleClass)
 	{
 		LOG(Debug_Camera, Error, TEXT("SwitchToCamera Fail"))
+		OnFinish.ExecuteIfBound();
 		return nullptr;
 	}
 
@@ -75,6 +76,7 @@ UCameraHandle* UCameraManager::SwitchToCamera(const int32 InPlayerIndex, const F
 	if (!IsValid(SwitchCameraHandle))
 	{
 		LOG(Debug_Camera, Error, TEXT("SwitchToCamera Fail"))
+		OnFinish.ExecuteIfBound();
 		return nullptr;
 	}
 
@@ -87,6 +89,7 @@ UCameraHandle* UCameraManager::SwitchToCamera(const int32 InPlayerIndex, ACamera
 	if (!InCameraActor || !InCameraHandleClass)
 	{
 		LOG(Debug_Camera, Error, TEXT("SwitchToCamera Fail"))
+		OnFinish.ExecuteIfBound();
 		return nullptr;
 	}
 
@@ -98,6 +101,7 @@ UCameraHandle* UCameraManager::SwitchToCamera(const int32 InPlayerIndex, ACamera
 	if (!InCameraActor || !IsValid(SwitchCameraHandle))
 	{
 		LOG(Debug_Camera, Error, TEXT("SwitchToCamera Fail"))
+		OnFinish.ExecuteIfBound();
 		return nullptr;
 	}
 
@@ -109,6 +113,7 @@ UCameraHandle* UCameraManager::SwitchToCamera(const int32 InPlayerIndex, UCamera
 	if (!IsValid(InCameraComponent) || !InCameraHandleClass)
 	{
 		LOG(Debug_Camera, Error, TEXT("SwitchToCamera Fail"))
+		OnFinish.ExecuteIfBound();
 		return nullptr;
 	}
 
@@ -120,6 +125,7 @@ UCameraHandle* UCameraManager::SwitchToCamera(const int32 InPlayerIndex, UCamera
 	if (!IsValid(InCameraComponent) || !IsValid(SwitchCameraHandle))
 	{
 		LOG(Debug_Camera, Error, TEXT("SwitchToCamera Fail"))
+		OnFinish.ExecuteIfBound();
 		return nullptr;
 	}
 
@@ -142,6 +148,7 @@ UCameraHandle* UCameraManager::SwitchToCamera(const int32 InPlayerIndex, const F
 	if (!InCameraTag.IsValid() || !InCameraHandleClass)
 	{
 		LOG(Debug_Camera, Error, TEXT("SwitchToCamera Fail"))
+		OnFinish.ExecuteIfBound();
 		return nullptr;
 	}
 
@@ -154,6 +161,7 @@ UCameraHandle* UCameraManager::SwitchToCamera(const int32 InPlayerIndex, const F
 	if (!InCameraTag.IsValid() || !IsValid(SwitchCameraHandle) || !IsValid(GetCameraPoint(InCameraTag)))
 	{
 		LOG(Debug_Camera, Error, TEXT("SwitchToCamera Fail"))
+		OnFinish.ExecuteIfBound();
 		return nullptr;
 	}
 
@@ -165,6 +173,7 @@ UCameraHandle* UCameraManager::SwitchToCamera(const int32 InPlayerIndex, ACamera
 	if (!IsValid(InCameraPoint) || !InCameraHandleClass)
 	{
 		LOG(Debug_Camera, Error, TEXT("SwitchToCamera Fail"))
+		OnFinish.ExecuteIfBound();
 		return nullptr;
 	}
 

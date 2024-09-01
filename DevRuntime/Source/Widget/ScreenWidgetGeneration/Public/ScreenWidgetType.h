@@ -12,7 +12,6 @@ class UCommonButtonGroup;
 class UMenuStyle;
 class UMenuContainer;
 
-UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_HUD);
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Menu);
 
 /**

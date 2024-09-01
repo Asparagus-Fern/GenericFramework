@@ -51,7 +51,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="UI"))
 	FGameplayTag SelfTag;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="HUD"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="UI.HUD"))
 	FGameplayTag SlotTag;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)

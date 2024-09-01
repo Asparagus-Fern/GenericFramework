@@ -4,11 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
+#include "NativeGameplayTags.h"
 #include "Components/NamedSlot.h"
 #include "GameplayTagSlot.generated.h"
 
+UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_HUD);
 class UGameplayTagSlot;
-
 
 /**
  * 带GameplayTag的插槽
@@ -26,7 +27,7 @@ protected:
 	virtual void BeginDestroy() override;
 
 public:
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, meta=(Categories="HUD"))
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, meta=(Categories="UI.HUD"))
 	FGameplayTag SlotTag;
 
 public:

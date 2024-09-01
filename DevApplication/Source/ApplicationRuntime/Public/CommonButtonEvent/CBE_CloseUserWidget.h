@@ -20,7 +20,7 @@ public:
 	virtual void ExecuteButtonEvent_Implementation() override;
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="HUD"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="UI.HUD"))
 	TArray<FGameplayTag> SlotTags;
 
 protected:

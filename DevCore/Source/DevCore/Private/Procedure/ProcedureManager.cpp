@@ -23,8 +23,6 @@ void UProcedureManager::NativeOnCreate()
 	FProcedureDelegates::OnProxyHandleContinue.AddUObject(this, &UProcedureManager::OnProcedureProxyHandleContinue);
 	FProcedureDelegates::OnProxyHandleStop.AddUObject(this, &UProcedureManager::OnProcedureProxyHandleStop);
 	FProcedureDelegates::OnProxyHandleFinish.AddUObject(this, &UProcedureManager::OnProcedureProxyHandleFinish);
-
-	LoadGameplayProcedure();
 }
 
 void UProcedureManager::NativeOnDestroy()
@@ -176,7 +174,7 @@ UProcedureProxy* UProcedureManager::RegisterProcedureHandle(const FProcedureHand
 {
 	UProcedureProxy* NewProcedureHandle = NewObject<UProcedureProxy>(this);
 	ActivatedProcedureProxy.Add(NewProcedureHandle);
-
+	
 	auto HandleNextTick = [NewProcedureHandle, InHandleGroup]()
 	{
 		NewProcedureHandle->Handle(InHandleGroup);

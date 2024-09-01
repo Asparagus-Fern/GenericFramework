@@ -145,7 +145,7 @@ void UWorldWidgetManager::NativeOnInactived()
 	Super::NativeOnInactived();
 
 	/* 从插槽移除3DUI面板 */
-	const FGameplayTag WorldWidgetPanelTag = FGameplayTag::RequestGameplayTag(FName("HUD.Main.WorldWidget"));
+	const FGameplayTag WorldWidgetPanelTag = FGameplayTag::RequestGameplayTag(FName("UI.HUD.Main.WorldWidget"));
 	if (WorldWidgetPanelTag.IsValid())
 	{
 		if (const UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
@@ -176,7 +176,7 @@ void UWorldWidgetManager::NativeOnInactived()
 
 void UWorldWidgetManager::GenerateWorldWidgetPanel()
 {
-	const FGameplayTag WorldWidgetPanelTag = FGameplayTag::RequestGameplayTag(FName("HUD.Main.WorldWidget"));
+	const FGameplayTag WorldWidgetPanelTag = FGameplayTag::RequestGameplayTag(FName("UI.HUD.Main.WorldWidget"));
 	if (WorldWidgetPanelTag.IsValid())
 	{
 		UGameplayTagSlot* Slot = GetManager<UScreenWidgetManager>()->GetSlot(WorldWidgetPanelTag);

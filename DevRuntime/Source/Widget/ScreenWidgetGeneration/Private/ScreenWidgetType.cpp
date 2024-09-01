@@ -8,7 +8,6 @@
 #include "UserWidget/Menu/MenuContainer.h"
 #include "UserWidget/Menu/MenuStyle.h"
 
-UE_DEFINE_GAMEPLAY_TAG(TAG_HUD, "UI.HUD");
 UE_DEFINE_GAMEPLAY_TAG(TAG_Menu, "UI.Menu");
 
 FSimpleMulticastDelegate FScreenWidgetDelegates::OnHUDCreated;
