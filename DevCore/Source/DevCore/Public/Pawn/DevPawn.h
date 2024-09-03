@@ -10,9 +10,11 @@
 #include "Procedure/ProcedureBaseInterface.h"
 #include "DevPawn.generated.h"
 
+struct FInputActionValue;
+class UInputAction;
+class UCameraComponent;
+class UCommonSpringArmComponent;
 class UFloatingPawnMovement;
-
-UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Pawn);
 
 UCLASS()
 class DEVCORE_API ADevPawn : public APawn, public IPawnInterface
@@ -23,6 +25,7 @@ public:
 	ADevPawn();
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
 	/* IIPawnInterface */
 public:
@@ -32,23 +35,82 @@ public:
 	virtual void SetRotation_Implementation(FRotator InValue) override;
 	virtual FVector GetLocation_Implementation() override;
 	virtual FRotator GetRotation_Implementation() override;
-	virtual FVector GetCameraLocation_Implementation() override;
-	virtual FRotator GetCameraRotation_Implementation() override;
 
-	virtual APawn* GetPawn() override;
-	virtual FGameplayTag GetPawnTag() override;
+	virtual bool IsPlayer_Implementation() override;
+	virtual bool IsAI_Implementation() override;
+	virtual APlayerController* GetPlayerController_Implementation() override;
+	virtual AAIController* GetAIController_Implementation() override;
 
 	/* ADevPawn */
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="Pawn", ExposeOnSpawn))
-	FGameplayTag PawnTag;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UFloatingPawnMovement* FloatingPawnMovement;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UCommonSpringArmComponent* CommonSpringArmComponent = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UCameraComponent* CameraComponent = nullptr;
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FName PawnName;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FPawnLockingState PawnLockingState;
 
+public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	UFloatingPawnMovement* FloatingPawnMovement;
+	TObjectPtr<UInputAction> IA_Move;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TObjectPtr<UInputAction> IA_Turn;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TObjectPtr<UInputAction> IA_Zoom;
 
 public:
-	APlayerController* GetPlayerController() const;
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	UCameraComponent* GetActiveCameraComponent();
+
+	UFUNCTION(BlueprintCallable)
+	void SetPawnLockingState(FPawnLockingState InPawnLockingState);
+
+	/* Move */
+protected:
+	UFUNCTION(BlueprintNativeEvent)
+	void OnMoveStart(const FInputActionValue& InValue);
+
+	UFUNCTION(BlueprintNativeEvent)
+	void OnMoving(const FInputActionValue& InValue);
+
+	UFUNCTION(BlueprintNativeEvent)
+	void OnMoveEnd(const FInputActionValue& InValue);
+
+	/* Turn */
+protected:
+	UFUNCTION(BlueprintNativeEvent)
+	void OnTurnStart(const FInputActionValue& InValue);
+
+	UFUNCTION(BlueprintNativeEvent)
+	void OnTurning(const FInputActionValue& InValue);
+
+	UFUNCTION(BlueprintNativeEvent)
+	void OnTurnEnd(const FInputActionValue& InValue);
+
+	/* Zoom */
+protected:
+	UFUNCTION(BlueprintNativeEvent)
+	void OnZoomStart(const FInputActionValue& InValue);
+
+	UFUNCTION(BlueprintNativeEvent)
+	void OnZooming(const FInputActionValue& InValue);
+
+	UFUNCTION(BlueprintNativeEvent)
+	void OnZoomEnd(const FInputActionValue& InValue);
+
+public:
+	DECLARE_MULTICAST_DELEGATE_OneParam(FPawnDelegate, ADevPawn*)
+	static FPawnDelegate OnPawnRegister;
+	static FPawnDelegate OnPawnUnRegister;
 };

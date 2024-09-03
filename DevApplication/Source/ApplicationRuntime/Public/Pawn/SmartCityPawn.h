@@ -3,19 +3,28 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ThirdPersonPawn.h"
+#include "Pawn/DevPawn.h"
 #include "SmartCityPawn.generated.h"
 
-class ACameraPoint;
+class UCameraHandle;
 
 UCLASS()
-class APPLICATIONRUNTIME_API ASmartCityPawn : public AThirdPersonPawn
+class APPLICATIONRUNTIME_API ASmartCityPawn : public ADevPawn
 {
 	GENERATED_BODY()
 
 public:
 	ASmartCityPawn();
 	virtual void BeginPlay() override;
-	virtual void Tick(float DeltaTime) override;
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+	virtual void CalcCamera(float DeltaTime, FMinimalViewInfo& OutResult) override;
+
+protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Transient)
+	UCameraComponent* DuplicateCameraComponent = nullptr;
+
+protected:
+	virtual UCameraComponent* GetActiveCameraComponent_Implementation() override;
+	virtual void OnSwitchCameraBegin(UCameraHandle* InCameraHandle);
+	virtual void OnSwitchCameraFinish(UCameraHandle* InCameraHandle);
 };

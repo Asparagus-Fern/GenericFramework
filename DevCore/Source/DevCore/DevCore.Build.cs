@@ -45,7 +45,8 @@ public class DevCore : ModuleRules
 				"UMG",
 				"GameplayTags",
 				"AssetRegistry",
-				"EnhancedInput"
+				"EnhancedInput",
+				"AIModule"
 				// ... add private dependencies that you statically link with here ...	
 			}
 		);

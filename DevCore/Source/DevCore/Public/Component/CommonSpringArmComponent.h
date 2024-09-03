@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Pawn/PawnType.h"
 #include "CommonSpringArmComponent.generated.h"
 
 UCLASS(ClassGroup=(Camera), meta=(BlueprintSpawnableComponent))
@@ -17,14 +18,8 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Spring Arm")
-	float ArmZoomSpeedRate = 1.f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Spring Arm", meta=(ClampMin = 0.f, UIMin = 0.f))
-	float MinArmLength = 0.f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Spring Arm")
-	float MaxArmLength = 500000000.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FSpringArmLimit SpringArmLimit;
 
 public:
 	UFUNCTION(BlueprintCallable)

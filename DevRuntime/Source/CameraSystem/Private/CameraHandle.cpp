@@ -8,6 +8,7 @@
 #include "CameraPoint/CameraPointBase.h"
 #include "Kismet/GameplayStatics.h"
 
+UCameraHandle::FCameraHandleDelegate UCameraHandle::OnSwitchCameraBegin;
 UCameraHandle::FCameraHandleDelegate UCameraHandle::OnSwitchCameraFinish;
 
 UWorld* UCameraHandle::GetWorld() const
@@ -18,6 +19,10 @@ UWorld* UCameraHandle::GetWorld() const
 		if (const UCameraManager* CameraManager = GetManager<UCameraManager>())
 		{
 			return CameraManager->GetWorld();
+		}
+		else
+		{
+			return GetOuter()->GetWorld();
 		}
 	}
 	return nullptr;
@@ -40,6 +45,8 @@ bool UCameraHandle::NativeHandleSwitchToCameraPoint(APlayerController* InPlayerC
 		OwnerPlayerController = InPlayerController;
 		TargetCameraPoint = InCameraPoint;
 		OnHandleFinish = OnFinish;
+		
+		OnSwitchCameraBegin.Broadcast(this);
 
 		TArray<AActor*> Actors;
 		UGameplayStatics::GetAllActorsWithInterface(this, UCameraHandleInterface::StaticClass(), Actors);
@@ -48,10 +55,10 @@ bool UCameraHandle::NativeHandleSwitchToCameraPoint(APlayerController* InPlayerC
 			ICameraHandleInterface::Execute_HandleSwitchToCameraBegin(Actor, this);
 		}
 
-
 		return HandleSwitchToCameraPoint(InPlayerController, InCameraPoint);
 	}
 
+	OnFinish.ExecuteIfBound();
 	return false;
 }
 
@@ -76,11 +83,6 @@ void UCameraHandle::NativeOnSwitchToCameraPointFinish()
 	OnHandleFinish.ExecuteIfBound();
 	OnSwitchCameraFinish.Broadcast(this);
 
-	if (!TargetCameraPoint->CameraTag.IsValid() && UCameraManagerSetting::Get()->bDestroyEmptyCameraPointAfterSwitchFinish)
-	{
-		TargetCameraPoint->Destroy();
-	}
-
 	TArray<AActor*> Actors;
 	UGameplayStatics::GetAllActorsWithInterface(this, UCameraHandleInterface::StaticClass(), Actors);
 	for (const auto Actor : Actors)
@@ -88,6 +90,10 @@ void UCameraHandle::NativeOnSwitchToCameraPointFinish()
 		ICameraHandleInterface::Execute_HandleSwitchToCameraFinish(Actor, this);
 	}
 
+	if (!TargetCameraPoint->CameraTag.IsValid() && UCameraManagerSetting::Get()->bDestroyEmptyCameraPointAfterSwitchFinish)
+	{
+		TargetCameraPoint->Destroy();
+	}
 	OwnerPlayerController = nullptr;
 	TargetCameraPoint = nullptr;
 	OnHandleFinish.Unbind();

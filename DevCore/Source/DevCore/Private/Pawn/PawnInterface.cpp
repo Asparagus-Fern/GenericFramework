@@ -6,13 +6,3 @@
 IPawnInterface::IPawnInterface()
 {
 }
-
-APawn* IPawnInterface::GetPawn()
-{
-	return Cast<APawn>(this);
-}
-
-FGameplayTag IPawnInterface::GetPawnTag()
-{
-	return FGameplayTag::EmptyTag;
-}

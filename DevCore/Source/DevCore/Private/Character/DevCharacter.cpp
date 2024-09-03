@@ -1,7 +1,7 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Pawn/Character/DevCharacter.h"
+#include "Character/DevCharacter.h"
 
 #include "Manager/ManagerGlobal.h"
 #include "Pawn/PawnManager.h"

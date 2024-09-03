@@ -22,7 +22,7 @@ class CAMERASYSTEM_API UCameraHandle : public UCommonObject
 
 public:
 	virtual UWorld* GetWorld() const override;
-	
+
 public:
 	UFUNCTION(BlueprintCallable)
 	void Reset();
@@ -52,6 +52,7 @@ public:
 
 public:
 	DECLARE_MULTICAST_DELEGATE_OneParam(FCameraHandleDelegate, UCameraHandle*)
+	static FCameraHandleDelegate OnSwitchCameraBegin;
 	static FCameraHandleDelegate OnSwitchCameraFinish;
 
 protected:

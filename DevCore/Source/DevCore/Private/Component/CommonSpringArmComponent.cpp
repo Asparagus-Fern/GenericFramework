@@ -6,6 +6,8 @@
 #include "BPFunctions/BPFunctions_Gameplay.h"
 #include "Debug/DebugType.h"
 #include "Kismet/GameplayStatics.h"
+#include "Pawn/PawnInterface.h"
+#include "Pawn/PawnManagerSetting.h"
 #include "PhysicsEngine/PhysicsSettings.h"
 
 UCommonSpringArmComponent::UCommonSpringArmComponent()
@@ -35,28 +37,24 @@ void UCommonSpringArmComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 
 void UCommonSpringArmComponent::AddTargetArmLength(const float InValue)
 {
-	float ArmLengthWeight = 0.5f;
-
-	const float Degree = FMath::GetMappedRangeValueClamped(FVector2D(MinArmLength, MaxArmLength), FVector2D(0.f, 90.f), TargetArmLength);
-	float CosValue = FMath::Cos(UE_DOUBLE_PI / (180.0) * Degree);
-	CosValue = FMath::GetMappedRangeValueClamped(FVector2D(0.f, 1.f), FVector2D(0.1f, 0.9f), CosValue);
-
-	DesiredArmLength += (TargetArmLength / 10.f * CosValue * ArmZoomSpeedRate * InValue);
-	if (DesiredArmLength <= 0)
+	FRotator Rotation;
+	if (GetOwner()->GetClass()->ImplementsInterface(UPawnInterface::StaticClass()))
 	{
-		FHitResult HitResult;
-		if (UBPFunctions_Gameplay::GetActorDownHitResult(GetOwner(), HitResult))
-		{
-			DesiredArmLength += HitResult.Distance;
-		}
+		Rotation = IPawnInterface::Execute_GetRotation(GetOwner());
+	}
+	else
+	{
+		Rotation = GetRelativeRotation();
 	}
 
-	DesiredArmLength = FMath::Clamp(DesiredArmLength, MinArmLength, MaxArmLength);
+	const float PitchRate = FMath::GetMappedRangeValueClamped(FVector2D(0.f, 90.f), FVector2D(0.8f, 1.2f), FMath::Abs(Rotation.Pitch));
+	DesiredArmLength += (FMath::Abs(FMath::Sin(UE_DOUBLE_PI / (180.0) * Rotation.Pitch)) * PitchRate * TargetArmLength * UPawnManagerSetting::Get()->ZoomSpeed * InValue);
+	DesiredArmLength = SpringArmLimit.GetLimitSpringArmLength(DesiredArmLength);
 }
 
 void UCommonSpringArmComponent::SetTargetArmLength(const float InValue)
 {
-	TargetArmLength = DesiredArmLength = FMath::Clamp(InValue, MinArmLength, MaxArmLength);
+	TargetArmLength = DesiredArmLength = InValue;
 	UpdateDesiredArmLocation(false, false, false, 0.f);
 }
 

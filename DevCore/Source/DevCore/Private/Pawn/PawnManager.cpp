@@ -17,58 +17,33 @@ bool UPawnManager::ShouldCreateSubsystem(UObject* Outer) const
 void UPawnManager::NativeOnActived()
 {
 	Super::NativeOnActived();
+
+	ADevPawn::OnPawnRegister.AddUObject(this, &UPawnManager::RegisterPawn);
+	ADevPawn::OnPawnUnRegister.AddUObject(this, &UPawnManager::UnRegisterPawn);
 }
 
 void UPawnManager::NativeOnInactived()
 {
 	Super::NativeOnInactived();
 
-	PawnMapping.Reset();
+	ADevPawn::OnPawnRegister.RemoveAll(this);
+	ADevPawn::OnPawnUnRegister.RemoveAll(this);
 }
 
-void UPawnManager::RegisterPawn(IPawnInterface* InPawnInterface)
+void UPawnManager::RegisterPawn(ADevPawn* Pawn)
 {
-	if (InPawnInterface->GetPawnTag().IsValid() && !PawnMapping.Contains(InPawnInterface->GetPawnTag()))
+	if (IsValid(Pawn) && !Pawns.Contains(Pawn))
 	{
-		PawnMapping.Add(InPawnInterface->GetPawnTag(), InPawnInterface);
+		Pawns.Add(Pawn);
 	}
 }
 
-void UPawnManager::UnRegisterPawn(IPawnInterface* InPawnInterface)
+void UPawnManager::UnRegisterPawn(ADevPawn* Pawn)
 {
-	if (InPawnInterface->GetPawnTag().IsValid() && PawnMapping.Contains(InPawnInterface->GetPawnTag()))
+	if (IsValid(Pawn) && Pawns.Contains(Pawn))
 	{
-		PawnMapping.Remove(InPawnInterface->GetPawnTag());
+		Pawns.Remove(Pawn);
 	}
-}
-
-void UPawnManager::PossessPawn(const int32 PlayerIndex, const FGameplayTag InPawnTag)
-{
-	if (APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), PlayerIndex))
-	{
-		if (IPawnInterface* PawnInterface = PawnMapping.FindRef(InPawnTag))
-		{
-			PC->Possess(PawnInterface->GetPawn());
-		}
-	}
-}
-
-IPawnInterface* UPawnManager::GetPawnInterface(const FGameplayTag InPawnTag)
-{
-	if (PawnMapping.Contains(InPawnTag))
-	{
-		return PawnMapping.FindRef(InPawnTag);
-	}
-	return nullptr;
-}
-
-APawn* UPawnManager::GetPawn(const FGameplayTag InPawnTag)
-{
-	if (IPawnInterface* PawnInterface = GetPawnInterface(InPawnTag))
-	{
-		return PawnInterface->GetPawn();
-	}
-	return nullptr;
 }
 
 #undef LOCTEXT_NAMESPACE

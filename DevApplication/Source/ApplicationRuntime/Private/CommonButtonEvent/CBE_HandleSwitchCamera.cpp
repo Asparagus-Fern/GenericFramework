@@ -4,6 +4,8 @@
 
 #include "CameraManager.h"
 #include "CameraHandle/CameraHandle_Transition.h"
+#include "GameFramework/Character.h"
+#include "Kismet/GameplayStatics.h"
 #include "Manager/ManagerGlobal.h"
 
 UCBE_HandleSwitchCamera::UCBE_HandleSwitchCamera()
@@ -14,7 +16,13 @@ UCBE_HandleSwitchCamera::UCBE_HandleSwitchCamera()
 
 bool UCBE_HandleSwitchCamera::CanExecuteButtonEvent_Implementation()
 {
-	return TargetCameraTag.IsValid() && IsValid(TargetCameraHandle);
+	bool IsValidPlayer = false;
+	if (const UCameraManager* CameraManager = GetManager<UCameraManager>())
+	{
+		IsValidPlayer = IsValid(UGameplayStatics::GetPlayerCharacter(CameraManager, TargetPlayerIndex));
+	}
+
+	return IsValidPlayer && TargetCameraTag.IsValid() && IsValid(TargetCameraHandle);
 }
 
 void UCBE_HandleSwitchCamera::ExecuteButtonEvent_Implementation()
@@ -27,12 +35,16 @@ void UCBE_HandleSwitchCamera::ExecuteButtonEvent_Implementation()
 		}
 	);
 
-	if (bIsAsync)
+	if (UCameraManager* CameraManager = GetManager<UCameraManager>())
 	{
-		GetManager<UCameraManager>()->SwitchToCamera(TargetPlayerIndex, TargetCameraTag, TargetCameraHandle, OnSwitchFinish);
+		if (bIsAsync)
+			CameraManager->SwitchToCamera(TargetPlayerIndex, TargetCameraTag, TargetCameraHandle, OnSwitchFinish);
+		else
+			CameraManager->SwitchToCamera(TargetPlayerIndex, TargetCameraTag, TargetCameraHandle);
 	}
 	else
 	{
-		GetManager<UCameraManager>()->SwitchToCamera(TargetPlayerIndex, TargetCameraTag, TargetCameraHandle);
+		if (bIsAsync)
+			MarkAsActivedFinish();
 	}
 }
