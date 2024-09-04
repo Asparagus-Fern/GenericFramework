@@ -45,14 +45,4 @@ public:
 protected:
 	bool CheckLevel(const TSoftObjectPtr<UWorld>& Level) const;
 	ULevelStreaming* GetLevelStreaming(const TSoftObjectPtr<UWorld>& Level) const;
-
-// public:
-// 	DECLARE_MULTICAST_DELEGATE(FLevelStreamingDelegate);
-// 	DECLARE_MULTICAST_DELEGATE_OneParam(FWorldLevelStreamingDelegate, int32);
-//
-// 	static FWorldLevelStreamingDelegate OnLoadWorldLevelStreamingBegin;
-// 	static FWorldLevelStreamingDelegate OnLoadWorldLevelStreamingEnd;
-//
-// 	static FLevelStreamingDelegate OnLoadWorldLevelStreamingOnceFinish;
-// 	static FLevelStreamingDelegate OnLoadWorldLevelStreamingFinish;
 };

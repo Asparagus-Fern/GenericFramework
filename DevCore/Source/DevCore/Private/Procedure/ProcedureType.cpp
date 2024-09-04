@@ -2,8 +2,6 @@
 
 #include "Procedure/ProcedureObject.h"
 
-UE_DEFINE_GAMEPLAY_TAG(TAG_Procedure, "Procedure");
-
 FProcedureDelegates::FPocedureProxyDelegate FProcedureDelegates::OnProxyHandleBegin;
 FProcedureDelegates::FPocedureProxyDelegate FProcedureDelegates::OnProxyHandlePause;
 FProcedureDelegates::FPocedureProxyDelegate FProcedureDelegates::OnProxyHandleContinue;

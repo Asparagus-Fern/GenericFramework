@@ -446,16 +446,22 @@ UUserWidgetBase* UScreenWidgetManager::GetContainerWidget(const FWidgetContainer
 UUserWidgetBase* UScreenWidgetManager::OpenUserWidget(const TSubclassOf<UUserWidgetBase> InWidgetClass, const FOnWidgetActiveStateChanged OnFinish)
 {
 	UUserWidgetBase* NewWidget = CreateWidget<UUserWidgetBase>(GetWorld(), InWidgetClass);
-	OpenUserWidget(NewWidget, OnFinish);
-	return NewWidget;
+	if (OpenUserWidget(NewWidget, OnFinish))
+	{
+		return NewWidget;
+	}
+	else
+	{
+		return nullptr;
+	}
 }
 
-void UScreenWidgetManager::OpenUserWidget(UUserWidgetBase* InWidget, FOnWidgetActiveStateChanged OnFinish)
+bool UScreenWidgetManager::OpenUserWidget(UUserWidgetBase* InWidget, FOnWidgetActiveStateChanged OnFinish)
 {
 	if (!IsValid(InWidget) || !InWidget->SlotTag.IsValid())
 	{
 		LOG(Debug_UI, Warning, TEXT("Fail To Open User Widget"))
-		return;
+		return false;
 	}
 
 	AddTemporaryGameHUD(InWidget);
@@ -490,25 +496,28 @@ void UScreenWidgetManager::OpenUserWidget(UUserWidgetBase* InWidget, FOnWidgetAc
 			ActiveWidget(InWidget, OnFinish);
 		}
 	}
+
+	return true;
 }
 
-void UScreenWidgetManager::CloseUserWidget(UUserWidgetBase* InWidget, const FOnWidgetActiveStateChanged OnFinish)
+bool UScreenWidgetManager::CloseUserWidget(UUserWidgetBase* InWidget, const FOnWidgetActiveStateChanged OnFinish)
 {
 	if (!IsValid(InWidget))
 	{
 		LOG(Debug_UI, Error, TEXT("InWidget Is NULL"))
-		return;
+		return false;
 	}
 
 	InactiveWidget(InWidget, OnFinish);
+	return true;
 }
 
-void UScreenWidgetManager::CloseUserWidget(const FGameplayTag InSlotTag, const FOnWidgetActiveStateChanged OnFinish)
+bool UScreenWidgetManager::CloseUserWidget(const FGameplayTag InSlotTag, const FOnWidgetActiveStateChanged OnFinish)
 {
 	if (!InSlotTag.IsValid())
 	{
 		LOG(Debug_UI, Error, TEXT("SlotTag Is NULL"))
-		return;
+		return false;
 	}
 
 	bool bHasWidgetClose = false;;
@@ -533,6 +542,8 @@ void UScreenWidgetManager::CloseUserWidget(const FGameplayTag InSlotTag, const F
 	{
 		OnFinish.ExecuteIfBound(nullptr);
 	}
+
+	return true;
 }
 
 void UScreenWidgetManager::ActiveWidget(UUserWidgetBase* InWidget, FOnWidgetActiveStateChanged OnFinish)

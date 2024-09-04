@@ -7,8 +7,6 @@
 #include "Manager/ManagerSetting.h"
 #include "ProcedureManagerSetting.generated.h"
 
-class UGameplayProcedure;
-
 /**
  * 
  */
@@ -19,11 +17,4 @@ class DEVCORE_API UProcedureManagerSetting : public UManagerSetting
 
 public:
 	static ThisClass* Get() { return GetMutableDefault<ThisClass>(); }
-
-public:
-	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly)
-	TSoftObjectPtr<UGameplayProcedure> DefaultGameplayProcedure;
-
-	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly)
-	TArray<TSoftObjectPtr<UGameplayProcedure>> GameplayProcedures;
 };

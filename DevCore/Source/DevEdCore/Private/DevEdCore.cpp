@@ -8,7 +8,6 @@
 #include "ISettingsModule.h"
 #include "Manager/GlobalManagerSetting.h"
 #include "Manager/ManagerSetting/ManagerSettingCommands.h"
-#include "Procedure/GameplayProcedureActions.h"
 
 #define LOCTEXT_NAMESPACE "FDevEdCoreModule"
 
@@ -98,7 +97,6 @@ void FDevEdCoreModule::RegisterCommand()
 void FDevEdCoreModule::RegisterAssetActions(TArray<TSharedPtr<FAssetTypeActions>>& OutAssetActions)
 {
 	ICommonEdModuleInterface::RegisterAssetActions(OutAssetActions);
-	OutAssetActions.Add(MakeShareable(new FGameplayProcedureActions(AssetCategory)));
 }
 
 void FDevEdCoreModule::UnRegisterCommand()

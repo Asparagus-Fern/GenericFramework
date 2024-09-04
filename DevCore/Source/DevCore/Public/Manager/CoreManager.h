@@ -60,7 +60,5 @@ public:
 
 public:
 	static UWorld* GetStaticWorld() { return StaticWorld; }
-
-private:
 	static UWorld* StaticWorld;
 };

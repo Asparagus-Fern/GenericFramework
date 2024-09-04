@@ -9,8 +9,6 @@ class UGameplayProcedure;
 class UProcedureObject;
 class UCoreManager;
 
-UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Procedure);
-
 struct DEVCORE_API FProcedureDelegates
 {
 	DECLARE_MULTICAST_DELEGATE_OneParam(FPocedureProxyDelegate, UProcedureProxy*)

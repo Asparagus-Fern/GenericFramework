@@ -9,14 +9,9 @@
 
 #define LOCTEXT_NAMESPACE "ULevelStreamingManager"
 
-// ULevelStreamingManager::FWorldLevelStreamingDelegate ULevelStreamingManager::OnLoadWorldLevelStreamingBegin;
-// ULevelStreamingManager::FWorldLevelStreamingDelegate ULevelStreamingManager::OnLoadWorldLevelStreamingEnd;
-// ULevelStreamingManager::FLevelStreamingDelegate ULevelStreamingManager::OnLoadWorldLevelStreamingOnceFinish;
-// ULevelStreamingManager::FLevelStreamingDelegate ULevelStreamingManager::OnLoadWorldLevelStreamingFinish;
-
 bool ULevelStreamingManager::ShouldCreateSubsystem(UObject* Outer) const
 {
-	return Super::ShouldCreateSubsystem(Outer) && ULevelStreamingManagerSetting::Get()->bEnableSubsystem;
+	return Super::ShouldCreateSubsystem(Outer) && ULevelStreamingManagerSetting::Get()->bEnableSubsystem && !Cast<UWorld>(Outer)->IsPartitionedWorld();
 }
 
 void ULevelStreamingManager::NativeOnActived()

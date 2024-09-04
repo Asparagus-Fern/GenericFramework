@@ -9,7 +9,6 @@
 #include "ProcedureManager.generated.h"
 
 class UProcedureProxy;
-class UGameplayProcedure;
 
 /**
  * 
@@ -26,30 +25,6 @@ public:
 public:
 	virtual void NativeOnCreate() override;
 	virtual void NativeOnDestroy() override;
-
-	/* UCoreManager */
-public:
-	virtual void OnWorldMatchStarting_Implementation() override;
-
-	/* UProcedureManager */
-public:
-	virtual void SwitchProcedure(UGameplayProcedure* InProcedure, bool bForce = false);
-	virtual void SwitchProcedure(FGameplayTag InProcedureTag, bool bForce = false);
-
-	virtual FGameplayTag GetLastProcedureTag();
-	virtual FGameplayTag GetCurrentProcedureTag();
-	virtual UGameplayProcedure* GetGameplayProcedure(FGameplayTag InProcedureTag);
-	virtual TMap<FGameplayTag, UGameplayProcedure*>& GetGameplayProcedures();
-
-public:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Transient)
-	FGameplayTag LastProcedureTag;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Transient)
-	FGameplayTag CurrentProcedureTag;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Transient)
-	TMap<FGameplayTag, UGameplayProcedure*> GameplayProcedures;
 
 	/* Procedure Handle */
 public:
