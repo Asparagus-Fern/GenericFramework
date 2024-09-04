@@ -58,7 +58,7 @@ void UCoreManager::OnWorldMatchStarting_Implementation()
 
 bool UCoreManager::DoesSupportWorldType(const EWorldType::Type WorldType) const
 {
-	return WorldType == EWorldType::Game || WorldType == EWorldType::PIE;
+	return WorldType == EWorldType::Game || WorldType == EWorldType::PIE || WorldType == EWorldType::GamePreview || WorldType == EWorldType::GameRPC;
 }
 
 void UCoreManager::NativeOnCreate()
@@ -96,6 +96,18 @@ void UCoreManager::NativeOnInactived()
 	IProcedureInterface::NativeOnInactived();
 	IProcedureInterface::Execute_OnInactived(this);
 	LOG(Debug_Manager, Log, TEXT("On Inactived : %s"), *GetName());
+}
+
+bool UCoreManager::IsGameManager() const
+{
+	const EWorldType::Type WorldType = GetWorld()->WorldType;
+	return WorldType == EWorldType::Game || WorldType == EWorldType::PIE || WorldType == EWorldType::GamePreview || WorldType == EWorldType::GameRPC;;
+}
+
+bool UCoreManager::IsEditorManager() const
+{
+	const EWorldType::Type WorldType = GetWorld()->WorldType;
+	return WorldType == EWorldType::Editor || WorldType == EWorldType::EditorPreview;
 }
 
 #undef LOCTEXT_NAMESPACE

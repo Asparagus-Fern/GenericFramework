@@ -11,6 +11,7 @@
 #include "CameraPoint/CameraPointBase.h"
 #include "CameraPoint/CineCameraPoint.h"
 #include "Kismet/GameplayStatics.h"
+#include "Slate/SceneViewport.h"
 
 #define LOCTEXT_NAMESPACE "UCoreManager"
 

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "CoreManager.h"
 
 template <class ManagerType>
 static ManagerType* GetManager()

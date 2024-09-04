@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
+#include "Scene/SceneType.h"
 #include "BPFunctions_Scene.generated.h"
 
 /**
@@ -17,4 +18,7 @@ class DEVCORE_API UBPFunctions_Scene : public UBlueprintFunctionLibrary
 public:
 	UFUNCTION(BlueprintPure, meta = (WorldContext = "WorldContextObject"))
 	static bool IsPartitionedWorld(const UObject* WorldContextObject);
+
+	UFUNCTION(BlueprintPure, meta = (WorldContext = "WorldContextObject"))
+	static ESceneWorldType GetWorldType(const UObject* WorldContextObject);
 };

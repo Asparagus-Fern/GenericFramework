@@ -2,8 +2,8 @@
 
 #include "Pawn/DevPawn.h"
 
+#include "AIController.h"
 #include "EnhancedInputComponent.h"
-#include "AIModule/Classes/AIController.h"
 #include "BPFunctions/BPFunctions_Gameplay.h"
 #include "Camera/CameraComponent.h"
 #include "Component/CommonSpringArmComponent.h"

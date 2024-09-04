@@ -35,6 +35,7 @@ void UEditorWorldWidgetPanel::NativeOnRefresh()
 		return;
 	}
 
+	/* 遍历所有的Widget并更新其位置 */
 	TMap<AWorldWidgetPoint*, UUserWidgetBase*> TempWorldWidgets = WorldWidgets;
 	for (const auto& TempWorldWidget : TempWorldWidgets)
 	{

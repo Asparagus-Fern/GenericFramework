@@ -58,6 +58,12 @@ public:
 	UFUNCTION(BlueprintNativeEvent)
 	void OnWorldMatchStarting();
 
+	UFUNCTION(BlueprintPure)
+	bool IsGameManager() const;
+
+	UFUNCTION(BlueprintPure)
+	bool IsEditorManager() const;
+	
 public:
 	static UWorld* GetStaticWorld() { return StaticWorld; }
 	static UWorld* StaticWorld;

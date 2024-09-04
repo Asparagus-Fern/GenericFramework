@@ -12,3 +12,13 @@ bool UBPFunctions_Scene::IsPartitionedWorld(const UObject* WorldContextObject)
 
 	return false;
 }
+
+ESceneWorldType UBPFunctions_Scene::GetWorldType(const UObject* WorldContextObject)
+{
+	if (const UWorld* World = GEngine->GetWorldFromContextObjectChecked(WorldContextObject))
+	{
+		return ConvertWorldTypeToSceneWorldType(World->WorldType);
+	}
+
+	return ESceneWorldType::None;
+}

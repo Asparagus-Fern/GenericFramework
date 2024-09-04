@@ -4,8 +4,8 @@
 #include "CameraPoint/CameraPointBase.h"
 
 #include "CameraManager.h"
+#include "Camera/CameraComponent.h"
 #include "Manager/ManagerGlobal.h"
-
 
 ACameraPointBase::ACameraPointBase()
 {
@@ -52,7 +52,7 @@ UCameraComponent* ACameraPointBase::GetCameraComponent_Implementation()
 
 #if WITH_EDITOR
 
-ACameraPointBase::FOnCopyEditorViewportCamera ACameraPointBase::OnCopyViewportCamera;
+ACameraPointBase::FCameraPointDelegate ACameraPointBase::OnCopyViewportCamera;
 ACameraPointBase::FOnCameraPointPilotStateChanged ACameraPointBase::OnCameraPointPilotStateChanged;
 
 void ACameraPointBase::CopyFromViewportCamera_Implementation()

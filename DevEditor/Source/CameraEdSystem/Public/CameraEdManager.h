@@ -28,4 +28,5 @@ public:
 protected:
 	virtual void OnCopyViewportCamera(ACameraPointBase* InCameraPoint);
 	virtual void OnCameraPointPilotStateChanged(ACameraPointBase* InCameraPoint, bool bIsPilot);
+
 };

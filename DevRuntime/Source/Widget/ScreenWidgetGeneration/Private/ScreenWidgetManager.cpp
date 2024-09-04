@@ -189,10 +189,11 @@ void UScreenWidgetManager::CreateGameHUDs()
 			GameHUDClasses.Add(GameHUD->GetClass());
 		}
 
-		if (GameHUDClasses.Contains(GameHUDClass))
+		TSubclassOf<UGameHUD> LoadHUDClass = UBPFunctions_Object::LoadClass<UGameHUD>(GameHUDClass);
+
+		if (GameHUDClasses.Contains(LoadHUDClass))
 			continue;
 
-		TSubclassOf<UGameHUD> LoadHUDClass = UBPFunctions_Object::LoadClass<UGameHUD>(GameHUDClass);
 		if (IsValid(LoadHUDClass))
 		{
 			UGameHUD* NewHUD = CreateWidget<UGameHUD>(GetWorld(), LoadHUDClass);

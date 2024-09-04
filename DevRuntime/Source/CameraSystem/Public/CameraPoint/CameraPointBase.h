@@ -32,6 +32,9 @@ public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void SetCameraComponent(UCameraComponent* InCameraComponent);
 
+public:
+	DECLARE_MULTICAST_DELEGATE_OneParam(FCameraPointDelegate, ACameraPointBase*)
+
 #if WITH_EDITOR
 
 public:

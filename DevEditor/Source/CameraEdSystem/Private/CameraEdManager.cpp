@@ -7,6 +7,7 @@
 #include "LevelEditorSubsystem.h"
 #include "LevelEditorViewport.h"
 #include "CameraPoint/CameraPointBase.h"
+#include "Slate/SceneViewport.h"
 
 #define LOCTEXT_NAMESPACE "UCameraEdManager"
 
@@ -23,7 +24,6 @@ bool UCameraEdManager::DoesSupportWorldType(const EWorldType::Type WorldType) co
 void UCameraEdManager::NativeOnCreate()
 {
 	Super::NativeOnCreate();
-
 	ACameraPointBase::OnCopyViewportCamera.AddUObject(this, &UCameraEdManager::OnCopyViewportCamera);
 	ACameraPointBase::OnCameraPointPilotStateChanged.AddUObject(this, &UCameraEdManager::OnCameraPointPilotStateChanged);
 }
@@ -31,7 +31,6 @@ void UCameraEdManager::NativeOnCreate()
 void UCameraEdManager::NativeOnDestroy()
 {
 	Super::NativeOnDestroy();
-
 	ACameraPointBase::OnCopyViewportCamera.RemoveAll(this);
 	ACameraPointBase::OnCameraPointPilotStateChanged.RemoveAll(this);
 }
