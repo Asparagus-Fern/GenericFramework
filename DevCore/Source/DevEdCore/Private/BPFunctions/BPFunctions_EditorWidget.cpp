@@ -89,7 +89,7 @@ bool UBPFunctions_EditorWidget::GetEditorProjectionData(const FLevelEditorViewpo
 
 TSharedPtr<SLevelViewport> UBPFunctions_EditorWidget::GetEditorViewportWidget(const FLevelEditorViewportClient* InLevelEditorViewportClient)
 {
-	if (InLevelEditorViewportClient)
+	if (InLevelEditorViewportClient && InLevelEditorViewportClient->ParentLevelEditor.IsValid())
 	{
 		const TWeakPtr<ILevelEditor> ParentLevelEditor = InLevelEditorViewportClient->ParentLevelEditor;
 		if (ParentLevelEditor.IsValid())

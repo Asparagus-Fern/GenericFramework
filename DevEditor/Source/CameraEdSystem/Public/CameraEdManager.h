@@ -26,7 +26,7 @@ public:
 
 	/* UCameraEdManager */
 protected:
+	// virtual void OnCameraViewportCapture(ACameraPointBase* InCameraPoint);
 	virtual void OnCopyViewportCamera(ACameraPointBase* InCameraPoint);
 	virtual void OnCameraPointPilotStateChanged(ACameraPointBase* InCameraPoint, bool bIsPilot);
-
 };

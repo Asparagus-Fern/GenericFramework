@@ -88,7 +88,7 @@ public:
 };
 
 USTRUCT(BlueprintType)
-struct FPawnLockingState
+struct DEVCORE_API FPawnLockingState
 {
 	GENERATED_BODY()
 

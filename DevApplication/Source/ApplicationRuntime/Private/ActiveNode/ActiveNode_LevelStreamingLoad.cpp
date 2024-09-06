@@ -3,6 +3,7 @@
 
 #include "ActiveNode/ActiveNode_LevelStreamingLoad.h"
 
+#include "ActiveNodeSubsystem.h"
 #include "LevelStreamingManager.h"
 #include "ScreenWidgetManager.h"
 #include "UserWidget/Loading/Loading.h"
@@ -107,13 +108,16 @@ void AActiveNode_LevelStreamingLoad::NativeOnLoadVisibleLevelsFinish()
 	if (IsValid(LoadingUI))
 		LoadingUI->NativeOnLoadingOnceFinish();
 
-	OnLoadVisibleLevelsFinish();
-
 	if (IsValid(LoadingUI))
 	{
 		LoadingUI->NativeOnLoadingEnd();
 		GetManager<UScreenWidgetManager>()->CloseUserWidget(LoadingUI->SlotTag);
 	}
+
+	OnLoadVisibleLevelsFinish();
+
+	bool bSuccess;
+	UActiveNodeSubsystem::ChangeActiveNodeTo(this, ChangeNodeTag, bSuccess, nullptr, false);
 }
 
 int32 AActiveNode_LevelStreamingLoad::GetLoadingNum() const

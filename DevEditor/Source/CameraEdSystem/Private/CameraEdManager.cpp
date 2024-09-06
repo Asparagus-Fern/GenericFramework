@@ -4,8 +4,11 @@
 #include "CameraEdManager.h"
 
 #include "CameraEdManagerSetting.h"
+#include "LevelEditor.h"
 #include "LevelEditorSubsystem.h"
 #include "LevelEditorViewport.h"
+#include "SLevelViewport.h"
+#include "BPFunctions/BPFunctions_EditorWidget.h"
 #include "CameraPoint/CameraPointBase.h"
 #include "Slate/SceneViewport.h"
 
@@ -24,6 +27,7 @@ bool UCameraEdManager::DoesSupportWorldType(const EWorldType::Type WorldType) co
 void UCameraEdManager::NativeOnCreate()
 {
 	Super::NativeOnCreate();
+	// ACameraPointBase::OnCameraViewportCapture.AddUObject(this, &UCameraEdManager::OnCameraViewportCapture);
 	ACameraPointBase::OnCopyViewportCamera.AddUObject(this, &UCameraEdManager::OnCopyViewportCamera);
 	ACameraPointBase::OnCameraPointPilotStateChanged.AddUObject(this, &UCameraEdManager::OnCameraPointPilotStateChanged);
 }
@@ -31,9 +35,35 @@ void UCameraEdManager::NativeOnCreate()
 void UCameraEdManager::NativeOnDestroy()
 {
 	Super::NativeOnDestroy();
+	// ACameraPointBase::OnCameraViewportCapture.RemoveAll(this);
 	ACameraPointBase::OnCopyViewportCamera.RemoveAll(this);
 	ACameraPointBase::OnCameraPointPilotStateChanged.RemoveAll(this);
 }
+
+/*void UCameraEdManager::OnCameraViewportCapture(ACameraPointBase* InCameraPoint)
+{
+	for (auto& ViewportClient : GEditor->GetLevelViewportClients())
+	{
+		FLevelViewportActorLock& ActorLock = ViewportClient->GetActorLock();
+		if (ActorLock.GetLockedActor() == InCameraPoint)
+		{
+			// TSharedPtr<SLevelViewport> LevelViewport = UBPFunctions_EditorWidget::GetEditorViewportWidget(ViewportClient);
+			// TSharedPtr<FSceneViewport> SceneViewport = LevelViewport->GetSceneViewport();
+			// if (SceneViewport.IsValid())
+			// {
+			// 	GScreenshotResolutionX = InCameraPoint->GetCameraComponent()->OrthoWidth * InCameraPoint->GetCameraComponent()->AspectRatio;
+			// 	GScreenshotResolutionY = InCameraPoint->GetCameraComponent()->OrthoWidth;
+			// }
+
+			// SceneViewport->TakeHighResScreenShot();
+
+			FScreenshotRequest::RequestScreenshot(false);
+			ViewportClient->ProcessScreenShots(ViewportClient->Viewport);
+
+			break;
+		}
+	}
+}*/
 
 void UCameraEdManager::OnCopyViewportCamera(ACameraPointBase* InCameraPoint)
 {

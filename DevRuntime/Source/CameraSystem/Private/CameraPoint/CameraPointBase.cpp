@@ -7,6 +7,8 @@
 #include "Camera/CameraComponent.h"
 #include "Manager/ManagerGlobal.h"
 
+UE_DEFINE_GAMEPLAY_TAG(TAG_Camera, "Camera");
+
 ACameraPointBase::ACameraPointBase()
 {
 	PrimaryActorTick.bCanEverTick = false;
@@ -52,8 +54,14 @@ UCameraComponent* ACameraPointBase::GetCameraComponent_Implementation()
 
 #if WITH_EDITOR
 
+// ACameraPointBase::FCameraPointDelegate ACameraPointBase::OnCameraViewportCapture;
 ACameraPointBase::FCameraPointDelegate ACameraPointBase::OnCopyViewportCamera;
 ACameraPointBase::FOnCameraPointPilotStateChanged ACameraPointBase::OnCameraPointPilotStateChanged;
+
+// void ACameraPointBase::CaptureCameraViewport_Implementation()
+// {
+// 	OnCameraViewportCapture.Broadcast(this);
+// }
 
 void ACameraPointBase::CopyFromViewportCamera_Implementation()
 {

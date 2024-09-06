@@ -33,10 +33,16 @@ public:
 	void AddRotation(FVector2D InValue);
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Pawn Interface")
+	void AddZoom(float InValue);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Pawn Interface")
 	void SetLocation(FVector InValue);
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Pawn Interface")
 	void SetRotation(FRotator InValue);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Pawn Interface")
+	void SetZoom(float InValue);
 
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Pawn Interface")
@@ -44,6 +50,9 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Pawn Interface")
 	FRotator GetRotation();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Pawn Interface")
+	float GetZoom();
 
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Pawn Interface")

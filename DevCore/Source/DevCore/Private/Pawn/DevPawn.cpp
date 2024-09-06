@@ -24,15 +24,8 @@ ADevPawn::ADevPawn()
 	bUseControllerRotationYaw = false;
 
 	PawnName = "DevPawn";
-	FloatingPawnMovement = CreateDefaultSubobject<UFloatingPawnMovement>("Movement");
-
 	USceneComponent* SceneComponent = CreateDefaultSubobject<USceneComponent>("Root");
 	RootComponent = SceneComponent;
-
-	CommonSpringArmComponent = CreateDefaultSubobject<UCommonSpringArmComponent>("SpringArm");
-	CommonSpringArmComponent->SetupAttachment(SceneComponent);
-	CameraComponent = CreateDefaultSubobject<UCameraComponent>("Camera");
-	CameraComponent->SetupAttachment(CommonSpringArmComponent);
 
 	const ConstructorHelpers::FObjectFinder<UInputAction> MoveAction(TEXT("/Script/EnhancedInput.InputAction'/DevCore/Input/MovementActions/IA_Move.IA_Move'"));
 	const ConstructorHelpers::FObjectFinder<UInputAction> TurnAction(TEXT("/Script/EnhancedInput.InputAction'/DevCore/Input/MovementActions/IA_Turn.IA_Turn'"));
@@ -46,8 +39,6 @@ ADevPawn::ADevPawn()
 void ADevPawn::BeginPlay()
 {
 	Super::BeginPlay();
-
-	CommonSpringArmComponent->SpringArmLimit = PawnLockingState.SpringArmLimit;
 	OnPawnRegister.Broadcast(this);
 }
 
@@ -88,16 +79,10 @@ void ADevPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void ADevPawn::AddLocation_Implementation(const FVector2D InValue)
 {
-	const FVector TargetLocation = Execute_GetLocation(this) + (UKismetMathLibrary::GetRightVector(GetActorRotation()) * InValue.X) + (UKismetMathLibrary::GetForwardVector(GetActorRotation()) * InValue.Y);
-	if (PawnLockingState.CanMove(TargetLocation))
+	if (PawnLockingState.CanMove(GetActorLocation()))
 	{
-		const float Rate = ((FMath::Abs(FMath::Sin(UE_DOUBLE_PI / (180.0) * Execute_GetRotation(this).Pitch)) * CommonSpringArmComponent->TargetArmLength) * UE_TWO_PI);
+		const FVector2D Movement = InValue * UPawnManagerSetting::Get()->MovementSpeed;
 
-		FloatingPawnMovement->MaxSpeed = Rate;
-		FloatingPawnMovement->Acceleration = Rate * 0.5f;
-		FloatingPawnMovement->Deceleration = Rate * 0.5f;
-
-		const FVector2D Movement = InValue * Rate * UPawnManagerSetting::Get()->MovementSpeed;
 		AddMovementInput(UKismetMathLibrary::GetRightVector(GetActorRotation()), Movement.X);
 		AddMovementInput(UKismetMathLibrary::GetForwardVector(GetActorRotation()), Movement.Y);
 	}
@@ -105,17 +90,22 @@ void ADevPawn::AddLocation_Implementation(const FVector2D InValue)
 
 void ADevPawn::AddRotation_Implementation(const FVector2D InValue)
 {
-	const FRotator TargetRotation = Execute_GetRotation(this) + FRotator(InValue.Y, InValue.X, 0.f);
-	if (PawnLockingState.CanTurn(TargetRotation))
+	if (PawnLockingState.CanTurn(GetActorRotation()))
 	{
-		AddActorWorldRotation(FRotator(0.f, InValue.X, 0.f));
-		CommonSpringArmComponent->AddRelativeRotation(FRotator(InValue.Y, 0.f, 0.f));
+		const FVector2D Rotation = InValue * UPawnManagerSetting::Get()->RotationSpeed;
+
+		AddControllerYawInput(Rotation.X);
+		AddControllerPitchInput(Rotation.Y);
 	}
+}
+
+void ADevPawn::AddZoom_Implementation(float InValue)
+{
 }
 
 void ADevPawn::SetLocation_Implementation(const FVector InValue)
 {
-	if (PawnLockingState.CanMove(InValue))
+	if (PawnLockingState.CanMove(GetActorLocation()))
 	{
 		SetActorLocation(InValue);
 	}
@@ -123,11 +113,14 @@ void ADevPawn::SetLocation_Implementation(const FVector InValue)
 
 void ADevPawn::SetRotation_Implementation(const FRotator InValue)
 {
-	if (PawnLockingState.CanTurn(InValue))
+	if (PawnLockingState.CanTurn(GetActorRotation()))
 	{
-		SetActorRotation(FRotator(0.f, InValue.Yaw, 0.f));
-		CommonSpringArmComponent->SetRelativeRotation(FRotator(InValue.Pitch, 0.f, 0.f), true);
+		SetActorRotation(InValue);
 	}
+}
+
+void ADevPawn::SetZoom_Implementation(float InValue)
+{
 }
 
 FVector ADevPawn::GetLocation_Implementation()
@@ -137,7 +130,12 @@ FVector ADevPawn::GetLocation_Implementation()
 
 FRotator ADevPawn::GetRotation_Implementation()
 {
-	return FRotator(CommonSpringArmComponent->GetRelativeRotation().Pitch, GetActorRotation().Yaw, 0.f);
+	return GetActorRotation();
+}
+
+float ADevPawn::GetZoom_Implementation()
+{
+	return -1.f;
 }
 
 bool ADevPawn::IsPlayer_Implementation()
@@ -160,15 +158,14 @@ AAIController* ADevPawn::GetAIController_Implementation()
 	return Cast<AAIController>(GetController());
 }
 
-void ADevPawn::SetPawnLockingState(FPawnLockingState InPawnLockingState)
+void ADevPawn::SetPawnLockingState_Implementation(FPawnLockingState InPawnLockingState)
 {
 	PawnLockingState = InPawnLockingState;
-	CommonSpringArmComponent->SpringArmLimit = PawnLockingState.SpringArmLimit;
 }
 
 UCameraComponent* ADevPawn::GetActiveCameraComponent_Implementation()
 {
-	return CameraComponent;
+	return nullptr;
 }
 
 void ADevPawn::OnMoveStart_Implementation(const FInputActionValue& InValue)
@@ -214,10 +211,7 @@ void ADevPawn::OnZooming_Implementation(const FInputActionValue& InValue)
 	if (InValue.GetMagnitude() != 0.f)
 	{
 		const float Value = InValue.Get<FInputActionValue::Axis1D>();
-		if (PawnLockingState.CanZoom(CommonSpringArmComponent->TargetArmLength + Value))
-		{
-			CommonSpringArmComponent->AddTargetArmLength(Value);
-		}
+		Execute_AddZoom(this, Value);
 	}
 }
 

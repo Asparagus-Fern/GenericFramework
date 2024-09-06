@@ -7,6 +7,8 @@
 #include "Manager/CoreManager.h"
 #include "CameraManager.generated.h"
 
+class UInputIdle;
+class UCameraAutoSwitch;
 class UCameraComponent;
 class UCameraHandle;
 class ACameraPointBase;
@@ -62,4 +64,21 @@ protected:
 	bool CheckIsSwitching(const APlayerController* InPlayerController);
 	UCameraHandle* GetCameraHandle(const APlayerController* InPlayerController);
 	void HandleSwitchToCameraFinish(UCameraHandle* InCameraHandle);
+
+	/* Auto Switch Camera */
+public:
+	UFUNCTION(BlueprintCallable)
+	bool SetCameraAutoSwitch(UCameraAutoSwitch* InCameraAutoSwitch);
+
+protected:
+	UPROPERTY(Transient, BlueprintReadOnly)
+	UCameraAutoSwitch* CameraAutoSwitch = nullptr;
+
+protected:
+	int32 CameraAutoSwitchIndex = 0;
+	FTimerHandle CameraAutoSwitchHandle;
+
+	void OnCameraAutoSwitchStart(UInputIdle* InputIdle);
+	void AutoSwitchCamera();
+	void OnCameraAutoSwitchStop(UInputIdle* InputIdle);
 };

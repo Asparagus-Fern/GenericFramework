@@ -4,11 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
+#include "NativeGameplayTags.h"
 #include "GameFramework/Actor.h"
 #include "CameraPointBase.generated.h"
 
 class UCameraComponent;
 class UCameraHandle;
+
+UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Camera);
 
 UCLASS(Abstract, HideCategories=(Object,Actor,Collision,Physics,Networking,Input,LevelInstance,Cooking,HLOD,Replication))
 class CAMERASYSTEM_API ACameraPointBase : public AActor
@@ -38,6 +41,9 @@ public:
 #if WITH_EDITOR
 
 public:
+	// UFUNCTION(CallInEditor, BlueprintNativeEvent, Category="Camera Point (Editor)", meta=(AdvancedDisplay))
+	// void CaptureCameraViewport();
+
 	/* 从当前视口拷贝位置与旋转到该相机 */
 	UFUNCTION(CallInEditor, BlueprintNativeEvent, Category="Camera Point (Editor)")
 	void CopyFromViewportCamera();
@@ -49,8 +55,8 @@ public:
 	void StopPilotCamera();
 
 public:
-	DECLARE_MULTICAST_DELEGATE_OneParam(FOnCopyEditorViewportCamera, ACameraPointBase*)
-	static FOnCopyEditorViewportCamera OnCopyViewportCamera;
+	// static FCameraPointDelegate OnCameraViewportCapture;
+	static FCameraPointDelegate OnCopyViewportCamera;
 
 	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnCameraPointPilotStateChanged, ACameraPointBase*, bool)
 	static FOnCameraPointPilotStateChanged OnCameraPointPilotStateChanged;

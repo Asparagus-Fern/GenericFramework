@@ -31,26 +31,18 @@ public:
 public:
 	virtual void AddLocation_Implementation(FVector2D InValue) override;
 	virtual void AddRotation_Implementation(FVector2D InValue) override;
+	virtual void AddZoom_Implementation(float InValue) override;
 	virtual void SetLocation_Implementation(FVector InValue) override;
 	virtual void SetRotation_Implementation(FRotator InValue) override;
+	virtual void SetZoom_Implementation(float InValue) override;
 	virtual FVector GetLocation_Implementation() override;
 	virtual FRotator GetRotation_Implementation() override;
+	virtual float GetZoom_Implementation() override;
 
 	virtual bool IsPlayer_Implementation() override;
 	virtual bool IsAI_Implementation() override;
 	virtual APlayerController* GetPlayerController_Implementation() override;
 	virtual AAIController* GetAIController_Implementation() override;
-
-	/* ADevPawn */
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	UFloatingPawnMovement* FloatingPawnMovement;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	UCommonSpringArmComponent* CommonSpringArmComponent = nullptr;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	UCameraComponent* CameraComponent = nullptr;
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
@@ -73,7 +65,7 @@ public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	UCameraComponent* GetActiveCameraComponent();
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void SetPawnLockingState(FPawnLockingState InPawnLockingState);
 
 	/* Move */

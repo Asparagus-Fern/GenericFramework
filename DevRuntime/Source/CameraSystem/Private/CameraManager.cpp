@@ -3,6 +3,7 @@
 
 #include "CameraManager.h"
 
+#include "CameraAutoSwitch.h"
 #include "CameraHandle.h"
 #include "CameraManagerSetting.h"
 #include "CineCameraComponent.h"
@@ -10,6 +11,7 @@
 #include "CameraPoint/CameraPoint.h"
 #include "CameraPoint/CameraPointBase.h"
 #include "CameraPoint/CineCameraPoint.h"
+#include "Input/InputManager.h"
 #include "Kismet/GameplayStatics.h"
 #include "Slate/SceneViewport.h"
 
@@ -247,6 +249,84 @@ void UCameraManager::HandleSwitchToCameraFinish(UCameraHandle* InCameraHandle)
 	{
 		CurrentCameraHandles.Remove(InCameraHandle);
 	}
+}
+
+bool UCameraManager::SetCameraAutoSwitch(UCameraAutoSwitch* InCameraAutoSwitch)
+{
+	if (UInputManager* InputManager = GetManager<UInputManager>())
+	{
+		if (IsValid(CameraAutoSwitch) && !IsValid(InCameraAutoSwitch))
+		{
+			InputManager->UnRegisterIdleData(CameraAutoSwitch);
+			CameraAutoSwitch = nullptr;
+			return true;
+		}
+
+		if (IsValid(InCameraAutoSwitch))
+		{
+			if (IsValid(CameraAutoSwitch))
+			{
+				InputManager->UnRegisterIdleData(CameraAutoSwitch);
+			}
+
+			if (InCameraAutoSwitch->AutoSwitchTags.IsEmpty() || !IsValid(InCameraAutoSwitch->CameraHandle) || InCameraAutoSwitch->TimeInterval < 0.f)
+			{
+				return false;
+			}
+
+			CameraAutoSwitch = InCameraAutoSwitch;
+			InputManager->RegisterIdleData(CameraAutoSwitch, FInputIdleDelegate::CreateUObject(this, &UCameraManager::OnCameraAutoSwitchStart), FInputIdleDelegate::CreateUObject(this, &UCameraManager::OnCameraAutoSwitchStop));
+			return true;
+		}
+	}
+
+	return false;
+}
+
+void UCameraManager::OnCameraAutoSwitchStart(UInputIdle* InputIdle)
+{
+	if (CameraAutoSwitch == InputIdle)
+	{
+		GetWorld()->GetTimerManager().SetTimer(CameraAutoSwitchHandle, FTimerDelegate::CreateUObject(this, &UCameraManager::AutoSwitchCamera), CameraAutoSwitch->TimeInterval, true);
+		AutoSwitchCamera();
+	}
+}
+
+void UCameraManager::AutoSwitchCamera()
+{
+	auto Switch = [this]()
+	{
+		for (FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)
+		{
+			APlayerController* PC = Iterator->Get();
+			SwitchToCamera(UGameplayStatics::GetPlayerControllerID(PC), CameraAutoSwitch->AutoSwitchTags[CameraAutoSwitchIndex], CameraAutoSwitch->CameraHandle);
+		}
+	};
+
+	if (IsValid(CameraAutoSwitch))
+	{
+		if (!CameraAutoSwitch->AutoSwitchTags.IsValidIndex(CameraAutoSwitchIndex))
+		{
+			CameraAutoSwitchIndex = 0;
+		}
+
+		if (!CameraAutoSwitch->AutoSwitchTags[CameraAutoSwitchIndex].IsValid())
+		{
+			CameraAutoSwitchIndex++;
+			AutoSwitchCamera();
+			return;
+		}
+
+		Switch();
+		CameraAutoSwitchIndex++;
+	}
+}
+
+void UCameraManager::OnCameraAutoSwitchStop(UInputIdle* InputIdle)
+{
+	GetWorld()->GetTimerManager().ClearTimer(CameraAutoSwitchHandle);
+	CameraAutoSwitchHandle.Invalidate();
+	CameraAutoSwitchIndex = 0;
 }
 
 #undef LOCTEXT_NAMESPACE
