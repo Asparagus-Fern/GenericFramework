@@ -53,4 +53,16 @@ public:
 
 	UFUNCTION(BlueprintCallable, DisplayName ="SwitchToCameraByCameraPoint")
 	static void SwitchToCamera_CameraPoint_Handle(int32 InPlayerIndex, ACameraPointBase* InCameraPoint, UCameraHandle* InCameraHandle);
+
+	UFUNCTION(BlueprintCallable, DisplayName ="SwitchToCurrentCamera(Class)")
+	static void SwitchToCurrent_HandleClass(int32 InPlayerIndex, TSubclassOf<UCameraHandle> InCameraHandleClass);
+
+	UFUNCTION(BlueprintCallable, DisplayName ="SwitchToCurrentCamera")
+	static void SwitchToCurrent_Handle(int32 InPlayerIndex, UCameraHandle* InCameraHandle);
+
+	UFUNCTION(BlueprintCallable, DisplayName ="SwitchToPreviousCamera(Class)")
+	static void SwitchToPrevious_HandleClass(int32 InPlayerIndex, TSubclassOf<UCameraHandle> InCameraHandleClass);
+
+	UFUNCTION(BlueprintCallable, DisplayName ="SwitchToPreviousCamera")
+	static void SwitchToPrevious_Handle(int32 InPlayerIndex, UCameraHandle* InCameraHandle);
 };

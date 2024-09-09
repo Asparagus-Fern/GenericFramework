@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "CameraHandle.h"
+#include "CameraHandle/CameraHandle.h"
 #include "CameraHandle_Transition.generated.h"
 
 /**
@@ -18,6 +18,7 @@ public:
 	UCameraHandle_Transition();
 	virtual bool HandleSwitchToCameraPoint_Implementation(APlayerController* InPlayerController, ACameraPointBase* InCameraPoint) override;
 	virtual void OnSwitchToCameraPointFinish_Implementation() override;
+	virtual float GetSwitchDuration_Implementation() override;
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

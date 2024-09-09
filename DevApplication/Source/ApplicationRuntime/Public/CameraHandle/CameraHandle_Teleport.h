@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "CameraHandle.h"
+#include "CameraHandle/CameraHandle.h"
 #include "CameraHandle_Teleport.generated.h"
 
 /**

@@ -20,6 +20,10 @@ public:
 	static ThisClass* Get() { return GetMutableDefault<ThisClass>(); }
 
 public:
+	/* 包含在此处的键位不会打断输入空闲的切换 */
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly)
+	TArray<FKey> InputIdleNotInclude;
+	
 	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly)
 	TArray<FEnhanceInputMappingContext> EnhanceInputMappingContexts;
 };

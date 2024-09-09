@@ -1,8 +1,7 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
-#include "CameraHandle.h"
+#include "CameraHandle/CameraHandle.h"
 
-#include "CameraHandleInterface.h"
 #include "CameraManager.h"
 #include "CameraManagerSetting.h"
 #include "CameraPoint/CameraPointBase.h"
@@ -45,7 +44,7 @@ bool UCameraHandle::NativeHandleSwitchToCameraPoint(APlayerController* InPlayerC
 		OwnerPlayerController = InPlayerController;
 		TargetCameraPoint = InCameraPoint;
 		OnHandleFinish = OnFinish;
-		
+
 		OnSwitchCameraBegin.Broadcast(this);
 
 		TArray<AActor*> Actors;
@@ -97,4 +96,9 @@ void UCameraHandle::NativeOnSwitchToCameraPointFinish()
 	OwnerPlayerController = nullptr;
 	TargetCameraPoint = nullptr;
 	OnHandleFinish.Unbind();
+}
+
+float UCameraHandle::GetSwitchDuration_Implementation()
+{
+	return 0.f;
 }

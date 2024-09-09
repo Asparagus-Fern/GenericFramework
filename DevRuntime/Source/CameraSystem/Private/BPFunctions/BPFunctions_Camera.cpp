@@ -3,7 +3,6 @@
 
 #include "BPFunctions/BPFunctions_Camera.h"
 
-#include "CameraHandle.h"
 #include "CameraManager.h"
 #include "Manager/ManagerGlobal.h"
 
@@ -94,5 +93,37 @@ void UBPFunctions_Camera::SwitchToCamera_CameraPoint_Handle(const int32 InPlayer
 	if (UCameraManager* CameraManager = GetManager<UCameraManager>())
 	{
 		CameraManager->SwitchToCamera(InPlayerIndex, InCameraPoint, InCameraHandle);
+	}
+}
+
+void UBPFunctions_Camera::SwitchToCurrent_HandleClass(const int32 InPlayerIndex, const TSubclassOf<UCameraHandle> InCameraHandleClass)
+{
+	if (UCameraManager* CameraManager = GetManager<UCameraManager>())
+	{
+		CameraManager->SwitchToCurrent(InPlayerIndex, InCameraHandleClass);
+	}
+}
+
+void UBPFunctions_Camera::SwitchToCurrent_Handle(const int32 InPlayerIndex, UCameraHandle* InCameraHandle)
+{
+	if (UCameraManager* CameraManager = GetManager<UCameraManager>())
+	{
+		CameraManager->SwitchToCurrent(InPlayerIndex, InCameraHandle);
+	}
+}
+
+void UBPFunctions_Camera::SwitchToPrevious_HandleClass(const int32 InPlayerIndex, const TSubclassOf<UCameraHandle> InCameraHandleClass)
+{
+	if (UCameraManager* CameraManager = GetManager<UCameraManager>())
+	{
+		CameraManager->SwitchToPrevious(InPlayerIndex, InCameraHandleClass);
+	}
+}
+
+void UBPFunctions_Camera::SwitchToPrevious_Handle(const int32 InPlayerIndex, UCameraHandle* InCameraHandle)
+{
+	if (UCameraManager* CameraManager = GetManager<UCameraManager>())
+	{
+		CameraManager->SwitchToPrevious(InPlayerIndex, InCameraHandle);
 	}
 }

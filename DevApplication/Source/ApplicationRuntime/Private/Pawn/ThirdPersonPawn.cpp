@@ -3,8 +3,8 @@
 
 #include "Pawn/ThirdPersonPawn.h"
 
-#include "CameraHandle.h"
 #include "Camera/CameraComponent.h"
+#include "CameraHandle/CameraHandle.h"
 #include "CameraPoint/CameraPointBase.h"
 #include "Component/CommonSpringArmComponent.h"
 #include "GameFramework/FloatingPawnMovement.h"
@@ -59,7 +59,7 @@ void AThirdPersonPawn::AddLocation_Implementation(FVector2D InValue)
 	const FVector TargetLocation = Execute_GetLocation(this) + (UKismetMathLibrary::GetRightVector(GetActorRotation()) * InValue.X) + (UKismetMathLibrary::GetForwardVector(GetActorRotation()) * InValue.Y);
 	if (PawnLockingState.CanMove(TargetLocation))
 	{
-		const float Rate = ((FMath::Abs(FMath::Sin(UE_DOUBLE_PI / (180.0) * Execute_GetRotation(this).Pitch)) * CommonSpringArmComponent->TargetArmLength) * UE_TWO_PI);
+		const float Rate = FMath::Abs(FMath::GetMappedRangeValueClamped(FVector2D(0.f, 1.f), FVector2D(0.1f, 0.9f), FMath::Sin(UE_DOUBLE_PI / (180.0) * Execute_GetRotation(this).Pitch))) * CommonSpringArmComponent->TargetArmLength * UE_TWO_PI;
 
 		FloatingPawnMovement->MaxSpeed = Rate;
 		FloatingPawnMovement->Acceleration = Rate * 0.5f;

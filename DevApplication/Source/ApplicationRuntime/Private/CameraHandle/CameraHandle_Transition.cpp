@@ -30,3 +30,8 @@ void UCameraHandle_Transition::OnSwitchToCameraPointFinish_Implementation()
 	Super::OnSwitchToCameraPointFinish_Implementation();
 	TimerHandle.Invalidate();
 }
+
+float UCameraHandle_Transition::GetSwitchDuration_Implementation()
+{
+	return ViewTargetTransitionParams.BlendTime;
+}

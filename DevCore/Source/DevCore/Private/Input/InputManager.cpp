@@ -128,9 +128,21 @@ void UInputManager::UnRegisterIdleData(UInputIdle* InputIdle)
 		return;
 	}
 
-	const FInputIdleInfo* InputIdleInfo = InputIdleInfos.FindByKey(InputIdle);
-	InputIdleInfo->Invalid();
-	InputIdleInfos.Remove(*InputIdleInfo);
+	const FInputIdleInfo InputIdleInfo = *InputIdleInfos.FindByKey(InputIdle);
+	InputIdleInfo.Invalid();
+	InputIdleInfos.Remove(InputIdleInfo);
+}
+
+bool UInputManager::IsIdle(UInputIdle* InputIdle, bool& Idle)
+{
+	if (IsValid(InputIdle) && InputIdleInfos.Contains(InputIdle))
+	{
+		const FInputIdleInfo InputIdleInfo = *InputIdleInfos.FindByKey(InputIdle);
+		Idle = InputIdleInfo.bIsIdle;
+		return true;
+	}
+
+	return false;
 }
 
 void UInputManager::RefreshIdleTime()

@@ -44,6 +44,10 @@ public:
 	virtual void NativeOnSwitchToCameraPointFinish();
 
 public:
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	float GetSwitchDuration();
+	
+public:
 	UPROPERTY(BlueprintReadOnly)
 	APlayerController* OwnerPlayerController = nullptr;
 

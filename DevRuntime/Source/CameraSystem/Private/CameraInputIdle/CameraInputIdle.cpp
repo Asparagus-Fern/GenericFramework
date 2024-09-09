@@ -1,4 +1,4 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "CameraAutoSwitch.h"
+#include "CameraInputIdle/CameraInputIdle.h"

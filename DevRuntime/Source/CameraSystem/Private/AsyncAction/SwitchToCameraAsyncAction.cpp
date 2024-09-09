@@ -126,6 +126,54 @@ USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCamera_CameraPoi
 	return NewAction;
 }
 
+USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCurrent_HandleClass(int32 InPlayerIndex, TSubclassOf<UCameraHandle> InCameraHandleClass)
+{
+	USwitchToCameraAsyncAction* NewAction = NewObject<USwitchToCameraAsyncAction>();
+
+	if (UCameraManager* CameraManager = GetManager<UCameraManager>())
+	{
+		CameraManager->SwitchToCurrent(InPlayerIndex, InCameraHandleClass, FSimpleDelegate::CreateUObject(NewAction, &USwitchToCameraAsyncAction::OnHandleFinish));
+	}
+
+	return NewAction;
+}
+
+USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCurrent_Handle(int32 InPlayerIndex, UCameraHandle* InCameraHandle)
+{
+	USwitchToCameraAsyncAction* NewAction = NewObject<USwitchToCameraAsyncAction>();
+
+	if (UCameraManager* CameraManager = GetManager<UCameraManager>())
+	{
+		CameraManager->SwitchToCurrent(InPlayerIndex, InCameraHandle, FSimpleDelegate::CreateUObject(NewAction, &USwitchToCameraAsyncAction::OnHandleFinish));
+	}
+
+	return NewAction;
+}
+
+USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToPrevious_HandleClass(int32 InPlayerIndex, TSubclassOf<UCameraHandle> InCameraHandleClass)
+{
+	USwitchToCameraAsyncAction* NewAction = NewObject<USwitchToCameraAsyncAction>();
+
+	if (UCameraManager* CameraManager = GetManager<UCameraManager>())
+	{
+		CameraManager->SwitchToPrevious(InPlayerIndex, InCameraHandleClass, FSimpleDelegate::CreateUObject(NewAction, &USwitchToCameraAsyncAction::OnHandleFinish));
+	}
+
+	return NewAction;
+}
+
+USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToPrevious_Handle(int32 InPlayerIndex, UCameraHandle* InCameraHandle)
+{
+	USwitchToCameraAsyncAction* NewAction = NewObject<USwitchToCameraAsyncAction>();
+
+	if (UCameraManager* CameraManager = GetManager<UCameraManager>())
+	{
+		CameraManager->SwitchToPrevious(InPlayerIndex, InCameraHandle, FSimpleDelegate::CreateUObject(NewAction, &USwitchToCameraAsyncAction::OnHandleFinish));
+	}
+
+	return NewAction;
+}
+
 void USwitchToCameraAsyncAction::OnHandleFinish()
 {
 	OnFinish.Broadcast();

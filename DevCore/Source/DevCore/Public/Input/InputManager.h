@@ -67,6 +67,8 @@ public:
 	bool RegisterIdleData(UInputIdle* InputIdle, const FInputIdleDelegate& OnIdle, const FInputIdleDelegate& OnContinue);
 	void UnRegisterIdleData(UInputIdle* InputIdle);
 
+	bool IsIdle(UInputIdle* InputIdle, bool& Idle);
+
 protected:
 	void RefreshIdleTime();
 	float IdleTime = 0.f;
