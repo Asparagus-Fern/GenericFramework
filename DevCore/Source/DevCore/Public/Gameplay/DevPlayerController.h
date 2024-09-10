@@ -6,6 +6,8 @@
 #include "GameFramework/PlayerController.h"
 #include "DevPlayerController.generated.h"
 
+class IPawnInputInterface;
+
 /**
  * 
  */
@@ -16,4 +18,6 @@ class DEVCORE_API ADevPlayerController : public APlayerController
 
 public:
 	ADevPlayerController();
+	virtual void OnPossess(APawn* InPawn) override;
+	virtual void OnUnPossess() override;
 };

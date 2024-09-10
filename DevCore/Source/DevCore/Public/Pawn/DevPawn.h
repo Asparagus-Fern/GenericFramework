@@ -3,13 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "NativeGameplayTags.h"
 #include "PawnInterface.h"
 #include "PawnType.h"
 #include "GameFramework/Pawn.h"
-#include "Procedure/ProcedureBaseInterface.h"
+#include "Input/InputType.h"
 #include "DevPawn.generated.h"
 
+class UInputHandleComponent;
+class UInputHandle;
 struct FInputActionValue;
 class UInputAction;
 class UCameraComponent;
@@ -26,6 +27,11 @@ public:
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
+
+public:
+	DECLARE_MULTICAST_DELEGATE_OneParam(FPawnDelegate, ADevPawn*)
+	static FPawnDelegate OnPawnRegister;
+	static FPawnDelegate OnPawnUnRegister;
 
 	/* IIPawnInterface */
 public:
@@ -51,15 +57,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FPawnLockingState PawnLockingState;
 
-public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TObjectPtr<UInputAction> IA_Move;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TObjectPtr<UInputAction> IA_Turn;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TObjectPtr<UInputAction> IA_Zoom;
+	UInputHandleComponent* InputHandleComponent;
 
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
@@ -67,42 +66,4 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void SetPawnLockingState(FPawnLockingState InPawnLockingState);
-
-	/* Move */
-protected:
-	UFUNCTION(BlueprintNativeEvent)
-	void OnMoveStart(const FInputActionValue& InValue);
-
-	UFUNCTION(BlueprintNativeEvent)
-	void OnMoving(const FInputActionValue& InValue);
-
-	UFUNCTION(BlueprintNativeEvent)
-	void OnMoveEnd(const FInputActionValue& InValue);
-
-	/* Turn */
-protected:
-	UFUNCTION(BlueprintNativeEvent)
-	void OnTurnStart(const FInputActionValue& InValue);
-
-	UFUNCTION(BlueprintNativeEvent)
-	void OnTurning(const FInputActionValue& InValue);
-
-	UFUNCTION(BlueprintNativeEvent)
-	void OnTurnEnd(const FInputActionValue& InValue);
-
-	/* Zoom */
-protected:
-	UFUNCTION(BlueprintNativeEvent)
-	void OnZoomStart(const FInputActionValue& InValue);
-
-	UFUNCTION(BlueprintNativeEvent)
-	void OnZooming(const FInputActionValue& InValue);
-
-	UFUNCTION(BlueprintNativeEvent)
-	void OnZoomEnd(const FInputActionValue& InValue);
-
-public:
-	DECLARE_MULTICAST_DELEGATE_OneParam(FPawnDelegate, ADevPawn*)
-	static FPawnDelegate OnPawnRegister;
-	static FPawnDelegate OnPawnUnRegister;
 };

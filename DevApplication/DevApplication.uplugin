@@ -25,6 +25,10 @@
     {
       "Name": "DevRuntime",
       "Enabled": true
+    },
+    {
+      "Name": "Mannequins",
+      "Enabled": true
     }
   ],
   "Modules": [

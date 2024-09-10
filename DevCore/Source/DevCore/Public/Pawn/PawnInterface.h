@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
 #include "PawnType.h"
+#include "Input/InputType.h"
 #include "UObject/Interface.h"
 #include "PawnInterface.generated.h"
 

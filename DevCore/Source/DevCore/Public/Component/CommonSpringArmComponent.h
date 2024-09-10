@@ -7,7 +7,7 @@
 #include "Pawn/PawnType.h"
 #include "CommonSpringArmComponent.generated.h"
 
-UCLASS(ClassGroup=(Camera), meta=(BlueprintSpawnableComponent))
+UCLASS(ClassGroup=(DevPlugin), meta=(BlueprintSpawnableComponent))
 class DEVCORE_API UCommonSpringArmComponent : public USpringArmComponent
 {
 	GENERATED_BODY()

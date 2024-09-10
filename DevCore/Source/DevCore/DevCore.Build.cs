@@ -28,7 +28,7 @@ public class DevCore : ModuleRules
 			new string[]
 			{
 				"Core",
-				"DeveloperSettings"
+				"DeveloperSettings",
 				// ... add other public dependencies that you statically link with here ...
 			}
 		);
