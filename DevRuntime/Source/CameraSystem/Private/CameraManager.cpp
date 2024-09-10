@@ -20,6 +20,8 @@
 UCameraManager::FCameraAutoSwitchDelegate UCameraManager::OnCameraInputIdleReset;
 UCameraManager::FCameraAutoSwitchDelegate UCameraManager::OnCameraAutoSwitchStart;
 UCameraManager::FCameraAutoSwitchDelegate UCameraManager::OnCameraAutoSwitchStop;
+UCameraManager::FCameraAutoSwitchDelegate UCameraManager::OnCameraLensMovementStart;
+UCameraManager::FCameraAutoSwitchDelegate UCameraManager::OnCameraLensMovementStop;
 
 bool UCameraManager::ShouldCreateSubsystem(UObject* Outer) const
 {
@@ -198,6 +200,7 @@ UCameraHandle* UCameraManager::SwitchToCamera(const int32 InPlayerIndex, ACamera
 
 	if (IsValid(CameraLensMovement))
 	{
+		OnCameraLensMovementStop.Broadcast(CameraInputIdle);
 		CameraLensMovement->NativeStopLensMovement();
 		CameraLensMovement = nullptr;
 	}
@@ -308,6 +311,7 @@ void UCameraManager::HandleSwitchToCameraFinish(UCameraHandle* InCameraHandle)
 
 	if (CameraInputIdle->bEnableLensMovement)
 	{
+		OnCameraLensMovementStart.Broadcast(CameraInputIdle);
 		CameraLensMovement = CameraInputIdle->LensMovementList[FMath::RandRange(0, CameraInputIdle->LensMovementList.Num() - 1)];
 		CameraLensMovement->NativeStartLensMovement();
 	}
@@ -356,6 +360,7 @@ void UCameraManager::OnInputIdleStart(UInputIdle* InputIdle)
 
 void UCameraManager::OnInputIdleStop(UInputIdle* InputIdle)
 {
+	/* 清理相机自动切换 */
 	if (CameraInputIdle->bEnableCameraAutoSwitch)
 	{
 		if (IsValid(CameraInputIdle))
@@ -368,8 +373,10 @@ void UCameraManager::OnInputIdleStop(UInputIdle* InputIdle)
 		OnCameraAutoSwitchStop.Broadcast(CameraInputIdle);
 	}
 
+	/* 清理相机运镜 */
 	if (CameraInputIdle->bEnableLensMovement && IsValid(CameraLensMovement))
 	{
+		OnCameraLensMovementStop.Broadcast(CameraInputIdle);
 		CameraLensMovement->NativeStopLensMovement();
 		CameraLensMovement = nullptr;
 	}
@@ -379,11 +386,13 @@ void UCameraManager::HandleCameraAutoSwitch()
 {
 	if (IsValid(CameraInputIdle))
 	{
+		/* 切回到第一个相机 */
 		if (!CameraInputIdle->AutoSwitchTags.IsValidIndex(CameraAutoSwitchIndex))
 		{
 			CameraAutoSwitchIndex = 0;
 		}
 
+		/* 当前标签无效，跳过该相机 */
 		if (!CameraInputIdle->AutoSwitchTags[CameraAutoSwitchIndex].IsValid())
 		{
 			CameraAutoSwitchIndex++;
@@ -416,6 +425,7 @@ void UCameraManager::HandleCameraLensMovement()
 	}
 	else
 	{
+		OnCameraLensMovementStart.Broadcast(CameraInputIdle);
 		CameraLensMovement = CameraInputIdle->LensMovementList[FMath::RandRange(0, CameraInputIdle->LensMovementList.Num() - 1)];
 		CameraLensMovement->NativeStartLensMovement();
 	}

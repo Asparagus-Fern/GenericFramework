@@ -14,6 +14,8 @@ USetCameraInputIdleAsyncAction* USetCameraInputIdleAsyncAction::SetCameraInputId
 		UCameraManager::OnCameraInputIdleReset.AddUObject(NewAction, &USetCameraInputIdleAsyncAction::CameraInputIdleReset);
 		UCameraManager::OnCameraAutoSwitchStart.AddUObject(NewAction, &USetCameraInputIdleAsyncAction::CameraAutoSwitchStart);
 		UCameraManager::OnCameraAutoSwitchStop.AddUObject(NewAction, &USetCameraInputIdleAsyncAction::CameraAutoSwitchStop);
+		UCameraManager::OnCameraLensMovementStart.AddUObject(NewAction, &USetCameraInputIdleAsyncAction::CameraLensMovementStart);
+		UCameraManager::OnCameraLensMovementStop.AddUObject(NewAction, &USetCameraInputIdleAsyncAction::CameraLensMovementStop);
 		CameraManager->SetCameraInputIdle(InCameraInputIdle);
 	}
 
@@ -36,4 +38,14 @@ void USetCameraInputIdleAsyncAction::CameraAutoSwitchStart(UCameraInputIdle* Cam
 void USetCameraInputIdleAsyncAction::CameraAutoSwitchStop(UCameraInputIdle* CameraInputIdle)
 {
 	OnCameraAutoSwitchStop.Broadcast(CameraInputIdle);
+}
+
+void USetCameraInputIdleAsyncAction::CameraLensMovementStart(UCameraInputIdle* CameraInputIdle)
+{
+	OnCameraLensMovementStart.Broadcast(CameraInputIdle);
+}
+
+void USetCameraInputIdleAsyncAction::CameraLensMovementStop(UCameraInputIdle* CameraInputIdle)
+{
+	OnCameraLensMovementStop.Broadcast(CameraInputIdle);
 }

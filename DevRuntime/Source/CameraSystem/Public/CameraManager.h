@@ -82,7 +82,7 @@ protected:
 	void UpdateCameraTag(int32 InPlayerIndex, FGameplayTag InCameraTag);
 	void HandleSwitchToCameraFinish(UCameraHandle* InCameraHandle);
 
-	/* UInputIdle_Camera */
+	/* UCameraInputIdle */
 protected:
 	/* 当前的相机空闲数据 */
 	UPROPERTY(Transient, BlueprintReadOnly)
@@ -95,6 +95,8 @@ public:
 	static FCameraAutoSwitchDelegate OnCameraInputIdleReset;
 	static FCameraAutoSwitchDelegate OnCameraAutoSwitchStart;
 	static FCameraAutoSwitchDelegate OnCameraAutoSwitchStop;
+	static FCameraAutoSwitchDelegate OnCameraLensMovementStart;
+	static FCameraAutoSwitchDelegate OnCameraLensMovementStop;
 
 protected:
 	virtual void OnInputIdleStart(UInputIdle* InputIdle);
@@ -113,4 +115,6 @@ protected:
 protected:
 	virtual void HandleCameraAutoSwitch();
 	virtual void HandleCameraLensMovement();
+
+public:
 };

@@ -23,16 +23,24 @@ public:
 
 public:
 	UPROPERTY(BlueprintAssignable)
+	FCameraAutoSwitchDelegate OnCameraAutoSwitchReset;
+
+	UPROPERTY(BlueprintAssignable)
 	FCameraAutoSwitchDelegate OnCameraAutoSwitchStart;
 
 	UPROPERTY(BlueprintAssignable)
 	FCameraAutoSwitchDelegate OnCameraAutoSwitchStop;
 
 	UPROPERTY(BlueprintAssignable)
-	FCameraAutoSwitchDelegate OnCameraAutoSwitchReset;
+	FCameraAutoSwitchDelegate OnCameraLensMovementStart;
+
+	UPROPERTY(BlueprintAssignable)
+	FCameraAutoSwitchDelegate OnCameraLensMovementStop;
 
 protected:
 	virtual void CameraInputIdleReset(UCameraInputIdle* CameraInputIdle);
 	virtual void CameraAutoSwitchStart(UCameraInputIdle* CameraInputIdle);
 	virtual void CameraAutoSwitchStop(UCameraInputIdle* CameraInputIdle);
+	virtual void CameraLensMovementStart(UCameraInputIdle* CameraInputIdle);
+	virtual void CameraLensMovementStop(UCameraInputIdle* CameraInputIdle);
 };
