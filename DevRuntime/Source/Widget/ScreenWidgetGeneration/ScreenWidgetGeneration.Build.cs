@@ -28,7 +28,8 @@ public class ScreenWidgetGeneration : ModuleRules
 
 				"UMG",
 				"GameplayTags",
-				"LevelStreaming"
+				"LevelStreaming",
+				"EnhancedInput"
 			}
 		);
 	}

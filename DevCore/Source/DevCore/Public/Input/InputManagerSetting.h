@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "InputType.h"
 #include "Manager/ManagerSetting.h"
 #include "InputManagerSetting.generated.h"

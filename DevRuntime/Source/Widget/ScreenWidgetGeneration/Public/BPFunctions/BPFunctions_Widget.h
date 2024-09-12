@@ -73,11 +73,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category="BPFunctions_Widget|UserWidgetBase")
 	static void OpenUserWidget(UUserWidgetBase* InWidget);
 
-	UFUNCTION(BlueprintCallable, Category="BPFunctions_Widget|UserWidgetBase")
-	static void CloseUserWidget(UUserWidgetBase* InWidget);
+	UFUNCTION(BlueprintCallable, meta=(AdvancedDisplay = 1), Category="BPFunctions_Widget|UserWidgetBase")
+	static void CloseUserWidget(UUserWidgetBase* InWidget, bool MarkAsGarbage = true);
 
-	UFUNCTION(BlueprintCallable, meta=( GameplayTagFilter="HUD"), Category="BPFunctions_Widget|UserWidgetBase")
-	static void CloseUserWidgetByTag(FGameplayTag InSlotTag);
+	UFUNCTION(BlueprintCallable, meta=(GameplayTagFilter="HUD", AdvancedDisplay = 1), Category="BPFunctions_Widget|UserWidgetBase")
+	static void CloseUserWidgetByTag(FGameplayTag InSlotTag, bool MarkAsGarbage = true);
 
 	UFUNCTION(BlueprintPure, Category="BPFunctions_Widget|UserWidgetBase")
 	static bool GetActivedWidgets(TArray<UUserWidgetBase*>& ActivedWidgets);

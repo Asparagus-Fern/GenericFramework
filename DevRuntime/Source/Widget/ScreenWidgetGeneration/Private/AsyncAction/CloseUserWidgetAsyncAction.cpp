@@ -6,25 +6,25 @@
 #include "ScreenWidgetManager.h"
 #include "Manager/ManagerGlobal.h"
 
-UCloseUserWidgetAsyncAction* UCloseUserWidgetAsyncAction::AsyncCloseUserWidget(UUserWidgetBase* InWidget)
+UCloseUserWidgetAsyncAction* UCloseUserWidgetAsyncAction::AsyncCloseUserWidget(UUserWidgetBase* InWidget, bool MarkAsGarbage)
 {
 	UCloseUserWidgetAsyncAction* NewAction = NewObject<UCloseUserWidgetAsyncAction>();
-	
+
 	if (UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
 	{
-		ScreenWidgetManager->CloseUserWidget(InWidget, FOnWidgetActiveStateChanged::CreateUObject(NewAction, &UCloseUserWidgetAsyncAction::OnHandleFinish));
+		ScreenWidgetManager->CloseUserWidget(InWidget, FOnWidgetActiveStateChanged::CreateUObject(NewAction, &UCloseUserWidgetAsyncAction::OnHandleFinish), MarkAsGarbage);
 	}
 
 	return NewAction;
 }
 
-UCloseUserWidgetAsyncAction* UCloseUserWidgetAsyncAction::AsyncCloseUserWidgetByTag(FGameplayTag InSlotTag)
+UCloseUserWidgetAsyncAction* UCloseUserWidgetAsyncAction::AsyncCloseUserWidgetByTag(FGameplayTag InSlotTag, bool MarkAsGarbage)
 {
 	UCloseUserWidgetAsyncAction* NewAction = NewObject<UCloseUserWidgetAsyncAction>();
 
 	if (UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
 	{
-		ScreenWidgetManager->CloseUserWidget(InSlotTag, FOnWidgetActiveStateChanged::CreateUObject(NewAction, &UCloseUserWidgetAsyncAction::OnHandleFinish));
+		ScreenWidgetManager->CloseUserWidget(InSlotTag, FOnWidgetActiveStateChanged::CreateUObject(NewAction, &UCloseUserWidgetAsyncAction::OnHandleFinish), MarkAsGarbage);
 	}
 
 	return NewAction;

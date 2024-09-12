@@ -7,6 +7,7 @@
 #include "Object/CommonObject.h"
 #include "InputHandle.generated.h"
 
+class UCommonInputComponent;
 class UInputAction;
 
 /**
@@ -17,20 +18,30 @@ class DEVCORE_API UInputHandle : public UCommonObject
 {
 	GENERATED_BODY()
 
+	friend UCommonInputComponent;
+
 public:
 	UInputHandle();
 
 public:
-	UPROPERTY()
-	UObject* Object = nullptr;
-
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TObjectPtr<UInputAction> InputAction = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TArray<ETriggerEvent> TriggerEvents;
 
-public:
+protected:
+	UPROPERTY()
+	UObject* Object = nullptr;
+
+	UPROPERTY(BlueprintReadOnly)
+	UCommonInputComponent* InputComponent = nullptr;
+
+protected:
+	void SetupInputMapping(UObject* InObject, UCommonInputComponent* InInputComponent);
+	void ClearupInputMapping();
+
+protected:
 	UFUNCTION(BlueprintNativeEvent)
 	void OnStarted(UObject* InObject, const FInputActionValue& InValue);
 	void NativeOnStarted(const FInputActionValue& InValue);
@@ -50,4 +61,23 @@ public:
 	UFUNCTION(BlueprintNativeEvent)
 	void OnCompleted(UObject* InObject, const FInputActionValue& InValue);
 	void NativeOnCompleted(const FInputActionValue& InValue);
+
+protected:
+	TArray<uint32> Handles;
+};
+
+/**
+ * 
+ */
+USTRUCT(BlueprintType)
+struct DEVCORE_API FPlayerInputHandle
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 PlayerIndex = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSoftClassPtr<UInputHandle> InputHandleClass = nullptr;
 };

@@ -68,12 +68,12 @@
 			"LoadingPhase": "Default"
 		},
 		{
-			"Name": "MapSystem",
+			"Name": "CharacterStatusSystem",
 			"Type": "Runtime",
 			"LoadingPhase": "Default"
 		},
 		{
-			"Name": "CharacterStateSystem",
+			"Name": "GameMapSystem",
 			"Type": "Runtime",
 			"LoadingPhase": "Default"
 		}

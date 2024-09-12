@@ -5,11 +5,14 @@
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
 #include "ScreenWidgetType.h"
+#include "Input/InputHandle.h"
 #include "Manager/CoreManager.h"
 #include "Procedure/ProcedureType.h"
 #include "UserWidget/Base/UserWidgetBase.h"
 #include "ScreenWidgetManager.generated.h"
 
+class UShortcutWidgetBinding;
+class UInputAction;
 class UCommonButtonBase;
 class UInstanceUserWidgetBase;
 class UGameplayTagSlot;
@@ -158,14 +161,14 @@ public:
 	virtual UUserWidgetBase* OpenUserWidget(TSubclassOf<UUserWidgetBase> InWidgetClass, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged());
 	virtual bool OpenUserWidget(UUserWidgetBase* InWidget, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged());
 
-	virtual bool CloseUserWidget(UUserWidgetBase* InWidget, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged());
-	virtual bool CloseUserWidget(FGameplayTag InSlotTag, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged());
+	virtual bool CloseUserWidget(UUserWidgetBase* InWidget, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged(), bool MarkAsGarbage = true);
+	virtual bool CloseUserWidget(FGameplayTag InSlotTag, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged(), bool MarkAsGarbage = true);
 
 protected:
 	virtual void ActiveWidget(UUserWidgetBase* InWidget, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged());
 	virtual void ActiveWidget(UUserWidgetBase* InWidget, bool bIsInstant, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged());
-	virtual void InactiveWidget(UUserWidgetBase* InWidget, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged());
-	virtual void InactiveWidget(UUserWidgetBase* InWidget, bool bIsInstant, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged());
+	virtual void InactiveWidget(UUserWidgetBase* InWidget, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged(), bool MarkAsGarbage = true);
+	virtual void InactiveWidget(UUserWidgetBase* InWidget, bool bIsInstant, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged(), bool MarkAsGarbage = true);
 
 public:
 	/* 当前显示在屏幕上的所有UI */
@@ -215,4 +218,13 @@ protected:
 
 	virtual FReply OnMenuResponseStateChanged(UInteractableUserWidgetBase* InteractableWidget, bool TargetEventState);
 	virtual void HandleMenuResponseStateChanged();
+
+	/* Shortcut Widgets */
+protected:
+	UPROPERTY(Transient)
+	UShortcutWidgetBinding* ShortcutWidgetBinding;
+
+protected:
+	virtual void CreateShortcutWidgets();
+	virtual void ClearupShortcutWidgets();
 };

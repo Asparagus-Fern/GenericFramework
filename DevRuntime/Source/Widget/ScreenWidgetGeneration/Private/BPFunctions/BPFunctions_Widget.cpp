@@ -133,19 +133,19 @@ void UBPFunctions_Widget::OpenUserWidget(UUserWidgetBase* InWidget)
 	}
 }
 
-void UBPFunctions_Widget::CloseUserWidget(UUserWidgetBase* InWidget)
+void UBPFunctions_Widget::CloseUserWidget(UUserWidgetBase* InWidget, bool MarkAsGarbage)
 {
 	if (UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
 	{
-		ScreenWidgetManager->CloseUserWidget(InWidget);
+		ScreenWidgetManager->CloseUserWidget(InWidget, FOnWidgetActiveStateChanged(), MarkAsGarbage);
 	}
 }
 
-void UBPFunctions_Widget::CloseUserWidgetByTag(FGameplayTag InSlotTag)
+void UBPFunctions_Widget::CloseUserWidgetByTag(FGameplayTag InSlotTag, bool MarkAsGarbage)
 {
 	if (UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
 	{
-		ScreenWidgetManager->CloseUserWidget(InSlotTag);
+		ScreenWidgetManager->CloseUserWidget(InSlotTag, FOnWidgetActiveStateChanged(), MarkAsGarbage);
 	}
 }
 

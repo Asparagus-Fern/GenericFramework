@@ -8,11 +8,8 @@
 #include "ScreenWidgetManager.h"
 #include "UserWidget/Loading/Loading.h"
 
-UE_DEFINE_GAMEPLAY_TAG(TAG_ActiveNode_LevelStreamingLoad, "ActiveNode.Load.LevelStreaming");
-
 AActiveNode_LevelStreamingLoad::AActiveNode_LevelStreamingLoad()
 {
-	NodeTag = TAG_ActiveNode_LevelStreamingLoad;
 }
 
 void AActiveNode_LevelStreamingLoad::Login()
@@ -116,8 +113,11 @@ void AActiveNode_LevelStreamingLoad::NativeOnLoadVisibleLevelsFinish()
 
 	OnLoadVisibleLevelsFinish();
 
-	bool bSuccess;
-	UActiveNodeSubsystem::ChangeActiveNodeTo(this, ChangeNodeTag, bSuccess, nullptr, false);
+	if (ChangeNodeTag.IsValid())
+	{
+		bool bSuccess;
+		UActiveNodeSubsystem::ChangeActiveNodeTo(this, ChangeNodeTag, bSuccess, nullptr, false);
+	}
 }
 
 int32 AActiveNode_LevelStreamingLoad::GetLoadingNum() const

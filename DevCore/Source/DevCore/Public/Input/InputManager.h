@@ -3,9 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "InputHandle.h"
 #include "Manager/CoreManager.h"
 #include "InputManager.generated.h"
 
+class UPlayerInputBinding;
 class UInputManager;
 class UInputIdle;
 class UCommonInputComponent;
@@ -62,7 +64,16 @@ public:
 	virtual void NativeOnActived() override;
 	virtual void NativeOnInactived() override;
 
-	/* UInputManager */
+	/* Player Input Handle */
+public:
+	virtual void RegisterPlayerInputHandle(UPlayerInputBinding* PlayerInputBinding);
+	virtual void UnRegisterPlayerInputHandle(UPlayerInputBinding* PlayerInputBinding);
+
+public:
+	UPROPERTY(BlueprintReadOnly)
+	TArray<UPlayerInputBinding*> PlayerInputBindings;
+
+	/* IdleData */
 public:
 	bool RegisterIdleData(UInputIdle* InputIdle, const FInputIdleDelegate& OnIdle, const FInputIdleDelegate& OnContinue);
 	void UnRegisterIdleData(UInputIdle* InputIdle);

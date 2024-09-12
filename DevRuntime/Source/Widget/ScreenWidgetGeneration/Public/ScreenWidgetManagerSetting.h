@@ -6,6 +6,9 @@
 #include "Manager/ManagerSetting.h"
 #include "ScreenWidgetManagerSetting.generated.h"
 
+class UShortcutWidgetBinding;
+class UUserWidgetBase;
+class UInputAction;
 class UGameMenuSetting;
 class UGameHUD;
 
@@ -27,4 +30,8 @@ public:
 
 	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, DisplayName="Game HUD Classes")
 	TArray<TSoftClassPtr<UGameHUD>> GameHUDClasses;
+
+	/* Widget的快捷操作(ex:快捷键打开Widget) */
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly)
+	TSoftObjectPtr<UShortcutWidgetBinding> ShortcutWidgetBinding;
 };

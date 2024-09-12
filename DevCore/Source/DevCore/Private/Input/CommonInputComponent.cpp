@@ -37,32 +37,27 @@ void UCommonInputComponent::RegisterInputHandle(UObject* Object, UInputHandle* I
 {
 	if (IsValid(Object) && IsValid(InputHandle) && !InputHandles.Contains(InputHandle))
 	{
-		InputHandle->Object = Object;
+		InputHandle->SetupInputMapping(Object, this);
 		InputHandles.Add(InputHandle);
-		SetupInputHandleMapping(InputHandle);
 	}
 }
 
-void UCommonInputComponent::SetupInputHandleMapping(UInputHandle* InputHandle)
+void UCommonInputComponent::UnRegisterInputHandle(UInputHandleComponent* InputHandleComponent)
 {
-	if (InputHandle->TriggerEvents.Contains(ETriggerEvent::Started))
+	if (IsValid(InputHandleComponent) && IsValid(InputHandleComponent->GetOwner()))
 	{
-		BindAction(InputHandle->InputAction, ETriggerEvent::Started, InputHandle, &UInputHandle::NativeOnStarted);
+		for (const auto& InputHandle : InputHandleComponent->InputHandles)
+		{
+			InputHandle->ClearupInputMapping();
+		}
 	}
-	if (InputHandle->TriggerEvents.Contains(ETriggerEvent::Ongoing))
+}
+
+void UCommonInputComponent::UnRegisterInputHandle(UInputHandle* InputHandle)
+{
+	if (IsValid(InputHandle) && InputHandles.Contains(InputHandle))
 	{
-		BindAction(InputHandle->InputAction, ETriggerEvent::Ongoing, InputHandle, &UInputHandle::NativeOngoing);
-	}
-	if (InputHandle->TriggerEvents.Contains(ETriggerEvent::Triggered))
-	{
-		BindAction(InputHandle->InputAction, ETriggerEvent::Triggered, InputHandle, &UInputHandle::NativeOnTriggered);
-	}
-	if (InputHandle->TriggerEvents.Contains(ETriggerEvent::Canceled))
-	{
-		BindAction(InputHandle->InputAction, ETriggerEvent::Canceled, InputHandle, &UInputHandle::NativeOnCanceled);
-	}
-	if (InputHandle->TriggerEvents.Contains(ETriggerEvent::Completed))
-	{
-		BindAction(InputHandle->InputAction, ETriggerEvent::Completed, InputHandle, &UInputHandle::NativeOnCompleted);
+		InputHandle->ClearupInputMapping();
+		InputHandles.Remove(InputHandle);
 	}
 }

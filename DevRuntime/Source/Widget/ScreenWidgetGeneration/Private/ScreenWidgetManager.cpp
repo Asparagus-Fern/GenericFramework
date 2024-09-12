@@ -10,11 +10,13 @@
 #include "BPFunctions/BPFunctions_Widget.h"
 #include "DataAsset/GameMenuSetting.h"
 #include "Group/CommonButtonGroup.h"
+#include "Input/InputManager.h"
 #include "Manager/ManagerGlobal.h"
 #include "UserWidget/Base/UserWidgetBase.h"
 #include "UserWidget/GameHUD.h"
 #include "UserWidget/Menu/MenuContainer.h"
 #include "UserWidget/Menu/MenuStyle.h"
+#include "UserWidget/Shortcut/ShortcutWidgetBinding.h"
 #include "UWidget/GameplayTagSlot.h"
 
 #define LOCTEXT_NAMESPACE "UScreenWidgetManager"
@@ -81,11 +83,15 @@ void UScreenWidgetManager::NativeOnActived()
 
 	UGameplayTagSlot::OnGameplayTagSlotBuild.AddUObject(this, &UScreenWidgetManager::RegisterSlot);
 	UGameplayTagSlot::OnGameplayTagSlotDestroy.AddUObject(this, &UScreenWidgetManager::UnRegisterSlot);
+
+	CreateShortcutWidgets();
 }
 
 void UScreenWidgetManager::NativeOnInactived()
 {
 	Super::NativeOnInactived();
+
+	ClearupShortcutWidgets();
 
 	/* 清除菜单 */
 	SwitchGameMenu(nullptr);
@@ -501,7 +507,7 @@ bool UScreenWidgetManager::OpenUserWidget(UUserWidgetBase* InWidget, FOnWidgetAc
 	return true;
 }
 
-bool UScreenWidgetManager::CloseUserWidget(UUserWidgetBase* InWidget, const FOnWidgetActiveStateChanged OnFinish)
+bool UScreenWidgetManager::CloseUserWidget(UUserWidgetBase* InWidget, const FOnWidgetActiveStateChanged OnFinish, const bool MarkAsGarbage)
 {
 	if (!IsValid(InWidget))
 	{
@@ -509,11 +515,11 @@ bool UScreenWidgetManager::CloseUserWidget(UUserWidgetBase* InWidget, const FOnW
 		return false;
 	}
 
-	InactiveWidget(InWidget, OnFinish);
+	InactiveWidget(InWidget, OnFinish, MarkAsGarbage);
 	return true;
 }
 
-bool UScreenWidgetManager::CloseUserWidget(const FGameplayTag InSlotTag, const FOnWidgetActiveStateChanged OnFinish)
+bool UScreenWidgetManager::CloseUserWidget(const FGameplayTag InSlotTag, const FOnWidgetActiveStateChanged OnFinish, const bool MarkAsGarbage)
 {
 	if (!InSlotTag.IsValid())
 	{
@@ -534,7 +540,7 @@ bool UScreenWidgetManager::CloseUserWidget(const FGameplayTag InSlotTag, const F
 				bHasWidgetClose = true;
 			}
 
-			CloseUserWidget(TempActivedWidget, OnFinish);
+			CloseUserWidget(TempActivedWidget, OnFinish, MarkAsGarbage);
 		}
 	}
 
@@ -547,7 +553,7 @@ bool UScreenWidgetManager::CloseUserWidget(const FGameplayTag InSlotTag, const F
 	return true;
 }
 
-void UScreenWidgetManager::ActiveWidget(UUserWidgetBase* InWidget, FOnWidgetActiveStateChanged OnFinish)
+void UScreenWidgetManager::ActiveWidget(UUserWidgetBase* InWidget, const FOnWidgetActiveStateChanged OnFinish)
 {
 	if (!IsValid(InWidget) || ActivedWidgets.Contains(InWidget))
 	{
@@ -608,7 +614,7 @@ void UScreenWidgetManager::ActiveWidget(UUserWidgetBase* InWidget, const bool bI
 	}
 }
 
-void UScreenWidgetManager::InactiveWidget(UUserWidgetBase* InWidget, FOnWidgetActiveStateChanged OnFinish)
+void UScreenWidgetManager::InactiveWidget(UUserWidgetBase* InWidget, FOnWidgetActiveStateChanged OnFinish, bool MarkAsGarbage)
 {
 	if (!IsValid(InWidget) || !ActivedWidgets.Contains(InWidget))
 	{
@@ -619,7 +625,7 @@ void UScreenWidgetManager::InactiveWidget(UUserWidgetBase* InWidget, FOnWidgetAc
 
 	InWidget->NativeOnDestroy();
 
-	auto OnActiveStateChangedFinish = [this, &InWidget, &OnFinish]()
+	auto OnActiveStateChangedFinish = [this, &InWidget, &OnFinish, &MarkAsGarbage]()
 	{
 		if (UGameplayTagSlot* Slot = GetSlot(InWidget->SlotTag))
 		{
@@ -641,7 +647,10 @@ void UScreenWidgetManager::InactiveWidget(UUserWidgetBase* InWidget, FOnWidgetAc
 
 		RemoveTemporaryGameHUD(InWidget);
 
-		InWidget->MarkAsGarbage();
+		if (MarkAsGarbage)
+		{
+			InWidget->MarkAsGarbage();
+		}
 	};
 
 	if (IWidgetAnimationInterface::Execute_HasAnimationEvent(InWidget, false))
@@ -661,7 +670,7 @@ void UScreenWidgetManager::InactiveWidget(UUserWidgetBase* InWidget, FOnWidgetAc
 	OnActiveStateChangedFinish();
 }
 
-void UScreenWidgetManager::InactiveWidget(UUserWidgetBase* InWidget, const bool bIsInstant, const FOnWidgetActiveStateChanged OnFinish)
+void UScreenWidgetManager::InactiveWidget(UUserWidgetBase* InWidget, const bool bIsInstant, const FOnWidgetActiveStateChanged OnFinish, const bool MarkAsGarbage)
 {
 	if (bIsInstant)
 	{
@@ -673,11 +682,15 @@ void UScreenWidgetManager::InactiveWidget(UUserWidgetBase* InWidget, const bool 
 		InWidget->NativeOnDestroy();
 		ActivedWidgets.Remove(InWidget);
 		OnFinish.ExecuteIfBound(InWidget);
-		InWidget->MarkAsGarbage();
+
+		if (MarkAsGarbage)
+		{
+			InWidget->MarkAsGarbage();
+		}
 	}
 	else
 	{
-		InactiveWidget(InWidget, OnFinish);
+		InactiveWidget(InWidget, OnFinish, MarkAsGarbage);
 	}
 }
 
@@ -982,6 +995,34 @@ void UScreenWidgetManager::HandleMenuResponseStateChanged()
 		bProcessingMenuSelection = false;
 		ProcessingIndex = 0;
 	}
+}
+
+void UScreenWidgetManager::CreateShortcutWidgets()
+{
+	if (!UScreenWidgetManagerSetting::Get()->ShortcutWidgetBinding.IsNull())
+	{
+		ShortcutWidgetBinding = UBPFunctions_Object::LoadObject<UShortcutWidgetBinding>(UScreenWidgetManagerSetting::Get()->ShortcutWidgetBinding);
+		if (IsValid(ShortcutWidgetBinding))
+		{
+			if (UInputManager* InputManager = GetManager<UInputManager>())
+			{
+				InputManager->RegisterPlayerInputHandle(ShortcutWidgetBinding);
+			}
+		}
+	}
+}
+
+void UScreenWidgetManager::ClearupShortcutWidgets()
+{
+	if (IsValid(ShortcutWidgetBinding))
+	{
+		if (UInputManager* InputManager = GetManager<UInputManager>())
+		{
+			InputManager->UnRegisterPlayerInputHandle(ShortcutWidgetBinding);
+		}
+	}
+
+	ShortcutWidgetBinding = nullptr;
 }
 
 #undef LOCTEXT_NAMESPACE

@@ -4,12 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "ActiveNode_Load.h"
-#include "NativeGameplayTags.h"
 #include "ActiveNode_LevelStreamingLoad.generated.h"
 
 class UUserWidgetBase;
 class ULoading;
-UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_ActiveNode_LevelStreamingLoad);
 
 UCLASS()
 class APPLICATIONRUNTIME_API AActiveNode_LevelStreamingLoad : public AActiveNode_Load

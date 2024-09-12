@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "ActiveNode.h"
+#include "NativeGameplayTags.h"
 #include "ActiveNode_Load.generated.h"
 
 UCLASS()

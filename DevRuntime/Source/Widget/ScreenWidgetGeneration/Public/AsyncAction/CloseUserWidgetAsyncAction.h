@@ -18,11 +18,11 @@ class SCREENWIDGETGENERATION_API UCloseUserWidgetAsyncAction : public UBlueprint
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintCallable, meta = ( BlueprintInternalUseOnly = "true"))
-	static UCloseUserWidgetAsyncAction* AsyncCloseUserWidget(UUserWidgetBase* InWidget);
+	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true", AdvancedDisplay = 1))
+	static UCloseUserWidgetAsyncAction* AsyncCloseUserWidget(UUserWidgetBase* InWidget, bool MarkAsGarbage = true);
 
-	UFUNCTION(BlueprintCallable, meta = ( BlueprintInternalUseOnly = "true"))
-	static UCloseUserWidgetAsyncAction* AsyncCloseUserWidgetByTag(FGameplayTag InSlotTag);
+	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true", AdvancedDisplay = 1))
+	static UCloseUserWidgetAsyncAction* AsyncCloseUserWidgetByTag(FGameplayTag InSlotTag, bool MarkAsGarbage = true);
 
 public:
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FUserWidgetDelegate);
