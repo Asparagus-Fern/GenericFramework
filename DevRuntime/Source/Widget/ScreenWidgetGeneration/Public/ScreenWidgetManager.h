@@ -4,15 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
+#include "InputActionValue.h"
 #include "ScreenWidgetType.h"
-#include "Input/InputHandle.h"
 #include "Manager/CoreManager.h"
 #include "Procedure/ProcedureType.h"
 #include "UserWidget/Base/UserWidgetBase.h"
 #include "ScreenWidgetManager.generated.h"
 
 class UShortcutWidgetBinding;
-class UInputAction;
 class UCommonButtonBase;
 class UInstanceUserWidgetBase;
 class UGameplayTagSlot;
@@ -214,17 +213,12 @@ protected:
 protected:
 	TMap<UMenuStyle*, bool> TargetMenuSelection;
 	bool bProcessingMenuSelection = false;
-	int32 ProcessingIndex = 0;
+	int32 ProcessingMenuIndex = 0;
 
 	virtual FReply OnMenuResponseStateChanged(UInteractableUserWidgetBase* InteractableWidget, bool TargetEventState);
 	virtual void HandleMenuResponseStateChanged();
 
-	/* Shortcut Widgets */
 protected:
-	UPROPERTY(Transient)
-	UShortcutWidgetBinding* ShortcutWidgetBinding;
-
-protected:
-	virtual void CreateShortcutWidgets();
-	virtual void ClearupShortcutWidgets();
+	UPROPERTY(BlueprintReadOnly, Transient)
+	UDataTable* ShortcutWidgetTable = nullptr;
 };

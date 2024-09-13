@@ -159,7 +159,7 @@ enum class EImageBrushResource :uint8
  * 
  */
 USTRUCT(BlueprintType)
-struct FImageBrush
+struct DEVSLATECORE_API FImageBrush
 {
 	GENERATED_BODY()
 
@@ -229,7 +229,7 @@ enum class EBorderBrushResource
  * 
  */
 USTRUCT(BlueprintType)
-struct FBorderBrush
+struct DEVSLATECORE_API FBorderBrush
 {
 	GENERATED_BODY()
 

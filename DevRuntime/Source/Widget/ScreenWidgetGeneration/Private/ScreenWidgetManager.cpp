@@ -4,7 +4,9 @@
 #include "ScreenWidgetManager.h"
 
 #include "DBTweenUpdateManager.h"
+#include "EnhancedInputComponent.h"
 #include "ScreenWidgetManagerSetting.h"
+#include "Blueprint/GameViewportSubsystem.h"
 #include "Blueprint/WidgetTree.h"
 #include "BPFunctions/BPFunctions_Object.h"
 #include "BPFunctions/BPFunctions_Widget.h"
@@ -16,7 +18,6 @@
 #include "UserWidget/GameHUD.h"
 #include "UserWidget/Menu/MenuContainer.h"
 #include "UserWidget/Menu/MenuStyle.h"
-#include "UserWidget/Shortcut/ShortcutWidgetBinding.h"
 #include "UWidget/GameplayTagSlot.h"
 
 #define LOCTEXT_NAMESPACE "UScreenWidgetManager"
@@ -84,14 +85,21 @@ void UScreenWidgetManager::NativeOnActived()
 	UGameplayTagSlot::OnGameplayTagSlotBuild.AddUObject(this, &UScreenWidgetManager::RegisterSlot);
 	UGameplayTagSlot::OnGameplayTagSlotDestroy.AddUObject(this, &UScreenWidgetManager::UnRegisterSlot);
 
-	CreateShortcutWidgets();
+	if (!UScreenWidgetManagerSetting::Get()->ShortcutWidgetTable.IsNull())
+	{
+		UDataTable* DataTable = UBPFunctions_Object::LoadObject<UDataTable>(UScreenWidgetManagerSetting::Get()->ShortcutWidgetTable);
+		if (!DataTable->RowStruct->IsChildOf(FShortcutWidgetTableRow::StaticStruct()))
+		{
+			return;
+		}
+
+		ShortcutWidgetTable = DataTable;
+	}
 }
 
 void UScreenWidgetManager::NativeOnInactived()
 {
 	Super::NativeOnInactived();
-
-	ClearupShortcutWidgets();
 
 	/* 清除菜单 */
 	SwitchGameMenu(nullptr);
@@ -951,9 +959,9 @@ void UScreenWidgetManager::HandleMenuResponseStateChanged()
 	TargetMenuSelection.GetKeys(MenuStyles);
 
 	/* 在每次菜单事件完成之后，移除子菜单或生成子菜单，如果存在的话 */
-	if (ProcessingIndex > 0)
+	if (ProcessingMenuIndex > 0)
 	{
-		const UMenuStyle* PreviousMenuStyle = MenuStyles[ProcessingIndex - 1];
+		const UMenuStyle* PreviousMenuStyle = MenuStyles[ProcessingMenuIndex - 1];
 		if (const bool PreviousEventState = TargetMenuSelection.FindRef(PreviousMenuStyle))
 		{
 			GenerateMenu(PreviousMenuStyle->GetMenuTag());
@@ -965,9 +973,9 @@ void UScreenWidgetManager::HandleMenuResponseStateChanged()
 	}
 
 	/* 执行当前菜单的事件 */
-	if (MenuStyles.IsValidIndex(ProcessingIndex))
+	if (MenuStyles.IsValidIndex(ProcessingMenuIndex))
 	{
-		UMenuStyle* TargetMenuStyle = MenuStyles[ProcessingIndex];
+		UMenuStyle* TargetMenuStyle = MenuStyles[ProcessingMenuIndex];
 		const FMenuGenerateInfo* MenuGenerateInfo = MenuGenerateInfos.FindByKey(TargetMenuStyle);
 		const bool TargetEventState = TargetMenuSelection.FindRef(TargetMenuStyle);
 
@@ -975,12 +983,12 @@ void UScreenWidgetManager::HandleMenuResponseStateChanged()
 		{
 			if (UProcedureProxy* ProcedureProxy = TargetMenuStyle->HandleButtonResponseEvent(TargetMenuStyle->GetResponseEvents(TargetEventState), TargetEventState, FSimpleDelegate::CreateUObject(this, &UScreenWidgetManager::HandleMenuResponseStateChanged)))
 			{
-				ProcessingIndex++;
+				ProcessingMenuIndex++;
 				return;
 			}
 		}
 
-		ProcessingIndex++;
+		ProcessingMenuIndex++;
 		HandleMenuResponseStateChanged();
 	}
 	/* 所有菜单都已经触发 */
@@ -993,36 +1001,8 @@ void UScreenWidgetManager::HandleMenuResponseStateChanged()
 
 		TargetMenuSelection.Reset();
 		bProcessingMenuSelection = false;
-		ProcessingIndex = 0;
+		ProcessingMenuIndex = 0;
 	}
-}
-
-void UScreenWidgetManager::CreateShortcutWidgets()
-{
-	if (!UScreenWidgetManagerSetting::Get()->ShortcutWidgetBinding.IsNull())
-	{
-		ShortcutWidgetBinding = UBPFunctions_Object::LoadObject<UShortcutWidgetBinding>(UScreenWidgetManagerSetting::Get()->ShortcutWidgetBinding);
-		if (IsValid(ShortcutWidgetBinding))
-		{
-			if (UInputManager* InputManager = GetManager<UInputManager>())
-			{
-				InputManager->RegisterPlayerInputHandle(ShortcutWidgetBinding);
-			}
-		}
-	}
-}
-
-void UScreenWidgetManager::ClearupShortcutWidgets()
-{
-	if (IsValid(ShortcutWidgetBinding))
-	{
-		if (UInputManager* InputManager = GetManager<UInputManager>())
-		{
-			InputManager->UnRegisterPlayerInputHandle(ShortcutWidgetBinding);
-		}
-	}
-
-	ShortcutWidgetBinding = nullptr;
 }
 
 #undef LOCTEXT_NAMESPACE

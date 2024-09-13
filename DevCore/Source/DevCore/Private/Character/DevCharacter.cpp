@@ -4,9 +4,7 @@
 #include "Character/DevCharacter.h"
 
 #include "AIController.h"
-#include "EnhancedInputComponent.h"
-#include "Input/CommonInputComponent.h"
-#include "Input/InputHandleComponent.h"
+#include "Input/PlayerInputComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 
 ADevCharacter::FCharacterDelegate ADevCharacter::OnCharacterRegister;
@@ -17,18 +15,24 @@ ADevCharacter::ADevCharacter()
 	PrimaryActorTick.bCanEverTick = true;
 
 	CharacterName = "DevCharacter";
-	InputHandleComponent = CreateDefaultSubobject<UInputHandleComponent>("InputHandle");
 }
 
 void ADevCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
 	OnCharacterRegister.Broadcast(this);
 }
 
 void ADevCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
+	if (IsValid(Execute_GetPlayerInputComponent(this)))
+	{
+		Execute_GetPlayerInputComponent(this)->RemovePlayerInput(InputComponent);
+	}
+
 	OnCharacterUnRegister.Broadcast(this);
+
 	Super::EndPlay(EndPlayReason);
 }
 
@@ -36,9 +40,9 @@ void ADevCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	if (UCommonInputComponent* CommonInputComponent = CastChecked<UCommonInputComponent>(PlayerInputComponent))
+	if (IsValid(Execute_GetPlayerInputComponent(this)))
 	{
-		CommonInputComponent->RegisterInputHandle(InputHandleComponent);
+		Execute_GetPlayerInputComponent(this)->SetupPlayerInput(PlayerInputComponent);
 	}
 }
 
@@ -105,4 +109,9 @@ APlayerController* ADevCharacter::GetPlayerController_Implementation()
 AAIController* ADevCharacter::GetAIController_Implementation()
 {
 	return Cast<AAIController>(GetController());
+}
+
+UPlayerInputComponent* ADevCharacter::GetPlayerInputComponent_Implementation()
+{
+	return nullptr;
 }

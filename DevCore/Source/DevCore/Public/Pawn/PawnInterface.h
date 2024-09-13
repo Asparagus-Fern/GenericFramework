@@ -9,6 +9,7 @@
 #include "UObject/Interface.h"
 #include "PawnInterface.generated.h"
 
+class UPlayerInputComponent;
 class AAIController;
 
 UINTERFACE(MinimalAPI)
@@ -67,4 +68,7 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Pawn Interface")
 	AAIController* GetAIController();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Pawn Interface")
+	UPlayerInputComponent* GetPlayerInputComponent();
 };

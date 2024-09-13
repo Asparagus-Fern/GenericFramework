@@ -11,6 +11,7 @@ public class GameMapSystem : ModuleRules
 			{
 				"Core",
 				"DevCore",
+				"DevSlateCore"
 			}
 		);
 
@@ -21,7 +22,9 @@ public class GameMapSystem : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
-				"DeveloperSettings"
+				"DeveloperSettings",
+				"ScreenWidgetGeneration",
+				"UMG"
 			}
 		);
 	}

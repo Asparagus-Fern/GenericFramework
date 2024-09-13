@@ -115,3 +115,13 @@ FVector2D UUserWidgetBase::GetAnchorOffset() const
 {
 	return FVector2D(-(GetDesiredSize().X * Anchor.X), -(GetDesiredSize().Y * Anchor.Y));
 }
+
+bool UUserWidgetBase::GetIsActived() const
+{
+	return bIsActived;
+}
+
+void UUserWidgetBase::SetIsActived(const bool InActived)
+{
+	bIsActived = InActived;
+}

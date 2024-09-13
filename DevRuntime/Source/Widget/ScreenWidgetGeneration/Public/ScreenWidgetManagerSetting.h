@@ -6,10 +6,6 @@
 #include "Manager/ManagerSetting.h"
 #include "ScreenWidgetManagerSetting.generated.h"
 
-class UShortcutWidgetBinding;
-class UUserWidgetBase;
-class UInputAction;
-class UGameMenuSetting;
 class UGameHUD;
 
 /**
@@ -25,13 +21,13 @@ public:
 
 public:
 	/* 在世界开始时，将GameHUDClasses创建到屏幕 */
-	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category="HUD")
 	bool AutoCreateGameHUD = true;
 
-	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, DisplayName="Game HUD Classes")
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, DisplayName="Game HUD Classes", Category="HUD")
 	TArray<TSoftClassPtr<UGameHUD>> GameHUDClasses;
 
-	/* Widget的快捷操作(ex:快捷键打开Widget) */
-	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly)
-	TSoftObjectPtr<UShortcutWidgetBinding> ShortcutWidgetBinding;
+public:
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category="Shortcut Widget")
+	TSoftObjectPtr<UDataTable> ShortcutWidgetTable = nullptr;
 };

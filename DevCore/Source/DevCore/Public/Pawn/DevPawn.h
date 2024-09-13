@@ -9,7 +9,7 @@
 #include "Input/InputType.h"
 #include "DevPawn.generated.h"
 
-class UInputHandleComponent;
+class UPlayerInputComponent;
 class UInputHandle;
 struct FInputActionValue;
 class UInputAction;
@@ -50,15 +50,14 @@ public:
 	virtual APlayerController* GetPlayerController_Implementation() override;
 	virtual AAIController* GetAIController_Implementation() override;
 
+	virtual UPlayerInputComponent* GetPlayerInputComponent_Implementation() override;
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FName PawnName;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FPawnLockingState PawnLockingState;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	UInputHandleComponent* InputHandleComponent;
 
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)

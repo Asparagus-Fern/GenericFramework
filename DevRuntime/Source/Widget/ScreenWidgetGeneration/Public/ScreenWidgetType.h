@@ -5,6 +5,7 @@
 #include "Components/Widget.h"
 #include "ScreenWidgetType.generated.h"
 
+class UInputAction;
 class UInteractableUserWidgetBase;
 class UUserWidgetBase;
 class UCommonButtonEvent;
@@ -191,4 +192,23 @@ public:
 
 	DECLARE_MULTICAST_DELEGATE_OneParam(FWidgetAnimationDelegate, UWidget*)
 	static FWidgetAnimationDelegate OnWidgetAnimationFinish;
+};
+
+/**
+ * 
+ */
+USTRUCT(BlueprintType)
+struct FShortcutWidgetTableRow : public FTableRowBase
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	int32 PlayerIndex = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TSubclassOf<UUserWidgetBase> WidgetClass = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UInputAction* InputAction = nullptr;
 };

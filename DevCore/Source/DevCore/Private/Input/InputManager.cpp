@@ -4,11 +4,8 @@
 #include "Input/InputManager.h"
 
 #include "EnhancedInputSubsystems.h"
-#include "Input/CommonInputComponent.h"
 #include "Input/InputIdle.h"
 #include "Input/InputManagerSetting.h"
-#include "Input/PlayerInputBinding.h"
-#include "Kismet/GameplayStatics.h"
 
 #define LOCTEXT_NAMESPACE "UInputManager"
 
@@ -99,54 +96,6 @@ void UInputManager::NativeOnActived()
 void UInputManager::NativeOnInactived()
 {
 	Super::NativeOnInactived();
-}
-
-void UInputManager::RegisterPlayerInputHandle(UPlayerInputBinding* PlayerInputBinding)
-{
-	if (!IsValid(PlayerInputBinding))
-	{
-		LOG(Debug_Input, Warning, TEXT("PlayerInputBinding Is NULL"))
-		return;
-	}
-
-	if (PlayerInputBindings.Contains(PlayerInputBinding))
-	{
-		LOG(Debug_Input, Warning, TEXT("PlayerInputBinding Is Alrealy Register"))
-		return;
-	}
-
-	if (const APlayerController* PC = UGameplayStatics::GetPlayerController(this, PlayerInputBinding->PlayerIndex))
-	{
-		if (UCommonInputComponent* InputComponent = Cast<UCommonInputComponent>(PC->InputComponent))
-		{
-			PlayerInputBinding->SetupBinding(InputComponent);
-			PlayerInputBindings.Add(PlayerInputBinding);
-		}
-	}
-}
-
-void UInputManager::UnRegisterPlayerInputHandle(UPlayerInputBinding* PlayerInputBinding)
-{
-	if (!IsValid(PlayerInputBinding))
-	{
-		LOG(Debug_Input, Warning, TEXT("PlayerInputBinding Is NULL"))
-		return;
-	}
-
-	if (!PlayerInputBindings.Contains(PlayerInputBinding))
-	{
-		LOG(Debug_Input, Warning, TEXT("PlayerInputBinding Is Not Register"))
-		return;
-	}
-
-	if (const APlayerController* PC = UGameplayStatics::GetPlayerController(this, PlayerInputBinding->PlayerIndex))
-	{
-		if (UCommonInputComponent* InputComponent = Cast<UCommonInputComponent>(PC->InputComponent))
-		{
-			PlayerInputBinding->ClearupBinding(InputComponent);
-			PlayerInputBindings.Remove(PlayerInputBinding);
-		}
-	}
 }
 
 bool UInputManager::RegisterIdleData(UInputIdle* InputIdle, const FInputIdleDelegate& OnIdle, const FInputIdleDelegate& OnContinue)

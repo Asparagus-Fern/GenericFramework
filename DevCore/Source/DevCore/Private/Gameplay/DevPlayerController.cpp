@@ -5,7 +5,7 @@
 
 #include "EnhancedInputSubsystems.h"
 #include "Gameplay/Common/CommonPlayerCameraManager.h"
-#include "Input/InputHandleComponent.h"
+#include "Input/PlayerInputComponent.h"
 #include "Pawn/PawnInterface.h"
 
 ADevPlayerController::ADevPlayerController()
@@ -17,12 +17,12 @@ void ADevPlayerController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
 
-	UActorComponent* ActorComponent = InPawn->FindComponentByClass(UInputHandleComponent::StaticClass());
+	UActorComponent* ActorComponent = InPawn->FindComponentByClass(UPlayerInputComponent::StaticClass());
 	if (IsValid(ActorComponent))
 	{
 		if (UEnhancedInputLocalPlayerSubsystem* EnhancedInputLocalPlayerSubsystem = GetLocalPlayer()->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
 		{
-			for (auto& EnhanceInputMappingContext : Cast<UInputHandleComponent>(ActorComponent)->EnhanceInputMappingContexts)
+			for (auto& EnhanceInputMappingContext : Cast<UPlayerInputComponent>(ActorComponent)->EnhanceInputMappingContexts)
 			{
 				EnhancedInputLocalPlayerSubsystem->AddMappingContext(EnhanceInputMappingContext.InputMappingContext, EnhanceInputMappingContext.Priority, EnhanceInputMappingContext.ModifyContextOptions);
 			}
@@ -32,12 +32,12 @@ void ADevPlayerController::OnPossess(APawn* InPawn)
 
 void ADevPlayerController::OnUnPossess()
 {
-	UActorComponent* ActorComponent = GetPawn()->FindComponentByClass(UInputHandleComponent::StaticClass());
+	UActorComponent* ActorComponent = GetPawn()->FindComponentByClass(UPlayerInputComponent::StaticClass());
 	if (IsValid(ActorComponent))
 	{
 		if (UEnhancedInputLocalPlayerSubsystem* EnhancedInputLocalPlayerSubsystem = GetLocalPlayer()->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
 		{
-			for (const auto& EnhanceInputMappingContext : Cast<UInputHandleComponent>(ActorComponent)->EnhanceInputMappingContexts)
+			for (const auto& EnhanceInputMappingContext : Cast<UPlayerInputComponent>(ActorComponent)->EnhanceInputMappingContexts)
 			{
 				EnhancedInputLocalPlayerSubsystem->RemoveMappingContext(EnhanceInputMappingContext.InputMappingContext);
 			}

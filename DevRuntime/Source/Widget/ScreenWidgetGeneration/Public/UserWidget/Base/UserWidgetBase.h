@@ -70,14 +70,16 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, AdvancedDisplay)
 	int32 ZOrder = 0;
 
+	UPROPERTY(VisibleAnywhere)
+	bool bIsActived = false;
+
 public:
 	UFUNCTION(BlueprintPure)
 	FVector2D GetAnchorOffset() const;
 
-protected:
-	bool bIsActived = false;
+	UFUNCTION(BlueprintPure)
+	bool GetIsActived() const;
 
-public:
-	bool GetIsActived() const { return bIsActived; }
-	void SetIsActived(const bool InActived) { bIsActived = InActived; }
+	UFUNCTION(BlueprintCallable)
+	void SetIsActived(const bool InActived);
 };

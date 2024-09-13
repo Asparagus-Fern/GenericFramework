@@ -7,7 +7,7 @@
 #include "Pawn/PawnInterface.h"
 #include "DevCharacter.generated.h"
 
-class UInputHandleComponent;
+class UPlayerInputComponent;
 
 UCLASS()
 class DEVCORE_API ADevCharacter : public ACharacter, public IPawnInterface
@@ -42,10 +42,9 @@ public:
 	virtual APlayerController* GetPlayerController_Implementation() override;
 	virtual AAIController* GetAIController_Implementation() override;
 
+	virtual UPlayerInputComponent* GetPlayerInputComponent_Implementation() override;
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FName CharacterName;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	UInputHandleComponent* InputHandleComponent = nullptr;
 };

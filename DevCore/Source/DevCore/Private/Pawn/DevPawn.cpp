@@ -3,10 +3,8 @@
 #include "Pawn/DevPawn.h"
 
 #include "AIController.h"
-#include "EnhancedInputComponent.h"
 #include "Camera/CameraComponent.h"
-#include "Input/CommonInputComponent.h"
-#include "Input/InputHandleComponent.h"
+#include "Input/PlayerInputComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Pawn/PawnManagerSetting.h"
 
@@ -24,19 +22,24 @@ ADevPawn::ADevPawn()
 	PawnName = "DevPawn";
 	USceneComponent* SceneComponent = CreateDefaultSubobject<USceneComponent>("Root");
 	RootComponent = SceneComponent;
-
-	InputHandleComponent = CreateDefaultSubobject<UInputHandleComponent>("InputHandle");
 }
 
 void ADevPawn::BeginPlay()
 {
 	Super::BeginPlay();
+
 	OnPawnRegister.Broadcast(this);
 }
 
 void ADevPawn::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
+	if (IsValid(Execute_GetPlayerInputComponent(this)))
+	{
+		Execute_GetPlayerInputComponent(this)->RemovePlayerInput(InputComponent);
+	}
+
 	OnPawnUnRegister.Broadcast(this);
+
 	Super::EndPlay(EndPlayReason);
 }
 
@@ -44,9 +47,9 @@ void ADevPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	if (UCommonInputComponent* CommonInputComponent = CastChecked<UCommonInputComponent>(PlayerInputComponent))
+	if (IsValid(Execute_GetPlayerInputComponent(this)))
 	{
-		CommonInputComponent->RegisterInputHandle(InputHandleComponent);
+		Execute_GetPlayerInputComponent(this)->SetupPlayerInput(PlayerInputComponent);
 	}
 }
 
@@ -129,6 +132,11 @@ APlayerController* ADevPawn::GetPlayerController_Implementation()
 AAIController* ADevPawn::GetAIController_Implementation()
 {
 	return Cast<AAIController>(GetController());
+}
+
+UPlayerInputComponent* ADevPawn::GetPlayerInputComponent_Implementation()
+{
+	return nullptr;
 }
 
 UCameraComponent* ADevPawn::GetActiveCameraComponent_Implementation()
