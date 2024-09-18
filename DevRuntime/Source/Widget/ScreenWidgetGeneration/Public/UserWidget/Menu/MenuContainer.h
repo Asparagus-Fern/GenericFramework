@@ -24,7 +24,7 @@ public:
 
 	UPROPERTY(Transient, Getter, BlueprintGetter="GetMenuStyles")
 	TArray<UMenuStyle*> MenuStyles;
-
+	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	bool bIsManagedByGroup = true;
 

@@ -22,9 +22,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (TitleProperty = "MenuTag"))
 	TArray<FMenuInfo> MenuInfos;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, AdvancedDisplay)
-	FGameplayTag RootMenuTag = FGameplayTag::EmptyTag;
-
 public:
 #if WITH_EDITOR
 	UFUNCTION(CallInEditor)

@@ -7,6 +7,7 @@
 #include "NativeGameplayTags.h"
 #include "ActiveNode_Play.generated.h"
 
+class UGameMenuSetting;
 class UUserWidgetBase;
 
 UCLASS()
@@ -21,8 +22,16 @@ public:
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="UI")
+	UGameMenuSetting* DefaultGameMenu = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="UI")
 	TArray<TSubclassOf<UUserWidgetBase>> DefaultOpenWidgetClasses;
 
-	UPROPERTY(Transient, VisibleAnywhere, BlueprintReadOnly, Category="UI")
+protected:
+	UPROPERTY(Transient)
 	TArray<UUserWidgetBase*> DefaultOpenWidgets;
+
+protected:
+	UFUNCTION()
+	void PostHUDCreated();
 };

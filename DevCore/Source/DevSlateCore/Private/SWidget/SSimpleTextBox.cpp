@@ -36,6 +36,9 @@ SSimpleTextBox::SSimpleTextBox()
 
 void SSimpleTextBox::Construct(const FArguments& InArgs)
 {
+	SpacerPtr = SNew(SSpacer)
+		.Size(FVector2D(InArgs._Space.Get(), InArgs._Space.Get()));
+
 	TextPtr = SNew(STextBlock)
 		.Text(InArgs._Text)
 		.ColorAndOpacity(InArgs._TextColor)
@@ -214,6 +217,14 @@ void SSimpleTextBox::SetOverflowPolicy(const TOptional<ETextOverflowPolicy>& InO
 	}
 }
 
+void SSimpleTextBox::SetSpace(const TAttribute<float>& InSpace) const
+{
+	if (SpacerPtr.IsValid())
+	{
+		SpacerPtr->SetSize(FVector2D(InSpace.Get(), InSpace.Get()));
+	}
+}
+
 void SSimpleTextBox::SetImage(const TAttribute<const FSlateBrush*>& InImage) const
 {
 	if (ImagePtr.IsValid())
@@ -295,6 +306,11 @@ void SSimpleTextBox::UpdateSimpleTextLayout()
 			]
 			+ SHorizontalBox::Slot()
 			.AutoWidth()
+			[
+				SpacerPtr.ToSharedRef()
+			]
+			+ SHorizontalBox::Slot()
+			.AutoWidth()
 			.HAlign(GetTextHorizontalAlignment())
 			.VAlign(GetTextVerticalAlignment())
 			[
@@ -311,6 +327,11 @@ void SSimpleTextBox::UpdateSimpleTextLayout()
 			.Padding(GetImageMargin())
 			[
 				ImagePtr.ToSharedRef()
+			]
+			+ SVerticalBox::Slot()
+			.AutoHeight()
+			[
+				SpacerPtr.ToSharedRef()
 			]
 			+ SVerticalBox::Slot()
 			.AutoHeight()
@@ -332,6 +353,11 @@ void SSimpleTextBox::UpdateSimpleTextLayout()
 			]
 			+ SHorizontalBox::Slot()
 			.AutoWidth()
+			[
+				SpacerPtr.ToSharedRef()
+			]
+			+ SHorizontalBox::Slot()
+			.AutoWidth()
 			.HAlign(GetImageHorizontalAlignment())
 			.VAlign(GetImageVerticalAlignment())
 			.Padding(GetImageMargin())
@@ -348,6 +374,11 @@ void SSimpleTextBox::UpdateSimpleTextLayout()
 			.VAlign(GetTextVerticalAlignment())
 			[
 				TextPtr.ToSharedRef()
+			]
+			+ SVerticalBox::Slot()
+			.AutoHeight()
+			[
+				SpacerPtr.ToSharedRef()
 			]
 			+ SVerticalBox::Slot()
 			.AutoHeight()

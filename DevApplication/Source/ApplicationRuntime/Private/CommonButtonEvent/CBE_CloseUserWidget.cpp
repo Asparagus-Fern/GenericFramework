@@ -14,32 +14,35 @@ void UCBE_CloseUserWidget::ExecuteButtonEvent_Implementation()
 {
 	Super::ExecuteButtonEvent_Implementation();
 
-	if (bIsAsync)
+	if (UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
 	{
-		TArray<FGameplayTag> ValidSlotTags = GetValidSlotTags();
-		if (ValidSlotTags.IsValidIndex(CloseWidgetIndex))
+		if (bIsAsync)
 		{
-			const auto OnCloseFinish = FOnWidgetActiveStateChanged::CreateLambda([this](UUserWidgetBase*)
-				{
-					CloseWidgetIndex++;
-					ExecuteButtonEvent();
-				}
-			);
+			TArray<FGameplayTag> ValidSlotTags = GetValidSlotTags();
+			if (ValidSlotTags.IsValidIndex(CloseWidgetIndex))
+			{
+				const auto OnCloseFinish = FOnWidgetActiveStateChanged::CreateLambda([this](UUserWidgetBase*)
+					{
+						CloseWidgetIndex++;
+						ExecuteButtonEvent();
+					}
+				);
 
-			GetManager<UScreenWidgetManager>()->CloseUserWidget(ValidSlotTags[CloseWidgetIndex], OnCloseFinish);
+				ScreenWidgetManager->CloseUserWidget(ValidSlotTags[CloseWidgetIndex], OnCloseFinish);
+			}
+			else
+			{
+				CloseWidgetIndex = 0;
+				MarkAsActivedFinish();
+			}
 		}
 		else
 		{
-			CloseWidgetIndex = 0;
-			MarkAsActivedFinish();
-		}
-	}
-	else
-	{
-		TArray<FGameplayTag> ValidSlotTags = GetValidSlotTags();
-		for (const auto& ValidWidget : ValidSlotTags)
-		{
-			GetManager<UScreenWidgetManager>()->CloseUserWidget(ValidWidget);
+			TArray<FGameplayTag> ValidSlotTags = GetValidSlotTags();
+			for (const auto& ValidWidget : ValidSlotTags)
+			{
+				ScreenWidgetManager->CloseUserWidget(ValidWidget);
+			}
 		}
 	}
 }

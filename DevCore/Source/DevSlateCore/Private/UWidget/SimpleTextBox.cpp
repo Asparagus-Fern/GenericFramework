@@ -26,6 +26,8 @@ USimpleTextBox::USimpleTextBox(const FObjectInitializer& ObjectInitializer)
 	TextMargin = FMargin(0.f);
 	OverflowPolicy = ETextOverflowPolicy::Clip;
 
+	Space = 0.f;
+
 	ImageColor = FLinearColor::White;
 	ImageMargin = FMargin(0.f);
 	ImageVisibility = ESlateVisibility::SelfHitTestInvisible;
@@ -73,6 +75,8 @@ void USimpleTextBox::SynchronizeProperties()
 		SetLineHeightPercentage(LineHeightPercentage);
 		SetTextMargin(TextMargin);
 		SetOverflowPolicy(OverflowPolicy);
+
+		SetSpace(Space);
 
 		SetImage(Image);
 		SetImageColor(ImageColor);
@@ -329,6 +333,20 @@ void USimpleTextBox::SetOverflowPolicy(ETextOverflowPolicy InOverflowPolicy)
 	if (MySimpleTextBox.IsValid())
 	{
 		MySimpleTextBox->SetOverflowPolicy(InOverflowPolicy);
+	}
+}
+
+float USimpleTextBox::GetSpace() const
+{
+	return Space;
+}
+
+void USimpleTextBox::SetSpace(float InSpace)
+{
+	Space = InSpace;
+	if (MySimpleTextBox.IsValid())
+	{
+		MySimpleTextBox->SetSpace(InSpace);
 	}
 }
 

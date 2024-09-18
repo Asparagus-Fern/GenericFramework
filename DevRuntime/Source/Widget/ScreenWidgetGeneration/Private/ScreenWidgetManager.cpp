@@ -3,10 +3,7 @@
 
 #include "ScreenWidgetManager.h"
 
-#include "DBTweenUpdateManager.h"
-#include "EnhancedInputComponent.h"
 #include "ScreenWidgetManagerSetting.h"
-#include "Blueprint/GameViewportSubsystem.h"
 #include "Blueprint/WidgetTree.h"
 #include "BPFunctions/BPFunctions_Object.h"
 #include "BPFunctions/BPFunctions_Widget.h"
@@ -14,7 +11,6 @@
 #include "Group/CommonButtonGroup.h"
 #include "Input/InputManager.h"
 #include "Kismet/GameplayStatics.h"
-#include "Manager/ManagerGlobal.h"
 #include "Shortcut/ShortcutWidgetHandle.h"
 #include "UserWidget/Base/UserWidgetBase.h"
 #include "UserWidget/GameHUD.h"
@@ -66,16 +62,36 @@ void UScreenWidgetManager::NativeOnRefresh()
 {
 	Super::NativeOnRefresh();
 
+	/* 处理按钮事件 */
 	if (!bProcessingMenuSelection && !TargetMenuSelection.IsEmpty())
 	{
 		bProcessingMenuSelection = true;
 
-		for (const auto& MenuStyle : GetMenuStyles())
-		{
-			MenuStyle->CommonButton->SetIsInteractionEnabled(false);
-		}
+		// for (const auto& MenuStyle : GetMenuStyles())
+		// {
+		// 	MenuStyle->CommonButton->SetIsInteractionEnabled(false);
+		// }
 
 		HandleMenuResponseStateChanged();
+	}
+
+	/* 清理生成的菜单信息 */
+	if (bClearupMenuGenerateInfos)
+	{
+		bClearupMenuGenerateInfos = false;
+
+		TArray<FMenuGenerateInfo> TempMenuGenerateInfos = MenuGenerateInfos;
+		for (auto& TempMenuGenerateInfo : TempMenuGenerateInfos)
+		{
+			if (!TempMenuGenerateInfo.GetIsValid())
+			{
+				if (IsValid(TempMenuGenerateInfo.MenuContainer))
+				{
+					InactiveWidget(TempMenuGenerateInfo.MenuContainer);
+				}
+				MenuGenerateInfos.Remove(TempMenuGenerateInfo);
+			}
+		}
 	}
 }
 
@@ -99,9 +115,6 @@ void UScreenWidgetManager::NativeOnInactived()
 	Super::NativeOnInactived();
 
 	UnRegisterShortcutWidgetHandles();
-
-	/* 清除菜单 */
-	SwitchGameMenu(nullptr);
 
 	/* 清除插槽 */
 	ClearupSlots();
@@ -356,7 +369,7 @@ void UScreenWidgetManager::RemoveTemporaryGameHUD(UUserWidgetBase* InWidget)
 	}
 
 	/* 获取两个集合交集 */
-	TSet<TSubclassOf<UGameHUD>> Intersect = GameHUDClasses.Intersect(ActivedWidgetTemporaryHUDClasses);
+	const TSet<TSubclassOf<UGameHUD>> Intersect = GameHUDClasses.Intersect(ActivedWidgetTemporaryHUDClasses);
 	for (auto& TemporaryHUDClass : InWidget->TemporaryHUDs)
 	{
 		/* 如果交集不包括InWidget的临时的HUD类，表示该Widget的HUD并没有被其他Widget使用，移除该临时HUD */
@@ -715,20 +728,34 @@ void UScreenWidgetManager::InactiveWidget(UUserWidgetBase* InWidget, const bool 
 
 void UScreenWidgetManager::SwitchGameMenu(UGameMenuSetting* InGameMenuSetting)
 {
-	/* todo:销毁菜单 */
-	if (IsValid(GameMenu))
+	if (GameMenu == InGameMenuSetting)
 	{
-		// MenuGenerateInfos.Reset();
-		// CurrentActiveMenuTag = FGameplayTag::EmptyTag;
-		// LastActiveMenuTag = FGameplayTag::EmptyTag;
-		//
-		// MenuSelectionChangedHandle.Reset();
-		// TargetMenuSelection.Reset();
-		// UpdateMenuSelectionHandle.Invalidate();
-		// TargetMenuSelectionIndex = 0;
+		LOG(Debug_UI, Warning, TEXT("Can not Switch The Same Game Menu Setting"))
+		return;
 	}
 
-	/* Generate Root Menu */
+	/* 销毁菜单 */
+	if (IsValid(GameMenu))
+	{
+		TArray<FMenuGenerateInfo> TempMenuGenerateInfos = MenuGenerateInfos;
+		if (TempMenuGenerateInfos.IsValidIndex(0))
+		{
+			/* 当存在选中菜单时，退出所有的选中菜单再进行销毁 */
+			if (IsValid(TempMenuGenerateInfos[0].ActivedMenuStyle))
+			{
+				DeselectMenu(TempMenuGenerateInfos[0].ActivedMenuStyle->GetMenuTag());
+
+				bSwitchingGameMenu = true;
+				WaitingGameMenu = InGameMenuSetting;
+				return;
+			}
+		}
+
+		/* 不存在选中菜单时，直接进行销毁 */
+		DestroyMenu(GameMenu->GetRootMenuTag());
+	}
+
+	/* 生成新的菜单 */
 	GameMenu = InGameMenuSetting;
 	if (IsValid(GameMenu))
 	{
@@ -860,11 +887,10 @@ void UScreenWidgetManager::GenerateMenu(TArray<FGameplayTag> InMenuTags)
 			ActiveWidget(MenuStyle);
 			MenuStyle->NativeConstructMenuStyle(MenuInfo);
 
-			/* 当前正在执行菜单的事件 */
-			if (bProcessingMenuSelection)
-			{
-				MenuStyle->CommonButton->SetIsInteractionEnabled(false);
-			}
+			// if (bProcessingMenuSelection)
+			// {
+			// 	MenuStyle->CommonButton->SetIsInteractionEnabled(false);
+			// }
 		}
 	}
 
@@ -896,6 +922,9 @@ void UScreenWidgetManager::DestroyMenu(TArray<FGameplayTag> InMenuTags)
 			UMenuStyle* MenuStyle = Cast<UMenuStyle>(InWidget);
 			FMenuGenerateInfo* MenuGenerateInfo = MenuGenerateInfos.FindByKey(MenuStyle);
 			MenuGenerateInfo->ClearupGarbageMenuStyle();
+
+			if (!MenuGenerateInfo->GetIsValid())
+				bClearupMenuGenerateInfos = true;
 		}
 	);
 
@@ -922,7 +951,7 @@ TArray<UMenuStyle*> UScreenWidgetManager::GetMenuStyles()
 	return MenuStyles;
 }
 
-FReply UScreenWidgetManager::OnMenuResponseStateChanged(UInteractableUserWidgetBase* InteractableWidget, bool TargetEventState)
+FReply UScreenWidgetManager::OnMenuResponseStateChanged(UInteractableUserWidgetBase* InteractableWidget, const bool TargetEventState)
 {
 	if (UMenuStyle* TargetMenuStyle = Cast<UMenuStyle>(InteractableWidget))
 	{
@@ -985,9 +1014,16 @@ void UScreenWidgetManager::HandleMenuResponseStateChanged()
 	if (MenuStyles.IsValidIndex(ProcessingMenuIndex))
 	{
 		UMenuStyle* TargetMenuStyle = MenuStyles[ProcessingMenuIndex];
-		const FMenuGenerateInfo* MenuGenerateInfo = MenuGenerateInfos.FindByKey(TargetMenuStyle);
+		FMenuGenerateInfo* MenuGenerateInfo = MenuGenerateInfos.FindByKey(TargetMenuStyle);
 		const bool TargetEventState = TargetMenuSelection.FindRef(TargetMenuStyle);
 
+		/* 标记当前激活的菜单 */
+		if (TargetEventState)
+			MenuGenerateInfo->ActivedMenuStyle = TargetMenuStyle;
+		else
+			MenuGenerateInfo->ActivedMenuStyle = nullptr;
+
+		/* 执行菜单事件 */
 		if (!TargetMenuStyle->GetResponseEvents(TargetEventState).IsEmpty())
 		{
 			if (UProcedureProxy* ProcedureProxy = TargetMenuStyle->HandleButtonResponseEvent(TargetMenuStyle->GetResponseEvents(TargetEventState), TargetEventState, FSimpleDelegate::CreateUObject(this, &UScreenWidgetManager::HandleMenuResponseStateChanged)))
@@ -997,15 +1033,32 @@ void UScreenWidgetManager::HandleMenuResponseStateChanged()
 			}
 		}
 
+		/* 没有菜单事件 */
 		ProcessingMenuIndex++;
 		HandleMenuResponseStateChanged();
 	}
 	/* 所有菜单都已经触发 */
 	else
 	{
-		for (const auto& MenuStyle : GetMenuStyles())
+		// for (const auto& MenuStyle : GetMenuStyles())
+		// {
+		// 	MenuStyle->CommonButton->SetIsInteractionEnabled(true);
+		// }
+
+		/* 当所有的事件都已退出，且存在WaitingGameMenu时，表明当前正在切换一个菜单数据，销毁并创建新的菜单数据 */
+		if (bSwitchingGameMenu)
 		{
-			MenuStyle->CommonButton->SetIsInteractionEnabled(true);
+			bSwitchingGameMenu = false;
+
+			DestroyMenu(GameMenu->GetRootMenuTag());
+
+			GameMenu = WaitingGameMenu;
+			WaitingGameMenu = nullptr;
+
+			if (IsValid(GameMenu))
+			{
+				GenerateMenu(GameMenu->GetRootMenuTag());
+			}
 		}
 
 		TargetMenuSelection.Reset();
@@ -1067,7 +1120,7 @@ void UScreenWidgetManager::UnRegisterShortcutWidgetHandles()
 	}
 }
 
-UShortcutWidgetHandle* UScreenWidgetManager::GetShortcutWidgetHandle(UUserWidgetBase* InWidget)
+UShortcutWidgetHandle* UScreenWidgetManager::GetShortcutWidgetHandle(const UUserWidgetBase* InWidget)
 {
 	for (const auto& ShortcutWidgetHandle : ShortcutWidgetHandles)
 	{
@@ -1080,7 +1133,7 @@ UShortcutWidgetHandle* UScreenWidgetManager::GetShortcutWidgetHandle(UUserWidget
 	return nullptr;
 }
 
-UShortcutWidgetHandle* UScreenWidgetManager::GetShortcutWidgetHandle(TSubclassOf<UUserWidgetBase> InWidgetClass)
+UShortcutWidgetHandle* UScreenWidgetManager::GetShortcutWidgetHandle(const TSubclassOf<UUserWidgetBase> InWidgetClass)
 {
 	for (const auto& ShortcutWidgetHandle : ShortcutWidgetHandles)
 	{

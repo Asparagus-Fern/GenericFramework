@@ -32,6 +32,7 @@ public:
 			  _LineHeightPercentage(1.0f),
 			  _TextMargin(),
 			  _OverflowPolicy(),
+			  _Space(0.f),
 			  _Image(FCoreStyle::Get().GetDefaultBrush()),
 			  _ImageColor(FLinearColor::White),
 			  _ImageMargin(),
@@ -61,6 +62,8 @@ public:
 		SLATE_ATTRIBUTE(FMargin, TextMargin)
 		SLATE_ARGUMENT(TOptional<ETextOverflowPolicy>, OverflowPolicy)
 
+		SLATE_ATTRIBUTE(float, Space)
+
 		SLATE_ATTRIBUTE(const FSlateBrush*, Image)
 		SLATE_ATTRIBUTE(FSlateColor, ImageColor)
 		SLATE_ATTRIBUTE(FMargin, ImageMargin)
@@ -80,6 +83,7 @@ public:
 
 protected:
 	TSharedPtr<STextBlock> TextPtr;
+	TSharedPtr<SSpacer> SpacerPtr;
 	TSharedPtr<SImage> ImagePtr;
 
 protected:
@@ -111,6 +115,9 @@ public:
 	void SetLineHeightPercentage(const TAttribute<float>& InLineHeightPercentage) const;
 	void SetTextMargin(const TAttribute<FMargin>& InTextMargin) const;
 	void SetOverflowPolicy(const TOptional<ETextOverflowPolicy>& InOverflowPolicy) const;
+
+public:
+	void SetSpace(const TAttribute<float>& InSpace) const;
 
 public:
 	FMargin GetImageMargin() const { return ImageMarginAttribute.Get(); }

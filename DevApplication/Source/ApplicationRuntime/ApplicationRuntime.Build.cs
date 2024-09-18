@@ -21,13 +21,17 @@ public class ApplicationRuntime : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
+
 				"GameplayTags",
+				"DBTween",
+
 				"ActiveNodeSystem",
 				"ScreenWidgetGeneration",
+				"WorldWidgetGeneration",
 				"CameraSystem",
 				"LevelStreaming",
 				"WorldPartition",
-				"DBTween"
+				"GameSettingSystem"
 			}
 		);
 	}

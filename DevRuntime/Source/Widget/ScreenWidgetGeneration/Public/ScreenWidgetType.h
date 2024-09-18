@@ -5,6 +5,7 @@
 #include "Components/Widget.h"
 #include "ScreenWidgetType.generated.h"
 
+class UScreenWidgetManager;
 class UShortcutWidgetHandle;
 class UInputAction;
 class UInteractableUserWidgetBase;
@@ -141,6 +142,8 @@ struct FMenuGenerateInfo
 {
 	GENERATED_BODY()
 
+	friend UScreenWidgetManager;
+
 public:
 	FMenuGenerateInfo();
 	FMenuGenerateInfo(UMenuContainer* InMenuContainer);
@@ -166,7 +169,10 @@ public:
 	void ClearupGarbageMenuStyle();
 
 protected:
-	UPROPERTY(BlueprintReadOnly, Transient)
+	UPROPERTY(Transient)
+	UMenuStyle* ActivedMenuStyle = nullptr;
+
+	UPROPERTY(Transient)
 	TArray<UMenuStyle*> GarbageMenuStyles;
 };
 
@@ -205,7 +211,7 @@ struct FShortcutWidgetTableRow : public FTableRowBase
 
 public:
 	FShortcutWidgetTableRow();
-	
+
 public:
 	/* 对UMG的快捷键处理类 */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)

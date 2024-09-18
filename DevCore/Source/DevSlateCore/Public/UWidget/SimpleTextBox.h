@@ -91,6 +91,10 @@ public:
 	ETextOverflowPolicy OverflowPolicy;
 
 public:
+	UPROPERTY(EditAnywhere, Getter, Setter, BlueprintGetter="GetSpace", BlueprintSetter="SetSpace", Category="SimpleTextBox|Space")
+	float Space;
+
+public:
 	UPROPERTY(EditAnywhere, Getter, Setter, BlueprintGetter="GetImage", BlueprintSetter="SetImage", Category="SimpleTextBox|Image")
 	FSlateBrush Image;
 
@@ -235,6 +239,14 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetOverflowPolicy(ETextOverflowPolicy InOverflowPolicy);
 
+	/* Spacer */
+public:
+	UFUNCTION(BlueprintPure)
+	float GetSpace() const;
+
+	UFUNCTION(BlueprintCallable)
+	void SetSpace(float InSpace);
+	
 	/* Image */
 public:
 	UFUNCTION(BlueprintPure)

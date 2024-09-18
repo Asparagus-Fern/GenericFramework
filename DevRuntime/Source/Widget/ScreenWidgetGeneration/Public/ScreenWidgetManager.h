@@ -198,6 +198,18 @@ public:
 	UPROPERTY(BlueprintReadOnly, Transient)
 	TArray<FMenuGenerateInfo> MenuGenerateInfos;
 
+protected:
+	/* 是否需要清理生成信息 */
+	bool bClearupMenuGenerateInfos = false;
+	
+	/* 是否正在切换菜单数据 */
+	bool bSwitchingGameMenu = false;
+
+protected:
+	/* 等待切换的菜单数据 */
+	UPROPERTY(Transient)
+	UGameMenuSetting* WaitingGameMenu = nullptr;
+
 public:
 	virtual void SwitchGameMenu(UGameMenuSetting* InGameMenuSetting);
 	virtual void SelectMenu(FGameplayTag InMenuTag);
@@ -230,6 +242,6 @@ protected:
 protected:
 	void RegisterShortcutWidgetHandles();
 	void UnRegisterShortcutWidgetHandles();
-	UShortcutWidgetHandle* GetShortcutWidgetHandle(UUserWidgetBase* InWidget);
+	UShortcutWidgetHandle* GetShortcutWidgetHandle(const UUserWidgetBase* InWidget);
 	UShortcutWidgetHandle* GetShortcutWidgetHandle(TSubclassOf<UUserWidgetBase> InWidgetClass);
 };

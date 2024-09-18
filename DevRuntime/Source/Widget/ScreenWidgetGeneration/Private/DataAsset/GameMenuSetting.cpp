@@ -168,7 +168,7 @@ bool UGameMenuSetting::GetDirectParentMenuInfo(const FGameplayTag InMenuTag, FMe
 
 FGameplayTag UGameMenuSetting::GetRootMenuTag() const
 {
-	return RootMenuTag.IsValid() ? RootMenuTag : (GameplayTagContainer.IsValid() ? GameplayTagContainer.First() : FGameplayTag::EmptyTag);
+	return GameplayTagContainer.IsValid() ? GameplayTagContainer.First() : FGameplayTag::EmptyTag;
 }
 
 TArray<FMenuInfo> UGameMenuSetting::GetRootMenuInfos()
