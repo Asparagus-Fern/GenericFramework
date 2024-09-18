@@ -5,6 +5,7 @@
 #include "Components/Widget.h"
 #include "ScreenWidgetType.generated.h"
 
+class UShortcutWidgetHandle;
 class UInputAction;
 class UInteractableUserWidgetBase;
 class UUserWidgetBase;
@@ -203,12 +204,22 @@ struct FShortcutWidgetTableRow : public FTableRowBase
 	GENERATED_BODY()
 
 public:
+	FShortcutWidgetTableRow();
+	
+public:
+	/* 对UMG的快捷键处理类 */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	int32 PlayerIndex = 0;
+	TSubclassOf<UShortcutWidgetHandle> ShortcutWidgetHandleClass;
 
+	/* 绑定的玩家下标 */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TSubclassOf<UUserWidgetBase> WidgetClass = nullptr;
+	int32 PlayerIndex;
 
+	/* 绑定的UMG类 */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	UInputAction* InputAction = nullptr;
+	TSubclassOf<UUserWidgetBase> WidgetClass;
+
+	/* 绑定的快捷键 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UInputAction* InputAction;
 };

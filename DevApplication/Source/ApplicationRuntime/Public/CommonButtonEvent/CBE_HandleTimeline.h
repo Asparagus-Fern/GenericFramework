@@ -13,8 +13,8 @@ class UTimelineButtonEvent;
 /**
  * 处理时间轴类型按钮事件
  */
-UCLASS()
-class APPLICATIONRUNTIME_API UCBE_HandleTimeline : public UCommonButtonEvent
+UCLASS(MinimalAPI)
+class UCBE_HandleTimeline : public UCommonButtonEvent
 {
 	GENERATED_BODY()
 

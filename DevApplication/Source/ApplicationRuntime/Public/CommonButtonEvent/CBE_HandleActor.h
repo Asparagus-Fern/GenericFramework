@@ -10,8 +10,8 @@
 /**
  * 
  */
-UCLASS()
-class APPLICATIONRUNTIME_API UCBE_HandleActor : public UCommonButtonEvent
+UCLASS(MinimalAPI)
+class UCBE_HandleActor : public UCommonButtonEvent
 {
 	GENERATED_BODY()
 

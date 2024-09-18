@@ -13,7 +13,9 @@
 #include "DataAsset/GameMenuSetting.h"
 #include "Group/CommonButtonGroup.h"
 #include "Input/InputManager.h"
+#include "Kismet/GameplayStatics.h"
 #include "Manager/ManagerGlobal.h"
+#include "Shortcut/ShortcutWidgetHandle.h"
 #include "UserWidget/Base/UserWidgetBase.h"
 #include "UserWidget/GameHUD.h"
 #include "UserWidget/Menu/MenuContainer.h"
@@ -21,6 +23,8 @@
 #include "UWidget/GameplayTagSlot.h"
 
 #define LOCTEXT_NAMESPACE "UScreenWidgetManager"
+
+/* ==================== FWidgetAnimationTimerHandle ==================== */
 
 FWidgetAnimationTimerHandle::FWidgetAnimationTimerHandle()
 {
@@ -42,6 +46,8 @@ bool FWidgetAnimationTimerHandle::operator==(const UUserWidgetBase* OtherWidget)
 {
 	return Widget == OtherWidget;
 }
+
+/* ==================== UScreenWidgetManager ==================== */
 
 UScreenWidgetManager::UScreenWidgetManager(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -85,21 +91,14 @@ void UScreenWidgetManager::NativeOnActived()
 	UGameplayTagSlot::OnGameplayTagSlotBuild.AddUObject(this, &UScreenWidgetManager::RegisterSlot);
 	UGameplayTagSlot::OnGameplayTagSlotDestroy.AddUObject(this, &UScreenWidgetManager::UnRegisterSlot);
 
-	if (!UScreenWidgetManagerSetting::Get()->ShortcutWidgetTable.IsNull())
-	{
-		UDataTable* DataTable = UBPFunctions_Object::LoadObject<UDataTable>(UScreenWidgetManagerSetting::Get()->ShortcutWidgetTable);
-		if (!DataTable->RowStruct->IsChildOf(FShortcutWidgetTableRow::StaticStruct()))
-		{
-			return;
-		}
-
-		ShortcutWidgetTable = DataTable;
-	}
+	RegisterShortcutWidgetHandles();
 }
 
 void UScreenWidgetManager::NativeOnInactived()
 {
 	Super::NativeOnInactived();
+
+	UnRegisterShortcutWidgetHandles();
 
 	/* 清除菜单 */
 	SwitchGameMenu(nullptr);
@@ -581,6 +580,11 @@ void UScreenWidgetManager::ActiveWidget(UUserWidgetBase* InWidget, const FOnWidg
 	ActivedWidgets.Add(InWidget);
 	OnWidgetOpen.Broadcast(InWidget);
 
+	if (UShortcutWidgetHandle* ShortcutWidgetHandle = GetShortcutWidgetHandle(InWidget))
+	{
+		ShortcutWidgetHandle->Link(InWidget);
+	}
+
 	if (IWidgetAnimationInterface::Execute_HasAnimationEvent(InWidget, true))
 	{
 		IWidgetAnimationInterface::Execute_PlayAnimationEvent(InWidget, true);
@@ -629,6 +633,11 @@ void UScreenWidgetManager::InactiveWidget(UUserWidgetBase* InWidget, FOnWidgetAc
 		LOG(Debug_UI, Error, TEXT("InWidget Is NULL"))
 		OnFinish.ExecuteIfBound(InWidget);
 		return;
+	}
+
+	if (UShortcutWidgetHandle* ShortcutWidgetHandle = GetShortcutWidgetHandle(InWidget))
+	{
+		ShortcutWidgetHandle->UnLink();
 	}
 
 	InWidget->NativeOnDestroy();
@@ -1003,6 +1012,85 @@ void UScreenWidgetManager::HandleMenuResponseStateChanged()
 		bProcessingMenuSelection = false;
 		ProcessingMenuIndex = 0;
 	}
+}
+
+void UScreenWidgetManager::RegisterShortcutWidgetHandles()
+{
+	if (!UScreenWidgetManagerSetting::Get()->ShortcutWidgetTable.IsNull())
+	{
+		UDataTable* DataTable = UBPFunctions_Object::LoadObject<UDataTable>(UScreenWidgetManagerSetting::Get()->ShortcutWidgetTable);
+		if (IsValid(DataTable))
+		{
+			if (!DataTable->RowStruct->IsChildOf(FShortcutWidgetTableRow::StaticStruct()))
+			{
+				return;
+			}
+
+			ShortcutWidgetTable = DataTable;
+
+			ShortcutWidgetTable->ForeachRow<FShortcutWidgetTableRow>
+			("", [this](FName Key, const FShortcutWidgetTableRow& Value)
+			 {
+				 if (!Value.ShortcutWidgetHandleClass || !Value.WidgetClass || !IsValid(Value.InputAction))
+				 {
+					 return;
+				 }
+
+				 /* PlayerIndex不存在 */
+				 if (!UGameplayStatics::GetPlayerController(this, Value.PlayerIndex))
+				 {
+					 return;
+				 }
+
+				 /* 相同WidgetClass映射了多个InputAction */
+				 if (IsValid(GetShortcutWidgetHandle(Value.WidgetClass)))
+				 {
+					 return;
+				 }
+
+				 UShortcutWidgetHandle* ShortcutWidgetHandle = NewObject<UShortcutWidgetHandle>(this, Value.ShortcutWidgetHandleClass);
+				 ShortcutWidgetHandle->ShortcutWidgetTableRow = Value;
+				 ShortcutWidgetHandles.Add(ShortcutWidgetHandle);
+
+				 ShortcutWidgetHandle->NativeOnCreate();
+			 }
+			);
+		}
+	}
+}
+
+void UScreenWidgetManager::UnRegisterShortcutWidgetHandles()
+{
+	for (const auto& ShortcutWidgetHandle : ShortcutWidgetHandles)
+	{
+		ShortcutWidgetHandle->NativeOnDestroy();
+	}
+}
+
+UShortcutWidgetHandle* UScreenWidgetManager::GetShortcutWidgetHandle(UUserWidgetBase* InWidget)
+{
+	for (const auto& ShortcutWidgetHandle : ShortcutWidgetHandles)
+	{
+		if (ShortcutWidgetHandle->Equal(InWidget))
+		{
+			return ShortcutWidgetHandle;
+		}
+	}
+
+	return nullptr;
+}
+
+UShortcutWidgetHandle* UScreenWidgetManager::GetShortcutWidgetHandle(TSubclassOf<UUserWidgetBase> InWidgetClass)
+{
+	for (const auto& ShortcutWidgetHandle : ShortcutWidgetHandles)
+	{
+		if (ShortcutWidgetHandle->Equal(InWidgetClass))
+		{
+			return ShortcutWidgetHandle;
+		}
+	}
+
+	return nullptr;
 }
 
 #undef LOCTEXT_NAMESPACE

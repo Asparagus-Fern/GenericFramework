@@ -9,8 +9,8 @@
 /**
  * 处理3DUI点位的激活状态
  */
-UCLASS()
-class APPLICATIONRUNTIME_API UCBE_HandleWorldWidgetPoint : public UCommonButtonEvent
+UCLASS(MinimalAPI)
+class UCBE_HandleWorldWidgetPoint : public UCommonButtonEvent
 {
 	GENERATED_BODY()
 

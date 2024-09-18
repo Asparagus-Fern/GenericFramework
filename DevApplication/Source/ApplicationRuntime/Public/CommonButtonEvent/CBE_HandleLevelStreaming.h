@@ -16,8 +16,8 @@ enum class EHandleLevelStreamingMethod : uint8
 /**
  * 处理流关卡的切换
  */
-UCLASS()
-class APPLICATIONRUNTIME_API UCBE_HandleLevelStreaming : public UCommonButtonEvent
+UCLASS(MinimalAPI)
+class UCBE_HandleLevelStreaming : public UCommonButtonEvent
 {
 	GENERATED_BODY()
 

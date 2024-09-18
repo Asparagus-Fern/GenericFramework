@@ -9,8 +9,8 @@
 /**
  * 处理材质参数集Scalar参数
  */
-UCLASS()
-class APPLICATIONRUNTIME_API UTBE_HandleMaterialScalarParameter : public UTimelineButtonEvent
+UCLASS(MinimalAPI)
+class UTBE_HandleMaterialScalarParameter : public UTimelineButtonEvent
 {
 	GENERATED_BODY()
 

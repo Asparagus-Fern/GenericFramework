@@ -9,8 +9,8 @@
 /**
  * 
  */
-UCLASS()
-class APPLICATIONRUNTIME_API UCameraHandle_Transition : public UCameraHandle
+UCLASS(MinimalAPI)
+class UCameraHandle_Transition : public UCameraHandle
 {
 	GENERATED_BODY()
 

@@ -9,8 +9,8 @@
 class UUserWidgetBase;
 class ULoading;
 
-UCLASS()
-class APPLICATIONRUNTIME_API AActiveNode_LevelStreamingLoad : public AActiveNode_Load
+UCLASS(MinimalAPI)
+class AActiveNode_LevelStreamingLoad : public AActiveNode_Load
 {
 	GENERATED_BODY()
 

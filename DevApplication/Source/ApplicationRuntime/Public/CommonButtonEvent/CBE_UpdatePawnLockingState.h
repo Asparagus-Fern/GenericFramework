@@ -10,8 +10,8 @@
 /**
  * 更新Pawn锁定状态
  */
-UCLASS()
-class APPLICATIONRUNTIME_API UCBE_UpdatePawnLockingState : public UCommonButtonEvent
+UCLASS(MinimalAPI)
+class UCBE_UpdatePawnLockingState : public UCommonButtonEvent
 {
 	GENERATED_BODY()
 

@@ -9,8 +9,8 @@
 /**
  * 处理菜单的选中状态
  */
-UCLASS()
-class APPLICATIONRUNTIME_API UCBE_HandleMenuSelection : public UCommonButtonEvent
+UCLASS(MinimalAPI)
+class UCBE_HandleMenuSelection : public UCommonButtonEvent
 {
 	GENERATED_BODY()
 

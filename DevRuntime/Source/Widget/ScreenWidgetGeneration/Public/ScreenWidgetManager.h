@@ -4,18 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
-#include "InputActionValue.h"
 #include "ScreenWidgetType.h"
 #include "Manager/CoreManager.h"
-#include "Procedure/ProcedureType.h"
 #include "UserWidget/Base/UserWidgetBase.h"
 #include "ScreenWidgetManager.generated.h"
 
-class UShortcutWidgetBinding;
+class UShortcutWidgetHandle;
 class UCommonButtonBase;
 class UInstanceUserWidgetBase;
 class UGameplayTagSlot;
-class UWidget;
 class UGameWidgetSetting;
 class UGameLoading;
 class UGameHUD;
@@ -24,6 +21,9 @@ class UUserWidgetBase;
 
 DECLARE_DELEGATE_OneParam(FOnWidgetActiveStateChanged, UUserWidgetBase*);
 
+/**
+ * 处理UMG的动画过渡
+ */
 USTRUCT()
 struct FWidgetAnimationTimerHandle
 {
@@ -46,6 +46,7 @@ public:
 public:
 	FOnWidgetActiveStateChanged OnFinish;
 };
+
 
 /**
  * 
@@ -218,7 +219,17 @@ protected:
 	virtual FReply OnMenuResponseStateChanged(UInteractableUserWidgetBase* InteractableWidget, bool TargetEventState);
 	virtual void HandleMenuResponseStateChanged();
 
+	/* Shortcut Widget */
 protected:
 	UPROPERTY(BlueprintReadOnly, Transient)
 	UDataTable* ShortcutWidgetTable = nullptr;
+
+	UPROPERTY(Transient)
+	TArray<UShortcutWidgetHandle*> ShortcutWidgetHandles;
+
+protected:
+	void RegisterShortcutWidgetHandles();
+	void UnRegisterShortcutWidgetHandles();
+	UShortcutWidgetHandle* GetShortcutWidgetHandle(UUserWidgetBase* InWidget);
+	UShortcutWidgetHandle* GetShortcutWidgetHandle(TSubclassOf<UUserWidgetBase> InWidgetClass);
 };

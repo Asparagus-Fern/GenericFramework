@@ -12,8 +12,8 @@ class UCameraHandle;
 /**
  * 处理相机的切换
  */
-UCLASS()
-class APPLICATIONRUNTIME_API UCBE_HandleSwitchCamera : public UCommonButtonEvent
+UCLASS(MinimalAPI)
+class UCBE_HandleSwitchCamera : public UCommonButtonEvent
 {
 	GENERATED_BODY()
 

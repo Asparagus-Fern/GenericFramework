@@ -9,8 +9,8 @@
 /**
  * 打开一个Widget
  */
-UCLASS()
-class APPLICATIONRUNTIME_API UCBE_OpenUserWidget : public UCommonButtonEvent
+UCLASS(MinimalAPI)
+class UCBE_OpenUserWidget : public UCommonButtonEvent
 {
 	GENERATED_BODY()
 

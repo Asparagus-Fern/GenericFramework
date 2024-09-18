@@ -4,6 +4,7 @@
 #include "Group/CommonButtonGroup.h"
 #include "Groups/CommonButtonGroupBase.h"
 #include "Manager/ManagerGlobal.h"
+#include "Shortcut/SWH_ToggleOpenWidget.h"
 #include "UserWidget/Base/UserWidgetBase.h"
 #include "UserWidget/Menu/MenuContainer.h"
 #include "UserWidget/Menu/MenuStyle.h"
@@ -116,4 +117,12 @@ void FMenuGenerateInfo::ClearupGarbageMenuStyle()
 		GarbageMenuStyles.Remove(GarbageMenuStyle);
 		GarbageMenuStyle->MarkAsGarbage();
 	}
+}
+
+FShortcutWidgetTableRow::FShortcutWidgetTableRow()
+	: ShortcutWidgetHandleClass(USWH_ToggleOpenWidget::StaticClass()),
+	  PlayerIndex(0),
+	  WidgetClass(nullptr),
+	  InputAction(nullptr)
+{
 }

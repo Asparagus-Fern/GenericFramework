@@ -9,8 +9,8 @@
 /**
  * 处理材质参数集Vector参数
  */
-UCLASS()
-class APPLICATIONRUNTIME_API UTBE_HandleMaterialVectorParameter : public UTimelineButtonEvent
+UCLASS(MinimalAPI)
+class UTBE_HandleMaterialVectorParameter : public UTimelineButtonEvent
 {
 	GENERATED_BODY()
 

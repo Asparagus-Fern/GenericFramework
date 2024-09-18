@@ -9,8 +9,8 @@
 /**
  * 关闭一个Widget
  */
-UCLASS()
-class APPLICATIONRUNTIME_API UCBE_CloseUserWidget : public UCommonButtonEvent
+UCLASS(MinimalAPI)
+class UCBE_CloseUserWidget : public UCommonButtonEvent
 {
 	GENERATED_BODY()
 
