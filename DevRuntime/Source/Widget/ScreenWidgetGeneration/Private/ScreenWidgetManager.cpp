@@ -3,6 +3,7 @@
 
 #include "ScreenWidgetManager.h"
 
+#include "UserWidget/HUD/TemporaryHUD.h"
 #include "ScreenWidgetManagerSetting.h"
 #include "Blueprint/WidgetTree.h"
 #include "BPFunctions/BPFunctions_Object.h"
@@ -13,7 +14,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Shortcut/ShortcutWidgetHandle.h"
 #include "UserWidget/Base/UserWidgetBase.h"
-#include "UserWidget/GameHUD.h"
+#include "UserWidget/HUD/GameHUD.h"
 #include "UserWidget/Menu/MenuContainer.h"
 #include "UserWidget/Menu/MenuStyle.h"
 #include "UWidget/GameplayTagSlot.h"
@@ -765,7 +766,10 @@ void UScreenWidgetManager::SwitchGameMenu(UGameMenuSetting* InGameMenuSetting)
 
 void UScreenWidgetManager::SelectMenu(const FGameplayTag InMenuTag)
 {
-	if (FMenuGenerateInfo* MenuGenerateInfo = MenuGenerateInfos.FindByKey(InMenuTag))
+	FMenuContainerInfo MenuContainerInfo;
+	GameMenu->GetMenuContainerInfo(InMenuTag, MenuContainerInfo);
+
+	if (FMenuGenerateInfo* MenuGenerateInfo = MenuGenerateInfos.FindByKey(MenuContainerInfo))
 	{
 		const UMenuStyle* MenuStyle = MenuGenerateInfo->GetMenuStyle(InMenuTag);
 
@@ -785,7 +789,10 @@ void UScreenWidgetManager::SelectMenu(const FGameplayTag InMenuTag)
 
 void UScreenWidgetManager::DeselectMenu(const FGameplayTag InMenuTag)
 {
-	if (FMenuGenerateInfo* MenuGenerateInfo = MenuGenerateInfos.FindByKey(InMenuTag))
+	FMenuContainerInfo MenuContainerInfo;
+	GameMenu->GetMenuContainerInfo(InMenuTag, MenuContainerInfo);
+
+	if (FMenuGenerateInfo* MenuGenerateInfo = MenuGenerateInfos.FindByKey(MenuContainerInfo))
 	{
 		const UMenuStyle* MenuStyle = MenuGenerateInfo->GetMenuStyle(InMenuTag);
 		if (IsValid(MenuStyle) && IsValid(MenuStyle->CommonButton) && ActivedWidgets.Contains(MenuGenerateInfo->MenuContainer) && ActivedWidgets.Contains(MenuStyle))
@@ -818,28 +825,13 @@ void UScreenWidgetManager::GenerateMenu(TArray<FGameplayTag> InMenuTags)
 {
 	/* 筛选有效的MenuInfo */
 	TArray<FMenuInfo> ValidMenuInfos;
-	for (auto& InMenuTag : InMenuTags)
+	for (const auto& InMenuTag : InMenuTags)
 	{
-		if (!InMenuTag.IsValid())
+		if (GameMenu->CheckIsValidMenuTag(InMenuTag))
 		{
-			LOG(Debug_UI, Error, TEXT("Menu Is InValid"))
-			continue;
-		}
-
-		FMenuInfo MenuInfo;
-		if (GameMenu->GetMenuInfo(InMenuTag, MenuInfo))
-		{
-			if (!MenuInfo.Container || !MenuInfo.Style)
-			{
-				LOG(Debug_UI, Error, TEXT("Menu Container/Style Is InValid"))
-				continue;
-			}
-
+			FMenuInfo MenuInfo;
+			GameMenu->GetMenuInfo(InMenuTag, MenuInfo);
 			ValidMenuInfos.Add(MenuInfo);
-		}
-		else
-		{
-			LOG(Debug_UI, Error, TEXT("Fail To GetMenuInfo"))
 		}
 	}
 
@@ -849,28 +841,49 @@ void UScreenWidgetManager::GenerateMenu(TArray<FGameplayTag> InMenuTags)
 	/* 构建菜单 */
 	for (auto& MenuInfo : ValidMenuInfos)
 	{
+		FMenuContainerInfo MenuContainerInfo;
+		GameMenu->GetMenuContainerInfo(MenuInfo.MenuTag, MenuContainerInfo);
+
 		/* 查找MenuGenerateInfo是否存在 */
-		FMenuGenerateInfo* FoundMenuGenerateInfo = MenuGenerateInfos.FindByKey(MenuInfo.Container);
+		FMenuGenerateInfo* FoundMenuGenerateInfo = MenuGenerateInfos.FindByKey(MenuContainerInfo);
 
 		/* 不存在则创建新的MenuGenerateInfo */
 		if (!FoundMenuGenerateInfo)
 		{
 			/* 创建菜单容器 */
-			UMenuContainer* MenuContainer = CreateWidget<UMenuContainer>(GetWorld(), MenuInfo.Container);
-			FMenuGenerateInfo NewMenuGenerateInfo = FMenuGenerateInfo(MenuContainer);
+			UMenuContainer* MenuContainer;
+
+			if (MenuContainerInfo.bUseContainerClass)
+				MenuContainer = CreateWidget<UMenuContainer>(GetWorld(), MenuContainerInfo.ContainerClass);
+			else
+				MenuContainer = DuplicateObject<UMenuContainer>(MenuContainerInfo.Container, GetWorld());
+
+			FMenuGenerateInfo NewMenuGenerateInfo = FMenuGenerateInfo(MenuContainerInfo, MenuContainer);
 			MenuGenerateInfos.Add(NewMenuGenerateInfo);
 
 			OpenUserWidget(MenuContainer);
 		}
 
 		/* 再次查找 */
-		FoundMenuGenerateInfo = MenuGenerateInfos.FindByKey(MenuInfo.Container);
+		FoundMenuGenerateInfo = MenuGenerateInfos.FindByKey(MenuContainerInfo);
 		if (FoundMenuGenerateInfo && ActivedWidgets.Contains(FoundMenuGenerateInfo->MenuContainer))
 		{
 			MenuContainers.Add(FoundMenuGenerateInfo->MenuContainer);
 
 			/* 创建菜单样式 */
-			UMenuStyle* MenuStyle = CreateWidget<UMenuStyle>(GetWorld(), MenuInfo.Style);
+			UMenuStyle* MenuStyle = nullptr;
+
+			if (MenuInfo.bUseStyleClass && IsValid(MenuInfo.StyleClass))
+				MenuStyle = CreateWidget<UMenuStyle>(GetWorld(), MenuInfo.StyleClass);
+			else if (!MenuInfo.bUseStyleClass && IsValid(MenuInfo.Style))
+				MenuStyle = DuplicateObject<UMenuStyle>(MenuInfo.Style, GetWorld());
+
+			if (!IsValid(MenuStyle))
+			{
+				LOG(Debug_UI, Error, TEXT("MenuStyle Is InValid"))
+				return;
+			}
+
 			MenuStyle->MenuContainer = FoundMenuGenerateInfo->MenuContainer;
 
 			/* 接管菜单的响应处理 */
@@ -920,7 +933,11 @@ void UScreenWidgetManager::DestroyMenu(TArray<FGameplayTag> InMenuTags)
 	const auto OnMenuInactived = FOnWidgetActiveStateChanged::CreateLambda([this](UUserWidgetBase* InWidget)
 		{
 			UMenuStyle* MenuStyle = Cast<UMenuStyle>(InWidget);
-			FMenuGenerateInfo* MenuGenerateInfo = MenuGenerateInfos.FindByKey(MenuStyle);
+
+			FMenuContainerInfo MenuContainerInfo;
+			GameMenu->GetMenuContainerInfo(MenuStyle->GetMenuTag(), MenuContainerInfo);
+
+			FMenuGenerateInfo* MenuGenerateInfo = MenuGenerateInfos.FindByKey(MenuContainerInfo);
 			MenuGenerateInfo->ClearupGarbageMenuStyle();
 
 			if (!MenuGenerateInfo->GetIsValid())
@@ -930,7 +947,10 @@ void UScreenWidgetManager::DestroyMenu(TArray<FGameplayTag> InMenuTags)
 
 	for (auto& MenuTag : InMenuTags)
 	{
-		if (FMenuGenerateInfo* MenuGenerateInfo = MenuGenerateInfos.FindByKey(MenuTag))
+		FMenuContainerInfo MenuContainerInfo;
+		GameMenu->GetMenuContainerInfo(MenuTag, MenuContainerInfo);
+
+		if (FMenuGenerateInfo* MenuGenerateInfo = MenuGenerateInfos.FindByKey(MenuContainerInfo))
 		{
 			UMenuStyle* MenuStyle = MenuGenerateInfo->GetMenuStyle(MenuTag);
 			MenuGenerateInfo->MarkMenuStyleAsGarbage(MenuStyle);
@@ -958,7 +978,10 @@ FReply UScreenWidgetManager::OnMenuResponseStateChanged(UInteractableUserWidgetB
 		const FMenuInfo MenuInfo = TargetMenuStyle->GetMenuInfo();
 		PRINT(Log, TEXT("MenuInfo : %s,Seletion : %d"), *MenuInfo.MenuMainName.ToString(), TargetEventState)
 
-		if (const FMenuGenerateInfo* MenuGenerateInfo = MenuGenerateInfos.FindByKey(TargetMenuStyle->GetMenuContainer()))
+		FMenuContainerInfo MenuContainerInfo;
+		GameMenu->GetMenuContainerInfo(MenuInfo.MenuTag, MenuContainerInfo);
+
+		if (const FMenuGenerateInfo* MenuGenerateInfo = MenuGenerateInfos.FindByKey(MenuContainerInfo))
 		{
 			if (!MenuGenerateInfo->MenuContainer->bIsManagedByGroup)
 			{
@@ -971,7 +994,10 @@ FReply UScreenWidgetManager::OnMenuResponseStateChanged(UInteractableUserWidgetB
 			TArray<FMenuGenerateInfo*> ChildMenuGenerateInfos;
 			for (auto& MenuTag : GameMenu->GetDirectChildMenuTags(TargetMenuStyle->GetMenuTag()))
 			{
-				if (FMenuGenerateInfo* ChildMenuGenerateInfo = MenuGenerateInfos.FindByKey(MenuTag))
+				FMenuContainerInfo ChildMenuContainerInfo;
+				GameMenu->GetMenuContainerInfo(MenuTag, ChildMenuContainerInfo);
+
+				if (FMenuGenerateInfo* ChildMenuGenerateInfo = MenuGenerateInfos.FindByKey(ChildMenuContainerInfo))
 				{
 					ChildMenuGenerateInfos.AddUnique(ChildMenuGenerateInfo);
 				}
@@ -1014,7 +1040,11 @@ void UScreenWidgetManager::HandleMenuResponseStateChanged()
 	if (MenuStyles.IsValidIndex(ProcessingMenuIndex))
 	{
 		UMenuStyle* TargetMenuStyle = MenuStyles[ProcessingMenuIndex];
-		FMenuGenerateInfo* MenuGenerateInfo = MenuGenerateInfos.FindByKey(TargetMenuStyle);
+
+		FMenuContainerInfo MenuContainerInfo;
+		GameMenu->GetMenuContainerInfo(TargetMenuStyle->GetMenuTag(), MenuContainerInfo);
+
+		FMenuGenerateInfo* MenuGenerateInfo = MenuGenerateInfos.FindByKey(MenuContainerInfo);
 		const bool TargetEventState = TargetMenuSelection.FindRef(TargetMenuStyle);
 
 		/* 标记当前激活的菜单 */

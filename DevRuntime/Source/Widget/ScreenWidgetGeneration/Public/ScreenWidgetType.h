@@ -26,7 +26,7 @@ struct SCREENWIDGETGENERATION_API FWidgetContainer
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY()
 	bool bInstance = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditConditionHides, EditCondition = "!bInstance"))
@@ -63,10 +63,12 @@ struct FMenuInfo
 public:
 	FMenuInfo();
 	FMenuInfo(FGameplayTag InMenuTag);
+	bool operator==(const FMenuInfo& InMenuInfo) const;
+	bool operator==(const FGameplayTag InMenuTag) const;
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="Menu"))
-	FGameplayTag MenuTag;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="UI.Menu"))
+	FGameplayTag MenuTag = FGameplayTag::EmptyTag;
 
 	/* 主要名字 */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
@@ -104,13 +106,16 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(EditConditionHides, EditCondition = "!bHidden && bIsEnable && bSelectable"))
 	bool bIsSelected = false;
 
-	/* 菜单容器 */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TSubclassOf<UMenuContainer> Container;
+	UPROPERTY()
+	bool bUseStyleClass = true;
+
+	/* 菜单样式类 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(EditConditionHides, EditCondition = "bUseStyleClass"))
+	TSubclassOf<UMenuStyle> StyleClass = nullptr;
 
 	/* 菜单样式 */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TSubclassOf<UMenuStyle> Style;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced, meta=(EditConditionHides, EditCondition = "!bUseStyleClass"))
+	UMenuStyle* Style = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced)
 	TArray<UCommonButtonEvent*> ActivedEvents;
@@ -121,17 +126,40 @@ public:
 	/* true则为激活，表示在该条件下激活按钮 */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TMap<ECommonButtonResponseEvent, bool> ResponseState;
+};
+
+/**
+ * 
+ */
+USTRUCT(BlueprintType)
+struct FMenuContainerInfo
+{
+	GENERATED_BODY()
 
 public:
-	bool operator==(const FMenuInfo InMenuInfo) const
-	{
-		return MenuTag == InMenuInfo.MenuTag;
-	}
+	FMenuContainerInfo();
+	FMenuContainerInfo(FGameplayTag InOwnerTag);
+	bool operator==(const FMenuContainerInfo& OtherContainerInfo) const;
+	bool operator==(const FMenuInfo& OtherMenuInfo) const;
+	bool operator==(FGameplayTag OtherMenuTag) const;
 
-	bool operator==(const FGameplayTag InMenuTag) const
-	{
-		return MenuTag == InMenuTag;
-	}
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="UI.Menu"))
+	FGameplayTag OwnerTag = FGameplayTag::EmptyTag;
+
+	UPROPERTY()
+	bool bUseContainerClass = true;
+
+	/* 菜单容器类 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(EditConditionHides, EditCondition = "bUseContainerClass"))
+	TSubclassOf<UMenuContainer> ContainerClass = nullptr;
+
+	/* 菜单容器 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced, meta=(EditConditionHides, EditCondition = "!bUseContainerClass"))
+	UMenuContainer* Container = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="UI.Menu"))
+	TArray<FGameplayTag> MenuTags;
 };
 
 /**
@@ -146,16 +174,19 @@ struct FMenuGenerateInfo
 
 public:
 	FMenuGenerateInfo();
-	FMenuGenerateInfo(UMenuContainer* InMenuContainer);
+	FMenuGenerateInfo(const FMenuContainerInfo& InMenuContainerInfo, UMenuContainer* InMenuContainer);
 
 public:
 	bool operator==(const FMenuGenerateInfo& OtherGenerateInfo) const;
-	bool operator==(const TSubclassOf<UMenuContainer> OtherMenuContainerClass) const;
-	bool operator==(UMenuStyle* MenuStyle) const;
-	bool operator==(const FMenuInfo& MenuInfo) const;
-	bool operator==(FGameplayTag MenuTag) const;
+	bool operator==(const FMenuContainerInfo& OtherMenuContainerInfo) const;
+	// bool operator==(const UMenuStyle* MenuStyle) const;
+	// bool operator==(const FMenuInfo& MenuInfo) const;
+	// bool operator==(FGameplayTag MenuTag) const;
 
 public:
+	UPROPERTY(BlueprintReadOnly, Transient)
+	FMenuContainerInfo MenuContainerInfo;
+
 	UPROPERTY(BlueprintReadOnly, Transient)
 	UMenuContainer* MenuContainer = nullptr;
 

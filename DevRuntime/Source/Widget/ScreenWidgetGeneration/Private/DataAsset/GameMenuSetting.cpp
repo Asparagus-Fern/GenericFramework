@@ -6,6 +6,7 @@
 #include "GameplayTagsManager.h"
 #include "Debug/DebugType.h"
 #include "UserWidget/Menu/MenuContainer.h"
+#include "UserWidget/Menu/MenuStyle.h"
 
 #if WITH_EDITOR
 
@@ -27,8 +28,10 @@ void UGameMenuSetting::GenerateMenu()
 
 	GameplayTagContainer = FGameplayTagContainer();
 
+	bool bConstructMenuContainer = MenuInfos.IsEmpty() && MenuContainerInfos.IsEmpty();
+
 	MenuTagTable->ForeachRow<FGameplayTagTableRow>
-	("", [this](FName Key, const FGameplayTagTableRow& Value)
+	("", [this, bConstructMenuContainer](FName Key, const FGameplayTagTableRow& Value)
 	 {
 		 const FGameplayTag MenuTag = FGameplayTag::RequestGameplayTag(Value.Tag);
 		 GameplayTagContainer.AddTag(MenuTag);
@@ -55,6 +58,22 @@ void UGameMenuSetting::GenerateMenu()
 		 FMenuInfo* NewMenuInfo = new FMenuInfo(MenuTag);
 		 NewMenuInfo->MenuMainName = FText::FromString(Value.DevComment);
 		 MenuInfos.Add(*NewMenuInfo);
+
+		 if (bConstructMenuContainer)
+		 {
+			 for (auto& MenuContainerInfo : MenuContainerInfos)
+			 {
+				 if (MenuContainerInfo.OwnerTag == MenuTag.RequestDirectParent())
+				 {
+					 MenuContainerInfo.MenuTags.Add(MenuTag);
+					 return;
+				 }
+			 }
+
+			 FMenuContainerInfo* MenuContainerInfo = new FMenuContainerInfo(MenuTag.RequestDirectParent());
+			 MenuContainerInfo->MenuTags.Add(MenuTag);
+			 MenuContainerInfos.Add(*MenuContainerInfo);
+		 }
 	 }
 	);
 
@@ -62,6 +81,50 @@ void UGameMenuSetting::GenerateMenu()
 }
 
 #endif
+
+bool UGameMenuSetting::CheckIsValidMenuTag(const FGameplayTag InMenuTag)
+{
+	/* 检查标签是否有效 */
+	if (!InMenuTag.IsValid())
+	{
+		LOG(Debug_UI, Error, TEXT("MenuTag Is InValid"))
+		return false;
+	}
+
+	/* 检查样式是否有效 */
+	FMenuInfo MenuInfo;
+	if (GetMenuInfo(InMenuTag, MenuInfo))
+	{
+		if (!MenuInfo.StyleClass && !IsValid(MenuInfo.Style))
+		{
+			LOG(Debug_UI, Error, TEXT("Menu Style Is InValid"))
+			return false;
+		}
+	}
+	else
+	{
+		LOG(Debug_UI, Error, TEXT("Fail To GetMenuInfo"))
+		return false;
+	}
+
+	/* 检查容器是否有效 */
+	FMenuContainerInfo MenuContainerInfo;
+	if (GetMenuContainerInfo(InMenuTag, MenuContainerInfo))
+	{
+		if (!MenuContainerInfo.ContainerClass && !IsValid(MenuContainerInfo.Container))
+		{
+			LOG(Debug_UI, Error, TEXT("Menu Container Is InValid"))
+			return false;
+		}
+	}
+	else
+	{
+		LOG(Debug_UI, Error, TEXT("Fail To GetMenuContainerInfo"))
+		return false;
+	}
+
+	return true;
+}
 
 bool UGameMenuSetting::GetMenuInfo(FGameplayTag InMenuTag, FMenuInfo& OutMenuInfo)
 {
@@ -73,7 +136,6 @@ bool UGameMenuSetting::GetMenuInfo(FGameplayTag InMenuTag, FMenuInfo& OutMenuInf
 			return true;
 		}
 	}
-
 	return false;
 }
 
@@ -90,6 +152,34 @@ TArray<FMenuInfo> UGameMenuSetting::GetMenuInfos(const TArray<FGameplayTag>& InM
 	}
 
 	return OutMenuInfos;
+}
+
+bool UGameMenuSetting::GetMenuContainerInfo(const FGameplayTag InMenuTag, FMenuContainerInfo& OutMenuContainerInfo)
+{
+	if (const FMenuContainerInfo* Found = MenuContainerInfos.FindByKey(InMenuTag))
+	{
+		OutMenuContainerInfo = *Found;
+		return true;
+	}
+	return false;
+}
+
+TArray<FMenuContainerInfo> UGameMenuSetting::GetMenuContainerInfos(const TArray<FGameplayTag>& InMenuTags)
+{
+	TArray<FMenuContainerInfo> OutMenuContainerInfos;
+
+	for (auto& MenuTag : InMenuTags)
+	{
+		if (const FMenuContainerInfo* Found = MenuContainerInfos.FindByKey(MenuTag))
+		{
+			if (!OutMenuContainerInfos.Contains(*Found))
+			{
+				OutMenuContainerInfos.Add(*Found);
+			}
+		}
+	}
+
+	return OutMenuContainerInfos;
 }
 
 TArray<FGameplayTag> UGameMenuSetting::GetChildMenuTags(const FGameplayTag InMenuTag, const bool bIsContainOriginal)

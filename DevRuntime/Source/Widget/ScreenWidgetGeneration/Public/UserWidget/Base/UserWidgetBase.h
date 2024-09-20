@@ -10,6 +10,7 @@
 #include "Procedure/ProcedureInterface.h"
 #include "UserWidgetBase.generated.h"
 
+class UTemporaryHUD;
 class UGameHUD;
 class UCommonButton;
 class UWidgetAnimationEvent;
@@ -55,7 +56,7 @@ public:
 	FGameplayTag SlotTag;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TArray<TSubclassOf<UGameHUD>> TemporaryHUDs;
+	TArray<TSubclassOf<UTemporaryHUD>> TemporaryHUDs;
 
 	UPROPERTY(EditAnywhere, Instanced)
 	UWidgetAnimationEvent* ActiveAnimationEvent = nullptr;

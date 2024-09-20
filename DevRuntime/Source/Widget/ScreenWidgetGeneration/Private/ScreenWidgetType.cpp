@@ -1,11 +1,7 @@
 #include "ScreenWidgetType.h"
 
 #include "ScreenWidgetManager.h"
-#include "Group/CommonButtonGroup.h"
-#include "Groups/CommonButtonGroupBase.h"
-#include "Manager/ManagerGlobal.h"
 #include "Shortcut/SWH_ToggleOpenWidget.h"
-#include "UserWidget/Base/UserWidgetBase.h"
 #include "UserWidget/Menu/MenuContainer.h"
 #include "UserWidget/Menu/MenuStyle.h"
 
@@ -33,52 +29,62 @@ FMenuInfo::FMenuInfo(const FGameplayTag InMenuTag)
 	ResponseState.Add(ECommonButtonResponseEvent::OnDeselected, false);
 }
 
+bool FMenuInfo::operator==(const FMenuInfo& InMenuInfo) const
+{
+	return MenuTag == InMenuInfo.MenuTag;
+}
+
+bool FMenuInfo::operator==(const FGameplayTag InMenuTag) const
+{
+	return MenuTag == InMenuTag;
+}
+
+FMenuContainerInfo::FMenuContainerInfo()
+{
+}
+
+FMenuContainerInfo::FMenuContainerInfo(const FGameplayTag InOwnerTag)
+	: OwnerTag(InOwnerTag)
+{
+}
+
+bool FMenuContainerInfo::operator==(const FMenuContainerInfo& OtherContainerInfo) const
+{
+	const TSet<FGameplayTag> A(MenuTags);
+	const TSet<FGameplayTag> B(OtherContainerInfo.MenuTags);
+	const bool IsMenuTagsEqual = A.Union(B).Array().Num() == MenuTags.Num() && A.Intersect(B).Array().Num() == MenuTags.Num();
+
+	return OwnerTag == OtherContainerInfo.OwnerTag && IsMenuTagsEqual;
+}
+
+bool FMenuContainerInfo::operator==(const FMenuInfo& OtherMenuInfo) const
+{
+	return OwnerTag == OtherMenuInfo.MenuTag.RequestDirectParent() && MenuTags.Contains(OtherMenuInfo.MenuTag);
+}
+
+bool FMenuContainerInfo::operator==(const FGameplayTag OtherMenuTag) const
+{
+	return OwnerTag == OtherMenuTag.RequestDirectParent() && MenuTags.Contains(OtherMenuTag);
+}
+
 FMenuGenerateInfo::FMenuGenerateInfo()
 {
 }
 
-FMenuGenerateInfo::FMenuGenerateInfo(UMenuContainer* InMenuContainer)
-	: MenuContainer(InMenuContainer)
+FMenuGenerateInfo::FMenuGenerateInfo(const FMenuContainerInfo& InMenuContainerInfo, UMenuContainer* InMenuContainer)
+	: MenuContainerInfo(InMenuContainerInfo),
+	  MenuContainer(InMenuContainer)
 {
 }
 
 bool FMenuGenerateInfo::operator==(const FMenuGenerateInfo& OtherGenerateInfo) const
 {
-	return MenuContainer == OtherGenerateInfo.MenuContainer;
+	return MenuContainerInfo == OtherGenerateInfo.MenuContainerInfo;
 }
 
-bool FMenuGenerateInfo::operator==(const TSubclassOf<UMenuContainer> OtherMenuContainerClass) const
+bool FMenuGenerateInfo::operator==(const FMenuContainerInfo& OtherMenuContainerInfo) const
 {
-	return MenuContainer->GetClass() == OtherMenuContainerClass;
-}
-
-bool FMenuGenerateInfo::operator==(UMenuStyle* MenuStyle) const
-{
-	return MenuStyles.Contains(MenuStyle);
-}
-
-bool FMenuGenerateInfo::operator==(const FMenuInfo& MenuInfo) const
-{
-	for (auto& MenuStyle : MenuStyles)
-	{
-		if (MenuStyle->GetMenuInfo() == MenuInfo)
-		{
-			return true;
-		}
-	}
-	return false;
-}
-
-bool FMenuGenerateInfo::operator==(const FGameplayTag MenuTag) const
-{
-	for (auto& MenuStyle : MenuStyles)
-	{
-		if (MenuStyle->GetMenuTag() == MenuTag)
-		{
-			return true;
-		}
-	}
-	return false;
+	return MenuContainerInfo == OtherMenuContainerInfo;
 }
 
 bool FMenuGenerateInfo::GetIsValid() const

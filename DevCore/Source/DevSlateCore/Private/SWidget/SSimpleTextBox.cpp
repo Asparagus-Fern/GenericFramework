@@ -305,7 +305,7 @@ void SSimpleTextBox::UpdateSimpleTextLayout()
 				ImagePtr.ToSharedRef()
 			]
 			+ SHorizontalBox::Slot()
-			.AutoWidth()
+			.FillWidth(1.f)
 			[
 				SpacerPtr.ToSharedRef()
 			]
@@ -329,7 +329,7 @@ void SSimpleTextBox::UpdateSimpleTextLayout()
 				ImagePtr.ToSharedRef()
 			]
 			+ SVerticalBox::Slot()
-			.AutoHeight()
+			.FillHeight(1.f)
 			[
 				SpacerPtr.ToSharedRef()
 			]
@@ -352,7 +352,7 @@ void SSimpleTextBox::UpdateSimpleTextLayout()
 				TextPtr.ToSharedRef()
 			]
 			+ SHorizontalBox::Slot()
-			.AutoWidth()
+			.FillWidth(1.f)
 			[
 				SpacerPtr.ToSharedRef()
 			]
@@ -376,7 +376,7 @@ void SSimpleTextBox::UpdateSimpleTextLayout()
 				TextPtr.ToSharedRef()
 			]
 			+ SVerticalBox::Slot()
-			.AutoHeight()
+			.FillHeight(1.f)
 			[
 				SpacerPtr.ToSharedRef()
 			]
