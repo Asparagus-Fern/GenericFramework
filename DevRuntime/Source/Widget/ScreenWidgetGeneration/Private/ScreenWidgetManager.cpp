@@ -63,6 +63,13 @@ void UScreenWidgetManager::NativeOnRefresh()
 {
 	Super::NativeOnRefresh();
 
+	// TArray<UMenuStyle*> TempMenuStyles = NewMenuStyles;
+	// for (auto& MenuStyle : TempMenuStyles)
+	// {
+	// 	MenuStyle->NativeConstructMenuStyle(MenuStyle->GetMenuInfo());
+	// 	NewMenuStyles.Remove(MenuStyle);
+	// }
+
 	/* 处理按钮事件 */
 	if (!bProcessingMenuSelection && !TargetMenuSelection.IsEmpty())
 	{
@@ -874,9 +881,13 @@ void UScreenWidgetManager::GenerateMenu(TArray<FGameplayTag> InMenuTags)
 			UMenuStyle* MenuStyle = nullptr;
 
 			if (MenuInfo.bUseStyleClass && IsValid(MenuInfo.StyleClass))
+			{
 				MenuStyle = CreateWidget<UMenuStyle>(GetWorld(), MenuInfo.StyleClass);
+			}
 			else if (!MenuInfo.bUseStyleClass && IsValid(MenuInfo.Style))
+			{
 				MenuStyle = DuplicateObject<UMenuStyle>(MenuInfo.Style, GetWorld());
+			}
 
 			if (!IsValid(MenuStyle))
 			{
@@ -898,7 +909,8 @@ void UScreenWidgetManager::GenerateMenu(TArray<FGameplayTag> InMenuTags)
 			FoundMenuGenerateInfo->MenuContainer->NativeConstructMenuContainer(MenuStyle, Index);
 
 			ActiveWidget(MenuStyle);
-			MenuStyle->NativeConstructMenuStyle(MenuInfo);
+			NewMenuStyles.Add(MenuStyle);
+			// MenuStyle->NativeConstructMenuStyle(MenuInfo);
 
 			// if (bProcessingMenuSelection)
 			// {
@@ -945,7 +957,7 @@ void UScreenWidgetManager::DestroyMenu(TArray<FGameplayTag> InMenuTags)
 		}
 	);
 
-	for (auto& MenuTag : InMenuTags)
+	for (const auto& MenuTag : InMenuTags)
 	{
 		FMenuContainerInfo MenuContainerInfo;
 		GameMenu->GetMenuContainerInfo(MenuTag, MenuContainerInfo);
@@ -953,8 +965,11 @@ void UScreenWidgetManager::DestroyMenu(TArray<FGameplayTag> InMenuTags)
 		if (FMenuGenerateInfo* MenuGenerateInfo = MenuGenerateInfos.FindByKey(MenuContainerInfo))
 		{
 			UMenuStyle* MenuStyle = MenuGenerateInfo->GetMenuStyle(MenuTag);
-			MenuGenerateInfo->MarkMenuStyleAsGarbage(MenuStyle);
-			InactiveWidget(MenuStyle, OnMenuInactived);
+			if (IsValid(MenuStyle))
+			{
+				MenuGenerateInfo->MarkMenuStyleAsGarbage(MenuStyle);
+				InactiveWidget(MenuStyle, OnMenuInactived);
+			}
 		}
 	}
 }

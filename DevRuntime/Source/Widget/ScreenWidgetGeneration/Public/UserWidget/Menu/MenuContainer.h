@@ -19,6 +19,9 @@ class SCREENWIDGETGENERATION_API UMenuContainer : public UUserWidgetBase
 	GENERATED_UCLASS_BODY()
 
 public:
+	virtual void NativeOnCreate() override;
+	
+public:
 	UPROPERTY(Transient, Getter, BlueprintGetter="GetCommonButtonGroup")
 	UCommonButtonGroup* CommonButtonGroup = nullptr;
 

@@ -27,7 +27,7 @@ void UMenuStyle::ConstructMenuStyle_Implementation(FMenuInfo InMenuInfo)
 void UMenuStyle::NativeConstructMenuStyle(FMenuInfo InMenuInfo)
 {
 	ConstructMenuStyle(InMenuInfo);
-	
+
 	if (IsValid(CommonButton))
 	{
 		if (!MenuInfo.bHidden)

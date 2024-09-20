@@ -17,7 +17,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnButtonEventHandleFinish);
 /**
  * 
  */
-UCLASS(HideCategories=(Appearance,Interaction,Layout,Localization,Performance,Navigation,Designer,Rendering,RenderTransform,Behavior))
+UCLASS()
 class SCREENWIDGETGENERATION_API UCommonButton : public UCommonButtonBase
                                                  , public IProcedureInterface
 {

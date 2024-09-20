@@ -210,6 +210,9 @@ protected:
 	UPROPERTY(Transient)
 	UGameMenuSetting* WaitingGameMenu = nullptr;
 
+	UPROPERTY(Transient)
+	TArray<UMenuStyle*> NewMenuStyles;
+
 public:
 	virtual void SwitchGameMenu(UGameMenuSetting* InGameMenuSetting);
 	virtual void SelectMenu(FGameplayTag InMenuTag);

@@ -29,16 +29,19 @@ UInteractableUserWidgetBase::UInteractableUserWidgetBase(const FObjectInitialize
 bool UInteractableUserWidgetBase::Initialize()
 {
 	const bool bInitializedThisCall = Super::Initialize();
-
+	
 	if (bInitializedThisCall)
 	{
-		if (WidgetTree->RootWidget && CommonButton)
+		if (IsValid(CommonButton))
 		{
-			UWidgetTree* NewWidgetTree = NewObject<UWidgetTree>(this, TEXT("WidgetTree"), RF_Transient);
-			NewWidgetTree->RootWidget = WidgetTree->RootWidget;
-			CommonButton->WidgetTree = NewWidgetTree;
+			if (WidgetTree->RootWidget)
+			{
+				UWidgetTree* NewWidgetTree = NewObject<UWidgetTree>(this, TEXT("WidgetTree"), RF_Transient);
+				NewWidgetTree->RootWidget = WidgetTree->RootWidget;
+				CommonButton->WidgetTree = NewWidgetTree;
 
-			WidgetTree->RootWidget = CommonButton;
+				WidgetTree->RootWidget = CommonButton;
+			}
 		}
 	}
 

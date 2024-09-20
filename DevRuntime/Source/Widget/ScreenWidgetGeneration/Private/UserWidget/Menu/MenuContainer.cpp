@@ -10,11 +10,18 @@
 UMenuContainer::UMenuContainer(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
-	CommonButtonGroup = CreateDefaultSubobject<UCommonButtonGroup>("CommonButtonGroup");
 }
 
 void UMenuContainer::ConstructMenuContainer_Implementation(UMenuStyle* MenuStyle, int32 Index)
 {
+}
+
+void UMenuContainer::NativeOnCreate()
+{
+	Super::NativeOnCreate();
+
+	CommonButtonGroup = NewObject<UCommonButtonGroup>(this, "CommonButtonGroup");
+	MenuStyles.Reset();
 }
 
 void UMenuContainer::NativeConstructMenuContainer(UMenuStyle* MenuStyle, int32 Index)

@@ -35,6 +35,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FString GroupName;
 
+	// UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	// TSubclassOf<UCommonButton> CommonButtonClass = nullptr;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced)
 	UCommonButton* CommonButton = nullptr;
 
