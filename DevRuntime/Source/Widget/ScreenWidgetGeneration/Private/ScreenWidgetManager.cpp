@@ -910,7 +910,7 @@ void UScreenWidgetManager::GenerateMenu(TArray<FGameplayTag> InMenuTags)
 
 			ActiveWidget(MenuStyle);
 			NewMenuStyles.Add(MenuStyle);
-			// MenuStyle->NativeConstructMenuStyle(MenuInfo);
+			MenuStyle->NativeConstructMenuStyle(MenuInfo);
 
 			// if (bProcessingMenuSelection)
 			// {
