@@ -28,13 +28,13 @@ void UMenuStyle::NativeConstructMenuStyle(FMenuInfo InMenuInfo)
 {
 	ConstructMenuStyle(InMenuInfo);
 
-	if (IsValid(CommonButton))
+	if (IsValid(ActiveCommonButton))
 	{
 		if (!MenuInfo.bHidden)
 		{
-			CommonButton->SetIsEnabled(MenuInfo.bIsEnable);
-			CommonButton->SetIsSelectable(MenuInfo.bSelectable);
-			CommonButton->SetIsToggleable(MenuInfo.bToggleable);
+			ActiveCommonButton->SetIsEnabled(MenuInfo.bIsEnable);
+			ActiveCommonButton->SetIsSelectable(MenuInfo.bSelectable);
+			ActiveCommonButton->SetIsToggleable(MenuInfo.bToggleable);
 		}
 	}
 	else

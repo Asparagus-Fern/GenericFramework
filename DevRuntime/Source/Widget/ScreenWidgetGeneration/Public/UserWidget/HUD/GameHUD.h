@@ -16,6 +16,9 @@ class SCREENWIDGETGENERATION_API UGameHUD : public UUserWidgetBase
 	GENERATED_BODY()
 
 public:
+	virtual void NativeDestruct() override;
+	
+public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	int32 ViewportZOrder = 0;
 };

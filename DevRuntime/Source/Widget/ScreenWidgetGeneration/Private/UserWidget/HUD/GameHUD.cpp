@@ -2,3 +2,8 @@
 
 
 #include "UserWidget/HUD/GameHUD.h"
+
+void UGameHUD::NativeDestruct()
+{
+	Super::NativeDestruct();
+}

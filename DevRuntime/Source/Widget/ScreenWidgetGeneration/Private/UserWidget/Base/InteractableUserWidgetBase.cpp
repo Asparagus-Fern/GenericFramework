@@ -3,6 +3,7 @@
 
 #include "UserWidget/Base/InteractableUserWidgetBase.h"
 
+#include "ScreenWidgetManager.h"
 #include "Event/CommonButtonEvent.h"
 #include "Blueprint/WidgetTree.h"
 #include "Components/ButtonSlot.h"
@@ -29,18 +30,34 @@ UInteractableUserWidgetBase::UInteractableUserWidgetBase(const FObjectInitialize
 bool UInteractableUserWidgetBase::Initialize()
 {
 	const bool bInitializedThisCall = Super::Initialize();
-	
+
+	/* 将自身WidgetTree包裹在CommonButton的WidgetTree下 */
+	auto WrapWithCommonButton = [this]()
+	{
+		UWidgetTree* NewWidgetTree = NewObject<UWidgetTree>(this, TEXT("WidgetTree"), RF_Transient);
+		NewWidgetTree->RootWidget = WidgetTree->RootWidget;
+
+		ActiveCommonButton = DuplicateObject(CommonButton, this);
+		ActiveCommonButton->WidgetTree = NewWidgetTree;
+
+		WidgetTree->RootWidget = ActiveCommonButton;
+	};
+
 	if (bInitializedThisCall)
 	{
-		if (IsValid(CommonButton))
-		{
-			if (WidgetTree->RootWidget)
-			{
-				UWidgetTree* NewWidgetTree = NewObject<UWidgetTree>(this, TEXT("WidgetTree"), RF_Transient);
-				NewWidgetTree->RootWidget = WidgetTree->RootWidget;
-				CommonButton->WidgetTree = NewWidgetTree;
+		ActiveCommonButton = nullptr;
 
-				WidgetTree->RootWidget = CommonButton;
+		if (IsValid(CommonButton) && WidgetTree->RootWidget)
+		{
+			/* 运行时始终包裹 */
+			if (IsValid(GetManager<UScreenWidgetManager>()))
+			{
+				WrapWithCommonButton();
+			}
+			/* 编辑器下如果勾选bPreview则进行包裹 */
+			else if (bPreview)
+			{
+				WrapWithCommonButton();
 			}
 		}
 	}
@@ -58,9 +75,9 @@ void UInteractableUserWidgetBase::NativeConstruct()
 	Super::NativeConstruct();
 
 	/* 绑定按钮的所有响应 */
-	if (IsValid(CommonButton))
+	if (IsValid(ActiveCommonButton))
 	{
-		CommonButton->OnButtonResponse.AddUObject(this, &UInteractableUserWidgetBase::HandleButtonResponse);
+		ActiveCommonButton->OnButtonResponse.AddUObject(this, &UInteractableUserWidgetBase::HandleButtonResponse);
 
 		/* 当GroupName不为空时，请求创建或添加到按钮组 */
 		if (!GroupName.IsEmpty())
@@ -93,14 +110,14 @@ void UInteractableUserWidgetBase::NativeDestruct()
 {
 	Super::NativeDestruct();
 
-	if (IsValid(CommonButton))
+	if (IsValid(ActiveCommonButton))
 	{
 		if (!GroupName.IsEmpty())
 		{
 			RemoveInteractableWidget.Broadcast(this, GroupName);
 		}
 
-		CommonButton->OnButtonResponse.RemoveAll(this);
+		ActiveCommonButton->OnButtonResponse.RemoveAll(this);
 	}
 
 	/* 同步到按钮事件 */

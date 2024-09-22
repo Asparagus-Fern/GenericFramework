@@ -162,9 +162,9 @@ void UScreenWidgetManager::AddInteractableWidget(UInteractableUserWidgetBase* In
 		InteractableWidgetGroups.FindOrAdd(GroupName, NewGroup);
 	}
 
-	if (IsValid(InteractableWidget->CommonButton))
+	if (IsValid(InteractableWidget->ActiveCommonButton))
 	{
-		InteractableWidgetGroups.FindRef(GroupName)->AddWidget(InteractableWidget->CommonButton);
+		InteractableWidgetGroups.FindRef(GroupName)->AddWidget(InteractableWidget->ActiveCommonButton);
 	}
 }
 
@@ -173,9 +173,9 @@ void UScreenWidgetManager::RemoveInteractableWidget(UInteractableUserWidgetBase*
 	UCommonButtonGroup* Group = InteractableWidgetGroups.FindRef(GroupName);
 	if (IsValid(Group))
 	{
-		if (IsValid(InteractableWidget->CommonButton))
+		if (IsValid(InteractableWidget->ActiveCommonButton))
 		{
-			Group->RemoveWidget(InteractableWidget->CommonButton);
+			Group->RemoveWidget(InteractableWidget->ActiveCommonButton);
 		}
 
 		if (Group->GetButtonCount() == 0)
@@ -780,15 +780,15 @@ void UScreenWidgetManager::SelectMenu(const FGameplayTag InMenuTag)
 	{
 		const UMenuStyle* MenuStyle = MenuGenerateInfo->GetMenuStyle(InMenuTag);
 
-		if (IsValid(MenuStyle) && IsValid(MenuStyle->CommonButton) && ActivedWidgets.Contains(MenuGenerateInfo->MenuContainer) && ActivedWidgets.Contains(MenuStyle))
+		if (IsValid(MenuStyle) && IsValid(MenuStyle->ActiveCommonButton) && ActivedWidgets.Contains(MenuGenerateInfo->MenuContainer) && ActivedWidgets.Contains(MenuStyle))
 		{
 			if (MenuGenerateInfo->MenuContainer->bIsManagedByGroup)
 			{
-				MenuGenerateInfo->MenuContainer->CommonButtonGroup->SelectButtonAtIndex(MenuGenerateInfo->MenuContainer->CommonButtonGroup->FindButtonIndex(MenuStyle->CommonButton));
+				MenuGenerateInfo->MenuContainer->CommonButtonGroup->SelectButtonAtIndex(MenuGenerateInfo->MenuContainer->CommonButtonGroup->FindButtonIndex(MenuStyle->ActiveCommonButton));
 			}
 			else
 			{
-				MenuStyle->CommonButton->SetSelectedInternal(true);
+				MenuStyle->ActiveCommonButton->SetSelectedInternal(true);
 			}
 		}
 	}
@@ -802,7 +802,7 @@ void UScreenWidgetManager::DeselectMenu(const FGameplayTag InMenuTag)
 	if (FMenuGenerateInfo* MenuGenerateInfo = MenuGenerateInfos.FindByKey(MenuContainerInfo))
 	{
 		const UMenuStyle* MenuStyle = MenuGenerateInfo->GetMenuStyle(InMenuTag);
-		if (IsValid(MenuStyle) && IsValid(MenuStyle->CommonButton) && ActivedWidgets.Contains(MenuGenerateInfo->MenuContainer) && ActivedWidgets.Contains(MenuStyle))
+		if (IsValid(MenuStyle) && IsValid(MenuStyle->ActiveCommonButton) && ActivedWidgets.Contains(MenuGenerateInfo->MenuContainer) && ActivedWidgets.Contains(MenuStyle))
 		{
 			if (MenuGenerateInfo->MenuContainer->bIsManagedByGroup)
 			{
@@ -810,7 +810,7 @@ void UScreenWidgetManager::DeselectMenu(const FGameplayTag InMenuTag)
 			}
 			else
 			{
-				MenuStyle->CommonButton->SetSelectedInternal(false);
+				MenuStyle->ActiveCommonButton->SetSelectedInternal(false);
 			}
 		}
 	}
@@ -894,7 +894,7 @@ void UScreenWidgetManager::GenerateMenu(TArray<FGameplayTag> InMenuTags)
 				LOG(Debug_UI, Error, TEXT("MenuStyle Is InValid"))
 				return;
 			}
-
+			
 			MenuStyle->MenuContainer = FoundMenuGenerateInfo->MenuContainer;
 
 			/* 接管菜单的响应处理 */

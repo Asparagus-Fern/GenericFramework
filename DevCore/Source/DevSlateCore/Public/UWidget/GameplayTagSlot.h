@@ -24,7 +24,7 @@ protected:
 	virtual const FText GetPaletteCategory() override { return NSLOCTEXT("DevWidget", "Common", "Dev Widget"); }
 #endif
 	virtual TSharedRef<SWidget> RebuildWidget() override;
-	virtual void BeginDestroy() override;
+	virtual void ReleaseSlateResources(bool bReleaseChildren) override;
 
 public:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, meta=(Categories="UI.HUD"))

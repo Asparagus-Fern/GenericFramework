@@ -31,12 +31,15 @@ TSharedRef<SWidget> UGameplayTagSlot::RebuildWidget()
 	}
 }
 
-void UGameplayTagSlot::BeginDestroy()
+void UGameplayTagSlot::ReleaseSlateResources(bool bReleaseChildren)
 {
-	if (SlotTag.IsValid())
-	{
-		OnGameplayTagSlotDestroy.Broadcast(this);
-	}
+	Super::ReleaseSlateResources(bReleaseChildren);
 
-	Super::BeginDestroy();
+	if (!IsDesignTime())
+	{
+		if (SlotTag.IsValid())
+		{
+			OnGameplayTagSlotDestroy.Broadcast(this);
+		}
+	}
 }

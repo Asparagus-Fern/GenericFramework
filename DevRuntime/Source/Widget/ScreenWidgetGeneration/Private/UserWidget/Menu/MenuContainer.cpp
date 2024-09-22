@@ -35,9 +35,9 @@ void UMenuContainer::NativeConstructMenuContainer(UMenuStyle* MenuStyle, int32 I
 	MenuStyles.Add(MenuStyle);
 
 	/* 将菜单加入到CommonButtonGroup管理 */
-	if (bIsManagedByGroup && IsValid(MenuStyle->CommonButton))
+	if (bIsManagedByGroup && IsValid(MenuStyle->ActiveCommonButton))
 	{
-		CommonButtonGroup->AddWidget(MenuStyle->CommonButton);
+		CommonButtonGroup->AddWidget(MenuStyle->ActiveCommonButton);
 	}
 
 	ConstructMenuContainer(MenuStyle, Index);
@@ -59,9 +59,9 @@ void UMenuContainer::NativeDestructMenuContainer(UMenuStyle* MenuStyle)
 
 	MenuStyles.Remove(MenuStyle);
 
-	if (bIsManagedByGroup && IsValid(MenuStyle->CommonButton))
+	if (bIsManagedByGroup && IsValid(MenuStyle->ActiveCommonButton))
 	{
-		CommonButtonGroup->RemoveWidget(MenuStyle->CommonButton);
+		CommonButtonGroup->RemoveWidget(MenuStyle->ActiveCommonButton);
 	}
 }
 

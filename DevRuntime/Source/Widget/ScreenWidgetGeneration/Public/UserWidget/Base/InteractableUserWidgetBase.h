@@ -32,18 +32,27 @@ public:
 	virtual void NativeDestruct() override;
 
 public:
+	/* 勾选可以在编辑器下预览运行时下的样式，它会在编辑器下将WidgetTree包裹在CommonButton的WidgetTree下，代价是无法再查看细节面板做出修改 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	bool bPreview = false;
+
+	/* 不为空时，会创建按钮组，所有相同组名的Widget，会被加入到该按钮组 */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FString GroupName;
 
-	// UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	// TSubclassOf<UCommonButton> CommonButtonClass = nullptr;
-	
+	/* 按钮响应设置，只作参数的配置 */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced)
 	UCommonButton* CommonButton = nullptr;
 
+	/* 激活的按钮，将从CommonButton复制，因为更改WidgetTree导致细节面板无法编辑的原因，CommonButton只作参数配置，ActiveCommonButton为实际展示的按钮 */
+	UPROPERTY(BlueprintReadOnly,Transient)
+	UCommonButton* ActiveCommonButton = nullptr;
+
+	/* 由未激活到激活的按钮事件 */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced)
 	TArray<UCommonButtonEvent*> ActivedEvents;
 
+	/* 由激活到未激活的按钮事件 */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced)
 	TArray<UCommonButtonEvent*> InactivedEvents;
 
