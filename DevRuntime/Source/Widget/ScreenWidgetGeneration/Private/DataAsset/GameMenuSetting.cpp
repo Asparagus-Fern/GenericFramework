@@ -10,7 +10,7 @@
 
 #if WITH_EDITOR
 
-void UGameMenuSetting::GenerateMenu()
+void UGameMenuSetting::Generate()
 {
 	if (!IsValid(MenuTagTable))
 	{

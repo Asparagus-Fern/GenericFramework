@@ -31,7 +31,7 @@ public:
 public:
 #if WITH_EDITOR
 	UFUNCTION(CallInEditor)
-	void GenerateMenu();
+	void Generate();
 #endif
 
 public:

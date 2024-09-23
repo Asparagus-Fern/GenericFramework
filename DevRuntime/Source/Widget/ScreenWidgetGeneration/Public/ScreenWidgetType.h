@@ -179,9 +179,6 @@ public:
 public:
 	bool operator==(const FMenuGenerateInfo& OtherGenerateInfo) const;
 	bool operator==(const FMenuContainerInfo& OtherMenuContainerInfo) const;
-	// bool operator==(const UMenuStyle* MenuStyle) const;
-	// bool operator==(const FMenuInfo& MenuInfo) const;
-	// bool operator==(FGameplayTag MenuTag) const;
 
 public:
 	UPROPERTY(BlueprintReadOnly, Transient)

@@ -93,10 +93,6 @@ void UScreenWidgetManager::NativeOnRefresh()
 		{
 			if (!TempMenuGenerateInfo.GetIsValid())
 			{
-				if (IsValid(TempMenuGenerateInfo.MenuContainer))
-				{
-					InactiveWidget(TempMenuGenerateInfo.MenuContainer);
-				}
 				MenuGenerateInfos.Remove(TempMenuGenerateInfo);
 			}
 		}
@@ -340,29 +336,8 @@ void UScreenWidgetManager::AddTemporaryGameHUD(UUserWidgetBase* InWidget)
 
 void UScreenWidgetManager::RemoveTemporaryGameHUD(UUserWidgetBase* InWidget)
 {
-	/* 项目设置里的HUD类 */
-	TArray<TSubclassOf<UGameHUD>> SettingGameHUDClasses;
-	for (auto& GameHUDClass : UScreenWidgetManagerSetting::Get()->GameHUDClasses)
-	{
-		if (!GameHUDClass.IsNull())
-		{
-			SettingGameHUDClasses.Add(GameHUDClass.Get());
-		}
-	}
-
-	/* 获取当前所有HUD的类集合 */
-	TSet<TSubclassOf<UGameHUD>> GameHUDClasses;
-	for (const auto& GameHUD : GameHUDs)
-	{
-		/* 不移除项目设置的HUD */
-		if (!SettingGameHUDClasses.Contains(GameHUD->GetClass()))
-		{
-			GameHUDClasses.Add(GameHUD->GetClass());
-		}
-	}
-
 	/* 获取当前激活的所有Widget的临时HUD类集合，不包括InWidget */
-	TSet<TSubclassOf<UGameHUD>> ActivedWidgetTemporaryHUDClasses;
+	TArray<TSubclassOf<UGameHUD>> ActivedWidgetTemporaryHUDClasses;
 	for (const auto& ActivedWidget : ActivedWidgets)
 	{
 		if (ActivedWidget == InWidget)
@@ -376,20 +351,28 @@ void UScreenWidgetManager::RemoveTemporaryGameHUD(UUserWidgetBase* InWidget)
 		}
 	}
 
-	/* 获取两个集合交集 */
-	const TSet<TSubclassOf<UGameHUD>> Intersect = GameHUDClasses.Intersect(ActivedWidgetTemporaryHUDClasses);
+	/* 需要移除的HUD */
+	TArray<TSubclassOf<UGameHUD>> RemoveHUDClasses;
 	for (auto& TemporaryHUDClass : InWidget->TemporaryHUDs)
 	{
-		/* 如果交集不包括InWidget的临时的HUD类，表示该Widget的HUD并没有被其他Widget使用，移除该临时HUD */
-		if (!Intersect.Contains(TemporaryHUDClass))
+		/* 这个HUD正在被其他激活的Widget使用，不移除 */
+		if (ActivedWidgetTemporaryHUDClasses.Contains(TemporaryHUDClass))
 		{
-			TArray<UGameHUD*> TempGameHUDs = GameHUDs;
-			for (const auto& TempGameHUD : TempGameHUDs)
+			continue;
+		}
+
+		RemoveHUDClasses.Add(TemporaryHUDClass);
+	}
+
+	/* 移除HUD */
+	for (auto& RemoveHUDClass : RemoveHUDClasses)
+	{
+		TArray<UGameHUD*> TempGameHUDs = GameHUDs;
+		for (const auto& TempGameHUD : TempGameHUDs)
+		{
+			if (TempGameHUD->GetClass() == RemoveHUDClass)
 			{
-				if (TempGameHUD->GetClass() == TemporaryHUDClass)
-				{
-					RemoveGameHUD(TempGameHUD);
-				}
+				RemoveGameHUD(TempGameHUD);
 			}
 		}
 	}
@@ -894,7 +877,7 @@ void UScreenWidgetManager::GenerateMenu(TArray<FGameplayTag> InMenuTags)
 				LOG(Debug_UI, Error, TEXT("MenuStyle Is InValid"))
 				return;
 			}
-			
+
 			MenuStyle->MenuContainer = FoundMenuGenerateInfo->MenuContainer;
 
 			/* 接管菜单的响应处理 */
@@ -944,16 +927,23 @@ void UScreenWidgetManager::DestroyMenu(TArray<FGameplayTag> InMenuTags)
 {
 	const auto OnMenuInactived = FOnWidgetActiveStateChanged::CreateLambda([this](UUserWidgetBase* InWidget)
 		{
-			UMenuStyle* MenuStyle = Cast<UMenuStyle>(InWidget);
+			const UMenuStyle* MenuStyle = Cast<UMenuStyle>(InWidget);
+			if (IsValid(MenuStyle))
+			{
+				FMenuContainerInfo MenuContainerInfo;
+				GameMenu->GetMenuContainerInfo(MenuStyle->GetMenuTag(), MenuContainerInfo);
 
-			FMenuContainerInfo MenuContainerInfo;
-			GameMenu->GetMenuContainerInfo(MenuStyle->GetMenuTag(), MenuContainerInfo);
+				FMenuGenerateInfo* MenuGenerateInfo = MenuGenerateInfos.FindByKey(MenuContainerInfo);
+				MenuGenerateInfo->ClearupGarbageMenuStyle();
 
-			FMenuGenerateInfo* MenuGenerateInfo = MenuGenerateInfos.FindByKey(MenuContainerInfo);
-			MenuGenerateInfo->ClearupGarbageMenuStyle();
+				if (!MenuGenerateInfo->GetIsValid())
+					bClearupMenuGenerateInfos = true;
 
-			if (!MenuGenerateInfo->GetIsValid())
-				bClearupMenuGenerateInfos = true;
+				if (IsValid(MenuGenerateInfo->MenuContainer))
+				{
+					InactiveWidget(MenuGenerateInfo->MenuContainer);
+				}
+			}
 		}
 	);
 
