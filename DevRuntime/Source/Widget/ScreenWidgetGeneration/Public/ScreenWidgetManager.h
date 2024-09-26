@@ -82,13 +82,13 @@ public:
 public:
 	/* 当前管理的所有按钮组 */
 	UPROPERTY(Transient, BlueprintReadOnly)
-	TMap<FString, UCommonButtonGroup*> InteractableWidgetGroups;
+	TMap<FString, TObjectPtr<UCommonButtonGroup>> InteractableWidgetGroups;
 
 	/* Game HUD */
 public:
 	/* 当前视口所有创建的HUD */
 	UPROPERTY(Transient, BlueprintReadOnly)
-	TArray<UGameHUD*> GameHUDs;
+	TArray<TObjectPtr<UGameHUD>> GameHUDs;
 
 public:
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FScreenWidgetDelegate);
@@ -142,7 +142,7 @@ protected:
 public:
 	/* 当前视口所有以注册的插槽 */
 	UPROPERTY(BlueprintReadOnly, Transient)
-	TArray<UGameplayTagSlot*> Slots;
+	TArray<TObjectPtr<UGameplayTagSlot>> Slots;
 
 public:
 	UGameplayTagSlot* GetSlot(FGameplayTag InSlotTag) const;
@@ -173,7 +173,7 @@ protected:
 public:
 	/* 当前显示在屏幕上的所有UI */
 	UPROPERTY(BlueprintReadOnly, Transient)
-	TArray<UUserWidgetBase*> ActivedWidgets;
+	TArray<TObjectPtr<UUserWidgetBase>> ActivedWidgets;
 
 public:
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FUserWidgetBaseDelegate, UUserWidgetBase*, UserWidgetBase);
@@ -192,7 +192,7 @@ protected:
 public:
 	/* 当前菜单数据 */
 	UPROPERTY(BlueprintReadOnly, Transient)
-	UGameMenuSetting* GameMenu = nullptr;
+	TObjectPtr<UGameMenuSetting> GameMenu = nullptr;
 
 	/* 所有由菜单数据创建的已被指定Style和Container的菜单 */
 	UPROPERTY(BlueprintReadOnly, Transient)
@@ -201,17 +201,17 @@ public:
 protected:
 	/* 是否需要清理生成信息 */
 	bool bClearupMenuGenerateInfos = false;
-	
+
 	/* 是否正在切换菜单数据 */
 	bool bSwitchingGameMenu = false;
 
 protected:
 	/* 等待切换的菜单数据 */
 	UPROPERTY(Transient)
-	UGameMenuSetting* WaitingGameMenu = nullptr;
+	TObjectPtr<UGameMenuSetting> WaitingGameMenu = nullptr;
 
 	UPROPERTY(Transient)
-	TArray<UMenuStyle*> NewMenuStyles;
+	TArray<TObjectPtr<UMenuStyle>> NewMenuStyles;
 
 public:
 	virtual void SwitchGameMenu(UGameMenuSetting* InGameMenuSetting);
@@ -237,10 +237,10 @@ protected:
 	/* Shortcut Widget */
 protected:
 	UPROPERTY(BlueprintReadOnly, Transient)
-	UDataTable* ShortcutWidgetTable = nullptr;
+	TObjectPtr<UDataTable> ShortcutWidgetTable = nullptr;
 
 	UPROPERTY(Transient)
-	TArray<UShortcutWidgetHandle*> ShortcutWidgetHandles;
+	TArray<TObjectPtr<UShortcutWidgetHandle>> ShortcutWidgetHandles;
 
 protected:
 	void RegisterShortcutWidgetHandles();

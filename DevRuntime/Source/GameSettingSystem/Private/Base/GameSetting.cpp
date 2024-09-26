@@ -1,4 +1,6 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Base/GameSettingValue.h"
+#include "Base/GameSetting.h"
+
+

@@ -3,14 +3,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UserWidget/Base/UserWidgetBase.h"
-#include "GameSettingValue.generated.h"
+
+#include "Object/CommonObject.h"
+#include "GameSetting.generated.h"
+
+class UGameSettingWidget;
 
 /**
  * 
  */
 UCLASS(Abstract)
-class GAMESETTINGSYSTEM_API UGameSettingValue : public UUserWidgetBase
+class GAMESETTINGSYSTEM_API UGameSetting : public UCommonObject
 {
 	GENERATED_BODY()
 };

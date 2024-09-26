@@ -1,8 +1,8 @@
 ﻿using UnrealBuildTool;
 
-public class DevEdCore : ModuleRules
+public class ApplicationDeveloper : ModuleRules
 {
-	public DevEdCore(ReadOnlyTargetRules Target) : base(Target)
+	public ApplicationDeveloper(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 
@@ -10,9 +10,6 @@ public class DevEdCore : ModuleRules
 			new string[]
 			{
 				"Core",
-				"DevCore",
-				"DevSlateCore",
-				"DeveloperSettings",
 			}
 		);
 
@@ -23,18 +20,11 @@ public class DevEdCore : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
-				"EditorSubsystem",
-				"UnrealEd",
-				"ToolMenus",
 				"Blutility",
 				"UnrealEd",
-				"LevelEditor",
-				"AssetTools",
-				"ClassViewer",
-				"Settings",
-				"SettingsEditor",
 				"GraphEditor",
-				"BlueprintGraph"
+				"BlueprintGraph",
+				"KismetCompiler"
 			}
 		);
 	}

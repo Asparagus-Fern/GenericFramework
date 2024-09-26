@@ -13,7 +13,10 @@ bool UBPFunctions_Widget::GetInteractableWidgetGroups(TMap<FString, UCommonButto
 {
 	if (const UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
 	{
-		Groups = ScreenWidgetManager->InteractableWidgetGroups;
+		for (auto& InteractableWidgetGroup : ScreenWidgetManager->InteractableWidgetGroups)
+		{
+			Groups.FindOrAdd(InteractableWidgetGroup.Key, InteractableWidgetGroup.Value);
+		}
 		return true;
 	}
 	return false;

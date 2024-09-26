@@ -1,46 +1,51 @@
 ﻿{
-  "FileVersion": 3,
-  "Version": 1,
-  "VersionName": "1.0",
-  "FriendlyName": "DevApplication",
-  "Description": "",
-  "Category": "Other",
-  "CreatedBy": "Chen",
-  "CreatedByURL": "",
-  "DocsURL": "",
-  "MarketplaceURL": "",
-  "CanContainContent": true,
-  "IsBetaVersion": false,
-  "IsExperimentalVersion": false,
-  "Installed": false,
-  "Plugins": [
-    {
-      "Name": "DevCore",
-      "Enabled": true
-    },
-    {
-      "Name": "DevEditor",
-      "Enabled": true
-    },
-    {
-      "Name": "DevRuntime",
-      "Enabled": true
-    },
-    {
-      "Name": "Mannequins",
-      "Enabled": true
-    }
-  ],
-  "Modules": [
-    {
-      "Name": "ApplicationRuntime",
-      "Type": "Runtime",
-      "LoadingPhase": "PostDefault"
-    },
-    {
-      "Name": "ApplicationEditor",
-      "Type": "Editor",
-      "LoadingPhase": "PostEngineInit"
-    }
-  ]
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "DevApplication",
+	"Description": "",
+	"Category": "Other",
+	"CreatedBy": "Chen",
+	"CreatedByURL": "",
+	"DocsURL": "",
+	"MarketplaceURL": "",
+	"CanContainContent": true,
+	"IsBetaVersion": false,
+	"IsExperimentalVersion": false,
+	"Installed": false,
+	"Plugins": [
+		{
+			"Name": "DevCore",
+			"Enabled": true
+		},
+		{
+			"Name": "DevEditor",
+			"Enabled": true
+		},
+		{
+			"Name": "DevRuntime",
+			"Enabled": true
+		},
+		{
+			"Name": "Mannequins",
+			"Enabled": true
+		}
+	],
+	"Modules": [
+		{
+			"Name": "ApplicationRuntime",
+			"Type": "Runtime",
+			"LoadingPhase": "PostDefault"
+		},
+		{
+			"Name": "ApplicationEditor",
+			"Type": "Editor",
+			"LoadingPhase": "PostEngineInit"
+		},
+		{
+			"Name": "ApplicationDeveloper",
+			"Type": "DeveloperTool",
+			"LoadingPhase": "Default"
+		}
+	]
 }
