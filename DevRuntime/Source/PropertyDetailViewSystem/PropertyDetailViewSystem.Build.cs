@@ -22,7 +22,8 @@ public class PropertyDetailViewSystem : ModuleRules
 				"Slate",
 				"SlateCore",
 				"ScreenWidgetGeneration",
-				"UMG"
+				"UMG",
+				"PropertyPath",
 			}
 		);
 	}
