@@ -72,13 +72,13 @@ public:
 
 	void BroadcastEditConditionChanged() const { OnEditConditionChangedEvent.Broadcast(true); }
 
-	virtual void Initialize(const ULocalPlayer* InLocalPlayer) { return; }
+	virtual void Initialize(const UObject* InContext) { return; }
 
-	virtual void Applied(const ULocalPlayer* InLocalPlayer, UPropertyEntity* Setting) const { return; }
+	virtual void Applied(const UObject* InContext, UPropertyEntity* Setting) const { return; }
 
-	virtual void Changed(const ULocalPlayer* InLocalPlayer, UPropertyEntity* Setting, EPropertyChangeReason Reason) const { return; }
+	virtual void Changed(const UObject* InContext, UPropertyEntity* Setting, EPropertyChangeReason Reason) const { return; }
 
-	virtual void GatherEditState(const ULocalPlayer* InLocalPlayer, FPropertyEditableState& InOutEditState) const { return; }
+	virtual void GatherEditState(const UObject* InContext, FPropertyEditableState& InOutEditState) const { return; }
 
 	virtual FString ToString() const { return TEXT(""); }
 };

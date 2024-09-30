@@ -3,23 +3,23 @@
 
 #include "Base/PropertyEntity.h"
 
-void UPropertyEntity::Initialize(ULocalPlayer* InLocalPlayer)
+void UPropertyEntity::Initialize(UObject* InContext)
 {
-	if (LocalPlayer == InLocalPlayer)
+	if (Context == InContext)
 	{
 		return;
 	}
 
-	LocalPlayer = InLocalPlayer;
+	Context = InContext;
 
 #if !UE_BUILD_SHIPPING
 	ensureAlwaysMsgf(PropertyName != NAME_None, TEXT("You Must Provide a PropertyName."));
 	ensureAlwaysMsgf(!DisplayName.IsEmpty(), TEXT("You Must Provide a DisplayName."));
 #endif
 
-	for (const TSharedRef<FPropertyEditCondition>& EditCondition : EditConditions)
+	for (const auto& EditCondition : EditConditions)
 	{
-		EditCondition->Initialize(LocalPlayer);
+		EditCondition->Initialize(Context);
 	}
 
 	Startup();
@@ -103,7 +103,7 @@ void UPropertyEntity::HandleEditDependencyChanged(UPropertyEntity* DependencySet
 
 	if (Reason != EPropertyChangeReason::DependencyChanged)
 	{
-		NotifySettingChanged(EPropertyChangeReason::DependencyChanged);
+		NotifyPropertyChanged(EPropertyChangeReason::DependencyChanged);
 	}
 }
 
@@ -113,13 +113,13 @@ void UPropertyEntity::HandleEditDependencyChanged(UPropertyEntity* DependencySet
 	RefreshEditableState();
 }
 
-void UPropertyEntity::NotifySettingChanged(EPropertyChangeReason Reason)
+void UPropertyEntity::NotifyPropertyChanged(EPropertyChangeReason Reason)
 {
-	OnSettingChanged(Reason);
+	OnPropertyChanged(Reason);
 
 	for (const TSharedRef<FPropertyEditCondition>& EditCondition : EditConditions)
 	{
-		EditCondition->Changed(LocalPlayer, this, Reason);
+		EditCondition->Changed(Context, this, Reason);
 	}
 
 	if (!bOnPropertyChangedEventGuard)
@@ -143,7 +143,7 @@ FPropertyEditableState UPropertyEntity::ComputeEditableState() const
 
 	for (const auto& EditCondition : EditConditions)
 	{
-		EditCondition->GatherEditState(LocalPlayer, EditState);
+		EditCondition->GatherEditState(Context, EditState);
 	}
 
 	return EditState;
@@ -151,7 +151,7 @@ FPropertyEditableState UPropertyEntity::ComputeEditableState() const
 
 void UPropertyEntity::RefreshEditableState(bool bNotifyEditConditionsChanged)
 {
-	if (!LocalPlayer)
+	if (!Context)
 	{
 		return;
 	}

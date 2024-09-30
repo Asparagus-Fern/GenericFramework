@@ -8,24 +8,24 @@ FPropertyDataSouceDynamic::FPropertyDataSouceDynamic(const TArray<FString>& InDy
 {
 }
 
-bool FPropertyDataSouceDynamic::Resolve(ULocalPlayer* InLocalPlayer)
+bool FPropertyDataSouceDynamic::Resolve(UObject* InContext)
 {
-	return DynamicPath.Resolve(InLocalPlayer);
+	return DynamicPath.Resolve(InContext);
 }
 
-FString FPropertyDataSouceDynamic::GetValueAsString(ULocalPlayer* InLocalPlayer) const
+FString FPropertyDataSouceDynamic::GetValueAsString(UObject* InContext) const
 {
 	FString OutStringValue;
 
-	const bool bSuccess = PropertyPathHelpers::GetPropertyValueAsString(InLocalPlayer, DynamicPath, OutStringValue);
+	const bool bSuccess = PropertyPathHelpers::GetPropertyValueAsString(InContext, DynamicPath, OutStringValue);
 	ensure(bSuccess);
 
 	return OutStringValue;
 }
 
-void FPropertyDataSouceDynamic::SetValue(ULocalPlayer* InLocalPlayer, const FString& InStringValue)
+void FPropertyDataSouceDynamic::SetValue(UObject* InContext, const FString& InStringValue)
 {
-	const bool bSuccess = PropertyPathHelpers::SetPropertyValueFromString(InLocalPlayer, DynamicPath, InStringValue);
+	const bool bSuccess = PropertyPathHelpers::SetPropertyValueFromString(InContext, DynamicPath, InStringValue);
 	ensure(bSuccess);
 }
 

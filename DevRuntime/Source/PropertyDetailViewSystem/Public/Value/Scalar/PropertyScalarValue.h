@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "PropertyType.h"
-#include "Base/PropertyValueBase.h"
+#include "Value/PropertyValueBase.h"
 #include "PropertyScalarValue.generated.h"
 
 /**

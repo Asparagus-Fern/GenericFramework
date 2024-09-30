@@ -5,6 +5,14 @@
 #include "CoreMinimal.h"
 // #include "PropertyType.generated.h"
 
+#define GET_PROPERTY_FUNCTION_PATH(GetTargetObjectClassName,GetTargetObjectFunctionName,TargetClassName,TargetFunctionOrProperty) \
+MakeShared<FPropertyDataSouceDynamic>( \
+	TArray<FString>({ \
+		GET_FUNCTION_NAME_STRING_CHECKED(GetTargetObjectClassName, GetTargetObjectFunctionName), \
+		GET_FUNCTION_NAME_STRING_CHECKED(TargetClassName, TargetFunctionOrProperty) \
+	}) \
+)
+
 /**
  * 
  */
@@ -15,5 +23,3 @@ enum class EPropertyChangeReason : uint8
 	ResetToDefault,
 	RestoreToInitial,
 };
-
-

@@ -3,11 +3,62 @@
 
 #include "Value/Scalar/PropertyScalarValueDynamic.h"
 
-#include "Base/PropertyDataSource.h"
+#include "DataSource/PropertyDataSource.h"
+
+#define LOCTEXT_NAMESPACE "PropertyDetailViewSystem"
+
+static FText PercentFormat = LOCTEXT("PercentFormat", "{0}%");
+
+FSettingScalarFormatFunction UPropertyScalarValueDynamic::FormatAsInteger([](double SourceValue, double NormalizedValue)
+	{
+		return FText::AsNumber(SourceValue, GetNumberFormattingOptions(1, 0));
+	}
+);
+
+FSettingScalarFormatFunction UPropertyScalarValueDynamic::FormatAsOneFractionalDigit([](double SourceValue, double NormalizedValue)
+	{
+		return FText::AsNumber(SourceValue, GetNumberFormattingOptions(1, 1));
+	}
+);
+
+FSettingScalarFormatFunction UPropertyScalarValueDynamic::FormatAsTwoFractionalDigits([](double SourceValue, double NormalizedValue)
+	{
+		return FText::AsNumber(SourceValue, GetNumberFormattingOptions(1, 2));
+	}
+);
+
+FSettingScalarFormatFunction UPropertyScalarValueDynamic::FormatAsThreeFractionalDigits([](double SourceValue, double NormalizedValue)
+	{
+		return FText::AsNumber(SourceValue, GetNumberFormattingOptions(1, 3));
+	}
+);
+
+FSettingScalarFormatFunction UPropertyScalarValueDynamic::FormatAsPercent([](double SourceValue, double NormalizedValue)
+	{
+		return FText::Format(PercentFormat, (int32)FMath::RoundHalfFromZero(100.0 * NormalizedValue));
+	}
+);
+
+FSettingScalarFormatFunction UPropertyScalarValueDynamic::FormatAsPercent_OneFractionalDigit([](double SourceValue, double NormalizedValue)
+	{
+		const FNumberFormattingOptions* FormattingOptions = GetNumberFormattingOptions(1, 1);
+		const double NormalizedValueTo100_0 = FMath::RoundHalfFromZero(1000.0 * NormalizedValue);
+		return FText::Format(PercentFormat, FText::AsNumber(NormalizedValueTo100_0 / 10.0, FormattingOptions));
+	}
+);
+
+FNumberFormattingOptions* UPropertyScalarValueDynamic::GetNumberFormattingOptions(int32 IntegralDigits, int32 FractionalDigits)
+{
+	FNumberFormattingOptions* FormattingOptions = new FNumberFormattingOptions();
+	FormattingOptions->MinimumIntegralDigits = IntegralDigits;
+	FormattingOptions->MinimumFractionalDigits = FractionalDigits;
+	FormattingOptions->MaximumFractionalDigits = FractionalDigits;
+	return FormattingOptions;
+}
 
 void UPropertyScalarValueDynamic::Startup()
 {
-	Getter->Startup(LocalPlayer, FSimpleDelegate::CreateUObject(this, &ThisClass::OnDataSourcesReady));
+	Getter->Startup(Context, FSimpleDelegate::CreateUObject(this, &ThisClass::OnDataSourcesReady));
 }
 
 void UPropertyScalarValueDynamic::OnDataSourcesReady()
@@ -54,14 +105,14 @@ void UPropertyScalarValueDynamic::SetValue(double InValue, EPropertyChangeReason
 	}
 
 	const FString StringValue = LexToString(InValue);
-	Setter->SetValue(LocalPlayer, StringValue);
+	Setter->SetValue(Context, StringValue);
 
-	NotifySettingChanged(Reason);
+	NotifyPropertyChanged(Reason);
 }
 
 double UPropertyScalarValueDynamic::GetValue() const
 {
-	const FString OutValue = Getter->GetValueAsString(LocalPlayer);
+	const FString OutValue = Getter->GetValueAsString(Context);
 
 	double Value;
 	LexFromString(Value, *OutValue);
@@ -117,3 +168,5 @@ void UPropertyScalarValueDynamic::SetDisplayFormat(FSettingScalarFormatFunction 
 {
 	DisplayFormat = InDisplayFormat;
 }
+
+#undef LOCTEXT_NAMESPACE

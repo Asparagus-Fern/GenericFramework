@@ -13,8 +13,8 @@ void UPropertyCollection::AddProperty(UPropertyEntity* InProperty)
 	ChildProperties.Add(InProperty);
 	InProperty->SetPropertyOwner(this);
 
-	if (LocalPlayer)
+	if (Context)
 	{
-		InProperty->Initialize(LocalPlayer);
+		InProperty->Initialize(Context);
 	}
 }

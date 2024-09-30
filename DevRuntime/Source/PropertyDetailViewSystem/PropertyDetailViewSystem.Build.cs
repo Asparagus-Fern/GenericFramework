@@ -24,6 +24,7 @@ public class PropertyDetailViewSystem : ModuleRules
 				"ScreenWidgetGeneration",
 				"UMG",
 				"PropertyPath",
+				"CommonUI"
 			}
 		);
 	}

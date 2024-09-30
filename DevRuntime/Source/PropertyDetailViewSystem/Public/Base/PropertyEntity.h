@@ -17,7 +17,7 @@ class PROPERTYDETAILVIEWSYSTEM_API UPropertyEntity : public UCommonObject
 	GENERATED_BODY()
 
 public:
-	void Initialize(ULocalPlayer* InLocalPlayer);
+	void Initialize(UObject* InContext);
 
 public:
 	UFUNCTION(BlueprintPure)
@@ -55,8 +55,8 @@ protected:
 	void HandleEditDependencyChanged(UPropertyEntity* DependencySetting, EPropertyChangeReason Reason);
 	void HandleEditDependencyChanged(UPropertyEntity* DependencySetting);
 
-	void NotifySettingChanged(EPropertyChangeReason Reason);
-	virtual void OnSettingChanged(EPropertyChangeReason Reason) { return; }
+	void NotifyPropertyChanged(EPropertyChangeReason Reason);
+	virtual void OnPropertyChanged(EPropertyChangeReason Reason) { return; }
 
 	void NotifyEditConditionsChanged();
 	virtual void OnEditConditionsChanged() { return; }
@@ -77,14 +77,19 @@ public:
 
 protected:
 	UPROPERTY(Transient)
-	TObjectPtr<ULocalPlayer> LocalPlayer;
+	TObjectPtr<UObject> Context;
 
 	UPROPERTY(Transient)
 	TObjectPtr<UPropertyEntity> PropertyOwner;
 
 	/* 唯一标识符 */
+	UPROPERTY(EditAnywhere, Getter, BlueprintGetter="GetPropertyName", meta=(ExposeOnSpawn = true))
 	FName PropertyName;
+
+	UPROPERTY(EditAnywhere, Getter, BlueprintGetter="GetDisplayName", meta=(ExposeOnSpawn = true))
 	FText DisplayName;
+
+	UPROPERTY(EditAnywhere, Getter, BlueprintGetter="GetDescriptionText", meta=(ExposeOnSpawn = true))
 	FText DescriptionText;
 
 	TArray<TSharedRef<FPropertyEditCondition>> EditConditions;

@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "PropertyEntity.h"
+#include "Base/PropertyEntity.h"
 #include "PropertyValueBase.generated.h"
 
 /**

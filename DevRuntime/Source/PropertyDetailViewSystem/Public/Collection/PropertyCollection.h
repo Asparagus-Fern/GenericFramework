@@ -16,6 +16,8 @@ class PROPERTYDETAILVIEWSYSTEM_API UPropertyCollection : public UPropertyEntity
 
 public:
 	virtual TArray<UPropertyEntity*> GetChildProperties() override { return ChildProperties; }
+
+	UFUNCTION(BlueprintCallable)
 	void AddProperty(UPropertyEntity* InProperty);
 
 protected:

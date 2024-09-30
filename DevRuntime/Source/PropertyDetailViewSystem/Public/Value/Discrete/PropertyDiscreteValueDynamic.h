@@ -4,8 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "PropertyDiscreteValue.h"
-#include "Base/PropertyDataSource.h"
 #include "PropertyDiscreteValueDynamic.generated.h"
+
+class FPropertyDataSource;
 
 /**
  * 

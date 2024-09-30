@@ -17,6 +17,17 @@ class PROPERTYDETAILVIEWSYSTEM_API UPropertyScalarValueDynamic : public UPropert
 {
 	GENERATED_BODY()
 
+public:
+	static FSettingScalarFormatFunction FormatAsInteger;
+	static FSettingScalarFormatFunction FormatAsOneFractionalDigit;
+	static FSettingScalarFormatFunction FormatAsTwoFractionalDigits;
+	static FSettingScalarFormatFunction FormatAsThreeFractionalDigits;
+	static FSettingScalarFormatFunction FormatAsPercent;
+	static FSettingScalarFormatFunction FormatAsPercent_OneFractionalDigit;
+
+private:
+	static FNumberFormattingOptions* GetNumberFormattingOptions(int32 IntegralDigits, int32 FractionalDigits);
+
 	/* UPropertyEntity */
 public:
 	virtual void Startup() override;

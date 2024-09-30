@@ -5,7 +5,7 @@
 
 void UPropertyDiscreteValueDynamic::Startup()
 {
-	Getter->Startup(LocalPlayer, FSimpleDelegate::CreateUObject(this, &ThisClass::OnDataSourcesReady));
+	Getter->Startup(Context, FSimpleDelegate::CreateUObject(this, &ThisClass::OnDataSourcesReady));
 }
 
 void UPropertyDiscreteValueDynamic::OnDataSourcesReady()
@@ -139,7 +139,7 @@ bool UPropertyDiscreteValueDynamic::HasOption(const FString& InOptionValue)
 
 FString UPropertyDiscreteValueDynamic::GetValueAsString() const
 {
-	return Getter->GetValueAsString(LocalPlayer);
+	return Getter->GetValueAsString(Context);
 }
 
 void UPropertyDiscreteValueDynamic::SetValueFromString(FString InStringValue)
@@ -149,6 +149,6 @@ void UPropertyDiscreteValueDynamic::SetValueFromString(FString InStringValue)
 
 void UPropertyDiscreteValueDynamic::SetValueFromString(FString InStringValue, EPropertyChangeReason Reason)
 {
-	Setter->SetValue(LocalPlayer, InStringValue);
-	NotifySettingChanged(Reason);
+	Setter->SetValue(Context, InStringValue);
+	NotifyPropertyChanged(Reason);
 }
