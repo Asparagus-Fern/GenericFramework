@@ -21,6 +21,7 @@
 
 #define LOCTEXT_NAMESPACE "UScreenWidgetManager"
 
+
 /* ==================== FWidgetAnimationTimerHandle ==================== */
 
 FWidgetAnimationTimerHandle::FWidgetAnimationTimerHandle()
@@ -45,6 +46,8 @@ bool FWidgetAnimationTimerHandle::operator==(const UUserWidgetBase* OtherWidget)
 }
 
 /* ==================== UScreenWidgetManager ==================== */
+
+UScreenWidgetManager::FOnMenuSelectionChanged UScreenWidgetManager::OnMenuSelectionChanged;
 
 UScreenWidgetManager::UScreenWidgetManager(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -426,7 +429,7 @@ void UScreenWidgetManager::RegisterSlot(UGameplayTagSlot* InSlot)
 {
 	if (!IsValid(InSlot) || !InSlot->SlotTag.IsValid() || Slots.Contains(InSlot))
 	{
-		LOG(Debug_UI, Warning, TEXT("Fail To RegisterSlot"))
+		LOG(LogUI, Warning, TEXT("Fail To RegisterSlot"))
 		return;
 	}
 
@@ -438,7 +441,7 @@ void UScreenWidgetManager::UnRegisterSlot(UGameplayTagSlot* InSlot)
 {
 	if (!IsValid(InSlot) || !InSlot->SlotTag.IsValid() || !Slots.Contains(InSlot))
 	{
-		LOG(Debug_UI, Warning, TEXT("Fail To UnRegisterSlot"))
+		LOG(LogUI, Warning, TEXT("Fail To UnRegisterSlot"))
 		return;
 	}
 
@@ -478,7 +481,7 @@ bool UScreenWidgetManager::OpenUserWidget(UUserWidgetBase* InWidget, FOnWidgetAc
 {
 	if (!IsValid(InWidget) || !InWidget->SlotTag.IsValid())
 	{
-		LOG(Debug_UI, Warning, TEXT("Fail To Open User Widget"))
+		LOG(LogUI, Warning, TEXT("Fail To Open User Widget"))
 		return false;
 	}
 
@@ -522,7 +525,7 @@ bool UScreenWidgetManager::CloseUserWidget(UUserWidgetBase* InWidget, const FOnW
 {
 	if (!IsValid(InWidget))
 	{
-		LOG(Debug_UI, Error, TEXT("InWidget Is NULL"))
+		LOG(LogUI, Error, TEXT("InWidget Is NULL"))
 		return false;
 	}
 
@@ -534,7 +537,7 @@ bool UScreenWidgetManager::CloseUserWidget(const FGameplayTag InSlotTag, const F
 {
 	if (!InSlotTag.IsValid())
 	{
-		LOG(Debug_UI, Error, TEXT("SlotTag Is NULL"))
+		LOG(LogUI, Error, TEXT("SlotTag Is NULL"))
 		return false;
 	}
 
@@ -568,7 +571,7 @@ void UScreenWidgetManager::ActiveWidget(UUserWidgetBase* InWidget, const FOnWidg
 {
 	if (!IsValid(InWidget) || ActivedWidgets.Contains(InWidget))
 	{
-		LOG(Debug_UI, Error, TEXT("InWidget Is NULL"))
+		LOG(LogUI, Error, TEXT("InWidget Is NULL"))
 		OnFinish.ExecuteIfBound(InWidget);
 		return;
 	}
@@ -634,7 +637,7 @@ void UScreenWidgetManager::InactiveWidget(UUserWidgetBase* InWidget, FOnWidgetAc
 {
 	if (!IsValid(InWidget) || !ActivedWidgets.Contains(InWidget))
 	{
-		LOG(Debug_UI, Error, TEXT("InWidget Is NULL"))
+		LOG(LogUI, Error, TEXT("InWidget Is NULL"))
 		OnFinish.ExecuteIfBound(InWidget);
 		return;
 	}
@@ -721,7 +724,7 @@ void UScreenWidgetManager::SwitchGameMenu(UGameMenuSetting* InGameMenuSetting)
 {
 	if (GameMenu == InGameMenuSetting)
 	{
-		LOG(Debug_UI, Warning, TEXT("Can not Switch The Same Game Menu Setting"))
+		LOG(LogUI, Warning, TEXT("Can not Switch The Same Game Menu Setting"))
 		return;
 	}
 
@@ -807,7 +810,7 @@ void UScreenWidgetManager::GenerateMenu(const FGameplayTag InMenuTag)
 	}
 	else
 	{
-		LOG(Debug_UI, Error, TEXT("Fail To Generate Menu"))
+		LOG(LogUI, Error, TEXT("Fail To Generate Menu"))
 	}
 }
 
@@ -874,7 +877,7 @@ void UScreenWidgetManager::GenerateMenu(TArray<FGameplayTag> InMenuTags)
 
 			if (!IsValid(MenuStyle))
 			{
-				LOG(Debug_UI, Error, TEXT("MenuStyle Is InValid"))
+				LOG(LogUI, Error, TEXT("MenuStyle Is InValid"))
 				return;
 			}
 
@@ -1031,14 +1034,14 @@ void UScreenWidgetManager::HandleMenuResponseStateChanged()
 	if (ProcessingMenuIndex > 0)
 	{
 		const UMenuStyle* PreviousMenuStyle = MenuStyles[ProcessingMenuIndex - 1];
-		if (const bool PreviousEventState = TargetMenuSelection.FindRef(PreviousMenuStyle))
-		{
+		const bool PreviousEventState = TargetMenuSelection.FindRef(PreviousMenuStyle);
+
+		OnMenuSelectionChanged.Broadcast(PreviousMenuStyle->GetMenuTag(), PreviousEventState);
+
+		if (PreviousEventState)
 			GenerateMenu(PreviousMenuStyle->GetMenuTag());
-		}
 		else
-		{
 			DestroyMenu(PreviousMenuStyle->GetMenuTag());
-		}
 	}
 
 	/* 执行当前菜单的事件 */

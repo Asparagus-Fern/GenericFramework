@@ -87,7 +87,7 @@ bool UGameMenuSetting::CheckIsValidMenuTag(const FGameplayTag InMenuTag)
 	/* 检查标签是否有效 */
 	if (!InMenuTag.IsValid())
 	{
-		LOG(Debug_UI, Error, TEXT("MenuTag Is InValid"))
+		LOG(LogUI, Error, TEXT("MenuTag Is InValid"))
 		return false;
 	}
 
@@ -97,13 +97,13 @@ bool UGameMenuSetting::CheckIsValidMenuTag(const FGameplayTag InMenuTag)
 	{
 		if (!MenuInfo.StyleClass && !IsValid(MenuInfo.Style))
 		{
-			LOG(Debug_UI, Error, TEXT("Menu Style Is InValid"))
+			LOG(LogUI, Error, TEXT("Menu Style Is InValid"))
 			return false;
 		}
 	}
 	else
 	{
-		LOG(Debug_UI, Error, TEXT("Fail To GetMenuInfo"))
+		LOG(LogUI, Error, TEXT("Fail To GetMenuInfo"))
 		return false;
 	}
 
@@ -113,13 +113,13 @@ bool UGameMenuSetting::CheckIsValidMenuTag(const FGameplayTag InMenuTag)
 	{
 		if (!MenuContainerInfo.ContainerClass && !IsValid(MenuContainerInfo.Container))
 		{
-			LOG(Debug_UI, Error, TEXT("Menu Container Is InValid"))
+			LOG(LogUI, Error, TEXT("Menu Container Is InValid"))
 			return false;
 		}
 	}
 	else
 	{
-		LOG(Debug_UI, Error, TEXT("Fail To GetMenuContainerInfo"))
+		LOG(LogUI, Error, TEXT("Fail To GetMenuContainerInfo"))
 		return false;
 	}
 

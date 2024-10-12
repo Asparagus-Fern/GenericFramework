@@ -21,10 +21,14 @@ public class PropertyDetailViewSystem : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
-				"ScreenWidgetGeneration",
+
 				"UMG",
 				"PropertyPath",
-				"CommonUI"
+				"CommonUI",
+				"InputCore",
+				"GameplayTags",
+
+				"ScreenWidgetGeneration",
 			}
 		);
 	}

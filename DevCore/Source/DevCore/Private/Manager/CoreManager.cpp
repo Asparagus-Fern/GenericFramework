@@ -67,7 +67,7 @@ void UCoreManager::NativeOnCreate()
 	IProcedureBaseInterface::Execute_OnCreate(this);
 
 	StaticWorld = GetWorld();
-	LOG(Debug_Manager, Log, TEXT("On Created : %s"), *GetName());
+	LOG(LogManager, Log, TEXT("On Created : %s"), *GetName());
 }
 
 void UCoreManager::NativeOnRefresh()
@@ -81,21 +81,21 @@ void UCoreManager::NativeOnDestroy()
 	IProcedureBaseInterface::NativeOnDestroy();
 
 	StaticWorld = nullptr;
-	LOG(Debug_Manager, Log, TEXT("On Destroy : %s"), *GetName());
+	LOG(LogManager, Log, TEXT("On Destroy : %s"), *GetName());
 }
 
 void UCoreManager::NativeOnActived()
 {
 	IProcedureInterface::NativeOnActived();
 	IProcedureInterface::Execute_OnActived(this);
-	LOG(Debug_Manager, Log, TEXT("On Actived : %s"), *GetName());
+	LOG(LogManager, Log, TEXT("On Actived : %s"), *GetName());
 }
 
 void UCoreManager::NativeOnInactived()
 {
 	IProcedureInterface::NativeOnInactived();
 	IProcedureInterface::Execute_OnInactived(this);
-	LOG(Debug_Manager, Log, TEXT("On Inactived : %s"), *GetName());
+	LOG(LogManager, Log, TEXT("On Inactived : %s"), *GetName());
 }
 
 bool UCoreManager::IsGameManager() const

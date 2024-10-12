@@ -1,86 +1,81 @@
 ﻿{
-	"FileVersion": 3,
-	"Version": 1,
-	"VersionName": "1.0",
-	"FriendlyName": "DevRuntime",
-	"Description": "",
-	"Category": "Other",
-	"CreatedBy": "Chen",
-	"CreatedByURL": "",
-	"DocsURL": "",
-	"MarketplaceURL": "",
-	"CanContainContent": true,
-	"IsBetaVersion": false,
-	"IsExperimentalVersion": false,
-	"Installed": false,
-	"Plugins": [
-		{
-			"Name": "DevCore",
-			"Enabled": true
-		},
-		{
-			"Name": "CommonUI",
-			"Enabled": true
-		},
-		{
-			"Name": "DBTween",
-			"Enabled": true
-		},
-		{
-			"Name": "ModularGameplay",
-			"Enabled": true
-		}
-	],
-	"Modules": [
-		{
-			"Name": "LevelStreaming",
-			"Type": "Runtime",
-			"LoadingPhase": "Default"
-		},
-		{
-			"Name": "WorldPartition",
-			"Type": "Runtime",
-			"LoadingPhase": "Default"
-		},
-		{
-			"Name": "ScreenWidgetGeneration",
-			"Type": "Runtime",
-			"LoadingPhase": "Default"
-		},
-		{
-			"Name": "WorldWidgetGeneration",
-			"Type": "Runtime",
-			"LoadingPhase": "Default"
-		},
-		{
-			"Name": "ActiveNodeSystem",
-			"Type": "Runtime",
-			"LoadingPhase": "Default"
-		},
-		{
-			"Name": "CameraSystem",
-			"Type": "Runtime",
-			"LoadingPhase": "Default"
-		},
-		{
-			"Name": "CharacterStatusSystem",
-			"Type": "Runtime",
-			"LoadingPhase": "Default"
-		},
-		{
-			"Name": "GameMapSystem",
-			"Type": "Runtime",
-			"LoadingPhase": "Default"
-		},
-		{
-			"Name": "GameSettingSystem",
-			"Type": "Runtime",
-			"LoadingPhase": "Default"
-		},
-		{
-			"Name": "PropertyDetailViewSystem",
-			"Type": "Runtime",
-			"LoadingPhase": "Default"
-		}
-	]
+  "FileVersion": 3,
+  "Version": 1,
+  "VersionName": "1.0",
+  "FriendlyName": "DevRuntime",
+  "Description": "",
+  "Category": "Other",
+  "CreatedBy": "Chen",
+  "CreatedByURL": "",
+  "DocsURL": "",
+  "MarketplaceURL": "",
+  "CanContainContent": true,
+  "IsBetaVersion": false,
+  "IsExperimentalVersion": false,
+  "Installed": false,
+  "Plugins": [
+    {
+      "Name": "DevCore",
+      "Enabled": true
+    },
+    {
+      "Name": "CommonUI",
+      "Enabled": true
+    },
+    {
+      "Name": "DBTween",
+      "Enabled": true
+    },
+    {
+      "Name": "ModularGameplay",
+      "Enabled": true
+    }
+  ],
+  "Modules": [
+    {
+      "Name": "LevelStreaming",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
+    },
+    {
+      "Name": "WorldPartition",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
+    },
+    {
+      "Name": "ScreenWidgetGeneration",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
+    },
+    {
+      "Name": "WorldWidgetGeneration",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
+    },
+    {
+      "Name": "ActiveNodeSystem",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
+    },
+    {
+      "Name": "CameraSystem",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
+    },
+    {
+      "Name": "CharacterStatusSystem",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
+    },
+    {
+      "Name": "GameMapSystem",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
+    },
+    {
+      "Name": "PropertyDetailViewSystem",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
+    }
+  ]
 }

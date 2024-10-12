@@ -3,6 +3,26 @@
 
 #include "Collection/PropertyCollection.h"
 
+TArray<UPropertyEntity*> UPropertyCollection::GetChildProperties()
+{
+	return ChildProperties;
+}
+
+TArray<UPropertyCollection*> UPropertyCollection::GetChildCollections() const
+{
+	TArray<UPropertyCollection*> Collections;
+
+	for (auto ChlidProperty : ChildProperties)
+	{
+		if (UPropertyCollection* ChildCollection = Cast<UPropertyCollection>(ChlidProperty))
+		{
+			Collections.Add(ChildCollection);
+		}
+	}
+
+	return Collections;
+}
+
 void UPropertyCollection::AddProperty(UPropertyEntity* InProperty)
 {
 #if !UE_BUILD_SHIPPING

@@ -15,7 +15,8 @@ class PROPERTYDETAILVIEWSYSTEM_API UPropertyCollection : public UPropertyEntity
 	GENERATED_BODY()
 
 public:
-	virtual TArray<UPropertyEntity*> GetChildProperties() override { return ChildProperties; }
+	virtual TArray<UPropertyEntity*> GetChildProperties() override;
+	TArray<UPropertyCollection*> GetChildCollections() const;
 
 	UFUNCTION(BlueprintCallable)
 	void AddProperty(UPropertyEntity* InProperty);

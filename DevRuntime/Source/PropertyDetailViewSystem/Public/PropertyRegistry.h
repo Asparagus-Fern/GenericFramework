@@ -3,18 +3,16 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Subsystems/LocalPlayerSubsystem.h"
+#include "Object/CommonObject.h"
 #include "PropertyRegistry.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROPERTYDETAILVIEWSYSTEM_API UPropertyRegistry : public ULocalPlayerSubsystem
+class PROPERTYDETAILVIEWSYSTEM_API UPropertyRegistry : public UCommonObject
 {
 	GENERATED_BODY()
 
 public:
-	// UFUNCTION(BlueprintPure)
-	// static TArray<FString> GetPropertyPath(TSubclassOf<UObject> );
 };

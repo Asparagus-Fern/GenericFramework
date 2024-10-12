@@ -234,6 +234,10 @@ protected:
 	virtual FReply OnMenuResponseStateChanged(UInteractableUserWidgetBase* InteractableWidget, bool TargetEventState);
 	virtual void HandleMenuResponseStateChanged();
 
+public:
+	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnMenuSelectionChanged, FGameplayTag, bool)
+	static FOnMenuSelectionChanged OnMenuSelectionChanged;
+
 	/* Shortcut Widget */
 protected:
 	UPROPERTY(BlueprintReadOnly, Transient)

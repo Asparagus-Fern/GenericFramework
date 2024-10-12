@@ -3,19 +3,19 @@
 #include "Widgets/Notifications/SNotificationList.h"
 #include "Framework/Notifications/NotificationManager.h"
 
-DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(Debug_Default, Log, All);
+DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(LogDefault, Log, All);
 
-DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(Debug_Manager, Log, All);
+DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(LogManager, Log, All);
 
-DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(Debug_Input, Log, All);
+DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(LogProcedure, Log, All);
 
-DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(Debug_Procedure, Log, All);
+DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(LogUI, Log, All);
 
-DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(Debug_UI, Log, All);
+DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(LogCamera, Log, All);
 
-DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(Debug_Camera, Log, All);
+DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(LogWorld, Log, All);
 
-DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(Debug_World, Log, All);
+DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(LogProperty, Log, All);
 
 #define LOG(CategoryName, Verbosity, Format, ...) \
 UE_LOG(CategoryName, Verbosity, TEXT("(%s) %s"), ANSI_TO_TCHAR(__FUNCTION__), *FString::Printf(Format,##__VA_ARGS__))
