@@ -26,13 +26,18 @@ void UPropertyListView::ValidateCompiledDefaults(IWidgetCompilerLog& CompileLog)
 
 #endif
 
+void UPropertyListView::SetVisualDataOverride(UPropertyVisualData* InVisualData)
+{
+	VisualData = InVisualData;
+}
+
 UUserWidget& UPropertyListView::OnGenerateEntryWidgetInternal(UObject* Item, TSubclassOf<UUserWidget> DesiredEntryClass, const TSharedRef<STableViewBase>& OwnerTable)
 {
 	UPropertyEntity* PropertyItem = Cast<UPropertyEntity>(Item);
 	TSubclassOf<UPropertyListEntryBase> PropertyEntryClass = TSubclassOf<UPropertyListEntryBase>(DesiredEntryClass);
 
 	if (VisualData)
-	{ 
+	{
 		if (const TSubclassOf<UPropertyListEntryBase> EntryClass = VisualData->GetEntryForProperty(PropertyItem))
 		{
 			PropertyEntryClass = EntryClass;

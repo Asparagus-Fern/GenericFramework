@@ -1,21 +1,32 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
-
-
-#include "GameSetting/GameSettingSource.h"
+#include "GameSetting/GameSettingRegistry.h"
 
 #include "Collection/PropertyCollection.h"
+#include "DataSource/PropertyDataSouceDynamic.h"
 #include "GameSetting/GameSettingCollection.h"
+#include "GameSetting/GameSettings.h"
 #include "Value/Action/PropertyActionValue.h"
+#include "Value/Discrete/PropertyDiscreteValueDynamic_Bool.h"
 #include "Value/Discrete/PropertyDiscreteValueDynamic_Enum.h"
 #include "Value/Discrete/PropertyDiscreteValueDynamic_Number.h"
+#include "Value/Scalar/PropertyScalarValueDynamic.h"
 
 #define LOCTEXT_NAMESPACE "GameSetting"
 
-void UGameSettingSource::InitializePropertyCollection(UPropertyCollection*& Collection)
+void UGameSettingRegistry::Initialize()
 {
+	if (IsValid(Collection))
+	{
+		return;
+	}
+
+	Collection = NewObject<UPropertyCollection>(this);
 	Collection->SetPropertyName(TEXT("GameSetting"));
 	Collection->SetDisplayName(LOCTEXT("GameSetting_Name", "Settings"));
 	Collection->SetDescriptionText(LOCTEXT("GameSetting_Description", "Adjust your game settings"));
+
+	Collection->SetPropertyContext(UGameSettings::Get());
+	Collection->Initialize();
 
 	/* ==================== Controller ==================== */
 	{
@@ -24,6 +35,76 @@ void UGameSettingSource::InitializePropertyCollection(UPropertyCollection*& Coll
 		Controller->SetDisplayName(LOCTEXT("Controller_Name", "Controller"));
 		Controller->SetDescriptionText(LOCTEXT("Controller_Description", "Controller settings"));
 		Collection->AddProperty(Controller);
+
+
+		{
+			UPropertyActionValue* Test1 = NewObject<UPropertyActionValue>(Controller);
+			Test1->SetPropertyName(TEXT("Test1"));
+			Test1->SetDisplayName(LOCTEXT("Test1_Name", "Test1"));
+			Test1->SetDescriptionText(LOCTEXT("Test1_Description", "Test1"));
+
+			Test1->SetActionText(LOCTEXT("Test1_Action", "Test1"));
+			Test1->SetAction(FOnExecutePropertyAction::CreateLambda([](UPropertyEntity*)
+					{
+						DPRINT(Log, TEXT("Execute Test1 Action"))
+					}
+				)
+			);
+
+			Controller->AddProperty(Test1);
+		}
+
+		{
+			UPropertyScalarValueDynamic* Test2 = NewObject<UPropertyScalarValueDynamic>(Controller);
+			Test2->SetPropertyName(TEXT("Test2"));
+			Test2->SetDisplayName(LOCTEXT("Test2_Name", "Test2"));
+			Test2->SetDescriptionText(LOCTEXT("Test2_Description", "Test2"));
+
+			Test2->SetDataSourceGetter(GET_GAME_SETTINGS_FUNCTION_PATH(Test2));
+			Test2->SetDataSourceSetter(GET_GAME_SETTINGS_FUNCTION_PATH(Test2));
+			Test2->SetDisplayFormat(UPropertyScalarValueDynamic::FormatAsDigits(1, 2));
+
+			Test2->SetSourceRange(TRange<double>(0, 100));
+			Test2->SetSourceStep(0.0001);
+
+			Test2->SetDefaultValue(0.5f);
+
+			// Test2->SetMinimumLimit(0.25);
+			// Test2->SetMaximumLimit(0.75);
+
+			Controller->AddProperty(Test2);
+		}
+
+		{
+			UPropertyDiscreteValueDynamic_Bool* Test3 = NewObject<UPropertyDiscreteValueDynamic_Bool>(Controller);
+			Test3->SetPropertyName(TEXT("Test3"));
+			Test3->SetDisplayName(LOCTEXT("Test3_Name", "Test3"));
+			Test3->SetDescriptionText(LOCTEXT("Test3_Description", "Test3"));
+
+			Test3->SetDataSourceGetter(GET_GAME_SETTINGS_FUNCTION_PATH(bTest3));
+			Test3->SetDataSourceSetter(GET_GAME_SETTINGS_FUNCTION_PATH(bTest3));
+
+			Controller->AddProperty(Test3);
+		}
+
+		{
+			UPropertyDiscreteValueDynamic_Number* Test4 = NewObject<UPropertyDiscreteValueDynamic_Number>(Controller);
+			Test4->SetPropertyName(TEXT("Test4"));
+			Test4->SetDisplayName(LOCTEXT("Test4_Name", "Test4"));
+			Test4->SetDescriptionText(LOCTEXT("Test4_Description", "Test4"));
+
+			Test4->SetDataSourceGetter(GET_GAME_SETTINGS_FUNCTION_PATH(GetGlobalIlluminationQuality));
+			Test4->SetDataSourceSetter(GET_GAME_SETTINGS_FUNCTION_PATH(SetGlobalIlluminationQuality));
+
+			Test4->AddNumberOption(0, LOCTEXT("VisualEffectQualityLow", "Low"));
+			Test4->AddNumberOption(1, LOCTEXT("VisualEffectQualityMedium", "Medium"));
+			Test4->AddNumberOption(2, LOCTEXT("VisualEffectQualityHigh", "High"));
+			Test4->AddNumberOption(3, LOCTEXT("VisualEffectQualityEpic", "Epic"));
+
+			Controller->AddProperty(Test4);
+		}
+
+		DLOG(LogProperty, Warning, TEXT(""))
 	}
 
 	/* ==================== Keyboard ==================== */
@@ -78,16 +159,6 @@ void UGameSettingSource::InitializePropertyCollection(UPropertyCollection*& Coll
 		Vedio->SetDisplayName(LOCTEXT("Vedio_Name", "Vedio"));
 		Vedio->SetDescriptionText(LOCTEXT("Vedio_Description", "Vedio settings"));
 		Collection->AddProperty(Vedio);
-
-		{
-			UPropertyActionValue* AutosetQuality = NewObject<UPropertyActionValue>(Vedio);
-			AutosetQuality->SetPropertyName(TEXT("AutosetQuality"));
-			AutosetQuality->SetDisplayName(LOCTEXT("AutosetQuality_Name", "AutosetQuality"));
-			AutosetQuality->SetDescriptionText(LOCTEXT("AutosetQuality_Description", "Autoset Quality"));
-
-			AutosetQuality->SetActionText(LOCTEXT("AutosetQuality_Action", "Auto-set"));
-			Vedio->AddProperty(AutosetQuality);
-		}
 	}
 
 	/* ==================== Audio ==================== */
@@ -107,6 +178,13 @@ void UGameSettingSource::InitializePropertyCollection(UPropertyCollection*& Coll
 		AuxiliarySettings->SetDescriptionText(LOCTEXT("AuxiliarySettings_Description", "Auxiliary settings"));
 		Collection->AddProperty(AuxiliarySettings);
 	}
+
+	RegisterProperty(Collection);
+}
+
+void UGameSettingRegistry::SavePropertyChanges()
+{
+	UGameSettings::Get()->SaveSettings();
 }
 
 #undef LOCTEXT_NAMESPACE

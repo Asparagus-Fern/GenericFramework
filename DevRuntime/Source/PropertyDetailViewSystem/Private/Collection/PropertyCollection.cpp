@@ -25,16 +25,29 @@ TArray<UPropertyCollection*> UPropertyCollection::GetChildCollections() const
 
 void UPropertyCollection::AddProperty(UPropertyEntity* InProperty)
 {
+	if (!ensureAlways(InProperty))
+	{
+		DLOG(LogProperty, Error, TEXT("InProperty Is NULL"))
+		return;
+	}
+
 #if !UE_BUILD_SHIPPING
-	ensureAlwaysMsgf(InProperty->GetPropertyOwner() == nullptr, TEXT("This setting already has a parent!"));
-	ensureAlwaysMsgf(!ChildProperties.Contains(InProperty), TEXT("This collection already includes this setting!"));
+	ensureAlwaysMsgf(InProperty->GetOwnerProperty() == nullptr, TEXT("This Property Already Has A Parent!"));
+	ensureAlwaysMsgf(!ChildProperties.Contains(InProperty), TEXT("This Collection Already Includes This Property!"));
 #endif
 
+	/* 添加并设置该属性的Owner */
 	ChildProperties.Add(InProperty);
-	InProperty->SetPropertyOwner(this);
+	InProperty->SetOwnerProperty(this);
 
-	if (Context)
+	/* 如果该属性Context为空，使用当前集合的Context对属性进行初始化 */
+	if (Context && !InProperty->IsContextValid())
 	{
 		InProperty->Initialize(Context);
+	}
+	/* 属性初始化 */
+	else if (InProperty->IsContextValid())
+	{
+		InProperty->Initialize();
 	}
 }

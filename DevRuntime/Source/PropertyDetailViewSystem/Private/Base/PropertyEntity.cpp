@@ -3,26 +3,55 @@
 
 #include "Base/PropertyEntity.h"
 
+void UPropertyEntity::SetPropertyContext(UObject* InContext)
+{
+	Context = InContext;
+}
+
+void UPropertyEntity::Initialize()
+{
+	if (Context)
+	{
+		Initialize(Context);
+	}
+}
+
 void UPropertyEntity::Initialize(UObject* InContext)
 {
-	if (Context == InContext)
-	{
-		return;
-	}
-
+	/* 避免重复初始化 */
+	DEnsureLOG(LogProperty, !bInitialize)
 	Context = InContext;
+	bInitialize = true;
 
 #if !UE_BUILD_SHIPPING
-	ensureAlwaysMsgf(PropertyName != NAME_None, TEXT("You Must Provide a PropertyName."));
-	ensureAlwaysMsgf(!DisplayName.IsEmpty(), TEXT("You Must Provide a DisplayName."));
+	DEnsureAlwaysLOG(LogProperty, PropertyName != NAME_None, TEXT("You Must Provide a PropertyName."))
 #endif
 
+	/* 当DisplayName为空时，以PropertyName作为PropertyName */
+	if (DisplayName.IsEmpty())
+	{
+		DisplayName = FText::FromName(PropertyName);
+	}
+
+	/* 初始化属性的编辑条件 */
 	for (const auto& EditCondition : EditConditions)
 	{
 		EditCondition->Initialize(Context);
 	}
 
 	Startup();
+}
+
+void UPropertyEntity::Apply()
+{
+	OnApply();
+
+	for (const auto& EditCondition : EditConditions)
+	{
+		EditCondition->Applied(Context, this);
+	}
+
+	OnPropertyAppliedEvent.Broadcast(this);
 }
 
 FName UPropertyEntity::GetPropertyName() const
@@ -55,14 +84,14 @@ void UPropertyEntity::SetDescriptionText(const FText& InDescriptionText)
 	DescriptionText = InDescriptionText;
 }
 
-void UPropertyEntity::SetPropertyOwner(UPropertyEntity* InPropertyOwner)
+void UPropertyEntity::SetOwnerProperty(UPropertyEntity* InPropertyOwner)
 {
-	PropertyOwner = InPropertyOwner;
+	OwnerProperty = InPropertyOwner;
 }
 
-UPropertyEntity* UPropertyEntity::GetPropertyOwner() const
+UPropertyEntity* UPropertyEntity::GetOwnerProperty() const
 {
-	return PropertyOwner;
+	return OwnerProperty;
 }
 
 void UPropertyEntity::AddEditCondition(const TSharedRef<FPropertyEditCondition>& InEditCondition)

@@ -7,7 +7,7 @@
 #include "PropertyDiscreteValueDynamic_Bool.generated.h"
 
 /**
- * 
+ * Bool类型属性
  */
 UCLASS()
 class PROPERTYDETAILVIEWSYSTEM_API UPropertyDiscreteValueDynamic_Bool : public UPropertyDiscreteValueDynamic

@@ -11,7 +11,7 @@ class UTextBlock;
 class UPropertyListView;
 
 /**
- * 
+ * 属性细节面板
  */
 UCLASS(Abstract)
 class PROPERTYDETAILVIEWSYSTEM_API UPropertyDetailPanel : public UUserWidgetBase

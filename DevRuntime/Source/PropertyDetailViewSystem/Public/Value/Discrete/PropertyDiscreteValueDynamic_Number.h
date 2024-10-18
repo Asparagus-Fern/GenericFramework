@@ -7,7 +7,7 @@
 #include "PropertyDiscreteValueDynamic_Number.generated.h"
 
 /**
- * 
+ * 数字类型属性
  */
 UCLASS()
 class PROPERTYDETAILVIEWSYSTEM_API UPropertyDiscreteValueDynamic_Number : public UPropertyDiscreteValueDynamic

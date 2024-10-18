@@ -11,7 +11,7 @@ class UPropertyValueBase;
 /**
  * 
  */
-UCLASS(Abstract, Blueprintable, meta=(DisableNativeTick))
+UCLASS(Abstract, Blueprintable)
 class PROPERTYDETAILVIEWSYSTEM_API UPropertyListEntry_Dynamic : public UPropertyListEntryBase
 {
 	GENERATED_BODY()

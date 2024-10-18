@@ -10,5 +10,8 @@ void UPropertyListEntry::SetPropertyEntity(UPropertyEntity* InProperty)
 {
 	Super::SetPropertyEntity(InProperty);
 
-	Text_DisplayName->SetText(InProperty->GetDisplayName());
+	if (Text_DisplayName)
+	{
+		Text_DisplayName->SetText(InProperty->GetDisplayName());
+	}
 }

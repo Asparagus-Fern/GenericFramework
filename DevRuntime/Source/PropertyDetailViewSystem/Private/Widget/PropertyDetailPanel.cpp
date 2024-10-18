@@ -5,7 +5,6 @@
 
 #include "Collection/PropertyCollection.h"
 #include "Components/TextBlock.h"
-#include "DataSource/PropertySourceHandle.h"
 #include "Widget/ListView/PropertyListView.h"
 
 #define LOCTEXT_NAMESPACE "PropertyDetailViewSystem"
@@ -29,7 +28,7 @@ void UPropertyDetailPanel::UpdatePropertyDetail(UPropertyCollection* InPropertyC
 
 	Text_Title->SetText(InPropertyCollection->GetDisplayName());
 	Text_TitleDescription->SetText(InPropertyCollection->GetDescriptionText());
-
+	
 	for (const auto& PropertyEntrty : InPropertyCollection->GetChildProperties())
 	{
 		ListView_Property->AddItem(PropertyEntrty);

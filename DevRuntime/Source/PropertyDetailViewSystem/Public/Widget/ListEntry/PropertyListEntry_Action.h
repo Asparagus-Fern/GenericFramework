@@ -12,7 +12,7 @@ class UCommonButtonBase;
 /**
  * 
  */
-UCLASS(Abstract)
+UCLASS(Abstract, Blueprintable)
 class PROPERTYDETAILVIEWSYSTEM_API UPropertyListEntry_Action : public UPropertyListEntry
 {
 	GENERATED_BODY()

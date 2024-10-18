@@ -5,45 +5,62 @@
 
 #include "Collection/PropertyCollection.h"
 #include "Components/TextBlock.h"
-#include "Widget/PropertyDetailPanel.h"
+#include "GameSetting/GameSettingRegistry.h"
+#include "GameSetting/GameSettings.h"
 #include "Widget/ListView/PropertyListView.h"
 
-void UGameSettingPanel::NativeConstruct()
+#define LOCTEXT_NAMESPACE "PropertyDetailViewSystem"
+
+void UGameSettingPanel::SetupProperty()
 {
-	Super::NativeConstruct();
+	Super::SetupProperty();
+
+	DEnsureAlwaysLOG(LogGameSetting, GetRegistry<UGameSettingRegistry>())
+
+	SetPropertyCollection(GetRegistry<UGameSettingRegistry>()->GetGameSettingCollection());
 
 	ListView_SettingMenu->OnItemSelectionChanged().AddUObject(this, &UGameSettingPanel::OnSettingMenuSelectionChanged);
+	if (ListView_SettingMenu->GetNumItems() > 0)
+	{
+		ListView_SettingMenu->SetSelectedIndex(0);
+	}
 }
 
-void UGameSettingPanel::NativeDestruct()
+void UGameSettingPanel::ClearupProperty()
 {
-	Super::NativeDestruct();
+	ListView_SettingMenu->OnItemSelectionChanged().RemoveAll(this);
+	Super::ClearupProperty();
+}
+
+void UGameSettingPanel::Refresh()
+{
+	// Super::Refresh();
+
+	RefreshPropertyWidget(nullptr);
+
+	if (Text_SettingTitle)
+	{
+		Text_SettingTitle->SetText(Collection ? Collection->GetDisplayName() : LOCTEXT("Warning_GameSettingPanel_MissingPropertyCollectionForTitle", "Property Title"));
+	}
+
+	if (Text_SettingTitleDescription)
+	{
+		Text_SettingTitleDescription->SetText(Collection ? Collection->GetDescriptionText() : LOCTEXT("Warning_GameSettingPanel_MissingPropertyCollectionForTitleDescription", "Property Title Description"));
+	}
+
+	ListView_SettingMenu->ClearListItems();
+	for (const auto& ChildCollection : Collection->GetChildCollections())
+	{
+		ListView_SettingMenu->AddItem(ChildCollection);
+	}
 }
 
 void UGameSettingPanel::OnSettingMenuSelectionChanged(UObject* InObject)
 {
 	if (UPropertyCollection* PropertyCollectionItem = Cast<UPropertyCollection>(InObject))
 	{
-		Panel_ProertyDetail->UpdatePropertyDetail(PropertyCollectionItem);
+		RefreshPropertyWidget(PropertyCollectionItem);
 	}
 }
 
-void UGameSettingPanel::RefreshPropertyWidget()
-{
-	// Super::RefreshPropertyWidget();
-
-	if (Text_Setting)
-	{
-		Text_Setting->SetText(PropertyCollection->GetDisplayName());
-	}
-
-	if (Text_SettingDescription)
-	{
-		Text_SettingDescription->SetText(PropertyCollection->GetDescriptionText());
-	}
-
-	for (const auto& ChildCollection : PropertyCollection->GetChildCollections())
-	{
-		ListView_SettingMenu->AddItem(ChildCollection);
-	}
-}
+#undef LOCTEXT_NAMESPACE

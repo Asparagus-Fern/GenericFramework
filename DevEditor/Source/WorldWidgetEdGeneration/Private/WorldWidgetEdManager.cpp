@@ -122,13 +122,13 @@ void UEditorWorldWidgetPanel::RefreshWorldWidgetPoint()
 
 			if (!IsValid(WorldWidgetPoint->WorldWidget))
 			{
-				LOG(LogUI, Error, TEXT("WorldWidget Is NULL"))
+				DLOG(LogUI, Error, TEXT("WorldWidget Is NULL"))
 				continue;
 			}
 
 			if (!WorldWidgetPoint->bPreview)
 			{
-				LOG(LogUI, Error, TEXT("Preview Is False"))
+				DLOG(LogUI, Error, TEXT("Preview Is False"))
 				continue;
 			}
 

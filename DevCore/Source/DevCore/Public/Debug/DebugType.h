@@ -17,30 +17,41 @@ DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(LogWorld, Log, All);
 
 DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(LogProperty, Log, All);
 
-#define LOG(CategoryName, Verbosity, Format, ...) \
-UE_LOG(CategoryName, Verbosity, TEXT("(%s) %s"), ANSI_TO_TCHAR(__FUNCTION__), *FString::Printf(Format,##__VA_ARGS__))
+DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(LogGameSetting, Log, All);
 
-#define PRINT(Verbosity, Format, ...) \
-if(IsValid(GEngine)){ \
-if (::ELogVerbosity::Verbosity == ::ELogVerbosity::Error){ \
-GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red,FString::Printf(Format,##__VA_ARGS__)); \
-} \
-else if (::ELogVerbosity::Verbosity == ::ELogVerbosity::Warning){ \
-GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Yellow,FString::Printf(Format,##__VA_ARGS__)); \
-} \
-else{ \
-GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Green,FString::Printf(Format,##__VA_ARGS__)); \
-} \
+#define DLOG(CategoryName, Verbosity, Format, ...) \
+	UE_LOG(CategoryName, Verbosity, TEXT("(%s) %s"), ANSI_TO_TCHAR(__FUNCTION__), *FString::Printf(Format, ##__VA_ARGS__))
+
+#define DEnsureLOG(CategoryName, InExpression, ...) \
+	if (!ensure(InExpression)){ \
+		DLOG(CategoryName, Warning, TEXT("Expression : (%s) Result Is Fail"), #InExpression, ##__VA_ARGS__) \
+		return; \
 }
 
-#define NOTIFY(Format, ...) \
+#define DEnsureAlwaysLOG(CategoryName, InExpression, ...) \
+	if (!ensureAlways(InExpression)){ \
+		DLOG(CategoryName, Warning, TEXT("Expression : (%s) Result Is Fail, %s"), ##InExpression, ##__VA_ARGS__) \
+		return; \
+}
+
+#define DPRINT(Verbosity, Format, ...) \
+	if(IsValid(GEngine)){ \
+		if (::ELogVerbosity::Verbosity == ::ELogVerbosity::Error) \
+			GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red,FString::Printf(Format,##__VA_ARGS__)); \
+		else if (::ELogVerbosity::Verbosity == ::ELogVerbosity::Warning) \
+			GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Yellow,FString::Printf(Format,##__VA_ARGS__)); \
+		else \
+			GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Green,FString::Printf(Format,##__VA_ARGS__)); \
+	}
+
+#define DNOTIFY(Format, ...) \
 { \
-FNotificationInfo NotificationInfo(FText::FromString(FString::Printf(TEXT("%s"),ANSI_TO_TCHAR(__FUNCTION__)))); \
-NotificationInfo.SubText = FText::FromString(FString::Printf(Format,##__VA_ARGS__)); \
-NotificationInfo.FadeInDuration = .5f; \
-NotificationInfo.FadeOutDuration = .5f; \
-NotificationInfo.ExpireDuration = 8.f; \
-FSlateNotificationManager::Get().AddNotification(NotificationInfo); \
+	FNotificationInfo NotificationInfo(FText::FromString(FString::Printf(TEXT("%s"),ANSI_TO_TCHAR(__FUNCTION__)))); \
+	NotificationInfo.SubText = FText::FromString(FString::Printf(Format,##__VA_ARGS__)); \
+	NotificationInfo.FadeInDuration = .5f; \
+	NotificationInfo.FadeOutDuration = .5f; \
+	NotificationInfo.ExpireDuration = 8.f; \
+	FSlateNotificationManager::Get().AddNotification(NotificationInfo); \
 }
 
 /* FNotificationInfo :

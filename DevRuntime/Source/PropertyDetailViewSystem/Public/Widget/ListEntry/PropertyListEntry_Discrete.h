@@ -6,7 +6,7 @@
 #include "PropertyListEntry.h"
 #include "PropertyListEntry_Discrete.generated.h"
 
-class UPropertyDiscreteValue;
+class UPropertyDiscreteValueDynamic;
 class UCommonButtonBase;
 class UCommonRotator;
 
@@ -22,33 +22,19 @@ public:
 	virtual void SetPropertyEntity(UPropertyEntity* InProperty) override;
 
 protected:
-	virtual void NativeOnInitialized() override;
 	virtual void NativeOnEntryReleased() override;
 
 	virtual void OnPropertyChanged(UPropertyEntity* InProperty, EPropertyChangeReason Reson) override;
 	virtual void OnPropertyEditConditionChanged(UPropertyEntity* InProperty) override;
 	virtual void RefreshEditableState(FPropertyEditableState InEditableState) override;
 
-	virtual void HandleRotatorChangedValue(int32 Value, bool bUserInitiated);
-	virtual void HandleOptionIncrease();
-	virtual void HandleOptionDecrease();
- 
-	virtual void Refresh();
+	virtual void Refresh() PURE_VIRTUAL(,);
 
 protected:
 	UPROPERTY()
-	TObjectPtr<UPropertyDiscreteValue> DiscreteProperty;
+	TObjectPtr<UPropertyDiscreteValueDynamic> DiscreteProperty;
 
 private:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget, BlueprintProtected = true, AllowPrivateAccess = true))
 	TObjectPtr<UPanelWidget> Panel_Value;
-
-	UPROPERTY(BlueprintReadOnly, meta = (BindWidget, BlueprintProtected = true, AllowPrivateAccess = true))
-	TObjectPtr<UCommonRotator> Rotator_PropertyValue;
-
-	UPROPERTY(BlueprintReadOnly, meta = (BindWidget, BlueprintProtected = true, AllowPrivateAccess = true))
-	TObjectPtr<UCommonButtonBase> Button_Increase;
-
-	UPROPERTY(BlueprintReadOnly, meta = (BindWidget, BlueprintProtected = true, AllowPrivateAccess = true))
-	TObjectPtr<UCommonButtonBase> Button_Decrease;
 };

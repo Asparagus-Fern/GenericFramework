@@ -18,19 +18,20 @@ class APPLICATIONRUNTIME_API UGameSettingPanel : public UPropertyPanel
 	GENERATED_BODY()
 
 public:
-	virtual void NativeConstruct() override;
-	virtual void NativeDestruct() override;
+	virtual void SetupProperty() override;
+	virtual void ClearupProperty() override;
 
 protected:
+	virtual void Refresh() override;
+
 	virtual void OnSettingMenuSelectionChanged(UObject* InObject);
-	virtual void RefreshPropertyWidget() override;
 
 private:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidgetOptional, BlueprintProtected = true, AllowPrivateAccess = true))
-	TObjectPtr<UTextBlock> Text_Setting;
+	TObjectPtr<UTextBlock> Text_SettingTitle;
 
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidgetOptional, BlueprintProtected = true, AllowPrivateAccess = true))
-	TObjectPtr<UTextBlock> Text_SettingDescription;
+	TObjectPtr<UTextBlock> Text_SettingTitleDescription;
 
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget, BlueprintProtected = true, AllowPrivateAccess = true))
 	TObjectPtr<UPropertyListView> ListView_SettingMenu;

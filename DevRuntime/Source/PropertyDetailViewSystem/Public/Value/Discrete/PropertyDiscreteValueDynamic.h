@@ -9,7 +9,7 @@
 class FPropertyDataSource;
 
 /**
- * 
+ * 离散类型的属性
  */
 UCLASS()
 class PROPERTYDETAILVIEWSYSTEM_API UPropertyDiscreteValueDynamic : public UPropertyDiscreteValue
@@ -18,6 +18,7 @@ class PROPERTYDETAILVIEWSYSTEM_API UPropertyDiscreteValueDynamic : public UPrope
 
 	/* UPropertyEntity */
 public:
+	virtual void OnInitialized() override;
 	virtual void Startup() override;
 
 protected:
@@ -38,28 +39,48 @@ public:
 
 	/* UPropertyDiscreteValueDynamic */
 public:
+	/* 设置属性的Get函数 */
 	void SetDataSourceGetter(const TSharedRef<FPropertyDataSource>& InGetter);
+
+	/* 设置属性的Set函数 */
 	void SetDataSourceSetter(const TSharedRef<FPropertyDataSource>& InSetter);
 
+	/* 获取属性值 */
 	FString GetValueAsString() const;
+
+	/* 设置属性值 */
 	void SetValueFromString(FString InStringValue);
+
+	/* 获取属性默认值 */
+	FString GetDefaultValueAsString() const;
+
+	/* 设置属性默认值 */
 	void SetDefaultValueFromString(FString InOptionValue);
 
+	/* 添加属性的一个选项 */
 	void AddOption(FString InOptionValue, FText InOptionText);
+
+	/* 移除属性的一个选项 */
 	void RemoveOption(FString InOptionValue);
 
+	/* 获取所有的属性选项 */
 	const TArray<FString>& GetOptionValues();
+
+	/* 当前属性是否存在指定选项 */
 	bool HasOption(const FString& InOptionValue);
 
 protected:
 	void SetValueFromString(FString InStringValue, EPropertyChangeReason Reason);
 
 protected:
+	/* 默认值 */
+	TOptional<FString> DefaultValue;
+
+	/* 初始值 */
+	FString InitialValue;
+
 	TSharedPtr<FPropertyDataSource> Getter;
 	TSharedPtr<FPropertyDataSource> Setter;
-
-	TOptional<FString> DefaultValue;
-	FString InitialValue;
 
 	TArray<FString> OptionValues;
 	TArray<FText> OptionDisplayTexts;

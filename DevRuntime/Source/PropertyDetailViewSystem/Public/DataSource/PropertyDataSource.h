@@ -6,6 +6,9 @@
 
 class ULocalPlayer;
 
+/**
+ * 
+ */
 class PROPERTYDETAILVIEWSYSTEM_API FPropertyDataSource : public TSharedFromThis<FPropertyDataSource>
 {
 public:

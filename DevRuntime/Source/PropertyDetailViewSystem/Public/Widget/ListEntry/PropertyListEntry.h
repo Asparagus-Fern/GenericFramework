@@ -9,7 +9,7 @@
 /**
  * 
  */
-UCLASS(Abstract, Blueprintable, meta=(DisableNativeTick))
+UCLASS(Abstract, NotBlueprintable, meta=(DisableNativeTick))
 class PROPERTYDETAILVIEWSYSTEM_API UPropertyListEntry : public UPropertyListEntryBase
 {
 	GENERATED_BODY()
@@ -18,6 +18,6 @@ protected:
 	virtual void SetPropertyEntity(UPropertyEntity* InProperty) override;
 
 protected:
-	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
+	UPROPERTY(BlueprintReadOnly, meta=(BindWidgetOptional))
 	TObjectPtr<UTextBlock> Text_DisplayName;
 };

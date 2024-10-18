@@ -102,7 +102,7 @@ bool UInputManager::RegisterIdleData(UInputIdle* InputIdle, const FInputIdleDele
 {
 	if (!IsValid(InputIdle))
 	{
-		LOG(LogInput, Warning, TEXT("InputIdle Is NULL"))
+		DLOG(LogInput, Warning, TEXT("InputIdle Is NULL"))
 		return false;
 	}
 
@@ -119,7 +119,7 @@ void UInputManager::UnRegisterIdleData(UInputIdle* InputIdle)
 {
 	if (!IsValid(InputIdle))
 	{
-		LOG(LogInput, Warning, TEXT("InputIdle Is NULL"))
+		DLOG(LogInput, Warning, TEXT("InputIdle Is NULL"))
 		return;
 	}
 

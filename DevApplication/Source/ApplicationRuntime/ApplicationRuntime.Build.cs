@@ -23,8 +23,9 @@ public class ApplicationRuntime : ModuleRules
 				"SlateCore",
 
 				"GameplayTags",
-				"DBTween",
 				"UMG",
+				
+				"DBTween",
 
 				"ActiveNodeSystem",
 				"ScreenWidgetGeneration",

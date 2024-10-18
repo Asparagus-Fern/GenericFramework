@@ -6,6 +6,7 @@
 #include "UserWidget/Base/UserWidgetBase.h"
 #include "PropertyPanel.generated.h"
 
+class UPropertyRegistry;
 class UPropertyCollection;
 class UPropertyListView;
 class UPropertySourceHandle;
@@ -16,7 +17,7 @@ class UPropertyDetailPanel;
 /**
  * 
  */
-UCLASS()
+UCLASS(Abstract)
 class PROPERTYDETAILVIEWSYSTEM_API UPropertyPanel : public UUserWidgetBase
 {
 	GENERATED_BODY()
@@ -30,19 +31,37 @@ public:
 #endif
 
 public:
+	/* 初始化属性面板 */
 	virtual void SetupProperty();
+
+	/* 清除属性面板 */
 	virtual void ClearupProperty();
+
+	/* 刷新属性面板 */
 	void RefreshProperty();
 
+	template <typename PropertyRegistryT = UPropertyRegistry>
+	PropertyRegistryT* GetRegistry() const { return Cast<PropertyRegistryT>(Registry); }
+	
 protected:
-	virtual void RefreshPropertyWidget();
+	void SetPropertyCollection(UPropertyCollection* InCollection);
+
+	/* 重载此函数自定义刷新 */
+	virtual void Refresh();
+
+	/* 刷新细节面板 */
+	void RefreshPropertyWidget(UPropertyCollection* InCollection) const;
 
 protected:
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<UPropertySourceHandle> PropertySource;
+	TSubclassOf<UPropertyRegistry> PropertyRegistry;
 
+	/* 当前面板的属性集 */
 	UPROPERTY(BlueprintReadOnly)
-	UPropertyCollection* PropertyCollection = nullptr;
+	UPropertyCollection* Collection = nullptr;
+
+	UPROPERTY(Transient)
+	TObjectPtr<UPropertyRegistry> Registry;
 
 protected:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))

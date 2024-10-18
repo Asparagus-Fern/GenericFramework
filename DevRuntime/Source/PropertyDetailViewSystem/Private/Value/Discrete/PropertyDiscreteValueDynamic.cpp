@@ -3,6 +3,21 @@
 
 #include "Value/Discrete/PropertyDiscreteValueDynamic.h"
 
+#include "DataSource/PropertyDataSource.h"
+
+void UPropertyDiscreteValueDynamic::OnInitialized()
+{
+	/* 确保Getter和Setter的属性路径能从Context获取 */
+#if !UE_BUILD_SHIPPING
+	ensureAlways(Getter);
+	ensureAlwaysMsgf(Getter->Resolve(Context), TEXT("%s: %s did not resolve, are all functions and properties valid, and are they UFunctions/UProperties? Does the getter function have no parameters?"), *GetPropertyName().ToString(), *Getter->ToString());
+	ensureAlways(Setter);
+	ensureAlwaysMsgf(Setter->Resolve(Context), TEXT("%s: %s did not resolve, are all functions and properties valid, and are they UFunctions/UProperties? Does the getter function have no parameters?"), *GetPropertyName().ToString(), *Getter->ToString());
+#endif
+
+	Super::OnInitialized();
+}
+
 void UPropertyDiscreteValueDynamic::Startup()
 {
 	Getter->Startup(Context, FSimpleDelegate::CreateUObject(this, &ThisClass::OnDataSourcesReady));
@@ -145,6 +160,16 @@ FString UPropertyDiscreteValueDynamic::GetValueAsString() const
 void UPropertyDiscreteValueDynamic::SetValueFromString(FString InStringValue)
 {
 	SetValueFromString(InStringValue, EPropertyChangeReason::Change);
+}
+
+FString UPropertyDiscreteValueDynamic::GetDefaultValueAsString() const
+{
+	if (DefaultValue.IsSet())
+	{
+		return DefaultValue.GetValue();
+	}
+
+	return TEXT("");
 }
 
 void UPropertyDiscreteValueDynamic::SetValueFromString(FString InStringValue, EPropertyChangeReason Reason)

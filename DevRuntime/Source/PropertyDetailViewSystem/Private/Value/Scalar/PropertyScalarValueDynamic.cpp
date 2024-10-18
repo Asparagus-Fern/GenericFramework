@@ -9,43 +9,25 @@
 
 static FText PercentFormat = LOCTEXT("PercentFormat", "{0}%");
 
-FSettingScalarFormatFunction UPropertyScalarValueDynamic::FormatAsInteger([](double SourceValue, double NormalizedValue)
-	{
-		return FText::AsNumber(SourceValue, GetNumberFormattingOptions(1, 0));
-	}
-);
+FPropertyScalarFormatFunction UPropertyScalarValueDynamic::FormatAsDigits(int32 IntegralDigits, int32 FractionalDigit)
+{
+	return FPropertyScalarFormatFunction([IntegralDigits, FractionalDigit](double SourceValue, double NormalizedValue)
+		{
+			return FText::AsNumber(SourceValue, GetNumberFormattingOptions(IntegralDigits, FractionalDigit));
+		}
+	);
+}
 
-FSettingScalarFormatFunction UPropertyScalarValueDynamic::FormatAsOneFractionalDigit([](double SourceValue, double NormalizedValue)
-	{
-		return FText::AsNumber(SourceValue, GetNumberFormattingOptions(1, 1));
-	}
-);
-
-FSettingScalarFormatFunction UPropertyScalarValueDynamic::FormatAsTwoFractionalDigits([](double SourceValue, double NormalizedValue)
-	{
-		return FText::AsNumber(SourceValue, GetNumberFormattingOptions(1, 2));
-	}
-);
-
-FSettingScalarFormatFunction UPropertyScalarValueDynamic::FormatAsThreeFractionalDigits([](double SourceValue, double NormalizedValue)
-	{
-		return FText::AsNumber(SourceValue, GetNumberFormattingOptions(1, 3));
-	}
-);
-
-FSettingScalarFormatFunction UPropertyScalarValueDynamic::FormatAsPercent([](double SourceValue, double NormalizedValue)
-	{
-		return FText::Format(PercentFormat, (int32)FMath::RoundHalfFromZero(100.0 * NormalizedValue));
-	}
-);
-
-FSettingScalarFormatFunction UPropertyScalarValueDynamic::FormatAsPercent_OneFractionalDigit([](double SourceValue, double NormalizedValue)
-	{
-		const FNumberFormattingOptions* FormattingOptions = GetNumberFormattingOptions(1, 1);
-		const double NormalizedValueTo100_0 = FMath::RoundHalfFromZero(1000.0 * NormalizedValue);
-		return FText::Format(PercentFormat, FText::AsNumber(NormalizedValueTo100_0 / 10.0, FormattingOptions));
-	}
-);
+FPropertyScalarFormatFunction UPropertyScalarValueDynamic::FormatAsPercent(int32 FractionalDigit)
+{
+	return FPropertyScalarFormatFunction([FractionalDigit](double SourceValue, double NormalizedValue)
+		{
+			const FNumberFormattingOptions* FormattingOptions = GetNumberFormattingOptions(1, FractionalDigit);
+			const double NormalizedValueToPercent = FMath::RoundHalfFromZero(100 * FMath::Pow(10, (float)FractionalDigit) * NormalizedValue);
+			return FText::Format(PercentFormat, FText::AsNumber(NormalizedValueToPercent / FMath::Pow(10, (float)FractionalDigit), FormattingOptions));
+		}
+	);
+}
 
 FNumberFormattingOptions* UPropertyScalarValueDynamic::GetNumberFormattingOptions(int32 IntegralDigits, int32 FractionalDigits)
 {
@@ -54,6 +36,18 @@ FNumberFormattingOptions* UPropertyScalarValueDynamic::GetNumberFormattingOption
 	FormattingOptions->MinimumFractionalDigits = FractionalDigits;
 	FormattingOptions->MaximumFractionalDigits = FractionalDigits;
 	return FormattingOptions;
+}
+
+void UPropertyScalarValueDynamic::OnInitialized()
+{
+#if !UE_BUILD_SHIPPING
+	ensureAlways(Getter);
+	ensureAlwaysMsgf(Getter->Resolve(Context), TEXT("%s: %s did not resolve, are all functions and properties valid, and are they UFunctions/UProperties? Does the getter function have no parameters?"), *GetPropertyName().ToString(), *Getter->ToString());
+	ensureAlways(Setter);
+	ensureAlwaysMsgf(Setter->Resolve(Context), TEXT("%s: %s did not resolve, are all functions and properties valid, and are they UFunctions/UProperties? Does the getter function have no parameters?"), *GetPropertyName().ToString(), *Getter->ToString());
+#endif
+
+	Super::OnInitialized();
 }
 
 void UPropertyScalarValueDynamic::Startup()
@@ -89,6 +83,21 @@ TOptional<double> UPropertyScalarValueDynamic::GetDefaultValue() const
 	return DefaultValue;
 }
 
+void UPropertyScalarValueDynamic::SetDefaultValue(double InValue)
+{
+	DefaultValue = InValue;
+}
+
+double UPropertyScalarValueDynamic::GetValue() const
+{
+	const FString OutValue = Getter->GetValueAsString(Context);
+
+	double Value;
+	LexFromString(Value, *OutValue);
+
+	return Value;
+}
+
 void UPropertyScalarValueDynamic::SetValue(double InValue, EPropertyChangeReason Reason)
 {
 	InValue = FMath::RoundHalfFromZero(InValue / SourceStep);
@@ -108,16 +117,6 @@ void UPropertyScalarValueDynamic::SetValue(double InValue, EPropertyChangeReason
 	Setter->SetValue(Context, StringValue);
 
 	NotifyPropertyChanged(Reason);
-}
-
-double UPropertyScalarValueDynamic::GetValue() const
-{
-	const FString OutValue = Getter->GetValueAsString(Context);
-
-	double Value;
-	LexFromString(Value, *OutValue);
-
-	return Value;
 }
 
 TRange<double> UPropertyScalarValueDynamic::GetSourceRange() const
@@ -164,7 +163,17 @@ void UPropertyScalarValueDynamic::SetSourceRangeAndStep(const TRange<double>& In
 	SourceStep = InSourceStep;
 }
 
-void UPropertyScalarValueDynamic::SetDisplayFormat(FSettingScalarFormatFunction InDisplayFormat)
+void UPropertyScalarValueDynamic::SetSourceRange(const TRange<double>& InRange)
+{
+	SourceRange = InRange;
+}
+
+void UPropertyScalarValueDynamic::SetSourceStep(double InSourceStep)
+{
+	SourceStep = InSourceStep;
+}
+
+void UPropertyScalarValueDynamic::SetDisplayFormat(FPropertyScalarFormatFunction InDisplayFormat)
 {
 	DisplayFormat = InDisplayFormat;
 }

@@ -9,7 +9,7 @@
 class UPropertyCollection;
 
 /**
- * 
+ * 属性详细描述面板
  */
 UCLASS()
 class PROPERTYDETAILVIEWSYSTEM_API UPropertyDetailDescriptionPanel : public UUserWidgetBase

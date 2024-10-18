@@ -7,7 +7,7 @@
 #include "PropertyDiscreteValueDynamic_Enum.generated.h"
 
 /**
- * 
+ * 枚举类型属性
  */
 UCLASS()
 class PROPERTYDETAILVIEWSYSTEM_API UPropertyDiscreteValueDynamic_Enum : public UPropertyDiscreteValueDynamic

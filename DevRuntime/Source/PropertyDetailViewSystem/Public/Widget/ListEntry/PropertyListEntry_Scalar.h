@@ -6,8 +6,9 @@
 #include "PropertyListEntry.h"
 #include "PropertyListEntry_Scalar.generated.h"
 
+class UPropertyScalarValueDynamic;
 class USlider;
-class UPropertyScalarValue;
+
 /**
  * 
  */
@@ -24,13 +25,7 @@ protected:
 	virtual void NativeOnEntryReleased() override;
 	virtual void OnPropertyChanged(UPropertyEntity* InProperty, EPropertyChangeReason Reson) override;
 	virtual void RefreshEditableState(FPropertyEditableState InEditableState) override;
-
-	UFUNCTION()
-	void HandleSliderValueChanged(float Value);
-
-	UFUNCTION()
-	void HandleSliderCaptureEnded();
-
+	
 	virtual void Refresh();
 
 protected:
@@ -42,15 +37,12 @@ protected:
 
 protected:
 	UPROPERTY()
-	TObjectPtr<UPropertyScalarValue> ScalarProperty;
+	TObjectPtr<UPropertyScalarValueDynamic> ScalarProperty;
 
-private:
-	UPROPERTY(BlueprintReadOnly, meta = (BindWidget, BlueprintProtected = true, AllowPrivateAccess = true))
+protected:
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	TObjectPtr<UPanelWidget> Panel_Value;
-
-	UPROPERTY(BlueprintReadOnly, meta = (BindWidget, BlueprintProtected = true, AllowPrivateAccess = true))
-	TObjectPtr<USlider> Slider_PropertyValue;
-
-	UPROPERTY(BlueprintReadOnly, meta = (BindWidget, BlueprintProtected = true, AllowPrivateAccess = true))
+	
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidgetOptional))
 	TObjectPtr<UTextBlock> Text_PropertyValue;
 };

@@ -3,8 +3,8 @@
 
 #include "Widget/PropertyPanel.h"
 
+#include "PropertyRegistry.h"
 #include "Collection/PropertyCollection.h"
-#include "DataSource/PropertySourceHandle.h"
 #include "Widget/PropertyDetailDescriptionPanel.h"
 #include "Widget/PropertyDetailPanel.h"
 
@@ -31,9 +31,9 @@ void UPropertyPanel::ValidateCompiledDefaults(IWidgetCompilerLog& CompileLog) co
 {
 	Super::ValidateCompiledDefaults(CompileLog);
 
-	if (!PropertySource)
+	if (!PropertyRegistry)
 	{
-		CompileLog.Error(FText::Format(LOCTEXT("Error_PropertyPanel_MissingPropertySource", "{0} has no PropertySource specified."), FText::FromString(GetName())));
+		CompileLog.Error(FText::Format(LOCTEXT("Error_PropertyPanel_MissingPropertyRegistry", "{0} has no PropertyRegistry specified."), FText::FromString(GetName())));
 	}
 }
 
@@ -41,39 +41,61 @@ void UPropertyPanel::ValidateCompiledDefaults(IWidgetCompilerLog& CompileLog) co
 
 void UPropertyPanel::SetupProperty()
 {
-	if (!PropertySource)
-	{
-		LOG(LogProperty, Error, TEXT("MissingPropertySource"))
-		return;
-	}
+	DEnsureLOG(LogProperty, PropertyRegistry)
 
-	UPropertySourceHandle* NewPropertySourceHandle = NewObject<UPropertySourceHandle>(this, PropertySource);
-	NewPropertySourceHandle->Initialize();
-	PropertyCollection = NewPropertySourceHandle->GetPropertyCollection();
-
-	RefreshPropertyWidget();
+	Registry = NewObject<UPropertyRegistry>(this, PropertyRegistry);
+	Registry->Initialize(); 
 }
 
 void UPropertyPanel::ClearupProperty()
 {
-	PropertyCollection->MarkAsGarbage();
-	PropertyCollection = nullptr;
-	RefreshPropertyWidget();
+	SetPropertyCollection(nullptr);
 }
 
 void UPropertyPanel::RefreshProperty()
 {
-	ClearupProperty();
-	SetupProperty();
+	SetPropertyCollection(Collection);
 }
 
-void UPropertyPanel::RefreshPropertyWidget()
+void UPropertyPanel::SetPropertyCollection(UPropertyCollection* InCollection)
 {
-	Panel_ProertyDetail->UpdatePropertyDetail(PropertyCollection);
+	if (Collection)
+	{
+		/* 如果和当前不一样，标记垃圾回收 */
+		if (Collection != InCollection)
+		{
+			Collection->MarkAsGarbage();
+		}
+		/* 如果和当前一样，刷新面板 */
+		else
+		{
+			Refresh();
+			return;
+		}
+	}
+
+	if (InCollection)
+		Collection = InCollection;
+	else
+		Collection = nullptr;
+
+	/* 刷新当前UI */
+	Refresh();
+}
+
+void UPropertyPanel::Refresh()
+{
+	RefreshPropertyWidget(Collection);
+}
+
+void UPropertyPanel::RefreshPropertyWidget(UPropertyCollection* InCollection) const
+{
+	/* 属性属性细节面板 */
+	Panel_ProertyDetail->UpdatePropertyDetail(InCollection);
 
 	if (Panel_ProertyDetailDescription)
 	{
-		Panel_ProertyDetailDescription->UpdatePropertyDetailDescription(PropertyCollection);
+		Panel_ProertyDetailDescription->UpdatePropertyDetailDescription(InCollection);
 	}
 }
 
