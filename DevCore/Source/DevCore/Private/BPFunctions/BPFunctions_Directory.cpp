@@ -5,16 +5,11 @@
 
 #include "Interfaces/IPluginManager.h"
 
-TSharedPtr<IPlugin> UBPFunctions_Directory::FindPlugin(const FString& InPluginName)
-{
-	return IPluginManager::Get().FindPlugin(InPluginName);
-}
-
 bool UBPFunctions_Directory::GetPluginBaseDir(const FString& InPluginName, FString& Directory)
 {
-	if (FindPlugin(InPluginName).IsValid())
+	if (const TSharedPtr<IPlugin> Plugin = IPluginManager::Get().FindPlugin(InPluginName))
 	{
-		Directory = FindPlugin(InPluginName)->GetBaseDir();
+		Directory = Plugin->GetBaseDir();
 		return true;
 	}
 	return false;
@@ -22,9 +17,9 @@ bool UBPFunctions_Directory::GetPluginBaseDir(const FString& InPluginName, FStri
 
 bool UBPFunctions_Directory::GetPluginBinariesDir(const FString& InPluginName, FString& Directory)
 {
-	if (FindPlugin(InPluginName).IsValid())
+	if (const TSharedPtr<IPlugin> Plugin = IPluginManager::Get().FindPlugin(InPluginName))
 	{
-		Directory = FindPlugin(InPluginName)->GetBaseDir() + "/Binaries";
+		Directory = Plugin->GetBaseDir() + "/Binaries";
 		return true;
 	}
 	return false;
@@ -32,9 +27,9 @@ bool UBPFunctions_Directory::GetPluginBinariesDir(const FString& InPluginName, F
 
 bool UBPFunctions_Directory::GetPluginContentDir(const FString& InPluginName, FString& Directory)
 {
-	if (FindPlugin(InPluginName).IsValid())
+	if (const TSharedPtr<IPlugin> Plugin = IPluginManager::Get().FindPlugin(InPluginName))
 	{
-		Directory = FindPlugin(InPluginName)->GetContentDir();
+		Directory = Plugin->GetContentDir();
 		return true;
 	}
 	return false;
@@ -42,9 +37,9 @@ bool UBPFunctions_Directory::GetPluginContentDir(const FString& InPluginName, FS
 
 bool UBPFunctions_Directory::GetPluginIntermediateDir(const FString& InPluginName, FString& Directory)
 {
-	if (FindPlugin(InPluginName).IsValid())
+	if (const TSharedPtr<IPlugin> Plugin = IPluginManager::Get().FindPlugin(InPluginName))
 	{
-		Directory = FindPlugin(InPluginName)->GetBaseDir() + "/Intermediate";
+		Directory = Plugin->GetBaseDir() + "/Intermediate";
 		return true;
 	}
 	return false;
@@ -52,9 +47,9 @@ bool UBPFunctions_Directory::GetPluginIntermediateDir(const FString& InPluginNam
 
 bool UBPFunctions_Directory::GetPluginResourcesDir(const FString& InPluginName, FString& Directory)
 {
-	if (FindPlugin(InPluginName).IsValid())
+	if (const TSharedPtr<IPlugin> Plugin = IPluginManager::Get().FindPlugin(InPluginName))
 	{
-		Directory = FindPlugin(InPluginName)->GetBaseDir() + "/Resources";
+		Directory = Plugin->GetBaseDir() + "/Resources";
 		return true;
 	}
 	return false;
@@ -62,9 +57,9 @@ bool UBPFunctions_Directory::GetPluginResourcesDir(const FString& InPluginName, 
 
 bool UBPFunctions_Directory::GetPluginSourceDir(const FString& InPluginName, FString& Directory)
 {
-	if (FindPlugin(InPluginName).IsValid())
+	if (const TSharedPtr<IPlugin> Plugin = IPluginManager::Get().FindPlugin(InPluginName))
 	{
-		Directory = FindPlugin(InPluginName)->GetBaseDir() + "/Source";
+		Directory = Plugin->GetBaseDir() + "/Source";
 		return true;
 	}
 	return false;
@@ -72,12 +67,10 @@ bool UBPFunctions_Directory::GetPluginSourceDir(const FString& InPluginName, FSt
 
 bool UBPFunctions_Directory::GetPluginExtraDir(const FString& InPluginName, FString& Directory)
 {
-	if (FindPlugin(InPluginName).IsValid())
+	if (const TSharedPtr<IPlugin> Plugin = IPluginManager::Get().FindPlugin(InPluginName))
 	{
-		Directory = FindPlugin(InPluginName)->GetBaseDir() + "/Extra";
+		Directory = Plugin->GetBaseDir() + "/Extra";
 		return true;
 	}
 	return false;
 }
-
-

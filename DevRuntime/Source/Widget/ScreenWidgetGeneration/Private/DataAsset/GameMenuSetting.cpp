@@ -87,7 +87,7 @@ bool UGameMenuSetting::CheckIsValidMenuTag(const FGameplayTag InMenuTag)
 	/* 检查标签是否有效 */
 	if (!InMenuTag.IsValid())
 	{
-		DLOG(LogUI, Error, TEXT("MenuTag Is InValid"))
+		DLOG(DLogUI, Error, TEXT("MenuTag Is InValid"))
 		return false;
 	}
 
@@ -97,13 +97,13 @@ bool UGameMenuSetting::CheckIsValidMenuTag(const FGameplayTag InMenuTag)
 	{
 		if (!MenuInfo.StyleClass && !IsValid(MenuInfo.Style))
 		{
-			DLOG(LogUI, Error, TEXT("Menu Style Is InValid"))
+			DLOG(DLogUI, Error, TEXT("Menu Style Is InValid"))
 			return false;
 		}
 	}
 	else
 	{
-		DLOG(LogUI, Error, TEXT("Fail To GetMenuInfo"))
+		DLOG(DLogUI, Error, TEXT("Fail To GetMenuInfo"))
 		return false;
 	}
 
@@ -113,13 +113,13 @@ bool UGameMenuSetting::CheckIsValidMenuTag(const FGameplayTag InMenuTag)
 	{
 		if (!MenuContainerInfo.ContainerClass && !IsValid(MenuContainerInfo.Container))
 		{
-			DLOG(LogUI, Error, TEXT("Menu Container Is InValid"))
+			DLOG(DLogUI, Error, TEXT("Menu Container Is InValid"))
 			return false;
 		}
 	}
 	else
 	{
-		DLOG(LogUI, Error, TEXT("Fail To GetMenuContainerInfo"))
+		DLOG(DLogUI, Error, TEXT("Fail To GetMenuContainerInfo"))
 		return false;
 	}
 
@@ -191,8 +191,8 @@ TArray<FGameplayTag> UGameMenuSetting::GetChildMenuTags(const FGameplayTag InMen
 	}
 
 	TArray<FGameplayTag> ChildTags;
-	UGameplayTagsManager::Get().RequestGameplayTagChildrenInDictionary(InMenuTag).GetGameplayTagArray(ChildTags);
-
+	UGameplayTagsManager::Get().RequestGameplayTagChildren(InMenuTag).GetGameplayTagArray(ChildTags);
+	
 	OutMenuTags.Append(ChildTags);
 	return OutMenuTags;
 }

@@ -258,19 +258,19 @@ void UWorldWidgetManager::TryToAddWorldWidgetPoint(AWorldWidgetPoint* WorldWidge
 {
 	if (!IsValid(WorldWidgetPoint))
 	{
-		DLOG(LogUI, Error, TEXT("WorldWidgetPoint Is NULL"))
+		DLOG(DLogUI, Error, TEXT("WorldWidgetPoint Is NULL"))
 		return;
 	}
 
 	if (!IsValid(WorldWidgetPoint->WorldWidget))
 	{
-		DLOG(LogUI, Error, TEXT("WorldWidget Is NULL"))
+		DLOG(DLogUI, Error, TEXT("WorldWidget Is NULL"))
 		return;
 	}
 
 	if (WorldWidgetPoint->IsHidden())
 	{
-		DLOG(LogUI, Error, TEXT("WorldWidgetPoint Is Hidden"))
+		DLOG(DLogUI, Error, TEXT("WorldWidgetPoint Is Hidden"))
 		return;
 	}
 
@@ -284,7 +284,7 @@ void UWorldWidgetManager::TryToRemoveWorldWidgetPoint(AWorldWidgetPoint* WorldWi
 {
 	if (!IsValid(WorldWidgetPoint))
 	{
-		DLOG(LogUI, Error, TEXT("WorldWidgetPoint Is NULL"))
+		DLOG(DLogUI, Error, TEXT("WorldWidgetPoint Is NULL"))
 		return;
 	}
 

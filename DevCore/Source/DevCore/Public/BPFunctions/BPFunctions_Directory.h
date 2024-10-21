@@ -16,8 +16,6 @@ class DEVCORE_API UBPFunctions_Directory : public UBlueprintFunctionLibrary
 
 	/* Plugin */
 public:
-	static TSharedPtr<IPlugin> FindPlugin(const FString& InPluginName);
-
 	UFUNCTION(BlueprintPure)
 	static bool GetPluginBaseDir(const FString& InPluginName, FString& Directory);
 

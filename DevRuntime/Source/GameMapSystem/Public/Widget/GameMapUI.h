@@ -25,7 +25,7 @@ public:
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-	TEnumAsByte<EMapType> Maptype = EMapType::StaticMap;
+	EMapType Maptype = EMapType::StaticMap;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	FImageBrush BackgroundImageBrush;

@@ -63,7 +63,7 @@ void UPropertyRegistry::ClearDirtyState()
 
 void UPropertyRegistry::RegisterProperty(UPropertyEntity* InPropertyEntity)
 {
-	DEnsureLOG(LogProperty, InPropertyEntity)
+	DEnsureLOG(DLogProperty, InPropertyEntity)
 
 	if (InPropertyEntity)
 	{
@@ -75,7 +75,7 @@ void UPropertyRegistry::RegisterProperty(UPropertyEntity* InPropertyEntity)
 
 void UPropertyRegistry::UnRegisterProperty(UPropertyEntity* InPropertyEntity)
 {
-	DEnsureLOG(LogProperty, InPropertyEntity)
+	DEnsureLOG(DLogProperty, InPropertyEntity)
 
 	if (InPropertyEntity)
 	{
@@ -90,7 +90,7 @@ void UPropertyRegistry::UnRegisterProperty(UPropertyEntity* InPropertyEntity)
 
 void UPropertyRegistry::RegisterInnerProperty(UPropertyEntity* InPropertyEntity)
 {
-	DEnsureLOG(LogProperty, InPropertyEntity)
+	DEnsureLOG(DLogProperty, InPropertyEntity)
 
 	InPropertyEntity->OnPropertyChangedEvent.AddUObject(this, &ThisClass::HandlePropertyChanged);
 	InPropertyEntity->OnPropertyAppliedEvent.AddUObject(this, &ThisClass::HandlePropertyApplied);
@@ -106,7 +106,7 @@ void UPropertyRegistry::RegisterInnerProperty(UPropertyEntity* InPropertyEntity)
 
 void UPropertyRegistry::UnRegisterInnerProperty(UPropertyEntity* InPropertyEntity)
 {
-	DEnsureLOG(LogProperty, InPropertyEntity)
+	DEnsureLOG(DLogProperty, InPropertyEntity)
 
 	for (const auto& ChildProperty : InPropertyEntity->GetChildProperties())
 	{

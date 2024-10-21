@@ -41,6 +41,7 @@ public class DevCore : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
+				
 				"Projects",
 				"UMG",
 				"GameplayTags",

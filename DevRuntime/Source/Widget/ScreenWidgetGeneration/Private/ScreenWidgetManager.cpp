@@ -429,7 +429,7 @@ void UScreenWidgetManager::RegisterSlot(UGameplayTagSlot* InSlot)
 {
 	if (!IsValid(InSlot) || !InSlot->SlotTag.IsValid() || Slots.Contains(InSlot))
 	{
-		DLOG(LogUI, Warning, TEXT("Fail To RegisterSlot"))
+		DLOG(DLogUI, Warning, TEXT("Fail To RegisterSlot"))
 		return;
 	}
 
@@ -441,7 +441,7 @@ void UScreenWidgetManager::UnRegisterSlot(UGameplayTagSlot* InSlot)
 {
 	if (!IsValid(InSlot) || !InSlot->SlotTag.IsValid() || !Slots.Contains(InSlot))
 	{
-		DLOG(LogUI, Warning, TEXT("Fail To UnRegisterSlot"))
+		DLOG(DLogUI, Warning, TEXT("Fail To UnRegisterSlot"))
 		return;
 	}
 
@@ -481,7 +481,7 @@ bool UScreenWidgetManager::OpenUserWidget(UUserWidgetBase* InWidget, FOnWidgetAc
 {
 	if (!IsValid(InWidget) || !InWidget->SlotTag.IsValid())
 	{
-		DLOG(LogUI, Warning, TEXT("Fail To Open User Widget"))
+		DLOG(DLogUI, Warning, TEXT("Fail To Open User Widget"))
 		return false;
 	}
 
@@ -525,7 +525,7 @@ bool UScreenWidgetManager::CloseUserWidget(UUserWidgetBase* InWidget, const FOnW
 {
 	if (!IsValid(InWidget))
 	{
-		DLOG(LogUI, Error, TEXT("InWidget Is NULL"))
+		DLOG(DLogUI, Error, TEXT("InWidget Is NULL"))
 		return false;
 	}
 
@@ -537,7 +537,7 @@ bool UScreenWidgetManager::CloseUserWidget(const FGameplayTag InSlotTag, const F
 {
 	if (!InSlotTag.IsValid())
 	{
-		DLOG(LogUI, Error, TEXT("SlotTag Is NULL"))
+		DLOG(DLogUI, Error, TEXT("SlotTag Is NULL"))
 		return false;
 	}
 
@@ -571,7 +571,7 @@ void UScreenWidgetManager::ActiveWidget(UUserWidgetBase* InWidget, const FOnWidg
 {
 	if (!IsValid(InWidget) || ActivedWidgets.Contains(InWidget))
 	{
-		DLOG(LogUI, Error, TEXT("InWidget Is NULL"))
+		DLOG(DLogUI, Error, TEXT("InWidget Is NULL"))
 		OnFinish.ExecuteIfBound(InWidget);
 		return;
 	}
@@ -637,7 +637,7 @@ void UScreenWidgetManager::InactiveWidget(UUserWidgetBase* InWidget, FOnWidgetAc
 {
 	if (!IsValid(InWidget) || !ActivedWidgets.Contains(InWidget))
 	{
-		DLOG(LogUI, Error, TEXT("InWidget Is NULL"))
+		DLOG(DLogUI, Error, TEXT("InWidget Is NULL"))
 		OnFinish.ExecuteIfBound(InWidget);
 		return;
 	}
@@ -724,7 +724,7 @@ void UScreenWidgetManager::SwitchGameMenu(UGameMenuSetting* InGameMenuSetting)
 {
 	if (GameMenu == InGameMenuSetting)
 	{
-		DLOG(LogUI, Warning, TEXT("Can not Switch The Same Game Menu Setting"))
+		DLOG(DLogUI, Warning, TEXT("Can not Switch The Same Game Menu Setting"))
 		return;
 	}
 
@@ -810,7 +810,7 @@ void UScreenWidgetManager::GenerateMenu(const FGameplayTag InMenuTag)
 	}
 	else
 	{
-		DLOG(LogUI, Error, TEXT("Fail To Generate Menu"))
+		DLOG(DLogUI, Error, TEXT("Fail To Generate Menu"))
 	}
 }
 
@@ -877,7 +877,7 @@ void UScreenWidgetManager::GenerateMenu(TArray<FGameplayTag> InMenuTags)
 
 			if (!IsValid(MenuStyle))
 			{
-				DLOG(LogUI, Error, TEXT("MenuStyle Is InValid"))
+				DLOG(DLogUI, Error, TEXT("MenuStyle Is InValid"))
 				return;
 			}
 

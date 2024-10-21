@@ -104,7 +104,7 @@ void UGameSettingRegistry::Initialize()
 			Controller->AddProperty(Test4);
 		}
 
-		DLOG(LogProperty, Warning, TEXT(""))
+		DLOG(DLogGameSetting, Warning, TEXT(""))
 	}
 
 	/* ==================== Keyboard ==================== */

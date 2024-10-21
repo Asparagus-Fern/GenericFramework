@@ -39,7 +39,7 @@ void UMenuStyle::NativeConstructMenuStyle(FMenuInfo InMenuInfo)
 	}
 	else
 	{
-		DLOG(LogUI, Error, TEXT("CommonButton Is NULL"))
+		DLOG(DLogUI, Error, TEXT("CommonButton Is NULL"))
 	}
 
 	SetVisibility(MenuInfo.bHidden ? ESlateVisibility::Collapsed : ESlateVisibility::SelfHitTestInvisible);

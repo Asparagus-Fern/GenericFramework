@@ -27,7 +27,7 @@ void UPropertyCollection::AddProperty(UPropertyEntity* InProperty)
 {
 	if (!ensureAlways(InProperty))
 	{
-		DLOG(LogProperty, Error, TEXT("InProperty Is NULL"))
+		DLOG(DLogProperty, Error, TEXT("InProperty Is NULL"))
 		return;
 	}
 

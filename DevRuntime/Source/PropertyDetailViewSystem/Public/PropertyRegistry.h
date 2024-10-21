@@ -42,7 +42,7 @@ public:
 
 private:
 	void RegisterInnerProperty(UPropertyEntity* InPropertyEntity);
-	void UnRegisterInnerProperty(UPropertyEntity* InPropertyEntity);
+	void UnRegisterInnerProperty(UPropertyEntity* InPropertyEntity);	
 	
 	void HandlePropertyChanged(UPropertyEntity* Property, EPropertyChangeReason Reason);
 	void HandlePropertyApplied(UPropertyEntity* Property);

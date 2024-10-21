@@ -72,7 +72,7 @@ UCameraHandle* UCameraManager::SwitchToCamera(const int32 InPlayerIndex, const F
 {
 	if (!InCameraHandleClass)
 	{
-		DLOG(LogCamera, Error, TEXT("SwitchToCamera Fail"))
+		DLOG(DLogCamera, Error, TEXT("SwitchToCamera Fail"))
 		OnFinish.ExecuteIfBound();
 		return nullptr;
 	}
@@ -84,7 +84,7 @@ UCameraHandle* UCameraManager::SwitchToCamera(const int32 InPlayerIndex, const F
 {
 	if (!IsValid(SwitchCameraHandle))
 	{
-		DLOG(LogCamera, Error, TEXT("SwitchToCamera Fail"))
+		DLOG(DLogCamera, Error, TEXT("SwitchToCamera Fail"))
 		OnFinish.ExecuteIfBound();
 		return nullptr;
 	}
@@ -97,7 +97,7 @@ UCameraHandle* UCameraManager::SwitchToCamera(const int32 InPlayerIndex, ACamera
 {
 	if (!InCameraActor || !InCameraHandleClass)
 	{
-		DLOG(LogCamera, Error, TEXT("SwitchToCamera Fail"))
+		DLOG(DLogCamera, Error, TEXT("SwitchToCamera Fail"))
 		OnFinish.ExecuteIfBound();
 		return nullptr;
 	}
@@ -109,7 +109,7 @@ UCameraHandle* UCameraManager::SwitchToCamera(const int32 InPlayerIndex, ACamera
 {
 	if (!InCameraActor || !IsValid(SwitchCameraHandle))
 	{
-		DLOG(LogCamera, Error, TEXT("SwitchToCamera Fail"))
+		DLOG(DLogCamera, Error, TEXT("SwitchToCamera Fail"))
 		OnFinish.ExecuteIfBound();
 		return nullptr;
 	}
@@ -121,7 +121,7 @@ UCameraHandle* UCameraManager::SwitchToCamera(const int32 InPlayerIndex, UCamera
 {
 	if (!IsValid(InCameraComponent) || !InCameraHandleClass)
 	{
-		DLOG(LogCamera, Error, TEXT("SwitchToCamera Fail"))
+		DLOG(DLogCamera, Error, TEXT("SwitchToCamera Fail"))
 		OnFinish.ExecuteIfBound();
 		return nullptr;
 	}
@@ -133,7 +133,7 @@ UCameraHandle* UCameraManager::SwitchToCamera(const int32 InPlayerIndex, UCamera
 {
 	if (!IsValid(InCameraComponent) || !IsValid(SwitchCameraHandle))
 	{
-		DLOG(LogCamera, Error, TEXT("SwitchToCamera Fail"))
+		DLOG(DLogCamera, Error, TEXT("SwitchToCamera Fail"))
 		OnFinish.ExecuteIfBound();
 		return nullptr;
 	}
@@ -156,7 +156,7 @@ UCameraHandle* UCameraManager::SwitchToCamera(const int32 InPlayerIndex, const F
 {
 	if (!InCameraTag.IsValid() || !InCameraHandleClass)
 	{
-		DLOG(LogCamera, Error, TEXT("SwitchToCamera Fail"))
+		DLOG(DLogCamera, Error, TEXT("SwitchToCamera Fail"))
 		OnFinish.ExecuteIfBound();
 		return nullptr;
 	}
@@ -169,7 +169,7 @@ UCameraHandle* UCameraManager::SwitchToCamera(const int32 InPlayerIndex, const F
 {
 	if (!InCameraTag.IsValid() || !IsValid(SwitchCameraHandle) || !IsValid(GetCameraPoint(InCameraTag)))
 	{
-		DLOG(LogCamera, Error, TEXT("SwitchToCamera Fail"))
+		DLOG(DLogCamera, Error, TEXT("SwitchToCamera Fail"))
 		OnFinish.ExecuteIfBound();
 		return nullptr;
 	}
@@ -181,7 +181,7 @@ UCameraHandle* UCameraManager::SwitchToCamera(const int32 InPlayerIndex, ACamera
 {
 	if (!IsValid(InCameraPoint) || !InCameraHandleClass)
 	{
-		DLOG(LogCamera, Error, TEXT("SwitchToCamera Fail"))
+		DLOG(DLogCamera, Error, TEXT("SwitchToCamera Fail"))
 		OnFinish.ExecuteIfBound();
 		return nullptr;
 	}
@@ -193,7 +193,7 @@ UCameraHandle* UCameraManager::SwitchToCamera(const int32 InPlayerIndex, ACamera
 {
 	if (!IsValid(InCameraPoint) || !IsValid(SwitchCameraHandle))
 	{
-		DLOG(LogCamera, Error, TEXT("SwitchToCamera Fail"))
+		DLOG(DLogCamera, Error, TEXT("SwitchToCamera Fail"))
 		OnFinish.ExecuteIfBound();
 		return nullptr;
 	}

@@ -65,11 +65,6 @@ bool UInteractableUserWidgetBase::Initialize()
 	return bInitializedThisCall;
 }
 
-void UInteractableUserWidgetBase::OnDesignerChanged(const FDesignerChangedEventArgs& EventArgs)
-{
-	Super::OnDesignerChanged(EventArgs);
-}
-
 void UInteractableUserWidgetBase::NativeConstruct()
 {
 	Super::NativeConstruct();

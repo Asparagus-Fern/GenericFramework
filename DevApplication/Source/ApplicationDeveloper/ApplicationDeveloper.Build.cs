@@ -20,6 +20,7 @@ public class ApplicationDeveloper : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
+				
 				"Blutility",
 				"UnrealEd",
 				"GraphEditor",
