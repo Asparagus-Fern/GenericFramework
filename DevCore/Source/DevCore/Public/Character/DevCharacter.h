@@ -18,14 +18,14 @@ public:
 	ADevCharacter();
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
-	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
+	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInput) override;
 
 public:
 	DECLARE_MULTICAST_DELEGATE_OneParam(FCharacterDelegate, ADevCharacter*)
 	static FCharacterDelegate OnCharacterRegister;
 	static FCharacterDelegate OnCharacterUnRegister;
 
-	/* IIPawnInterface */
+	/* IPawnInterface */
 public:
 	virtual void AddLocation_Implementation(FVector2D InValue) override;
 	virtual void AddRotation_Implementation(FVector2D InValue) override;
@@ -47,4 +47,7 @@ public:
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FName CharacterName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPlayerInputComponent* PlayerInputComponent;
 };

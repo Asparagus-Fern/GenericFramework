@@ -167,12 +167,12 @@ public:
 	FImageBrush();
 	FImageBrush(const FSlateBrush& InSlateBrush);
 	FImageBrush(USlateBrushAsset* InSlateBrushAsset);
-	FImageBrush(TScriptInterface<ISlateTextureAtlasInterface> InSlateTextureAtlasInterface, bool InMatchSize, FVector2D InSize);
-	FImageBrush(UMaterialInterface* InMaterialInterface, FVector2D InSize);
-	FImageBrush(const TSoftObjectPtr<UMaterialInterface>& InSoftMaterialInterface, FVector2D InSize);
-	FImageBrush(UTexture2D* InTexture2D, bool InMatchSize, FVector2D InSize);
-	FImageBrush(const TSoftObjectPtr<UTexture2D>& InSoftTexture2D, bool InMatchSize, FVector2D InSize);
-	FImageBrush(UTexture2DDynamic* InTexture2DDynamic, bool InMatchSize, FVector2D InSize);
+	FImageBrush(TScriptInterface<ISlateTextureAtlasInterface> InSlateTextureAtlasInterface, bool InMatchSize = false, FVector2D InSize = FVector2D(32.f, 32.f));
+	FImageBrush(UMaterialInterface* InMaterialInterface, FVector2D InSize = FVector2D(32.f, 32.f));
+	FImageBrush(const TSoftObjectPtr<UMaterialInterface>& InSoftMaterialInterface, FVector2D InSize = FVector2D(32.f, 32.f));
+	FImageBrush(UTexture2D* InTexture2D, bool InMatchSize = false, FVector2D InSize = FVector2D(32.f, 32.f));
+	FImageBrush(const TSoftObjectPtr<UTexture2D>& InSoftTexture2D, bool InMatchSize = false, FVector2D InSize = FVector2D(32.f, 32.f));
+	FImageBrush(UTexture2DDynamic* InTexture2DDynamic, bool InMatchSize = false, FVector2D InSize = FVector2D(32.f, 32.f));
 	FImageBrush(UObject* InResourceObject);
 
 public:

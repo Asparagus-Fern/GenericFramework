@@ -24,13 +24,14 @@ public class ApplicationRuntime : ModuleRules
 
 				"GameplayTags",
 				"UMG",
-				
+
 				"DBTween",
 
 				"ActiveNodeSystem",
 				"ScreenWidgetGeneration",
 				"WorldWidgetGeneration",
 				"CameraSystem",
+				"WorldUtilities",
 				"LevelStreaming",
 				"WorldPartition",
 				"PropertyDetailViewSystem",

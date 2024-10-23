@@ -60,10 +60,11 @@ void AThirdPersonPawn::AddLocation_Implementation(FVector2D InValue)
 	if (PawnLockingState.CanMove(TargetLocation))
 	{
 		const float Rate = FMath::Abs(FMath::GetMappedRangeValueClamped(FVector2D(0.f, 1.f), FVector2D(0.1f, 0.9f), FMath::Sin(UE_DOUBLE_PI / (180.0) * Execute_GetRotation(this).Pitch))) * CommonSpringArmComponent->TargetArmLength * UE_TWO_PI;
+		const float MovementRate = 1.5f;
 
-		FloatingPawnMovement->MaxSpeed = Rate;
-		FloatingPawnMovement->Acceleration = Rate * 0.5f;
-		FloatingPawnMovement->Deceleration = Rate * 0.5f;
+		FloatingPawnMovement->MaxSpeed = Rate * MovementRate * 1.2f;
+		FloatingPawnMovement->Acceleration = Rate * MovementRate * 2.f;
+		FloatingPawnMovement->Deceleration = Rate * MovementRate * 2.5f;
 
 		const FVector2D Movement = InValue * Rate * UPawnManagerSetting::Get()->MovementSpeed;
 		AddMovementInput(UKismetMathLibrary::GetRightVector(GetActorRotation()), Movement.X);

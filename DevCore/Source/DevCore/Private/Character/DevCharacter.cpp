@@ -15,6 +15,8 @@ ADevCharacter::ADevCharacter()
 	PrimaryActorTick.bCanEverTick = true;
 
 	CharacterName = "DevCharacter";
+
+	PlayerInputComponent = CreateDefaultSubobject<UPlayerInputComponent>("PlayerInputComponent");
 }
 
 void ADevCharacter::BeginPlay()
@@ -36,13 +38,13 @@ void ADevCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	Super::EndPlay(EndPlayReason);
 }
 
-void ADevCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void ADevCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput)
 {
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
+	Super::SetupPlayerInputComponent(PlayerInput);
 
 	if (IsValid(Execute_GetPlayerInputComponent(this)))
 	{
-		Execute_GetPlayerInputComponent(this)->SetupPlayerInput(PlayerInputComponent);
+		Execute_GetPlayerInputComponent(this)->SetupPlayerInput(PlayerInput);
 	}
 }
 
@@ -113,5 +115,5 @@ AAIController* ADevCharacter::GetAIController_Implementation()
 
 UPlayerInputComponent* ADevCharacter::GetPlayerInputComponent_Implementation()
 {
-	return nullptr;
+	return IsValid(PlayerInputComponent) ? PlayerInputComponent : nullptr;
 }

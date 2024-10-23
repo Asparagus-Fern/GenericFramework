@@ -34,6 +34,11 @@
       "LoadingPhase": "PostDefault"
     },
     {
+      "Name": "ScreenWidgetEdGeneration",
+      "Type": "Editor",
+      "LoadingPhase": "Default"
+    },
+    {
       "Name": "WorldWidgetEdGeneration",
       "Type": "Editor",
       "LoadingPhase": "PostDefault"

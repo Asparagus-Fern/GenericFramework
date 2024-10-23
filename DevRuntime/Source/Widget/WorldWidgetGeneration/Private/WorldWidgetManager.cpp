@@ -12,8 +12,7 @@
 #include "Components/CanvasPanel.h"
 #include "Components/CanvasPanelSlot.h"
 #include "Manager/ManagerGlobal.h"
-#include "Procedure/ProcedureManager.h"
-#include "UWidget/GameplayTagSlot.h"
+#include "UWidget/Override/GameplayTagSlot.h"
 
 void UWorldWidgetPanel::NativeOnCreate()
 {

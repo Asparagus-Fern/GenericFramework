@@ -18,6 +18,6 @@ class DEVCORE_API ADevPlayerController : public APlayerController
 
 public:
 	ADevPlayerController();
-	virtual void OnPossess(APawn* InPawn) override;
-	virtual void OnUnPossess() override;
+	// virtual void OnPossess(APawn* InPawn) override;
+	// virtual void OnUnPossess() override;
 };

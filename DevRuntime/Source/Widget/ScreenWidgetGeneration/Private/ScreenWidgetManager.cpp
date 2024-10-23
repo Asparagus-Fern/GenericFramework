@@ -17,7 +17,7 @@
 #include "UserWidget/HUD/GameHUD.h"
 #include "UserWidget/Menu/MenuContainer.h"
 #include "UserWidget/Menu/MenuStyle.h"
-#include "UWidget/GameplayTagSlot.h"
+#include "UWidget/Override/GameplayTagSlot.h"
 
 #define LOCTEXT_NAMESPACE "UScreenWidgetManager"
 

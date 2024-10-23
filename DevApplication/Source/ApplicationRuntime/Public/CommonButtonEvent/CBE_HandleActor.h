@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "SceneType.h"
 #include "Event/CommonButtonEvent.h"
-#include "Scene/SceneManager.h"
 #include "CBE_HandleActor.generated.h"
 
 /**

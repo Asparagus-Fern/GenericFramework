@@ -33,6 +33,11 @@
   ],
   "Modules": [
     {
+      "Name": "WorldUtilities",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
+    },
+    {
       "Name": "LevelStreaming",
       "Type": "Runtime",
       "LoadingPhase": "Default"

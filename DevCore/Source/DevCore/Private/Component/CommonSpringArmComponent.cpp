@@ -48,7 +48,7 @@ void UCommonSpringArmComponent::AddTargetArmLength(const float InValue)
 	}
 
 	const float PitchRate = FMath::GetMappedRangeValueClamped(FVector2D(0.f, 90.f), FVector2D(0.8f, 1.2f), FMath::Abs(Rotation.Pitch));
-	DesiredArmLength += (FMath::Abs(FMath::Sin(UE_DOUBLE_PI / (180.0) * Rotation.Pitch)) * PitchRate * TargetArmLength * UPawnManagerSetting::Get()->ZoomSpeed * InValue);
+	DesiredArmLength += (FMath::Abs(FMath::Sin(UE_DOUBLE_PI / (180.0) * Rotation.Pitch)) * PitchRate * TargetArmLength * 0.75f * UPawnManagerSetting::Get()->ZoomSpeed * InValue);
 	DesiredArmLength = SpringArmLimit.GetLimitSpringArmLength(DesiredArmLength);
 }
 

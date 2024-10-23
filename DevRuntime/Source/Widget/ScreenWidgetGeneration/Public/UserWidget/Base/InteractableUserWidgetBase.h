@@ -40,7 +40,7 @@ public:
 	FString GroupName;
 
 	/* 按钮响应设置，只作参数的配置 */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced)
+	UPROPERTY(EditAnywhere, Instanced)
 	UCommonButton* CommonButton = nullptr;
 
 	/* 激活的按钮，将从CommonButton复制，因为更改WidgetTree导致细节面板无法编辑的原因，CommonButton只作参数配置，ActiveCommonButton为实际展示的按钮 */

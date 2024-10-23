@@ -10,4 +10,5 @@ class FScreenWidgetGenerationModule : public ICommonModuleInterface
 {
 public:
 	virtual void StartupModule() override;
+	virtual void ShutdownModule() override;
 };

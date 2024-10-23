@@ -9,6 +9,30 @@
 
 /* ==================== Interactable Widget Group ==================== */
 
+void UBPFunctions_Widget::AddInteractableWidget(UInteractableUserWidgetBase* InteractableWidget, const FString GroupName)
+{
+	if (UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
+	{
+		ScreenWidgetManager->AddInteractableWidget(InteractableWidget, GroupName);
+	}
+}
+
+void UBPFunctions_Widget::RemoveInteractableWidget(UInteractableUserWidgetBase* InteractableWidget, const FString GroupName)
+{
+	if (UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
+	{
+		ScreenWidgetManager->RemoveInteractableWidget(InteractableWidget, GroupName);
+	}
+}
+
+void UBPFunctions_Widget::ClearupInteractableWidgetGroup(const FString& GroupName, const bool DeselectAll)
+{
+	if (UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
+	{
+		ScreenWidgetManager->ClearupInteractableWidgetGroup(GroupName, DeselectAll);
+	}
+}
+
 bool UBPFunctions_Widget::GetInteractableWidgetGroups(TMap<FString, UCommonButtonGroup*>& Groups)
 {
 	if (const UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())

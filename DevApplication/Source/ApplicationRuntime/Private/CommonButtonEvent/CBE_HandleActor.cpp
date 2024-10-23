@@ -3,6 +3,8 @@
 
 #include "CommonButtonEvent/CBE_HandleActor.h"
 
+#include "SceneManager.h"
+
 void UCBE_HandleActor::NativeOnCreate()
 {
 	Super::NativeOnCreate();

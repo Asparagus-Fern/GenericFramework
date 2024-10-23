@@ -117,6 +117,136 @@ void UBPFunctions_Slate::SetImageBrush(UImage* InImage, const FImageBrush InImag
 	SetDesiredSizeOverride(InImage, InImageBrush);
 }
 
+FImageBrush UBPFunctions_Slate::Conv_ImageBrush_SlateBrushToImageBrush(const FSlateBrush& InSlateBrush)
+{
+	return FImageBrush(InSlateBrush);
+}
+
+FSlateBrush UBPFunctions_Slate::Conv_ImageBrush_ToSlateBrush(const FImageBrush& InImageBrush)
+{
+	return InImageBrush.SlateBrush;
+}
+
+FImageBrush UBPFunctions_Slate::Conv_ImageBrush_SlateBrushAssetToImageBrush(USlateBrushAsset* InSlateBrushAsset)
+{
+	return FImageBrush(InSlateBrushAsset);
+}
+
+USlateBrushAsset* UBPFunctions_Slate::Conv_ImageBrush_ToSlateBrushAsset(const FImageBrush& InImageBrush)
+{
+	return InImageBrush.SlateBrushAsset;
+}
+
+FImageBrush UBPFunctions_Slate::Conv_ImageBrush_SlateTextureAtlasInterfaceToImageBrush(TScriptInterface<ISlateTextureAtlasInterface> InSlateTextureAtlasInterface)
+{
+	return FImageBrush(InSlateTextureAtlasInterface);
+}
+
+TScriptInterface<ISlateTextureAtlasInterface> UBPFunctions_Slate::Conv_ImageBrush_ToSlateTextureAtlasInterface(const FImageBrush& InImageBrush)
+{
+	return InImageBrush.SlateTextureAtlasInterface;
+}
+
+FImageBrush UBPFunctions_Slate::Conv_ImageBrush_MaterialInterfaceToImageBrush(UMaterialInterface* InMaterialInterface)
+{
+	return FImageBrush(InMaterialInterface);
+}
+
+UMaterialInterface* UBPFunctions_Slate::Conv_ImageBrush_ToMaterialInterface(const FImageBrush& InImageBrush)
+{
+	return InImageBrush.MaterialInterface;
+}
+
+FImageBrush UBPFunctions_Slate::Conv_ImageBrush_SoftMaterialInterfaceToImageBrush(const TSoftObjectPtr<UMaterialInterface>& InSoftMaterialInterface)
+{
+	return FImageBrush(InSoftMaterialInterface);
+}
+
+TSoftObjectPtr<UMaterialInterface> UBPFunctions_Slate::Conv_ImageBrush_ToSoftMaterialInterface(const FImageBrush& InImageBrush)
+{
+	return InImageBrush.SoftMaterialInterface;
+}
+
+FImageBrush UBPFunctions_Slate::Conv_ImageBrush_Texture2DToImageBrush(UTexture2D* InTexture2D)
+{
+	return FImageBrush(InTexture2D);
+}
+
+UTexture2D* UBPFunctions_Slate::Conv_ImageBrush_ToTexture2D(const FImageBrush& InImageBrush)
+{
+	return InImageBrush.Texture2D;
+}
+
+FImageBrush UBPFunctions_Slate::Conv_ImageBrush_SoftTexture2DToImageBrush(const TSoftObjectPtr<UTexture2D>& InSoftTexture2D)
+{
+	return FImageBrush(InSoftTexture2D);
+}
+
+TSoftObjectPtr<UTexture2D> UBPFunctions_Slate::Conv_ImageBrush_ToSoftTexture2D(const FImageBrush& InImageBrush)
+{
+	return InImageBrush.SoftTexture2D;
+}
+
+FImageBrush UBPFunctions_Slate::Conv_ImageBrush_Texture2DDynamicToImageBrush(UTexture2DDynamic* InTexture2DDynamic)
+{
+	return FImageBrush(InTexture2DDynamic);
+}
+
+UTexture2DDynamic* UBPFunctions_Slate::Conv_ImageBrush_ToTexture2DDynamic(const FImageBrush& InImageBrush)
+{
+	return InImageBrush.Texture2DDynamic;
+}
+
+FImageBrush UBPFunctions_Slate::Conv_ImageBrush_ResourceObjectToImageBrush(UObject* InResourceObject)
+{
+	return FImageBrush(InResourceObject);
+}
+
+UObject* UBPFunctions_Slate::Conv_ImageBrush_ToResourceObject(const FImageBrush& InImageBrush)
+{
+	return InImageBrush.ResourceObject;
+}
+
+FBorderBrush UBPFunctions_Slate::Conv_BorderBrush_SlateBrushToBorderBrush(const FSlateBrush& InSlateBrush)
+{
+	return FBorderBrush(InSlateBrush);
+}
+
+FSlateBrush UBPFunctions_Slate::Conv_BorderBrush_ToSlateBrush(const FBorderBrush& InBorderBrush)
+{
+	return InBorderBrush.SlateBrush;
+}
+
+FBorderBrush UBPFunctions_Slate::Conv_BorderBrush_SlateBrushAssetToBorderBrush(USlateBrushAsset* InSlateBrushAsset)
+{
+	return FBorderBrush(InSlateBrushAsset);
+}
+
+USlateBrushAsset* UBPFunctions_Slate::Conv_BorderBrush_ToSlateBrushAsset(const FBorderBrush& InBorderBrush)
+{
+	return InBorderBrush.SlateBrushAsset;
+}
+
+FBorderBrush UBPFunctions_Slate::Conv_BorderBrush_MaterialInterfaceToBorderBrush(UMaterialInterface* InMaterialInterface)
+{
+	return FBorderBrush(InMaterialInterface);
+}
+
+UMaterialInterface* UBPFunctions_Slate::Conv_BorderBrush_ToMaterialInterface(const FBorderBrush& InBorderBrush)
+{
+	return InBorderBrush.MaterialInterface;
+}
+
+FBorderBrush UBPFunctions_Slate::Conv_BorderBrush_Texture2DToBorderBrush(UTexture2D* InTexture2D)
+{
+	return FBorderBrush(InTexture2D);
+}
+
+UTexture2D* UBPFunctions_Slate::Conv_BorderBrush_ToTexture2D(const FBorderBrush& InBorderBrush)
+{
+	return InBorderBrush.Texture2D;
+}
+
 bool UBPFunctions_Slate::IsValid_BorderBrush(const FBorderBrush& InBorderBrush)
 {
 	switch (InBorderBrush.BoderBrushResource)

@@ -22,6 +22,8 @@ ADevPawn::ADevPawn()
 	PawnName = "DevPawn";
 	USceneComponent* SceneComponent = CreateDefaultSubobject<USceneComponent>("Root");
 	RootComponent = SceneComponent;
+
+	PlayerInputComponent = CreateDefaultSubobject<UPlayerInputComponent>("PlayerInputComponent");
 }
 
 void ADevPawn::BeginPlay()
@@ -43,13 +45,13 @@ void ADevPawn::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	Super::EndPlay(EndPlayReason);
 }
 
-void ADevPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void ADevPawn::SetupPlayerInputComponent(UInputComponent* PlayerInput)
 {
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
+	Super::SetupPlayerInputComponent(PlayerInput);
 
 	if (IsValid(Execute_GetPlayerInputComponent(this)))
 	{
-		Execute_GetPlayerInputComponent(this)->SetupPlayerInput(PlayerInputComponent);
+		Execute_GetPlayerInputComponent(this)->SetupPlayerInput(PlayerInput);
 	}
 }
 
@@ -136,7 +138,7 @@ AAIController* ADevPawn::GetAIController_Implementation()
 
 UPlayerInputComponent* ADevPawn::GetPlayerInputComponent_Implementation()
 {
-	return nullptr;
+	return IsValid(PlayerInputComponent) ? PlayerInputComponent : nullptr;
 }
 
 UCameraComponent* ADevPawn::GetActiveCameraComponent_Implementation()

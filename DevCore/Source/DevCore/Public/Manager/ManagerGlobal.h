@@ -17,3 +17,14 @@ static ManagerType* GetManager()
 	}
 	return nullptr;
 }
+
+template <class ManagerType>
+static ManagerType* GetManager(const UObject* WorldContextObject)
+{
+	if (const UWorld* World = GEngine->GetWorldFromContextObjectChecked(WorldContextObject))
+	{
+		return World->GetSubsystem<ManagerType>();
+	}
+
+	return nullptr;
+}

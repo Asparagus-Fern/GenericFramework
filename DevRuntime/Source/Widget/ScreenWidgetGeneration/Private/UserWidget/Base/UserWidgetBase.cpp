@@ -10,9 +10,17 @@ UUserWidgetBase::UUserWidgetBase(const FObjectInitializer& ObjectInitializer)
 {
 }
 
+void UUserWidgetBase::NativePreConstruct()
+{
+	Super::NativePreConstruct();
+}
+
 void UUserWidgetBase::NativeConstruct()
 {
 	Super::NativeConstruct();
+
+	/* 传递当前UI，计算Slate所需大小 */
+	TakeWidget()->SlatePrepass();
 }
 
 void UUserWidgetBase::NativeDestruct()

@@ -26,14 +26,14 @@ public:
 	ADevPawn();
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
-	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
+	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInput) override;
 
 public:
 	DECLARE_MULTICAST_DELEGATE_OneParam(FPawnDelegate, ADevPawn*)
 	static FPawnDelegate OnPawnRegister;
 	static FPawnDelegate OnPawnUnRegister;
 
-	/* IIPawnInterface */
+	/* IPawnInterface */
 public:
 	virtual void AddLocation_Implementation(FVector2D InValue) override;
 	virtual void AddRotation_Implementation(FVector2D InValue) override;
@@ -59,6 +59,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FPawnLockingState PawnLockingState;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPlayerInputComponent* PlayerInputComponent;
+	
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	UCameraComponent* GetActiveCameraComponent();
