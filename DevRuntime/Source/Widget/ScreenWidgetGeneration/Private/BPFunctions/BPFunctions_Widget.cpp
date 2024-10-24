@@ -176,6 +176,14 @@ void UBPFunctions_Widget::CloseUserWidgetByTag(FGameplayTag InSlotTag, bool Mark
 	}
 }
 
+void UBPFunctions_Widget::MoveUserWidget(FGameplayTag OriginSlotTag, FGameplayTag TargetSlotTag)
+{
+	if (UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
+	{
+		ScreenWidgetManager->MoveUserWidget(OriginSlotTag, TargetSlotTag, FOnWidgetActiveStateChanged());
+	}
+}
+
 bool UBPFunctions_Widget::GetActivedWidgets(TArray<UUserWidgetBase*>& ActivedWidgets)
 {
 	if (const UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())

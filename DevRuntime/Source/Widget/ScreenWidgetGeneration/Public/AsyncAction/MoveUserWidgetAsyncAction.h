@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
-#include "OpenUserWidgetAsyncAction.generated.h"
+#include "MoveUserWidgetAsyncAction.generated.h"
 
 class UUserWidgetBase;
 
@@ -13,16 +13,13 @@ class UUserWidgetBase;
  * 
  */
 UCLASS()
-class SCREENWIDGETGENERATION_API UOpenUserWidgetAsyncAction : public UBlueprintAsyncActionBase
+class SCREENWIDGETGENERATION_API UMoveUserWidgetAsyncAction : public UBlueprintAsyncActionBase
 {
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"))
-	static UOpenUserWidgetAsyncAction* AsyncOpenUserWidget(UUserWidgetBase* InWidget);
-
-	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"))
-	static UOpenUserWidgetAsyncAction* AsyncOpenUserWidgetByClass(TSubclassOf<UUserWidgetBase> InWidgetClass);
+	UFUNCTION(BlueprintCallable, meta = (GameplayTagFilter="UI.HUD", BlueprintInternalUseOnly = "true"))
+	static UMoveUserWidgetAsyncAction* AsyncMoveUserWidget(FGameplayTag OriginSlotTag, FGameplayTag TargetSlotTag);
 
 public:
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FUserWidgetDelegate, UUserWidgetBase*, Widget);

@@ -69,14 +69,14 @@ public:
 	UFUNCTION(BlueprintPure, Category="BPFunctions_Widget|Slot")
 	static bool GetSlots(TArray<UGameplayTagSlot*>& Slots);
 
-	UFUNCTION(BlueprintPure, meta=( GameplayTagFilter="HUD"))
+	UFUNCTION(BlueprintPure, meta=(GameplayTagFilter="UI.HUD"))
 	static UGameplayTagSlot* GetSlot(FGameplayTag InSlotTag);
 
-	UFUNCTION(BlueprintPure, meta=( GameplayTagFilter="HUD", DeterminesOutputType = "InClass"), Category="BPFunctions_Widget|Slot")
+	UFUNCTION(BlueprintPure, meta=(GameplayTagFilter="UI.HUD", DeterminesOutputType = "InClass"), Category="BPFunctions_Widget|Slot")
 	static UUserWidgetBase* GetSlotWidget(FGameplayTag InSlotTag, TSubclassOf<UUserWidgetBase> InClass);
 
 public:
-	UFUNCTION(BlueprintCallable, meta = ( DeterminesOutputType = "InWidgetClass"), Category="BPFunctions_Widget|UserWidgetBase")
+	UFUNCTION(BlueprintCallable, meta = (DeterminesOutputType = "InWidgetClass"), Category="BPFunctions_Widget|UserWidgetBase")
 	static UUserWidgetBase* OpenUserWidgetByClass(TSubclassOf<UUserWidgetBase> InWidgetClass);
 
 	UFUNCTION(BlueprintCallable, Category="BPFunctions_Widget|UserWidgetBase")
@@ -85,8 +85,11 @@ public:
 	UFUNCTION(BlueprintCallable, meta=(AdvancedDisplay = 1), Category="BPFunctions_Widget|UserWidgetBase")
 	static void CloseUserWidget(UUserWidgetBase* InWidget, bool MarkAsGarbage = true);
 
-	UFUNCTION(BlueprintCallable, meta=(GameplayTagFilter="HUD", AdvancedDisplay = 1), Category="BPFunctions_Widget|UserWidgetBase")
+	UFUNCTION(BlueprintCallable, meta=(GameplayTagFilter="UI.HUD", AdvancedDisplay = 1), Category="BPFunctions_Widget|UserWidgetBase")
 	static void CloseUserWidgetByTag(FGameplayTag InSlotTag, bool MarkAsGarbage = true);
+
+	UFUNCTION(BlueprintCallable, meta=(GameplayTagFilter="UI.HUD"), Category="BPFunctions_Widget|UserWidgetBase")
+	static void MoveUserWidget(FGameplayTag OriginSlotTag, FGameplayTag TargetSlotTag);
 
 	UFUNCTION(BlueprintPure, Category="BPFunctions_Widget|UserWidgetBase")
 	static bool GetActivedWidgets(TArray<UUserWidgetBase*>& ActivedWidgets);
@@ -96,10 +99,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category="BPFunctions_Widget|Menu")
 	static void SwitchGameMenu(UGameMenuSetting* InGameMenuSetting);
 
-	UFUNCTION(BlueprintCallable, meta=( GameplayTagFilter="Menu"), Category="BPFunctions_Widget|Menu")
+	UFUNCTION(BlueprintCallable, meta=( GameplayTagFilter="UI.Menu"), Category="BPFunctions_Widget|Menu")
 	static void SelectMenu(FGameplayTag InMenuTag);
 
-	UFUNCTION(BlueprintCallable, meta=( GameplayTagFilter="Menu"), Category="BPFunctions_Widget|Menu")
+	UFUNCTION(BlueprintCallable, meta=( GameplayTagFilter="UI.Menu"), Category="BPFunctions_Widget|Menu")
 	static void DeselectMenu(FGameplayTag InMenuTag);
 
 	UFUNCTION(BlueprintPure, Category="BPFunctions_Widget|Menu")

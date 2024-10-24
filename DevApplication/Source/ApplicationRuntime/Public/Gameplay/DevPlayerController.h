@@ -12,12 +12,10 @@ class IPawnInputInterface;
  * 
  */
 UCLASS()
-class DEVCORE_API ADevPlayerController : public APlayerController
+class APPLICATIONRUNTIME_API ADevPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 
 public:
 	ADevPlayerController();
-	// virtual void OnPossess(APawn* InPawn) override;
-	// virtual void OnUnPossess() override;
 };

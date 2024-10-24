@@ -10,7 +10,7 @@
  * 
  */
 UCLASS()
-class DEVCORE_API ADevGameMode : public AGameMode
+class APPLICATIONRUNTIME_API ADevGameMode : public AGameMode
 {
 	GENERATED_UCLASS_BODY()
 };

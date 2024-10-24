@@ -10,7 +10,13 @@
  * 
  */
 UCLASS()
-class DEVCORE_API ADevHUD : public AHUD
+class APPLICATIONRUNTIME_API ADevHUD : public AHUD
 {
 	GENERATED_UCLASS_BODY()
+
+public:
+	virtual void DrawHUD() override;
+
+protected:
+	virtual void DrawMapScale();
 };

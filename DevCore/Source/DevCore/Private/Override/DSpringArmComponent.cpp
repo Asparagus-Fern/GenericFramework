@@ -1,16 +1,11 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
+#include "Override/DSpringArmComponent.h"
 
-#include "Component/CommonSpringArmComponent.h"
-
-#include "BPFunctions/BPFunctions_Gameplay.h"
-#include "Debug/DebugType.h"
-#include "Kismet/GameplayStatics.h"
 #include "Pawn/PawnInterface.h"
 #include "Pawn/PawnManagerSetting.h"
-#include "PhysicsEngine/PhysicsSettings.h"
 
-UCommonSpringArmComponent::UCommonSpringArmComponent()
+UDSpringArmComponent::UDSpringArmComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
 
@@ -21,21 +16,21 @@ UCommonSpringArmComponent::UCommonSpringArmComponent()
 	TargetArmLength = 3000.f;
 }
 
-void UCommonSpringArmComponent::BeginPlay()
+void UDSpringArmComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
 	DesiredArmLength = TargetArmLength;
 }
 
-void UCommonSpringArmComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UDSpringArmComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	UpdateTargetArmLength(DeltaTime);
 }
 
-void UCommonSpringArmComponent::AddTargetArmLength(const float InValue)
+void UDSpringArmComponent::AddTargetArmLength(const float InValue)
 {
 	FRotator Rotation;
 	if (GetOwner()->GetClass()->ImplementsInterface(UPawnInterface::StaticClass()))
@@ -52,13 +47,13 @@ void UCommonSpringArmComponent::AddTargetArmLength(const float InValue)
 	DesiredArmLength = SpringArmLimit.GetLimitSpringArmLength(DesiredArmLength);
 }
 
-void UCommonSpringArmComponent::SetTargetArmLength(const float InValue)
+void UDSpringArmComponent::SetTargetArmLength(const float InValue)
 {
 	TargetArmLength = DesiredArmLength = InValue;
 	UpdateDesiredArmLocation(false, false, false, 0.f);
 }
 
-void UCommonSpringArmComponent::UpdateTargetArmLength(float DeltaTime)
+void UDSpringArmComponent::UpdateTargetArmLength(float DeltaTime)
 {
 	TargetArmLength = TargetArmLength + DeltaTime * (DesiredArmLength - TargetArmLength);
 }

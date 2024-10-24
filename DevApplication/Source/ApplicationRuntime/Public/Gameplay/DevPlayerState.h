@@ -10,7 +10,7 @@
  * 
  */
 UCLASS()
-class DEVCORE_API ADevPlayerState : public APlayerState
+class APPLICATIONRUNTIME_API ADevPlayerState : public APlayerState
 {
 	GENERATED_BODY()
 };

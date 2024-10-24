@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/GameState.h"
-#include "DevGameState.generated.h"
+#include "Engine/GameInstance.h"
+#include "DevGameInstance.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class DEVCORE_API ADevGameState : public AGameState
+class APPLICATIONRUNTIME_API UDevGameInstance : public UGameInstance
 {
 	GENERATED_BODY()
 };

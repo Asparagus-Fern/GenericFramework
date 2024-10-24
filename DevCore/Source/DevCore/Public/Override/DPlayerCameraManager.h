@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Engine/GameInstance.h"
-#include "DevGameInstance.generated.h"
+#include "Camera/PlayerCameraManager.h"
+#include "DPlayerCameraManager.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class DEVCORE_API UDevGameInstance : public UGameInstance
+class DEVCORE_API ADPlayerCameraManager : public APlayerCameraManager
 {
 	GENERATED_BODY()
 };

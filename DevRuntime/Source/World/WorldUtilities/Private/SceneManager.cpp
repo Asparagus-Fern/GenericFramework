@@ -5,6 +5,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "SceneManagerSetting.h"
 #include "Compass/CompassActor.h"
+#include "MapScale/MapScaleActor.h"
 
 USceneManager::USceneManager(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -28,6 +29,7 @@ void USceneManager::NativeOnActived()
 {
 	Super::NativeOnActived();
 	CompassActor = Cast<ACompassActor>(UGameplayStatics::GetActorOfClass(this, ACompassActor::StaticClass()));
+	MapScaleActor = Cast<AMapScaleActor>(UGameplayStatics::GetActorOfClass(this, AMapScaleActor::StaticClass()));
 }
 
 void USceneManager::NativeOnInactived()
@@ -93,15 +95,32 @@ float USceneManager::GetPlayerPointToNorthAngle(int32 PlayerIndex) const
 
 	const FVector WorldNorthDirection = CompassActor->GetDirectionNorth();
 	const FVector WorldEastDirection = CompassActor->GetDirectionEast();
-	const FVector LookForward = UGameplayStatics::GetPlayerCameraManager(this, PlayerIndex)->GetActorForwardVector().GetSafeNormal2D();
 
-	float DegreesNorth = FMath::RadiansToDegrees(FMath::Acos(FVector::DotProduct(WorldNorthDirection, LookForward)));
-	const float DegreesEast = FMath::RadiansToDegrees(FMath::Acos(FVector::DotProduct(WorldEastDirection, LookForward)));
-
-	if (DegreesEast > 90.f)
+	if (const APlayerCameraManager* PlayerCameraManager = UGameplayStatics::GetPlayerCameraManager(this, PlayerIndex))
 	{
-		DegreesNorth = -DegreesNorth;
+		const FVector LookForward = PlayerCameraManager->GetActorForwardVector().GetSafeNormal2D();
+
+		float DegreesNorth = FMath::RadiansToDegrees(FMath::Acos(FVector::DotProduct(WorldNorthDirection, LookForward)));
+		const float DegreesEast = FMath::RadiansToDegrees(FMath::Acos(FVector::DotProduct(WorldEastDirection, LookForward)));
+
+		if (DegreesEast > 90.f)
+		{
+			DegreesNorth = -DegreesNorth;
+		}
+
+		return DegreesNorth;
 	}
 
-	return DegreesNorth;
+	return 0.f;
+}
+
+float USceneManager::GetWorldElevationOriginHeight() const
+{
+	if (!IsValid(CompassActor))
+	{
+		DLOG(DLogWorld, Log, TEXT("CompassActor Is NULL"))
+		return 0.f;
+	}
+
+	return CompassActor->GetActorLocation().Z;
 }

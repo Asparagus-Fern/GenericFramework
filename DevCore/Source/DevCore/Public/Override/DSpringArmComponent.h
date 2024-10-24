@@ -5,15 +5,15 @@
 #include "CoreMinimal.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Pawn/PawnType.h"
-#include "CommonSpringArmComponent.generated.h"
+#include "DSpringArmComponent.generated.h"
 
 UCLASS(ClassGroup=(DevPlugin), meta=(BlueprintSpawnableComponent))
-class DEVCORE_API UCommonSpringArmComponent : public USpringArmComponent
+class DEVCORE_API UDSpringArmComponent : public USpringArmComponent
 {
 	GENERATED_BODY()
 
 public:
-	UCommonSpringArmComponent();
+	UDSpringArmComponent();
 	virtual void BeginPlay() override;
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 

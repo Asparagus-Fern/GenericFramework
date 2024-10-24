@@ -14,7 +14,7 @@ class UInputHandle;
 struct FInputActionValue;
 class UInputAction;
 class UCameraComponent;
-class UCommonSpringArmComponent;
+class UDSpringArmComponent;
 class UFloatingPawnMovement;
 
 UCLASS()

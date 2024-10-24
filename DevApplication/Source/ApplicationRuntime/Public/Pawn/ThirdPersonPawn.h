@@ -24,7 +24,7 @@ public:
 	UFloatingPawnMovement* FloatingPawnMovement;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	UCommonSpringArmComponent* CommonSpringArmComponent = nullptr;
+	UDSpringArmComponent* SpringArmComponent = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UCameraComponent* CameraComponent = nullptr;

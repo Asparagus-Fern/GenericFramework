@@ -7,6 +7,7 @@
 #include "Manager/CoreManager.h"
 #include "SceneManager.generated.h"
 
+class AMapScaleActor;
 class ACompassActor;
 
 /**
@@ -27,9 +28,17 @@ public:
 	virtual void NativeOnActived() override;
 	virtual void NativeOnInactived() override;
 
+	/* USceneManager */
 public:
 	TArray<AActor*> FindActors(const FFindActorHandle& FindActorHandle, bool bUpdate = false);
+
+	/* Compass */
+public:
 	float GetPlayerPointToNorthAngle(int32 PlayerIndex) const;
+
+	/* MapScale */
+public:
+	float GetWorldElevationOriginHeight() const;
 
 protected:
 	UPROPERTY(Transient)
@@ -37,4 +46,7 @@ protected:
 
 	UPROPERTY(Transient)
 	ACompassActor* CompassActor = nullptr;
+
+	UPROPERTY(Transient)
+	AMapScaleActor* MapScaleActor = nullptr;
 };
