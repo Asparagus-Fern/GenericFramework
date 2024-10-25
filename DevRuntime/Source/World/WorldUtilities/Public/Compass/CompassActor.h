@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "Actor/CommonActor.h"
 #include "CompassActor.generated.h"
 
 class UTextRenderComponent;
 class UArrowComponent;
 
-UCLASS(NotBlueprintable, HideCategories=(Object,Actor,Collision,Physics,Networking,Input,LevelInstance,Cooking,HLOD,Replication))
-class WORLDUTILITIES_API ACompassActor : public AActor
+UCLASS(NotBlueprintable, HideCategories=(Object,Collision,Physics,Networking,Input,LevelInstance,Cooking,LOD,HLOD,Replication))
+class WORLDUTILITIES_API ACompassActor : public ACommonActor
 {
 	GENERATED_BODY()
 

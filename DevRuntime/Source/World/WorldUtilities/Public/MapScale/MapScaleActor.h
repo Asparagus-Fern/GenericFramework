@@ -3,11 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "Actor/CommonActor.h"
 #include "MapScaleActor.generated.h"
 
-UCLASS()
-class WORLDUTILITIES_API AMapScaleActor : public AActor
+UCLASS(NotBlueprintable,HideCategories=(Object,Collision,Physics,Networking,Input,LevelInstance,Cooking,LOD,HLOD,Replication))
+class WORLDUTILITIES_API AMapScaleActor : public ACommonActor
 {
 	GENERATED_BODY()
 

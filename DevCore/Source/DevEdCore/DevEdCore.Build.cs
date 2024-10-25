@@ -23,6 +23,7 @@ public class DevEdCore : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
+
 				"EditorSubsystem",
 				"UnrealEd",
 				"ToolMenus",
@@ -34,7 +35,8 @@ public class DevEdCore : ModuleRules
 				"Settings",
 				"SettingsEditor",
 				"GraphEditor",
-				"BlueprintGraph"
+				"BlueprintGraph",
+				"SubobjectEditor",
 			}
 		);
 	}
