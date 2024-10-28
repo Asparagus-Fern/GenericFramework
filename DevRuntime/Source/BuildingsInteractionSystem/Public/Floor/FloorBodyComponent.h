@@ -4,26 +4,21 @@
 
 #include "CoreMinimal.h"
 #include "Components/SceneComponent.h"
-#include "Procedure/ProcedureBaseInterface.h"
 #include "FloorBodyComponent.generated.h"
 
 
-class UFloorMarkPointComponent;
 class UFloorStaticMeshComponent;
 
 UCLASS()
-class BUILDINGSINTERACTIONSYSTEM_API UFloorBodyComponent : public USceneComponent, public IProcedureBaseInterface
+class BUILDINGSINTERACTIONSYSTEM_API UFloorBodyComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:
 	UFloorBodyComponent();
 	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	virtual void OnRegister() override;
-
-	/* IProcedureBaseInterface */
-public:
-	virtual void NativeOnRefresh() override;
 
 	/* UFloorBodyComponent */
 public:
@@ -32,9 +27,24 @@ public:
 	static FOnFloorBodyRefresh OnFloorBodyRefresh;
 
 public:
+	UPROPERTY(VisibleDefaultsOnly)
+	USceneComponent* SceneComponent = nullptr;
+
 	UPROPERTY(EditAnywhere)
 	TArray<TObjectPtr<UStaticMesh>> BodyStaticMeshes;
 
-	UPROPERTY(BlueprintReadOnly)
-	TArray<UFloorStaticMeshComponent*> BodyComponents;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
+	TArray<UStaticMeshComponent*> BodyComponents;
+
+protected:
+	UStaticMeshComponent* GetComponentByStaticMesh(TObjectPtr<UStaticMesh> StaticMesh);
+
+	UFUNCTION()
+	void HandleBeginCursorOver(UPrimitiveComponent* TouchedComponent);
+
+	UFUNCTION()
+	void HandleEndCursorOver(UPrimitiveComponent* TouchedComponent);
+
+	UFUNCTION()
+	void HandleOnClicked(UPrimitiveComponent* TouchedComponent, FKey ButtonPressed);
 };

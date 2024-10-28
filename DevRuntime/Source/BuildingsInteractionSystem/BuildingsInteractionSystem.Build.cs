@@ -20,7 +20,10 @@ public class BuildingsInteractionSystem : ModuleRules
 				"CoreUObject",
 				"Engine",
 				"Slate",
-				"SlateCore"
+				"SlateCore",
+
+				"InputCore",
+				"DeveloperSettings"
 			}
 		);
 	}

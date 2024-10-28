@@ -3,25 +3,25 @@
 #include "Floor/FloorActor.h"
 
 #include "Floor/FloorBodyComponent.h"
-#include "Floor/FloorMarkPointComponent.h"
 
 AFloorActor::AFloorActor()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	SceneComponent = CreateDefaultSubobject<UFloorBodyComponent>("Root");
+	SceneComponent = CreateDefaultSubobject<USceneComponent>("Root");
 	RootComponent = SceneComponent;
 
-	FloorComponent = CreateDefaultSubobject<UFloorBodyComponent>("Body");
-	FloorComponent->SetupAttachment(RootComponent);
-
-	FloorMarkPointComponent = CreateDefaultSubobject<UFloorMarkPointComponent>("MarkPoint");
-	FloorMarkPointComponent->SetupAttachment(RootComponent);
+	FloorBodyComponent = CreateDefaultSubobject<UFloorBodyComponent>("Body");
 }
 
 void AFloorActor::BeginPlay()
 {
 	Super::BeginPlay();
+}
+
+void AFloorActor::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
 }
 
 void AFloorActor::OnConstruction(const FTransform& Transform)

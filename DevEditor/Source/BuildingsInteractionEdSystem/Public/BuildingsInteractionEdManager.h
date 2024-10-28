@@ -6,6 +6,7 @@
 #include "Manager/CoreEdManager.h"
 #include "BuildingsInteractionEdManager.generated.h"
 
+class UFloorMarkPointComponent;
 class UFloorBodyComponent;
 
 /**
@@ -21,5 +22,5 @@ public:
 	virtual void NativeOnDestroy() override;
 
 protected:
-	void OnFloorBodyRefresh(UFloorBodyComponent* InFloorBodyComponent);
+	virtual void OnFloorBodyRefresh(UFloorBodyComponent* InFloorBodyComponent);
 };

@@ -7,14 +7,13 @@
 #include "Actor/CommonActor.h"
 #include "FloorActor.generated.h"
 
-class UFloorMarkPointComponent;
 class UFloorBodyComponent;
 class UFloorPreset;
 
 /**
  * 
  */
-UCLASS(NotBlueprintable)
+UCLASS()
 class BUILDINGSINTERACTIONSYSTEM_API AFloorActor : public ACommonActor
 {
 	GENERATED_BODY()
@@ -22,15 +21,13 @@ class BUILDINGSINTERACTIONSYSTEM_API AFloorActor : public ACommonActor
 public:
 	AFloorActor();
 	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	virtual void OnConstruction(const FTransform& Transform) override;
 
 public:
 	UPROPERTY(VisibleAnywhere)
 	USceneComponent* SceneComponent = nullptr;
-	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	UFloorBodyComponent* FloorComponent = nullptr;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	UFloorMarkPointComponent* FloorMarkPointComponent = nullptr;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UFloorBodyComponent* FloorBodyComponent = nullptr;
 };

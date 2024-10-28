@@ -5,11 +5,18 @@
 
 #include "Selection.h"
 
-TArray<AActor*> UBPFunctions_EditorScene::GetSelectedActor()
+TArray<AActor*> UBPFunctions_EditorScene::GetSelectedActors()
 {
 	TArray<AActor*> SelectedActors;
 	GEditor->GetSelectedActors()->GetSelectedObjects(SelectedActors);
 	return SelectedActors;
+}
+
+TArray<UActorComponent*> UBPFunctions_EditorScene::GetSelectedComponents()
+{
+	TArray<UActorComponent*> SelectedComponents;
+	GEditor->GetSelectedComponents()->GetSelectedObjects(SelectedComponents);
+	return SelectedComponents;
 }
 
 void UBPFunctions_EditorScene::SelectNone()
@@ -45,7 +52,18 @@ void UBPFunctions_EditorScene::SelectComponents(TArray<UActorComponent*> InCompo
 
 void UBPFunctions_EditorScene::RefreshSelection()
 {
-	const TArray<AActor*> Actors = GetSelectedActor();
+	const TArray<AActor*> Actors = GetSelectedActors();
+	const TArray<UActorComponent*> Components = GetSelectedComponents();
+
 	SelectNone();
-	SelectActors(Actors, true);
+
+	if (!Actors.IsEmpty())
+	{
+		SelectActors(Actors, true);
+	}
+
+	if (!Components.IsEmpty())
+	{
+		SelectComponents(Components, true);
+	}
 }

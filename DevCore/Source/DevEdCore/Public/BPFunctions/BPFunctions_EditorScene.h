@@ -15,7 +15,8 @@ class DEVEDCORE_API UBPFunctions_EditorScene : public UBlueprintFunctionLibrary
 	GENERATED_BODY()
 
 public:
-	static TArray<AActor*> GetSelectedActor();
+	static TArray<AActor*> GetSelectedActors();
+	static TArray<UActorComponent*> GetSelectedComponents();
 
 	static void SelectNone();
 	static void SelectActor(AActor* InActor, bool bInSelected);
