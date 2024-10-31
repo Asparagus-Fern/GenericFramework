@@ -13,4 +13,9 @@ class APPLICATIONRUNTIME_API ASmartCityPawn : public AThirdPersonPawn
 
 public:
 	ASmartCityPawn();
+	virtual void AddZoom_Implementation(float InValue) override;
+
+protected:
+	/* 是否重新评估Pawn的位置和弹簧臂长度 */
+	bool bEnableReassessment = true;
 };

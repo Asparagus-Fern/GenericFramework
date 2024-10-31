@@ -43,7 +43,7 @@ void UDSpringArmComponent::AddTargetArmLength(const float InValue)
 	}
 
 	const float PitchRate = FMath::GetMappedRangeValueClamped(FVector2D(0.f, 90.f), FVector2D(0.8f, 1.2f), FMath::Abs(Rotation.Pitch));
-	DesiredArmLength += (FMath::Abs(FMath::Sin(UE_DOUBLE_PI / (180.0) * Rotation.Pitch)) * PitchRate * TargetArmLength * 0.75f * UPawnManagerSetting::Get()->ZoomSpeed * InValue);
+	DesiredArmLength += (FMath::Abs(FMath::Sin(UE_DOUBLE_PI / (180.0) * Rotation.Pitch)) * PitchRate * (TargetArmLength * 0.2f) * ZoomSpeed * InValue);
 	DesiredArmLength = SpringArmLimit.GetLimitSpringArmLength(DesiredArmLength);
 }
 
@@ -53,7 +53,12 @@ void UDSpringArmComponent::SetTargetArmLength(const float InValue)
 	UpdateDesiredArmLocation(false, false, false, 0.f);
 }
 
+bool UDSpringArmComponent::GetIsReassessment(float InValue) const
+{
+	return DesiredArmLength + InValue < ReassessmentSpringArmLength;
+}
+
 void UDSpringArmComponent::UpdateTargetArmLength(float DeltaTime)
 {
-	TargetArmLength = TargetArmLength + DeltaTime * (DesiredArmLength - TargetArmLength);
+	TargetArmLength = TargetArmLength + (DeltaTime * SpringArmLag) * (DesiredArmLength - TargetArmLength);
 }

@@ -19,6 +19,15 @@ public:
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float SpringArmLag = 5.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(ClampMin = 0.1f, UIMin = 0.1f))
+	float ZoomSpeed = 1.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float ReassessmentSpringArmLength = 100.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FSpringArmLimit SpringArmLimit;
 
 public:
@@ -27,6 +36,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void SetTargetArmLength(float InValue);
+
+	UFUNCTION(BlueprintPure)
+	bool GetIsReassessment(float InValue) const;
 
 protected:
 	float DesiredArmLength = 0.f;

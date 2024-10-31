@@ -132,7 +132,7 @@ float AThirdPersonPawn::GetZoom_Implementation()
 
 UCameraComponent* AThirdPersonPawn::GetActiveCameraComponent_Implementation()
 {
-	return IsValid(DuplicateCameraComponent) ? DuplicateCameraComponent : Super::GetActiveCameraComponent_Implementation();
+	return IsValid(DuplicateCameraComponent) ? DuplicateCameraComponent : (IsValid(CameraComponent) ? CameraComponent : Super::GetActiveCameraComponent_Implementation());
 }
 
 void AThirdPersonPawn::SetPawnLockingState_Implementation(FPawnLockingState InPawnLockingState)
