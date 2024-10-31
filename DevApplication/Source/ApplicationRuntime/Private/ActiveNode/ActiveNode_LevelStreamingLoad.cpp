@@ -116,7 +116,7 @@ void AActiveNode_LevelStreamingLoad::NativeOnLoadVisibleLevelsFinish()
 	if (ChangeNodeTag.IsValid())
 	{
 		bool bSuccess;
-		UActiveNodeSubsystem::ChangeActiveNodeTo(this, ChangeNodeTag, bSuccess, nullptr, false);
+		UActiveNodeSubsystem::ChangeActiveNodeTo(this, ChangeNodeTag, bSuccess, AActiveNode::StaticClass(), false);
 	}
 }
 

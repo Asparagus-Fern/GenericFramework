@@ -57,6 +57,8 @@ class SCREENWIDGETGENERATION_API UScreenWidgetManager : public UCoreManager
 	GENERATED_UCLASS_BODY()
 
 public:
+	DECLARE_EVENT(UScreenWidgetManager, FScreenWidgetDelegate);
+
 	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
 
 	/* IProcedureBaseInterface */
@@ -74,6 +76,16 @@ public:
 
 	/* Interactable Widget Group */
 public:
+	DECLARE_EVENT_TwoParams(UScreenWidgetManager, FOnInteractableWidgetAdded, UInteractableUserWidgetBase*, FString);
+
+	DECLARE_EVENT_TwoParams(UScreenWidgetManager, FOnInteractableWidgetRemoved, UInteractableUserWidgetBase*, FString);
+
+	DECLARE_EVENT_OneParam(UScreenWidgetManager, FOnInteractableWidgetClearup, FString);
+
+	static FOnInteractableWidgetAdded OnInteractableWidgetAdded;
+	static FOnInteractableWidgetRemoved OnInteractableWidgetRemoved;
+	static FOnInteractableWidgetClearup OnInteractableWidgetClearup;
+
 	virtual void AddInteractableWidget(UInteractableUserWidgetBase* InteractableWidget, FString GroupName);
 	virtual void RemoveInteractableWidget(UInteractableUserWidgetBase* InteractableWidget, FString GroupName);
 	virtual void ClearupInteractableWidgetGroup(const FString& GroupName, bool DeselectAll);
@@ -90,28 +102,22 @@ public:
 	UPROPERTY(Transient, BlueprintReadOnly)
 	TArray<TObjectPtr<UGameHUD>> GameHUDs;
 
+private:
+	bool bIsHUDCreated = false;
+
 public:
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FScreenWidgetDelegate);
+	DECLARE_EVENT_OneParam(UScreenWidgetManager, FHUDDelegate, UGameHUD*);
 
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FHUDDelegate, UGameHUD*, HUD);
+	DECLARE_EVENT_TwoParams(UScreenWidgetManager, FOnHUDActiveStateChanged, UGameHUD*, bool);
 
-	UPROPERTY(BlueprintAssignable)
-	FScreenWidgetDelegate PreHUDCreated;
+	static FScreenWidgetDelegate PreHUDCreated;
+	static FHUDDelegate OnHUDCreated;
+	static FScreenWidgetDelegate PostHUDCreated;
+	static FScreenWidgetDelegate PreHUDDestroyed;
+	static FHUDDelegate OnHUDDestroyed;
+	static FScreenWidgetDelegate PostHUDDestroyed;
 
-	UPROPERTY(BlueprintAssignable)
-	FHUDDelegate OnHUDCreated;
-
-	UPROPERTY(BlueprintAssignable)
-	FScreenWidgetDelegate PostHUDCreated;
-
-	UPROPERTY(BlueprintAssignable)
-	FScreenWidgetDelegate PreHUDDestroyed;
-
-	UPROPERTY(BlueprintAssignable)
-	FHUDDelegate OnHUDDestroyed;
-
-	UPROPERTY(BlueprintAssignable)
-	FScreenWidgetDelegate PostHUDDestroyed;
+	static FOnHUDActiveStateChanged OnHUDActiveStateChanged;
 
 public:
 	void CreateGameHUDs(TArray<TSoftClassPtr<UGameHUD>> InGameHUDClasses, bool bAddToViewport = true);
@@ -122,6 +128,7 @@ public:
 	void RemoveGameHUD(UGameHUD* GameHUD);
 	void RemoveGameHUD(FGameplayTag InTag);
 
+	/* 从标签查找HUD */
 	virtual TArray<UGameHUD*> GetGameHUDByTag(FGameplayTag InTag);
 
 	/* 设置所有HUD的显隐 */
@@ -133,6 +140,8 @@ public:
 	/* 从标签查找HUD并设置显隐 */
 	virtual void SetGameHUDActiveState(FGameplayTag InTag, bool IsActived);
 
+	bool IsGameHUDCreated() const { return bIsHUDCreated; }
+
 protected:
 	/* 创建该Widget的临时HUD，在移除该Widget时将，如果其他Widget没有使用到该临时HUD，将被移除 */
 	void AddTemporaryGameHUD(UUserWidgetBase* InWidget);
@@ -142,22 +151,34 @@ protected:
 
 	/* UGameplayTagSlot */
 public:
+	DECLARE_EVENT_OneParam(UScreenWidgetManager, FSlotDelegate, UGameplayTagSlot*);
+
+	static FSlotDelegate OnSlotRegister;
+	static FSlotDelegate OnSlotUnRegister;
+	static FScreenWidgetDelegate OnSlslotClearup;
+
+public:
 	/* 当前视口所有以注册的插槽 */
 	UPROPERTY(BlueprintReadOnly, Transient)
 	TArray<TObjectPtr<UGameplayTagSlot>> Slots;
 
 public:
-	UGameplayTagSlot* GetSlot(FGameplayTag InSlotTag) const;
-	UUserWidgetBase* GetSlotWidget(FGameplayTag InSlotTag);
-	void ClearupSlots();
-
-protected:
 	void RegisterSlot(UGameplayTagSlot* InSlot);
 	void UnRegisterSlot(UGameplayTagSlot* InSlot);
+	void ClearupSlots();
+
+	UGameplayTagSlot* GetSlot(FGameplayTag InSlotTag) const;
+	UUserWidgetBase* GetSlotWidget(FGameplayTag InSlotTag);
 
 	/* User Widget Base */
 public:
 	static UUserWidgetBase* GetContainerWidget(const FWidgetContainer& WidgetContainer);
+
+public:
+	DECLARE_EVENT_OneParam(UScreenWidgetManager, FUserWidgetBaseDelegate, UUserWidgetBase*);
+
+	static FUserWidgetBaseDelegate OnWidgetOpen;
+	static FUserWidgetBaseDelegate OnWidgetClose;
 
 public:
 	virtual UUserWidgetBase* OpenUserWidget(TSubclassOf<UUserWidgetBase> InWidgetClass, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged());
@@ -181,20 +202,16 @@ public:
 	UPROPERTY(BlueprintReadOnly, Transient)
 	TArray<TObjectPtr<UUserWidgetBase>> ActivedWidgets;
 
-public:
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FUserWidgetBaseDelegate, UUserWidgetBase*, UserWidgetBase);
-
-	UPROPERTY(BlueprintAssignable)
-	FUserWidgetBaseDelegate OnWidgetOpen;
-
-	UPROPERTY(BlueprintAssignable)
-	FUserWidgetBaseDelegate OnWidgetClose;
-
 protected:
 	UPROPERTY(Transient)
 	TArray<FWidgetAnimationTimerHandle> WidgetAnimationTimerHandles;
 
 	/* Game Menu */
+public:
+	DECLARE_EVENT_TwoParams(UScreenWidgetManager, FOnMenuSelectionChanged, FGameplayTag, bool)
+
+	static FOnMenuSelectionChanged OnMenuSelectionChanged;
+
 public:
 	/* 当前菜单数据 */
 	UPROPERTY(BlueprintReadOnly, Transient)
@@ -204,6 +221,11 @@ public:
 	UPROPERTY(BlueprintReadOnly, Transient)
 	TArray<FMenuGenerateInfo> MenuGenerateInfos;
 
+public:
+	virtual void SwitchGameMenu(UGameMenuSetting* InGameMenuSetting);
+	virtual void SelectMenu(FGameplayTag InMenuTag);
+	virtual void DeselectMenu(FGameplayTag InMenuTag);
+
 protected:
 	/* 是否需要清理生成信息 */
 	bool bClearupMenuGenerateInfos = false;
@@ -211,38 +233,26 @@ protected:
 	/* 是否正在切换菜单数据 */
 	bool bSwitchingGameMenu = false;
 
-protected:
 	/* 等待切换的菜单数据 */
 	UPROPERTY(Transient)
 	TObjectPtr<UGameMenuSetting> WaitingGameMenu = nullptr;
 
 	UPROPERTY(Transient)
-	TArray<TObjectPtr<UMenuStyle>> NewMenuStyles;
+	TMap<UMenuStyle*, bool> TargetMenuSelection;
 
-public:
-	virtual void SwitchGameMenu(UGameMenuSetting* InGameMenuSetting);
-	virtual void SelectMenu(FGameplayTag InMenuTag);
-	virtual void DeselectMenu(FGameplayTag InMenuTag);
+	bool bProcessingMenuSelection = false;
+	int32 ProcessingMenuIndex = 0;
 
 protected:
+	TArray<UMenuStyle*> GetMenuStyles();
+
 	virtual void GenerateMenu(FGameplayTag InMenuTag);
 	virtual void GenerateMenu(TArray<FGameplayTag> InMenuTags);
 	virtual void DestroyMenu(FGameplayTag InMenuTag);
 	virtual void DestroyMenu(TArray<FGameplayTag> InMenuTags);
 
-	TArray<UMenuStyle*> GetMenuStyles();
-
-protected:
-	TMap<UMenuStyle*, bool> TargetMenuSelection;
-	bool bProcessingMenuSelection = false;
-	int32 ProcessingMenuIndex = 0;
-
 	virtual FReply OnMenuResponseStateChanged(UInteractableUserWidgetBase* InteractableWidget, bool TargetEventState);
 	virtual void HandleMenuResponseStateChanged();
-
-public:
-	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnMenuSelectionChanged, FGameplayTag, bool)
-	static FOnMenuSelectionChanged OnMenuSelectionChanged;
 
 	/* Shortcut Widget */
 protected:

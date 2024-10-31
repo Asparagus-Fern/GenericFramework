@@ -30,7 +30,7 @@ void UEditorWorldWidgetPanel::NativeOnCreate()
 
 void UEditorWorldWidgetPanel::NativeOnRefresh()
 {
-	if (!ConstraintCanvas.IsValid() || !LevelEditorViewportClient)
+	if (!ConstraintCanvas.IsValid() || !LevelEditorViewportClient || !LevelEditorViewportClient->ParentLevelEditor.IsValid())
 	{
 		return;
 	}
@@ -207,8 +207,6 @@ void UWorldWidgetEdManager::NativeOnCreate()
 
 void UWorldWidgetEdManager::NativeOnDestroy()
 {
-	Super::NativeOnDestroy();
-
 	for (const auto& WorldWidgetPanel : WorldWidgetPanels)
 	{
 		WorldWidgetPanel->NativeOnDestroy();
@@ -227,16 +225,13 @@ void UWorldWidgetEdManager::NativeOnDestroy()
 	BeginPIEHandle.Reset();
 	EndPIEHandle.Reset();
 	WorldWidgetPointConstructHandle.Reset();
+
+	Super::NativeOnDestroy();
 }
 
 void UWorldWidgetEdManager::NativeOnRefresh()
 {
 	Super::NativeOnRefresh();
-
-	for (const auto& WorldWidgetPanel : WorldWidgetPanels)
-	{
-		WorldWidgetPanel->NativeOnRefresh();
-	}
 }
 
 void UWorldWidgetEdManager::OnLevelEditorCreated(TSharedPtr<ILevelEditor> LevelEditor)

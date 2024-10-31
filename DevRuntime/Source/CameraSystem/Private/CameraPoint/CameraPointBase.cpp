@@ -9,6 +9,9 @@
 
 UE_DEFINE_GAMEPLAY_TAG(TAG_Camera, "Camera");
 
+ACameraPointBase::FCameraPointDelegate ACameraPointBase::OnCameraPointRegister;
+ACameraPointBase::FCameraPointDelegate ACameraPointBase::OnCameraPointUnRegister;
+
 ACameraPointBase::ACameraPointBase()
 {
 	PrimaryActorTick.bCanEverTick = false;
@@ -21,20 +24,12 @@ ACameraPointBase::ACameraPointBase()
 void ACameraPointBase::BeginPlay()
 {
 	Super::BeginPlay();
-
-	if (CameraTag.IsValid())
-	{
-		GetManager<UCameraManager>()->AddCameraPoint(CameraTag, this);
-	}
+	OnCameraPointRegister.Broadcast(this);
 }
 
 void ACameraPointBase::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-	if (CameraTag.IsValid())
-	{
-		GetManager<UCameraManager>()->RemoveCameraPoint(CameraTag);
-	}
-
+	OnCameraPointUnRegister.Broadcast(this);
 	Super::EndPlay(EndPlayReason);
 }
 
@@ -54,14 +49,8 @@ UCameraComponent* ACameraPointBase::GetCameraComponent_Implementation()
 
 #if WITH_EDITOR
 
-// ACameraPointBase::FCameraPointDelegate ACameraPointBase::OnCameraViewportCapture;
 ACameraPointBase::FCameraPointDelegate ACameraPointBase::OnCopyViewportCamera;
 ACameraPointBase::FOnCameraPointPilotStateChanged ACameraPointBase::OnCameraPointPilotStateChanged;
-
-// void ACameraPointBase::CaptureCameraViewport_Implementation()
-// {
-// 	OnCameraViewportCapture.Broadcast(this);
-// }
 
 void ACameraPointBase::CopyFromViewportCamera_Implementation()
 {

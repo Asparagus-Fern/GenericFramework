@@ -33,9 +33,20 @@ public:
 
 	/* AWorldWidgetPoint */
 public:
+	DECLARE_EVENT_OneParam(AWorldWidgetPoint, FWorldWidgetPointDelegate, AWorldWidgetPoint*);
+
+	static FWorldWidgetPointDelegate OnWorldWidgetPointConstruct;
+	static FWorldWidgetPointDelegate OnWorldWidgetPointRegister;
+	static FWorldWidgetPointDelegate OnWorldWidgetPointUnRegister;
+
+public:
+	/* 是否自动注册 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	bool bIsAutoRegister = true;
+
 	/* 当为false时自动激活显示，为true则手动控制显示 */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	bool bIsManual = false;
+	bool bIsManualActive = false;
 
 	/* 可通过标签获取到所有该标签点位 */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="Point"))
@@ -44,10 +55,4 @@ public:
 	/* 点位UI */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced)
 	UUserWidgetBase* WorldWidget = nullptr;
-
-public:
-	DECLARE_MULTICAST_DELEGATE_OneParam(FWorldWidgetPointDelegate, AWorldWidgetPoint*);
-	static FWorldWidgetPointDelegate OnWorldWidgetPointConstruct;
-	static FWorldWidgetPointDelegate OnWorldWidgetPointRegister;
-	static FWorldWidgetPointDelegate OnWorldWidgetPointUnRegister;
 };

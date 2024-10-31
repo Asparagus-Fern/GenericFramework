@@ -16,6 +16,4 @@ class WORLDWIDGETGENERATION_API UWorldWidgetManagerSetting : public UManagerSett
 
 public:
 	static ThisClass* Get() { return GetMutableDefault<ThisClass>(); }
-
-public:
 };

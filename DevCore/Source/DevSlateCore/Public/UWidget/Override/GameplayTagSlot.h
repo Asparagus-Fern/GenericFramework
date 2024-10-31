@@ -25,13 +25,28 @@ protected:
 #endif
 	virtual TSharedRef<SWidget> RebuildWidget() override;
 	virtual void ReleaseSlateResources(bool bReleaseChildren) override;
+	virtual void OnSlotAdded(UPanelSlot* InSlot) override;
+	virtual void OnSlotRemoved(UPanelSlot* InSlot) override;
 
 public:
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, meta=(Categories="UI.HUD"))
+	/* 是否手动的注册插槽 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	bool bManualRegistration = false;
+
+	/* 插槽标签 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="UI.HUD"))
 	FGameplayTag SlotTag;
 
 public:
 	DECLARE_MULTICAST_DELEGATE_OneParam(FGameplayTagSlotDelegate, UGameplayTagSlot*)
 	static FGameplayTagSlotDelegate OnGameplayTagSlotBuild;
 	static FGameplayTagSlotDelegate OnGameplayTagSlotDestroy;
+
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSlotContentChanged, UWidget*, Widget);
+
+	UPROPERTY(BlueprintAssignable)
+	FOnSlotContentChanged OnSlotContentAdded;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnSlotContentChanged OnSlotContentRemoved;
 };

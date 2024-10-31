@@ -3,10 +3,6 @@
 
 #include "WorldWidgetPoint.h"
 
-#include "WorldWidget.h"
-#include "WorldWidgetManager.h"
-#include "Manager/ManagerGlobal.h"
-
 UE_DEFINE_GAMEPLAY_TAG(TAG_Point, "Point");
 
 AWorldWidgetPoint::FWorldWidgetPointDelegate AWorldWidgetPoint::OnWorldWidgetPointConstruct;
@@ -31,7 +27,11 @@ void AWorldWidgetPoint::OnConstruction(const FTransform& Transform)
 void AWorldWidgetPoint::BeginPlay()
 {
 	Super::BeginPlay();
-	OnWorldWidgetPointRegister.Broadcast(this);
+
+	if (bIsAutoRegister)
+	{
+		OnWorldWidgetPointRegister.Broadcast(this);
+	}
 }
 
 void AWorldWidgetPoint::EndPlay(const EEndPlayReason::Type EndPlayReason)

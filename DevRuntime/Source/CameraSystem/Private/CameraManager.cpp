@@ -17,6 +17,9 @@
 
 #define LOCTEXT_NAMESPACE "UCoreManager"
 
+UCameraManager::FCameraPointDelegate UCameraManager::OnCameraPointRegister;
+UCameraManager::FCameraPointDelegate UCameraManager::OnCameraPointUnRegister;
+
 UCameraManager::FCameraAutoSwitchDelegate UCameraManager::OnCameraInputIdleReset;
 UCameraManager::FCameraAutoSwitchDelegate UCameraManager::OnCameraAutoSwitchStart;
 UCameraManager::FCameraAutoSwitchDelegate UCameraManager::OnCameraAutoSwitchStop;
@@ -31,26 +34,39 @@ bool UCameraManager::ShouldCreateSubsystem(UObject* Outer) const
 void UCameraManager::NativeOnActived()
 {
 	Super::NativeOnActived();
+
+	ACameraPointBase::OnCameraPointRegister.AddUObject(this, &UCameraManager::AddCameraPoint);
+	ACameraPointBase::OnCameraPointUnRegister.AddUObject(this, &UCameraManager::RemoveCameraPoint);
+
 	UCameraHandle::OnSwitchCameraFinish.AddUObject(this, &UCameraManager::HandleSwitchToCameraFinish);
 }
 
 void UCameraManager::NativeOnInactived()
 {
 	Super::NativeOnInactived();
+
+	ACameraPointBase::OnCameraPointRegister.RemoveAll(this);
+	ACameraPointBase::OnCameraPointUnRegister.RemoveAll(this);
+
 	UCameraHandle::OnSwitchCameraFinish.RemoveAll(this);
 }
 
-void UCameraManager::AddCameraPoint(FGameplayTag InCameraTag, ACameraPointBase* InCameraPoint)
+void UCameraManager::AddCameraPoint(ACameraPointBase* InCameraPoint)
 {
-	if (InCameraTag.IsValid())
+	if (IsValid(InCameraPoint) && InCameraPoint->CameraTag.IsValid() && !CameraPoints.Contains(InCameraPoint->CameraTag))
 	{
-		CameraPoints.FindOrAdd(InCameraTag, InCameraPoint);
+		CameraPoints.FindOrAdd(InCameraPoint->CameraTag, InCameraPoint);
+		OnCameraPointRegister.Broadcast(InCameraPoint);
 	}
 }
 
-void UCameraManager::RemoveCameraPoint(FGameplayTag InCameraTag)
+void UCameraManager::RemoveCameraPoint(ACameraPointBase* InCameraPoint)
 {
-	CameraPoints.Remove(InCameraTag);
+	if (IsValid(InCameraPoint) && InCameraPoint->CameraTag.IsValid() && CameraPoints.Contains(InCameraPoint->CameraTag))
+	{
+		CameraPoints.Remove(InCameraPoint->CameraTag);
+		OnCameraPointUnRegister.Broadcast(InCameraPoint);
+	}
 }
 
 ACameraPointBase* UCameraManager::GetCameraPoint(const FGameplayTag InCameraTag) const
@@ -61,6 +77,11 @@ ACameraPointBase* UCameraManager::GetCameraPoint(const FGameplayTag InCameraTag)
 	}
 
 	return nullptr;
+}
+
+bool UCameraManager::CanCameraSwitch(FGameplayTag InCameraTag) const
+{
+	return IsValid(GetCameraPoint(InCameraTag));
 }
 
 bool UCameraManager::CanSwitchToCamera(const FGameplayTag InCameraTag) const
@@ -309,7 +330,7 @@ void UCameraManager::HandleSwitchToCameraFinish(UCameraHandle* InCameraHandle)
 		CurrentCameraHandles.Remove(InCameraHandle);
 	}
 
-	if (CameraInputIdle->bEnableLensMovement)
+	if (IsValid(CameraInputIdle) && CameraInputIdle->bEnableLensMovement)
 	{
 		OnCameraLensMovementStart.Broadcast(CameraInputIdle);
 		CameraLensMovement = CameraInputIdle->LensMovementList[FMath::RandRange(0, CameraInputIdle->LensMovementList.Num() - 1)];

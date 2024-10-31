@@ -46,6 +46,27 @@ bool FWidgetAnimationTimerHandle::operator==(const UUserWidgetBase* OtherWidget)
 
 /* ==================== UScreenWidgetManager ==================== */
 
+UScreenWidgetManager::FOnInteractableWidgetAdded UScreenWidgetManager::OnInteractableWidgetAdded;
+UScreenWidgetManager::FOnInteractableWidgetRemoved UScreenWidgetManager::OnInteractableWidgetRemoved;
+UScreenWidgetManager::FOnInteractableWidgetClearup UScreenWidgetManager::OnInteractableWidgetClearup;
+
+UScreenWidgetManager::FScreenWidgetDelegate UScreenWidgetManager::PreHUDCreated;
+UScreenWidgetManager::FHUDDelegate UScreenWidgetManager::OnHUDCreated;
+UScreenWidgetManager::FScreenWidgetDelegate UScreenWidgetManager::PostHUDCreated;
+
+UScreenWidgetManager::FScreenWidgetDelegate UScreenWidgetManager::PreHUDDestroyed;
+UScreenWidgetManager::FHUDDelegate UScreenWidgetManager::OnHUDDestroyed;
+UScreenWidgetManager::FScreenWidgetDelegate UScreenWidgetManager::PostHUDDestroyed;
+
+UScreenWidgetManager::FSlotDelegate UScreenWidgetManager::OnSlotRegister;
+UScreenWidgetManager::FSlotDelegate UScreenWidgetManager::OnSlotUnRegister;
+UScreenWidgetManager::FScreenWidgetDelegate UScreenWidgetManager::OnSlslotClearup;
+
+UScreenWidgetManager::FUserWidgetBaseDelegate UScreenWidgetManager::OnWidgetOpen;
+UScreenWidgetManager::FUserWidgetBaseDelegate UScreenWidgetManager::OnWidgetClose;
+
+UScreenWidgetManager::FOnHUDActiveStateChanged UScreenWidgetManager::OnHUDActiveStateChanged;
+
 UScreenWidgetManager::FOnMenuSelectionChanged UScreenWidgetManager::OnMenuSelectionChanged;
 
 UScreenWidgetManager::UScreenWidgetManager(const FObjectInitializer& ObjectInitializer)
@@ -133,6 +154,8 @@ void UScreenWidgetManager::OnWorldMatchStarting_Implementation()
 	{
 		PreHUDCreated.Broadcast();
 		CreateGameHUDs(UScreenWidgetManagerSetting::Get()->GameHUDClasses, true);
+
+		bIsHUDCreated = true;
 		PostHUDCreated.Broadcast();
 	}
 }
@@ -152,6 +175,7 @@ void UScreenWidgetManager::AddInteractableWidget(UInteractableUserWidgetBase* In
 	if (IsValid(InteractableWidget->ActiveCommonButton))
 	{
 		InteractableWidgetGroups.FindRef(GroupName)->AddWidget(InteractableWidget->ActiveCommonButton);
+		OnInteractableWidgetAdded.Broadcast(InteractableWidget, GroupName);
 	}
 }
 
@@ -163,6 +187,7 @@ void UScreenWidgetManager::RemoveInteractableWidget(UInteractableUserWidgetBase*
 	{
 		if (IsValid(InteractableWidget->ActiveCommonButton))
 		{
+			OnInteractableWidgetRemoved.Broadcast(InteractableWidget, GroupName);
 			Group->RemoveWidget(InteractableWidget->ActiveCommonButton);
 		}
 
@@ -189,6 +214,8 @@ void UScreenWidgetManager::ClearupInteractableWidgetGroup(const FString& GroupNa
 
 		RemoveGroup->MarkAsGarbage();
 	}
+
+	OnInteractableWidgetClearup.Broadcast(GroupName);
 }
 
 bool UScreenWidgetManager::FindInteractableWidgetGroup(const FString& GroupName, UCommonButtonGroup*& Group) const
@@ -335,6 +362,8 @@ void UScreenWidgetManager::SetGameHUDActiveState(UGameHUD* GameHUD, const bool I
 {
 	GameHUD->PlayAnimationEvent(IsActived);
 	GameHUD->SetIsActived(IsActived);
+
+	OnHUDActiveStateChanged.Broadcast(GameHUD, IsActived);
 }
 
 void UScreenWidgetManager::SetGameHUDActiveState(const FGameplayTag InTag, const bool IsActived)
@@ -360,6 +389,16 @@ void UScreenWidgetManager::AddTemporaryGameHUD(UUserWidgetBase* InWidget)
 		{
 			UGameHUD* NewTemporaryHUD = CreateWidget<UGameHUD>(GetWorld(), TemporaryHUDClass);
 			CreateGameHUD(NewTemporaryHUD, false);
+		}
+		else
+		{
+			for (const auto& GameHUD : GameHUDs)
+			{
+				if (GameHUD.GetClass() == TemporaryHUDClass)
+				{
+					ActiveWidget(GameHUD);
+				}
+			}
 		}
 	}
 }
@@ -410,6 +449,44 @@ void UScreenWidgetManager::RemoveTemporaryGameHUD(UUserWidgetBase* InWidget)
 
 /* ==================== UGameplayTagSlot ==================== */
 
+void UScreenWidgetManager::RegisterSlot(UGameplayTagSlot* InSlot)
+{
+	if (!IsValid(InSlot) || !InSlot->SlotTag.IsValid() || Slots.Contains(InSlot))
+	{
+		DLOG(DLogUI, Warning, TEXT("Fail To RegisterSlot"))
+		return;
+	}
+
+	Slots.Add(InSlot);
+	InSlot->ClearChildren();
+
+	OnSlotRegister.Broadcast(InSlot);
+}
+
+void UScreenWidgetManager::UnRegisterSlot(UGameplayTagSlot* InSlot)
+{
+	if (!IsValid(InSlot) || !InSlot->SlotTag.IsValid() || !Slots.Contains(InSlot))
+	{
+		DLOG(DLogUI, Warning, TEXT("Fail To UnRegisterSlot"))
+		return;
+	}
+
+	OnSlotUnRegister.Broadcast(InSlot);
+	Slots.Remove(InSlot);
+}
+
+void UScreenWidgetManager::ClearupSlots()
+{
+	TArray<UUserWidgetBase*> TempActivedWidgets = ActivedWidgets;
+	for (const auto& TempActivedWidget : TempActivedWidgets)
+	{
+		InactiveWidget(TempActivedWidget, true);
+	}
+
+	OnSlslotClearup.Broadcast();
+	Slots.Reset();
+}
+
 UGameplayTagSlot* UScreenWidgetManager::GetSlot(const FGameplayTag InSlotTag) const
 {
 	if (!InSlotTag.IsValid())
@@ -439,40 +516,6 @@ UUserWidgetBase* UScreenWidgetManager::GetSlotWidget(const FGameplayTag InSlotTa
 	}
 
 	return nullptr;
-}
-
-void UScreenWidgetManager::ClearupSlots()
-{
-	TArray<UUserWidgetBase*> TempActivedWidgets = ActivedWidgets;
-	for (const auto& TempActivedWidget : TempActivedWidgets)
-	{
-		InactiveWidget(TempActivedWidget, true);
-	}
-
-	Slots.Reset();
-}
-
-void UScreenWidgetManager::RegisterSlot(UGameplayTagSlot* InSlot)
-{
-	if (!IsValid(InSlot) || !InSlot->SlotTag.IsValid() || Slots.Contains(InSlot))
-	{
-		DLOG(DLogUI, Warning, TEXT("Fail To RegisterSlot"))
-		return;
-	}
-
-	Slots.Add(InSlot);
-	InSlot->ClearChildren();
-}
-
-void UScreenWidgetManager::UnRegisterSlot(UGameplayTagSlot* InSlot)
-{
-	if (!IsValid(InSlot) || !InSlot->SlotTag.IsValid() || !Slots.Contains(InSlot))
-	{
-		DLOG(DLogUI, Warning, TEXT("Fail To UnRegisterSlot"))
-		return;
-	}
-
-	Slots.Remove(InSlot);
 }
 
 /* ==================== User Widget Base ==================== */
@@ -741,13 +784,12 @@ void UScreenWidgetManager::InactiveWidget(UUserWidgetBase* InWidget, FOnWidgetAc
 
 	auto OnActiveStateChangedFinish = [this, &InWidget, &OnFinish, &MarkAsGarbage]()
 	{
-		if (UGameplayTagSlot* Slot = GetSlot(InWidget->SlotTag))
-		{
-			Slot->RemoveChild(InWidget);
-		}
+		RemoveTemporaryGameHUD(InWidget);
 
-		ActivedWidgets.Remove(InWidget);
-		OnWidgetClose.Broadcast(InWidget);
+		if (InWidget->IsA<UGameHUD>())
+		{
+			RemoveGameHUD(Cast<UGameHUD>(InWidget));
+		}
 
 		if (const FWidgetAnimationTimerHandle* Found = WidgetAnimationTimerHandles.FindByKey(InWidget))
 		{
@@ -759,7 +801,14 @@ void UScreenWidgetManager::InactiveWidget(UUserWidgetBase* InWidget, FOnWidgetAc
 			OnFinish.ExecuteIfBound(InWidget);
 		}
 
-		RemoveTemporaryGameHUD(InWidget);
+		// if (UGameplayTagSlot* Slot = GetSlot(InWidget->SlotTag))
+		// {
+		// 	Slot->RemoveChild(InWidget);
+		// }
+
+		InWidget->RemoveFromParent();
+		ActivedWidgets.Remove(InWidget);
+		OnWidgetClose.Broadcast(InWidget);
 
 		if (MarkAsGarbage)
 		{
@@ -902,6 +951,18 @@ void UScreenWidgetManager::DeselectMenu(const FGameplayTag InMenuTag)
 	}
 }
 
+TArray<UMenuStyle*> UScreenWidgetManager::GetMenuStyles()
+{
+	TArray<UMenuStyle*> MenuStyles;
+
+	for (auto& MenuGenerateInfo : MenuGenerateInfos)
+	{
+		MenuStyles.Append(MenuGenerateInfo.MenuStyles);
+	}
+
+	return MenuStyles;
+}
+
 void UScreenWidgetManager::GenerateMenu(const FGameplayTag InMenuTag)
 {
 	if (InMenuTag.IsValid())
@@ -995,7 +1056,6 @@ void UScreenWidgetManager::GenerateMenu(TArray<FGameplayTag> InMenuTags)
 			FoundMenuGenerateInfo->MenuContainer->NativeConstructMenuContainer(MenuStyle, Index);
 
 			ActiveWidget(MenuStyle);
-			NewMenuStyles.Add(MenuStyle);
 			MenuStyle->NativeConstructMenuStyle(MenuInfo);
 
 			// if (bProcessingMenuSelection)
@@ -1065,18 +1125,6 @@ void UScreenWidgetManager::DestroyMenu(TArray<FGameplayTag> InMenuTags)
 			}
 		}
 	}
-}
-
-TArray<UMenuStyle*> UScreenWidgetManager::GetMenuStyles()
-{
-	TArray<UMenuStyle*> MenuStyles;
-
-	for (auto& MenuGenerateInfo : MenuGenerateInfos)
-	{
-		MenuStyles.Append(MenuGenerateInfo.MenuStyles);
-	}
-
-	return MenuStyles;
 }
 
 FReply UScreenWidgetManager::OnMenuResponseStateChanged(UInteractableUserWidgetBase* InteractableWidget, const bool TargetEventState)

@@ -7,6 +7,8 @@
 #include "NativeGameplayTags.h"
 #include "ActiveNode_Play.generated.h"
 
+class ACameraPointBase;
+class UCameraHandle;
 class UGameMenuSetting;
 class UUserWidgetBase;
 
@@ -20,6 +22,7 @@ public:
 	virtual void Login() override;
 	virtual void Logout() override;
 
+	/* UI */
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="UI")
 	UGameMenuSetting* DefaultGameMenu = nullptr;
@@ -27,11 +30,19 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="UI")
 	TArray<TSubclassOf<UUserWidgetBase>> DefaultOpenWidgetClasses;
 
+	/* Camera */
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(Categories="Camera"), Category="Camera")
+	FGameplayTag DefaultCameraTag = FGameplayTag::EmptyTag;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Instanced, Category="Camera")
+	UCameraHandle* CameraHandle = nullptr;
+
 protected:
 	UPROPERTY(Transient)
 	TArray<UUserWidgetBase*> DefaultOpenWidgets;
 
 protected:
-	UFUNCTION()
-	void PostHUDCreated();
+	virtual void PostHUDCreated();
+	virtual void OnCameraPointRegister(ACameraPointBase* InCameraPoint);
 };

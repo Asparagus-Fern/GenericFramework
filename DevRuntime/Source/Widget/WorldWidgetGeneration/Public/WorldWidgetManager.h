@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "Manager/CoreManager.h"
 #include "WorldWidgetManager.generated.h"
 
@@ -71,6 +72,19 @@ public:
 	virtual void NativeOnInactived() override;
 
 	/* UWorldWidgetManager */
+public:
+	/* 注册一个3DUI点位 */
+	virtual void RegisterWorldWidgetPoint(AWorldWidgetPoint* WorldWidgetPoint);
+
+	/* 反注册一个3DUI点位 */
+	virtual void UnRegisterWorldWidgetPoint(AWorldWidgetPoint* WorldWidgetPoint);
+
+	TArray<AWorldWidgetPoint*> GetWorldWidgetPoints() { return WorldWidgetPoints; }
+
+	AWorldWidgetPoint* FindWorldWidgetPoint(FGameplayTag PointTag);
+
+	TArray<AWorldWidgetPoint*> FindWorldWidgetPoints(FGameplayTag PointTag);
+
 protected:
 	UPROPERTY(Transient)
 	TArray<AWorldWidgetPoint*> WorldWidgetPoints;
@@ -80,17 +94,23 @@ protected:
 
 protected:
 	/* 在HUD创建之后创建3DUI面板 */
-	UFUNCTION()
 	virtual void GenerateWorldWidgetPanel();
 
+	/* 创建3DUI面板 */
 	virtual UWorldWidgetPanel* CreateWorldWidgetPanel();
+
+	/* 刷新所有的3DUI面板 */
 	virtual void RefreshWorldWidgetPanel();
+
+	/* 移除指定3DUI面板 */
 	virtual void RemoveWorldWidgetPanel(UWorldWidgetPanel* InWorldWidgetPanel);
+
+	/* 清除所有3DUI面板 */
 	virtual void ClearupWorldWidgetPanel();
 
-	virtual void RegisterWorldWidgetPoint(AWorldWidgetPoint* WorldWidgetPoint);
-	virtual void UnRegisterWorldWidgetPoint(AWorldWidgetPoint* WorldWidgetPoint);
-
+	/* 尝试将一个3DUI添加到3DUI面板 */
 	virtual void TryToAddWorldWidgetPoint(AWorldWidgetPoint* WorldWidgetPoint);
+
+	/* 尝试将一个3DUI从3DUI面板移除 */
 	virtual void TryToRemoveWorldWidgetPoint(AWorldWidgetPoint* WorldWidgetPoint);
 };

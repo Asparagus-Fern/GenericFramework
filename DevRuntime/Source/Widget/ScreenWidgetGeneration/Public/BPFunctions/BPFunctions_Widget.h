@@ -66,15 +66,22 @@ public:
 
 	/* UGameplayTagSlot */
 public:
+	UFUNCTION(BlueprintCallable, Category="BPFunctions_Widget|Slot")
+	static void RegisterSlot(UGameplayTagSlot* InSlot);
+
+	UFUNCTION(BlueprintCallable, Category="BPFunctions_Widget|Slot")
+	static void UnRegisterSlot(UGameplayTagSlot* InSlot);
+
 	UFUNCTION(BlueprintPure, Category="BPFunctions_Widget|Slot")
 	static bool GetSlots(TArray<UGameplayTagSlot*>& Slots);
 
-	UFUNCTION(BlueprintPure, meta=(GameplayTagFilter="UI.HUD"))
+	UFUNCTION(BlueprintPure, meta=(GameplayTagFilter="UI.HUD"), Category="BPFunctions_Widget|Slot")
 	static UGameplayTagSlot* GetSlot(FGameplayTag InSlotTag);
 
 	UFUNCTION(BlueprintPure, meta=(GameplayTagFilter="UI.HUD", DeterminesOutputType = "InClass"), Category="BPFunctions_Widget|Slot")
 	static UUserWidgetBase* GetSlotWidget(FGameplayTag InSlotTag, TSubclassOf<UUserWidgetBase> InClass);
 
+	/* UserWidgetBase */
 public:
 	UFUNCTION(BlueprintCallable, meta = (DeterminesOutputType = "InWidgetClass"), Category="BPFunctions_Widget|UserWidgetBase")
 	static UUserWidgetBase* OpenUserWidgetByClass(TSubclassOf<UUserWidgetBase> InWidgetClass);

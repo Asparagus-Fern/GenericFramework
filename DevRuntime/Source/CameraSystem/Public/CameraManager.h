@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
+#include "CameraPoint/CameraPointBase.h"
 #include "Manager/CoreManager.h"
 #include "CameraManager.generated.h"
 
@@ -32,6 +33,12 @@ public:
 
 	/* UCameraManager */
 public:
+	DECLARE_EVENT_OneParam(UCameraManager, FCameraPointDelegate, ACameraPointBase*)
+
+	static FCameraPointDelegate OnCameraPointRegister;
+	static FCameraPointDelegate OnCameraPointUnRegister;
+
+public:
 	/* 已注册的相机点位 */
 	UPROPERTY(BlueprintReadOnly, Transient)
 	TMap<FGameplayTag, ACameraPointBase*> CameraPoints;
@@ -49,9 +56,10 @@ public:
 	TMap<int32, FGameplayTag> PreviousCameraTag;
 
 public:
-	virtual void AddCameraPoint(FGameplayTag InCameraTag, ACameraPointBase* InCameraPoint);
-	virtual void RemoveCameraPoint(FGameplayTag InCameraTag);
+	virtual void AddCameraPoint(ACameraPointBase* InCameraPoint);
+	virtual void RemoveCameraPoint(ACameraPointBase* InCameraPoint);
 	ACameraPointBase* GetCameraPoint(FGameplayTag InCameraTag) const;
+	bool CanCameraSwitch(FGameplayTag InCameraTag) const;
 
 public:
 	bool CanSwitchToCamera(FGameplayTag InCameraTag) const;
@@ -83,26 +91,23 @@ protected:
 	void HandleSwitchToCameraFinish(UCameraHandle* InCameraHandle);
 
 	/* UCameraInputIdle */
-protected:
-	/* 当前的相机空闲数据 */
-	UPROPERTY(Transient, BlueprintReadOnly)
-	UCameraInputIdle* CameraInputIdle = nullptr;
-
 public:
-	bool SetCameraInputIdle(UCameraInputIdle* InCameraInputIdle);
+	DECLARE_EVENT_OneParam(UCameraManager, FCameraAutoSwitchDelegate, UCameraInputIdle*)
 
-	DECLARE_MULTICAST_DELEGATE_OneParam(FCameraAutoSwitchDelegate, UCameraInputIdle*)
 	static FCameraAutoSwitchDelegate OnCameraInputIdleReset;
 	static FCameraAutoSwitchDelegate OnCameraAutoSwitchStart;
 	static FCameraAutoSwitchDelegate OnCameraAutoSwitchStop;
 	static FCameraAutoSwitchDelegate OnCameraLensMovementStart;
 	static FCameraAutoSwitchDelegate OnCameraLensMovementStop;
 
-protected:
-	virtual void OnInputIdleStart(UInputIdle* InputIdle);
-	virtual void OnInputIdleStop(UInputIdle* InputIdle);
+public:
+	bool SetCameraInputIdle(UCameraInputIdle* InCameraInputIdle);
 
 protected:
+	/* 当前的相机空闲数据 */
+	UPROPERTY(Transient, BlueprintReadOnly)
+	UCameraInputIdle* CameraInputIdle = nullptr;
+
 	/* 计数当前相机自动切换的下标 */
 	int32 CameraAutoSwitchIndex = 0;
 
@@ -113,8 +118,9 @@ protected:
 	UCameraLensMovement* CameraLensMovement = nullptr;
 
 protected:
+	virtual void OnInputIdleStart(UInputIdle* InputIdle);
+	virtual void OnInputIdleStop(UInputIdle* InputIdle);
+
 	virtual void HandleCameraAutoSwitch();
 	virtual void HandleCameraLensMovement();
-
-public:
 };

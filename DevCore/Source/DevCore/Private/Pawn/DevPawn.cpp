@@ -59,7 +59,7 @@ void ADevPawn::AddLocation_Implementation(const FVector2D InValue)
 {
 	if (PawnLockingState.CanMove(GetActorLocation()))
 	{
-		const FVector2D Movement = InValue * UPawnManagerSetting::Get()->MovementSpeed;
+		const FVector2D Movement = InValue * MovementSpeed;
 
 		AddMovementInput(UKismetMathLibrary::GetRightVector(GetActorRotation()), Movement.X);
 		AddMovementInput(UKismetMathLibrary::GetForwardVector(GetActorRotation()), Movement.Y);
@@ -70,7 +70,7 @@ void ADevPawn::AddRotation_Implementation(const FVector2D InValue)
 {
 	if (PawnLockingState.CanTurn(GetActorRotation()))
 	{
-		const FVector2D Rotation = InValue * UPawnManagerSetting::Get()->RotationSpeed;
+		const FVector2D Rotation = InValue * RotationSpeed;
 
 		AddControllerYawInput(Rotation.X);
 		AddControllerPitchInput(Rotation.Y);

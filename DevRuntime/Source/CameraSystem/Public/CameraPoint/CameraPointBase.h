@@ -36,14 +36,20 @@ public:
 	void SetCameraComponent(UCameraComponent* InCameraComponent);
 
 public:
-	DECLARE_MULTICAST_DELEGATE_OneParam(FCameraPointDelegate, ACameraPointBase*)
+	DECLARE_EVENT_OneParam(ACameraPointBase, FCameraPointDelegate, ACameraPointBase*)
+
+	static FCameraPointDelegate OnCameraPointRegister;
+	static FCameraPointDelegate OnCameraPointUnRegister;
 
 #if WITH_EDITOR
 
 public:
-	// UFUNCTION(CallInEditor, BlueprintNativeEvent, Category="Camera Point (Editor)", meta=(AdvancedDisplay))
-	// void CaptureCameraViewport();
+	DECLARE_EVENT_TwoParams(ACameraPointBase, FOnCameraPointPilotStateChanged, ACameraPointBase*, bool)
 
+	static FCameraPointDelegate OnCopyViewportCamera;
+	static FOnCameraPointPilotStateChanged OnCameraPointPilotStateChanged;
+
+public:
 	/* 从当前视口拷贝位置与旋转到该相机 */
 	UFUNCTION(CallInEditor, BlueprintNativeEvent, Category="Camera Point (Editor)")
 	void CopyFromViewportCamera();
@@ -53,13 +59,6 @@ public:
 
 	UFUNCTION(CallInEditor, BlueprintNativeEvent, Category="Camera Point (Editor)")
 	void StopPilotCamera();
-
-public:
-	// static FCameraPointDelegate OnCameraViewportCapture;
-	static FCameraPointDelegate OnCopyViewportCamera;
-
-	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnCameraPointPilotStateChanged, ACameraPointBase*, bool)
-	static FOnCameraPointPilotStateChanged OnCameraPointPilotStateChanged;
 
 #endif
 };

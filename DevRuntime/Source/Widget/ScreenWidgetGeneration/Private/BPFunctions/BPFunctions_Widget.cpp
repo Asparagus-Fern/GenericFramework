@@ -106,6 +106,22 @@ void UBPFunctions_Widget::SetGameHUDActiveStateByTag(const FGameplayTag InTag, c
 
 /* ==================== UGameplayTagSlot ==================== */
 
+void UBPFunctions_Widget::RegisterSlot(UGameplayTagSlot* InSlot)
+{
+	if (UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
+	{
+		ScreenWidgetManager->RegisterSlot(InSlot);
+	}
+}
+
+void UBPFunctions_Widget::UnRegisterSlot(UGameplayTagSlot* InSlot)
+{
+	if (UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
+	{
+		ScreenWidgetManager->UnRegisterSlot(InSlot);
+	}
+}
+
 bool UBPFunctions_Widget::GetSlots(TArray<UGameplayTagSlot*>& Slots)
 {
 	if (const UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())

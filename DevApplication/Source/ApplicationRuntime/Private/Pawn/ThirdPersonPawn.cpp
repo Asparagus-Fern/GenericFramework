@@ -66,7 +66,7 @@ void AThirdPersonPawn::AddLocation_Implementation(FVector2D InValue)
 		FloatingPawnMovement->Acceleration = Rate * MovementRate * 2.f;
 		FloatingPawnMovement->Deceleration = Rate * MovementRate * 2.5f;
 
-		const FVector2D Movement = InValue * Rate * UPawnManagerSetting::Get()->MovementSpeed;
+		const FVector2D Movement = InValue * MovementSpeed;
 		AddMovementInput(UKismetMathLibrary::GetRightVector(GetActorRotation()), Movement.X);
 		AddMovementInput(UKismetMathLibrary::GetForwardVector(GetActorRotation()), Movement.Y);
 	}
@@ -77,8 +77,8 @@ void AThirdPersonPawn::AddRotation_Implementation(FVector2D InValue)
 	const FRotator TargetRotation = Execute_GetRotation(this) + FRotator(InValue.Y, InValue.X, 0.f);
 	if (PawnLockingState.CanTurn(TargetRotation))
 	{
-		AddActorWorldRotation(FRotator(0.f, InValue.X, 0.f));
-		SpringArmComponent->AddRelativeRotation(FRotator(InValue.Y, 0.f, 0.f));
+		AddActorWorldRotation(FRotator(0.f, InValue.X * RotationSpeed, 0.f));
+		SpringArmComponent->AddRelativeRotation(FRotator(InValue.Y * RotationSpeed, 0.f, 0.f));
 	}
 }
 

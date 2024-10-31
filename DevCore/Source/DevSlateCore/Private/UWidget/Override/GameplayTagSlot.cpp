@@ -21,7 +21,7 @@ TSharedRef<SWidget> UGameplayTagSlot::RebuildWidget()
 	}
 	else
 	{
-		if (SlotTag.IsValid())
+		if (SlotTag.IsValid() && !bManualRegistration)
 		{
 			OnGameplayTagSlotBuild.Broadcast(this);
 		}
@@ -41,4 +41,16 @@ void UGameplayTagSlot::ReleaseSlateResources(bool bReleaseChildren)
 			OnGameplayTagSlotDestroy.Broadcast(this);
 		}
 	}
+}
+
+void UGameplayTagSlot::OnSlotAdded(UPanelSlot* InSlot)
+{
+	Super::OnSlotAdded(InSlot);
+	OnSlotContentAdded.Broadcast(GetChildAt(0));
+}
+
+void UGameplayTagSlot::OnSlotRemoved(UPanelSlot* InSlot)
+{
+	OnSlotContentAdded.Broadcast(GetChildAt(0));
+	Super::OnSlotRemoved(InSlot);
 }

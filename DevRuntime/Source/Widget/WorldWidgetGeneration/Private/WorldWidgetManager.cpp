@@ -4,7 +4,6 @@
 #include "WorldWidgetManager.h"
 
 #include "ScreenWidgetManager.h"
-#include "WorldWidget.h"
 #include "WorldWidgetManagerSetting.h"
 #include "WorldWidgetPoint.h"
 #include "Animation/WidgetAnimationEvent.h"
@@ -31,6 +30,12 @@ void UWorldWidgetPanel::NativeOnRefresh()
 
 	for (const auto& WorldWidget : WorldWidgets)
 	{
+		if (WorldWidget.Key->IsHidden())
+		{
+			WorldWidget.Value->SetVisibility(ESlateVisibility::Collapsed);
+			continue;
+		}
+		
 		for (FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)
 		{
 			FVector2D ScreenPosition;
@@ -124,6 +129,7 @@ void UWorldWidgetManager::NativeOnRefresh()
 {
 	Super::NativeOnRefresh();
 
+	EObjectFlags A = GetFlags();
 	for (const auto& WorldWidgetPanel : WorldWidgetPanels)
 	{
 		WorldWidgetPanel->NativeOnRefresh();
@@ -134,9 +140,9 @@ void UWorldWidgetManager::NativeOnActived()
 {
 	Super::NativeOnActived();
 
-	GetManager<UScreenWidgetManager>()->PostHUDCreated.AddUniqueDynamic(this, &UWorldWidgetManager::GenerateWorldWidgetPanel);
+	GetManager<UScreenWidgetManager>()->PostHUDCreated.AddUObject(this, &UWorldWidgetManager::GenerateWorldWidgetPanel);
 	AWorldWidgetPoint::OnWorldWidgetPointRegister.AddUObject(this, &UWorldWidgetManager::RegisterWorldWidgetPoint);
-	AWorldWidgetPoint::OnWorldWidgetPointUnRegister.AddUObject(this, &UWorldWidgetManager::RegisterWorldWidgetPoint);
+	AWorldWidgetPoint::OnWorldWidgetPointUnRegister.AddUObject(this, &UWorldWidgetManager::UnRegisterWorldWidgetPoint);
 }
 
 void UWorldWidgetManager::NativeOnInactived()
@@ -173,6 +179,56 @@ void UWorldWidgetManager::NativeOnInactived()
 	AWorldWidgetPoint::OnWorldWidgetPointUnRegister.RemoveAll(this);
 }
 
+void UWorldWidgetManager::RegisterWorldWidgetPoint(AWorldWidgetPoint* WorldWidgetPoint)
+{
+	if (IsValid(WorldWidgetPoint) && !WorldWidgetPoints.Contains(WorldWidgetPoint))
+	{
+		WorldWidgetPoints.Add(WorldWidgetPoint);
+
+		if (!WorldWidgetPoint->bIsManualActive)
+		{
+			TryToAddWorldWidgetPoint(WorldWidgetPoint);
+		}
+	}
+}
+
+void UWorldWidgetManager::UnRegisterWorldWidgetPoint(AWorldWidgetPoint* WorldWidgetPoint)
+{
+	if (IsValid(WorldWidgetPoint) && WorldWidgetPoints.Contains(WorldWidgetPoint))
+	{
+		TryToRemoveWorldWidgetPoint(WorldWidgetPoint);
+		WorldWidgetPoints.Remove(WorldWidgetPoint);
+	}
+}
+
+AWorldWidgetPoint* UWorldWidgetManager::FindWorldWidgetPoint(const FGameplayTag PointTag)
+{
+	for (const auto& WorldWidgetPoint : WorldWidgetPoints)
+	{
+		if (WorldWidgetPoint->PointTag == PointTag)
+		{
+			return WorldWidgetPoint;
+		}
+	}
+
+	return nullptr;
+}
+
+TArray<AWorldWidgetPoint*> UWorldWidgetManager::FindWorldWidgetPoints(FGameplayTag PointTag)
+{
+	TArray<AWorldWidgetPoint*> Result;
+
+	for (const auto& WorldWidgetPoint : WorldWidgetPoints)
+	{
+		if (WorldWidgetPoint->PointTag.MatchesTag(PointTag))
+		{
+			Result.Add(WorldWidgetPoint);
+		}
+	}
+
+	return Result;
+}
+
 void UWorldWidgetManager::GenerateWorldWidgetPanel()
 {
 	const FGameplayTag WorldWidgetPanelTag = FGameplayTag::RequestGameplayTag(FName("UI.HUD.Main.WorldWidget"));
@@ -185,7 +241,7 @@ void UWorldWidgetManager::GenerateWorldWidgetPanel()
 
 			for (const auto& WorldWidgetPoint : WorldWidgetPoints)
 			{
-				if (!WorldWidgetPoint->bIsManual)
+				if (!WorldWidgetPoint->bIsManualActive)
 				{
 					TryToAddWorldWidgetPoint(WorldWidgetPoint);
 				}
@@ -229,28 +285,6 @@ void UWorldWidgetManager::ClearupWorldWidgetPanel()
 		WorldWidgetPanel->MarkAsGarbage();
 	}
 	WorldWidgetPanels.Reset();
-}
-
-void UWorldWidgetManager::RegisterWorldWidgetPoint(AWorldWidgetPoint* WorldWidgetPoint)
-{
-	if (IsValid(WorldWidgetPoint) && !WorldWidgetPoints.Contains(WorldWidgetPoint))
-	{
-		WorldWidgetPoints.Add(WorldWidgetPoint);
-
-		if (!WorldWidgetPoint->bIsManual)
-		{
-			TryToAddWorldWidgetPoint(WorldWidgetPoint);
-		}
-	}
-}
-
-void UWorldWidgetManager::UnRegisterWorldWidgetPoint(AWorldWidgetPoint* WorldWidgetPoint)
-{
-	if (IsValid(WorldWidgetPoint) && WorldWidgetPoints.Contains(WorldWidgetPoint))
-	{
-		TryToRemoveWorldWidgetPoint(WorldWidgetPoint);
-		WorldWidgetPoints.Remove(WorldWidgetPoint);
-	}
 }
 
 void UWorldWidgetManager::TryToAddWorldWidgetPoint(AWorldWidgetPoint* WorldWidgetPoint)

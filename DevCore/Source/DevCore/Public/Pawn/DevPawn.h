@@ -53,15 +53,22 @@ public:
 	virtual UPlayerInputComponent* GetPlayerInputComponent_Implementation() override;
 
 public:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UPlayerInputComponent* PlayerInputComponent;
+
+public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FName PawnName;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FPawnLockingState PawnLockingState;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	UPlayerInputComponent* PlayerInputComponent;
-	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(ClampMin = 0.1f, UIMin = 0.1f))
+	float MovementSpeed = 1.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(ClampMin = 0.1f, UIMin = 0.1f))
+	float RotationSpeed = 1.f;
+
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	UCameraComponent* GetActiveCameraComponent();
