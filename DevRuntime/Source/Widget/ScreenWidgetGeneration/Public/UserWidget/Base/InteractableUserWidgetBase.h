@@ -91,24 +91,31 @@ public:
 public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnButtonSelectedChanged(bool Selected);
+	virtual void NativeOnButtonSelectedChanged(bool Selected);
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnButtonClicked();
+	virtual void NativeOnButtonClicked();
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnButtonDoubleClicked();
+	virtual void NativeOnButtonDoubleClicked();
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnButtonHovered();
+	virtual void NativeOnButtonHovered();
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnButtonUnhovered();
+	virtual void NativeOnButtonUnhovered();
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnButtonPressed();
+	virtual void NativeOnButtonPressed();
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnButtonReleased();
+	virtual void NativeOnButtonReleased();
 
 public:
 	UFUNCTION(BlueprintPure)

@@ -135,6 +135,47 @@ void UInteractableUserWidgetBase::NativeDestruct()
 	}
 }
 
+void UInteractableUserWidgetBase::NativeOnButtonSelectedChanged(bool Selected)
+{
+	OnButtonSelectedChanged(Selected);
+}
+
+void UInteractableUserWidgetBase::NativeOnButtonClicked()
+{
+	OnButtonClicked();
+}
+
+void UInteractableUserWidgetBase::NativeOnButtonDoubleClicked()
+{
+	OnButtonDoubleClicked();
+}
+
+void UInteractableUserWidgetBase::NativeOnButtonHovered()
+{
+	if (!ActiveCommonButton->GetSelected())
+	{
+		OnButtonHovered();
+	}
+}
+
+void UInteractableUserWidgetBase::NativeOnButtonUnhovered()
+{
+	if (!ActiveCommonButton->GetSelected())
+	{
+		OnButtonUnhovered();
+	}
+}
+
+void UInteractableUserWidgetBase::NativeOnButtonPressed()
+{
+	OnButtonPressed();
+}
+
+void UInteractableUserWidgetBase::NativeOnButtonReleased()
+{
+	OnButtonReleased();
+}
+
 TArray<UCommonButtonEvent*> UInteractableUserWidgetBase::GetResponseEvents(const bool TargetEventState)
 {
 	return TargetEventState ? ActivedEvents : InactivedEvents;
@@ -148,37 +189,37 @@ void UInteractableUserWidgetBase::HandleButtonResponse(UCommonButton* Button, EC
 		break;
 
 	case ECommonButtonResponseEvent::OnSelected:
-		OnButtonSelectedChanged(true);
+		NativeOnButtonSelectedChanged(true);
 		OnSelectedChanged.Broadcast(this, true);
 		break;
 
 	case ECommonButtonResponseEvent::OnDeselected:
-		OnButtonSelectedChanged(false);
+		NativeOnButtonSelectedChanged(false);
 		OnSelectedChanged.Broadcast(this, false);
 		break;
 
 	case ECommonButtonResponseEvent::OnClick:
-		OnButtonClicked();
+		NativeOnButtonClicked();
 		OnClicked.Broadcast(this);
 		break;
 
 	case ECommonButtonResponseEvent::OnHovered:
-		OnButtonHovered();
+		NativeOnButtonHovered();
 		OnHovered.Broadcast(this);
 		break;
 
 	case ECommonButtonResponseEvent::OnUnHovered:
-		OnButtonUnhovered();
+		NativeOnButtonUnhovered();
 		OnUnhovered.Broadcast(this);
 		break;
 
 	case ECommonButtonResponseEvent::OnPressed:
-		OnButtonPressed();
+		NativeOnButtonPressed();
 		OnPressed.Broadcast(this);
 		break;
 
 	case ECommonButtonResponseEvent::OnReleased:
-		OnButtonReleased();
+		NativeOnButtonReleased();
 		OnReleased.Broadcast(this);
 		break;
 	}

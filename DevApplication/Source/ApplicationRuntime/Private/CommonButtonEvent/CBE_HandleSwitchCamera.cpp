@@ -19,7 +19,7 @@ bool UCBE_HandleSwitchCamera::CanExecuteButtonEvent_Implementation()
 	bool IsValidPlayer = false;
 	if (const UCameraManager* CameraManager = GetManager<UCameraManager>())
 	{
-		IsValidPlayer = IsValid(UGameplayStatics::GetPlayerCharacter(CameraManager, TargetPlayerIndex));
+		IsValidPlayer = IsValid(UGameplayStatics::GetPlayerController(CameraManager, TargetPlayerIndex));
 	}
 
 	return IsValidPlayer && TargetCameraTag.IsValid() && IsValid(TargetCameraHandle);

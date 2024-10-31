@@ -6,13 +6,10 @@
 #include "LevelEditor.h"
 #include "LevelEditorViewport.h"
 #include "SWorldWidgetContainer.h"
-#include "UnrealEdGlobals.h"
-#include "WorldWidget.h"
 #include "WorldWidgetEdManagerSetting.h"
 #include "WorldWidgetPoint.h"
 #include "BPFunctions/BPFunctions_EditorWidget.h"
-#include "Components/CanvasPanelSlot.h"
-#include "Editor/UnrealEdEngine.h"
+#include "UserWidget/Base/UserWidgetBase.h"
 #include "Widgets/Layout/SConstraintCanvas.h"
 
 void UEditorWorldWidgetPanel::NativeOnCreate()

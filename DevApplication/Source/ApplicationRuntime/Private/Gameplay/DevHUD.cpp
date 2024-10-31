@@ -17,7 +17,7 @@ ADevHUD::ADevHUD(const FObjectInitializer& ObjectInitializer)
 void ADevHUD::DrawHUD()
 {
 	Super::DrawHUD();
-	DrawMapScale();
+	// DrawMapScale();
 }
 
 void ADevHUD::DrawMapScale()
