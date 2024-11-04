@@ -6,6 +6,8 @@
 #include "Base/UserWidgetBase.h"
 #include "CarouselContent.generated.h"
 
+class UCommonButtonGroup;
+class UInteractableUserWidgetBase;
 /**
  * 
  */
@@ -15,6 +17,11 @@ class SCREENWIDGETGENERATION_API UCarouselContent : public UUserWidgetBase
 	GENERATED_BODY()
 
 public:
+	virtual void NativePreConstruct() override;
+	virtual void NativeConstruct() override;
+	virtual void NativeDestruct() override;
+
+public:
 	UFUNCTION(BlueprintCallable)
 	void SetNum(int32 InNum);
 
@@ -22,20 +29,18 @@ public:
 	void SetIndex(int32 InIndex);
 
 public:
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnNumChanged, int32, Num);
+	DECLARE_EVENT_TwoParams(UCarouselContent, FOnCarouselChanged, int32, int32);
 
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnIndexChanged, int32, Index);
+	FOnCarouselChanged OnCarouselChanged;
 
-	UPROPERTY(BlueprintAssignable, BlueprintCallable)
-	FOnNumChanged OnNumChanged;
+protected:
+	UPROPERTY(BlueprintReadOnly)
+	int32 Num;
 
-	UPROPERTY(BlueprintAssignable, BlueprintCallable)
-	FOnIndexChanged OnIndexChanged;
+	UPROPERTY(BlueprintReadOnly)
+	int32 Index;
 
 protected:
 	UFUNCTION(BlueprintImplementableEvent)
-	void HandleOnNumChanged(int32 InNum);
-
-	UFUNCTION(BlueprintImplementableEvent)
-	void HandleOnIndexChanged(int32 InIndex);
+	void HandleOnCarouselChanged(int32 InNum, int32 InIndex);
 };

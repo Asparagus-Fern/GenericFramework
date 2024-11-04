@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AutomationBlueprintFunctionLibrary.h"
 #include "GameplayTagContainer.h"
+#include "Kismet/BlueprintFunctionLibrary.h"
 #include "BPFunctions_GameplayTag.generated.h"
 
 /**

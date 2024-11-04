@@ -5,6 +5,9 @@
 
 #include "ScreenWidgetManager.h"
 #include "Animation/WidgetAnimationEvent.h"
+#include "Blueprint/WidgetTree.h"
+#include "Components/NamedSlot.h"
+#include "Components/SizeBox.h"
 #include "Event/CommonButtonEvent.h"
 
 UCommonButton::UCommonButton(const FObjectInitializer& ObjectInitializer)
@@ -18,6 +21,24 @@ UCommonButton::UCommonButton(const FObjectInitializer& ObjectInitializer)
 	{
 		Style = StyleClassFinder.Class;
 	}
+
+	SetVisibilityInternal(ESlateVisibility::Visible);
+}
+
+TSharedRef<SWidget> UCommonButton::RebuildWidget()
+{
+	return Super::RebuildWidget();
+}
+
+bool UCommonButton::Initialize()
+{
+	// return Super::Initialize();
+	return true;
+}
+
+bool UCommonButton::InitializeForce()
+{
+	return UCommonButtonBase::Initialize();
 }
 
 void UCommonButton::NativePreConstruct()
@@ -69,12 +90,14 @@ void UCommonButton::NativeOnSelected(bool bBroadcast)
 {
 	Super::NativeOnSelected(bBroadcast);
 	HandleResponse(ECommonButtonResponseEvent::OnSelected);
+	DPRINT(Log, TEXT("1"))
 }
 
 void UCommonButton::NativeOnDeselected(bool bBroadcast)
 {
 	Super::NativeOnDeselected(bBroadcast);
 	HandleResponse(ECommonButtonResponseEvent::OnDeselected);
+	DPRINT(Log, TEXT("2"))
 }
 
 void UCommonButton::NativeOnActived()

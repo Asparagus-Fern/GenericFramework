@@ -29,7 +29,8 @@ public:
 	virtual bool Initialize() override;
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
-
+	virtual void SynchronizeProperties() override;
+	
 public:
 	/* 勾选可以在编辑器下预览运行时下的样式，它会在编辑器下将WidgetTree包裹在CommonButton的WidgetTree下，代价是无法再查看细节面板做出修改 */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
@@ -128,6 +129,9 @@ public:
 
 	DECLARE_DELEGATE_RetVal_TwoParams(FReply, FOnResponseStateChanged, UInteractableUserWidgetBase*, bool);
 	FOnResponseStateChanged OnResponseStateChanged;
+
+protected:
+	TWeakObjectPtr<class UOverlay> RootOverlay;
 
 protected:
 	virtual void HandleButtonResponse(UCommonButton* Button, ECommonButtonResponseEvent InResponseEvent);

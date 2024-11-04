@@ -4,14 +4,32 @@
 #include "UserWidget/CarouselContent.h"
 
 
+void UCarouselContent::NativePreConstruct()
+{
+	Super::NativePreConstruct();
+	SetNum(5);
+}
+
+void UCarouselContent::NativeConstruct()
+{
+	Super::NativeConstruct();
+}
+
+void UCarouselContent::NativeDestruct()
+{
+	Super::NativeDestruct();
+}
+
 void UCarouselContent::SetNum(int32 InNum)
 {
-	HandleOnNumChanged(InNum);
-	OnNumChanged.Broadcast(InNum);
+	Num = InNum;
+	HandleOnCarouselChanged(Num, Index);
+	OnCarouselChanged.Broadcast(Num, Index);
 }
 
 void UCarouselContent::SetIndex(int32 InIndex)
 {
-	HandleOnIndexChanged(InIndex);
-	OnIndexChanged.Broadcast(InIndex);
+	Index = InIndex;
+	HandleOnCarouselChanged(Num, Index);
+	OnCarouselChanged.Broadcast(Num, Index);
 }

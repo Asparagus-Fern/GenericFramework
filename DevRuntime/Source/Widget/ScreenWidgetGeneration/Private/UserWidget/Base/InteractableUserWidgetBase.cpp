@@ -25,40 +25,48 @@ UInteractableUserWidgetBase::UInteractableUserWidgetBase(const FObjectInitialize
 
 	ResponseState.Add(ECommonButtonResponseEvent::OnSelected, true);
 	ResponseState.Add(ECommonButtonResponseEvent::OnDeselected, false);
+
+	SetVisibilityInternal(ESlateVisibility::Visible);
 }
 
 bool UInteractableUserWidgetBase::Initialize()
 {
 	const bool bInitializedThisCall = Super::Initialize();
 
-	/* 将自身WidgetTree包裹在CommonButton的WidgetTree下 */
-	auto WrapWithCommonButton = [this]()
-	{
-		UWidgetTree* NewWidgetTree = NewObject<UWidgetTree>(this, TEXT("WidgetTree"), RF_Transient);
-		NewWidgetTree->RootWidget = WidgetTree->RootWidget;
-
-		ActiveCommonButton = DuplicateObject(CommonButton, this);
-		ActiveCommonButton->WidgetTree = NewWidgetTree;
-
-		WidgetTree->RootWidget = ActiveCommonButton;
-	};
-
 	if (bInitializedThisCall)
 	{
-		ActiveCommonButton = nullptr;
-
 		if (IsValid(CommonButton) && WidgetTree->RootWidget)
 		{
-			/* 运行时始终包裹 */
-			if (IsValid(GetManager<UScreenWidgetManager>()))
-			{
-				WrapWithCommonButton();
-			}
-			/* 编辑器下如果勾选bPreview则进行包裹 */
-			else if (bPreview)
-			{
-				WrapWithCommonButton();
-			}
+			// UOverlay* RootOverlayRaw = WidgetTree->ConstructWidget<UOverlay>(UOverlay::StaticClass(), FName(TEXT("Overlay")));
+			// RootOverlay = RootOverlayRaw;
+			//
+			// {
+			// 	ActiveCommonButton = DuplicateObject(CommonButton, this);
+			// 	UOverlaySlot* OverlaySlot = RootOverlayRaw->AddChildToOverlay(ActiveCommonButton);
+			// 	OverlaySlot->SetPadding(FMargin());
+			// 	OverlaySlot->SetHorizontalAlignment(EHorizontalAlignment::HAlign_Fill);
+			// 	OverlaySlot->SetVerticalAlignment(EVerticalAlignment::VAlign_Fill);
+			// }
+			//
+			// {
+			// 	UOverlaySlot* OverlaySlot = RootOverlayRaw->AddChildToOverlay(WidgetTree->RootWidget);
+			// 	OverlaySlot->SetPadding(FMargin());
+			// 	OverlaySlot->SetHorizontalAlignment(EHorizontalAlignment::HAlign_Fill);
+			// 	OverlaySlot->SetVerticalAlignment(EVerticalAlignment::VAlign_Fill);
+			// }
+			//
+			// WidgetTree->RootWidget = RootOverlayRaw;
+
+			CommonButton->Initialize();
+
+			UWidgetTree* NewWidgetTree = NewObject<UWidgetTree>(this, TEXT("WidgetTree"), RF_Transient);
+			NewWidgetTree->RootWidget = WidgetTree->RootWidget;
+
+			ActiveCommonButton = DuplicateObject(CommonButton, this, "ActiveCommonButton");
+			ActiveCommonButton->WidgetTree = NewWidgetTree;
+			ActiveCommonButton->InitializeForce();
+
+			WidgetTree->RootWidget = ActiveCommonButton;
 		}
 	}
 
@@ -132,6 +140,16 @@ void UInteractableUserWidgetBase::NativeDestruct()
 				ActivedEvent->NativeOnDestroy();
 			}
 		}
+	}
+}
+
+void UInteractableUserWidgetBase::SynchronizeProperties()
+{
+	Super::SynchronizeProperties();
+
+	if (ActiveCommonButton)
+	{
+		ActiveCommonButton->SynchronizeProperties();
 	}
 }
 

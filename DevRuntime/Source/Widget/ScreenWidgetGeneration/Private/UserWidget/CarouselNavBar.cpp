@@ -33,8 +33,7 @@ void UCarouselNavBar::NativeConstruct()
 
 	if (CarouselContent)
 	{
-		CarouselContent->OnNumChanged.AddDynamic(this, &UCarouselNavBar::HandleNumChanged);
-		CarouselContent->OnIndexChanged.AddDynamic(this, &UCarouselNavBar::UCarouselNavBar::HandleIndexChanged);
+		CarouselContent->OnCarouselChanged.AddUObject(this, &UCarouselNavBar::HandleCarouselChanged);
 	}
 }
 
@@ -54,25 +53,46 @@ void UCarouselNavBar::NativeDestruct()
 
 	if (CarouselContent)
 	{
-		CarouselContent->OnNumChanged.RemoveAll(this);
-		CarouselContent->OnIndexChanged.RemoveAll(this);
+		CarouselContent->OnCarouselChanged.RemoveAll(this);
 	}
+}
+
+void UCarouselNavBar::SetNum(int32 InNum)
+{
+	Num = InNum;
+
+	if (CarouselContent)
+	{
+		CarouselContent->SetNum(InNum);
+	}
+}
+
+void UCarouselNavBar::SetIndex(int32 InIndex)
+{
+	Index = InIndex;
+
+	if (CarouselContent)
+	{
+		CarouselContent->SetIndex(InIndex);
+	}
+
+	OnCarouselIndexChanged.Broadcast(Index);
 }
 
 void UCarouselNavBar::OnPreviewButtonClicked(UInteractableUserWidgetBase* InWidget)
 {
+	Index = (Index == 0) ? Num - 1 : Index - 1;
+	SetIndex(Index);
 }
 
 void UCarouselNavBar::OnNextButtonClicked(UInteractableUserWidgetBase* InWidget)
 {
+	Index = (Index == Num - 1) ? 0 : Index + 1;
+	SetIndex(Index);
 }
 
-void UCarouselNavBar::HandleNumChanged(int32 InNum)
+void UCarouselNavBar::HandleCarouselChanged(int32 InNum, int32 InIndex)
 {
 	Num = InNum;
-}
-
-void UCarouselNavBar::HandleIndexChanged(int32 InIndex)
-{
 	Index = InIndex;
 }

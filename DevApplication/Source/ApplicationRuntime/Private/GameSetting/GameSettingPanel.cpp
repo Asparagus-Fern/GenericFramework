@@ -16,7 +16,7 @@ void UGameSettingPanel::SetupProperty()
 	Super::SetupProperty();
 
 	DEnsureAlwaysLOG(DLogGameSetting, GetRegistry<UGameSettingRegistry>())
-
+	
 	SetPropertyCollection(GetRegistry<UGameSettingRegistry>()->GetGameSettingCollection());
 
 	ListView_SettingMenu->OnItemSelectionChanged().AddUObject(this, &UGameSettingPanel::OnSettingMenuSelectionChanged);

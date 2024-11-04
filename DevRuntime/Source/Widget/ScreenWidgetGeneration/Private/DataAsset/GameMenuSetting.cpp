@@ -28,10 +28,8 @@ void UGameMenuSetting::Generate()
 
 	GameplayTagContainer = FGameplayTagContainer();
 
-	bool bConstructMenuContainer = MenuInfos.IsEmpty() && MenuContainerInfos.IsEmpty();
-
 	MenuTagTable->ForeachRow<FGameplayTagTableRow>
-	("", [this, bConstructMenuContainer](FName Key, const FGameplayTagTableRow& Value)
+	("", [this](FName Key, const FGameplayTagTableRow& Value)
 	 {
 		 const FGameplayTag MenuTag = FGameplayTag::RequestGameplayTag(Value.Tag);
 		 GameplayTagContainer.AddTag(MenuTag);
@@ -58,22 +56,19 @@ void UGameMenuSetting::Generate()
 		 FMenuInfo* NewMenuInfo = new FMenuInfo(MenuTag);
 		 NewMenuInfo->MenuMainName = FText::FromString(Value.DevComment);
 		 MenuInfos.Add(*NewMenuInfo);
-
-		 if (bConstructMenuContainer)
+		
+		 for (auto& MenuContainerInfo : MenuContainerInfos)
 		 {
-			 for (auto& MenuContainerInfo : MenuContainerInfos)
+			 if (MenuContainerInfo.OwnerTag == MenuTag.RequestDirectParent())
 			 {
-				 if (MenuContainerInfo.OwnerTag == MenuTag.RequestDirectParent())
-				 {
-					 MenuContainerInfo.MenuTags.Add(MenuTag);
-					 return;
-				 }
+				 MenuContainerInfo.MenuTags.Add(MenuTag);
+				 return;
 			 }
-
-			 FMenuContainerInfo* MenuContainerInfo = new FMenuContainerInfo(MenuTag.RequestDirectParent());
-			 MenuContainerInfo->MenuTags.Add(MenuTag);
-			 MenuContainerInfos.Add(*MenuContainerInfo);
 		 }
+
+		 FMenuContainerInfo* MenuContainerInfo = new FMenuContainerInfo(MenuTag.RequestDirectParent());
+		 MenuContainerInfo->MenuTags.Add(MenuTag);
+		 MenuContainerInfos.Add(*MenuContainerInfo);
 	 }
 	);
 
@@ -192,7 +187,7 @@ TArray<FGameplayTag> UGameMenuSetting::GetChildMenuTags(const FGameplayTag InMen
 
 	TArray<FGameplayTag> ChildTags;
 	UGameplayTagsManager::Get().RequestGameplayTagChildren(InMenuTag).GetGameplayTagArray(ChildTags);
-	
+
 	OutMenuTags.Append(ChildTags);
 	return OutMenuTags;
 }

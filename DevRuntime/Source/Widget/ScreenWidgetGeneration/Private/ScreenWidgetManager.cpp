@@ -1039,7 +1039,7 @@ void UScreenWidgetManager::GenerateMenu(TArray<FGameplayTag> InMenuTags)
 			if (!IsValid(MenuStyle))
 			{
 				DLOG(DLogUI, Error, TEXT("MenuStyle Is InValid"))
-				return;
+				continue;
 			}
 
 			MenuStyle->MenuContainer = FoundMenuGenerateInfo->MenuContainer;

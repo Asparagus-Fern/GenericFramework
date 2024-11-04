@@ -22,6 +22,18 @@ public:
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
 
+public:
+	UFUNCTION(BlueprintCallable)
+	void SetNum(int32 InNum);
+	
+	UFUNCTION(BlueprintCallable)
+	void SetIndex(int32 InIndex);
+
+public:
+	DECLARE_EVENT_OneParam(UCarouselNavBar, FOnCarouselIndexChanged, int32);
+
+	FOnCarouselIndexChanged OnCarouselIndexChanged;
+
 protected:
 	UPROPERTY(EditAnywhere, meta=(ClampMin = 0, UIMin = 0))
 	int32 Num = 0;
@@ -32,6 +44,9 @@ protected:
 	UPROPERTY(BlueprintReadOnly)
 	int32 Index = 0;
 
+	UPROPERTY(BlueprintReadWrite)
+	bool bAllowWrap = true;
+
 protected:
 	UFUNCTION()
 	void OnPreviewButtonClicked(UInteractableUserWidgetBase* InWidget);
@@ -39,17 +54,13 @@ protected:
 	UFUNCTION()
 	void OnNextButtonClicked(UInteractableUserWidgetBase* InWidget);
 
-	UFUNCTION()
-	void HandleNumChanged(int32 InNum);
-
-	UFUNCTION()
-	void HandleIndexChanged(int32 InIndex);
+	void HandleCarouselChanged(int32 InNum, int32 InIndex);
 
 private:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidgetOptional, BlueprintProtected = true, AllowPrivateAccess = true))
 	TObjectPtr<UInteractableUserWidgetBase> Button_Left;
 
-	UPROPERTY(BlueprintReadOnly, meta = (BindWidget, BlueprintProtected = true, AllowPrivateAccess = true))
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget = "CarouselContent", BlueprintProtected = true, AllowPrivateAccess = true))
 	TObjectPtr<UCarouselContent> CarouselContent;
 
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidgetOptional, BlueprintProtected = true, AllowPrivateAccess = true))

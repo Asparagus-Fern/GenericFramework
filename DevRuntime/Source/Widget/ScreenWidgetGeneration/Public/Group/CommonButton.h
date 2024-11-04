@@ -17,9 +17,9 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnButtonEventHandleFinish);
 /**
  * 
  */
-UCLASS()
-class SCREENWIDGETGENERATION_API UCommonButton : public UCommonButtonBase
-                                                 , public IProcedureInterface
+UCLASS(NotBlueprintable)
+class SCREENWIDGETGENERATION_API UCommonButton final : public UCommonButtonBase
+                                                       , public IProcedureInterface
 {
 	GENERATED_BODY()
 
@@ -33,6 +33,9 @@ public:
 	/* UCommonButtonBase */
 public:
 	UCommonButton(const FObjectInitializer& ObjectInitializer);
+	virtual TSharedRef<SWidget> RebuildWidget() override;
+	virtual bool Initialize() override;
+	bool InitializeForce();
 	virtual void NativePreConstruct() override;
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
@@ -57,6 +60,9 @@ public:
 	virtual void NativeOnDestroy() override;
 
 protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UNamedSlot* NamedSlot;
+
 	FOnButtonResponse OnButtonResponse;
 	void HandleResponse(ECommonButtonResponseEvent InResponseEvent);
 };

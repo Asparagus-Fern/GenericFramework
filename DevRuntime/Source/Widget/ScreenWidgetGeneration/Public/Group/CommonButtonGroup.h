@@ -17,7 +17,4 @@ class SCREENWIDGETGENERATION_API UCommonButtonGroup : public UCommonButtonGroupB
 	GENERATED_BODY()
 
 	friend UScreenWidgetManager;
-
-	/* UCommonButtonGroupBase */
-public:
 };
