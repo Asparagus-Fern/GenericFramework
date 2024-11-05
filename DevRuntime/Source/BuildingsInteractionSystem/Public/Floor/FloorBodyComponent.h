@@ -10,41 +10,43 @@
 class UFloorStaticMeshComponent;
 
 UCLASS()
-class BUILDINGSINTERACTIONSYSTEM_API UFloorBodyComponent : public UActorComponent
+class BUILDINGSINTERACTIONSYSTEM_API UFloorBodyComponent : public USceneComponent
 {
 	GENERATED_BODY()
 
 public:
 	UFloorBodyComponent();
+	virtual void OnRegister() override;
+	virtual void OnUnregister() override;
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
-	virtual void OnRegister() override;
-
-	/* UFloorBodyComponent */
-public:
-	DECLARE_EVENT_OneParam(UFloorBodyComponent, FOnFloorBodyRefresh, UFloorBodyComponent*)
-
-	static FOnFloorBodyRefresh OnFloorBodyRefresh;
 
 public:
-	UPROPERTY(VisibleDefaultsOnly)
-	USceneComponent* SceneComponent = nullptr;
-
 	UPROPERTY(EditAnywhere)
 	TArray<TObjectPtr<UStaticMesh>> BodyStaticMeshes;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Instanced)
 	TArray<UStaticMeshComponent*> BodyComponents;
 
-protected:
-	UStaticMeshComponent* GetComponentByStaticMesh(TObjectPtr<UStaticMesh> StaticMesh);
+public:
+#if WITH_EDITOR
+	UFUNCTION(BlueprintCallable, CallInEditor, Category="Floor Body Component")
+	void RefreshFloor();
+#endif
+	
+	UFUNCTION(BlueprintCallable, DisplayName="RefreshBody")
+	void Refresh();
+
+	UFUNCTION(BlueprintPure)
+	void GetBodyBoundingBox(FVector& BoundingBoxMin, FVector& BoundingBoxMax);
+
+private:
+	UFUNCTION()
+	void HandleBeginCursorOverInternal(UPrimitiveComponent* TouchedComponent);
 
 	UFUNCTION()
-	void HandleBeginCursorOver(UPrimitiveComponent* TouchedComponent);
+	void HandleEndCursorOverInternal(UPrimitiveComponent* TouchedComponent);
 
 	UFUNCTION()
-	void HandleEndCursorOver(UPrimitiveComponent* TouchedComponent);
-
-	UFUNCTION()
-	void HandleOnClicked(UPrimitiveComponent* TouchedComponent, FKey ButtonPressed);
+	void HandleOnClickedInternal(UPrimitiveComponent* TouchedComponent, FKey ButtonPressed);
 };

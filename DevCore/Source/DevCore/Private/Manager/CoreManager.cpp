@@ -64,38 +64,13 @@ bool UCoreManager::DoesSupportWorldType(const EWorldType::Type WorldType) const
 void UCoreManager::NativeOnCreate()
 {
 	IProcedureBaseInterface::NativeOnCreate();
-	IProcedureBaseInterface::Execute_OnCreate(this);
-
 	StaticWorld = GetWorld();
-	DLOG(DLogManager, Log, TEXT("On Created : %s"), *GetName());
-}
-
-void UCoreManager::NativeOnRefresh()
-{
-	IProcedureBaseInterface::NativeOnRefresh();
-	IProcedureBaseInterface::Execute_OnRefresh(this);
 }
 
 void UCoreManager::NativeOnDestroy()
 {
 	IProcedureBaseInterface::NativeOnDestroy();
-
 	StaticWorld = nullptr;
-	DLOG(DLogManager, Log, TEXT("On Destroy : %s"), *GetName());
-}
-
-void UCoreManager::NativeOnActived()
-{
-	IProcedureInterface::NativeOnActived();
-	IProcedureInterface::Execute_OnActived(this);
-	DLOG(DLogManager, Log, TEXT("On Actived : %s"), *GetName());
-}
-
-void UCoreManager::NativeOnInactived()
-{
-	IProcedureInterface::NativeOnInactived();
-	IProcedureInterface::Execute_OnInactived(this);
-	DLOG(DLogManager, Log, TEXT("On Inactived : %s"), *GetName());
 }
 
 bool UCoreManager::IsGameManager() const

@@ -90,14 +90,14 @@ void UCommonButton::NativeOnSelected(bool bBroadcast)
 {
 	Super::NativeOnSelected(bBroadcast);
 	HandleResponse(ECommonButtonResponseEvent::OnSelected);
-	DPRINT(Log, TEXT("1"))
+	// DPRINT(Log, TEXT("1"))
 }
 
 void UCommonButton::NativeOnDeselected(bool bBroadcast)
 {
 	Super::NativeOnDeselected(bBroadcast);
 	HandleResponse(ECommonButtonResponseEvent::OnDeselected);
-	DPRINT(Log, TEXT("2"))
+	// DPRINT(Log, TEXT("2"))
 }
 
 void UCommonButton::NativeOnActived()

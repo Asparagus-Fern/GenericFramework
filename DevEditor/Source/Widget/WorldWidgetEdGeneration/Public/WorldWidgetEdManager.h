@@ -8,18 +8,14 @@
 
 class SWorldWidgetContainer;
 class UWorldWidgetEdManager;
-class AWorldWidgetPoint;
+class UWorldWidgetComponent;
 class ILevelEditor;
 class SConstraintCanvas;
 class SLevelViewport;
 
 
 /**
- * One Level Editor Viewport Client Has a Standalone Editor World Widget Panel
- * it will Created / Remove While :
- * 1. On Level Editor Created
- * 2. On Level Viewport Client List Changed
- * 3. On Editor Map Changed
+ * 将WorldWidget显示Level Editor Viewport的面板
  */
 UCLASS(MinimalAPI)
 class UEditorWorldWidgetPanel : public UWorldWidgetPanel
@@ -38,15 +34,18 @@ public:
 public:
 	TSharedPtr<SConstraintCanvas> ConstraintCanvas = nullptr;
 	FLevelEditorViewportClient* LevelEditorViewportClient = nullptr;
-	TMap<AWorldWidgetPoint*, TSharedPtr<SWorldWidgetContainer>> WorldWidgetContainer;
+	TMap<UWorldWidgetComponent*, TSharedPtr<SWorldWidgetContainer>> WorldWidgetContainer;
 
 protected:
-	virtual void RefreshWorldWidgetPoint() override;
+	virtual void AddWorldWidgetComponent(UWorldWidgetComponent* InWorldWidgetComponent) override;
+	virtual void RemoveWorldWidgetComponent(UWorldWidgetComponent* InWorldWidgetComponent) override;
+	virtual void RefreshWorldWidgetComponent() override;
+
 	virtual void OnWorldWidgetDoubleClicked(TSharedPtr<SWorldWidgetContainer> DoubleClickedContainer);
 };
 
 /**
- * 
+ * WorldWidget在编辑器的管理类，将WorldWidget显示在编辑器视口
  */
 UCLASS()
 class WORLDWIDGETEDGENERATION_API UWorldWidgetEdManager : public UWorldWidgetManager
@@ -68,29 +67,37 @@ public:
 	virtual void NativeOnRefresh() override;
 
 protected:
+	/* 编辑器创建时 */
 	FDelegateHandle LevelEditorCreatedHandle;
 	void OnLevelEditorCreated(TSharedPtr<ILevelEditor> LevelEditor);
 
+	/* 关卡添加Actor时 */
 	FDelegateHandle LevelActorAddedHandle;
 	void OnLevelActorAdded(AActor* Actor);
 
+	/* Actor被移动时 */
 	FDelegateHandle ActorsMovedHandle;
 	void OnActorsMoved(TArray<AActor*>& Actors);
 
+	/* Actor被删除时 */
 	FDelegateHandle LevelActorDeletedHandle;
 	void OnLevelActorDeleted(AActor* InActor);
 
+	/* 蓝图编译时 */
 	FDelegateHandle BlueprintCompiledHandle;
 	void OnBlueprintCompiled();
 
+	/* PIE开始时 */
 	FDelegateHandle BeginPIEHandle;
 	void BeginPIE(bool bIsSimulating);
 
+	/* PIE结束时 */
 	FDelegateHandle EndPIEHandle;
 	void EndPIE(bool bIsSimulating);
 
-	FDelegateHandle WorldWidgetPointConstructHandle;
-	void OnWorldWidgetPointConstruct(AWorldWidgetPoint* WorldWidgetPoint);
+	/* WorldWidgetComponent注册时 */
+	FDelegateHandle WorldWidgetComponentRegisterHandle;
+	void OnWorldWidgetComponentRegister(UWorldWidgetComponent* WorldWidgetComponent);
 
 protected:
 	bool bIsGenerateWorldWidgetPanel = false;

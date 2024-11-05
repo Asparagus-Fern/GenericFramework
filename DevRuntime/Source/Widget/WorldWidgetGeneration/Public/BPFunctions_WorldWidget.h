@@ -8,6 +8,7 @@
 #include "BPFunctions_WorldWidget.generated.h"
 
 class AWorldWidgetPoint;
+class UWorldWidgetComponent;
 /**
  * 
  */
@@ -22,13 +23,19 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	static void UnRegisterWorldWidgetPoint(AWorldWidgetPoint* WorldWidgetPoint);
+	
+	UFUNCTION(BlueprintCallable)
+	static void RegisterWorldWidgetComponent(UWorldWidgetComponent* WorldWidgetComponent);
+
+	UFUNCTION(BlueprintCallable)
+	static void UnRegisterWorldWidgetComponent(UWorldWidgetComponent* WorldWidgetComponent);
 
 	UFUNCTION(BlueprintPure)
-	static TArray<AWorldWidgetPoint*> GetWorldWidgetPoints();
+	static TArray<UWorldWidgetComponent*> GetWorldWidgetComponents();
 
-	UFUNCTION(BlueprintPure, meta=(GameplayTagFilter="Point"))
-	static AWorldWidgetPoint* FindWorldWidgetPoint(FGameplayTag PointTag);
+	UFUNCTION(BlueprintPure, meta=(GameplayTagFilter="UI.WorldWidget"))
+	static UWorldWidgetComponent* FindWorldWidgetComponent(FGameplayTag WorldWidgetTag);
 
-	UFUNCTION(BlueprintPure, meta=(GameplayTagFilter="Point"))
-	static TArray<AWorldWidgetPoint*> FindWorldWidgetPoints(FGameplayTag PointTag);
+	UFUNCTION(BlueprintPure, meta=(GameplayTagFilter="UI.WorldWidget"))
+	static TArray<UWorldWidgetComponent*> FindWorldWidgetComponents(FGameplayTag WorldWidgetTag);
 };

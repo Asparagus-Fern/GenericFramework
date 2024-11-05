@@ -4,6 +4,7 @@
 #include "WorldWidgetManager.h"
 
 #include "ScreenWidgetManager.h"
+#include "WorldWidgetComponent.h"
 #include "WorldWidgetManagerSetting.h"
 #include "WorldWidgetPoint.h"
 #include "Animation/WidgetAnimationEvent.h"
@@ -16,6 +17,8 @@
 void UWorldWidgetPanel::NativeOnCreate()
 {
 	IProcedureBaseInterface::NativeOnCreate();
+
+	/* 创建新的Panel存放WorldWidget */
 	Panel = NewObject<UCanvasPanel>(GetOuter());
 }
 
@@ -30,29 +33,26 @@ void UWorldWidgetPanel::NativeOnRefresh()
 
 	for (const auto& WorldWidget : WorldWidgets)
 	{
-		if (WorldWidget.Key->IsHidden())
-		{
-			WorldWidget.Value->SetVisibility(ESlateVisibility::Collapsed);
-			continue;
-		}
-		
+		/* 对每个Player单独做世界位置转屏幕位置的计算 */
 		for (FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)
 		{
 			FVector2D ScreenPosition;
 			APlayerController* PlayerController = Iterator->Get();
 
 			/* 映射位置到所有PlayerController */
-			if (UWidgetLayoutLibrary::ProjectWorldLocationToWidgetPosition(PlayerController, WorldWidget.Key->GetActorLocation(), ScreenPosition, false))
+			if (UWidgetLayoutLibrary::ProjectWorldLocationToWidgetPosition(PlayerController, WorldWidget.Key->GetComponentLocation(), ScreenPosition, false))
 			{
 				if (UCanvasPanelSlot* CanvasPanelSlot = UWidgetLayoutLibrary::SlotAsCanvasSlot(WorldWidget.Value))
 				{
+					/* 最终的位置 */
 					const FVector2D ResultPosition = ScreenPosition + WorldWidget.Value->GetAnchorOffset();
 
 					int32 ViewportSizeX;
 					int32 ViewportSizeY;
 					PlayerController->GetViewportSize(ViewportSizeX, ViewportSizeY);
 
-					if ((ResultPosition.X > 0) && (ResultPosition.X < ViewportSizeX) && (ResultPosition.Y > 0) && (ResultPosition.Y < ViewportSizeY))
+					/* 可显示区域根据WorldWidget的大小而定，会比屏幕大小略大一些，水平方向为当前屏幕X大小左右外扩WorldWidget的SizeX距离，垂直方向为当前屏幕Y上下外扩WorldWidget的SizeY距离，才能保证WorldWidget在边缘处被正确显示而不是被折叠 */
+					if ((ResultPosition.X > -WorldWidget.Value->GetDesiredSize().X) && (ResultPosition.X < ViewportSizeX) && (ResultPosition.Y > -WorldWidget.Value->GetDesiredSize().Y) && (ResultPosition.Y < ViewportSizeY))
 					{
 						WorldWidget.Value->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 						CanvasPanelSlot->SetPosition(ResultPosition);
@@ -61,6 +61,7 @@ void UWorldWidgetPanel::NativeOnRefresh()
 				}
 			}
 
+			/* 其余情况均折叠WorldWidget */
 			WorldWidget.Value->SetVisibility(ESlateVisibility::Collapsed);
 		}
 	}
@@ -72,38 +73,38 @@ void UWorldWidgetPanel::NativeOnDestroy()
 	Panel->ClearChildren();
 }
 
-void UWorldWidgetPanel::AddWorldWidgetPoint(AWorldWidgetPoint* InWorldWidgetPoint)
+void UWorldWidgetPanel::AddWorldWidgetComponent(UWorldWidgetComponent* InWorldWidgetComponent)
 {
-	if (IsValid(InWorldWidgetPoint) && !WorldWidgets.Contains(InWorldWidgetPoint))
+	if (IsValid(InWorldWidgetComponent) && !WorldWidgets.Contains(InWorldWidgetComponent))
 	{
-		WorldWidgets.FindOrAdd(InWorldWidgetPoint, InWorldWidgetPoint->WorldWidget);
+		WorldWidgets.FindOrAdd(InWorldWidgetComponent, InWorldWidgetComponent->WorldWidget);
 
 		if (IsValid(Panel))
 		{
-			UCanvasPanelSlot* CanvasPanelSlot = Panel->AddChildToCanvas(InWorldWidgetPoint->WorldWidget);
+			UCanvasPanelSlot* CanvasPanelSlot = Panel->AddChildToCanvas(InWorldWidgetComponent->WorldWidget);
 			CanvasPanelSlot->SetAutoSize(true);
 			CanvasPanelSlot->SetAnchors(FAnchors());
 			CanvasPanelSlot->SetAlignment(FVector2D());
 			CanvasPanelSlot->SetOffsets(FMargin());
-			CanvasPanelSlot->SetZOrder(InWorldWidgetPoint->WorldWidget->ZOrder);
+			CanvasPanelSlot->SetZOrder(InWorldWidgetComponent->WorldWidget->ZOrder);
 		}
 	}
 }
 
-void UWorldWidgetPanel::RemoveWorldWidgetPoint(AWorldWidgetPoint* InWorldWidgetPoint)
+void UWorldWidgetPanel::RemoveWorldWidgetComponent(UWorldWidgetComponent* InWorldWidgetComponent)
 {
-	if (IsValid(InWorldWidgetPoint) && WorldWidgets.Contains(InWorldWidgetPoint))
+	if (IsValid(InWorldWidgetComponent) && WorldWidgets.Contains(InWorldWidgetComponent))
 	{
 		if (IsValid(Panel))
 		{
-			Panel->RemoveChild(WorldWidgets.FindRef(InWorldWidgetPoint));
+			Panel->RemoveChild(WorldWidgets.FindRef(InWorldWidgetComponent));
 		}
 
-		WorldWidgets.Remove(InWorldWidgetPoint);
+		WorldWidgets.Remove(InWorldWidgetComponent);
 	}
 }
 
-void UWorldWidgetPanel::RefreshWorldWidgetPoint()
+void UWorldWidgetPanel::RefreshWorldWidgetComponent()
 {
 	Panel->ClearChildren();
 
@@ -141,8 +142,8 @@ void UWorldWidgetManager::NativeOnActived()
 	Super::NativeOnActived();
 
 	GetManager<UScreenWidgetManager>()->PostHUDCreated.AddUObject(this, &UWorldWidgetManager::GenerateWorldWidgetPanel);
-	AWorldWidgetPoint::OnWorldWidgetPointRegister.AddUObject(this, &UWorldWidgetManager::RegisterWorldWidgetPoint);
-	AWorldWidgetPoint::OnWorldWidgetPointUnRegister.AddUObject(this, &UWorldWidgetManager::UnRegisterWorldWidgetPoint);
+	UWorldWidgetComponent::OnWorldWidgetPointBeginPlay.AddUObject(this, &UWorldWidgetManager::RegisterWorldWidgetComponent);
+	UWorldWidgetComponent::OnWorldWidgetPointEndPlay.AddUObject(this, &UWorldWidgetManager::UnRegisterWorldWidgetComponent);
 }
 
 void UWorldWidgetManager::NativeOnInactived()
@@ -175,37 +176,37 @@ void UWorldWidgetManager::NativeOnInactived()
 		ScreenWidgetManager->PostHUDCreated.RemoveAll(this);
 	}
 
-	AWorldWidgetPoint::OnWorldWidgetPointRegister.RemoveAll(this);
-	AWorldWidgetPoint::OnWorldWidgetPointUnRegister.RemoveAll(this);
+	UWorldWidgetComponent::OnWorldWidgetPointBeginPlay.RemoveAll(this);
+	UWorldWidgetComponent::OnWorldWidgetPointEndPlay.RemoveAll(this);
 }
 
-void UWorldWidgetManager::RegisterWorldWidgetPoint(AWorldWidgetPoint* WorldWidgetPoint)
+void UWorldWidgetManager::RegisterWorldWidgetComponent(UWorldWidgetComponent* WorldWidgetPoint)
 {
-	if (IsValid(WorldWidgetPoint) && !WorldWidgetPoints.Contains(WorldWidgetPoint))
+	if (IsValid(WorldWidgetPoint) && !WorldWidgetComponents.Contains(WorldWidgetPoint))
 	{
-		WorldWidgetPoints.Add(WorldWidgetPoint);
+		WorldWidgetComponents.Add(WorldWidgetPoint);
 
 		if (!WorldWidgetPoint->bIsManualActive)
 		{
-			TryToAddWorldWidgetPoint(WorldWidgetPoint);
+			TryToAddWorldWidgetComponent(WorldWidgetPoint);
 		}
 	}
 }
 
-void UWorldWidgetManager::UnRegisterWorldWidgetPoint(AWorldWidgetPoint* WorldWidgetPoint)
+void UWorldWidgetManager::UnRegisterWorldWidgetComponent(UWorldWidgetComponent* WorldWidgetPoint)
 {
-	if (IsValid(WorldWidgetPoint) && WorldWidgetPoints.Contains(WorldWidgetPoint))
+	if (IsValid(WorldWidgetPoint) && WorldWidgetComponents.Contains(WorldWidgetPoint))
 	{
-		TryToRemoveWorldWidgetPoint(WorldWidgetPoint);
-		WorldWidgetPoints.Remove(WorldWidgetPoint);
+		TryToRemoveWorldWidgetComponent(WorldWidgetPoint);
+		WorldWidgetComponents.Remove(WorldWidgetPoint);
 	}
 }
 
-AWorldWidgetPoint* UWorldWidgetManager::FindWorldWidgetPoint(const FGameplayTag PointTag)
+UWorldWidgetComponent* UWorldWidgetManager::FindWorldWidgetComponent(const FGameplayTag WorldWidgetTag)
 {
-	for (const auto& WorldWidgetPoint : WorldWidgetPoints)
+	for (const auto& WorldWidgetPoint : WorldWidgetComponents)
 	{
-		if (WorldWidgetPoint->PointTag == PointTag)
+		if (WorldWidgetPoint->WorldWidgetTag == WorldWidgetTag)
 		{
 			return WorldWidgetPoint;
 		}
@@ -214,13 +215,13 @@ AWorldWidgetPoint* UWorldWidgetManager::FindWorldWidgetPoint(const FGameplayTag 
 	return nullptr;
 }
 
-TArray<AWorldWidgetPoint*> UWorldWidgetManager::FindWorldWidgetPoints(FGameplayTag PointTag)
+TArray<UWorldWidgetComponent*> UWorldWidgetManager::FindWorldWidgetComponents(FGameplayTag WorldWidgetTag)
 {
-	TArray<AWorldWidgetPoint*> Result;
+	TArray<UWorldWidgetComponent*> Result;
 
-	for (const auto& WorldWidgetPoint : WorldWidgetPoints)
+	for (const auto& WorldWidgetPoint : WorldWidgetComponents)
 	{
-		if (WorldWidgetPoint->PointTag.MatchesTag(PointTag))
+		if (WorldWidgetPoint->WorldWidgetTag.MatchesTag(WorldWidgetTag))
 		{
 			Result.Add(WorldWidgetPoint);
 		}
@@ -239,11 +240,11 @@ void UWorldWidgetManager::GenerateWorldWidgetPanel()
 		{
 			Slot->SetContent(CreateWorldWidgetPanel()->GetPanel());
 
-			for (const auto& WorldWidgetPoint : WorldWidgetPoints)
+			for (const auto& WorldWidgetPoint : WorldWidgetComponents)
 			{
 				if (!WorldWidgetPoint->bIsManualActive)
 				{
-					TryToAddWorldWidgetPoint(WorldWidgetPoint);
+					TryToAddWorldWidgetComponent(WorldWidgetPoint);
 				}
 			}
 		}
@@ -263,7 +264,7 @@ void UWorldWidgetManager::RefreshWorldWidgetPanel()
 {
 	for (const auto& WorldWidgetPanel : WorldWidgetPanels)
 	{
-		WorldWidgetPanel->RefreshWorldWidgetPoint();
+		WorldWidgetPanel->RefreshWorldWidgetComponent();
 	}
 }
 
@@ -287,35 +288,35 @@ void UWorldWidgetManager::ClearupWorldWidgetPanel()
 	WorldWidgetPanels.Reset();
 }
 
-void UWorldWidgetManager::TryToAddWorldWidgetPoint(AWorldWidgetPoint* WorldWidgetPoint)
+void UWorldWidgetManager::TryToAddWorldWidgetComponent(UWorldWidgetComponent* WorldWidgetComponent)
 {
-	if (!IsValid(WorldWidgetPoint))
+	if (!IsValid(WorldWidgetComponent))
 	{
 		DLOG(DLogUI, Error, TEXT("WorldWidgetPoint Is NULL"))
 		return;
 	}
 
-	if (!IsValid(WorldWidgetPoint->WorldWidget))
+	if (!IsValid(WorldWidgetComponent->WorldWidget))
 	{
 		DLOG(DLogUI, Error, TEXT("WorldWidget Is NULL"))
 		return;
 	}
 
-	if (WorldWidgetPoint->IsHidden())
+	if (WorldWidgetComponent->GetOwner()->IsHidden())
 	{
-		DLOG(DLogUI, Error, TEXT("WorldWidgetPoint Is Hidden"))
+		DLOG(DLogUI, Warning, TEXT("WorldWidgetPoint Is Hidden"))
 		return;
 	}
 
 	for (const auto& WorldWidgetPanel : WorldWidgetPanels)
 	{
-		WorldWidgetPanel->AddWorldWidgetPoint(WorldWidgetPoint);
+		WorldWidgetPanel->AddWorldWidgetComponent(WorldWidgetComponent);
 	}
 }
 
-void UWorldWidgetManager::TryToRemoveWorldWidgetPoint(AWorldWidgetPoint* WorldWidgetPoint)
+void UWorldWidgetManager::TryToRemoveWorldWidgetComponent(UWorldWidgetComponent* WorldWidgetComponent)
 {
-	if (!IsValid(WorldWidgetPoint))
+	if (!IsValid(WorldWidgetComponent))
 	{
 		DLOG(DLogUI, Error, TEXT("WorldWidgetPoint Is NULL"))
 		return;
@@ -323,7 +324,7 @@ void UWorldWidgetManager::TryToRemoveWorldWidgetPoint(AWorldWidgetPoint* WorldWi
 
 	for (const auto& WorldWidgetPanel : WorldWidgetPanels)
 	{
-		WorldWidgetPanel->RemoveWorldWidgetPoint(WorldWidgetPoint);
+		WorldWidgetPanel->RemoveWorldWidgetComponent(WorldWidgetComponent);
 	}
 }
 

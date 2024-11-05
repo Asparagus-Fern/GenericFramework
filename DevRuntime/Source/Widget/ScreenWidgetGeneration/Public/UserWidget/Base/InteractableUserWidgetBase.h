@@ -130,8 +130,8 @@ public:
 	DECLARE_DELEGATE_RetVal_TwoParams(FReply, FOnResponseStateChanged, UInteractableUserWidgetBase*, bool);
 	FOnResponseStateChanged OnResponseStateChanged;
 
-protected:
-	TWeakObjectPtr<class UOverlay> RootOverlay;
+// protected:
+// 	TWeakObjectPtr<class UOverlay> RootOverlay;
 
 protected:
 	virtual void HandleButtonResponse(UCommonButton* Button, ECommonButtonResponseEvent InResponseEvent);

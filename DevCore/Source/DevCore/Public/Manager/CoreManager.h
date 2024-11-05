@@ -38,13 +38,7 @@ public:
 	/* IProcedureBaseInterface */
 public:
 	virtual void NativeOnCreate() override;
-	virtual void NativeOnRefresh() override;
 	virtual void NativeOnDestroy() override;
-
-	/* IProcedureInterface，只会在运行时调用 */
-public:
-	virtual void NativeOnActived() override;
-	virtual void NativeOnInactived() override;
 
 	/* UCoreManager */
 public:

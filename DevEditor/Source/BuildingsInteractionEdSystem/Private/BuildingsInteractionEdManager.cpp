@@ -9,13 +9,11 @@
 void UBuildingsInteractionEdManager::NativeOnCreate()
 {
 	Super::NativeOnCreate();
-	UFloorBodyComponent::OnFloorBodyRefresh.AddUObject(this, &UBuildingsInteractionEdManager::OnFloorBodyRefresh);
 }
 
 void UBuildingsInteractionEdManager::NativeOnDestroy()
 {
 	Super::NativeOnDestroy();
-	UFloorBodyComponent::OnFloorBodyRefresh.RemoveAll(this);
 }
 
 void UBuildingsInteractionEdManager::OnFloorBodyRefresh(UFloorBodyComponent* InFloorBodyComponent)

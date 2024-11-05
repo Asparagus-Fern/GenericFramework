@@ -11,7 +11,8 @@ AFloorActor::AFloorActor()
 	SceneComponent = CreateDefaultSubobject<USceneComponent>("Root");
 	RootComponent = SceneComponent;
 
-	FloorBodyComponent = CreateDefaultSubobject<UFloorBodyComponent>("Body");
+	FloorBodyComponent = CreateDefaultSubobject<UFloorBodyComponent>("Floor Body");
+	FloorBodyComponent->SetupAttachment(SceneComponent);
 }
 
 void AFloorActor::BeginPlay()
@@ -27,54 +28,29 @@ void AFloorActor::EndPlay(const EEndPlayReason::Type EndPlayReason)
 void AFloorActor::OnConstruction(const FTransform& Transform)
 {
 	Super::OnConstruction(Transform);
+}
 
-	// auto GetGoundingBoxMin = [](FVector& Min, const FBox& InBoundingBox)
-	// {
-	// 	Min.X = (InBoundingBox.Min.X < Min.X) ? InBoundingBox.Min.X : Min.X;
-	// 	Min.Y = (InBoundingBox.Min.Y < Min.Y) ? InBoundingBox.Min.Y : Min.Y;
-	// 	Min.Z = (InBoundingBox.Min.Z < Min.Z) ? InBoundingBox.Min.Z : Min.Z;
-	// };
-	//
-	// auto GetGoundingBoxMax = [](FVector& Max, const FBox& InBoundingBox)
-	// {
-	// 	Max.X = (InBoundingBox.Max.X > Max.X) ? InBoundingBox.Max.X : Max.X;
-	// 	Max.Y = (InBoundingBox.Max.Y > Max.Y) ? InBoundingBox.Max.Y : Max.Y;
-	// 	Max.Z = (InBoundingBox.Max.Z > Max.Z) ? InBoundingBox.Max.Z : Max.Z;
-	// };
-	//
-	// float LocationZ = 0.f;
+void AFloorActor::NativeOnActived()
+{
+	IProcedureInterface::NativeOnActived();
+}
 
-	// for (auto It = FloorBodyInfos.CreateConstIterator(); It; ++It)
-	// {
-	// FVector BoundingBoxMin = FVector(UE_BIG_NUMBER,UE_BIG_NUMBER,UE_BIG_NUMBER);
-	// FVector BoundingBoxMax = FVector(UE_SMALL_NUMBER,UE_SMALL_NUMBER,UE_SMALL_NUMBER);
+void AFloorActor::NativeOnInactived()
+{
+	IProcedureInterface::NativeOnInactived();
+}
 
-	// USceneComponent* TransientSceneComponent = Cast<USceneComponent>(AddComponentByClass(USceneComponent::StaticClass(), true, FTransform::Identity, false));
-	// TransientSceneComponent->AttachToComponent(SceneBodyComponent, FAttachmentTransformRules(EAttachmentRule::KeepRelative, false));
+void AFloorActor::HandleBeginCursorOverBody_Implementation(UFloorBodyComponent* BodyComponent)
+{
+	IFloorBodyInteractionInterface::HandleBeginCursorOverBody_Implementation(BodyComponent);
+}
 
-	// if (!It->StaticMesh)
-	// {
-	// 	continue;
-	// }
-	//
-	// UFloorStaticMeshComponent* BodyStaticMeshComponent = Cast<UFloorStaticMeshComponent>(AddComponentByClass(UFloorStaticMeshComponent::StaticClass(), true, FTransform::Identity, false));
-	// BodyStaticMeshComponent->AttachToComponent(SceneBodyComponent, FAttachmentTransformRules(EAttachmentRule::KeepRelative, false));
-	//
-	// BodyStaticMeshComponent->SetStaticMesh(It->StaticMesh);
-	// BodyStaticMeshComponent->SetRelativeTransform(It->Transform);
+void AFloorActor::HandleEndCursorOverBody_Implementation(UFloorBodyComponent* BodyComponent)
+{
+	IFloorBodyInteractionInterface::HandleEndCursorOverBody_Implementation(BodyComponent);
+}
 
-	// BodyStaticMeshComponent->SetFloor(It.GetIndex());
-
-	// const FBox BoundingBox = TransientFloorStaticMeshComponent->Bounds.GetBox();
-	// GetGoundingBoxMin(BoundingBoxMin, BoundingBox);
-	// GetGoundingBoxMax(BoundingBoxMax, BoundingBox);
-
-
-	// if (It.GetIndex())
-	// {
-	// 	TransientSceneComponent->SetRelativeLocation(FVector(0.f, 0.f, LocationZ));
-	// }
-	//
-	// LocationZ += (BoundingBoxMax - BoundingBoxMin).Z;
-	// }
+void AFloorActor::HandleBodyClicked_Implementation(UFloorBodyComponent* BodyComponent)
+{
+	IFloorBodyInteractionInterface::HandleBodyClicked_Implementation(BodyComponent);
 }

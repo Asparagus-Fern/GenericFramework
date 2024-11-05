@@ -735,6 +735,8 @@ void UScreenWidgetManager::ActiveWidget(UUserWidgetBase* InWidget, const FOnWidg
 		{
 			OnFinish.ExecuteIfBound(InWidget);
 		}
+
+		InWidget->NativeOnActived();
 	};
 
 	const FTimerHandle TimerHandle = PlayWidgetAnimation(InWidget, true, FTimerDelegate::CreateLambda(OnActiveStateChangedFinish));
@@ -775,13 +777,13 @@ void UScreenWidgetManager::InactiveWidget(UUserWidgetBase* InWidget, FOnWidgetAc
 		return;
 	}
 
+	InWidget->NativeOnInactived();
+	
 	if (UShortcutWidgetHandle* ShortcutWidgetHandle = GetShortcutWidgetHandle(InWidget))
 	{
 		ShortcutWidgetHandle->UnLink();
 	}
-
-	InWidget->NativeOnDestroy();
-
+	
 	auto OnActiveStateChangedFinish = [this, &InWidget, &OnFinish, &MarkAsGarbage]()
 	{
 		RemoveTemporaryGameHUD(InWidget);
@@ -800,16 +802,13 @@ void UScreenWidgetManager::InactiveWidget(UUserWidgetBase* InWidget, FOnWidgetAc
 		{
 			OnFinish.ExecuteIfBound(InWidget);
 		}
-
-		// if (UGameplayTagSlot* Slot = GetSlot(InWidget->SlotTag))
-		// {
-		// 	Slot->RemoveChild(InWidget);
-		// }
-
+		
 		InWidget->RemoveFromParent();
 		ActivedWidgets.Remove(InWidget);
 		OnWidgetClose.Broadcast(InWidget);
 
+		InWidget->NativeOnDestroy();
+		
 		if (MarkAsGarbage)
 		{
 			InWidget->MarkAsGarbage();

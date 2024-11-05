@@ -6,8 +6,10 @@
 #include "LevelEditor.h"
 #include "LevelEditorViewport.h"
 #include "SWorldWidgetContainer.h"
+#include "WorldWidgetComponent.h"
 #include "WorldWidgetEdManagerSetting.h"
 #include "WorldWidgetPoint.h"
+#include "BPFunctions/BPFunctions_EditorScene.h"
 #include "BPFunctions/BPFunctions_EditorWidget.h"
 #include "UserWidget/Base/UserWidgetBase.h"
 #include "Widgets/Layout/SConstraintCanvas.h"
@@ -16,13 +18,14 @@ void UEditorWorldWidgetPanel::NativeOnCreate()
 {
 	UWorldWidgetPanel::NativeOnCreate();
 
+	/* 对视口创建新的Panel存放WorldWidget */
 	ConstraintCanvas = SNew(SConstraintCanvas);
 	if (LevelEditorViewportClient)
 	{
 		UBPFunctions_EditorWidget::AddToEditorViewport(LevelEditorViewportClient, ConstraintCanvas.ToSharedRef());
 	}
 
-	RefreshWorldWidgetPoint();
+	RefreshWorldWidgetComponent();
 }
 
 void UEditorWorldWidgetPanel::NativeOnRefresh()
@@ -33,7 +36,7 @@ void UEditorWorldWidgetPanel::NativeOnRefresh()
 	}
 
 	/* 遍历所有的Widget并更新其位置 */
-	TMap<AWorldWidgetPoint*, UUserWidgetBase*> TempWorldWidgets = WorldWidgets;
+	TMap<UWorldWidgetComponent*, UUserWidgetBase*> TempWorldWidgets = WorldWidgets;
 	for (const auto& TempWorldWidget : TempWorldWidgets)
 	{
 		if (!IsValid(TempWorldWidget.Value))
@@ -42,7 +45,7 @@ void UEditorWorldWidgetPanel::NativeOnRefresh()
 			continue;
 		}
 
-		if (TempWorldWidget.Key->IsHiddenEd())
+		if (TempWorldWidget.Key->GetOwner()->IsHiddenEd())
 		{
 			TempWorldWidget.Value->SetVisibility(ESlateVisibility::Collapsed);
 			continue;
@@ -58,12 +61,12 @@ void UEditorWorldWidgetPanel::NativeOnRefresh()
 		{
 			/* 获取世界坐标转屏幕坐标 */
 			FVector2D ScreenPosition;
-			if (UBPFunctions_EditorWidget::EditorProjectWorldToScreen(LevelEditorViewportClient, TempWorldWidget.Key->GetActorLocation(), ScreenPosition))
+			if (UBPFunctions_EditorWidget::EditorProjectWorldToScreen(LevelEditorViewportClient, TempWorldWidget.Key->GetComponentLocation(), ScreenPosition))
 			{
 				const FVector2D ResultPosition = ScreenPosition + TempWorldWidget.Value->GetAnchorOffset();
 
 				/* 超出屏幕大小时隐藏 */
-				if (ResultPosition.X > 0 && ResultPosition.X < Viewport->GetSizeXY().X && ResultPosition.Y > 0 && ResultPosition.Y < Viewport->GetSizeXY().Y)
+				if (ResultPosition.X > -TempWorldWidget.Value->GetDesiredSize().X && ResultPosition.X < Viewport->GetSizeXY().X && ResultPosition.Y > -TempWorldWidget.Value->GetDesiredSize().Y && ResultPosition.Y < Viewport->GetSizeXY().Y)
 				{
 					TempWorldWidget.Value->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 					TempWorldWidget.Value->SetRenderTranslation(ResultPosition);
@@ -96,61 +99,93 @@ void UEditorWorldWidgetPanel::NativeOnDestroy()
 	WorldWidgetContainer.Reset();
 }
 
-void UEditorWorldWidgetPanel::RefreshWorldWidgetPoint()
+void UEditorWorldWidgetPanel::AddWorldWidgetComponent(UWorldWidgetComponent* InWorldWidgetComponent)
 {
-	for (const auto& WorldWidget : WorldWidgets)
+	/* InWorldWidgetComponent为空 */
+	if (!IsValid(InWorldWidgetComponent))
 	{
-		ConstraintCanvas->RemoveSlot(WorldWidgetContainer.FindRef(WorldWidget.Key).ToSharedRef());
-		WorldWidget.Value->MarkAsGarbage();
+		return;
 	}
 
-	WorldWidgets.Reset();
-	WorldWidgetContainer.Reset();
+	/* 该WorldWidget组件没有指定WorldWidget */
+	if (!IsValid(InWorldWidgetComponent->WorldWidget))
+	{
+		return;
+	}
+
+	/* 该WorldWidget组件已被创建 */
+	if (WorldWidgets.Contains(InWorldWidgetComponent))
+	{
+		return;
+	}
+
+	UUserWidgetBase* DuplicateWorldWidget = DuplicateObject(InWorldWidgetComponent->WorldWidget, InWorldWidgetComponent);
+	WorldWidgets.Add(InWorldWidgetComponent, DuplicateWorldWidget);
+
+	TSharedPtr<SWorldWidgetContainer> NewContainer = SNew(SWorldWidgetContainer)
+		.OnWorldWidgetDoubleClicked_UObject(this, &UEditorWorldWidgetPanel::OnWorldWidgetDoubleClicked)
+		[
+			DuplicateWorldWidget->TakeWidget()
+		];
+
+	WorldWidgetContainer.FindOrAdd(InWorldWidgetComponent, NewContainer);
+
+	ConstraintCanvas->AddSlot()
+		.AutoSize(true)
+		.Anchors(FAnchors())
+		.Alignment(FVector2D())
+		.Offset(FMargin())
+		.ZOrder(DuplicateWorldWidget->ZOrder)
+		[
+			NewContainer.ToSharedRef()
+		];
+}
+
+void UEditorWorldWidgetPanel::RemoveWorldWidgetComponent(UWorldWidgetComponent* InWorldWidgetComponent)
+{
+	/* InWorldWidgetComponent为空 */
+	if (!IsValid(InWorldWidgetComponent))
+	{
+		return;
+	}
+
+	ConstraintCanvas->RemoveSlot(WorldWidgetContainer.FindRef(InWorldWidgetComponent).ToSharedRef());
+
+	WorldWidgets.Remove(InWorldWidgetComponent);
+	WorldWidgetContainer.Remove(InWorldWidgetComponent);
+}
+
+void UEditorWorldWidgetPanel::RefreshWorldWidgetComponent()
+{
+	/* 清除当前所有的WorldWidget */
+	{
+		for (const auto& WorldWidget : WorldWidgets)
+		{
+			ConstraintCanvas->RemoveSlot(WorldWidgetContainer.FindRef(WorldWidget.Key).ToSharedRef());
+			WorldWidget.Value->MarkAsGarbage();
+		}
+
+		WorldWidgets.Reset();
+		WorldWidgetContainer.Reset();
+	}
 
 	for (FActorIterator It(GetWorld()); It; ++It)
 	{
 		AActor* Actor = *It;
-		if (AWorldWidgetPoint* WorldWidgetPoint = Cast<AWorldWidgetPoint>(Actor))
+
+		if (const AWorldWidgetPoint* WorldWidgetPoint = Cast<AWorldWidgetPoint>(Actor))
 		{
-			if (WorldWidgets.Contains(WorldWidgetPoint))
+			AddWorldWidgetComponent(WorldWidgetPoint->WorldWidgetComponent);
+			return;
+		}
+		else
+		{
+			TArray<UWorldWidgetComponent*> WorldWidgetComponents;
+			Actor->GetComponents(UWorldWidgetComponent::StaticClass(), WorldWidgetComponents);
+
+			for (const auto& WorldWidgetComponent : WorldWidgetComponents)
 			{
-				continue;
-			}
-
-			if (!IsValid(WorldWidgetPoint->WorldWidget))
-			{
-				DLOG(DLogUI, Error, TEXT("WorldWidget Is NULL"))
-				continue;
-			}
-
-			if (!WorldWidgetPoint->bPreview)
-			{
-				DLOG(DLogUI, Error, TEXT("Preview Is False"))
-				continue;
-			}
-
-			if (!WorldWidgets.Contains(WorldWidgetPoint))
-			{
-				UUserWidgetBase* DuplicateWorldWidget = DuplicateObject(WorldWidgetPoint->WorldWidget, WorldWidgetPoint);
-				WorldWidgets.Add(WorldWidgetPoint, DuplicateWorldWidget);
-
-				TSharedPtr<SWorldWidgetContainer> NewContainer = SNew(SWorldWidgetContainer)
-					.OnWorldWidgetDoubleClicked_UObject(this, &UEditorWorldWidgetPanel::OnWorldWidgetDoubleClicked)
-					[
-						DuplicateWorldWidget->TakeWidget()
-					];
-
-				WorldWidgetContainer.FindOrAdd(WorldWidgetPoint, NewContainer);
-
-				ConstraintCanvas->AddSlot()
-					.AutoSize(true)
-					.Anchors(FAnchors())
-					.Alignment(FVector2D())
-					.Offset(FMargin())
-					.ZOrder(DuplicateWorldWidget->ZOrder)
-					[
-						NewContainer.ToSharedRef()
-					];
+				AddWorldWidgetComponent(WorldWidgetComponent);
 			}
 		}
 	}
@@ -158,14 +193,11 @@ void UEditorWorldWidgetPanel::RefreshWorldWidgetPoint()
 
 void UEditorWorldWidgetPanel::OnWorldWidgetDoubleClicked(TSharedPtr<SWorldWidgetContainer> DoubleClickedContainer)
 {
-	if (WorldWidgetContainer.FindKey(DoubleClickedContainer))
+	if (const UWorldWidgetComponent* WorldWidgetComponent = *WorldWidgetContainer.FindKey(DoubleClickedContainer))
 	{
-		AWorldWidgetPoint* WorldWidgetPoint = *WorldWidgetContainer.FindKey(DoubleClickedContainer);
-
-		if (GEditor->CanSelectActor(WorldWidgetPoint, true))
+		if (GEditor->CanSelectActor(WorldWidgetComponent->GetOwner(), true))
 		{
-			GEditor->SelectNone(false, true, false);
-			GEditor->SelectActor(WorldWidgetPoint, true, true, true);
+			UBPFunctions_EditorScene::SelectActor(WorldWidgetComponent->GetOwner(), true);
 		}
 	}
 }
@@ -197,7 +229,7 @@ void UWorldWidgetEdManager::NativeOnCreate()
 	BeginPIEHandle = FEditorDelegates::BeginPIE.AddUObject(this, &UWorldWidgetEdManager::BeginPIE);
 	EndPIEHandle = FEditorDelegates::EndPIE.AddUObject(this, &UWorldWidgetEdManager::EndPIE);
 
-	WorldWidgetPointConstructHandle = AWorldWidgetPoint::OnWorldWidgetPointConstruct.AddUObject(this, &UWorldWidgetEdManager::OnWorldWidgetPointConstruct);
+	WorldWidgetComponentRegisterHandle = UWorldWidgetComponent::OnWorldWidgetComponentRegister.AddUObject(this, &UWorldWidgetEdManager::OnWorldWidgetComponentRegister);
 
 	GenerateWorldWidgetPanel();
 }
@@ -211,7 +243,7 @@ void UWorldWidgetEdManager::NativeOnDestroy()
 	}
 
 	WorldWidgetPanels.Reset();
-	WorldWidgetPoints.Reset();
+	WorldWidgetComponents.Reset();
 	bIsGenerateWorldWidgetPanel = false;
 
 	LevelEditorCreatedHandle.Reset();
@@ -221,7 +253,7 @@ void UWorldWidgetEdManager::NativeOnDestroy()
 	BlueprintCompiledHandle.Reset();
 	BeginPIEHandle.Reset();
 	EndPIEHandle.Reset();
-	WorldWidgetPointConstructHandle.Reset();
+	WorldWidgetComponentRegisterHandle.Reset();
 
 	Super::NativeOnDestroy();
 }
@@ -273,7 +305,7 @@ void UWorldWidgetEdManager::EndPIE(bool bIsSimulating)
 	GenerateWorldWidgetPanel();
 }
 
-void UWorldWidgetEdManager::OnWorldWidgetPointConstruct(AWorldWidgetPoint* WorldWidgetPoint)
+void UWorldWidgetEdManager::OnWorldWidgetComponentRegister(UWorldWidgetComponent* WorldWidgetComponent)
 {
 	RefreshWorldWidgetPanel();
 }
@@ -288,14 +320,15 @@ void UWorldWidgetEdManager::GenerateWorldWidgetPanel()
 	TArray<FLevelEditorViewportClient*> LevelEditorViewportClients = GEditor->GetLevelViewportClients();
 	for (const auto& LevelEditorViewportClient : LevelEditorViewportClients)
 	{
-		/* ActorLock是编辑器的相机窗口 */
+		/* ActorLock是编辑器的相机窗口 todo:尝试添加到相机视口 */
 		FLevelViewportActorLock& ActorLock = LevelEditorViewportClient->GetActorLock();
 		const AActor* Actor = ActorLock.GetLockedActor();
 		if (IsValid(Actor))
 		{
 			continue;
 		}
-
+		
+		/* 添加到LevelEditorViewport */
 		if (UEditorWorldWidgetPanel* EditorWorldWidgetPanel = Cast<UEditorWorldWidgetPanel>(CreateWorldWidgetPanel()))
 		{
 			if (!bIsGenerateWorldWidgetPanel)
@@ -307,6 +340,9 @@ void UWorldWidgetEdManager::GenerateWorldWidgetPanel()
 			EditorWorldWidgetPanel->NativeOnCreate();
 		}
 	}
+
+	/* todo:尝试添加到ActorPreview */
+	//...
 }
 
 UWorldWidgetPanel* UWorldWidgetEdManager::CreateWorldWidgetPanel()

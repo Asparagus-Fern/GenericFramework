@@ -7,10 +7,11 @@
 #include "Manager/CoreManager.h"
 #include "WorldWidgetManager.generated.h"
 
+class UWorldWidgetComponent;
 class UUserWidgetBase;
 class UWorldWidgetManager;
 class UCanvasPanel;
-class AWorldWidgetPoint;
+class UWorldWidgetComponent;
 
 /**
  * 
@@ -34,16 +35,21 @@ protected:
 	UCanvasPanel* Panel;
 
 	UPROPERTY()
-	TMap<AWorldWidgetPoint*, UUserWidgetBase*> WorldWidgets;
+	TMap<UWorldWidgetComponent*, UUserWidgetBase*> WorldWidgets;
 
 public:
 	UCanvasPanel* GetPanel() const { return Panel; }
-	TMap<AWorldWidgetPoint*, UUserWidgetBase*> GetWorldWidgets() { return WorldWidgets; }
+	TMap<UWorldWidgetComponent*, UUserWidgetBase*> GetWorldWidgets() { return WorldWidgets; }
 
 protected:
-	virtual void AddWorldWidgetPoint(AWorldWidgetPoint* InWorldWidgetPoint);
-	virtual void RemoveWorldWidgetPoint(AWorldWidgetPoint* InWorldWidgetPoint);
-	virtual void RefreshWorldWidgetPoint();
+	/* 添加一个WorldWidget进入该Panel */
+	virtual void AddWorldWidgetComponent(UWorldWidgetComponent* InWorldWidgetComponent);
+
+	/* 从该Panel移除一个WorldWidget */
+	virtual void RemoveWorldWidgetComponent(UWorldWidgetComponent* InWorldWidgetComponent);
+
+	/* 刷新该Panel的所有WorldWidget */
+	virtual void RefreshWorldWidgetComponent();
 };
 
 
@@ -74,20 +80,20 @@ public:
 	/* UWorldWidgetManager */
 public:
 	/* 注册一个3DUI点位 */
-	virtual void RegisterWorldWidgetPoint(AWorldWidgetPoint* WorldWidgetPoint);
+	virtual void RegisterWorldWidgetComponent(UWorldWidgetComponent* WorldWidgetPoint);
 
 	/* 反注册一个3DUI点位 */
-	virtual void UnRegisterWorldWidgetPoint(AWorldWidgetPoint* WorldWidgetPoint);
+	virtual void UnRegisterWorldWidgetComponent(UWorldWidgetComponent* WorldWidgetPoint);
 
-	TArray<AWorldWidgetPoint*> GetWorldWidgetPoints() { return WorldWidgetPoints; }
+	TArray<UWorldWidgetComponent*> GetWorldWidgetComponents() { return WorldWidgetComponents; }
 
-	AWorldWidgetPoint* FindWorldWidgetPoint(FGameplayTag PointTag);
+	UWorldWidgetComponent* FindWorldWidgetComponent(FGameplayTag WorldWidgetTag);
 
-	TArray<AWorldWidgetPoint*> FindWorldWidgetPoints(FGameplayTag PointTag);
+	TArray<UWorldWidgetComponent*> FindWorldWidgetComponents(FGameplayTag WorldWidgetTag);
 
 protected:
 	UPROPERTY(Transient)
-	TArray<AWorldWidgetPoint*> WorldWidgetPoints;
+	TArray<UWorldWidgetComponent*> WorldWidgetComponents;
 
 	UPROPERTY(Transient)
 	TArray<UWorldWidgetPanel*> WorldWidgetPanels;
@@ -109,8 +115,8 @@ protected:
 	virtual void ClearupWorldWidgetPanel();
 
 	/* 尝试将一个3DUI添加到3DUI面板 */
-	virtual void TryToAddWorldWidgetPoint(AWorldWidgetPoint* WorldWidgetPoint);
+	virtual void TryToAddWorldWidgetComponent(UWorldWidgetComponent* WorldWidgetComponent);
 
 	/* 尝试将一个3DUI从3DUI面板移除 */
-	virtual void TryToRemoveWorldWidgetPoint(AWorldWidgetPoint* WorldWidgetPoint);
+	virtual void TryToRemoveWorldWidgetComponent(UWorldWidgetComponent* WorldWidgetComponent);
 };

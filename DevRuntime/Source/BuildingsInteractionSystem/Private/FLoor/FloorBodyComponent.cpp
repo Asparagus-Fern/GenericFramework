@@ -3,11 +3,23 @@
 
 #include "Floor/FloorBodyComponent.h"
 
-UFloorBodyComponent::FOnFloorBodyRefresh UFloorBodyComponent::OnFloorBodyRefresh;
+#include "Interface/FloorBodyInteractionInterface.h"
 
 UFloorBodyComponent::UFloorBodyComponent()
 {
 	PrimaryComponentTick.bCanEverTick = false;
+}
+
+void UFloorBodyComponent::OnRegister()
+{
+	Super::OnRegister();
+
+	Refresh();
+}
+
+void UFloorBodyComponent::OnUnregister()
+{
+	Super::OnUnregister();
 }
 
 void UFloorBodyComponent::BeginPlay()
@@ -16,9 +28,9 @@ void UFloorBodyComponent::BeginPlay()
 
 	for (const auto& BodyComponent : BodyComponents)
 	{
-		BodyComponent->OnBeginCursorOver.AddDynamic(this, &UFloorBodyComponent::HandleBeginCursorOver);
-		BodyComponent->OnEndCursorOver.AddDynamic(this, &UFloorBodyComponent::HandleEndCursorOver);
-		BodyComponent->OnClicked.AddDynamic(this, &UFloorBodyComponent::HandleOnClicked);
+		BodyComponent->OnBeginCursorOver.AddDynamic(this, &UFloorBodyComponent::HandleBeginCursorOverInternal);
+		BodyComponent->OnEndCursorOver.AddDynamic(this, &UFloorBodyComponent::HandleEndCursorOverInternal);
+		BodyComponent->OnClicked.AddDynamic(this, &UFloorBodyComponent::HandleOnClickedInternal);
 	}
 }
 
@@ -34,104 +46,112 @@ void UFloorBodyComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	}
 }
 
-void UFloorBodyComponent::OnRegister()
-{
-	Super::OnRegister();
+#if WITH_EDITOR
 
+void UFloorBodyComponent::RefreshFloor()
+{
+	Refresh();
+}
+
+#endif
+
+void UFloorBodyComponent::Refresh()
+{
 	BodyComponents.Reset();
 
-	/* 查找指定的SceneComponent */
-	SceneComponent = Cast<USceneComponent>(GetOwner()->FindComponentByTag(USceneComponent::StaticClass(), "BodyScene"));
+	TArray<UStaticMeshComponent*> ChildrenToRemove;
+	TArray<TObjectPtr<UStaticMesh>> ChildrenToAdd;
 
-	/* 不存在则创建 */
-	if (!IsValid(SceneComponent))
+	/* 遍历当前所有子组件，确定需要增加或移除的组件 */
+	for (const auto& Child : GetOwner()->GetInstanceComponents())
 	{
-		SceneComponent = Cast<USceneComponent>(GetOwner()->AddComponentByClass(USceneComponent::StaticClass(), true, FTransform::Identity, false));
-		SceneComponent->AttachToComponent(GetOwner()->GetRootComponent(), FAttachmentTransformRules(EAttachmentRule::KeepRelative, false));
-		SceneComponent->ComponentTags.Add("BodyScene");
-		GetOwner()->AddInstanceComponent(SceneComponent);
-	}
-
-	/* 查找已经挂在的StaticMeshComponent */
-	TArray<UActorComponent*> FoundComponets = GetOwner()->GetComponentsByTag(UStaticMeshComponent::StaticClass(), "Body");
-	for (const auto& FoundComponet : FoundComponets)
-	{
-		if (UStaticMeshComponent* Component = Cast<UStaticMeshComponent>(FoundComponet))
+		if (UStaticMeshComponent* BodyComponent = Cast<UStaticMeshComponent>(Child))
 		{
-			BodyComponents.Add(Component);
+			if (!BodyComponents.Contains(BodyComponent) && BodyStaticMeshes.Contains(BodyComponent->GetStaticMesh()))
+			{
+				BodyComponents.Add(BodyComponent);
+			}
+
+			if (!BodyStaticMeshes.Contains(BodyComponent->GetStaticMesh()))
+			{
+				ChildrenToRemove.Add(BodyComponent);
+			}
+
+			ChildrenToAdd.Add(BodyComponent->GetStaticMesh());
 		}
 	}
 
-	/* 如果BodyStaticMeshes为空，清除所有StaticMeshComponent */
-	if (BodyStaticMeshes.IsEmpty())
-	{
-		for (const auto& Child : BodyComponents)
-		{
-			GetOwner()->RemoveInstanceComponent(Child);
-			Child->DestroyComponent();
-		}
+	const TSet<TObjectPtr<UStaticMesh>> Previous(ChildrenToAdd);
+	const TSet<TObjectPtr<UStaticMesh>> Current(BodyStaticMeshes);
+	ChildrenToAdd = Current.Difference(Previous).Array();
 
-		OnFloorBodyRefresh.Broadcast(this);
-		return;
-	}
-
-	/* 从StaticMesh创建StaticMeshComponent */
-	TArray<UStaticMeshComponent*> TempBodyComponents = BodyComponents;
-	for (auto& StaticMesh : BodyStaticMeshes)
+	/* 添加组件 */
+	for (auto& ItemToAdd : ChildrenToAdd)
 	{
 		/* 跳过无效StaticMesh */
-		if (!StaticMesh)
+		if (!ItemToAdd)
 		{
 			continue;
 		}
 
-		/* 跳过已有的StaticMeshComponent */
-		if (UStaticMeshComponent* Component = GetComponentByStaticMesh(StaticMesh))
-		{
-			TempBodyComponents.Remove(Component);
-			continue;
-		}
+		UStaticMeshComponent* StaticMeshComponent = NewObject<UStaticMeshComponent>(this);
+		BodyComponents.Add(StaticMeshComponent);
 
-		UStaticMeshComponent* BodyStaticMeshComponent = Cast<UStaticMeshComponent>(GetOwner()->AddComponentByClass(UStaticMeshComponent::StaticClass(), true, FTransform::Identity, false));
-		BodyComponents.Add(BodyStaticMeshComponent);
-
-		BodyStaticMeshComponent->SetStaticMesh(StaticMesh);
-		BodyStaticMeshComponent->AttachToComponent(SceneComponent, FAttachmentTransformRules(EAttachmentRule::KeepRelative, false));
-		BodyStaticMeshComponent->ComponentTags.Add("Body");
-		GetOwner()->AddInstanceComponent(BodyStaticMeshComponent);
+		StaticMeshComponent->SetStaticMesh(ItemToAdd);
+		StaticMeshComponent->AttachToComponent(this, FAttachmentTransformRules(EAttachmentRule::KeepRelative, false));
+		StaticMeshComponent->RegisterComponent();
+		GetOwner()->AddInstanceComponent(StaticMeshComponent);
 	}
 
-	/* 不在BodyStaticMeshes里的全部销毁 */
-	for (const auto& TempBodyComponent : TempBodyComponents)
+	/* 移除组件 */
+	for (const auto& ItemToRemove : ChildrenToRemove)
 	{
-		GetOwner()->RemoveInstanceComponent(TempBodyComponent);
-		TempBodyComponent->DestroyComponent();
+		GetOwner()->RemoveInstanceComponent(ItemToRemove);
+		ItemToRemove->DestroyComponent();
 	}
-
-	OnFloorBodyRefresh.Broadcast(this);
 }
 
-UStaticMeshComponent* UFloorBodyComponent::GetComponentByStaticMesh(TObjectPtr<UStaticMesh> StaticMesh)
+void UFloorBodyComponent::GetBodyBoundingBox(FVector& BoundingBoxMin, FVector& BoundingBoxMax)
 {
-	for (const auto& BodyComponent : BodyComponents)
+	auto GetGoundingBoxMin = [](FVector& Min, const FBox& InBoundingBox)
 	{
-		if (BodyComponent->GetStaticMesh() == StaticMesh)
+		Min.X = (InBoundingBox.Min.X < Min.X) ? InBoundingBox.Min.X : Min.X;
+		Min.Y = (InBoundingBox.Min.Y < Min.Y) ? InBoundingBox.Min.Y : Min.Y;
+		Min.Z = (InBoundingBox.Min.Z < Min.Z) ? InBoundingBox.Min.Z : Min.Z;
+	};
+
+	auto GetGoundingBoxMax = [](FVector& Max, const FBox& InBoundingBox)
+	{
+		Max.X = (InBoundingBox.Max.X > Max.X) ? InBoundingBox.Max.X : Max.X;
+		Max.Y = (InBoundingBox.Max.Y > Max.Y) ? InBoundingBox.Max.Y : Max.Y;
+		Max.Z = (InBoundingBox.Max.Z > Max.Z) ? InBoundingBox.Max.Z : Max.Z;
+	};
+
+	BoundingBoxMin = FVector(UE_BIG_NUMBER,UE_BIG_NUMBER,UE_BIG_NUMBER);
+	BoundingBoxMax = FVector(UE_SMALL_NUMBER,UE_SMALL_NUMBER,UE_SMALL_NUMBER);
+
+	for (auto It = BodyComponents.CreateConstIterator(); It; ++It)
+	{
+		if (const UStaticMeshComponent* BodyComponent = *It)
 		{
-			return BodyComponent;
+			const FBox BoundingBox = BodyComponent->Bounds.GetBox();
+			GetGoundingBoxMin(BoundingBoxMin, BoundingBox);
+			GetGoundingBoxMax(BoundingBoxMax, BoundingBox);
 		}
 	}
-
-	return nullptr;
 }
 
-void UFloorBodyComponent::HandleBeginCursorOver(UPrimitiveComponent* TouchedComponent)
+void UFloorBodyComponent::HandleBeginCursorOverInternal(UPrimitiveComponent* TouchedComponent)
 {
+	IFloorBodyInteractionInterface::Execute_HandleBeginCursorOverBody(GetOwner(), this);
 }
 
-void UFloorBodyComponent::HandleEndCursorOver(UPrimitiveComponent* TouchedComponent)
+void UFloorBodyComponent::HandleEndCursorOverInternal(UPrimitiveComponent* TouchedComponent)
 {
+	IFloorBodyInteractionInterface::Execute_HandleEndCursorOverBody(GetOwner(), this);
 }
 
-void UFloorBodyComponent::HandleOnClicked(UPrimitiveComponent* TouchedComponent, FKey ButtonPressed)
+void UFloorBodyComponent::HandleOnClickedInternal(UPrimitiveComponent* TouchedComponent, FKey ButtonPressed)
 {
+	IFloorBodyInteractionInterface::Execute_HandleBodyClicked(GetOwner(), this);
 }

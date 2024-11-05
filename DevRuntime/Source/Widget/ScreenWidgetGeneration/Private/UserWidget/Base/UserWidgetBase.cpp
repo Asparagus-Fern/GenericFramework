@@ -10,44 +10,12 @@ UUserWidgetBase::UUserWidgetBase(const FObjectInitializer& ObjectInitializer)
 {
 }
 
-void UUserWidgetBase::NativePreConstruct()
-{
-	Super::NativePreConstruct();
-}
-
 void UUserWidgetBase::NativeConstruct()
 {
 	Super::NativeConstruct();
 
 	/* 传递当前UI，计算Slate所需大小 */
 	TakeWidget()->SlatePrepass();
-}
-
-void UUserWidgetBase::NativeDestruct()
-{
-	Super::NativeDestruct();
-}
-
-void UUserWidgetBase::NativeOnCreate()
-{
-	IProcedureBaseInterface::NativeOnCreate();
-	IProcedureBaseInterface::Execute_OnCreate(this);
-
-	SetIsActived(true);
-}
-
-void UUserWidgetBase::NativeOnRefresh()
-{
-	IProcedureBaseInterface::NativeOnRefresh();
-	IProcedureBaseInterface::Execute_OnRefresh(this);
-}
-
-void UUserWidgetBase::NativeOnDestroy()
-{
-	IProcedureBaseInterface::NativeOnDestroy();
-	IProcedureBaseInterface::Execute_OnDestroy(this);
-
-	SetIsActived(false);
 }
 
 bool UUserWidgetBase::HasAnimationEvent_Implementation(const bool InIsActive) const
@@ -122,14 +90,4 @@ float UUserWidgetBase::GetAnimationDuration_Implementation(const bool InIsActive
 FVector2D UUserWidgetBase::GetAnchorOffset() const
 {
 	return FVector2D(-(GetDesiredSize().X * Anchor.X), -(GetDesiredSize().Y * Anchor.Y));
-}
-
-bool UUserWidgetBase::GetIsActived() const
-{
-	return bIsActived;
-}
-
-void UUserWidgetBase::SetIsActived(const bool InActived)
-{
-	bIsActived = InActived;
 }

@@ -4,50 +4,61 @@
 #include "BPFunctions_WorldWidget.h"
 
 #include "WorldWidgetManager.h"
+#include "WorldWidgetPoint.h"
 #include "Manager/ManagerGlobal.h"
 
 void UBPFunctions_WorldWidget::RegisterWorldWidgetPoint(AWorldWidgetPoint* WorldWidgetPoint)
 {
-	if (UWorldWidgetManager* WorldWidgetManager = GetManager<UWorldWidgetManager>())
-	{
-		WorldWidgetManager->RegisterWorldWidgetPoint(WorldWidgetPoint);
-	}
+	RegisterWorldWidgetComponent(WorldWidgetPoint->WorldWidgetComponent);
 }
 
 void UBPFunctions_WorldWidget::UnRegisterWorldWidgetPoint(AWorldWidgetPoint* WorldWidgetPoint)
 {
-	if (UWorldWidgetManager* WorldWidgetManager = GetManager<UWorldWidgetManager>())
-	{
-		WorldWidgetManager->UnRegisterWorldWidgetPoint(WorldWidgetPoint);
-	}
+	UnRegisterWorldWidgetComponent(WorldWidgetPoint->WorldWidgetComponent);
 }
 
-TArray<AWorldWidgetPoint*> UBPFunctions_WorldWidget::GetWorldWidgetPoints()
+void UBPFunctions_WorldWidget::RegisterWorldWidgetComponent(UWorldWidgetComponent* WorldWidgetComponent)
 {
 	if (UWorldWidgetManager* WorldWidgetManager = GetManager<UWorldWidgetManager>())
 	{
-		return WorldWidgetManager->GetWorldWidgetPoints();
+		WorldWidgetManager->RegisterWorldWidgetComponent(WorldWidgetComponent);
 	}
-
-	return TArray<AWorldWidgetPoint*>{};
 }
 
-AWorldWidgetPoint* UBPFunctions_WorldWidget::FindWorldWidgetPoint(FGameplayTag PointTag)
+void UBPFunctions_WorldWidget::UnRegisterWorldWidgetComponent(UWorldWidgetComponent* WorldWidgetComponent)
 {
 	if (UWorldWidgetManager* WorldWidgetManager = GetManager<UWorldWidgetManager>())
 	{
-		return WorldWidgetManager->FindWorldWidgetPoint(PointTag);
+		WorldWidgetManager->UnRegisterWorldWidgetComponent(WorldWidgetComponent);
+	}
+}
+
+TArray<UWorldWidgetComponent*> UBPFunctions_WorldWidget::GetWorldWidgetComponents()
+{
+	if (UWorldWidgetManager* WorldWidgetManager = GetManager<UWorldWidgetManager>())
+	{
+		return WorldWidgetManager->GetWorldWidgetComponents();
+	}
+
+	return TArray<UWorldWidgetComponent*>{};
+}
+
+UWorldWidgetComponent* UBPFunctions_WorldWidget::FindWorldWidgetComponent(FGameplayTag WorldWidgetTag)
+{
+	if (UWorldWidgetManager* WorldWidgetManager = GetManager<UWorldWidgetManager>())
+	{
+		return WorldWidgetManager->FindWorldWidgetComponent(WorldWidgetTag);
 	}
 
 	return nullptr;
 }
 
-TArray<AWorldWidgetPoint*> UBPFunctions_WorldWidget::FindWorldWidgetPoints(FGameplayTag PointTag)
+TArray<UWorldWidgetComponent*> UBPFunctions_WorldWidget::FindWorldWidgetComponents(FGameplayTag WorldWidgetTag)
 {
 	if (UWorldWidgetManager* WorldWidgetManager = GetManager<UWorldWidgetManager>())
 	{
-		return WorldWidgetManager->FindWorldWidgetPoints(PointTag);
+		return WorldWidgetManager->FindWorldWidgetComponents(WorldWidgetTag);
 	}
 
-	return TArray<AWorldWidgetPoint*>{};
+	return TArray<UWorldWidgetComponent*>{};
 }
