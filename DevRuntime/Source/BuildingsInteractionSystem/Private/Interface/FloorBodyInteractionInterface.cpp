@@ -3,5 +3,8 @@
 
 #include "Interface/FloorBodyInteractionInterface.h"
 
-
-// Add default functionality here for any IFloorBodyInteractionInterface functions that are not pure virtual.
+void IFloorBodyInteractionInterface::NativeHandleFloorSelectionChanged(bool bIsSelected)
+{
+	bIsFloorSelected = bIsSelected;
+	IFloorBodyInteractionInterface::Execute_HandleFloorSelectionChanged(Cast<UObject>(this), bIsSelected);
+}

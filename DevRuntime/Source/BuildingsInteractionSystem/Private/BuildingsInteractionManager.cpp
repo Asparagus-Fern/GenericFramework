@@ -3,11 +3,11 @@
 
 #include "BuildingsInteractionManager.h"
 
-#include "BuildingsINteractionManagerSetting.h"
+#include "BuildingsInteractionManagerSetting.h"
 
 bool UBuildingsInteractionManager::ShouldCreateSubsystem(UObject* Outer) const
 {
-	return Super::ShouldCreateSubsystem(Outer) && UBuildingsINteractionManagerSetting::Get()->bEnableSubsystem;
+	return Super::ShouldCreateSubsystem(Outer) && UBuildingsInteractionManagerSetting::Get()->bEnableSubsystem;
 }
 
 void UBuildingsInteractionManager::NativeOnActived()

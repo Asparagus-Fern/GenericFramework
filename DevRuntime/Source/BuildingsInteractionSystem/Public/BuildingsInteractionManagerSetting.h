@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Manager/ManagerSetting.h"
-#include "BuildingsINteractionManagerSetting.generated.h"
+#include "BuildingsInteractionManagerSetting.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class BUILDINGSINTERACTIONSYSTEM_API UBuildingsINteractionManagerSetting : public UManagerSetting
+class BUILDINGSINTERACTIONSYSTEM_API UBuildingsInteractionManagerSetting : public UManagerSetting
 {
 	GENERATED_BODY()
 

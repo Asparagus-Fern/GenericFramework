@@ -30,4 +30,11 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, Category="Floor Body Interaction Interface")
 	void HandleBodyClicked(UFloorBodyComponent* BodyComponent);
+
+	UFUNCTION(BlueprintNativeEvent, Category="Floor Body Interaction Interface")
+	void HandleFloorSelectionChanged(bool bIsSelected);
+	virtual void NativeHandleFloorSelectionChanged(bool bIsSelected);
+
+protected:
+	bool bIsFloorSelected = false;
 };

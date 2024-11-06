@@ -8,6 +8,7 @@
 #include "Procedure/ProcedureInterface.h"
 #include "FloorActor.generated.h"
 
+class ABuildingActor;
 class UFloorBodyComponent;
 
 /**
@@ -27,16 +28,20 @@ public:
 	int32 GetFloor() const { return Floor; }
 	void SetFloor(int32 InFloor) { Floor = InFloor; }
 
+	ABuildingActor* GetOwnerBuilding();
+	void SetOwnerBuilding(ABuildingActor* InBuildingActor);
+
 	/* IProcedureInterface */
 public:
-	virtual void NativeOnActived() override;
-	virtual void NativeOnInactived() override;
+	virtual void OnActived_Implementation() override;
+	virtual void OnInactived_Implementation() override;
 
 	/* IFloorBodyInteractionInterface */
 protected:
 	virtual void HandleBeginCursorOverBody_Implementation(UFloorBodyComponent* BodyComponent) override;
 	virtual void HandleEndCursorOverBody_Implementation(UFloorBodyComponent* BodyComponent) override;
 	virtual void HandleBodyClicked_Implementation(UFloorBodyComponent* BodyComponent) override;
+	virtual void HandleFloorSelectionChanged_Implementation(bool bIsSelected) override;
 
 	/* AFloorActor */
 public:
@@ -47,6 +52,13 @@ public:
 	UFloorBodyComponent* FloorBodyComponent = nullptr;
 
 protected:
-	UPROPERTY(BlueprintReadOnly, meta=(ClampMin = 0))
+	UPROPERTY(BlueprintReadOnly)
+	TWeakObjectPtr<ABuildingActor> OwnerBuilding = nullptr;
+
+	UPROPERTY(BlueprintReadOnly)
 	int32 Floor = 0;
+
+public:
+	UFUNCTION(BlueprintPure)
+	bool GetIsFloorSelected() const;
 };

@@ -1,9 +1,12 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "Floor/FloorBodyComponent.h"
 
 #include "Interface/FloorBodyInteractionInterface.h"
+
+UFloorBodyComponent::FFloorBodyEvent UFloorBodyComponent::OnBeginCursorOverBody;
+UFloorBodyComponent::FFloorBodyEvent UFloorBodyComponent::OnEndCursorOverBody;
+UFloorBodyComponent::FFloorBodyEvent UFloorBodyComponent::OnBodyClicked;
 
 UFloorBodyComponent::UFloorBodyComponent()
 {
@@ -15,35 +18,6 @@ void UFloorBodyComponent::OnRegister()
 	Super::OnRegister();
 
 	Refresh();
-}
-
-void UFloorBodyComponent::OnUnregister()
-{
-	Super::OnUnregister();
-}
-
-void UFloorBodyComponent::BeginPlay()
-{
-	Super::BeginPlay();
-
-	for (const auto& BodyComponent : BodyComponents)
-	{
-		BodyComponent->OnBeginCursorOver.AddDynamic(this, &UFloorBodyComponent::HandleBeginCursorOverInternal);
-		BodyComponent->OnEndCursorOver.AddDynamic(this, &UFloorBodyComponent::HandleEndCursorOverInternal);
-		BodyComponent->OnClicked.AddDynamic(this, &UFloorBodyComponent::HandleOnClickedInternal);
-	}
-}
-
-void UFloorBodyComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
-{
-	Super::EndPlay(EndPlayReason);
-
-	for (const auto& BodyComponent : BodyComponents)
-	{
-		BodyComponent->OnBeginCursorOver.RemoveAll(this);
-		BodyComponent->OnEndCursorOver.RemoveAll(this);
-		BodyComponent->OnClicked.RemoveAll(this);
-	}
 }
 
 #if WITH_EDITOR
@@ -141,17 +115,40 @@ void UFloorBodyComponent::GetBodyBoundingBox(FVector& BoundingBoxMin, FVector& B
 	}
 }
 
+void UFloorBodyComponent::AddBodyMouseDelegate()
+{
+	for (const auto& BodyComponent : BodyComponents)
+	{
+		BodyComponent->OnBeginCursorOver.AddDynamic(this, &UFloorBodyComponent::HandleBeginCursorOverInternal);
+		BodyComponent->OnEndCursorOver.AddDynamic(this, &UFloorBodyComponent::HandleEndCursorOverInternal);
+		BodyComponent->OnClicked.AddDynamic(this, &UFloorBodyComponent::HandleOnClickedInternal);
+	}
+}
+
+void UFloorBodyComponent::RemoveBodyMouseDelegate()
+{
+	for (const auto& BodyComponent : BodyComponents)
+	{
+		BodyComponent->OnBeginCursorOver.RemoveAll(this);
+		BodyComponent->OnEndCursorOver.RemoveAll(this);
+		BodyComponent->OnClicked.RemoveAll(this);
+	}
+}
+
 void UFloorBodyComponent::HandleBeginCursorOverInternal(UPrimitiveComponent* TouchedComponent)
 {
+	OnBeginCursorOverBody.Broadcast(this);
 	IFloorBodyInteractionInterface::Execute_HandleBeginCursorOverBody(GetOwner(), this);
 }
 
 void UFloorBodyComponent::HandleEndCursorOverInternal(UPrimitiveComponent* TouchedComponent)
 {
+	OnEndCursorOverBody.Broadcast(this);
 	IFloorBodyInteractionInterface::Execute_HandleEndCursorOverBody(GetOwner(), this);
 }
 
 void UFloorBodyComponent::HandleOnClickedInternal(UPrimitiveComponent* TouchedComponent, FKey ButtonPressed)
 {
+	OnBodyClicked.Broadcast(this);
 	IFloorBodyInteractionInterface::Execute_HandleBodyClicked(GetOwner(), this);
 }

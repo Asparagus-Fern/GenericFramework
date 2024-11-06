@@ -17,9 +17,6 @@ class BUILDINGSINTERACTIONSYSTEM_API UFloorBodyComponent : public USceneComponen
 public:
 	UFloorBodyComponent();
 	virtual void OnRegister() override;
-	virtual void OnUnregister() override;
-	virtual void BeginPlay() override;
-	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 public:
 	UPROPERTY(EditAnywhere)
@@ -28,6 +25,13 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Instanced)
 	TArray<UStaticMeshComponent*> BodyComponents;
 
+public:
+	DECLARE_EVENT_OneParam(UFloorBodyComponent, FFloorBodyEvent, UFloorBodyComponent*)
+
+	static FFloorBodyEvent OnBeginCursorOverBody;
+	static FFloorBodyEvent OnEndCursorOverBody;
+	static FFloorBodyEvent OnBodyClicked;
+	
 public:
 #if WITH_EDITOR
 	UFUNCTION(BlueprintCallable, CallInEditor, Category="Floor Body Component")
@@ -40,6 +44,12 @@ public:
 	UFUNCTION(BlueprintPure)
 	void GetBodyBoundingBox(FVector& BoundingBoxMin, FVector& BoundingBoxMax);
 
+	UFUNCTION(BlueprintCallable)
+	void AddBodyMouseDelegate();
+
+	UFUNCTION(BlueprintCallable)
+	void RemoveBodyMouseDelegate();
+	
 private:
 	UFUNCTION()
 	void HandleBeginCursorOverInternal(UPrimitiveComponent* TouchedComponent);

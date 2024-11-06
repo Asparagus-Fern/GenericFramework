@@ -2,6 +2,7 @@
 
 #include "Floor/FloorActor.h"
 
+#include "Building/BuildingActor.h"
 #include "Floor/FloorBodyComponent.h"
 
 AFloorActor::AFloorActor()
@@ -30,14 +31,26 @@ void AFloorActor::OnConstruction(const FTransform& Transform)
 	Super::OnConstruction(Transform);
 }
 
-void AFloorActor::NativeOnActived()
+ABuildingActor* AFloorActor::GetOwnerBuilding()
 {
-	IProcedureInterface::NativeOnActived();
+	return OwnerBuilding.Get();
 }
 
-void AFloorActor::NativeOnInactived()
+void AFloorActor::SetOwnerBuilding(ABuildingActor* InBuildingActor)
 {
-	IProcedureInterface::NativeOnInactived();
+	OwnerBuilding = InBuildingActor;
+}
+
+void AFloorActor::OnActived_Implementation()
+{
+	IProcedureInterface::OnActived_Implementation();
+	FloorBodyComponent->AddBodyMouseDelegate();
+}
+
+void AFloorActor::OnInactived_Implementation()
+{
+	IProcedureInterface::OnInactived_Implementation();
+	FloorBodyComponent->RemoveBodyMouseDelegate();
 }
 
 void AFloorActor::HandleBeginCursorOverBody_Implementation(UFloorBodyComponent* BodyComponent)
@@ -53,4 +66,14 @@ void AFloorActor::HandleEndCursorOverBody_Implementation(UFloorBodyComponent* Bo
 void AFloorActor::HandleBodyClicked_Implementation(UFloorBodyComponent* BodyComponent)
 {
 	IFloorBodyInteractionInterface::HandleBodyClicked_Implementation(BodyComponent);
+}
+
+void AFloorActor::HandleFloorSelectionChanged_Implementation(bool bIsSelected)
+{
+	IFloorBodyInteractionInterface::HandleFloorSelectionChanged_Implementation(bIsSelected);
+}
+
+bool AFloorActor::GetIsFloorSelected() const
+{
+	return bIsFloorSelected;
 }
