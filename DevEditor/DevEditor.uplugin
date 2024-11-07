@@ -57,6 +57,11 @@
 			"Name": "BuildingsInteractionEdSystem",
 			"Type": "Editor",
 			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "SequenceUMGEdSystem",
+			"Type": "Editor",
+			"LoadingPhase": "Default"
 		}
 	]
 }
