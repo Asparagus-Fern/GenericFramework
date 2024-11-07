@@ -360,7 +360,7 @@ void UScreenWidgetManager::SetGameHUDActiveState(const bool IsActived)
 
 void UScreenWidgetManager::SetGameHUDActiveState(UGameHUD* GameHUD, const bool IsActived)
 {
-	GameHUD->PlayAnimationEvent(IsActived);
+	GameHUD->PlayActivationAnimation(IsActived);
 	GameHUD->SetIsActived(IsActived);
 
 	OnHUDActiveStateChanged.Broadcast(GameHUD, IsActived);
@@ -853,13 +853,13 @@ FTimerHandle UScreenWidgetManager::PlayWidgetAnimation(UUserWidgetBase* InWidget
 {
 	FTimerHandle TimerHandle;
 
-	if (IWidgetAnimationInterface::Execute_HasAnimationEvent(InWidget, InIsActive))
+	if (IWidgetAnimationInterface::Execute_HasActivationAnimation(InWidget, InIsActive))
 	{
-		IWidgetAnimationInterface::Execute_PlayAnimationEvent(InWidget, InIsActive);
+		IWidgetAnimationInterface::Execute_PlayActivationAnimation(InWidget, InIsActive);
 
-		if (IWidgetAnimationInterface::Execute_GetAnimationDuration(InWidget, InIsActive) > 0.f)
+		if (IWidgetAnimationInterface::Execute_GetActivationAnimationDuration(InWidget, InIsActive) > 0.f)
 		{
-			GetWorld()->GetTimerManager().SetTimer(TimerHandle, InDelegate, IWidgetAnimationInterface::Execute_GetAnimationDuration(InWidget, InIsActive), false);
+			GetWorld()->GetTimerManager().SetTimer(TimerHandle, InDelegate, IWidgetAnimationInterface::Execute_GetActivationAnimationDuration(InWidget, InIsActive), false);
 		}
 	}
 

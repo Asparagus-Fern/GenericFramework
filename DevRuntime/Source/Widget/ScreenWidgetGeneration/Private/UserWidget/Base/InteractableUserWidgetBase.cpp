@@ -4,13 +4,9 @@
 #include "UserWidget/Base/InteractableUserWidgetBase.h"
 
 #include "ScreenWidgetManager.h"
+#include "Animation/WidgetAnimation.h"
 #include "Event/CommonButtonEvent.h"
 #include "Blueprint/WidgetTree.h"
-#include "Components/ButtonSlot.h"
-#include "Components/Overlay.h"
-#include "Components/OverlaySlot.h"
-#include "Components/SizeBox.h"
-#include "Components/SizeBoxSlot.h"
 #include "Group/CommonButton.h"
 #include "Manager/ManagerGlobal.h"
 #include "Procedure/ProcedureManager.h"
@@ -37,36 +33,51 @@ bool UInteractableUserWidgetBase::Initialize()
 	{
 		if (IsValid(CommonButton) && WidgetTree->RootWidget)
 		{
-			// UOverlay* RootOverlayRaw = WidgetTree->ConstructWidget<UOverlay>(UOverlay::StaticClass(), FName(TEXT("Overlay")));
-			// RootOverlay = RootOverlayRaw;
-			//
-			// {
-			// 	ActiveCommonButton = DuplicateObject(CommonButton, this);
-			// 	UOverlaySlot* OverlaySlot = RootOverlayRaw->AddChildToOverlay(ActiveCommonButton);
-			// 	OverlaySlot->SetPadding(FMargin());
-			// 	OverlaySlot->SetHorizontalAlignment(EHorizontalAlignment::HAlign_Fill);
-			// 	OverlaySlot->SetVerticalAlignment(EVerticalAlignment::VAlign_Fill);
-			// }
-			//
-			// {
-			// 	UOverlaySlot* OverlaySlot = RootOverlayRaw->AddChildToOverlay(WidgetTree->RootWidget);
-			// 	OverlaySlot->SetPadding(FMargin());
-			// 	OverlaySlot->SetHorizontalAlignment(EHorizontalAlignment::HAlign_Fill);
-			// 	OverlaySlot->SetVerticalAlignment(EVerticalAlignment::VAlign_Fill);
-			// }
-			//
-			// WidgetTree->RootWidget = RootOverlayRaw;
+			{
+				// UOverlay* RootOverlayRaw = WidgetTree->ConstructWidget<UOverlay>(UOverlay::StaticClass(), FName(TEXT("Overlay")));
+				// RootOverlay = RootOverlayRaw;
+				//
+				// {
+				// 	ActiveCommonButton = DuplicateObject(CommonButton, this);
+				// 	UOverlaySlot* OverlaySlot = RootOverlayRaw->AddChildToOverlay(ActiveCommonButton);
+				// 	OverlaySlot->SetPadding(FMargin());
+				// 	OverlaySlot->SetHorizontalAlignment(EHorizontalAlignment::HAlign_Fill);
+				// 	OverlaySlot->SetVerticalAlignment(EVerticalAlignment::VAlign_Fill);
+				// }
+				//
+				// {
+				// 	UOverlaySlot* OverlaySlot = RootOverlayRaw->AddChildToOverlay(WidgetTree->RootWidget);
+				// 	OverlaySlot->SetPadding(FMargin());
+				// 	OverlaySlot->SetHorizontalAlignment(EHorizontalAlignment::HAlign_Fill);
+				// 	OverlaySlot->SetVerticalAlignment(EVerticalAlignment::VAlign_Fill);
+				// }
+				//
+				// WidgetTree->RootWidget = RootOverlayRaw;
+			}
 
-			CommonButton->Initialize();
+			{
+				CommonButton->Initialize();
+				
+				UWidgetTree* NewWidgetTree = NewObject<UWidgetTree>(this, TEXT("WidgetTree"), RF_Transient);
+				NewWidgetTree->RootWidget = WidgetTree->RootWidget;
+				
+				ActiveCommonButton = DuplicateObject(CommonButton, this, "ActiveCommonButton");
+				ActiveCommonButton->WidgetTree = NewWidgetTree;
+				ActiveCommonButton->InitializeForce();
+				
+				WidgetTree->RootWidget = ActiveCommonButton;
+			}
 
-			UWidgetTree* NewWidgetTree = NewObject<UWidgetTree>(this, TEXT("WidgetTree"), RF_Transient);
-			NewWidgetTree->RootWidget = WidgetTree->RootWidget;
-
-			ActiveCommonButton = DuplicateObject(CommonButton, this, "ActiveCommonButton");
-			ActiveCommonButton->WidgetTree = NewWidgetTree;
-			ActiveCommonButton->InitializeForce();
-
-			WidgetTree->RootWidget = ActiveCommonButton;
+			{
+				// CommonButton->Initialize();
+				//
+				// UWidgetTree* NewWidgetTree = NewObject<UWidgetTree>(this, TEXT("WidgetTree"), RF_Transient);
+				// CommonButton->WidgetTree = NewWidgetTree;
+				// NewWidgetTree->RootWidget = WidgetTree->RootWidget;
+				//
+				// ActiveCommonButton = DuplicateObject(CommonButton, this, "ActiveCommonButton");
+				// WidgetTree->RootWidget = ActiveCommonButton;
+			}
 		}
 	}
 
@@ -150,6 +161,36 @@ void UInteractableUserWidgetBase::SynchronizeProperties()
 	if (ActiveCommonButton)
 	{
 		ActiveCommonButton->SynchronizeProperties();
+	}
+}
+
+void UInteractableUserWidgetBase::NativeOnInitialized()
+{
+	Super::NativeOnInitialized();
+}
+
+void UInteractableUserWidgetBase::PlayActivationAnimation_Implementation(bool InIsActive)
+{
+	if (!IsValid(ActiveCommonButton))
+	{
+		Super::PlayActivationAnimation_Implementation(InIsActive);
+	}
+	else
+	{
+		if (InIsActive)
+		{
+			if (IsValid(Execute_GetActiveAnimation(this)))
+			{
+				ActiveCommonButton->PlayAnimation(Execute_GetActiveAnimation(this));
+			}
+		}
+		else
+		{
+			if (IsValid(Execute_GetInactiveAnimation(this)))
+			{
+				ActiveCommonButton->PlayAnimation(Execute_GetInactiveAnimation(this));
+			}
+		}
 	}
 }
 

@@ -6,7 +6,7 @@
 #include "UObject/Interface.h"
 #include "WidgetAnimationInterface.generated.h"
 
-class UWidgetAnimationEvent;
+class UWidgetAnimation;
 
 UINTERFACE(BlueprintType)
 class UWidgetAnimationInterface : public UInterface
@@ -23,23 +23,23 @@ class SCREENWIDGETGENERATION_API IWidgetAnimationInterface
 
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Widget Animation Interface")
-	bool HasAnimationEvent(bool InIsActive) const;
+	bool HasActivationAnimation(bool InIsActive) const;
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Widget Animation Interface")
-	UWidgetAnimationEvent* GetActiveAnimationEvent() const;
+	UWidgetAnimation* GetActiveAnimation() const;
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Widget Animation Interface")
-	void SetActiveAnimationEvent(UWidgetAnimationEvent* InAnimationEvent);
+	void SetActiveAnimation(UWidgetAnimation* InAnimation);
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Widget Animation Interface")
-	UWidgetAnimationEvent* GetInactiveAnimationEvent() const;
+	UWidgetAnimation* GetInactiveAnimation() const;
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Widget Animation Interface")
-	void SetInactiveAnimationEvent(UWidgetAnimationEvent* InAnimationEvent);
+	void SetInactiveAnimation(UWidgetAnimation* InAnimation);
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Widget Animation Interface")
-	void PlayAnimationEvent(bool InIsActive);
+	void PlayActivationAnimation(bool InIsActive);
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Widget Animation Interface")
-	float GetAnimationDuration(bool InIsActive);
+	float GetActivationAnimationDuration(bool InIsActive);
 };

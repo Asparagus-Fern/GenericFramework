@@ -29,6 +29,7 @@ protected:
 #if WITH_EDITOR
 	virtual const FText GetPaletteCategory() override { return NSLOCTEXT("DevWidget", "DevUserWidget", "User Widget Base"); }
 #endif
+	virtual void NativePreConstruct() override;
 	virtual void NativeConstruct() override;
 
 	/* IProcedureInterface */
@@ -45,15 +46,15 @@ public:
 	/* 表示Widget完全从屏幕移除，即将被垃圾回收 */
 	virtual void NativeOnDestroy() override { IProcedureInterface::NativeOnDestroy(); }
 
-	/* IWidgetAnimationInterface todo:废弃并更换成 UWidgetAnimation */
+	/* IWidgetAnimationInterface */
 public:
-	virtual bool HasAnimationEvent_Implementation(bool InIsActive) const override;
-	virtual UWidgetAnimationEvent* GetActiveAnimationEvent_Implementation() const override;
-	virtual void SetActiveAnimationEvent_Implementation(UWidgetAnimationEvent* InAnimationEvent) override;
-	virtual UWidgetAnimationEvent* GetInactiveAnimationEvent_Implementation() const override;
-	virtual void SetInactiveAnimationEvent_Implementation(UWidgetAnimationEvent* InAnimationEvent) override;
-	virtual void PlayAnimationEvent_Implementation(bool InIsActive) override;
-	virtual float GetAnimationDuration_Implementation(bool InIsActive) override;
+	virtual bool HasActivationAnimation_Implementation(bool InIsActive) const override;
+	virtual UWidgetAnimation* GetActiveAnimation_Implementation() const override;
+	virtual void SetActiveAnimation_Implementation(UWidgetAnimation* InAnimation) override;
+	virtual UWidgetAnimation* GetInactiveAnimation_Implementation() const override;
+	virtual void SetInactiveAnimation_Implementation(UWidgetAnimation* InAnimation) override;
+	virtual void PlayActivationAnimation_Implementation(bool InIsActive) override;
+	virtual float GetActivationAnimationDuration_Implementation(bool InIsActive) override;
 
 public:
 	/* 表示自身标签，用于指定获取Widget */
@@ -68,13 +69,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TArray<TSubclassOf<UTemporaryHUD>> TemporaryHUDs;
 
-	/* 创建时的动画 todo:废弃并更换成 UWidgetAnimation */
-	UPROPERTY(EditAnywhere, Instanced)
-	UWidgetAnimationEvent* ActiveAnimationEvent = nullptr;
+	/* 创建时的动画 */
+	UPROPERTY(meta=(BindWidgetAnimOptional), Transient)
+	UWidgetAnimation* ActiveAnimation = nullptr;
 
-	/* 移除时的动画 todo:废弃并更换成 UWidgetAnimation */
-	UPROPERTY(EditAnywhere, Instanced)
-	UWidgetAnimationEvent* InactiveAnimationEvent = nullptr;
+	/* 移除时的动画 */
+	UPROPERTY(meta=(BindWidgetAnimOptional), Transient)
+	UWidgetAnimation* InactiveAnimation = nullptr;
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, AdvancedDisplay)

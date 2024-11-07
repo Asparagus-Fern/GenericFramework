@@ -197,6 +197,7 @@ void UEditorWorldWidgetPanel::OnWorldWidgetDoubleClicked(TSharedPtr<SWorldWidget
 	{
 		if (GEditor->CanSelectActor(WorldWidgetComponent->GetOwner(), true))
 		{
+			UBPFunctions_EditorScene::SelectNone();
 			UBPFunctions_EditorScene::SelectActor(WorldWidgetComponent->GetOwner(), true);
 		}
 	}
@@ -327,7 +328,7 @@ void UWorldWidgetEdManager::GenerateWorldWidgetPanel()
 		{
 			continue;
 		}
-		
+
 		/* 添加到LevelEditorViewport */
 		if (UEditorWorldWidgetPanel* EditorWorldWidgetPanel = Cast<UEditorWorldWidgetPanel>(CreateWorldWidgetPanel()))
 		{

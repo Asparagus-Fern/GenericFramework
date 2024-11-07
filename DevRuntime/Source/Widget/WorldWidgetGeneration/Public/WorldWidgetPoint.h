@@ -21,6 +21,11 @@ public:
 	AWorldWidgetPoint(const FObjectInitializer& ObjectInitializer);
 
 public:
+#if WITH_EDITORONLY_DATA
+	UPROPERTY(VisibleAnywhere)
+	FString DoubleClick = "Double Click UMG To Select The Actor";
+#endif
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UWorldWidgetComponent* WorldWidgetComponent = nullptr;
 };
