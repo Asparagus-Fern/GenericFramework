@@ -1,8 +1,8 @@
 ﻿using UnrealBuildTool;
 
-public class SequenceUMGSystem : ModuleRules
+public class MovieSceneUMGModule : ModuleRules
 {
-	public SequenceUMGSystem(ReadOnlyTargetRules Target) : base(Target)
+	public MovieSceneUMGModule(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 
@@ -20,7 +20,12 @@ public class SequenceUMGSystem : ModuleRules
 				"CoreUObject",
 				"Engine",
 				"Slate",
-				"SlateCore"
+				"SlateCore",
+				
+				"UMG",
+				"MovieScene",
+				"MovieSceneTracks",
+				"LevelSequence"
 			}
 		);
 	}

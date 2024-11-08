@@ -4,12 +4,12 @@
 #include "Module/CommonEdModuleInterface.h"
 #include "Modules/ModuleManager.h"
 
-class FSequenceUMGEdSystemModule : public ICommonEdModuleInterface
+class FMovieSceneUMGEdModuleModule : public ICommonEdModuleInterface
 {
 public:
 	virtual void StartupModule() override;
 	virtual void ShutdownModule() override;
 
-protected:
-	virtual void LoadDependentModule(TArray<FName>& InDependentModuleName) override;
+private:
+	FDelegateHandle UMGTrackCreateEditorHandle;
 };

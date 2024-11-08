@@ -94,7 +94,7 @@
 			"LoadingPhase": "Default"
 		},
 		{
-			"Name": "SequenceUMGSystem",
+			"Name": "MovieSceneUMGModule",
 			"Type": "Runtime",
 			"LoadingPhase": "Default"
 		}

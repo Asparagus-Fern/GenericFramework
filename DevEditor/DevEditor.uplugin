@@ -59,7 +59,7 @@
 			"LoadingPhase": "Default"
 		},
 		{
-			"Name": "SequenceUMGEdSystem",
+			"Name": "MovieSceneUMGEdModule",
 			"Type": "Editor",
 			"LoadingPhase": "Default"
 		}
