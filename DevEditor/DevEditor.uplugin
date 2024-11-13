@@ -21,10 +21,6 @@
 		{
 			"Name": "DevRuntime",
 			"Enabled": true
-		},
-		{
-			"Name": "ZoneGraph",
-			"Enabled": true
 		}
 	],
 	"Modules": [
@@ -49,19 +45,9 @@
 			"LoadingPhase": "PostDefault"
 		},
 		{
-			"Name": "MapEdSystem",
+			"Name": "MovieSceneEdUtilities",
 			"Type": "Editor",
 			"LoadingPhase": "PostDefault"
-		},
-		{
-			"Name": "BuildingsInteractionEdSystem",
-			"Type": "Editor",
-			"LoadingPhase": "Default"
-		},
-		{
-			"Name": "MovieSceneUMGEdModule",
-			"Type": "Editor",
-			"LoadingPhase": "Default"
 		}
 	]
 }

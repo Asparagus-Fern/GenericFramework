@@ -2,7 +2,7 @@
   "FileVersion": 3,
   "Version": 1,
   "VersionName": "1.0",
-  "FriendlyName": "DevApplication",
+  "FriendlyName": "DevLab",
   "Description": "",
   "Category": "Other",
   "CreatedBy": "Chen",
@@ -17,34 +17,22 @@
     {
       "Name": "DevCore",
       "Enabled": true
-    },
-    {
-      "Name": "DevRuntime",
-      "Enabled": true
-    },
-    {
-      "Name": "DevEditor",
-      "Enabled": true
-    },
-    {
-      "Name": "DevLab",
-      "Enabled": true
     }
   ],
   "Modules": [
     {
-      "Name": "ApplicationRuntime",
+      "Name": "GameMapSystem",
       "Type": "Runtime",
-      "LoadingPhase": "PostDefault"
+      "LoadingPhase": "Default"
     },
     {
-      "Name": "ApplicationEditor",
-      "Type": "Editor",
-      "LoadingPhase": "PostEngineInit"
+      "Name": "PropertyDetailViewSystem",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
     },
     {
-      "Name": "ApplicationDeveloper",
-      "Type": "UncookedOnly",
+      "Name": "BuildingsInteractionSystem",
+      "Type": "Runtime",
       "LoadingPhase": "Default"
     }
   ]
