@@ -12,8 +12,8 @@ public class ScreenWidgetGeneration : ModuleRules
 				"Core",
 				"DevCore",
 				"DevSlateCore",
+				
 				"CommonUI",
-				"DBTween",
 				"DeveloperSettings",
 			}
 		);

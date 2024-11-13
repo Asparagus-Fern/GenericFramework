@@ -20,7 +20,14 @@ public class DevGameplay : ModuleRules
 				"CoreUObject",
 				"Engine",
 				"Slate",
-				"SlateCore"
+				"SlateCore",
+
+				"DeveloperSettings",
+				"InputCore",
+				"EnhancedInput",
+				"AIModule",
+
+				"CameraSystem"
 			}
 		);
 	}

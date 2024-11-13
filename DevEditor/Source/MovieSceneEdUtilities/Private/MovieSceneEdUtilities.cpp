@@ -2,7 +2,7 @@
 
 #include "ILevelSequenceModule.h"
 #include "ISequencerModule.h"
-#include "Spawner/LevelSequenceUMGEdSpawner.h"
+#include "Spawner/MovieSceneUMGEdSpawner.h"
 #include "TrackEditor/MovieSceneUMGTrackEditor.h"
 
 #define LOCTEXT_NAMESPACE "FMovieSceneEdUtilitiesModule"
@@ -12,7 +12,7 @@ void FMovieSceneEdUtilitiesModule::StartupModule()
 	ICommonEdModuleInterface::StartupModule();
 
 	ILevelSequenceModule& LevelSequenceModule = FModuleManager::LoadModuleChecked<ILevelSequenceModule>("LevelSequence");
-	EditorUMGSpawnerDelegateHandle = LevelSequenceModule.RegisterObjectSpawner(FOnCreateMovieSceneObjectSpawner::CreateStatic(&FLevelSequenceUMGEdSpawner::CreateObjectSpawner));
+	EditorUMGSpawnerDelegateHandle = LevelSequenceModule.RegisterObjectSpawner(FOnCreateMovieSceneObjectSpawner::CreateStatic(&FMovieSceneUMGEdSpawner::CreateObjectSpawner));
 
 	ISequencerModule& SequencerModule = FModuleManager::Get().LoadModuleChecked<ISequencerModule>("Sequencer");
 	UMGTrackCreateEditorHandle = SequencerModule.RegisterTrackEditor(FOnCreateTrackEditor::CreateStatic(&FMovieSceneUMGTrackEditor::CreateTrackEditor));

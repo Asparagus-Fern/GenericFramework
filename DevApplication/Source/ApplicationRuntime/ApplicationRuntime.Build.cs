@@ -25,8 +25,7 @@ public class ApplicationRuntime : ModuleRules
 				"GameplayTags",
 				"UMG",
 
-				"DBTween",
-
+				"DevGameplay",
 				"ActiveNodeSystem",
 				"ScreenWidgetGeneration",
 				"WorldWidgetGeneration",
@@ -35,6 +34,8 @@ public class ApplicationRuntime : ModuleRules
 				"LevelStreaming",
 				"WorldPartition",
 				"PropertyDetailViewSystem",
+
+				"DBTween"
 			}
 		);
 	}

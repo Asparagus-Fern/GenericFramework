@@ -9,4 +9,5 @@ class FDevCoreModule : public ICommonModuleInterface
 {
 public:
 	virtual void StartupModule() override;
+	virtual void ShutdownModule() override;
 };
