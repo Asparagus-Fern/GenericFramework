@@ -4,19 +4,19 @@
 
 #include "CoreMinimal.h"
 #include "EnhancedInputComponent.h"
-#include "CommonInputComponent.generated.h"
+#include "DEnhancedInputComponent.generated.h"
 
 
 class UPlayerInputComponent;
 class UInputHandle;
 
 UCLASS()
-class DEVCORE_API UCommonInputComponent : public UEnhancedInputComponent
+class DEVCORE_API UDEnhancedInputComponent : public UEnhancedInputComponent
 {
 	GENERATED_BODY()
 
 public:
-	UCommonInputComponent();
+	UDEnhancedInputComponent();
 	virtual void BeginPlay() override;
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 };

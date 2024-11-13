@@ -71,6 +71,11 @@
 			"Name": "MovieSceneUtilities",
 			"Type": "Runtime",
 			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "DevGameplay",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
 		}
 	]
 }

@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "EnhancedPlayerInput.h"
-#include "CommonPlayerInput.generated.h"
+#include "DEnhancedPlayerInput.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class DEVCORE_API UCommonPlayerInput : public UEnhancedPlayerInput
+class DEVCORE_API UDEnhancedPlayerInput : public UEnhancedPlayerInput
 {
 	GENERATED_BODY()
 

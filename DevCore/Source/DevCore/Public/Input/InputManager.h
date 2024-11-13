@@ -9,8 +9,8 @@
 class UPlayerInputBinding;
 class UInputManager;
 class UInputIdle;
-class UCommonInputComponent;
-class UCommonPlayerInput;
+class UDEnhancedInputComponent;
+class UDEnhancedPlayerInput;
 
 DECLARE_DELEGATE_OneParam(FInputIdleDelegate, UInputIdle*);
 
@@ -48,8 +48,8 @@ UCLASS()
 class DEVCORE_API UInputManager : public UCoreManager
 {
 	GENERATED_UCLASS_BODY()
-	friend UCommonPlayerInput;
-	friend UCommonInputComponent;
+	friend UDEnhancedPlayerInput;
+	friend UDEnhancedInputComponent;
 
 public:
 	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
