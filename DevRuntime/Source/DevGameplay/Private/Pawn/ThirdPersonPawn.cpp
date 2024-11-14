@@ -8,26 +8,24 @@
 #include "CameraPoint/CameraPointBase.h"
 #include "GameFramework/FloatingPawnMovement.h"
 #include "Kismet/KismetMathLibrary.h"
-#include "Pawn/DSpringArmComponent.h"
+#include "Pawn/Component/PawnSpringArmComponent.h"
 
 
-AThirdPersonPawn::AThirdPersonPawn()
+AThirdPersonPawn::AThirdPersonPawn(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
 {
-	PrimaryActorTick.bCanEverTick = true;
 	PawnName = "ThirdPersonPawn";
 
-	FloatingPawnMovement = CreateDefaultSubobject<UFloatingPawnMovement>("Movement");
-
-	SpringArmComponent = CreateDefaultSubobject<UDSpringArmComponent>("SpringArm");
+	SpringArmComponent = CreateDefaultSubobject<UPawnSpringArmComponent>("SpringArmComponent");
 	SpringArmComponent->SetupAttachment(GetRootComponent());
-	CameraComponent = CreateDefaultSubobject<UCameraComponent>("Camera");
+	
+	CameraComponent = CreateDefaultSubobject<UCameraComponent>("CameraComponent");
 	CameraComponent->SetupAttachment(SpringArmComponent);
 }
 
 void AThirdPersonPawn::BeginPlay()
 {
 	Super::BeginPlay();
-	SpringArmComponent->SpringArmLimit = PawnLockingState.SpringArmLimit;
 
 	UCameraHandle::OnSwitchCameraBegin.AddUObject(this, &AThirdPersonPawn::OnSwitchCameraBegin);
 	UCameraHandle::OnSwitchCameraFinish.AddUObject(this, &AThirdPersonPawn::OnSwitchCameraFinish);
@@ -56,7 +54,7 @@ void AThirdPersonPawn::CalcCamera(float DeltaTime, FMinimalViewInfo& OutResult)
 void AThirdPersonPawn::AddLocation_Implementation(FVector2D InValue)
 {
 	const FVector TargetLocation = Execute_GetLocation(this) + (UKismetMathLibrary::GetRightVector(GetActorRotation()) * InValue.X) + (UKismetMathLibrary::GetForwardVector(GetActorRotation()) * InValue.Y);
-	if (PawnLockingState.CanMove(TargetLocation))
+	if (Execute_CanMove(this, TargetLocation))
 	{
 		const float Rate = FMath::Abs(FMath::GetMappedRangeValueClamped(FVector2D(0.f, 1.f), FVector2D(0.1f, 0.9f), FMath::Sin(UE_DOUBLE_PI / (180.0) * Execute_GetRotation(this).Pitch))) * SpringArmComponent->TargetArmLength * UE_TWO_PI;
 		const float MovementRate = 1.5f;
@@ -65,7 +63,7 @@ void AThirdPersonPawn::AddLocation_Implementation(FVector2D InValue)
 		FloatingPawnMovement->Acceleration = Rate * MovementRate * 2.f;
 		FloatingPawnMovement->Deceleration = Rate * MovementRate * 2.5f;
 
-		const FVector2D Movement = InValue * MovementSpeed;
+		const FVector2D Movement = InValue * IPawnInputMovementInterface::Execute_GetMovementSpeedRate(this);
 		AddMovementInput(UKismetMathLibrary::GetRightVector(GetActorRotation()), Movement.X);
 		AddMovementInput(UKismetMathLibrary::GetForwardVector(GetActorRotation()), Movement.Y);
 	}
@@ -74,16 +72,16 @@ void AThirdPersonPawn::AddLocation_Implementation(FVector2D InValue)
 void AThirdPersonPawn::AddRotation_Implementation(FVector2D InValue)
 {
 	const FRotator TargetRotation = Execute_GetRotation(this) + FRotator(InValue.Y, InValue.X, 0.f);
-	if (PawnLockingState.CanTurn(TargetRotation))
+	if (Execute_CanTurn(this, TargetRotation))
 	{
-		AddActorWorldRotation(FRotator(0.f, InValue.X * RotationSpeed, 0.f));
-		SpringArmComponent->AddRelativeRotation(FRotator(InValue.Y * RotationSpeed, 0.f, 0.f));
+		AddActorWorldRotation(FRotator(0.f, InValue.X * IPawnInputMovementInterface::Execute_GetRotationSpeedRate(this), 0.f));
+		SpringArmComponent->AddRelativeRotation(FRotator(InValue.Y * IPawnInputMovementInterface::Execute_GetRotationSpeedRate(this), 0.f, 0.f));
 	}
 }
 
 void AThirdPersonPawn::AddZoom_Implementation(float InValue)
 {
-	if (PawnLockingState.CanZoom(SpringArmComponent->TargetArmLength + InValue))
+	if (Execute_CanZoom(this, SpringArmComponent->TargetArmLength + InValue))
 	{
 		SpringArmComponent->AddTargetArmLength(InValue);
 	}
@@ -91,7 +89,7 @@ void AThirdPersonPawn::AddZoom_Implementation(float InValue)
 
 void AThirdPersonPawn::SetLocation_Implementation(FVector InValue)
 {
-	if (PawnLockingState.CanMove(InValue))
+	if (Execute_CanMove(this, InValue))
 	{
 		SetActorLocation(InValue);
 	}
@@ -99,7 +97,7 @@ void AThirdPersonPawn::SetLocation_Implementation(FVector InValue)
 
 void AThirdPersonPawn::SetRotation_Implementation(FRotator InValue)
 {
-	if (PawnLockingState.CanTurn(InValue))
+	if (Execute_CanTurn(this, InValue))
 	{
 		SetActorRotation(FRotator(0.f, InValue.Yaw, 0.f));
 		SpringArmComponent->SetRelativeRotation(FRotator(InValue.Pitch, 0.f, 0.f), true);
@@ -108,7 +106,7 @@ void AThirdPersonPawn::SetRotation_Implementation(FRotator InValue)
 
 void AThirdPersonPawn::SetZoom_Implementation(float InValue)
 {
-	if (PawnLockingState.CanZoom(InValue))
+	if (Execute_CanZoom(this, InValue))
 	{
 		SpringArmComponent->SetTargetArmLength(InValue);
 	}
@@ -127,17 +125,6 @@ FRotator AThirdPersonPawn::GetRotation_Implementation()
 float AThirdPersonPawn::GetZoom_Implementation()
 {
 	return SpringArmComponent->TargetArmLength;
-}
-
-UCameraComponent* AThirdPersonPawn::GetActiveCameraComponent_Implementation()
-{
-	return IsValid(DuplicateCameraComponent) ? DuplicateCameraComponent : (IsValid(CameraComponent) ? CameraComponent : Super::GetActiveCameraComponent_Implementation());
-}
-
-void AThirdPersonPawn::SetPawnLockingState_Implementation(FPawnLockingState InPawnLockingState)
-{
-	Super::SetPawnLockingState_Implementation(InPawnLockingState);
-	SpringArmComponent->SpringArmLimit = PawnLockingState.SpringArmLimit;
 }
 
 void AThirdPersonPawn::OnSwitchCameraBegin(UCameraHandle* InCameraHandle)
@@ -191,4 +178,9 @@ void AThirdPersonPawn::OnSwitchCameraFinish(UCameraHandle* InCameraHandle)
 	Execute_GetPlayerController(this)->PlayerCameraManager->SetViewTarget(this);
 	// Execute_GetPlayerController(this)->PlayerCameraManager->SetFOV(DuplicateCameraComponent->FieldOfView);
 	// Execute_GetPlayerController(this)->PlayerCameraManager->UpdateCamera(0.f);
+}
+
+UCameraComponent* AThirdPersonPawn::GetActiveCameraComponent_Implementation()
+{
+	return IsValid(DuplicateCameraComponent) ? DuplicateCameraComponent : (IsValid(CameraComponent) ? CameraComponent : nullptr);
 }

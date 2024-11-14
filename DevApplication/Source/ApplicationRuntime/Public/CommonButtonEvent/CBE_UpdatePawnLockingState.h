@@ -25,5 +25,5 @@ public:
 	int32 TargetPlayerIndex = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	FPawnLockingState PawnLockingState;
+	FPawnLockState PawnLockingState;
 };

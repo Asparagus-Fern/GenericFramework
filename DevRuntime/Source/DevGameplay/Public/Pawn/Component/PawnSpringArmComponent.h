@@ -4,16 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/SpringArmComponent.h"
-#include "Pawn/PawnType.h"
-#include "DSpringArmComponent.generated.h"
+#include "PawnSpringArmComponent.generated.h"
 
 UCLASS(ClassGroup=(DevPlugin), meta=(BlueprintSpawnableComponent))
-class DEVGAMEPLAY_API UDSpringArmComponent : public USpringArmComponent
+class DEVGAMEPLAY_API UPawnSpringArmComponent : public USpringArmComponent
 {
 	GENERATED_BODY()
 
 public:
-	UDSpringArmComponent();
+	UPawnSpringArmComponent();
 	virtual void BeginPlay() override;
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
@@ -21,14 +20,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float SpringArmLag = 5.f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(ClampMin = 0.1f, UIMin = 0.1f))
-	float ZoomSpeed = 1.f;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float ReassessmentSpringArmLength = 100.f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FSpringArmLimit SpringArmLimit;
 
 public:
 	UFUNCTION(BlueprintCallable)

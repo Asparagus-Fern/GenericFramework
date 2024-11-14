@@ -4,13 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "Pawn/PawnInterface.h"
+#include "Pawn/DevPawn.h"
+#include "Pawn/Component/PawnInputMovementComponent.h"
 #include "DevCharacter.generated.h"
 
-class UPlayerInputComponent;
-
 UCLASS()
-class DEVGAMEPLAY_API ADevCharacter : public ACharacter, public IPawnInterface
+class DEVGAMEPLAY_API ADevCharacter : public ACharacter, public IPawnInterface, public IPawnInputMovementInterface
 {
 	GENERATED_BODY()
 
@@ -27,6 +26,13 @@ public:
 
 	/* IPawnInterface */
 public:
+	virtual bool IsPlayer_Implementation() override;
+	virtual bool IsAI_Implementation() override;
+	virtual APlayerController* GetPlayerController_Implementation() override;
+	virtual AAIController* GetAIController_Implementation() override;
+
+	/* IPawnInputMovementInterface */
+public:
 	virtual void AddLocation_Implementation(FVector2D InValue) override;
 	virtual void AddRotation_Implementation(FVector2D InValue) override;
 	virtual void AddZoom_Implementation(float InValue) override;
@@ -37,17 +43,10 @@ public:
 	virtual FRotator GetRotation_Implementation() override;
 	virtual float GetZoom_Implementation() override;
 
-	virtual bool IsPlayer_Implementation() override;
-	virtual bool IsAI_Implementation() override;
-	virtual APlayerController* GetPlayerController_Implementation() override;
-	virtual AAIController* GetAIController_Implementation() override;
-
-	virtual UPlayerInputComponent* GetPlayerInputComponent_Implementation() override;
-
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FName CharacterName;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	UPlayerInputComponent* PlayerInputComponent;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UPawnInputMovementComponent* InputMovementComponent;
 };

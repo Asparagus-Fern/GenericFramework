@@ -8,7 +8,6 @@
 #include "PawnManager.generated.h"
 
 class ADevPawn;
-class IPawnInterface;
 
 /**
  * 

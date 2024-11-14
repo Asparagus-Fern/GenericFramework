@@ -3,7 +3,6 @@
 
 #include "CommonButtonEvent/CBE_UpdatePawnLockingState.h"
 
-#include "GameFramework/Character.h"
 #include "Kismet/GameplayStatics.h"
 #include "Pawn/DevPawn.h"
 #include "Pawn/PawnManager.h"
@@ -25,9 +24,12 @@ void UCBE_UpdatePawnLockingState::ExecuteButtonEvent_Implementation()
 
 	if (const UPawnManager* PawnManager = GetManager<UPawnManager>())
 	{
-		if (ADevPawn* DevPawn = Cast<ADevPawn>(UGameplayStatics::GetPlayerPawn(PawnManager, TargetPlayerIndex)))
+		if (APawn* Pawn = UGameplayStatics::GetPlayerPawn(PawnManager, TargetPlayerIndex))
 		{
-			DevPawn->SetPawnLockingState(PawnLockingState);
+			if (Pawn->GetClass()->ImplementsInterface(UPawnLockStateInterface::StaticClass()))
+			{
+				IPawnLockStateInterface::Execute_SetPawnLockState(Pawn, PawnLockingState);
+			}
 		}
 	}
 

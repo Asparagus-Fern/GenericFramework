@@ -4,7 +4,6 @@
 #include "Character/DevCharacter.h"
 
 #include "AIController.h"
-#include "Input/PlayerInputComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 
 ADevCharacter::FCharacterDelegate ADevCharacter::OnCharacterRegister;
@@ -16,7 +15,7 @@ ADevCharacter::ADevCharacter()
 
 	CharacterName = "DevCharacter";
 
-	PlayerInputComponent = CreateDefaultSubobject<UPlayerInputComponent>("PlayerInputComponent");
+	InputMovementComponent = CreateDefaultSubobject<UPawnInputMovementComponent>("InputMovementComponent");
 }
 
 void ADevCharacter::BeginPlay()
@@ -28,11 +27,6 @@ void ADevCharacter::BeginPlay()
 
 void ADevCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-	if (IsValid(Execute_GetPlayerInputComponent(this)))
-	{
-		Execute_GetPlayerInputComponent(this)->RemovePlayerInput(InputComponent);
-	}
-
 	OnCharacterUnRegister.Broadcast(this);
 
 	Super::EndPlay(EndPlayReason);
@@ -41,11 +35,26 @@ void ADevCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
 void ADevCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput)
 {
 	Super::SetupPlayerInputComponent(PlayerInput);
+}
 
-	if (IsValid(Execute_GetPlayerInputComponent(this)))
-	{
-		Execute_GetPlayerInputComponent(this)->SetupPlayerInput(PlayerInput);
-	}
+bool ADevCharacter::IsPlayer_Implementation()
+{
+	return IsValid(Cast<APlayerController>(GetController()));
+}
+
+bool ADevCharacter::IsAI_Implementation()
+{
+	return IsValid(Cast<AAIController>(GetController()));
+}
+
+APlayerController* ADevCharacter::GetPlayerController_Implementation()
+{
+	return Cast<APlayerController>(GetController());
+}
+
+AAIController* ADevCharacter::GetAIController_Implementation()
+{
+	return Cast<AAIController>(GetController());
 }
 
 void ADevCharacter::AddLocation_Implementation(FVector2D InValue)
@@ -91,29 +100,4 @@ FRotator ADevCharacter::GetRotation_Implementation()
 float ADevCharacter::GetZoom_Implementation()
 {
 	return -1.f;
-}
-
-bool ADevCharacter::IsPlayer_Implementation()
-{
-	return IsValid(Cast<APlayerController>(GetController()));
-}
-
-bool ADevCharacter::IsAI_Implementation()
-{
-	return IsValid(Cast<AAIController>(GetController()));
-}
-
-APlayerController* ADevCharacter::GetPlayerController_Implementation()
-{
-	return Cast<APlayerController>(GetController());
-}
-
-AAIController* ADevCharacter::GetAIController_Implementation()
-{
-	return Cast<AAIController>(GetController());
-}
-
-UPlayerInputComponent* ADevCharacter::GetPlayerInputComponent_Implementation()
-{
-	return IsValid(PlayerInputComponent) ? PlayerInputComponent : nullptr;
 }

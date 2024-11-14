@@ -6,6 +6,8 @@
 #include "Pawn/DevPawn.h"
 #include "ThirdPersonPawn.generated.h"
 
+class UCameraComponent;
+class UPawnSpringArmComponent;
 class UCameraHandle;
 
 UCLASS()
@@ -14,25 +16,22 @@ class DEVGAMEPLAY_API AThirdPersonPawn : public ADevPawn
 	GENERATED_BODY()
 
 public:
-	AThirdPersonPawn();
+	AThirdPersonPawn(const FObjectInitializer& ObjectInitializer);
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	virtual void CalcCamera(float DeltaTime, FMinimalViewInfo& OutResult) override;
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	UFloatingPawnMovement* FloatingPawnMovement;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UPawnSpringArmComponent* SpringArmComponent = nullptr;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	UDSpringArmComponent* SpringArmComponent = nullptr;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	UCameraComponent* CameraComponent = nullptr;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Transient)
+	UPROPERTY(BlueprintReadOnly, Transient)
 	UCameraComponent* DuplicateCameraComponent = nullptr;
 
-	/* IPawnInterface */
+	/* IPawnInputMovementInterface */
 public:
 	virtual void AddLocation_Implementation(FVector2D InValue) override;
 	virtual void AddRotation_Implementation(FVector2D InValue) override;
@@ -44,13 +43,12 @@ public:
 	virtual FRotator GetRotation_Implementation() override;
 	virtual float GetZoom_Implementation() override;
 
-	/* ADevPawn */
-public:
-	virtual UCameraComponent* GetActiveCameraComponent_Implementation() override;
-	virtual void SetPawnLockingState_Implementation(FPawnLockingState InPawnLockingState) override;
-
 	/* AThirdPersonPawn */
 protected:
 	virtual void OnSwitchCameraBegin(UCameraHandle* InCameraHandle);
 	virtual void OnSwitchCameraFinish(UCameraHandle* InCameraHandle);
+
+public:
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	UCameraComponent* GetActiveCameraComponent();
 };

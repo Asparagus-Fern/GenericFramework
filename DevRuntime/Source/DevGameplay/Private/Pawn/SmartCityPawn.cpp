@@ -5,11 +5,11 @@
 
 #include "BPFunctions/BPFunctions_Gameplay.h"
 #include "Camera/CameraComponent.h"
-#include "Pawn/DSpringArmComponent.h"
+#include "Pawn/Component/PawnSpringArmComponent.h"
 
-ASmartCityPawn::ASmartCityPawn()
+ASmartCityPawn::ASmartCityPawn(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
 {
-	PrimaryActorTick.bCanEverTick = true;
 	PawnName = "SmartCityPawn";
 }
 

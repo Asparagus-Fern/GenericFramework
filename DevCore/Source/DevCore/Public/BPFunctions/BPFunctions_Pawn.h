@@ -7,7 +7,7 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "BPFunctions_Pawn.generated.h"
 
-class IPawnInterface;
+class IPawnInputMovementInterface;
 
 /**
  * 

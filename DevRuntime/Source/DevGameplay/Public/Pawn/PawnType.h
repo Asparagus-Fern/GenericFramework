@@ -35,8 +35,6 @@ public:
 
 public:
 	bool CanMove(const FVector& TargetLocation) const;
-	FVector GetLimitLocation(const FVector& TargetLocation) const;
-	void UnLimit();
 };
 
 /**
@@ -51,19 +49,23 @@ public:
 	UPROPERTY()
 	bool bLimitPitch = true;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditCondition = "bLimitPitch", ClampMin = "-89.9", UIMin = "-89.9", ClampMax = "89.9", UIMax = "89.9"))
-	FVector2D PitchRange = FVector2D(-89.9f, 10.f);
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditCondition = "bLimitPitch", ClampMin = "-90", UIMin = "-90", ClampMax = "90", UIMax = "90"))
+	FVector2D PitchRange = FVector2D(-90.f, 10.f);
 
 	UPROPERTY()
 	bool bLimitYaw = false;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditCondition = "bLimitYaw"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditCondition = "bLimitYaw", ClampMin = "0", UIMin = "0", ClampMax = "360", UIMax = "360"))
 	FVector2D YawRange = FVector2D::Zero();
+
+	UPROPERTY()
+	bool bLimitRoll = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditCondition = "bLimitRoll", ClampMin = "0", UIMin = "0", ClampMax = "360", UIMax = "360"))
+	FVector2D RollRange = FVector2D::Zero();
 
 public:
 	bool CanTurn(const FRotator& TargetRotation) const;
-	FRotator GetLimitRotation(const FRotator& TargetRotation) const;
-	void UnLimit();
 };
 
 /**
@@ -78,17 +80,18 @@ public:
 	UPROPERTY()
 	bool bLimitSpringArmLength = true;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditCondition = "bLimitSpringArmLength", ClampMin = "0.01", UIMin = "0.01"))
-	FVector2D SpringArmLengthRange = FVector2D(0.01f, 1000000000.f);
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditCondition = "bLimitSpringArmLength", ClampMin = "0", UIMin = "0"))
+	FVector2D SpringArmLengthRange = FVector2D(0.f, 1000000000.f);
 
 public:
 	bool CanZoom(float TargetSpringArmLength) const;
-	float GetLimitSpringArmLength(float TargetSpringArmLength) const;
-	void UnLimit();
 };
 
+/**
+ * 
+ */
 USTRUCT(BlueprintType)
-struct DEVGAMEPLAY_API FPawnLockingState
+struct DEVGAMEPLAY_API FPawnLockState
 {
 	GENERATED_BODY()
 
@@ -116,11 +119,4 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FSpringArmLimit SpringArmLimit;
-
-public:
-	bool CanMove(const FVector& TargetLocation) const;
-	bool CanTurn(const FRotator& TargetRotation) const;
-	bool CanZoom(float TargetSpringArmLength) const;
-	void UnLock();
-	void UnLimit();
 };

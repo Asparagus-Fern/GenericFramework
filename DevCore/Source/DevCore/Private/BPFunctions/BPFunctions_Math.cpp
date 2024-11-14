@@ -37,7 +37,7 @@ FVector UBPFunctions_Math::Vector_MapRangeUnclamped(const FVector& InValue, cons
 
 FRotator UBPFunctions_Math::Rotator_Safe(FRotator R)
 {
-	return FRotator(R.Pitch, R.Yaw + R.Roll, 0.f);
+	return FRotator(R.Pitch, FRotator::ClampAxis(R.Yaw + R.Roll), 0.f);
 }
 
 FRotator UBPFunctions_Math::Rotator_MapRangeClamped(const FRotator& InValue, const FRotator& InRangeA, const FRotator& InRangeB, const FRotator& OutRangeA, const FRotator& OutRangeB)

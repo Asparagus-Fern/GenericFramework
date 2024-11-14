@@ -12,7 +12,10 @@ class DEVGAMEPLAY_API ASmartCityPawn : public AThirdPersonPawn
 	GENERATED_BODY()
 
 public:
-	ASmartCityPawn();
+	ASmartCityPawn(const FObjectInitializer& ObjectInitializer);
+
+	/* IPawnInputMovementInterface */
+public:
 	virtual void AddZoom_Implementation(float InValue) override;
 
 protected:
