@@ -36,7 +36,7 @@ bool UActiveNodeSubsystem::ShouldCreateSubsystem(UObject* Outer) const
 void UActiveNodeSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
-
+	
 	// 这个时候 UWorld 还没有完全初始化..
 }
 

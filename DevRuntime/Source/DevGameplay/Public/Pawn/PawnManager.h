@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameplayTagContainer.h"
+#include "Manager/CoreInternalManager.h"
 #include "Manager/CoreManager.h"
 #include "PawnManager.generated.h"
 
@@ -12,20 +12,17 @@ class ADevPawn;
 /**
  * 
  */
-UCLASS()
-class DEVGAMEPLAY_API UPawnManager : public UCoreManager
+UCLASS(MinimalAPI)
+class UPawnManager : public UWorldSubsystem, public FCoreInternalManager
 {
 	GENERATED_BODY()
 
 public:
 	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
+	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+	virtual void Deinitialize() override;
+	virtual bool DoesSupportWorldType(const EWorldType::Type WorldType) const override;
 
-	/* IProcedureInterface */
-public:
-	virtual void NativeOnActived() override;
-	virtual void NativeOnInactived() override;
-
-	/* UPawnManager */
 protected:
 	UPROPERTY(Transient)
 	TArray<ADevPawn*> Pawns;

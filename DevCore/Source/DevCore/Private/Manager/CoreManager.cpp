@@ -32,7 +32,7 @@ void UCoreManager::Initialize(FSubsystemCollectionBase& Collection)
 void UCoreManager::OnWorldBeginPlay(UWorld& InWorld)
 {
 	Super::OnWorldBeginPlay(InWorld);
-
+	
 	FWorldDelegates::OnWorldBeginTearDown.AddUObject(this, &UCoreManager::OnWorldEndPlay);
 	InWorld.OnWorldMatchStarting.AddUFunction(this, "OnWorldMatchStarting");
 

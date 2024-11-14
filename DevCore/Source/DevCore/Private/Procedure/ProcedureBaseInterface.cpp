@@ -7,17 +7,26 @@
 
 void IProcedureBaseInterface::NativeOnCreate()
 {
-	IProcedureBaseInterface::Execute_OnCreate(Cast<UObject>(this));
-	DLOG(DLogManager, Log, TEXT("On Created : %s"), *Cast<UObject>(this)->GetName());
+	if (UObject* Object = Cast<UObject>(this))
+	{
+		IProcedureBaseInterface::Execute_OnCreate(Object);
+		DLOG(DLogManager, Log, TEXT("On Created : %s"), *Object->GetName());
+	}
 }
 
 void IProcedureBaseInterface::NativeOnDestroy()
 {
-	IProcedureBaseInterface::Execute_OnDestroy(Cast<UObject>(this));
-	DLOG(DLogManager, Log, TEXT("On Destroy : %s"), *Cast<UObject>(this)->GetName());
+	if (UObject* Object = Cast<UObject>(this))
+	{
+		IProcedureBaseInterface::Execute_OnDestroy(Object);
+		DLOG(DLogManager, Log, TEXT("On Destroy : %s"), *Object->GetName());
+	}
 }
 
 void IProcedureBaseInterface::NativeOnRefresh()
 {
-	IProcedureBaseInterface::Execute_OnRefresh(Cast<UObject>(this));
+	if (UObject* Object = Cast<UObject>(this))
+	{
+		IProcedureBaseInterface::Execute_OnRefresh(Object);
+	}
 }

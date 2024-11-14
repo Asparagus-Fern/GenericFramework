@@ -4,13 +4,14 @@
 #include "CommonButtonEvent/CBE_UpdatePawnLockingState.h"
 
 #include "Kismet/GameplayStatics.h"
+#include "Manager/ManagerProxy.h"
 #include "Pawn/DevPawn.h"
 #include "Pawn/PawnManager.h"
 
 bool UCBE_UpdatePawnLockingState::CanExecuteButtonEvent_Implementation()
 {
 	bool IsValidPlayer = false;
-	if (const UPawnManager* PawnManager = GetManager<UPawnManager>())
+	if (const UPawnManager* PawnManager = UManagerProxy::Get()->GetManager<UPawnManager>())
 	{
 		IsValidPlayer = IsValid(UGameplayStatics::GetPlayerController(PawnManager, TargetPlayerIndex));
 	}
@@ -22,7 +23,7 @@ void UCBE_UpdatePawnLockingState::ExecuteButtonEvent_Implementation()
 {
 	Super::ExecuteButtonEvent_Implementation();
 
-	if (const UPawnManager* PawnManager = GetManager<UPawnManager>())
+	if (const UPawnManager* PawnManager = UManagerProxy::Get()->GetManager<UPawnManager>())
 	{
 		if (APawn* Pawn = UGameplayStatics::GetPlayerPawn(PawnManager, TargetPlayerIndex))
 		{

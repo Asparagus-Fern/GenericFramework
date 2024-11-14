@@ -34,20 +34,13 @@ ADevPawn::ADevPawn(const FObjectInitializer& ObjectInitializer)
 void ADevPawn::BeginPlay()
 {
 	Super::BeginPlay();
-
 	OnPawnRegister.Broadcast(this);
 }
 
 void ADevPawn::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	OnPawnUnRegister.Broadcast(this);
-
 	Super::EndPlay(EndPlayReason);
-}
-
-void ADevPawn::SetupPlayerInputComponent(UInputComponent* PlayerInput)
-{
-	Super::SetupPlayerInputComponent(PlayerInput);
 }
 
 bool ADevPawn::IsPlayer_Implementation()

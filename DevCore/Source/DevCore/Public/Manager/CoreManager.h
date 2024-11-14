@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ManagerInterface.h"
 #include "ManagerType.h"
 #include "Debug/DebugType.h"
 #include "Object/CommonObject.h"
@@ -57,7 +56,7 @@ public:
 
 	UFUNCTION(BlueprintPure)
 	bool IsEditorManager() const;
-	
+
 public:
 	static UWorld* GetStaticWorld() { return StaticWorld; }
 	static UWorld* StaticWorld;

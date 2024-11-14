@@ -14,20 +14,27 @@ bool UPawnManager::ShouldCreateSubsystem(UObject* Outer) const
 	return Super::ShouldCreateSubsystem(Outer) && UPawnManagerSetting::Get()->bEnableSubsystem;
 }
 
-void UPawnManager::NativeOnActived()
+void UPawnManager::Initialize(FSubsystemCollectionBase& Collection)
 {
-	Super::NativeOnActived();
+	Super::Initialize(Collection);
+	RegistManager(this);
 
 	ADevPawn::OnPawnRegister.AddUObject(this, &UPawnManager::RegisterPawn);
 	ADevPawn::OnPawnUnRegister.AddUObject(this, &UPawnManager::UnRegisterPawn);
 }
 
-void UPawnManager::NativeOnInactived()
+void UPawnManager::Deinitialize()
 {
-	Super::NativeOnInactived();
+	Super::Deinitialize();
+	UnRegistManager();
 
 	ADevPawn::OnPawnRegister.RemoveAll(this);
 	ADevPawn::OnPawnUnRegister.RemoveAll(this);
+}
+
+bool UPawnManager::DoesSupportWorldType(const EWorldType::Type WorldType) const
+{
+	return WorldType == EWorldType::Game || WorldType == EWorldType::PIE;
 }
 
 void UPawnManager::RegisterPawn(ADevPawn* Pawn)

@@ -6,14 +6,20 @@
 
 void IProcedureInterface::NativeOnActived()
 {
-	IProcedureInterface::Execute_OnActived(Cast<UObject>(this));
-	SetIsActived(true);
-	DLOG(DLogManager, Log, TEXT("On Actived : %s"), *Cast<UObject>(this)->GetName());
+	if (UObject* Object = Cast<UObject>(this))
+	{
+		IProcedureInterface::Execute_OnActived(Object);
+		SetIsActived(true);
+		DLOG(DLogManager, Log, TEXT("On Actived : %s"), *Object->GetName());
+	}
 }
 
 void IProcedureInterface::NativeOnInactived()
 {
-	IProcedureInterface::Execute_OnInactived(Cast<UObject>(this));
-	SetIsActived(false);
-	DLOG(DLogManager, Log, TEXT("On Inactived : %s"), *Cast<UObject>(this)->GetName());
+	if (UObject* Object = Cast<UObject>(this))
+	{
+		IProcedureInterface::Execute_OnInactived(Object);
+		SetIsActived(false);
+		DLOG(DLogManager, Log, TEXT("On Inactived : %s"), *Object->GetName());
+	}
 }
