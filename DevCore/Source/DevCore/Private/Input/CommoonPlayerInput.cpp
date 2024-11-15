@@ -3,10 +3,11 @@
 #include "Input/DEnhancedPlayerInput.h"
 #include "Input/InputManager.h"
 #include "Input/InputManagerSetting.h"
+#include "Manager/ManagerProxy.h"
 
 bool UDEnhancedPlayerInput::InputKey(const FInputKeyParams& Params)
 {
-	if (UInputManager* InputManager = GetManager<UInputManager>())
+	if (UInputManager* InputManager = UManagerProxy::Get()->GetManager<UInputManager>())
 	{
 		if (!UInputManagerSetting::Get()->InputIdleNotInclude.Contains(Params.Key))
 		{

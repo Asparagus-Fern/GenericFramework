@@ -19,25 +19,25 @@ bool UCameraEdManager::ShouldCreateSubsystem(UObject* Outer) const
 	return Super::ShouldCreateSubsystem(Outer) && UCameraEdManagerSetting::Get()->bEnableSubsystem;
 }
 
-bool UCameraEdManager::DoesSupportWorldType(const EWorldType::Type WorldType) const
+void UCameraEdManager::Initialize(FSubsystemCollectionBase& Collection)
 {
-	return WorldType == EWorldType::Editor;
-}
+	Super::Initialize(Collection);
 
-void UCameraEdManager::NativeOnCreate()
-{
-	Super::NativeOnCreate();
-	// ACameraPointBase::OnCameraViewportCapture.AddUObject(this, &UCameraEdManager::OnCameraViewportCapture);
 	ACameraPointBase::OnCopyViewportCamera.AddUObject(this, &UCameraEdManager::OnCopyViewportCamera);
 	ACameraPointBase::OnCameraPointPilotStateChanged.AddUObject(this, &UCameraEdManager::OnCameraPointPilotStateChanged);
 }
 
-void UCameraEdManager::NativeOnDestroy()
+void UCameraEdManager::Deinitialize()
 {
-	Super::NativeOnDestroy();
-	// ACameraPointBase::OnCameraViewportCapture.RemoveAll(this);
+	Super::Deinitialize();
+
 	ACameraPointBase::OnCopyViewportCamera.RemoveAll(this);
 	ACameraPointBase::OnCameraPointPilotStateChanged.RemoveAll(this);
+}
+
+bool UCameraEdManager::DoesSupportWorldType(const EWorldType::Type WorldType) const
+{
+	return WorldType == EWorldType::Editor;
 }
 
 /*void UCameraEdManager::OnCameraViewportCapture(ACameraPointBase* InCameraPoint)

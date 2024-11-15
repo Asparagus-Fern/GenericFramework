@@ -7,6 +7,7 @@
 #include "ScreenWidgetManager.h"
 #include "CameraHandle/CameraHandle.h"
 #include "DataAsset/GameMenuSetting.h"
+#include "Manager/ManagerProxy.h"
 
 AActiveNode_Play::AActiveNode_Play()
 {
@@ -16,7 +17,7 @@ void AActiveNode_Play::Login()
 {
 	Super::Login();
 
-	if (const UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
+	if (const UScreenWidgetManager* ScreenWidgetManager = UManagerProxy::Get()->GetManager<UScreenWidgetManager>())
 	{
 		if (ScreenWidgetManager->IsGameHUDCreated())
 		{
@@ -28,7 +29,7 @@ void AActiveNode_Play::Login()
 		}
 	}
 
-	if (UCameraManager* CameraManager = GetManager<UCameraManager>())
+	if (UCameraManager* CameraManager = UManagerProxy::Get()->GetManager<UCameraManager>())
 	{
 		if (DefaultCameraTag.IsValid() && IsValid(CameraHandle))
 		{
@@ -51,7 +52,7 @@ void AActiveNode_Play::Logout()
 	UScreenWidgetManager::PostHUDCreated.RemoveAll(this);
 	UCameraManager::OnCameraPointRegister.RemoveAll(this);
 
-	if (UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
+	if (UScreenWidgetManager* ScreenWidgetManager = UManagerProxy::Get()->GetManager<UScreenWidgetManager>())
 	{
 		for (const auto& DefaultOpenWidget : DefaultOpenWidgets)
 		{
@@ -62,10 +63,10 @@ void AActiveNode_Play::Logout()
 
 void AActiveNode_Play::PostHUDCreated()
 {
-	if (UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
-	{
-		ScreenWidgetManager->PostHUDCreated.RemoveAll(this);
+	UScreenWidgetManager::PostHUDCreated.RemoveAll(this);
 
+	if (UScreenWidgetManager* ScreenWidgetManager = UManagerProxy::Get()->GetManager<UScreenWidgetManager>())
+	{
 		for (const auto& DefaultOpenWidgetClass : DefaultOpenWidgetClasses)
 		{
 			if (UUserWidgetBase* Widget = ScreenWidgetManager->OpenUserWidget(DefaultOpenWidgetClass))
@@ -85,7 +86,7 @@ void AActiveNode_Play::OnCameraPointRegister(ACameraPointBase* InCameraPoint)
 {
 	UCameraManager::OnCameraPointRegister.RemoveAll(this);
 
-	if (UCameraManager* CameraManager = GetManager<UCameraManager>())
+	if (UCameraManager* CameraManager = UManagerProxy::Get()->GetManager<UCameraManager>())
 	{
 		if (InCameraPoint->CameraTag == DefaultCameraTag)
 		{

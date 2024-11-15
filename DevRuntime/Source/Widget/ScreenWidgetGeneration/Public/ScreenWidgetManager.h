@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
 #include "ScreenWidgetType.h"
-#include "Manager/CoreManager.h"
+#include "Manager/CoreInternalManager.h"
 #include "UserWidget/Base/UserWidgetBase.h"
 #include "ScreenWidgetManager.generated.h"
 
@@ -52,27 +52,28 @@ public:
  * 
  */
 UCLASS()
-class SCREENWIDGETGENERATION_API UScreenWidgetManager : public UCoreManager
+class SCREENWIDGETGENERATION_API UScreenWidgetManager : public UWorldSubsystem, public FCoreInternalManager
 {
-	GENERATED_UCLASS_BODY()
+	GENERATED_BODY()
 
 public:
 	DECLARE_EVENT(UScreenWidgetManager, FScreenWidgetDelegate);
 
 	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
+	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+	virtual void Deinitialize() override;
+	virtual bool DoesSupportWorldType(const EWorldType::Type WorldType) const override;
 
-	/* IProcedureBaseInterface */
+	/* FTickableGameObject */
 public:
-	virtual void NativeOnRefresh() override;
+	virtual bool IsTickable() const override { return true; }
+	virtual void Tick(float DeltaTime) override;
 
-	/* IProcedureInterface */
+	/* FCoreInternalManager */
 public:
-	virtual void NativeOnActived() override;
-	virtual void NativeOnInactived() override;
-
-	/* UCoreManager */
-public:
-	virtual void OnWorldMatchStarting_Implementation() override;
+	virtual void OnWorldMatchStarting(UWorld* InWorld) override;
+	virtual void OnWorldBeginPlay(UWorld& InWorld) override;
+	virtual void OnWorldEndPlay(UWorld* InWorld) override;
 
 	/* Interactable Widget Group */
 public:
@@ -172,15 +173,14 @@ public:
 
 	/* User Widget Base */
 public:
-	static UUserWidgetBase* GetContainerWidget(const FWidgetContainer& WidgetContainer);
-
-public:
 	DECLARE_EVENT_OneParam(UScreenWidgetManager, FUserWidgetBaseDelegate, UUserWidgetBase*);
 
 	static FUserWidgetBaseDelegate OnWidgetOpen;
 	static FUserWidgetBaseDelegate OnWidgetClose;
 
 public:
+	UUserWidgetBase* GetContainerWidget(const FWidgetContainer& WidgetContainer);
+	
 	virtual UUserWidgetBase* OpenUserWidget(TSubclassOf<UUserWidgetBase> InWidgetClass, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged());
 	virtual bool OpenUserWidget(UUserWidgetBase* InWidget, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged());
 

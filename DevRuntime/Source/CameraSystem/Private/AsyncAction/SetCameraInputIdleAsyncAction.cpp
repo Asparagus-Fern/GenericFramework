@@ -4,12 +4,13 @@
 #include "AsyncAction/SetCameraInputIdleAsyncAction.h"
 
 #include "CameraManager.h"
+#include "Manager/ManagerProxy.h"
 
 USetCameraInputIdleAsyncAction* USetCameraInputIdleAsyncAction::SetCameraInputIdle(UCameraInputIdle* InCameraInputIdle)
 {
 	USetCameraInputIdleAsyncAction* NewAction = NewObject<USetCameraInputIdleAsyncAction>();
 
-	if (UCameraManager* CameraManager = GetManager<UCameraManager>())
+	if (UCameraManager* CameraManager = UManagerProxy::Get()->GetManager<UCameraManager>())
 	{
 		UCameraManager::OnCameraInputIdleReset.AddUObject(NewAction, &USetCameraInputIdleAsyncAction::CameraInputIdleReset);
 		UCameraManager::OnCameraAutoSwitchStart.AddUObject(NewAction, &USetCameraInputIdleAsyncAction::CameraAutoSwitchStart);

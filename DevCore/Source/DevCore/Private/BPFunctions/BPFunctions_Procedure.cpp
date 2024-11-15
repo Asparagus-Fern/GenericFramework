@@ -3,7 +3,6 @@
 
 #include "BPFunctions/BPFunctions_Procedure.h"
 
-#include "Manager/ManagerGlobal.h"
 #include "Procedure/ProcedureManager.h"
 
 

@@ -4,14 +4,14 @@
 #include "BPFunctions/BPFunctions_Widget.h"
 
 #include "ScreenWidgetManager.h"
-#include "Manager/ManagerGlobal.h"
+#include "Manager/ManagerProxy.h"
 #include "UserWidget/Base/UserWidgetBase.h"
 
 /* ==================== Interactable Widget Group ==================== */
 
 void UBPFunctions_Widget::AddInteractableWidget(UInteractableUserWidgetBase* InteractableWidget, const FString GroupName)
 {
-	if (UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
+	if (UScreenWidgetManager* ScreenWidgetManager = UManagerProxy::Get()->GetManager<UScreenWidgetManager>())
 	{
 		ScreenWidgetManager->AddInteractableWidget(InteractableWidget, GroupName);
 	}
@@ -19,7 +19,7 @@ void UBPFunctions_Widget::AddInteractableWidget(UInteractableUserWidgetBase* Int
 
 void UBPFunctions_Widget::RemoveInteractableWidget(UInteractableUserWidgetBase* InteractableWidget, const FString GroupName)
 {
-	if (UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
+	if (UScreenWidgetManager* ScreenWidgetManager = UManagerProxy::Get()->GetManager<UScreenWidgetManager>())
 	{
 		ScreenWidgetManager->RemoveInteractableWidget(InteractableWidget, GroupName);
 	}
@@ -27,7 +27,7 @@ void UBPFunctions_Widget::RemoveInteractableWidget(UInteractableUserWidgetBase* 
 
 void UBPFunctions_Widget::ClearupInteractableWidgetGroup(const FString& GroupName, const bool DeselectAll)
 {
-	if (UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
+	if (UScreenWidgetManager* ScreenWidgetManager = UManagerProxy::Get()->GetManager<UScreenWidgetManager>())
 	{
 		ScreenWidgetManager->ClearupInteractableWidgetGroup(GroupName, DeselectAll);
 	}
@@ -35,7 +35,7 @@ void UBPFunctions_Widget::ClearupInteractableWidgetGroup(const FString& GroupNam
 
 bool UBPFunctions_Widget::GetInteractableWidgetGroups(TMap<FString, UCommonButtonGroup*>& Groups)
 {
-	if (const UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
+	if (const UScreenWidgetManager* ScreenWidgetManager = UManagerProxy::Get()->GetManager<UScreenWidgetManager>())
 	{
 		for (auto& InteractableWidgetGroup : ScreenWidgetManager->InteractableWidgetGroups)
 		{
@@ -48,7 +48,7 @@ bool UBPFunctions_Widget::GetInteractableWidgetGroups(TMap<FString, UCommonButto
 
 bool UBPFunctions_Widget::FindInteractableWidgetGroup(const FString& GroupName, UCommonButtonGroup*& Group)
 {
-	if (const UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
+	if (const UScreenWidgetManager* ScreenWidgetManager = UManagerProxy::Get()->GetManager<UScreenWidgetManager>())
 	{
 		return ScreenWidgetManager->FindInteractableWidgetGroup(GroupName, Group);
 	}
@@ -60,7 +60,7 @@ bool UBPFunctions_Widget::FindInteractableWidgetGroup(const FString& GroupName, 
 
 bool UBPFunctions_Widget::GetGameHUDs(TArray<UGameHUD*>& GameHUDs)
 {
-	if (const UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
+	if (const UScreenWidgetManager* ScreenWidgetManager = UManagerProxy::Get()->GetManager<UScreenWidgetManager>())
 	{
 		GameHUDs = ScreenWidgetManager->GameHUDs;
 		return true;
@@ -71,7 +71,7 @@ bool UBPFunctions_Widget::GetGameHUDs(TArray<UGameHUD*>& GameHUDs)
 
 bool UBPFunctions_Widget::GetGameHUDByTag(const FGameplayTag InTag, TArray<UGameHUD*>& GameHUDs)
 {
-	if (UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
+	if (UScreenWidgetManager* ScreenWidgetManager = UManagerProxy::Get()->GetManager<UScreenWidgetManager>())
 	{
 		GameHUDs = ScreenWidgetManager->GetGameHUDByTag(InTag);
 		return true;
@@ -82,7 +82,7 @@ bool UBPFunctions_Widget::GetGameHUDByTag(const FGameplayTag InTag, TArray<UGame
 
 void UBPFunctions_Widget::SetAllGameHUDActiveState(const bool IsVisisble)
 {
-	if (UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
+	if (UScreenWidgetManager* ScreenWidgetManager = UManagerProxy::Get()->GetManager<UScreenWidgetManager>())
 	{
 		ScreenWidgetManager->SetGameHUDActiveState(IsVisisble);
 	}
@@ -90,7 +90,7 @@ void UBPFunctions_Widget::SetAllGameHUDActiveState(const bool IsVisisble)
 
 void UBPFunctions_Widget::SetGameHUDActiveState(UGameHUD* GameHUD, const bool IsVisisble)
 {
-	if (UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
+	if (UScreenWidgetManager* ScreenWidgetManager = UManagerProxy::Get()->GetManager<UScreenWidgetManager>())
 	{
 		ScreenWidgetManager->SetGameHUDActiveState(GameHUD, IsVisisble);
 	}
@@ -98,7 +98,7 @@ void UBPFunctions_Widget::SetGameHUDActiveState(UGameHUD* GameHUD, const bool Is
 
 void UBPFunctions_Widget::SetGameHUDActiveStateByTag(const FGameplayTag InTag, const bool IsVisisble)
 {
-	if (UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
+	if (UScreenWidgetManager* ScreenWidgetManager = UManagerProxy::Get()->GetManager<UScreenWidgetManager>())
 	{
 		ScreenWidgetManager->SetGameHUDActiveState(InTag, IsVisisble);
 	}
@@ -108,7 +108,7 @@ void UBPFunctions_Widget::SetGameHUDActiveStateByTag(const FGameplayTag InTag, c
 
 void UBPFunctions_Widget::RegisterSlot(UGameplayTagSlot* InSlot)
 {
-	if (UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
+	if (UScreenWidgetManager* ScreenWidgetManager = UManagerProxy::Get()->GetManager<UScreenWidgetManager>())
 	{
 		ScreenWidgetManager->RegisterSlot(InSlot);
 	}
@@ -116,7 +116,7 @@ void UBPFunctions_Widget::RegisterSlot(UGameplayTagSlot* InSlot)
 
 void UBPFunctions_Widget::UnRegisterSlot(UGameplayTagSlot* InSlot)
 {
-	if (UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
+	if (UScreenWidgetManager* ScreenWidgetManager = UManagerProxy::Get()->GetManager<UScreenWidgetManager>())
 	{
 		ScreenWidgetManager->UnRegisterSlot(InSlot);
 	}
@@ -124,7 +124,7 @@ void UBPFunctions_Widget::UnRegisterSlot(UGameplayTagSlot* InSlot)
 
 bool UBPFunctions_Widget::GetSlots(TArray<UGameplayTagSlot*>& Slots)
 {
-	if (const UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
+	if (const UScreenWidgetManager* ScreenWidgetManager = UManagerProxy::Get()->GetManager<UScreenWidgetManager>())
 	{
 		Slots = ScreenWidgetManager->Slots;
 		return true;
@@ -135,7 +135,7 @@ bool UBPFunctions_Widget::GetSlots(TArray<UGameplayTagSlot*>& Slots)
 
 UGameplayTagSlot* UBPFunctions_Widget::GetSlot(const FGameplayTag InSlotTag)
 {
-	if (const UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
+	if (const UScreenWidgetManager* ScreenWidgetManager = UManagerProxy::Get()->GetManager<UScreenWidgetManager>())
 	{
 		return ScreenWidgetManager->GetSlot(InSlotTag);
 	}
@@ -148,7 +148,7 @@ UUserWidgetBase* UBPFunctions_Widget::GetSlotWidget(FGameplayTag InSlotTag, TSub
 	ensure(InClass);
 
 
-	if (UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
+	if (UScreenWidgetManager* ScreenWidgetManager = UManagerProxy::Get()->GetManager<UScreenWidgetManager>())
 	{
 		return ScreenWidgetManager->GetSlotWidget(InSlotTag);
 	}
@@ -160,7 +160,7 @@ UUserWidgetBase* UBPFunctions_Widget::GetSlotWidget(FGameplayTag InSlotTag, TSub
 
 UUserWidgetBase* UBPFunctions_Widget::OpenUserWidgetByClass(const TSubclassOf<UUserWidgetBase> InWidgetClass)
 {
-	if (UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
+	if (UScreenWidgetManager* ScreenWidgetManager = UManagerProxy::Get()->GetManager<UScreenWidgetManager>())
 	{
 		return ScreenWidgetManager->OpenUserWidget(InWidgetClass);
 	}
@@ -170,7 +170,7 @@ UUserWidgetBase* UBPFunctions_Widget::OpenUserWidgetByClass(const TSubclassOf<UU
 
 void UBPFunctions_Widget::OpenUserWidget(UUserWidgetBase* InWidget)
 {
-	if (UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
+	if (UScreenWidgetManager* ScreenWidgetManager = UManagerProxy::Get()->GetManager<UScreenWidgetManager>())
 	{
 		ScreenWidgetManager->OpenUserWidget(InWidget);
 	}
@@ -178,7 +178,7 @@ void UBPFunctions_Widget::OpenUserWidget(UUserWidgetBase* InWidget)
 
 void UBPFunctions_Widget::CloseUserWidget(UUserWidgetBase* InWidget, bool MarkAsGarbage)
 {
-	if (UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
+	if (UScreenWidgetManager* ScreenWidgetManager = UManagerProxy::Get()->GetManager<UScreenWidgetManager>())
 	{
 		ScreenWidgetManager->CloseUserWidget(InWidget, FOnWidgetActiveStateChanged(), MarkAsGarbage);
 	}
@@ -186,7 +186,7 @@ void UBPFunctions_Widget::CloseUserWidget(UUserWidgetBase* InWidget, bool MarkAs
 
 void UBPFunctions_Widget::CloseUserWidgetByTag(FGameplayTag InSlotTag, bool MarkAsGarbage)
 {
-	if (UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
+	if (UScreenWidgetManager* ScreenWidgetManager = UManagerProxy::Get()->GetManager<UScreenWidgetManager>())
 	{
 		ScreenWidgetManager->CloseUserWidget(InSlotTag, FOnWidgetActiveStateChanged(), MarkAsGarbage);
 	}
@@ -194,7 +194,7 @@ void UBPFunctions_Widget::CloseUserWidgetByTag(FGameplayTag InSlotTag, bool Mark
 
 void UBPFunctions_Widget::MoveUserWidget(FGameplayTag OriginSlotTag, FGameplayTag TargetSlotTag)
 {
-	if (UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
+	if (UScreenWidgetManager* ScreenWidgetManager = UManagerProxy::Get()->GetManager<UScreenWidgetManager>())
 	{
 		ScreenWidgetManager->MoveUserWidget(OriginSlotTag, TargetSlotTag, FOnWidgetActiveStateChanged());
 	}
@@ -202,7 +202,7 @@ void UBPFunctions_Widget::MoveUserWidget(FGameplayTag OriginSlotTag, FGameplayTa
 
 bool UBPFunctions_Widget::GetActivedWidgets(TArray<UUserWidgetBase*>& ActivedWidgets)
 {
-	if (const UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
+	if (const UScreenWidgetManager* ScreenWidgetManager = UManagerProxy::Get()->GetManager<UScreenWidgetManager>())
 	{
 		ActivedWidgets = ScreenWidgetManager->ActivedWidgets;
 		return true;
@@ -215,7 +215,7 @@ bool UBPFunctions_Widget::GetActivedWidgets(TArray<UUserWidgetBase*>& ActivedWid
 
 void UBPFunctions_Widget::SwitchGameMenu(UGameMenuSetting* InGameMenuSetting)
 {
-	if (UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
+	if (UScreenWidgetManager* ScreenWidgetManager = UManagerProxy::Get()->GetManager<UScreenWidgetManager>())
 	{
 		ScreenWidgetManager->SwitchGameMenu(InGameMenuSetting);
 	}
@@ -223,7 +223,7 @@ void UBPFunctions_Widget::SwitchGameMenu(UGameMenuSetting* InGameMenuSetting)
 
 void UBPFunctions_Widget::SelectMenu(FGameplayTag InMenuTag)
 {
-	if (UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
+	if (UScreenWidgetManager* ScreenWidgetManager = UManagerProxy::Get()->GetManager<UScreenWidgetManager>())
 	{
 		ScreenWidgetManager->SelectMenu(InMenuTag);
 	}
@@ -231,7 +231,7 @@ void UBPFunctions_Widget::SelectMenu(FGameplayTag InMenuTag)
 
 void UBPFunctions_Widget::DeselectMenu(FGameplayTag InMenuTag)
 {
-	if (UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
+	if (UScreenWidgetManager* ScreenWidgetManager = UManagerProxy::Get()->GetManager<UScreenWidgetManager>())
 	{
 		ScreenWidgetManager->DeselectMenu(InMenuTag);
 	}
@@ -239,7 +239,7 @@ void UBPFunctions_Widget::DeselectMenu(FGameplayTag InMenuTag)
 
 UGameMenuSetting* UBPFunctions_Widget::GetGameMenu(const UObject* WorldContextObject)
 {
-	if (const UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
+	if (const UScreenWidgetManager* ScreenWidgetManager = UManagerProxy::Get()->GetManager<UScreenWidgetManager>())
 	{
 		return ScreenWidgetManager->GameMenu;
 	}
@@ -249,7 +249,7 @@ UGameMenuSetting* UBPFunctions_Widget::GetGameMenu(const UObject* WorldContextOb
 
 bool UBPFunctions_Widget::GetMenuGenerateInfos(TArray<FMenuGenerateInfo>& MenuGenerateInfos)
 {
-	if (const UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
+	if (const UScreenWidgetManager* ScreenWidgetManager = UManagerProxy::Get()->GetManager<UScreenWidgetManager>())
 	{
 		MenuGenerateInfos = ScreenWidgetManager->MenuGenerateInfos;
 		return true;

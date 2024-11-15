@@ -4,6 +4,7 @@
 #include "CommonButtonEvent/CBE_HandleActor.h"
 
 #include "SceneManager.h"
+#include "Manager/ManagerProxy.h"
 
 void UCBE_HandleActor::NativeOnCreate()
 {
@@ -25,7 +26,7 @@ void UCBE_HandleActor::ExecuteButtonEvent_Implementation()
 {
 	Super::ExecuteButtonEvent_Implementation();
 
-	TArray<AActor*> Actors = GetManager<USceneManager>()->FindActors(FindActorHandle);
+	TArray<AActor*> Actors = UManagerProxy::Get()->GetManager<USceneManager>()->FindActors(FindActorHandle);
 	for (const auto& HandleActorMethod : HandleActor.HandleActorMethods)
 	{
 		switch (HandleActorMethod)

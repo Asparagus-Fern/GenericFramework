@@ -4,13 +4,13 @@
 #include "AsyncAction/CloseUserWidgetAsyncAction.h"
 
 #include "ScreenWidgetManager.h"
-#include "Manager/ManagerGlobal.h"
+#include "Manager/ManagerProxy.h"
 
 UCloseUserWidgetAsyncAction* UCloseUserWidgetAsyncAction::AsyncCloseUserWidget(UUserWidgetBase* InWidget, bool MarkAsGarbage)
 {
 	UCloseUserWidgetAsyncAction* NewAction = NewObject<UCloseUserWidgetAsyncAction>();
 
-	if (UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
+	if (UScreenWidgetManager* ScreenWidgetManager = UManagerProxy::Get()->GetManager<UScreenWidgetManager>())
 	{
 		ScreenWidgetManager->CloseUserWidget(InWidget, FOnWidgetActiveStateChanged::CreateUObject(NewAction, &UCloseUserWidgetAsyncAction::OnHandleFinish), MarkAsGarbage);
 	}
@@ -22,7 +22,7 @@ UCloseUserWidgetAsyncAction* UCloseUserWidgetAsyncAction::AsyncCloseUserWidgetBy
 {
 	UCloseUserWidgetAsyncAction* NewAction = NewObject<UCloseUserWidgetAsyncAction>();
 
-	if (UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
+	if (UScreenWidgetManager* ScreenWidgetManager = UManagerProxy::Get()->GetManager<UScreenWidgetManager>())
 	{
 		ScreenWidgetManager->CloseUserWidget(InSlotTag, FOnWidgetActiveStateChanged::CreateUObject(NewAction, &UCloseUserWidgetAsyncAction::OnHandleFinish), MarkAsGarbage);
 	}

@@ -14,55 +14,61 @@ FCoreInternalManager::~FCoreInternalManager()
 {
 }
 
+UWorld* FCoreInternalManager::GetTickableGameObjectWorld() const
+{
+	if (!GetOwner())
+	{
+		return nullptr;
+	}
+
+	return GetOwner()->GetWorld();;
+}
+
 void FCoreInternalManager::RegistManager(UObject* InOwner)
 {
+	if (!IsValid(InOwner))
+	{
+		DLOG(DLogManager, Error, TEXT("Regist Manager Fail, Must Provide Owner For Internal Manager"));
+		return;
+	}
+
 	Owner = InOwner;
 	UManagerProxy::Get()->RegistManager(this);
 	OnManagerInitialized();
-	DLOG(DLogManager, Log, TEXT("On Initialized : %s"), *GetOwner()->GetName());
-
-	if (UWorld* World = GetOwner()->GetWorld())
-	{
-		if (!World->IsGameWorld())
-		{
-			return;
-		}
-
-		if (World->bMatchStarted)
-		{
-			HandleOnWorldBeginPlay(World);
-		}
-		else
-		{
-			World->OnWorldMatchStarting.AddRaw(this, &FCoreInternalManager::HandleOnWorldBeginPlay, World);
-		}
-
-		FWorldDelegates::OnWorldBeginTearDown.AddRaw(this, &FCoreInternalManager::HandleOnWorldEndPlay);
-	}
 }
 
 void FCoreInternalManager::UnRegistManager()
 {
 	UManagerProxy::Get()->UnRegistManager(this);
 	OnManagerDeinitialized();
-	DLOG(DLogManager, Log, TEXT("On Deinitialized : %s"), *GetOwner()->GetName());
+}
+
+void FCoreInternalManager::OnManagerInitialized()
+{
+	DLOG(DLogManager, Log, TEXT("On Manager Initialized : %s"), *GetOwner()->GetName());
+}
+
+void FCoreInternalManager::OnManagerDeinitialized()
+{
+	DLOG(DLogManager, Log, TEXT("On Manager Deinitialized : %s"), *GetOwner()->GetName());
+}
+
+void FCoreInternalManager::OnWorldMatchStarting(UWorld* InWorld)
+{
+	DLOG(DLogManager, Log, TEXT("On Manager Match Starting : %s"), *GetOwner()->GetName());
+}
+
+void FCoreInternalManager::OnWorldBeginPlay(UWorld* InWorld)
+{
+	DLOG(DLogManager, Log, TEXT("On Manager Begin Play : %s"), *GetOwner()->GetName());
+}
+
+void FCoreInternalManager::OnWorldEndPlay(UWorld* InWorld)
+{
+	DLOG(DLogManager, Log, TEXT("On Manager End Play : %s"), *GetOwner()->GetName());
 }
 
 UObject* FCoreInternalManager::GetOwner() const
 {
 	return Owner;
-}
-
-void FCoreInternalManager::HandleOnWorldBeginPlay(UWorld* InWorld)
-{
-	InWorld->OnWorldBeginPlay.RemoveAll(this);
-	OnManagerBeginPlay(GetOwner()->GetWorld());
-	DLOG(DLogManager, Log, TEXT("On Manager Begin Play : %s"), *GetOwner()->GetName());
-}
-
-void FCoreInternalManager::HandleOnWorldEndPlay(UWorld* InWorld)
-{
-	FWorldDelegates::OnWorldBeginTearDown.RemoveAll(this);
-	OnManagerEndPlay(InWorld);
-	DLOG(DLogManager, Log, TEXT("On Manager End Play : %s"), *GetOwner()->GetName());
 }

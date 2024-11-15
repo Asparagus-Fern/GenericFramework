@@ -8,7 +8,7 @@
 #include "Event/CommonButtonEvent.h"
 #include "Blueprint/WidgetTree.h"
 #include "Group/CommonButton.h"
-#include "Manager/ManagerGlobal.h"
+#include "Manager/ManagerProxy.h"
 #include "Procedure/ProcedureManager.h"
 
 UInteractableUserWidgetBase::FBuildInteractableWidgetGroup UInteractableUserWidgetBase::AddInteractableWidget;
@@ -57,14 +57,14 @@ bool UInteractableUserWidgetBase::Initialize()
 
 			{
 				CommonButton->Initialize();
-				
+
 				UWidgetTree* NewWidgetTree = NewObject<UWidgetTree>(this, TEXT("WidgetTree"), RF_Transient);
 				NewWidgetTree->RootWidget = WidgetTree->RootWidget;
-				
+
 				ActiveCommonButton = DuplicateObject(CommonButton, this, "ActiveCommonButton");
 				ActiveCommonButton->WidgetTree = NewWidgetTree;
 				ActiveCommonButton->InitializeForce();
-				
+
 				WidgetTree->RootWidget = ActiveCommonButton;
 			}
 
@@ -304,7 +304,7 @@ void UInteractableUserWidgetBase::HandleButtonResponse(UCommonButton* Button, EC
 
 UProcedureProxy* UInteractableUserWidgetBase::HandleButtonResponseEvent(TArray<UCommonButtonEvent*> TargetEvents, const bool TargetEventState, const FSimpleDelegate OnFinish)
 {
-	if (UProcedureManager* ProcedureManager = GetManager<UProcedureManager>())
+	if (UProcedureManager* ProcedureManager = UManagerProxy::Get()->GetManager<UProcedureManager>())
 	{
 		TArray<UProcedureObject*> ProcedureObjects;
 		for (const auto& TargetEvent : TargetEvents)

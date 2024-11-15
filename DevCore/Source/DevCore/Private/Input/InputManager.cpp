@@ -9,12 +9,6 @@
 
 #define LOCTEXT_NAMESPACE "UInputManager"
 
-UInputManager::UInputManager(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
-{
-	bTickable = true;
-}
-
 FInputIdleInfo::FInputIdleInfo()
 {
 }
@@ -61,9 +55,26 @@ bool UInputManager::ShouldCreateSubsystem(UObject* Outer) const
 	return Super::ShouldCreateSubsystem(Outer) && UInputManagerSetting::Get()->bEnableSubsystem;
 }
 
+void UInputManager::Initialize(FSubsystemCollectionBase& Collection)
+{
+	Super::Initialize(Collection);
+	RegistManager(this);
+}
+
+void UInputManager::Deinitialize()
+{
+	Super::Deinitialize();
+	UnRegistManager();
+}
+
+bool UInputManager::DoesSupportWorldType(const EWorldType::Type WorldType) const
+{
+	return WorldType == EWorldType::Game || WorldType == EWorldType::PIE;
+}
+
 void UInputManager::Tick(float DeltaTime)
 {
-	Super::Tick(DeltaTime);
+	FCoreInternalManager::Tick(DeltaTime);
 	IdleTime += DeltaTime;
 
 	TArray<FInputIdleInfo>& TempInputIdleInfos = InputIdleInfos;
@@ -73,9 +84,9 @@ void UInputManager::Tick(float DeltaTime)
 	}
 }
 
-void UInputManager::NativeOnActived()
+void UInputManager::OnWorldBeginPlay(UWorld& InWorld)
 {
-	Super::NativeOnActived();
+	Super::OnWorldBeginPlay(InWorld);
 
 	for (FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)
 	{
@@ -93,9 +104,9 @@ void UInputManager::NativeOnActived()
 	}
 }
 
-void UInputManager::NativeOnInactived()
+void UInputManager::OnWorldEndPlay(UWorld* InWorld)
 {
-	Super::NativeOnInactived();
+	FCoreInternalManager::OnWorldEndPlay(InWorld);
 }
 
 bool UInputManager::RegisterIdleData(UInputIdle* InputIdle, const FInputIdleDelegate& OnIdle, const FInputIdleDelegate& OnContinue)

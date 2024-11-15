@@ -5,6 +5,7 @@
 
 #include "ScreenWidgetManager.h"
 #include "DataAsset/GameMenuSetting.h"
+#include "Manager/ManagerProxy.h"
 
 bool UCBE_SwitchGameMenu::CanExecuteButtonEvent_Implementation()
 {
@@ -15,7 +16,7 @@ void UCBE_SwitchGameMenu::ExecuteButtonEvent_Implementation()
 {
 	Super::ExecuteButtonEvent_Implementation();
 
-	if (UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
+	if (UScreenWidgetManager* ScreenWidgetManager = UManagerProxy::Get()->GetManager<UScreenWidgetManager>())
 	{
 		ScreenWidgetManager->SwitchGameMenu(GameMenuSetting);
 	}

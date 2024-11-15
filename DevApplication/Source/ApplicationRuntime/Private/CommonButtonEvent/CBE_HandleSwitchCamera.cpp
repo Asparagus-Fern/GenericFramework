@@ -6,7 +6,7 @@
 #include "CameraHandle/CameraHandle_Transition.h"
 #include "GameFramework/Character.h"
 #include "Kismet/GameplayStatics.h"
-#include "Manager/ManagerGlobal.h"
+#include "Manager/ManagerProxy.h"
 
 UCBE_HandleSwitchCamera::UCBE_HandleSwitchCamera()
 {
@@ -17,7 +17,7 @@ UCBE_HandleSwitchCamera::UCBE_HandleSwitchCamera()
 bool UCBE_HandleSwitchCamera::CanExecuteButtonEvent_Implementation()
 {
 	bool IsValidPlayer = false;
-	if (const UCameraManager* CameraManager = GetManager<UCameraManager>())
+	if (const UCameraManager* CameraManager = UManagerProxy::Get()->GetManager<UCameraManager>())
 	{
 		IsValidPlayer = IsValid(UGameplayStatics::GetPlayerController(CameraManager, TargetPlayerIndex));
 	}
@@ -35,7 +35,7 @@ void UCBE_HandleSwitchCamera::ExecuteButtonEvent_Implementation()
 		}
 	);
 
-	if (UCameraManager* CameraManager = GetManager<UCameraManager>())
+	if (UCameraManager* CameraManager = UManagerProxy::Get()->GetManager<UCameraManager>())
 	{
 		if (bIsAsync)
 			CameraManager->SwitchToCamera(TargetPlayerIndex, TargetCameraTag, TargetCameraHandle, OnSwitchFinish);

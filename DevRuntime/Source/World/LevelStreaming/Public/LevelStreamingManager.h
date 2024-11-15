@@ -4,24 +4,22 @@
 
 #include "CoreMinimal.h"
 #include "LevelStreamingType.h"
-#include "Manager/CoreManager.h"
+#include "Manager/CoreInternalManager.h"
 #include "LevelStreamingManager.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class LEVELSTREAMING_API ULevelStreamingManager : public UCoreManager
+class LEVELSTREAMING_API ULevelStreamingManager : public UWorldSubsystem, public FCoreInternalManager
 {
 	GENERATED_BODY()
 
 public:
 	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
-
-	/* IProcedureInterface */
-public:
-	virtual void NativeOnActived() override;
-	virtual void NativeOnInactived() override;
+	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+	virtual void Deinitialize() override;
+	virtual bool DoesSupportWorldType(const EWorldType::Type WorldType) const override;
 
 	/* ULevelStreamingManager */
 public:

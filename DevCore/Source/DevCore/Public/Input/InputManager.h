@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Manager/CoreManager.h"
+#include "Manager/CoreInternalManager.h"
 #include "InputManager.generated.h"
 
 class UPlayerInputBinding;
@@ -45,23 +45,27 @@ protected:
  * 
  */
 UCLASS()
-class DEVCORE_API UInputManager : public UCoreManager
+class DEVCORE_API UInputManager : public UWorldSubsystem, public FCoreInternalManager
 {
-	GENERATED_UCLASS_BODY()
+	GENERATED_BODY()
+
 	friend UDEnhancedPlayerInput;
 	friend UDEnhancedInputComponent;
 
 public:
 	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
+	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+	virtual void Deinitialize() override;
+	virtual bool DoesSupportWorldType(const EWorldType::Type WorldType) const override;
 
 	/* FTickableGameObject */
 public:
 	virtual void Tick(float DeltaTime) override;
 
-	/* IProcedureInterface */
+	/* FCoreInternalManager */
 public:
-	virtual void NativeOnActived() override;
-	virtual void NativeOnInactived() override;
+	virtual void OnWorldBeginPlay(UWorld& InWorld) override;
+	virtual void OnWorldEndPlay(UWorld* InWorld) override;
 	
 	/* IdleData */
 public:

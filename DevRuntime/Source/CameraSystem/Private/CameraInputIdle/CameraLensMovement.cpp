@@ -4,13 +4,14 @@
 #include "CameraInputIdle/CameraLensMovement.h"
 
 #include "CameraManager.h"
+#include "Manager/ManagerProxy.h"
 
 UWorld* UCameraLensMovement::GetWorld() const
 {
 	if (!HasAnyFlags(RF_ClassDefaultObject) && ensureMsgf(GetOuter(), TEXT("CommonButtonEvent: %s has a null OuterPrivate in UCommonButtonEvent::GetWorld()"), *GetFullName())
 		&& !GetOuter()->HasAnyFlags(RF_BeginDestroyed) && !GetOuter()->IsUnreachable())
 	{
-		if (const UCameraManager* CameraManager = GetManager<UCameraManager>())
+		if (const UCameraManager* CameraManager = UManagerProxy::Get()->GetManager<UCameraManager>())
 		{
 			return CameraManager->GetWorld();
 		}

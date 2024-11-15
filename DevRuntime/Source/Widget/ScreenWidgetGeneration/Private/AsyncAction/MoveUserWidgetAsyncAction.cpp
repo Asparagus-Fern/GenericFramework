@@ -4,12 +4,13 @@
 #include "AsyncAction/MoveUserWidgetAsyncAction.h"
 
 #include "ScreenWidgetManager.h"
+#include "Manager/ManagerProxy.h"
 
 UMoveUserWidgetAsyncAction* UMoveUserWidgetAsyncAction::AsyncMoveUserWidget(const FGameplayTag OriginSlotTag, const FGameplayTag TargetSlotTag)
 {
 	UMoveUserWidgetAsyncAction* NewAction = NewObject<UMoveUserWidgetAsyncAction>();
 
-	if (UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
+	if (UScreenWidgetManager* ScreenWidgetManager = UManagerProxy::Get()->GetManager<UScreenWidgetManager>())
 	{
 		ScreenWidgetManager->MoveUserWidget(OriginSlotTag, TargetSlotTag, FOnWidgetActiveStateChanged::CreateUObject(NewAction, &UMoveUserWidgetAsyncAction::OnHandleFinish));
 	}

@@ -4,6 +4,7 @@
 #include "CommonButtonEvent/CBE_OpenUserWidget.h"
 
 #include "ScreenWidgetManager.h"
+#include "Manager/ManagerProxy.h"
 
 bool UCBE_OpenUserWidget::CanExecuteButtonEvent_Implementation()
 {
@@ -26,7 +27,7 @@ void UCBE_OpenUserWidget::ExecuteButtonEvent_Implementation()
 				}
 			);
 
-			GetManager<UScreenWidgetManager>()->OpenUserWidget(ValidWidgets[OpenWidgetIndex], OnOpenFinish);
+			UManagerProxy::Get()->GetManager<UScreenWidgetManager>()->OpenUserWidget(ValidWidgets[OpenWidgetIndex], OnOpenFinish);
 		}
 		else
 		{
@@ -39,7 +40,7 @@ void UCBE_OpenUserWidget::ExecuteButtonEvent_Implementation()
 		TArray<UUserWidgetBase*> ValidWidgets = GetValidWidgets();
 		for (const auto& ValidWidget : ValidWidgets)
 		{
-			GetManager<UScreenWidgetManager>()->OpenUserWidget(ValidWidget);
+			UManagerProxy::Get()->GetManager<UScreenWidgetManager>()->OpenUserWidget(ValidWidget);
 		}
 	}
 }
@@ -48,12 +49,15 @@ TArray<UUserWidgetBase*> UCBE_OpenUserWidget::GetValidWidgets()
 {
 	TArray<UUserWidgetBase*> ValidWidgets;
 
-	for (auto& OpenWidget : OpenWidgets)
+	if (UScreenWidgetManager* ScreenWidgetManager = UManagerProxy::Get()->UManagerProxy::Get()->GetManager<UScreenWidgetManager>())
 	{
-		UUserWidgetBase* ContainerWidget = UScreenWidgetManager::GetContainerWidget(OpenWidget);
-		if (IsValid(ContainerWidget))
+		for (auto& OpenWidget : OpenWidgets)
 		{
-			ValidWidgets.Add(ContainerWidget);
+			UUserWidgetBase* ContainerWidget = ScreenWidgetManager->GetContainerWidget(OpenWidget);
+			if (IsValid(ContainerWidget))
+			{
+				ValidWidgets.Add(ContainerWidget);
+			}
 		}
 	}
 

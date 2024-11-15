@@ -4,13 +4,13 @@
 #include "AsyncAction/OpenUserWidgetAsyncAction.h"
 
 #include "ScreenWidgetManager.h"
-#include "Manager/ManagerGlobal.h"
+#include "Manager/ManagerProxy.h"
 
 UOpenUserWidgetAsyncAction* UOpenUserWidgetAsyncAction::AsyncOpenUserWidget(UUserWidgetBase* InWidget)
 {
 	UOpenUserWidgetAsyncAction* NewAction = NewObject<UOpenUserWidgetAsyncAction>();
 
-	if (UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
+	if (UScreenWidgetManager* ScreenWidgetManager = UManagerProxy::Get()->GetManager<UScreenWidgetManager>())
 	{
 		ScreenWidgetManager->OpenUserWidget(InWidget, FOnWidgetActiveStateChanged::CreateUObject(NewAction, &UOpenUserWidgetAsyncAction::OnHandleFinish));
 	}
@@ -22,7 +22,7 @@ UOpenUserWidgetAsyncAction* UOpenUserWidgetAsyncAction::AsyncOpenUserWidgetByCla
 {
 	UOpenUserWidgetAsyncAction* NewAction = NewObject<UOpenUserWidgetAsyncAction>();
 
-	if (UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
+	if (UScreenWidgetManager* ScreenWidgetManager = UManagerProxy::Get()->GetManager<UScreenWidgetManager>())
 	{
 		ScreenWidgetManager->OpenUserWidget(InWidgetClass, FOnWidgetActiveStateChanged::CreateUObject(NewAction, &UOpenUserWidgetAsyncAction::OnHandleFinish));
 	}

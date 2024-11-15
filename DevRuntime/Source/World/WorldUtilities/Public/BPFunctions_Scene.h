@@ -24,8 +24,8 @@ public:
 
 public:
 	/* 获取Player当前朝向和指定北方向间的夹角 */
-	UFUNCTION(BlueprintPure, meta = (WorldContext = "WorldContextObject"))
-	static float GetPlayerPointToNorthAngle(const UObject* WorldContextObject, int32 PlayerIndex = 0);
+	UFUNCTION(BlueprintPure)
+	static float GetPlayerPointToNorthAngle(int32 PlayerIndex = 0);
 
 	/* 获取高度的格式化文本 */
 	UFUNCTION(BlueprintPure)

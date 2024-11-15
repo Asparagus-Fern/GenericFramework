@@ -9,7 +9,7 @@
 #include "Blueprint/WidgetLayoutLibrary.h"
 #include "Components/CanvasPanel.h"
 #include "Components/CanvasPanelSlot.h"
-#include "Manager/ManagerGlobal.h"
+#include "Manager/ManagerProxy.h"
 #include "UWidget/Override/GameplayTagSlot.h"
 
 void UWorldWidgetPanel::NativeOnCreate()
@@ -117,42 +117,62 @@ void UWorldWidgetPanel::RefreshWorldWidgetComponent()
 	}
 }
 
+#define LOCTEXT_NAMESPACE "UWorldWidgetManager"
+
 bool UWorldWidgetManager::ShouldCreateSubsystem(UObject* Outer) const
 {
 	return Super::ShouldCreateSubsystem(Outer) && UWorldWidgetManagerSetting::Get()->bEnableSubsystem;
 }
 
-#define LOCTEXT_NAMESPACE "UWorldWidgetManager"
-
-void UWorldWidgetManager::NativeOnRefresh()
+void UWorldWidgetManager::Initialize(FSubsystemCollectionBase& Collection)
 {
-	Super::NativeOnRefresh();
+	Super::Initialize(Collection);
+	RegistManager(this);
 
-	EObjectFlags A = GetFlags();
+	UScreenWidgetManager::PostHUDCreated.AddUObject(this, &UWorldWidgetManager::GenerateWorldWidgetPanel);
+	UWorldWidgetComponent::OnWorldWidgetPointBeginPlay.AddUObject(this, &UWorldWidgetManager::RegisterWorldWidgetComponent);
+	UWorldWidgetComponent::OnWorldWidgetPointEndPlay.AddUObject(this, &UWorldWidgetManager::UnRegisterWorldWidgetComponent);
+}
+
+void UWorldWidgetManager::Deinitialize()
+{
+	Super::Deinitialize();
+	UnRegistManager();
+
+	UWorldWidgetComponent::OnWorldWidgetPointBeginPlay.RemoveAll(this);
+	UWorldWidgetComponent::OnWorldWidgetPointEndPlay.RemoveAll(this);
+	UScreenWidgetManager::PostHUDCreated.RemoveAll(this);
+}
+
+bool UWorldWidgetManager::DoesSupportWorldType(const EWorldType::Type WorldType) const
+{
+	return WorldType == EWorldType::Game || WorldType == EWorldType::PIE;
+}
+
+void UWorldWidgetManager::Tick(float DeltaTime)
+{
+	FCoreInternalManager::Tick(DeltaTime);
+
 	for (const auto& WorldWidgetPanel : WorldWidgetPanels)
 	{
 		WorldWidgetPanel->NativeOnRefresh();
 	}
 }
 
-void UWorldWidgetManager::NativeOnActived()
+void UWorldWidgetManager::OnWorldBeginPlay(UWorld* InWorld)
 {
-	Super::NativeOnActived();
-
-	GetManager<UScreenWidgetManager>()->PostHUDCreated.AddUObject(this, &UWorldWidgetManager::GenerateWorldWidgetPanel);
-	UWorldWidgetComponent::OnWorldWidgetPointBeginPlay.AddUObject(this, &UWorldWidgetManager::RegisterWorldWidgetComponent);
-	UWorldWidgetComponent::OnWorldWidgetPointEndPlay.AddUObject(this, &UWorldWidgetManager::UnRegisterWorldWidgetComponent);
+	FCoreInternalManager::OnWorldBeginPlay(InWorld);
 }
 
-void UWorldWidgetManager::NativeOnInactived()
+void UWorldWidgetManager::OnWorldEndPlay(UWorld* InWorld)
 {
-	Super::NativeOnInactived();
+	FCoreInternalManager::OnWorldEndPlay(InWorld);
 
 	/* 从插槽移除3DUI面板 */
 	const FGameplayTag WorldWidgetPanelTag = FGameplayTag::RequestGameplayTag(FName("UI.HUD.Main.WorldWidget"));
 	if (WorldWidgetPanelTag.IsValid())
 	{
-		if (const UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
+		if (const UScreenWidgetManager* ScreenWidgetManager = UManagerProxy::Get()->GetManager<UScreenWidgetManager>())
 		{
 			UGameplayTagSlot* Slot = ScreenWidgetManager->GetSlot(WorldWidgetPanelTag);
 			if (IsValid(Slot))
@@ -167,15 +187,6 @@ void UWorldWidgetManager::NativeOnInactived()
 		WorldWidgetPanel->NativeOnDestroy();
 	}
 	WorldWidgetPanels.Reset();
-
-	/* 销毁代理 */
-	if (UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
-	{
-		ScreenWidgetManager->PostHUDCreated.RemoveAll(this);
-	}
-
-	UWorldWidgetComponent::OnWorldWidgetPointBeginPlay.RemoveAll(this);
-	UWorldWidgetComponent::OnWorldWidgetPointEndPlay.RemoveAll(this);
 }
 
 void UWorldWidgetManager::RegisterWorldWidgetComponent(UWorldWidgetComponent* WorldWidgetPoint)
@@ -233,7 +244,7 @@ void UWorldWidgetManager::GenerateWorldWidgetPanel()
 	const FGameplayTag WorldWidgetPanelTag = FGameplayTag::RequestGameplayTag(FName("UI.HUD.Main.WorldWidget"));
 	if (WorldWidgetPanelTag.IsValid())
 	{
-		UGameplayTagSlot* Slot = GetManager<UScreenWidgetManager>()->GetSlot(WorldWidgetPanelTag);
+		UGameplayTagSlot* Slot = UManagerProxy::Get()->GetManager<UScreenWidgetManager>()->GetSlot(WorldWidgetPanelTag);
 		if (IsValid(Slot))
 		{
 			Slot->SetContent(CreateWorldWidgetPanel()->GetPanel());

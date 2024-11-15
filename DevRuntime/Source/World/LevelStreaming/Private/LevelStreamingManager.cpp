@@ -4,6 +4,7 @@
 #include "LevelStreamingManager.h"
 
 #include "LevelStreamingManagerSetting.h"
+#include "Debug/DebugType.h"
 #include "Engine/LevelStreamingAlwaysLoaded.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -14,14 +15,21 @@ bool ULevelStreamingManager::ShouldCreateSubsystem(UObject* Outer) const
 	return Super::ShouldCreateSubsystem(Outer) && ULevelStreamingManagerSetting::Get()->bEnableSubsystem && !Cast<UWorld>(Outer)->IsPartitionedWorld();
 }
 
-void ULevelStreamingManager::NativeOnActived()
+void ULevelStreamingManager::Initialize(FSubsystemCollectionBase& Collection)
 {
-	Super::NativeOnActived();
+	Super::Initialize(Collection);
+	RegistManager(this);
 }
 
-void ULevelStreamingManager::NativeOnInactived()
+void ULevelStreamingManager::Deinitialize()
 {
-	Super::NativeOnInactived();
+	Super::Deinitialize();
+	UnRegistManager();
+}
+
+bool ULevelStreamingManager::DoesSupportWorldType(const EWorldType::Type WorldType) const
+{
+	return WorldType == EWorldType::Game || WorldType == EWorldType::PIE;
 }
 
 void ULevelStreamingManager::LoadLevel(const TSoftObjectPtr<UWorld>& Level, const bool bMakeVisibleAfterLoad, const bool bShouldBlockOnLoad, const FOnHandleLevelStreamingFinish& OnFinish)

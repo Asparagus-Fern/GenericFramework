@@ -6,6 +6,7 @@
 #include "ActiveNodeSubsystem.h"
 #include "LevelStreamingManager.h"
 #include "ScreenWidgetManager.h"
+#include "Manager/ManagerProxy.h"
 #include "UserWidget/Loading/Loading.h"
 
 AActiveNode_LevelStreamingLoad::AActiveNode_LevelStreamingLoad()
@@ -19,7 +20,7 @@ void AActiveNode_LevelStreamingLoad::Login()
 	if (!GetWorld()->IsPartitionedWorld())
 	{
 		/* 创建加载页面 */
-		if (UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
+		if (UScreenWidgetManager* ScreenWidgetManager = UManagerProxy::Get()->GetManager<UScreenWidgetManager>())
 		{
 			if (LoadingClass)
 			{
@@ -34,7 +35,7 @@ void AActiveNode_LevelStreamingLoad::Login()
 			LoadingUI->NativeOnLoadingBegin(GetLoadingNum());
 
 		/* 加载关卡 */
-		if (ULevelStreamingManager* LevelStreamingManager = GetManager<ULevelStreamingManager>())
+		if (ULevelStreamingManager* LevelStreamingManager = UManagerProxy::Get()->GetManager<ULevelStreamingManager>())
 		{
 			/* 是否加载当前世界所有关卡 */
 			if (bLoadCurrentWorldLevels)
@@ -81,7 +82,11 @@ void AActiveNode_LevelStreamingLoad::NativeOnLoadCurrentWorldLevelStreamingFinis
 		LoadingUI->NativeOnLoadingOnceFinish();
 
 	OnLoadCurrentWorldLevelStreamingFinish();
-	GetManager<ULevelStreamingManager>()->LoadLevels(VisibleLevels, true, false, FOnHandleLevelStreamingOnceFinish::CreateUObject(this, &AActiveNode_LevelStreamingLoad::NativeOnLoadVisibleLevelsOnceFinish), FOnHandleLevelStreamingFinish::CreateUObject(this, &AActiveNode_LevelStreamingLoad::NativeOnLoadVisibleLevelsFinish));
+
+	if (ULevelStreamingManager* LevelStreamingManager = UManagerProxy::Get()->GetManager<ULevelStreamingManager>())
+	{
+		LevelStreamingManager->LoadLevels(VisibleLevels, true, false, FOnHandleLevelStreamingOnceFinish::CreateUObject(this, &AActiveNode_LevelStreamingLoad::NativeOnLoadVisibleLevelsOnceFinish), FOnHandleLevelStreamingFinish::CreateUObject(this, &AActiveNode_LevelStreamingLoad::NativeOnLoadVisibleLevelsFinish));
+	}
 }
 
 void AActiveNode_LevelStreamingLoad::OnLoadVisibleLevelsOnceFinish_Implementation()
@@ -108,7 +113,7 @@ void AActiveNode_LevelStreamingLoad::NativeOnLoadVisibleLevelsFinish()
 	if (IsValid(LoadingUI))
 	{
 		LoadingUI->NativeOnLoadingEnd();
-		GetManager<UScreenWidgetManager>()->CloseUserWidget(LoadingUI->SlotTag);
+		UManagerProxy::Get()->GetManager<UScreenWidgetManager>()->CloseUserWidget(LoadingUI->SlotTag);
 	}
 
 	OnLoadVisibleLevelsFinish();

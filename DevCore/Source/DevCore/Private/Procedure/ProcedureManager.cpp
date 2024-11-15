@@ -14,9 +14,11 @@ bool UProcedureManager::ShouldCreateSubsystem(UObject* Outer) const
 	return Super::ShouldCreateSubsystem(Outer) && UProcedureManagerSetting::Get()->bEnableSubsystem;
 }
 
-void UProcedureManager::NativeOnCreate()
+void UProcedureManager::Initialize(FSubsystemCollectionBase& Collection)
 {
-	Super::NativeOnCreate();
+	Super::Initialize(Collection);
+	RegistManager(this);
+
 	FProcedureDelegates::OnProxyHandleBegin.AddUObject(this, &UProcedureManager::OnProcedureProxyHandleBegin);
 	FProcedureDelegates::OnProxyHandlePause.AddUObject(this, &UProcedureManager::OnProcedureProxyHandlePause);
 	FProcedureDelegates::OnProxyHandleContinue.AddUObject(this, &UProcedureManager::OnProcedureProxyHandleContinue);
@@ -24,14 +26,21 @@ void UProcedureManager::NativeOnCreate()
 	FProcedureDelegates::OnProxyHandleFinish.AddUObject(this, &UProcedureManager::OnProcedureProxyHandleFinish);
 }
 
-void UProcedureManager::NativeOnDestroy()
+void UProcedureManager::Deinitialize()
 {
-	Super::NativeOnDestroy();
+	Super::Deinitialize();
+	UnRegistManager();
+
 	FProcedureDelegates::OnProxyHandleBegin.RemoveAll(this);
 	FProcedureDelegates::OnProxyHandlePause.RemoveAll(this);
 	FProcedureDelegates::OnProxyHandleContinue.RemoveAll(this);
 	FProcedureDelegates::OnProxyHandleStop.RemoveAll(this);
 	FProcedureDelegates::OnProxyHandleFinish.RemoveAll(this);
+}
+
+bool UProcedureManager::DoesSupportWorldType(const EWorldType::Type WorldType) const
+{
+	return WorldType == EWorldType::Game || WorldType == EWorldType::PIE;
 }
 
 UProcedureProxy* UProcedureManager::RegisterProcedureHandle(TArray<UProcedureObject*> InProcedureObjects, const bool InTargetActiveState, const FSimpleDelegate OnFinish)
@@ -60,7 +69,7 @@ UProcedureProxy* UProcedureManager::RegisterProcedureHandle(const FProcedureHand
 {
 	UProcedureProxy* NewProcedureHandle = NewObject<UProcedureProxy>(this);
 	ActivatedProcedureProxy.Add(NewProcedureHandle);
-	
+
 	auto HandleNextTick = [NewProcedureHandle, InHandleGroup]()
 	{
 		NewProcedureHandle->Handle(InHandleGroup);

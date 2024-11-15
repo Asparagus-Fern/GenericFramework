@@ -7,34 +7,39 @@
 #include "Compass/CompassActor.h"
 #include "MapScale/MapScaleActor.h"
 
-USceneManager::USceneManager(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
-{
-	bTickable = true;
-}
-
 bool USceneManager::ShouldCreateSubsystem(UObject* Outer) const
 {
 	return Super::ShouldCreateSubsystem(Outer) && USceneManagerSetting::Get()->bEnableSubsystem;
 }
 
-void USceneManager::Tick(float DeltaTime)
+void USceneManager::Initialize(FSubsystemCollectionBase& Collection)
 {
-	Super::Tick(DeltaTime);
-
-	// DLOG(DLogWorld, Log, TEXT("%f"), GetPlayerPointToNorthAngle(0))
+	Super::Initialize(Collection);
+	RegistManager(this);
 }
 
-void USceneManager::NativeOnActived()
+void USceneManager::Deinitialize()
 {
-	Super::NativeOnActived();
+	Super::Deinitialize();
+	UnRegistManager();
+}
+
+bool USceneManager::DoesSupportWorldType(const EWorldType::Type WorldType) const
+{
+	return WorldType == EWorldType::Game || WorldType == EWorldType::PIE;
+}
+
+void USceneManager::OnWorldMatchStarting(UWorld* InWorld)
+{
+	FCoreInternalManager::OnWorldMatchStarting(InWorld);
+
 	CompassActor = Cast<ACompassActor>(UGameplayStatics::GetActorOfClass(this, ACompassActor::StaticClass()));
 	MapScaleActor = Cast<AMapScaleActor>(UGameplayStatics::GetActorOfClass(this, AMapScaleActor::StaticClass()));
 }
 
-void USceneManager::NativeOnInactived()
+void USceneManager::OnWorldEndPlay(UWorld* InWorld)
 {
-	Super::NativeOnInactived();
+	FCoreInternalManager::OnWorldEndPlay(InWorld);
 }
 
 TArray<AActor*> USceneManager::FindActors(const FFindActorHandle& FindActorHandle, const bool bUpdate)

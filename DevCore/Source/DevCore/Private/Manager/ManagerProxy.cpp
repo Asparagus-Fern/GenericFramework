@@ -52,7 +52,7 @@ void UManagerProxy::RegistManager(FCoreInternalManager* InManager)
 
 	if (IsManagerExist(InManager))
 	{
-		DLOG(DLogManager, Error, TEXT("InManager Is Already Registed"))
+		DLOG(DLogManager, Warning, TEXT("InManager Is Already Registed"))
 		return;
 	}
 
@@ -99,9 +99,63 @@ void UManagerProxy::InitializeInternal()
 	}
 
 	bIsInitialize = true;
+	FWorldDelegates::OnPostWorldCreation.AddUObject(this, &UManagerProxy::HandleOnWorldCreation);
+	FWorldDelegates::OnWorldBeginTearDown.AddUObject(this, &UManagerProxy::HandleOnWorldBeginTearDown);
 }
 
 void UManagerProxy::DeinitializeInternal()
 {
 	bIsInitialize = false;
+}
+
+void UManagerProxy::HandleOnWorldCreation(UWorld* InWorld)
+{
+	InWorld->OnWorldMatchStarting.AddUObject(this, &UManagerProxy::HandleOnWorldMatchStarting, InWorld);
+	InWorld->OnWorldBeginPlay.AddUObject(this, &UManagerProxy::HandleOnWorldBeginPlay, InWorld);
+}
+
+void UManagerProxy::HandleOnWorldBeginTearDown(UWorld* InWorld)
+{
+	if (!InWorld->IsGameWorld())
+	{
+		return;
+	}
+
+	HandleOnWorldEndPlay(InWorld);
+}
+
+void UManagerProxy::HandleOnWorldBeginPlay(UWorld* InWorld)
+{
+	InWorld->OnWorldBeginPlay.RemoveAll(this);
+	if (!InWorld->IsGameWorld())
+	{
+		return;
+	}
+
+	for (const auto& Manager : ManagerMapping)
+	{
+		Manager->OnWorldBeginPlay(InWorld);
+	}
+}
+
+void UManagerProxy::HandleOnWorldMatchStarting(UWorld* InWorld)
+{
+	InWorld->OnWorldMatchStarting.RemoveAll(this);
+	if (!InWorld->IsGameWorld())
+	{
+		return;
+	}
+
+	for (const auto& Manager : ManagerMapping)
+	{
+		Manager->OnWorldMatchStarting(InWorld);
+	}
+}
+
+void UManagerProxy::HandleOnWorldEndPlay(UWorld* InWorld)
+{
+	for (const auto& Manager : ManagerMapping)
+	{
+		Manager->OnWorldEndPlay(InWorld);
+	}
 }

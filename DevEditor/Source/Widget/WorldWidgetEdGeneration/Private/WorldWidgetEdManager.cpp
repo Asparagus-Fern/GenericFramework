@@ -176,7 +176,6 @@ void UEditorWorldWidgetPanel::RefreshWorldWidgetComponent()
 		if (const AWorldWidgetPoint* WorldWidgetPoint = Cast<AWorldWidgetPoint>(Actor))
 		{
 			AddWorldWidgetComponent(WorldWidgetPoint->WorldWidgetComponent);
-			return;
 		}
 		else
 		{
@@ -210,14 +209,9 @@ bool UWorldWidgetEdManager::ShouldCreateSubsystem(UObject* Outer) const
 	return Super::ShouldCreateSubsystem(Outer) && UWorldWidgetEdManagerSetting::Get()->bEnableSubsystem;
 }
 
-bool UWorldWidgetEdManager::DoesSupportWorldType(const EWorldType::Type WorldType) const
+void UWorldWidgetEdManager::Initialize(FSubsystemCollectionBase& Collection)
 {
-	return WorldType == EWorldType::Editor;
-}
-
-void UWorldWidgetEdManager::NativeOnCreate()
-{
-	Super::NativeOnCreate();
+	RegistManager(this);
 
 	FLevelEditorModule& LevelEditorModule = FModuleManager::Get().GetModuleChecked<FLevelEditorModule>("LevelEditor");
 	LevelEditorCreatedHandle = LevelEditorModule.OnLevelEditorCreated().AddUObject(this, &UWorldWidgetEdManager::OnLevelEditorCreated);
@@ -227,16 +221,15 @@ void UWorldWidgetEdManager::NativeOnCreate()
 	LevelActorDeletedHandle = GEditor->OnLevelActorDeleted().AddUObject(this, &UWorldWidgetEdManager::OnLevelActorDeleted);
 	BlueprintCompiledHandle = GEditor->OnBlueprintCompiled().AddUObject(this, &UWorldWidgetEdManager::OnBlueprintCompiled);
 
-	BeginPIEHandle = FEditorDelegates::BeginPIE.AddUObject(this, &UWorldWidgetEdManager::BeginPIE);
-	EndPIEHandle = FEditorDelegates::EndPIE.AddUObject(this, &UWorldWidgetEdManager::EndPIE);
-
 	WorldWidgetComponentRegisterHandle = UWorldWidgetComponent::OnWorldWidgetComponentRegister.AddUObject(this, &UWorldWidgetEdManager::OnWorldWidgetComponentRegister);
 
 	GenerateWorldWidgetPanel();
 }
 
-void UWorldWidgetEdManager::NativeOnDestroy()
+void UWorldWidgetEdManager::Deinitialize()
 {
+	UnRegistManager();
+
 	for (const auto& WorldWidgetPanel : WorldWidgetPanels)
 	{
 		WorldWidgetPanel->NativeOnDestroy();
@@ -252,16 +245,31 @@ void UWorldWidgetEdManager::NativeOnDestroy()
 	ActorsMovedHandle.Reset();
 	LevelActorDeletedHandle.Reset();
 	BlueprintCompiledHandle.Reset();
-	BeginPIEHandle.Reset();
-	EndPIEHandle.Reset();
 	WorldWidgetComponentRegisterHandle.Reset();
-
-	Super::NativeOnDestroy();
 }
 
-void UWorldWidgetEdManager::NativeOnRefresh()
+bool UWorldWidgetEdManager::DoesSupportWorldType(const EWorldType::Type WorldType) const
 {
-	Super::NativeOnRefresh();
+	return WorldType == EWorldType::Editor;
+}
+
+void UWorldWidgetEdManager::OnWorldBeginPlay(UWorld* InWorld)
+{
+	/* 运行时开始的时候把编辑器的3DUI清空 */
+	for (const auto& WorldWidgetPanel : WorldWidgetPanels)
+	{
+		WorldWidgetPanel->NativeOnDestroy();
+		WorldWidgetPanel->MarkAsGarbage();
+	}
+
+	bIsGenerateWorldWidgetPanel = false;
+	WorldWidgetPanels.Reset();
+}
+
+void UWorldWidgetEdManager::OnWorldEndPlay(UWorld* InWorld)
+{
+	/* 运行时结束时重新生成编辑器的3DUI */
+	GenerateWorldWidgetPanel();
 }
 
 void UWorldWidgetEdManager::OnLevelEditorCreated(TSharedPtr<ILevelEditor> LevelEditor)
@@ -287,23 +295,6 @@ void UWorldWidgetEdManager::OnLevelActorDeleted(AActor* InActor)
 void UWorldWidgetEdManager::OnBlueprintCompiled()
 {
 	RefreshWorldWidgetPanel();
-}
-
-void UWorldWidgetEdManager::BeginPIE(bool bIsSimulating)
-{
-	for (const auto& WorldWidgetPanel : WorldWidgetPanels)
-	{
-		WorldWidgetPanel->NativeOnDestroy();
-		WorldWidgetPanel->MarkAsGarbage();
-	}
-
-	bIsGenerateWorldWidgetPanel = false;
-	WorldWidgetPanels.Reset();
-}
-
-void UWorldWidgetEdManager::EndPIE(bool bIsSimulating)
-{
-	GenerateWorldWidgetPanel();
 }
 
 void UWorldWidgetEdManager::OnWorldWidgetComponentRegister(UWorldWidgetComponent* WorldWidgetComponent)

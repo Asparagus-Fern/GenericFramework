@@ -6,6 +6,7 @@
 #include "ScreenWidgetManager.h"
 #include "Components/UniformGridPanel.h"
 #include "Components/UniformGridSlot.h"
+#include "Manager/ManagerProxy.h"
 
 void UUniformWidgetBox::NativePreConstruct()
 {
@@ -32,12 +33,15 @@ void UUniformWidgetBox::NativePreConstruct()
 			}
 			else
 			{
-				UUserWidgetBase* ContainerWidget = UScreenWidgetManager::GetContainerWidget(UniformGridPanelWidget.WidgetContainer);
-				if (IsValid(ContainerWidget))
+				if (UScreenWidgetManager* ScreenWidgetManager = UManagerProxy::Get()->GetManager<UScreenWidgetManager>())
 				{
-					UUniformGridSlot* UniformGridSlot = UniformGridPanel->AddChildToUniformGrid(ContainerWidget, UniformGridPanelWidget.Row, UniformGridPanelWidget.Colum);
-					UniformGridSlot->SetHorizontalAlignment(UniformGridPanelWidget.HorizontalAlignment);
-					UniformGridSlot->SetVerticalAlignment(UniformGridPanelWidget.VerticalAlignment);
+					UUserWidgetBase* ContainerWidget = ScreenWidgetManager->GetContainerWidget(UniformGridPanelWidget.WidgetContainer);
+					if (IsValid(ContainerWidget))
+					{
+						UUniformGridSlot* UniformGridSlot = UniformGridPanel->AddChildToUniformGrid(ContainerWidget, UniformGridPanelWidget.Row, UniformGridPanelWidget.Colum);
+						UniformGridSlot->SetHorizontalAlignment(UniformGridPanelWidget.HorizontalAlignment);
+						UniformGridSlot->SetVerticalAlignment(UniformGridPanelWidget.VerticalAlignment);
+					}
 				}
 			}
 		}

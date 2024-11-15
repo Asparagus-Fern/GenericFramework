@@ -5,26 +5,22 @@
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
 #include "ProcedureType.h"
-#include "Manager/CoreManager.h"
+#include "Manager/CoreInternalManager.h"
 #include "ProcedureManager.generated.h"
-
-class UProcedureProxy;
 
 /**
  * 
  */
 UCLASS()
-class DEVCORE_API UProcedureManager : public UCoreManager
+class DEVCORE_API UProcedureManager : public UWorldSubsystem, public FCoreInternalManager
 {
 	GENERATED_BODY()
 
 public:
 	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
-
-	/* IProcedureBaseInterface */
-public:
-	virtual void NativeOnCreate() override;
-	virtual void NativeOnDestroy() override;
+	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+	virtual void Deinitialize() override;
+	virtual bool DoesSupportWorldType(const EWorldType::Type WorldType) const override;
 
 	/* Procedure Handle */
 public:

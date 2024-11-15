@@ -14,6 +14,7 @@
 #include "CameraPoint/CineCameraPoint.h"
 #include "Input/InputManager.h"
 #include "Kismet/GameplayStatics.h"
+#include "Manager/ManagerProxy.h"
 
 #define LOCTEXT_NAMESPACE "UCoreManager"
 
@@ -31,24 +32,29 @@ bool UCameraManager::ShouldCreateSubsystem(UObject* Outer) const
 	return Super::ShouldCreateSubsystem(Outer) && UCameraManagerSetting::Get()->bEnableSubsystem;
 }
 
-void UCameraManager::NativeOnActived()
+void UCameraManager::Initialize(FSubsystemCollectionBase& Collection)
 {
-	Super::NativeOnActived();
+	Super::Initialize(Collection);
+	RegistManager(this);
 
 	ACameraPointBase::OnCameraPointRegister.AddUObject(this, &UCameraManager::AddCameraPoint);
 	ACameraPointBase::OnCameraPointUnRegister.AddUObject(this, &UCameraManager::RemoveCameraPoint);
-
 	UCameraHandle::OnSwitchCameraFinish.AddUObject(this, &UCameraManager::HandleSwitchToCameraFinish);
 }
 
-void UCameraManager::NativeOnInactived()
+void UCameraManager::Deinitialize()
 {
-	Super::NativeOnInactived();
+	Super::Deinitialize();
+	UnRegistManager();
 
 	ACameraPointBase::OnCameraPointRegister.RemoveAll(this);
 	ACameraPointBase::OnCameraPointUnRegister.RemoveAll(this);
-
 	UCameraHandle::OnSwitchCameraFinish.RemoveAll(this);
+}
+
+bool UCameraManager::DoesSupportWorldType(const EWorldType::Type WorldType) const
+{
+	return WorldType == EWorldType::Game || WorldType == EWorldType::PIE;
 }
 
 void UCameraManager::AddCameraPoint(ACameraPointBase* InCameraPoint)
@@ -340,7 +346,7 @@ void UCameraManager::HandleSwitchToCameraFinish(UCameraHandle* InCameraHandle)
 
 bool UCameraManager::SetCameraInputIdle(UCameraInputIdle* InCameraInputIdle)
 {
-	if (UInputManager* InputManager = GetManager<UInputManager>())
+	if (UInputManager* InputManager = UManagerProxy::Get()->GetManager<UInputManager>())
 	{
 		if (IsValid(CameraInputIdle))
 		{

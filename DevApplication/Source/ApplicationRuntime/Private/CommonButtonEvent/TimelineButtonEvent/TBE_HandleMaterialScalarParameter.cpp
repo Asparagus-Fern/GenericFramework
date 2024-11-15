@@ -4,6 +4,7 @@
 
 #include "ScreenWidgetManager.h"
 #include "Kismet/KismetMaterialLibrary.h"
+#include "Manager/ManagerProxy.h"
 #include "Materials/MaterialParameterCollection.h"
 
 bool UTBE_HandleMaterialScalarParameter::CanExecuteButtonEvent_Implementation()
@@ -14,7 +15,7 @@ bool UTBE_HandleMaterialScalarParameter::CanExecuteButtonEvent_Implementation()
 void UTBE_HandleMaterialScalarParameter::ExecuteButtonEvent_Implementation()
 {
 	Super::ExecuteButtonEvent_Implementation();
-	UKismetMaterialLibrary::SetScalarParameterValue(GetManager<UScreenWidgetManager>(), Collection, ParameterName, Value);
+	UKismetMaterialLibrary::SetScalarParameterValue(UManagerProxy::Get()->GetManager<UScreenWidgetManager>(), Collection, ParameterName, Value);
 
 	if (bIsAsync)
 	{
@@ -24,5 +25,5 @@ void UTBE_HandleMaterialScalarParameter::ExecuteButtonEvent_Implementation()
 
 void UTBE_HandleMaterialScalarParameter::HandleTimelineUpdate_Implementation(float Alpha)
 {
-	UKismetMaterialLibrary::SetScalarParameterValue(GetManager<UScreenWidgetManager>(), Collection, ParameterName, FMath::Lerp(StartValue, EndValue, Alpha));
+	UKismetMaterialLibrary::SetScalarParameterValue(UManagerProxy::Get()->GetManager<UScreenWidgetManager>(), Collection, ParameterName, FMath::Lerp(StartValue, EndValue, Alpha));
 }

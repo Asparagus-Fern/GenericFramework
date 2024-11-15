@@ -4,7 +4,7 @@
 #include "CommonButtonEvent/CBE_HandleLevelStreaming.h"
 
 #include "LevelStreamingManager.h"
-#include "Manager/ManagerGlobal.h"
+#include "Manager/ManagerProxy.h"
 
 UCBE_HandleLevelStreaming::UCBE_HandleLevelStreaming()
 {
@@ -20,7 +20,7 @@ void UCBE_HandleLevelStreaming::ExecuteButtonEvent_Implementation()
 {
 	Super::ExecuteButtonEvent_Implementation();
 
-	if (ULevelStreamingManager* LevelStreamingManager = GetManager<ULevelStreamingManager>())
+	if (ULevelStreamingManager* LevelStreamingManager = UManagerProxy::Get()->GetManager<ULevelStreamingManager>())
 	{
 		switch (HandleLevelStreamingMethod)
 		{

@@ -19,26 +19,25 @@ public:
 	/* FTickableGameObject */
 public:
 	virtual TStatId GetStatId() const override { RETURN_QUICK_DECLARE_CYCLE_STAT(FPreviewForceFeedbackEffect, STATGROUP_Tickables); }
-	virtual UWorld* GetTickableGameObjectWorld() const override { return GetOwner()->GetWorld(); }
+	virtual UWorld* GetTickableGameObjectWorld() const override;
 	virtual bool IsTickable() const override { return false; }
 	virtual bool IsTickableInEditor() const override { return false; }
 	virtual bool IsTickableWhenPaused() const override { return false; }
 	virtual void Tick(float DeltaTime) override { return; }
 
+	/* FCoreInternalManager */
 protected:
 	void RegistManager(UObject* InOwner);
 	void UnRegistManager();
 
-	virtual void OnManagerInitialized() { return; }
-	virtual void OnManagerDeinitialized() { return; }
-
-	virtual void OnManagerBeginPlay(UWorld* InWorld) { return; }
-	virtual void OnManagerEndPlay(UWorld* InWorld) { return; }
+	virtual void OnManagerInitialized();
+	virtual void OnManagerDeinitialized();
+	
+	virtual void OnWorldMatchStarting(UWorld* InWorld);
+	virtual void OnWorldBeginPlay(UWorld* InWorld);
+	virtual void OnWorldEndPlay(UWorld* InWorld);
 
 private:
 	UObject* GetOwner() const;
 	UObject* Owner = nullptr;
-
-	void HandleOnWorldBeginPlay(UWorld* InWorld);
-	void HandleOnWorldEndPlay(UWorld* InWorld);
 };

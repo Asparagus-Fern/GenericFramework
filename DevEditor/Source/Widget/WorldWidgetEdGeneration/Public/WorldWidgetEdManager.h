@@ -47,25 +47,26 @@ protected:
 /**
  * WorldWidget在编辑器的管理类，将WorldWidget显示在编辑器视口
  */
-UCLASS()
-class WORLDWIDGETEDGENERATION_API UWorldWidgetEdManager : public UWorldWidgetManager
+UCLASS(MinimalAPI)
+class UWorldWidgetEdManager : public UWorldWidgetManager
 {
 	GENERATED_BODY()
 
 public:
 	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
+	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+	virtual void Deinitialize() override;
 	virtual bool DoesSupportWorldType(const EWorldType::Type WorldType) const override;
 
 	/* FTickableGameObject */
 public:
 	virtual bool IsTickableInEditor() const override { return true; }
 
-	/* IProcedureBaseInterface */
+	/* FCoreInternalManager */
 public:
-	virtual void NativeOnCreate() override;
-	virtual void NativeOnDestroy() override;
-	virtual void NativeOnRefresh() override;
-
+	virtual void OnWorldBeginPlay(UWorld* InWorld) override;
+	virtual void OnWorldEndPlay(UWorld* InWorld) override;
+	
 protected:
 	/* 编辑器创建时 */
 	FDelegateHandle LevelEditorCreatedHandle;
@@ -86,14 +87,6 @@ protected:
 	/* 蓝图编译时 */
 	FDelegateHandle BlueprintCompiledHandle;
 	void OnBlueprintCompiled();
-
-	/* PIE开始时 */
-	FDelegateHandle BeginPIEHandle;
-	void BeginPIE(bool bIsSimulating);
-
-	/* PIE结束时 */
-	FDelegateHandle EndPIEHandle;
-	void EndPIE(bool bIsSimulating);
 
 	/* WorldWidgetComponent注册时 */
 	FDelegateHandle WorldWidgetComponentRegisterHandle;

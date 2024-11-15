@@ -5,6 +5,7 @@
 
 #include "ScreenWidgetManager.h"
 #include "Components/CanvasPanel.h"
+#include "Manager/ManagerProxy.h"
 
 void UDynamicPositionBox::NativePreConstruct()
 {
@@ -30,14 +31,17 @@ void UDynamicPositionBox::NativePreConstruct()
 			}
 			else
 			{
-				UUserWidgetBase* ContainerWidget = UScreenWidgetManager::GetContainerWidget(CanvasPanelWidget.WidgetContainer);
-				if (IsValid(ContainerWidget))
+				if (UScreenWidgetManager* ScreenWidgetManager = UManagerProxy::Get()->GetManager<UScreenWidgetManager>())
 				{
-					UCanvasPanelSlot* CanvasPanelSlot = CanvasPanel->AddChildToCanvas(ContainerWidget);
-					CanvasPanelSlot->SetLayout(CanvasPanelWidget.LayoutData);
-					CanvasPanelSlot->SetAutoSize(CanvasPanelWidget.bAutoSize);
-					CanvasPanelSlot->SetZOrder(CanvasPanelWidget.ZOrder);
-					CanvasPanelSlot->SetPosition(CanvasPanelWidget.Position);
+					UUserWidgetBase* ContainerWidget = ScreenWidgetManager->GetContainerWidget(CanvasPanelWidget.WidgetContainer);
+					if (IsValid(ContainerWidget))
+					{
+						UCanvasPanelSlot* CanvasPanelSlot = CanvasPanel->AddChildToCanvas(ContainerWidget);
+						CanvasPanelSlot->SetLayout(CanvasPanelWidget.LayoutData);
+						CanvasPanelSlot->SetAutoSize(CanvasPanelWidget.bAutoSize);
+						CanvasPanelSlot->SetZOrder(CanvasPanelWidget.ZOrder);
+						CanvasPanelSlot->SetPosition(CanvasPanelWidget.Position);
+					}
 				}
 			}
 		}

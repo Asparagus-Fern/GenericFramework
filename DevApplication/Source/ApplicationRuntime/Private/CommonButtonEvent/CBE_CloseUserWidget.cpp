@@ -4,6 +4,7 @@
 #include "CommonButtonEvent/CBE_CloseUserWidget.h"
 
 #include "ScreenWidgetManager.h"
+#include "Manager/ManagerProxy.h"
 
 bool UCBE_CloseUserWidget::CanExecuteButtonEvent_Implementation()
 {
@@ -14,7 +15,7 @@ void UCBE_CloseUserWidget::ExecuteButtonEvent_Implementation()
 {
 	Super::ExecuteButtonEvent_Implementation();
 
-	if (UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
+	if (UScreenWidgetManager* ScreenWidgetManager = UManagerProxy::Get()->GetManager<UScreenWidgetManager>())
 	{
 		if (bIsAsync)
 		{

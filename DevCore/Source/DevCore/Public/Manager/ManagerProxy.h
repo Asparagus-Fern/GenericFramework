@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "CoreInternalManager.h"
-#include "UObject/Object.h"
+#include "Object/CommonObject.h"
 #include "ManagerProxy.generated.h"
 
 class FCoreInternalManager;
@@ -13,7 +13,7 @@ class FCoreInternalManager;
  * 
  */
 UCLASS(Transient)
-class DEVCORE_API UManagerProxy : public UObject
+class DEVCORE_API UManagerProxy : public UCommonObject
 {
 	GENERATED_BODY()
 
@@ -50,4 +50,11 @@ private:
 	static UManagerProxy* Instance;
 	bool bIsInitialize = false;
 	TArray<FCoreInternalManager*> ManagerMapping;
+
+	void HandleOnWorldCreation(UWorld* InWorld);
+	void HandleOnWorldBeginTearDown(UWorld* InWorld);
+
+	void HandleOnWorldBeginPlay(UWorld* InWorld); 
+	void HandleOnWorldMatchStarting(UWorld* InWorld);
+	void HandleOnWorldEndPlay(UWorld* InWorld);
 };

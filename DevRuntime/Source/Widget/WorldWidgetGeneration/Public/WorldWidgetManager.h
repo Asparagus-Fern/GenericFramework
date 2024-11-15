@@ -4,7 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
-#include "Manager/CoreManager.h"
+#include "Manager/CoreInternalManager.h"
+#include "Object/CommonObject.h"
 #include "WorldWidgetManager.generated.h"
 
 class UWorldWidgetComponent;
@@ -57,25 +58,25 @@ protected:
  * 
  */
 UCLASS()
-class WORLDWIDGETGENERATION_API UWorldWidgetManager : public UCoreManager
+class WORLDWIDGETGENERATION_API UWorldWidgetManager : public UWorldSubsystem, public FCoreInternalManager
 {
 	GENERATED_BODY()
 
 public:
 	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
+	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+	virtual void Deinitialize() override;
+	virtual bool DoesSupportWorldType(const EWorldType::Type WorldType) const override;
 
 	/* FTickableGameObject */
 public:
 	virtual bool IsTickable() const override { return true; }
+	virtual void Tick(float DeltaTime) override;
 
-	/* IProcedureBaseInterface */
+	/* FCoreInternalManager */
 public:
-	virtual void NativeOnRefresh() override;
-
-	/* IProcedureInterface */
-public:
-	virtual void NativeOnActived() override;
-	virtual void NativeOnInactived() override;
+	virtual void OnWorldBeginPlay(UWorld* InWorld) override;
+	virtual void OnWorldEndPlay(UWorld* InWorld) override;
 
 	/* UWorldWidgetManager */
 public:

@@ -5,10 +5,11 @@
 
 #include "SceneManager.h"
 #include "Kismet/GameplayStatics.h"
+#include "Manager/ManagerProxy.h"
 
 float UCompassWidget::GetPlayerPointToNorthAngle() const
 {
-	if (const USceneManager* SceneManager = GetManager<USceneManager>())
+	if (const USceneManager* SceneManager = UManagerProxy::Get()->GetManager<USceneManager>())
 	{
 		return SceneManager->GetPlayerPointToNorthAngle(UGameplayStatics::GetPlayerControllerID(GetOwningPlayer()));
 	}

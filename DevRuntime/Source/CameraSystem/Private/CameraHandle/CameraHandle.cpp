@@ -6,6 +6,7 @@
 #include "CameraManagerSetting.h"
 #include "CameraPoint/CameraPointBase.h"
 #include "Kismet/GameplayStatics.h"
+#include "Manager/ManagerProxy.h"
 
 UCameraHandle::FCameraHandleDelegate UCameraHandle::OnSwitchCameraBegin;
 UCameraHandle::FCameraHandleDelegate UCameraHandle::OnSwitchCameraFinish;
@@ -15,7 +16,7 @@ UWorld* UCameraHandle::GetWorld() const
 	if (!HasAnyFlags(RF_ClassDefaultObject) && ensureMsgf(GetOuter(), TEXT("CommonButtonEvent: %s has a null OuterPrivate in UCommonButtonEvent::GetWorld()"), *GetFullName())
 		&& !GetOuter()->HasAnyFlags(RF_BeginDestroyed) && !GetOuter()->IsUnreachable())
 	{
-		if (const UCameraManager* CameraManager = GetManager<UCameraManager>())
+		if (const UCameraManager* CameraManager = UManagerProxy::Get()->GetManager<UCameraManager>())
 		{
 			return CameraManager->GetWorld();
 		}

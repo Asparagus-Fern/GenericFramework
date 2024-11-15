@@ -4,6 +4,7 @@
 #include "BPFunctions_Scene.h"
 
 #include "SceneManager.h"
+#include "Manager/ManagerProxy.h"
 
 bool UBPFunctions_Scene::IsPartitionedWorld(const UObject* WorldContextObject)
 {
@@ -25,9 +26,9 @@ ESceneWorldType UBPFunctions_Scene::GetWorldType(const UObject* WorldContextObje
 	return ESceneWorldType::None;
 }
 
-float UBPFunctions_Scene::GetPlayerPointToNorthAngle(const UObject* WorldContextObject, const int32 PlayerIndex)
+float UBPFunctions_Scene::GetPlayerPointToNorthAngle(const int32 PlayerIndex)
 {
-	if (const USceneManager* SceneManager = GetManager<USceneManager>(WorldContextObject))
+	if (const USceneManager* SceneManager = UManagerProxy::Get()->GetManager<USceneManager>())
 	{
 		return SceneManager->GetPlayerPointToNorthAngle(PlayerIndex);
 	}

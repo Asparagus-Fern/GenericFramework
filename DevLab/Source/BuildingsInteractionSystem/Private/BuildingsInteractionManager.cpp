@@ -9,13 +9,3 @@ bool UBuildingsInteractionManager::ShouldCreateSubsystem(UObject* Outer) const
 {
 	return Super::ShouldCreateSubsystem(Outer) && UBuildingsInteractionManagerSetting::Get()->bEnableSubsystem;
 }
-
-void UBuildingsInteractionManager::NativeOnActived()
-{
-	Super::NativeOnActived();
-}
-
-void UBuildingsInteractionManager::NativeOnInactived()
-{
-	Super::NativeOnInactived();
-}

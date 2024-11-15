@@ -69,12 +69,6 @@ UScreenWidgetManager::FOnHUDActiveStateChanged UScreenWidgetManager::OnHUDActive
 
 UScreenWidgetManager::FOnMenuSelectionChanged UScreenWidgetManager::OnMenuSelectionChanged;
 
-UScreenWidgetManager::UScreenWidgetManager(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
-{
-	bTickable = true;
-}
-
 /* ==================== IProcedureBaseInterface ==================== */
 
 bool UScreenWidgetManager::ShouldCreateSubsystem(UObject* Outer) const
@@ -82,9 +76,38 @@ bool UScreenWidgetManager::ShouldCreateSubsystem(UObject* Outer) const
 	return Super::ShouldCreateSubsystem(Outer) && UScreenWidgetManagerSetting::Get()->bEnableSubsystem;
 }
 
-void UScreenWidgetManager::NativeOnRefresh()
+void UScreenWidgetManager::Initialize(FSubsystemCollectionBase& Collection)
 {
-	Super::NativeOnRefresh();
+	Super::Initialize(Collection);
+	RegistManager(this);
+
+	UInteractableUserWidgetBase::AddInteractableWidget.AddUObject(this, &UScreenWidgetManager::AddInteractableWidget);
+	UInteractableUserWidgetBase::RemoveInteractableWidget.AddUObject(this, &UScreenWidgetManager::RemoveInteractableWidget);
+
+	UGameplayTagSlot::OnGameplayTagSlotBuild.AddUObject(this, &UScreenWidgetManager::RegisterSlot);
+	UGameplayTagSlot::OnGameplayTagSlotDestroy.AddUObject(this, &UScreenWidgetManager::UnRegisterSlot);
+}
+
+void UScreenWidgetManager::Deinitialize()
+{
+	Super::Deinitialize();
+	UnRegistManager();
+
+	UGameplayTagSlot::OnGameplayTagSlotBuild.RemoveAll(this);
+	UGameplayTagSlot::OnGameplayTagSlotDestroy.RemoveAll(this);
+
+	UInteractableUserWidgetBase::AddInteractableWidget.RemoveAll(this);
+	UInteractableUserWidgetBase::RemoveInteractableWidget.RemoveAll(this);
+}
+
+bool UScreenWidgetManager::DoesSupportWorldType(const EWorldType::Type WorldType) const
+{
+	return WorldType == EWorldType::Game || WorldType == EWorldType::PIE;
+}
+
+void UScreenWidgetManager::Tick(float DeltaTime)
+{
+	FCoreInternalManager::Tick(DeltaTime);
 
 	/* 处理按钮事件 */
 	if (!bProcessingMenuSelection && !TargetMenuSelection.IsEmpty())
@@ -109,24 +132,30 @@ void UScreenWidgetManager::NativeOnRefresh()
 	}
 }
 
-/* ==================== IProcedureInterface ==================== */
-
-void UScreenWidgetManager::NativeOnActived()
+void UScreenWidgetManager::OnWorldMatchStarting(UWorld* InWorld)
 {
-	Super::NativeOnActived();
+	FCoreInternalManager::OnWorldMatchStarting(InWorld);
 
-	UInteractableUserWidgetBase::AddInteractableWidget.AddUObject(this, &UScreenWidgetManager::AddInteractableWidget);
-	UInteractableUserWidgetBase::RemoveInteractableWidget.AddUObject(this, &UScreenWidgetManager::RemoveInteractableWidget);
+	if (UScreenWidgetManagerSetting::Get()->AutoCreateGameHUD)
+	{
+		PreHUDCreated.Broadcast();
+		CreateGameHUDs(UScreenWidgetManagerSetting::Get()->GameHUDClasses, true);
 
-	UGameplayTagSlot::OnGameplayTagSlotBuild.AddUObject(this, &UScreenWidgetManager::RegisterSlot);
-	UGameplayTagSlot::OnGameplayTagSlotDestroy.AddUObject(this, &UScreenWidgetManager::UnRegisterSlot);
+		bIsHUDCreated = true;
+		PostHUDCreated.Broadcast();
+	}
+}
+
+void UScreenWidgetManager::OnWorldBeginPlay(UWorld& InWorld)
+{
+	Super::OnWorldBeginPlay(InWorld);
 
 	RegisterShortcutWidgetHandles();
 }
 
-void UScreenWidgetManager::NativeOnInactived()
+void UScreenWidgetManager::OnWorldEndPlay(UWorld* InWorld)
 {
-	Super::NativeOnInactived();
+	FCoreInternalManager::OnWorldEndPlay(InWorld);
 
 	UnRegisterShortcutWidgetHandles();
 
@@ -137,27 +166,6 @@ void UScreenWidgetManager::NativeOnInactived()
 	PreHUDDestroyed.Broadcast();
 	ClearupGameHUDs();
 	PostHUDDestroyed.Broadcast();
-
-	/* 清除绑定的代理 */
-	UGameplayTagSlot::OnGameplayTagSlotBuild.RemoveAll(this);
-	UGameplayTagSlot::OnGameplayTagSlotDestroy.RemoveAll(this);
-
-	UInteractableUserWidgetBase::AddInteractableWidget.RemoveAll(this);
-	UInteractableUserWidgetBase::RemoveInteractableWidget.RemoveAll(this);
-}
-
-void UScreenWidgetManager::OnWorldMatchStarting_Implementation()
-{
-	Super::OnWorldMatchStarting_Implementation();
-
-	if (UScreenWidgetManagerSetting::Get()->AutoCreateGameHUD)
-	{
-		PreHUDCreated.Broadcast();
-		CreateGameHUDs(UScreenWidgetManagerSetting::Get()->GameHUDClasses, true);
-
-		bIsHUDCreated = true;
-		PostHUDCreated.Broadcast();
-	}
 }
 
 /* ==================== Interactable Widget Group ==================== */
@@ -524,11 +532,11 @@ UUserWidgetBase* UScreenWidgetManager::GetContainerWidget(const FWidgetContainer
 {
 	if (WidgetContainer.bInstance && IsValid(WidgetContainer.Widget))
 	{
-		return DuplicateObject<UUserWidgetBase>(WidgetContainer.Widget, GetStaticWorld());
+		return DuplicateObject<UUserWidgetBase>(WidgetContainer.Widget, GetWorld());
 	}
 	else if (!WidgetContainer.bInstance && IsValid(WidgetContainer.WidgetClass))
 	{
-		return CreateWidget<UUserWidgetBase>(GetStaticWorld(), WidgetContainer.WidgetClass);
+		return CreateWidget<UUserWidgetBase>(GetWorld(), WidgetContainer.WidgetClass);
 	}
 
 	return nullptr;
@@ -778,12 +786,12 @@ void UScreenWidgetManager::InactiveWidget(UUserWidgetBase* InWidget, FOnWidgetAc
 	}
 
 	InWidget->NativeOnInactived();
-	
+
 	if (UShortcutWidgetHandle* ShortcutWidgetHandle = GetShortcutWidgetHandle(InWidget))
 	{
 		ShortcutWidgetHandle->UnLink();
 	}
-	
+
 	auto OnActiveStateChangedFinish = [this, &InWidget, &OnFinish, &MarkAsGarbage]()
 	{
 		RemoveTemporaryGameHUD(InWidget);
@@ -802,13 +810,13 @@ void UScreenWidgetManager::InactiveWidget(UUserWidgetBase* InWidget, FOnWidgetAc
 		{
 			OnFinish.ExecuteIfBound(InWidget);
 		}
-		
+
 		InWidget->RemoveFromParent();
 		ActivedWidgets.Remove(InWidget);
 		OnWidgetClose.Broadcast(InWidget);
 
 		InWidget->NativeOnDestroy();
-		
+
 		if (MarkAsGarbage)
 		{
 			InWidget->MarkAsGarbage();

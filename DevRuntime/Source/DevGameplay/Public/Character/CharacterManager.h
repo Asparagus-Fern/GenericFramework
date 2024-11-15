@@ -3,25 +3,23 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Manager/CoreManager.h"
+#include "Manager/CoreInternalManager.h"
 #include "CharacterManager.generated.h"
 
 class ADevCharacter;
 /**
  * 
  */
-UCLASS()
-class DEVGAMEPLAY_API UCharacterManager : public UCoreManager
+UCLASS(MinimalAPI)
+class UCharacterManager : public UWorldSubsystem, public FCoreInternalManager
 {
 	GENERATED_BODY()
 
 public:
 	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
-
-	/* IProcedureInterface */
-public:
-	virtual void NativeOnActived() override;
-	virtual void NativeOnInactived() override;
+	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+	virtual void Deinitialize() override;
+	virtual bool DoesSupportWorldType(const EWorldType::Type WorldType) const override;
 
 	/* UCharacterManager */
 protected:

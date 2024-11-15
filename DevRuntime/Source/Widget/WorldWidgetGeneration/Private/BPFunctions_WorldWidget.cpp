@@ -5,7 +5,7 @@
 
 #include "WorldWidgetManager.h"
 #include "WorldWidgetPoint.h"
-#include "Manager/ManagerGlobal.h"
+#include "Manager/ManagerProxy.h"
 
 void UBPFunctions_WorldWidget::RegisterWorldWidgetPoint(AWorldWidgetPoint* WorldWidgetPoint)
 {
@@ -19,7 +19,7 @@ void UBPFunctions_WorldWidget::UnRegisterWorldWidgetPoint(AWorldWidgetPoint* Wor
 
 void UBPFunctions_WorldWidget::RegisterWorldWidgetComponent(UWorldWidgetComponent* WorldWidgetComponent)
 {
-	if (UWorldWidgetManager* WorldWidgetManager = GetManager<UWorldWidgetManager>())
+	if (UWorldWidgetManager* WorldWidgetManager = UManagerProxy::Get()->GetManager<UWorldWidgetManager>())
 	{
 		WorldWidgetManager->RegisterWorldWidgetComponent(WorldWidgetComponent);
 	}
@@ -27,7 +27,7 @@ void UBPFunctions_WorldWidget::RegisterWorldWidgetComponent(UWorldWidgetComponen
 
 void UBPFunctions_WorldWidget::UnRegisterWorldWidgetComponent(UWorldWidgetComponent* WorldWidgetComponent)
 {
-	if (UWorldWidgetManager* WorldWidgetManager = GetManager<UWorldWidgetManager>())
+	if (UWorldWidgetManager* WorldWidgetManager = UManagerProxy::Get()->GetManager<UWorldWidgetManager>())
 	{
 		WorldWidgetManager->UnRegisterWorldWidgetComponent(WorldWidgetComponent);
 	}
@@ -35,7 +35,7 @@ void UBPFunctions_WorldWidget::UnRegisterWorldWidgetComponent(UWorldWidgetCompon
 
 TArray<UWorldWidgetComponent*> UBPFunctions_WorldWidget::GetWorldWidgetComponents()
 {
-	if (UWorldWidgetManager* WorldWidgetManager = GetManager<UWorldWidgetManager>())
+	if (UWorldWidgetManager* WorldWidgetManager = UManagerProxy::Get()->GetManager<UWorldWidgetManager>())
 	{
 		return WorldWidgetManager->GetWorldWidgetComponents();
 	}
@@ -45,7 +45,7 @@ TArray<UWorldWidgetComponent*> UBPFunctions_WorldWidget::GetWorldWidgetComponent
 
 UWorldWidgetComponent* UBPFunctions_WorldWidget::FindWorldWidgetComponent(FGameplayTag WorldWidgetTag)
 {
-	if (UWorldWidgetManager* WorldWidgetManager = GetManager<UWorldWidgetManager>())
+	if (UWorldWidgetManager* WorldWidgetManager = UManagerProxy::Get()->GetManager<UWorldWidgetManager>())
 	{
 		return WorldWidgetManager->FindWorldWidgetComponent(WorldWidgetTag);
 	}
@@ -55,7 +55,7 @@ UWorldWidgetComponent* UBPFunctions_WorldWidget::FindWorldWidgetComponent(FGamep
 
 TArray<UWorldWidgetComponent*> UBPFunctions_WorldWidget::FindWorldWidgetComponents(FGameplayTag WorldWidgetTag)
 {
-	if (UWorldWidgetManager* WorldWidgetManager = GetManager<UWorldWidgetManager>())
+	if (UWorldWidgetManager* WorldWidgetManager = UManagerProxy::Get()->GetManager<UWorldWidgetManager>())
 	{
 		return WorldWidgetManager->FindWorldWidgetComponents(WorldWidgetTag);
 	}

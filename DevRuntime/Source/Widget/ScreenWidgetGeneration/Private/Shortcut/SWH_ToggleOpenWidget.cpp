@@ -5,12 +5,13 @@
 
 #include "UserWidget/Base/UserWidgetBase.h"
 #include "ScreenWidgetManager.h"
+#include "Manager/ManagerProxy.h"
 
 void USWH_ToggleOpenWidget::OnCompleted(const FInputActionInstance& Instance)
 {
 	Super::OnCompleted(Instance);
 
-	if (UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
+	if (UScreenWidgetManager* ScreenWidgetManager = UManagerProxy::Get()->GetManager<UScreenWidgetManager>())
 	{
 		if (IsValid(Widget) && Widget->GetIsActived())
 		{

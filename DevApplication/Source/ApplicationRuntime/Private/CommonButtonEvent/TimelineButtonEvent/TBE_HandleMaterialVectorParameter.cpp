@@ -4,6 +4,7 @@
 
 #include "ScreenWidgetManager.h"
 #include "Kismet/KismetMaterialLibrary.h"
+#include "Manager/ManagerProxy.h"
 #include "Materials/MaterialParameterCollection.h"
 
 bool UTBE_HandleMaterialVectorParameter::CanExecuteButtonEvent_Implementation()
@@ -14,7 +15,7 @@ bool UTBE_HandleMaterialVectorParameter::CanExecuteButtonEvent_Implementation()
 void UTBE_HandleMaterialVectorParameter::ExecuteButtonEvent_Implementation()
 {
 	Super::ExecuteButtonEvent_Implementation();
-	UKismetMaterialLibrary::SetVectorParameterValue(GetManager<UScreenWidgetManager>(), Collection, ParameterName, Value);
+	UKismetMaterialLibrary::SetVectorParameterValue(UManagerProxy::Get()->GetManager<UScreenWidgetManager>(), Collection, ParameterName, Value);
 
 	if (bIsAsync)
 	{
@@ -24,5 +25,5 @@ void UTBE_HandleMaterialVectorParameter::ExecuteButtonEvent_Implementation()
 
 void UTBE_HandleMaterialVectorParameter::HandleTimelineUpdate_Implementation(float Alpha)
 {
-	UKismetMaterialLibrary::SetVectorParameterValue(GetManager<UScreenWidgetManager>(), Collection, ParameterName, FMath::Lerp(StartValue, EndValue, Alpha));
+	UKismetMaterialLibrary::SetVectorParameterValue(UManagerProxy::Get()->GetManager<UScreenWidgetManager>(), Collection, ParameterName, FMath::Lerp(StartValue, EndValue, Alpha));
 }

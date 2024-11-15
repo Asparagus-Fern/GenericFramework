@@ -11,20 +11,27 @@ bool UCharacterManager::ShouldCreateSubsystem(UObject* Outer) const
 	return Super::ShouldCreateSubsystem(Outer) && UCharacterManagerSetting::Get()->bEnableSubsystem;
 }
 
-void UCharacterManager::NativeOnActived()
+void UCharacterManager::Initialize(FSubsystemCollectionBase& Collection)
 {
-	Super::NativeOnActived();
+	Super::Initialize(Collection);
+	RegistManager(this);
 
 	ADevCharacter::OnCharacterRegister.AddUObject(this, &UCharacterManager::RegisterCharacter);
 	ADevCharacter::OnCharacterUnRegister.AddUObject(this, &UCharacterManager::UnRegisterCharacter);
 }
 
-void UCharacterManager::NativeOnInactived()
+void UCharacterManager::Deinitialize()
 {
-	Super::NativeOnInactived();
+	Super::Deinitialize();
+	UnRegistManager();
 
 	ADevCharacter::OnCharacterRegister.RemoveAll(this);
 	ADevCharacter::OnCharacterUnRegister.RemoveAll(this);
+}
+
+bool UCharacterManager::DoesSupportWorldType(const EWorldType::Type WorldType) const
+{
+	return Super::DoesSupportWorldType(WorldType);
 }
 
 void UCharacterManager::RegisterCharacter(ADevCharacter* Character)

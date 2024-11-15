@@ -5,7 +5,6 @@
 
 #include "CameraManager.h"
 #include "Camera/CameraComponent.h"
-#include "Manager/ManagerGlobal.h"
 
 UE_DEFINE_GAMEPLAY_TAG(TAG_Camera, "Camera");
 

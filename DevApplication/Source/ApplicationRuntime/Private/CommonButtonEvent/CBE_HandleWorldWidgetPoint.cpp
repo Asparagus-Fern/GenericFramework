@@ -3,8 +3,6 @@
 
 #include "CommonButtonEvent/CBE_HandleWorldWidgetPoint.h"
 
-#include "Manager/ManagerGlobal.h"
-
 void UCBE_HandleWorldWidgetPoint::NativeOnActived()
 {
 	Super::NativeOnActived();

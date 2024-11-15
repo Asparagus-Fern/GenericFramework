@@ -10,23 +10,19 @@
 /**
  * 
  */
-UCLASS()
-class CAMERAEDSYSTEM_API UCameraEdManager : public UCameraManager
+UCLASS(MinimalAPI)
+class UCameraEdManager : public UCameraManager
 {
 	GENERATED_BODY()
 
 public:
 	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
+	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+	virtual void Deinitialize() override;
 	virtual bool DoesSupportWorldType(const EWorldType::Type WorldType) const override;
-
-	/* IProcedureBaseInterface*/
-public:
-	virtual void NativeOnCreate() override;
-	virtual void NativeOnDestroy() override;
 
 	/* UCameraEdManager */
 protected:
-	// virtual void OnCameraViewportCapture(ACameraPointBase* InCameraPoint);
 	virtual void OnCopyViewportCamera(ACameraPointBase* InCameraPoint);
 	virtual void OnCameraPointPilotStateChanged(ACameraPointBase* InCameraPoint, bool bIsPilot);
 };

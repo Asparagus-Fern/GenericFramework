@@ -4,12 +4,13 @@
 #include "HandleLevelsAsyncAction.h"
 
 #include "LevelStreamingManager.h"
+#include "Manager/ManagerProxy.h"
 
 UHandleLevelsAsyncAction* UHandleLevelsAsyncAction::LoadLevels(const TArray<TSoftObjectPtr<UWorld>> Levels, const bool bMakeVisibleAfterLoad, const bool bShouldBlockOnLoad)
 {
 	UHandleLevelsAsyncAction* NewAction = NewObject<UHandleLevelsAsyncAction>();
 
-	if (ULevelStreamingManager* LevelStreamingManager = GetManager<ULevelStreamingManager>())
+	if (ULevelStreamingManager* LevelStreamingManager = UManagerProxy::Get()->GetManager<ULevelStreamingManager>())
 	{
 		LevelStreamingManager->LoadLevels(Levels, bMakeVisibleAfterLoad, bShouldBlockOnLoad, FOnHandleLevelStreamingOnceFinish::CreateUObject(NewAction, &UHandleLevelsAsyncAction::OnHandleOnceFinish), FOnHandleLevelStreamingFinish::CreateUObject(NewAction, &UHandleLevelsAsyncAction::OnHandleOnceFinish));
 	}
@@ -21,7 +22,7 @@ UHandleLevelsAsyncAction* UHandleLevelsAsyncAction::LoadLevelsBySetting(const TA
 {
 	UHandleLevelsAsyncAction* NewAction = NewObject<UHandleLevelsAsyncAction>();
 
-	if (ULevelStreamingManager* LevelStreamingManager = GetManager<ULevelStreamingManager>())
+	if (ULevelStreamingManager* LevelStreamingManager = UManagerProxy::Get()->GetManager<ULevelStreamingManager>())
 	{
 		LevelStreamingManager->LoadLevelsBySetting(LoadLevelStreamingSettings, FOnHandleLevelStreamingOnceFinish::CreateUObject(NewAction, &UHandleLevelsAsyncAction::OnHandleOnceFinish), FOnHandleLevelStreamingFinish::CreateUObject(NewAction, &UHandleLevelsAsyncAction::OnHandleOnceFinish));
 	}
@@ -33,7 +34,7 @@ UHandleLevelsAsyncAction* UHandleLevelsAsyncAction::UnloadLevels(const TArray<TS
 {
 	UHandleLevelsAsyncAction* NewAction = NewObject<UHandleLevelsAsyncAction>();
 
-	if (ULevelStreamingManager* LevelStreamingManager = GetManager<ULevelStreamingManager>())
+	if (ULevelStreamingManager* LevelStreamingManager = UManagerProxy::Get()->GetManager<ULevelStreamingManager>())
 	{
 		LevelStreamingManager->UnloadLevels(Levels, bShouldBlockOnUnload, FOnHandleLevelStreamingOnceFinish::CreateUObject(NewAction, &UHandleLevelsAsyncAction::OnHandleOnceFinish), FOnHandleLevelStreamingFinish::CreateUObject(NewAction, &UHandleLevelsAsyncAction::OnHandleOnceFinish));
 	}
@@ -45,7 +46,7 @@ UHandleLevelsAsyncAction* UHandleLevelsAsyncAction::UnloadLevelsBySetting(const 
 {
 	UHandleLevelsAsyncAction* NewAction = NewObject<UHandleLevelsAsyncAction>();
 
-	if (ULevelStreamingManager* LevelStreamingManager = GetManager<ULevelStreamingManager>())
+	if (ULevelStreamingManager* LevelStreamingManager = UManagerProxy::Get()->GetManager<ULevelStreamingManager>())
 	{
 		LevelStreamingManager->UnloadLevelsBySetting(UnloadLevelStreamingSettings, FOnHandleLevelStreamingOnceFinish::CreateUObject(NewAction, &UHandleLevelsAsyncAction::OnHandleOnceFinish), FOnHandleLevelStreamingFinish::CreateUObject(NewAction, &UHandleLevelsAsyncAction::OnHandleOnceFinish));
 	}
@@ -57,7 +58,7 @@ UHandleLevelsAsyncAction* UHandleLevelsAsyncAction::SetLevelsVisibility(const TA
 {
 	UHandleLevelsAsyncAction* NewAction = NewObject<UHandleLevelsAsyncAction>();
 
-	if (ULevelStreamingManager* LevelStreamingManager = GetManager<ULevelStreamingManager>())
+	if (ULevelStreamingManager* LevelStreamingManager = UManagerProxy::Get()->GetManager<ULevelStreamingManager>())
 	{
 		LevelStreamingManager->SetLevelsVisibility(Levels, bVisible, FOnHandleLevelStreamingOnceFinish::CreateUObject(NewAction, &UHandleLevelsAsyncAction::OnHandleOnceFinish), FOnHandleLevelStreamingFinish::CreateUObject(NewAction, &UHandleLevelsAsyncAction::OnHandleOnceFinish));
 	}
@@ -69,7 +70,7 @@ UHandleLevelsAsyncAction* UHandleLevelsAsyncAction::LoadCurrentWorldLevelStreami
 {
 	UHandleLevelsAsyncAction* NewAction = NewObject<UHandleLevelsAsyncAction>();
 
-	if (ULevelStreamingManager* LevelStreamingManager = GetManager<ULevelStreamingManager>())
+	if (ULevelStreamingManager* LevelStreamingManager = UManagerProxy::Get()->GetManager<ULevelStreamingManager>())
 	{
 		LevelStreamingManager->LoadCurrentWorldLevelStreaming(FOnHandleLevelStreamingOnceFinish::CreateUObject(NewAction, &UHandleLevelsAsyncAction::OnHandleOnceFinish), FOnHandleLevelStreamingFinish::CreateUObject(NewAction, &UHandleLevelsAsyncAction::OnHandleOnceFinish));
 	}
@@ -81,7 +82,7 @@ UHandleLevelsAsyncAction* UHandleLevelsAsyncAction::UnLoadCurrentWorldLevelStrea
 {
 	UHandleLevelsAsyncAction* NewAction = NewObject<UHandleLevelsAsyncAction>();
 
-	if (ULevelStreamingManager* LevelStreamingManager = GetManager<ULevelStreamingManager>())
+	if (ULevelStreamingManager* LevelStreamingManager = UManagerProxy::Get()->GetManager<ULevelStreamingManager>())
 	{
 		LevelStreamingManager->UnLoadCurrentWorldLevelStreaming(FOnHandleLevelStreamingOnceFinish::CreateUObject(NewAction, &UHandleLevelsAsyncAction::OnHandleOnceFinish), FOnHandleLevelStreamingFinish::CreateUObject(NewAction, &UHandleLevelsAsyncAction::OnHandleOnceFinish));
 	}

@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Manager/CoreManager.h"
 #include "GameMapManager.generated.h"
 
 class UGameMapInfo;
@@ -12,7 +11,7 @@ class UGameMapInfo;
  * 
  */
 UCLASS()
-class GAMEMAPSYSTEM_API UGameMapManager : public UCoreManager
+class GAMEMAPSYSTEM_API UGameMapManager : public UWorldSubsystem
 {
 	GENERATED_BODY()
 

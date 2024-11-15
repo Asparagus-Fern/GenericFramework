@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "SceneType.h"
-#include "Manager/CoreManager.h"
+#include "Manager/CoreInternalManager.h"
 #include "SceneManager.generated.h"
 
 class AMapScaleActor;
@@ -14,19 +14,20 @@ class ACompassActor;
  * 
  */
 UCLASS()
-class WORLDUTILITIES_API USceneManager : public UCoreManager
+class WORLDUTILITIES_API USceneManager : public UWorldSubsystem, public FCoreInternalManager
 {
 	GENERATED_BODY()
 
 public:
-	USceneManager(const FObjectInitializer& ObjectInitializer);
 	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
-	virtual void Tick(float DeltaTime) override;
+	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+	virtual void Deinitialize() override;
+	virtual bool DoesSupportWorldType(const EWorldType::Type WorldType) const override;
 
-	/* IProcedureInterface */
+	/* FCoreInternalManager */
 public:
-	virtual void NativeOnActived() override;
-	virtual void NativeOnInactived() override;
+	virtual void OnWorldMatchStarting(UWorld* InWorld) override;
+	virtual void OnWorldEndPlay(UWorld* InWorld) override;
 
 	/* USceneManager */
 public:

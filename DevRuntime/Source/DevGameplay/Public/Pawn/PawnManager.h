@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "Manager/CoreInternalManager.h"
-#include "Manager/CoreManager.h"
 #include "PawnManager.generated.h"
 
 class ADevPawn;
