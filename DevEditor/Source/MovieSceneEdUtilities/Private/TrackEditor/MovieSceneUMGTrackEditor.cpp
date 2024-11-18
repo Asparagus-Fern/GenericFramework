@@ -39,6 +39,13 @@ TSharedRef<ISequencerSection> FMovieSceneUMGTrackEditor::MakeSectionInterface(UM
 
 void FMovieSceneUMGTrackEditor::BuildAddTrackMenu(FMenuBuilder& MenuBuilder)
 {
+	/* 仅在LevelSequence可使用 */
+	if (!IsValid(Cast<ULevelSequence>(GetSequencer()->GetFocusedMovieSceneSequence())))
+	{
+		return;
+	}
+
+	/* 在MasterTrack中添加一个UI来添加UMG Track */
 	auto SubMenuCallback = [this](FMenuBuilder& SubMenuBuilder)
 	{
 		SubMenuBuilder.AddWidget(CreateUMGAssetPicker(), FText::GetEmpty(), true);
@@ -79,6 +86,7 @@ TSharedRef<SWidget> FMovieSceneUMGTrackEditor::CreateUMGAssetPicker()
 		AssetPickerConfig.AdditionalReferencingAssets.Add(FAssetData(Sequence));
 	}
 
+	/* 创建资产筛选器，选择UMG添加进Sequence */
 	return SNew(SBox)
 		.WidthOverride(300.0f)
 		.HeightOverride(300.f)
@@ -89,6 +97,7 @@ TSharedRef<SWidget> FMovieSceneUMGTrackEditor::CreateUMGAssetPicker()
 
 void FMovieSceneUMGTrackEditor::OnUMGAssetSelected(const FAssetData& InAssetData)
 {
+	/* 关闭所有菜单 */
 	FSlateApplication::Get().DismissAllMenus();
 	UUserWidgetBlueprint* SelectedUMGAsset = Cast<UUserWidgetBlueprint>(InAssetData.GetAsset());
 	UMovieScene* MovieScene = GetFocusedMovieScene();
@@ -103,11 +112,14 @@ void FMovieSceneUMGTrackEditor::OnUMGAssetSelected(const FAssetData& InAssetData
 		return;
 	}
 
+	/* 当UMG Binding存在时，不再重复绑定 */
 	if (IsUMGBindingExist(SelectedUMGAsset))
 	{
+		//todo:选中该Binding?
 		return;
 	}
 
+	/* 添加一个UMG Binding */
 	AddUMGBinding(SelectedUMGAsset);
 }
 
@@ -141,40 +153,10 @@ bool FMovieSceneUMGTrackEditor::IsUMGBindingExist(UUserWidgetBlueprint* InUserWi
 void FMovieSceneUMGTrackEditor::AddUMGBinding(UUserWidgetBlueprint* InUserWidgetBP)
 {
 	const FScopedTransaction Transaction(LOCTEXT("AddTrackDescription", "Add UMG Track"));
-	
-	UMovieSceneSequence* Sequence = GetSequencer()->GetFocusedMovieSceneSequence();
-	UMovieScene* MovieScene = GetFocusedMovieScene();
 
-	ULevelSequence* LevelSequence = Cast<ULevelSequence>(Sequence);
-
-	MovieScene->Modify();
-
-	FGuid BindingID = GetSequencer()->MakeNewSpawnable(*InUserWidgetBP);
-	AddUMGBindingDefaultTrack(BindingID);
-
-	// FGuid UserWidgetGuid = ActiveSequencer->CreateBinding(*InUserWidgetBP,InUserWidgetBP->GetName());
-
-	// UMovieSceneUMGTrack* NewUMGTrack = 	InMovieScene->AddTrack<UMovieSceneUMGTrack>(UserWidgetGuid);
-	// NewUMGTrack->UserWidgetBP = InUserWidgetBP;
-	// NewUMGTrack->SetDisplayName(FText::FromString(InUserWidgetBP->GetName()));
-
-	// FGuid BindingID = Sequence->CreateSpawnable(InUserWidgetBP);
-
-	// FGuid BindingID = ActiveSequencer->CreateBinding(*InUserWidgetBP, InUserWidgetBP->GetName());
-	// Sequence->BindPossessableObject(BindingID, *InUserWidgetBP, GetSequencer()->GetPlaybackContext());
-
-	// FMovieSceneBinding* Binding = InMovieScene->FindBinding(BindingID);
-	// if (UMovieSceneUMGTrack* Track = Cast<UMovieSceneUMGTrack>(InMovieScene->FindTrack(UMovieSceneUMGTrack::StaticClass(), BindingID, NAME_None)))
-	// {
-	// 	Track->UserWidgetBP = InUserWidgetBP;
-	// 	Track->SetDisplayName(FText::FromString(InUserWidgetBP->GetName()));
-	// }
-}
-
-void FMovieSceneUMGTrackEditor::AddUMGBindingDefaultTrack(FGuid BindingID)
-{
-	UMovieSceneSequence* Sequence = GetSequencer()->GetFocusedMovieSceneSequence();
-	UMovieScene* MovieScene = GetFocusedMovieScene();
+	/* 从Movie Scene UMG Spawner创建UMG */
+	GetFocusedMovieScene()->Modify();
+	GetSequencer()->MakeNewSpawnable(*InUserWidgetBP);
 }
 
 #undef LOCTEXT_NAMESPACE

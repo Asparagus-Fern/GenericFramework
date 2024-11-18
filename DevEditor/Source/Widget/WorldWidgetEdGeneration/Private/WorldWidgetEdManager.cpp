@@ -18,13 +18,6 @@ void UEditorWorldWidgetPanel::NativeOnCreate()
 {
 	UWorldWidgetPanel::NativeOnCreate();
 
-	/* 对视口创建新的Panel存放WorldWidget */
-	ConstraintCanvas = SNew(SConstraintCanvas);
-	if (LevelEditorViewportClient)
-	{
-		UBPFunctions_EditorWidget::AddToEditorViewport(LevelEditorViewportClient, ConstraintCanvas.ToSharedRef());
-	}
-
 	RefreshWorldWidgetComponent();
 }
 
@@ -81,8 +74,6 @@ void UEditorWorldWidgetPanel::NativeOnRefresh()
 
 void UEditorWorldWidgetPanel::NativeOnDestroy()
 {
-	UWorldWidgetPanel::NativeOnDestroy();
-
 	for (const auto& WorldWidget : WorldWidgets)
 	{
 		ConstraintCanvas->RemoveSlot(WorldWidget.Value->TakeWidget());
@@ -94,9 +85,26 @@ void UEditorWorldWidgetPanel::NativeOnDestroy()
 		UBPFunctions_EditorWidget::RemoveFromEditorViewport(LevelEditorViewportClient, ConstraintCanvas.ToSharedRef());
 	}
 
-	ConstraintCanvas.Reset();
-	WorldWidgets.Reset();
+	UWorldWidgetPanel::NativeOnDestroy();
+
 	WorldWidgetContainer.Reset();
+}
+
+void UEditorWorldWidgetPanel::HandleAddToViewport()
+{
+	/* 对视口创建新的Panel存放WorldWidget */
+	if (LevelEditorViewportClient)
+	{
+		UBPFunctions_EditorWidget::AddToEditorViewport(LevelEditorViewportClient, ConstraintCanvas.ToSharedRef());
+	}
+}
+
+void UEditorWorldWidgetPanel::HandleRemoveFromViewport()
+{
+	if (LevelEditorViewportClient)
+	{
+		UBPFunctions_EditorWidget::RemoveFromEditorViewport(LevelEditorViewportClient, ConstraintCanvas.ToSharedRef());
+	}
 }
 
 void UEditorWorldWidgetPanel::AddWorldWidgetComponent(UWorldWidgetComponent* InWorldWidgetComponent)
@@ -216,6 +224,7 @@ void UWorldWidgetEdManager::Initialize(FSubsystemCollectionBase& Collection)
 	FLevelEditorModule& LevelEditorModule = FModuleManager::Get().GetModuleChecked<FLevelEditorModule>("LevelEditor");
 	LevelEditorCreatedHandle = LevelEditorModule.OnLevelEditorCreated().AddUObject(this, &UWorldWidgetEdManager::OnLevelEditorCreated);
 
+	LevelViewportClientListChangedHandle = GEditor->OnLevelViewportClientListChanged().AddUObject(this, &UWorldWidgetEdManager::OnLevelViewportClientListChanged);
 	LevelActorAddedHandle = GEditor->OnLevelActorAdded().AddUObject(this, &UWorldWidgetEdManager::OnLevelActorAdded);
 	ActorsMovedHandle = GEditor->OnActorsMoved().AddUObject(this, &UWorldWidgetEdManager::OnActorsMoved);
 	LevelActorDeletedHandle = GEditor->OnLevelActorDeleted().AddUObject(this, &UWorldWidgetEdManager::OnLevelActorDeleted);
@@ -238,9 +247,9 @@ void UWorldWidgetEdManager::Deinitialize()
 
 	WorldWidgetPanels.Reset();
 	WorldWidgetComponents.Reset();
-	bIsGenerateWorldWidgetPanel = false;
 
 	LevelEditorCreatedHandle.Reset();
+	LevelViewportClientListChangedHandle.Reset();
 	LevelActorAddedHandle.Reset();
 	ActorsMovedHandle.Reset();
 	LevelActorDeletedHandle.Reset();
@@ -256,14 +265,7 @@ bool UWorldWidgetEdManager::DoesSupportWorldType(const EWorldType::Type WorldTyp
 void UWorldWidgetEdManager::OnWorldBeginPlay(UWorld* InWorld)
 {
 	/* 运行时开始的时候把编辑器的3DUI清空 */
-	for (const auto& WorldWidgetPanel : WorldWidgetPanels)
-	{
-		WorldWidgetPanel->NativeOnDestroy();
-		WorldWidgetPanel->MarkAsGarbage();
-	}
-
-	bIsGenerateWorldWidgetPanel = false;
-	WorldWidgetPanels.Reset();
+	ClearupWorldWidgetPanel();
 }
 
 void UWorldWidgetEdManager::OnWorldEndPlay(UWorld* InWorld)
@@ -274,6 +276,12 @@ void UWorldWidgetEdManager::OnWorldEndPlay(UWorld* InWorld)
 
 void UWorldWidgetEdManager::OnLevelEditorCreated(TSharedPtr<ILevelEditor> LevelEditor)
 {
+	GenerateWorldWidgetPanel();
+}
+
+void UWorldWidgetEdManager::OnLevelViewportClientListChanged()
+{
+	ClearupWorldWidgetPanel();
 	GenerateWorldWidgetPanel();
 }
 
@@ -304,37 +312,15 @@ void UWorldWidgetEdManager::OnWorldWidgetComponentRegister(UWorldWidgetComponent
 
 void UWorldWidgetEdManager::GenerateWorldWidgetPanel()
 {
-	if (bIsGenerateWorldWidgetPanel)
+	for (const auto& LevelEditorViewportClient : UBPFunctions_EditorWidget::GetLevelEditorViewportClients())
 	{
-		return;
-	}
-
-	TArray<FLevelEditorViewportClient*> LevelEditorViewportClients = GEditor->GetLevelViewportClients();
-	for (const auto& LevelEditorViewportClient : LevelEditorViewportClients)
-	{
-		/* ActorLock是编辑器的相机窗口 todo:尝试添加到相机视口 */
-		FLevelViewportActorLock& ActorLock = LevelEditorViewportClient->GetActorLock();
-		const AActor* Actor = ActorLock.GetLockedActor();
-		if (IsValid(Actor))
-		{
-			continue;
-		}
-
 		/* 添加到LevelEditorViewport */
 		if (UEditorWorldWidgetPanel* EditorWorldWidgetPanel = Cast<UEditorWorldWidgetPanel>(CreateWorldWidgetPanel()))
 		{
-			if (!bIsGenerateWorldWidgetPanel)
-			{
-				bIsGenerateWorldWidgetPanel = true;
-			}
-
 			EditorWorldWidgetPanel->LevelEditorViewportClient = LevelEditorViewportClient;
 			EditorWorldWidgetPanel->NativeOnCreate();
 		}
 	}
-
-	/* todo:尝试添加到ActorPreview */
-	//...
 }
 
 UWorldWidgetPanel* UWorldWidgetEdManager::CreateWorldWidgetPanel()

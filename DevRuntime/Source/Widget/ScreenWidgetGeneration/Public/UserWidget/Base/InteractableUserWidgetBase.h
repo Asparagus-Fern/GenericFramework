@@ -47,7 +47,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FString GroupName;
 
-	/* 按钮响应设置，只作参数的配置 */
+	/* 按钮响应设置，只作参数的配置，todo:考虑弃用CommonButton，封装成按钮逻辑基类 */
 	UPROPERTY(EditAnywhere, Instanced)
 	UCommonButton* CommonButton = nullptr;
 

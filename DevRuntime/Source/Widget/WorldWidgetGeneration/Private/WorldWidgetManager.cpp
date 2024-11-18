@@ -14,17 +14,14 @@
 
 void UWorldWidgetPanel::NativeOnCreate()
 {
-	IProcedureBaseInterface::NativeOnCreate();
-
-	/* 创建新的Panel存放WorldWidget */
-	Panel = NewObject<UCanvasPanel>(GetOuter());
+	Super::NativeOnCreate();
 }
 
 void UWorldWidgetPanel::NativeOnRefresh()
 {
-	IProcedureBaseInterface::NativeOnRefresh();
+	Super::NativeOnRefresh();
 
-	if (!IsValid(Panel) || !IsValid(GetWorld()))
+	if (!IsValid(CanvasPanel) || !IsValid(GetWorld()))
 	{
 		return;
 	}
@@ -67,8 +64,26 @@ void UWorldWidgetPanel::NativeOnRefresh()
 
 void UWorldWidgetPanel::NativeOnDestroy()
 {
-	IProcedureBaseInterface::NativeOnDestroy();
-	Panel->ClearChildren();
+	Super::NativeOnDestroy();
+	WorldWidgets.Reset();
+}
+
+void UWorldWidgetPanel::HandleAddToViewport()
+{
+	const FGameplayTag WorldWidgetPanelTag = FGameplayTag::RequestGameplayTag(FName("UI.HUD.Main.WorldWidget"));
+	if (WorldWidgetPanelTag.IsValid())
+	{
+		UGameplayTagSlot* Slot = UManagerProxy::Get()->GetManager<UScreenWidgetManager>()->GetSlot(WorldWidgetPanelTag);
+		if (IsValid(Slot))
+		{
+			Slot->SetContent(CanvasPanel);
+		}
+	}
+}
+
+void UWorldWidgetPanel::HandleRemoveFromViewport()
+{
+	CanvasPanel->RemoveFromParent();
 }
 
 void UWorldWidgetPanel::AddWorldWidgetComponent(UWorldWidgetComponent* InWorldWidgetComponent)
@@ -77,9 +92,9 @@ void UWorldWidgetPanel::AddWorldWidgetComponent(UWorldWidgetComponent* InWorldWi
 	{
 		WorldWidgets.FindOrAdd(InWorldWidgetComponent, InWorldWidgetComponent->WorldWidget);
 
-		if (IsValid(Panel))
+		if (IsValid(CanvasPanel))
 		{
-			UCanvasPanelSlot* CanvasPanelSlot = Panel->AddChildToCanvas(InWorldWidgetComponent->WorldWidget);
+			UCanvasPanelSlot* CanvasPanelSlot = CanvasPanel->AddChildToCanvas(InWorldWidgetComponent->WorldWidget);
 			CanvasPanelSlot->SetAutoSize(true);
 			CanvasPanelSlot->SetAnchors(FAnchors());
 			CanvasPanelSlot->SetAlignment(FVector2D());
@@ -93,9 +108,9 @@ void UWorldWidgetPanel::RemoveWorldWidgetComponent(UWorldWidgetComponent* InWorl
 {
 	if (IsValid(InWorldWidgetComponent) && WorldWidgets.Contains(InWorldWidgetComponent))
 	{
-		if (IsValid(Panel))
+		if (IsValid(CanvasPanel))
 		{
-			Panel->RemoveChild(WorldWidgets.FindRef(InWorldWidgetComponent));
+			CanvasPanel->RemoveChild(WorldWidgets.FindRef(InWorldWidgetComponent));
 		}
 
 		WorldWidgets.Remove(InWorldWidgetComponent);
@@ -104,11 +119,11 @@ void UWorldWidgetPanel::RemoveWorldWidgetComponent(UWorldWidgetComponent* InWorl
 
 void UWorldWidgetPanel::RefreshWorldWidgetComponent()
 {
-	Panel->ClearChildren();
+	CanvasPanel->ClearChildren();
 
 	for (const auto& WorldWidget : WorldWidgets)
 	{
-		UCanvasPanelSlot* CanvasPanelSlot = Panel->AddChildToCanvas(WorldWidget.Key->WorldWidget);
+		UCanvasPanelSlot* CanvasPanelSlot = CanvasPanel->AddChildToCanvas(WorldWidget.Key->WorldWidget);
 		CanvasPanelSlot->SetAutoSize(true);
 		CanvasPanelSlot->SetAnchors(FAnchors());
 		CanvasPanelSlot->SetAlignment(FVector2D());
@@ -241,21 +256,13 @@ TArray<UWorldWidgetComponent*> UWorldWidgetManager::FindWorldWidgetComponents(FG
 
 void UWorldWidgetManager::GenerateWorldWidgetPanel()
 {
-	const FGameplayTag WorldWidgetPanelTag = FGameplayTag::RequestGameplayTag(FName("UI.HUD.Main.WorldWidget"));
-	if (WorldWidgetPanelTag.IsValid())
-	{
-		UGameplayTagSlot* Slot = UManagerProxy::Get()->GetManager<UScreenWidgetManager>()->GetSlot(WorldWidgetPanelTag);
-		if (IsValid(Slot))
-		{
-			Slot->SetContent(CreateWorldWidgetPanel()->GetPanel());
+	CreateWorldWidgetPanel();
 
-			for (const auto& WorldWidgetPoint : WorldWidgetComponents)
-			{
-				if (!WorldWidgetPoint->bIsManualActive)
-				{
-					TryToAddWorldWidgetComponent(WorldWidgetPoint);
-				}
-			}
+	for (const auto& WorldWidgetPoint : WorldWidgetComponents)
+	{
+		if (!WorldWidgetPoint->bIsManualActive)
+		{
+			TryToAddWorldWidgetComponent(WorldWidgetPoint);
 		}
 	}
 }

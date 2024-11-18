@@ -87,6 +87,42 @@ bool UBPFunctions_EditorWidget::GetEditorProjectionData(const FLevelEditorViewpo
 	return false;
 }
 
+TArray<FLevelEditorViewportClient*> UBPFunctions_EditorWidget::GetLevelEditorCameraViewportClients()
+{
+	TArray<FLevelEditorViewportClient*> LevelEditorViewportClients;
+
+	for (const auto& LevelEditorViewportClient : GEditor->GetLevelViewportClients())
+	{
+		FLevelViewportActorLock& ActorLock = LevelEditorViewportClient->GetActorLock();
+		const AActor* Actor = ActorLock.GetLockedActor();
+		if (IsValid(Actor))
+		{
+			LevelEditorViewportClients.Add(LevelEditorViewportClient);
+		}
+	}
+
+	return LevelEditorViewportClients;
+}
+
+TArray<FLevelEditorViewportClient*> UBPFunctions_EditorWidget::GetLevelEditorViewportClients()
+{
+	TArray<FLevelEditorViewportClient*> LevelEditorViewportClients;
+
+	for (const auto& LevelEditorViewportClient : GEditor->GetLevelViewportClients())
+	{
+		FLevelViewportActorLock& ActorLock = LevelEditorViewportClient->GetActorLock();
+		const AActor* Actor = ActorLock.GetLockedActor();
+		if (IsValid(Actor))
+		{
+			continue;
+		}
+
+		LevelEditorViewportClients.Add(LevelEditorViewportClient);
+	}
+
+	return LevelEditorViewportClients;
+}
+
 TSharedPtr<SLevelViewport> UBPFunctions_EditorWidget::GetEditorViewportWidget(const FLevelEditorViewportClient* InLevelEditorViewportClient)
 {
 	if (InLevelEditorViewportClient && InLevelEditorViewportClient->ParentLevelEditor.IsValid())

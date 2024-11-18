@@ -23,6 +23,9 @@ public class MovieSceneEdUtilities : ModuleRules
 				"Slate",
 				"SlateCore",
 
+				"DeveloperSettings",
+				"EditorSubsystem",
+
 				"UnrealEd",
 				"UMG",
 				"UMGEditor",

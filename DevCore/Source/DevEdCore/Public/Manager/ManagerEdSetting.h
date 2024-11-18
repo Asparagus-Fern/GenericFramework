@@ -10,7 +10,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(Abstract)
 class DEVEDCORE_API UManagerEdSetting : public UManagerSetting
 {
 	GENERATED_BODY()

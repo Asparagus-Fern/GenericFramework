@@ -30,9 +30,13 @@ public:
 	virtual void NativeOnRefresh() override;
 	virtual void NativeOnDestroy() override;
 
+	/* UGamePanel */
+public:
+	virtual void HandleAddToViewport() override;
+	virtual void HandleRemoveFromViewport() override;
+
 	/* FEditorWorldWidgetPanel */
 public:
-	TSharedPtr<SConstraintCanvas> ConstraintCanvas = nullptr;
 	FLevelEditorViewportClient* LevelEditorViewportClient = nullptr;
 	TMap<UWorldWidgetComponent*, TSharedPtr<SWorldWidgetContainer>> WorldWidgetContainer;
 
@@ -66,12 +70,15 @@ public:
 public:
 	virtual void OnWorldBeginPlay(UWorld* InWorld) override;
 	virtual void OnWorldEndPlay(UWorld* InWorld) override;
-	
+
 protected:
 	/* 编辑器创建时 */
 	FDelegateHandle LevelEditorCreatedHandle;
 	void OnLevelEditorCreated(TSharedPtr<ILevelEditor> LevelEditor);
 
+	FDelegateHandle LevelViewportClientListChangedHandle;
+	void OnLevelViewportClientListChanged();
+	
 	/* 关卡添加Actor时 */
 	FDelegateHandle LevelActorAddedHandle;
 	void OnLevelActorAdded(AActor* Actor);
@@ -93,8 +100,6 @@ protected:
 	void OnWorldWidgetComponentRegister(UWorldWidgetComponent* WorldWidgetComponent);
 
 protected:
-	bool bIsGenerateWorldWidgetPanel = false;
-
 	virtual void GenerateWorldWidgetPanel() override;
 	virtual UWorldWidgetPanel* CreateWorldWidgetPanel() override;
 };

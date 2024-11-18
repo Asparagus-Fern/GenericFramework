@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
 #include "Manager/CoreInternalManager.h"
-#include "Object/CommonObject.h"
+#include "Object/GamePanel.h"
 #include "WorldWidgetManager.generated.h"
 
 class UWorldWidgetComponent;
@@ -18,7 +18,7 @@ class UWorldWidgetComponent;
  * 
  */
 UCLASS()
-class WORLDWIDGETGENERATION_API UWorldWidgetPanel : public UCommonObject, public IProcedureBaseInterface
+class WORLDWIDGETGENERATION_API UWorldWidgetPanel : public UGamePanel
 {
 	GENERATED_BODY()
 
@@ -30,16 +30,17 @@ public:
 	virtual void NativeOnRefresh() override;
 	virtual void NativeOnDestroy() override;
 
+	/* UGamePanel */
+public:
+	virtual void HandleAddToViewport() override;
+	virtual void HandleRemoveFromViewport() override;
+	
 	/* FWorldWidgetPanel */
 protected:
-	UPROPERTY()
-	UCanvasPanel* Panel;
-
 	UPROPERTY()
 	TMap<UWorldWidgetComponent*, UUserWidgetBase*> WorldWidgets;
 
 public:
-	UCanvasPanel* GetPanel() const { return Panel; }
 	TMap<UWorldWidgetComponent*, UUserWidgetBase*> GetWorldWidgets() { return WorldWidgets; }
 
 protected:
