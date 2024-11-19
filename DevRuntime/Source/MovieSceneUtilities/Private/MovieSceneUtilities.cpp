@@ -1,9 +1,9 @@
 ﻿#include "MovieSceneUtilities.h"
 
-#define LOCTEXT_NAMESPACE "FMovieSceneUtilitiesModule"
-
 #include "ILevelSequenceModule.h"
 #include "Spawner/MovieSceneUMGSpawner.h"
+
+#define LOCTEXT_NAMESPACE "FMovieSceneUtilitiesModule"
 
 void FMovieSceneUtilitiesModule::StartupModule()
 {

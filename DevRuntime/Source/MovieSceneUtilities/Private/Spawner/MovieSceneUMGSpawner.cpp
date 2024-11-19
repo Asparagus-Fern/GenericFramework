@@ -17,40 +17,6 @@ UClass* FMovieSceneUMGSpawner::GetSupportedTemplateType() const
 	return UUserWidget::StaticClass();
 }
 
-ULevelStreaming* GetLevelStreaming(const FName& DesiredLevelName, const UWorld* World)
-{
-	if (DesiredLevelName == NAME_None)
-	{
-		return nullptr;
-	}
-
-	const TArray<ULevelStreaming*>& StreamingLevels = World->GetStreamingLevels();
-	FString SafeLevelNameString = DesiredLevelName.ToString();
-	if (FPackageName::IsShortPackageName(SafeLevelNameString))
-	{
-		// Make sure MyMap1 and Map1 names do not resolve to a same streaming level
-		SafeLevelNameString.InsertAt(0, '/');
-	}
-
-#if WITH_EDITOR
-	FWorldContext* WorldContext = GEngine->GetWorldContextFromWorld(World);
-	if (WorldContext && WorldContext->PIEInstance != INDEX_NONE)
-	{
-		SafeLevelNameString = UWorld::ConvertToPIEPackageName(SafeLevelNameString, WorldContext->PIEInstance);
-	}
-#endif
-
-	for (ULevelStreaming* LevelStreaming : StreamingLevels)
-	{
-		if (LevelStreaming && LevelStreaming->GetWorldAssetPackageName().EndsWith(SafeLevelNameString, ESearchCase::IgnoreCase))
-		{
-			return LevelStreaming;
-		}
-	}
-
-	return nullptr;
-}
-
 UObject* FMovieSceneUMGSpawner::SpawnObject(FMovieSceneSpawnable& Spawnable, FMovieSceneSequenceIDRef TemplateID, IMovieScenePlayer& Player)
 {
 	UUserWidget* ObjectTemplate = Cast<UUserWidget>(Spawnable.GetObjectTemplate());
@@ -100,4 +66,38 @@ void FMovieSceneUMGSpawner::DestroySpawnedObject(UObject& Object)
 	{
 		UserWidget->RemoveFromParent();
 	}
+}
+
+ULevelStreaming* FMovieSceneUMGSpawner::GetLevelStreaming(const FName& DesiredLevelName, const UWorld* World)
+{
+	if (DesiredLevelName == NAME_None)
+	{
+		return nullptr;
+	}
+
+	const TArray<ULevelStreaming*>& StreamingLevels = World->GetStreamingLevels();
+	FString SafeLevelNameString = DesiredLevelName.ToString();
+	if (FPackageName::IsShortPackageName(SafeLevelNameString))
+	{
+		// Make sure MyMap1 and Map1 names do not resolve to a same streaming level
+		SafeLevelNameString.InsertAt(0, '/');
+	}
+
+#if WITH_EDITOR
+	FWorldContext* WorldContext = GEngine->GetWorldContextFromWorld(World);
+	if (WorldContext && WorldContext->PIEInstance != INDEX_NONE)
+	{
+		SafeLevelNameString = UWorld::ConvertToPIEPackageName(SafeLevelNameString, WorldContext->PIEInstance);
+	}
+#endif
+
+	for (ULevelStreaming* LevelStreaming : StreamingLevels)
+	{
+		if (LevelStreaming && LevelStreaming->GetWorldAssetPackageName().EndsWith(SafeLevelNameString, ESearchCase::IgnoreCase))
+		{
+			return LevelStreaming;
+		}
+	}
+
+	return nullptr;
 }
