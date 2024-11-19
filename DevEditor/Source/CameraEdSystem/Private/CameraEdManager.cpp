@@ -16,7 +16,7 @@
 
 bool UCameraEdManager::ShouldCreateSubsystem(UObject* Outer) const
 {
-	return Super::ShouldCreateSubsystem(Outer) && UCameraEdManagerSetting::Get()->bEnableSubsystem;
+	return Super::ShouldCreateSubsystem(Outer) && UCameraEdManagerSetting::Get()->GetEnableManager();
 }
 
 void UCameraEdManager::Initialize(FSubsystemCollectionBase& Collection)

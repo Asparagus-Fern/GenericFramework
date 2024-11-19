@@ -3,19 +3,23 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ManagerSetting.h"
 #include "GlobalManagerSetting.generated.h"
 
 /**
  * 
  */
-UCLASS()
-class DEVCORE_API UGlobalManagerSetting : public UManagerSetting
+UCLASS(config=ManagerSettings, DefaultConfig)
+class DEVCORE_API UGlobalManagerSetting : public UDeveloperSettings
 {
 	GENERATED_BODY()
 
 public:
 	static ThisClass* Get() { return GetMutableDefault<ThisClass>(); }
+	virtual FName GetContainerName() const override { return "Manager"; }
 	virtual FName GetCategoryName() const override { return "Manager(Global)"; }
 	virtual FName GetSectionName() const override { return "Global"; }
+
+public:
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly)
+	bool bEnableSubsystem = true;
 };

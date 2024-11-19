@@ -3,6 +3,8 @@
 
 #include "Manager/ManagerSetting.h"
 
+#include "Manager/GlobalManagerSetting.h"
+
 #define LOCTEXT_NAMESPACE "UManagerSetting"
 
 FName UManagerSetting::GetContainerName() const
@@ -18,6 +20,11 @@ FName UManagerSetting::GetCategoryName() const
 FName UManagerSetting::GetSectionName() const
 {
 	return Super::GetSectionName();
+}
+
+bool UManagerSetting::GetEnableManager() const
+{
+	return bEnableManager && UGlobalManagerSetting::Get()->bEnableSubsystem;
 }
 
 #undef LOCTEXT_NAMESPACE

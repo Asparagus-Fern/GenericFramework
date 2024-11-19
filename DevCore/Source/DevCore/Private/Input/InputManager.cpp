@@ -52,7 +52,7 @@ void FInputIdleInfo::Invalid() const
 
 bool UInputManager::ShouldCreateSubsystem(UObject* Outer) const
 {
-	return Super::ShouldCreateSubsystem(Outer) && UInputManagerSetting::Get()->bEnableSubsystem;
+	return Super::ShouldCreateSubsystem(Outer) && UInputManagerSetting::Get()->GetEnableManager();
 }
 
 void UInputManager::Initialize(FSubsystemCollectionBase& Collection)

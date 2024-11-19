@@ -9,7 +9,7 @@
 
 bool USceneManager::ShouldCreateSubsystem(UObject* Outer) const
 {
-	return Super::ShouldCreateSubsystem(Outer) && USceneManagerSetting::Get()->bEnableSubsystem;
+	return Super::ShouldCreateSubsystem(Outer) && USceneManagerSetting::Get()->GetEnableManager();
 }
 
 void USceneManager::Initialize(FSubsystemCollectionBase& Collection)

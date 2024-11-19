@@ -20,6 +20,10 @@ public:
 	virtual FName GetSectionName() const override;
 
 public:
-	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly)
-	bool bEnableSubsystem = true;
+	UFUNCTION(BlueprintPure)
+	bool GetEnableManager() const;
+
+public:
+	UPROPERTY(Config, EditDefaultsOnly)
+	bool bEnableManager = true;
 };
