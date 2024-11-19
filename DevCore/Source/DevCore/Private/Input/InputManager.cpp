@@ -58,13 +58,13 @@ bool UInputManager::ShouldCreateSubsystem(UObject* Outer) const
 void UInputManager::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
-	RegistManager(this);
+	RegisterManager(this);
 }
 
 void UInputManager::Deinitialize()
 {
 	Super::Deinitialize();
-	UnRegistManager();
+	UnRegisterManager();
 }
 
 bool UInputManager::DoesSupportWorldType(const EWorldType::Type WorldType) const
@@ -74,7 +74,7 @@ bool UInputManager::DoesSupportWorldType(const EWorldType::Type WorldType) const
 
 void UInputManager::Tick(float DeltaTime)
 {
-	FCoreInternalManager::Tick(DeltaTime);
+	FTickableInternalManager::Tick(DeltaTime);
 	IdleTime += DeltaTime;
 
 	TArray<FInputIdleInfo>& TempInputIdleInfos = InputIdleInfos;

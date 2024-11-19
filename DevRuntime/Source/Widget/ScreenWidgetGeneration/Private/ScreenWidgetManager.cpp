@@ -79,7 +79,7 @@ bool UScreenWidgetManager::ShouldCreateSubsystem(UObject* Outer) const
 void UScreenWidgetManager::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
-	RegistManager(this);
+	RegisterManager(this);
 
 	UInteractableUserWidgetBase::AddInteractableWidget.AddUObject(this, &UScreenWidgetManager::AddInteractableWidget);
 	UInteractableUserWidgetBase::RemoveInteractableWidget.AddUObject(this, &UScreenWidgetManager::RemoveInteractableWidget);
@@ -91,7 +91,7 @@ void UScreenWidgetManager::Initialize(FSubsystemCollectionBase& Collection)
 void UScreenWidgetManager::Deinitialize()
 {
 	Super::Deinitialize();
-	UnRegistManager();
+	UnRegisterManager();
 
 	UGameplayTagSlot::OnGameplayTagSlotBuild.RemoveAll(this);
 	UGameplayTagSlot::OnGameplayTagSlotDestroy.RemoveAll(this);
@@ -107,7 +107,7 @@ bool UScreenWidgetManager::DoesSupportWorldType(const EWorldType::Type WorldType
 
 void UScreenWidgetManager::Tick(float DeltaTime)
 {
-	FCoreInternalManager::Tick(DeltaTime);
+	FTickableInternalManager::Tick(DeltaTime);
 
 	/* 处理按钮事件 */
 	if (!bProcessingMenuSelection && !TargetMenuSelection.IsEmpty())

@@ -16,9 +16,5 @@ public:
 
 	/* IPawnInputMovementInterface */
 public:
-	virtual void AddZoom_Implementation(float InValue) override;
-
-protected:
-	/* 是否重新评估Pawn的位置和弹簧臂长度 */
-	bool bEnableReassessment = true;
+	virtual bool ReassessmentTargetArmLength_Implementation() override;
 };

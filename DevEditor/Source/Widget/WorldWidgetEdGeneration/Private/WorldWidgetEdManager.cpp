@@ -219,7 +219,7 @@ bool UWorldWidgetEdManager::ShouldCreateSubsystem(UObject* Outer) const
 
 void UWorldWidgetEdManager::Initialize(FSubsystemCollectionBase& Collection)
 {
-	RegistManager(this);
+	RegisterManager(this);
 
 	FLevelEditorModule& LevelEditorModule = FModuleManager::Get().GetModuleChecked<FLevelEditorModule>("LevelEditor");
 	LevelEditorCreatedHandle = LevelEditorModule.OnLevelEditorCreated().AddUObject(this, &UWorldWidgetEdManager::OnLevelEditorCreated);
@@ -237,7 +237,7 @@ void UWorldWidgetEdManager::Initialize(FSubsystemCollectionBase& Collection)
 
 void UWorldWidgetEdManager::Deinitialize()
 {
-	UnRegistManager();
+	UnRegisterManager();
 
 	for (const auto& WorldWidgetPanel : WorldWidgetPanels)
 	{

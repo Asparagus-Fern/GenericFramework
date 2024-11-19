@@ -3,6 +3,7 @@
 
 #include "BPFunctions/BPFunctions_Gameplay.h"
 
+#include "AIController.h"
 #include "EngineUtils.h"
 #include "GameFramework/GameModeBase.h"
 #include "GameFramework/GameStateBase.h"
@@ -99,6 +100,16 @@ APlayerState* UBPFunctions_Gameplay::GetPlayerStateByClass(const UObject* WorldC
 	}
 
 	return nullptr;
+}
+
+bool UBPFunctions_Gameplay::GetIsPlayerPossessPawn(const APawn* InPawn)
+{
+	return IsValid(Cast<APlayerController>(InPawn->GetController()));
+}
+
+bool UBPFunctions_Gameplay::GetIsAIPossessPawn(const APawn* InPawn)
+{
+	return IsValid(Cast<AAIController>(InPawn->GetController()));
 }
 
 void UBPFunctions_Gameplay::SetAllActorsVisibility(const UObject* WorldContextObject, const TSubclassOf<AActor> InClass, const bool bIsHiddenInGame)

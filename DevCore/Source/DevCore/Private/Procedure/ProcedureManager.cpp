@@ -17,7 +17,7 @@ bool UProcedureManager::ShouldCreateSubsystem(UObject* Outer) const
 void UProcedureManager::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
-	RegistManager(this);
+	RegisterManager(this);
 
 	FProcedureDelegates::OnProxyHandleBegin.AddUObject(this, &UProcedureManager::OnProcedureProxyHandleBegin);
 	FProcedureDelegates::OnProxyHandlePause.AddUObject(this, &UProcedureManager::OnProcedureProxyHandlePause);
@@ -29,7 +29,7 @@ void UProcedureManager::Initialize(FSubsystemCollectionBase& Collection)
 void UProcedureManager::Deinitialize()
 {
 	Super::Deinitialize();
-	UnRegistManager();
+	UnRegisterManager();
 
 	FProcedureDelegates::OnProxyHandleBegin.RemoveAll(this);
 	FProcedureDelegates::OnProxyHandlePause.RemoveAll(this);

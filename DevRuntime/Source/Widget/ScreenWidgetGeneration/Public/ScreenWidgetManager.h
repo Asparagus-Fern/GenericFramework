@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
 #include "ScreenWidgetType.h"
-#include "Manager/CoreInternalManager.h"
+#include "Manager/TickableInternalManager.h"
 #include "UserWidget/Base/UserWidgetBase.h"
 #include "ScreenWidgetManager.generated.h"
 
@@ -52,7 +52,7 @@ public:
  * 
  */
 UCLASS()
-class SCREENWIDGETGENERATION_API UScreenWidgetManager : public UWorldSubsystem, public FCoreInternalManager
+class SCREENWIDGETGENERATION_API UScreenWidgetManager : public UWorldSubsystem, public FTickableInternalManager
 {
 	GENERATED_BODY()
 

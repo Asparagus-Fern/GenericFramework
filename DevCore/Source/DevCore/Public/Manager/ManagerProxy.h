@@ -19,42 +19,68 @@ class DEVCORE_API UManagerProxy : public UCommonObject
 
 public:
 	static UManagerProxy* InitializeManagerProxy();
-	static void DeinitializeManagerProxy();
-
 	static UManagerProxy* Get();
 
-	void RegistManager(FCoreInternalManager* InManager);
-	void UnRegistManager(FCoreInternalManager* InManager);
+	void RegisterManager(FCoreInternalManager* InManager);
+	void UnRegisterManager(FCoreInternalManager* InManager);
 
 	bool IsManagerExist(const FCoreInternalManager* InManager);
-	bool IsManagerExist(TSubclassOf<UObject> InClass);
+	bool IsManagerExist(FGuid InManagerID);
 
 	template <typename T>
 	T* GetManager()
 	{
 		for (const auto& Manager : ManagerMapping)
 		{
-			if (Manager->GetOwner()->GetClass() == T::StaticClass())
+			if (Manager.Value->GetManagerOwner()->GetClass() == T::StaticClass())
 			{
-				return Cast<T>(Manager->GetOwner());
+				return Cast<T>(Manager.Value->GetManagerOwner());
 			}
 		}
 		return nullptr;
 	}
 
+	template <typename T>
+	T* GetManager(FGuid ManagerID)
+	{
+		for (const auto& Manager : ManagerMapping)
+		{
+			if (Manager.Value->GetManagerOwner()->GetClass() == T::StaticClass() && Manager.Key == ManagerID)
+			{
+				return Cast<T>(Manager.Value->GetManagerOwner());
+			}
+		}
+		return nullptr;
+	}
+
+	template <typename T>
+	TArray<T*> GetManagers()
+	{
+		TArray<T*> Result;
+
+		for (const auto& Manager : ManagerMapping)
+		{
+			if (Manager.Value->GetManagerOwner()->GetClass() == T::StaticClass())
+			{
+				Result.Add(Cast<T>(Manager.Value->GetManagerOwner()));
+			}
+		}
+
+		return Result;
+	}
+
 protected:
 	virtual void InitializeInternal();
-	virtual void DeinitializeInternal();
 
 private:
 	static UManagerProxy* Instance;
 	bool bIsInitialize = false;
-	TArray<FCoreInternalManager*> ManagerMapping;
+	TMap<FGuid, FCoreInternalManager*> ManagerMapping;
 
 	void HandleOnWorldCreation(UWorld* InWorld);
 	void HandleOnWorldBeginTearDown(UWorld* InWorld);
 
-	void HandleOnWorldBeginPlay(UWorld* InWorld); 
+	void HandleOnWorldBeginPlay(UWorld* InWorld);
 	void HandleOnWorldMatchStarting(UWorld* InWorld);
 	void HandleOnWorldEndPlay(UWorld* InWorld);
 };

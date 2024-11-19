@@ -15,13 +15,13 @@ bool USceneManager::ShouldCreateSubsystem(UObject* Outer) const
 void USceneManager::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
-	RegistManager(this);
+	RegisterManager(this);
 }
 
 void USceneManager::Deinitialize()
 {
 	Super::Deinitialize();
-	UnRegistManager();
+	UnRegisterManager();
 }
 
 bool USceneManager::DoesSupportWorldType(const EWorldType::Type WorldType) const

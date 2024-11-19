@@ -68,7 +68,7 @@ bool UMovieSceneUMGEdManager::ShouldCreateSubsystem(UObject* Outer) const
 void UMovieSceneUMGEdManager::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
-	RegistManager(this);
+	RegisterManager(this);
 
 	FLevelEditorModule& LevelEditorModule = FModuleManager::Get().GetModuleChecked<FLevelEditorModule>("LevelEditor");
 	LevelEditorCreatedHandle = LevelEditorModule.OnLevelEditorCreated().AddUObject(this, &UMovieSceneUMGEdManager::OnLevelEditorCreated);
@@ -82,7 +82,7 @@ void UMovieSceneUMGEdManager::Initialize(FSubsystemCollectionBase& Collection)
 void UMovieSceneUMGEdManager::Deinitialize()
 {
 	Super::Deinitialize();
-	UnRegistManager();
+	UnRegisterManager();
 
 	ISequencerModule& SequencerModule = FModuleManager::Get().LoadModuleChecked<ISequencerModule>("Sequencer");
 	SequencerModule.UnregisterOnSequencerCreated(OnSequencerCreatedHandle);

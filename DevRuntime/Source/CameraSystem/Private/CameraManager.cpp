@@ -35,7 +35,7 @@ bool UCameraManager::ShouldCreateSubsystem(UObject* Outer) const
 void UCameraManager::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
-	RegistManager(this);
+	RegisterManager(this);
 
 	ACameraPointBase::OnCameraPointRegister.AddUObject(this, &UCameraManager::AddCameraPoint);
 	ACameraPointBase::OnCameraPointUnRegister.AddUObject(this, &UCameraManager::RemoveCameraPoint);
@@ -45,7 +45,7 @@ void UCameraManager::Initialize(FSubsystemCollectionBase& Collection)
 void UCameraManager::Deinitialize()
 {
 	Super::Deinitialize();
-	UnRegistManager();
+	UnRegisterManager();
 
 	ACameraPointBase::OnCameraPointRegister.RemoveAll(this);
 	ACameraPointBase::OnCameraPointUnRegister.RemoveAll(this);

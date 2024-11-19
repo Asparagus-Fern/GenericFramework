@@ -18,13 +18,13 @@ bool ULevelStreamingManager::ShouldCreateSubsystem(UObject* Outer) const
 void ULevelStreamingManager::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
-	RegistManager(this);
+	RegisterManager(this);
 }
 
 void ULevelStreamingManager::Deinitialize()
 {
 	Super::Deinitialize();
-	UnRegistManager();
+	UnRegisterManager();
 }
 
 bool ULevelStreamingManager::DoesSupportWorldType(const EWorldType::Type WorldType) const

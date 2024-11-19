@@ -14,6 +14,7 @@ class DEVCORE_API UBPFunctions_Gameplay : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
 
+	/* Gameplay */
 public:
 	UFUNCTION(BlueprintPure, meta = (WorldContext = "WorldContextObject", DeterminesOutputType = "InClass"))
 	static UGameInstance* GetGameInstanceByClass(const UObject* WorldContextObject, const TSubclassOf<UGameInstance> InClass);
@@ -39,6 +40,14 @@ public:
 	UFUNCTION(BlueprintPure, meta = (WorldContext = "WorldContextObject", DeterminesOutputType = "InClass"))
 	static APlayerState* GetPlayerStateByClass(const UObject* WorldContextObject, const TSubclassOf<APlayerState> InClass);
 
+	/* Pawn */
+public:
+	UFUNCTION(BlueprintPure)
+	static bool GetIsPlayerPossessPawn(const APawn* InPawn);
+
+	UFUNCTION(BlueprintPure)
+	static bool GetIsAIPossessPawn(const APawn* InPawn);
+	
 	/* Actor */
 public:
 	UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject"))

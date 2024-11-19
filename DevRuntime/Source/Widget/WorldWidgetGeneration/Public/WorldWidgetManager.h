@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
-#include "Manager/CoreInternalManager.h"
+#include "Manager/TickableInternalManager.h"
 #include "Object/GamePanel.h"
 #include "WorldWidgetManager.generated.h"
 
@@ -59,7 +59,7 @@ protected:
  * 
  */
 UCLASS()
-class WORLDWIDGETGENERATION_API UWorldWidgetManager : public UWorldSubsystem, public FCoreInternalManager
+class WORLDWIDGETGENERATION_API UWorldWidgetManager : public UWorldSubsystem, public FTickableInternalManager
 {
 	GENERATED_BODY()
 

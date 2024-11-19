@@ -60,6 +60,9 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Pawn Input Movement Interface")
 	float GetZoomSpeedRate();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Pawn Input Movement Interface")
+	bool ReassessmentTargetArmLength();
 };
 
 UCLASS(ClassGroup=(DevPlugin), meta=(BlueprintSpawnableComponent))

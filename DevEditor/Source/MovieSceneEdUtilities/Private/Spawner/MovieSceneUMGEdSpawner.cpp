@@ -1,9 +1,9 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
-#include "MovieScene.h"
-#include "Blueprint/UserWidgetBlueprint.h"
 #include "Spawner/MovieSceneUMGEdSpawner.h"
 
+#include "MovieScene.h"
+#include "Blueprint/UserWidgetBlueprint.h"
 #include "ISequencer.h"
 #include "Sections/MovieSceneBoolSection.h"
 #include "Tracks/MovieSceneSpawnTrack.h"

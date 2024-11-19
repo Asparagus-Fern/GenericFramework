@@ -14,7 +14,6 @@ void FDevCoreModule::StartupModule()
 
 void FDevCoreModule::ShutdownModule()
 {
-	UManagerProxy::DeinitializeManagerProxy();
 	ICommonModuleInterface::ShutdownModule();
 }
 

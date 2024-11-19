@@ -14,61 +14,56 @@ FCoreInternalManager::~FCoreInternalManager()
 {
 }
 
-UWorld* FCoreInternalManager::GetTickableGameObjectWorld() const
+FGuid FCoreInternalManager::RegisterManager(UObject* InOwner)
 {
-	if (!GetOwner())
+	ManagerID = FGuid::NewGuid();
+
+	if (IsValid(InOwner))
 	{
-		return nullptr;
+		Owner = InOwner;
+		UManagerProxy::Get()->RegisterManager(this);
+		OnManagerInitialized();
 	}
-
-	return GetOwner()->GetWorld();;
-}
-
-void FCoreInternalManager::RegistManager(UObject* InOwner)
-{
-	if (!IsValid(InOwner))
+	else
 	{
 		DLOG(DLogManager, Error, TEXT("Regist Manager Fail, Must Provide Owner For Internal Manager"));
-		return;
 	}
-
-	Owner = InOwner;
-	UManagerProxy::Get()->RegistManager(this);
-	OnManagerInitialized();
+	
+	return ManagerID;
 }
 
-void FCoreInternalManager::UnRegistManager()
+void FCoreInternalManager::UnRegisterManager()
 {
-	UManagerProxy::Get()->UnRegistManager(this);
+	UManagerProxy::Get()->UnRegisterManager(this);
 	OnManagerDeinitialized();
 }
 
 void FCoreInternalManager::OnManagerInitialized()
 {
-	DLOG(DLogManager, Log, TEXT("On Manager Initialized : %s"), *GetOwner()->GetName());
+	DLOG(DLogManager, Log, TEXT("On Manager Initialized : %s"), *GetManagerOwner()->GetName());
 }
 
 void FCoreInternalManager::OnManagerDeinitialized()
 {
-	DLOG(DLogManager, Log, TEXT("On Manager Deinitialized : %s"), *GetOwner()->GetName());
+	DLOG(DLogManager, Log, TEXT("On Manager Deinitialized : %s"), *GetManagerOwner()->GetName());
 }
 
 void FCoreInternalManager::OnWorldMatchStarting(UWorld* InWorld)
 {
-	DLOG(DLogManager, Log, TEXT("On Manager Match Starting : %s"), *GetOwner()->GetName());
+	DLOG(DLogManager, Log, TEXT("On Manager Match Starting : %s"), *GetManagerOwner()->GetName());
 }
 
 void FCoreInternalManager::OnWorldBeginPlay(UWorld* InWorld)
 {
-	DLOG(DLogManager, Log, TEXT("On Manager Begin Play : %s"), *GetOwner()->GetName());
+	DLOG(DLogManager, Log, TEXT("On Manager Begin Play : %s"), *GetManagerOwner()->GetName());
 }
 
 void FCoreInternalManager::OnWorldEndPlay(UWorld* InWorld)
 {
-	DLOG(DLogManager, Log, TEXT("On Manager End Play : %s"), *GetOwner()->GetName());
+	DLOG(DLogManager, Log, TEXT("On Manager End Play : %s"), *GetManagerOwner()->GetName());
 }
 
-UObject* FCoreInternalManager::GetOwner() const
+UObject* FCoreInternalManager::GetManagerOwner() const
 {
 	return Owner;
 }

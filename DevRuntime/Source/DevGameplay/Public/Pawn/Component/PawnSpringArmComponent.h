@@ -20,7 +20,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float SpringArmLag = 5.f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY()
+	bool bEnableReassessmentSpringArmLength = true;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditCondition = bEnableReassessmentSpringArmLength))
 	float ReassessmentSpringArmLength = 100.f;
 
 public:
@@ -30,10 +33,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetTargetArmLength(float InValue);
 
-	UFUNCTION(BlueprintPure)
-	bool GetIsReassessment(float InValue) const;
-
 protected:
+	bool bIsReassessmenting = false;
 	float DesiredArmLength = 0.f;
+	bool NeedReassessment() const;
 	void UpdateTargetArmLength(float DeltaTime);
 };

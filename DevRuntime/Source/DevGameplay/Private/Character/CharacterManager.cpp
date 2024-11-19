@@ -14,7 +14,7 @@ bool UCharacterManager::ShouldCreateSubsystem(UObject* Outer) const
 void UCharacterManager::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
-	RegistManager(this);
+	RegisterManager(this);
 
 	ADevCharacter::OnCharacterRegister.AddUObject(this, &UCharacterManager::RegisterCharacter);
 	ADevCharacter::OnCharacterUnRegister.AddUObject(this, &UCharacterManager::UnRegisterCharacter);
@@ -23,7 +23,7 @@ void UCharacterManager::Initialize(FSubsystemCollectionBase& Collection)
 void UCharacterManager::Deinitialize()
 {
 	Super::Deinitialize();
-	UnRegistManager();
+	UnRegisterManager();
 
 	ADevCharacter::OnCharacterRegister.RemoveAll(this);
 	ADevCharacter::OnCharacterUnRegister.RemoveAll(this);

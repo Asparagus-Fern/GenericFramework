@@ -29,6 +29,14 @@
     {
       "Name": "DevLab",
       "Enabled": true
+    },
+    {
+      "Name": "DBTween",
+      "Enabled": true
+    },
+    {
+      "Name": "Mannequins",
+      "Enabled": true
     }
   ],
   "Modules": [

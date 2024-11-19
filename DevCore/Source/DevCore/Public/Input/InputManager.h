@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Manager/CoreInternalManager.h"
+#include "Manager/TickableInternalManager.h"
 #include "InputManager.generated.h"
 
 class UPlayerInputBinding;
@@ -45,7 +45,7 @@ protected:
  * 
  */
 UCLASS()
-class DEVCORE_API UInputManager : public UWorldSubsystem, public FCoreInternalManager
+class DEVCORE_API UInputManager : public UWorldSubsystem, public FTickableInternalManager
 {
 	GENERATED_BODY()
 

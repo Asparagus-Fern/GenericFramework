@@ -7,6 +7,7 @@
 #include "ThirdPersonCharacter.generated.h"
 
 class USpringArmComponent;
+class UPawnSpringArmComponent;
 class UCameraComponent;
 
 UCLASS()
@@ -19,9 +20,21 @@ public:
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
+	/* IPawnInputMovementInterface */
+public:
+	virtual void AddLocation_Implementation(FVector2D InValue) override;
+	virtual void AddRotation_Implementation(FVector2D InValue) override;
+	virtual void AddZoom_Implementation(float InValue) override;
+	virtual void SetLocation_Implementation(FVector InValue) override;
+	virtual void SetRotation_Implementation(FRotator InValue) override;
+	virtual void SetZoom_Implementation(float InValue) override;
+	virtual FVector GetLocation_Implementation() override;
+	virtual FRotator GetRotation_Implementation() override;
+	virtual float GetZoom_Implementation() override;
+	
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	USpringArmComponent* SpringArmComponent = nullptr;
+	UPawnSpringArmComponent* SpringArmComponent = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UCameraComponent* CameraComponent = nullptr;

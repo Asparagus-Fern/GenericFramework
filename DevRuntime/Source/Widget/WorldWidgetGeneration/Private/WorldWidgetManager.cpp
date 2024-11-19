@@ -142,7 +142,7 @@ bool UWorldWidgetManager::ShouldCreateSubsystem(UObject* Outer) const
 void UWorldWidgetManager::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
-	RegistManager(this);
+	RegisterManager(this);
 
 	UScreenWidgetManager::PostHUDCreated.AddUObject(this, &UWorldWidgetManager::GenerateWorldWidgetPanel);
 	UWorldWidgetComponent::OnWorldWidgetPointBeginPlay.AddUObject(this, &UWorldWidgetManager::RegisterWorldWidgetComponent);
@@ -152,7 +152,7 @@ void UWorldWidgetManager::Initialize(FSubsystemCollectionBase& Collection)
 void UWorldWidgetManager::Deinitialize()
 {
 	Super::Deinitialize();
-	UnRegistManager();
+	UnRegisterManager();
 
 	UWorldWidgetComponent::OnWorldWidgetPointBeginPlay.RemoveAll(this);
 	UWorldWidgetComponent::OnWorldWidgetPointEndPlay.RemoveAll(this);
@@ -166,7 +166,7 @@ bool UWorldWidgetManager::DoesSupportWorldType(const EWorldType::Type WorldType)
 
 void UWorldWidgetManager::Tick(float DeltaTime)
 {
-	FCoreInternalManager::Tick(DeltaTime);
+	FTickableInternalManager::Tick(DeltaTime);
 
 	for (const auto& WorldWidgetPanel : WorldWidgetPanels)
 	{

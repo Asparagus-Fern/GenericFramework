@@ -17,7 +17,7 @@ bool UPawnManager::ShouldCreateSubsystem(UObject* Outer) const
 void UPawnManager::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
-	RegistManager(this);
+	RegisterManager(this);
 
 	ADevPawn::OnPawnRegister.AddUObject(this, &UPawnManager::RegisterPawn);
 	ADevPawn::OnPawnUnRegister.AddUObject(this, &UPawnManager::UnRegisterPawn);
@@ -26,7 +26,7 @@ void UPawnManager::Initialize(FSubsystemCollectionBase& Collection)
 void UPawnManager::Deinitialize()
 {
 	Super::Deinitialize();
-	UnRegistManager();
+	UnRegisterManager();
 
 	ADevPawn::OnPawnRegister.RemoveAll(this);
 	ADevPawn::OnPawnUnRegister.RemoveAll(this);

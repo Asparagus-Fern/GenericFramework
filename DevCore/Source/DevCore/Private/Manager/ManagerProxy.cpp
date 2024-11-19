@@ -21,16 +21,6 @@ UManagerProxy* UManagerProxy::InitializeManagerProxy()
 	return Instance;
 }
 
-void UManagerProxy::DeinitializeManagerProxy()
-{
-	if (IsValid(Instance))
-	{
-		Instance->DeinitializeInternal();
-		Instance->RemoveFromRoot();
-		Instance->MarkAsGarbage();
-	}
-}
-
 UManagerProxy* UManagerProxy::Get()
 {
 	if (!Instance)
@@ -42,7 +32,7 @@ UManagerProxy* UManagerProxy::Get()
 	return Instance;
 }
 
-void UManagerProxy::RegistManager(FCoreInternalManager* InManager)
+void UManagerProxy::RegisterManager(FCoreInternalManager* InManager)
 {
 	if (!InManager)
 	{
@@ -56,10 +46,10 @@ void UManagerProxy::RegistManager(FCoreInternalManager* InManager)
 		return;
 	}
 
-	ManagerMapping.Add(InManager);
+	ManagerMapping.Add(InManager->ManagerID, InManager);
 }
 
-void UManagerProxy::UnRegistManager(FCoreInternalManager* InManager)
+void UManagerProxy::UnRegisterManager(FCoreInternalManager* InManager)
 {
 	if (!InManager)
 	{
@@ -67,22 +57,22 @@ void UManagerProxy::UnRegistManager(FCoreInternalManager* InManager)
 		return;
 	}
 
-	if (ManagerMapping.Contains(InManager))
+	if (ManagerMapping.Contains(InManager->ManagerID))
 	{
-		ManagerMapping.Remove(InManager);
+		ManagerMapping.Remove(InManager->ManagerID);
 	}
 }
 
 bool UManagerProxy::IsManagerExist(const FCoreInternalManager* InManager)
 {
-	return IsManagerExist(InManager->GetOwner()->GetClass());
+	return IsManagerExist(InManager->ManagerID);
 }
 
-bool UManagerProxy::IsManagerExist(TSubclassOf<UObject> InClass)
+bool UManagerProxy::IsManagerExist(FGuid InManagerID)
 {
 	for (const auto& Manager : ManagerMapping)
 	{
-		if (Manager->GetOwner()->GetClass() == InClass)
+		if (Manager.Key == InManagerID)
 		{
 			return true;
 		}
@@ -101,11 +91,6 @@ void UManagerProxy::InitializeInternal()
 	bIsInitialize = true;
 	FWorldDelegates::OnPostWorldCreation.AddUObject(this, &UManagerProxy::HandleOnWorldCreation);
 	FWorldDelegates::OnWorldBeginTearDown.AddUObject(this, &UManagerProxy::HandleOnWorldBeginTearDown);
-}
-
-void UManagerProxy::DeinitializeInternal()
-{
-	bIsInitialize = false;
 }
 
 void UManagerProxy::HandleOnWorldCreation(UWorld* InWorld)
@@ -134,7 +119,7 @@ void UManagerProxy::HandleOnWorldBeginPlay(UWorld* InWorld)
 
 	for (const auto& Manager : ManagerMapping)
 	{
-		Manager->OnWorldBeginPlay(InWorld);
+		Manager.Value->OnWorldBeginPlay(InWorld);
 	}
 }
 
@@ -148,7 +133,7 @@ void UManagerProxy::HandleOnWorldMatchStarting(UWorld* InWorld)
 
 	for (const auto& Manager : ManagerMapping)
 	{
-		Manager->OnWorldMatchStarting(InWorld);
+		Manager.Value->OnWorldMatchStarting(InWorld);
 	}
 }
 
@@ -156,6 +141,6 @@ void UManagerProxy::HandleOnWorldEndPlay(UWorld* InWorld)
 {
 	for (const auto& Manager : ManagerMapping)
 	{
-		Manager->OnWorldEndPlay(InWorld);
+		Manager.Value->OnWorldEndPlay(InWorld);
 	}
 }

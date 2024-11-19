@@ -16,19 +16,18 @@ ADevCharacter::ADevCharacter()
 	CharacterName = "DevCharacter";
 
 	InputMovementComponent = CreateDefaultSubobject<UPawnInputMovementComponent>("InputMovementComponent");
+	LockStateComponent = CreateDefaultSubobject<UPawnLockStateComponent>("LockStateComponent");
 }
 
 void ADevCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-
 	OnCharacterRegister.Broadcast(this);
 }
 
 void ADevCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	OnCharacterUnRegister.Broadcast(this);
-
 	Super::EndPlay(EndPlayReason);
 }
 
@@ -59,45 +58,111 @@ AAIController* ADevCharacter::GetAIController_Implementation()
 
 void ADevCharacter::AddLocation_Implementation(FVector2D InValue)
 {
-	AddMovementInput(UKismetMathLibrary::GetRightVector(FRotator(0.f, GetControlRotation().Yaw, GetControlRotation().Roll)), InValue.X);
-	AddMovementInput(UKismetMathLibrary::GetForwardVector(FRotator(0.f, GetControlRotation().Yaw, 0.f)), InValue.Y);
+	IPawnInputMovementInterface::Execute_AddLocation(InputMovementComponent, InValue);
 }
 
 void ADevCharacter::AddRotation_Implementation(FVector2D InValue)
 {
-	AddControllerYawInput(InValue.X);
-	AddControllerPitchInput(InValue.Y);
+	IPawnInputMovementInterface::Execute_AddRotation(InputMovementComponent, InValue);
 }
 
 void ADevCharacter::AddZoom_Implementation(float InValue)
 {
+	IPawnInputMovementInterface::Execute_AddZoom(InputMovementComponent, InValue);
 }
 
 void ADevCharacter::SetLocation_Implementation(FVector InValue)
 {
-	SetActorLocation(InValue);
+	IPawnInputMovementInterface::Execute_SetLocation(InputMovementComponent, InValue);
 }
 
 void ADevCharacter::SetRotation_Implementation(FRotator InValue)
 {
-	SetActorRotation(InValue);
+	IPawnInputMovementInterface::Execute_SetRotation(InputMovementComponent, InValue);
 }
 
 void ADevCharacter::SetZoom_Implementation(float InValue)
 {
+	IPawnInputMovementInterface::Execute_SetZoom(InputMovementComponent, InValue);
 }
 
 FVector ADevCharacter::GetLocation_Implementation()
 {
-	return GetActorLocation();
+	return IPawnInputMovementInterface::Execute_GetLocation(InputMovementComponent);
 }
 
 FRotator ADevCharacter::GetRotation_Implementation()
 {
-	return GetActorRotation();
+	return IPawnInputMovementInterface::Execute_GetRotation(InputMovementComponent);
 }
 
 float ADevCharacter::GetZoom_Implementation()
 {
-	return -1.f;
+	return IPawnInputMovementInterface::Execute_GetZoom(InputMovementComponent);
+}
+
+float ADevCharacter::GetZoomSpeedRate_Implementation()
+{
+	return IPawnInputMovementInterface::Execute_GetZoomSpeedRate(InputMovementComponent);
+}
+
+FPawnLockState ADevCharacter::GetPawnLockState_Implementation()
+{
+	return IPawnLockStateInterface::Execute_GetPawnLockState(LockStateComponent);
+}
+
+
+void ADevCharacter::SetPawnLockState_Implementation(const FPawnLockState& InPawnLockState)
+{
+	IPawnLockStateInterface::Execute_SetPawnLockState(LockStateComponent, InPawnLockState);
+}
+
+bool ADevCharacter::CanMove_Implementation(const FVector& TargetLocation) const
+{
+	return IPawnLockStateInterface::Execute_CanMove(LockStateComponent, TargetLocation);
+}
+
+bool ADevCharacter::CanTurn_Implementation(const FRotator& TargetRotation) const
+{
+	return IPawnLockStateInterface::Execute_CanTurn(LockStateComponent, TargetRotation);
+}
+
+bool ADevCharacter::CanZoom_Implementation(float TargetSpringArmLength) const
+{
+	return IPawnLockStateInterface::Execute_CanZoom(LockStateComponent, TargetSpringArmLength);
+}
+
+void ADevCharacter::SetIsFullyLock_Implementation(bool InFullyLock)
+{
+	IPawnLockStateInterface::Execute_SetIsFullyLock(LockStateComponent, InFullyLock);
+}
+
+void ADevCharacter::SetIsLockLocation_Implementation(bool InLockLocation)
+{
+	IPawnLockStateInterface::Execute_SetIsLockLocation(LockStateComponent, InLockLocation);
+}
+
+void ADevCharacter::SetIsLockRotation_Implementation(bool InLockRotation)
+{
+	IPawnLockStateInterface::Execute_SetIsLockRotation(LockStateComponent, InLockRotation);
+}
+
+void ADevCharacter::SetIsLockSpringArm_Implementation(bool InLockSpringArm)
+{
+	IPawnLockStateInterface::Execute_SetIsLockSpringArm(LockStateComponent, InLockSpringArm);
+}
+
+FVector ADevCharacter::GetLimitLocation_Implementation(const FVector& TargetLocation) const
+{
+	return IPawnLockStateInterface::Execute_GetLimitLocation(LockStateComponent, TargetLocation);
+}
+
+FRotator ADevCharacter::GetLimitRotation_Implementation(const FRotator& TargetRotation) const
+{
+	return IPawnLockStateInterface::Execute_GetLimitRotation(LockStateComponent, TargetRotation);
+}
+
+float ADevCharacter::GetLimitSpringArmLength_Implementation(float TargetSpringArmLength) const
+{
+	return IPawnLockStateInterface::Execute_GetLimitSpringArmLength(LockStateComponent, TargetSpringArmLength);
 }

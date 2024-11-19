@@ -45,9 +45,19 @@ void UPawnSpringArmComponent::AddTargetArmLength(const float InValue)
 	const float PitchRate = FMath::GetMappedRangeValueClamped(FVector2D(0.f, 90.f), FVector2D(0.8f, 1.2f), FMath::Abs(Rotation.Pitch));
 	DesiredArmLength += (FMath::Abs(FMath::Sin(UE_DOUBLE_PI / (180.0) * Rotation.Pitch)) * PitchRate * (TargetArmLength * 0.2f) * ZoomSpeedRate * InValue);
 
+	if (!bIsReassessmenting && NeedReassessment())
+	{
+		bIsReassessmenting = IPawnInputMovementInterface::Execute_ReassessmentTargetArmLength(GetOwner());
+	}
+
 	if (GetOwner()->GetClass()->ImplementsInterface(UPawnLockStateInterface::StaticClass()))
 	{
 		DesiredArmLength = IPawnLockStateInterface::Execute_GetLimitSpringArmLength(GetOwner(), DesiredArmLength);
+	}
+
+	if (bIsReassessmenting && !NeedReassessment())
+	{
+		bIsReassessmenting = false;
 	}
 }
 
@@ -57,9 +67,9 @@ void UPawnSpringArmComponent::SetTargetArmLength(const float InValue)
 	UpdateDesiredArmLocation(false, false, false, 0.f);
 }
 
-bool UPawnSpringArmComponent::GetIsReassessment(float InValue) const
+bool UPawnSpringArmComponent::NeedReassessment() const
 {
-	return DesiredArmLength + InValue < ReassessmentSpringArmLength;
+	return DesiredArmLength < ReassessmentSpringArmLength && bEnableReassessmentSpringArmLength;
 }
 
 void UPawnSpringArmComponent::UpdateTargetArmLength(float DeltaTime)

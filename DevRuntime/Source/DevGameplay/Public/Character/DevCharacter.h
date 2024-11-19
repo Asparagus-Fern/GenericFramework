@@ -9,7 +9,7 @@
 #include "DevCharacter.generated.h"
 
 UCLASS()
-class DEVGAMEPLAY_API ADevCharacter : public ACharacter, public IPawnInterface, public IPawnInputMovementInterface
+class DEVGAMEPLAY_API ADevCharacter : public ACharacter, public IPawnInterface, public IPawnInputMovementInterface, public IPawnLockStateInterface
 {
 	GENERATED_BODY()
 
@@ -42,11 +42,33 @@ public:
 	virtual FVector GetLocation_Implementation() override;
 	virtual FRotator GetRotation_Implementation() override;
 	virtual float GetZoom_Implementation() override;
+	virtual float GetZoomSpeedRate_Implementation() override;
 
+	/* IPawnLockStateInterface */
+public:
+	virtual FPawnLockState GetPawnLockState_Implementation() override;
+	virtual void SetPawnLockState_Implementation(const FPawnLockState& InPawnLockState) override;
+
+	virtual bool CanMove_Implementation(const FVector& TargetLocation) const override;
+	virtual bool CanTurn_Implementation(const FRotator& TargetRotation) const override;
+	virtual bool CanZoom_Implementation(float TargetSpringArmLength) const override;
+
+	virtual void SetIsFullyLock_Implementation(bool InFullyLock) override;
+	virtual void SetIsLockLocation_Implementation(bool InLockLocation) override;
+	virtual void SetIsLockRotation_Implementation(bool InLockRotation) override;
+	virtual void SetIsLockSpringArm_Implementation(bool InLockSpringArm) override;
+
+	virtual FVector GetLimitLocation_Implementation(const FVector& TargetLocation) const override;
+	virtual FRotator GetLimitRotation_Implementation(const FRotator& TargetRotation) const override;
+	virtual float GetLimitSpringArmLength_Implementation(float TargetSpringArmLength) const override;
+	
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FName CharacterName;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	UPawnInputMovementComponent* InputMovementComponent;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UPawnLockStateComponent* LockStateComponent = nullptr;
 };
