@@ -22,7 +22,6 @@ void UPickableDetectionComponent::BeginPlay()
 
 		if (UBPFunctions_Gameplay::GetIsPlayerPossessPawn(OwnerPawn))
 		{
-			DPRINT(Log, TEXT("Is Possess"))
 		}
 	}
 }

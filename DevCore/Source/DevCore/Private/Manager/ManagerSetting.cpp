@@ -24,7 +24,7 @@ FName UManagerSetting::GetSectionName() const
 
 bool UManagerSetting::GetEnableManager() const
 {
-	return bEnableManager && UGlobalManagerSetting::Get()->bEnableSubsystem;
+	return bEnableManager && UGlobalManagerSetting::Get()->bEnableAllManager;
 }
 
 #undef LOCTEXT_NAMESPACE

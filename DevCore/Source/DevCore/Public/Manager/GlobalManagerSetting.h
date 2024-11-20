@@ -21,5 +21,5 @@ public:
 
 public:
 	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly)
-	bool bEnableSubsystem = true;
+	bool bEnableAllManager = true;
 };
