@@ -23,7 +23,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	static void UnRegisterWorldWidgetPoint(AWorldWidgetPoint* WorldWidgetPoint);
-	
+
 	UFUNCTION(BlueprintCallable)
 	static void RegisterWorldWidgetComponent(UWorldWidgetComponent* WorldWidgetComponent);
 
