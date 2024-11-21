@@ -10,7 +10,7 @@ public class GISUtilities : ModuleRules
 			new string[]
 			{
 				"Core",
-				"DevCore"
+				"DevCore",
 			}
 		);
 
@@ -20,7 +20,11 @@ public class GISUtilities : ModuleRules
 				"CoreUObject",
 				"Engine",
 				"Slate",
-				"SlateCore"
+				"SlateCore",
+
+				"GeoReferencing",
+				"gdal",
+				"iGdalTpl"
 			}
 		);
 	}
