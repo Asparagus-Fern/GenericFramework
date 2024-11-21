@@ -10,7 +10,7 @@ void FiGdalTplModule::StartupModule()
 	// This code will execute after your module is loaded into memory; the exact timing is specified in the .uplugin file per-module
 
 	// Get the base directory of this plugin
-	FString BaseDir = IPluginManager::Get().FindPlugin("iAnalyseThirdPartyLib")->GetBaseDir();
+	FString BaseDir = IPluginManager::Get().FindPlugin("GisThirdParty")->GetBaseDir();
 
 	// Add on the relative location of the third party dll and load it
 	FString GeosLibraryPath = FPaths::Combine(*BaseDir, TEXT("Source/ThirdParty/gdal/lib/geos.dll"));

@@ -29,10 +29,10 @@ class GISUTILITIES_API UBPFunctions_GISParse : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
 
-public:
+/*public:
 	UFUNCTION(BlueprintCallable)
 	static bool ParseSHPAsPoint(AGeoReferencingSystem* MyGeoReferencing, const FString& SHPPath, TArray<FVector>& PointCoordinates);
 
 	UFUNCTION(BlueprintCallable)
-	static bool ParseSHPAsLine(AGeoReferencingSystem* MyGeoReferencing, const FString& SHPPath, TArray<FLineCoordinate>& LineCoordinates);
+	static bool ParseSHPAsLine(AGeoReferencingSystem* MyGeoReferencing, const FString& SHPPath, TArray<FLineCoordinate>& LineCoordinates);*/
 };

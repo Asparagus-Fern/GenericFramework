@@ -10,7 +10,6 @@ public class GISUtilities : ModuleRules
 			new string[]
 			{
 				"Core",
-				"DevCore",
 			}
 		);
 
@@ -22,9 +21,8 @@ public class GISUtilities : ModuleRules
 				"Slate",
 				"SlateCore",
 
-				"GeoReferencing",
-				"gdal",
-				"iGdalTpl"
+				// "gdal",
+				// "GeoReferencing",
 			}
 		);
 	}

@@ -1,6 +1,8 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
-#include "GeographicCoordinates.h"
+#include "BPFunctions_GISParse.h"
+
+/*#include "GeographicCoordinates.h"
 
 #include "Windows/MinWindows.h"
 #include "Windows/AllowWindowsPlatformTypes.h"
@@ -11,10 +13,7 @@
 
 #include "Windows/PostWindowsApi.h"
 
-#include "BPFunctions_GISParse.h"
-
 #include "GeoReferencingSystem.h"
-#include "Debug/DebugType.h"
 
 FVector ConvertToEngineLocation(AGeoReferencingSystem* GeoReferencingSystem, OGRPoint* InPoint)
 {
@@ -201,4 +200,4 @@ bool UBPFunctions_GISParse::ParseSHPAsLine(AGeoReferencingSystem* MyGeoReferenci
 	GDALClose(DataSource);
 
 	return true;
-}
+}*/
