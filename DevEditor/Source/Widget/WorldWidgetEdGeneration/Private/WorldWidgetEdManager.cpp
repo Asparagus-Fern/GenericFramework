@@ -230,6 +230,11 @@ void UWorldWidgetEdManager::Initialize(FSubsystemCollectionBase& Collection)
 	LevelActorDeletedHandle = GEditor->OnLevelActorDeleted().AddUObject(this, &UWorldWidgetEdManager::OnLevelActorDeleted);
 	BlueprintCompiledHandle = GEditor->OnBlueprintCompiled().AddUObject(this, &UWorldWidgetEdManager::OnBlueprintCompiled);
 
+	if (UWorld* World = GetWorld())
+	{
+		LevelsChangedHandle = World->OnLevelsChanged().AddUObject(this, &UWorldWidgetEdManager::OnLevelsChanged);
+	}
+
 	WorldWidgetComponentRegisterHandle = UWorldWidgetComponent::OnWorldWidgetComponentRegister.AddUObject(this, &UWorldWidgetEdManager::OnWorldWidgetComponentRegister);
 
 	GenerateWorldWidgetPanel();
@@ -254,6 +259,9 @@ void UWorldWidgetEdManager::Deinitialize()
 	ActorsMovedHandle.Reset();
 	LevelActorDeletedHandle.Reset();
 	BlueprintCompiledHandle.Reset();
+
+	LevelsChangedHandle.Reset();
+
 	WorldWidgetComponentRegisterHandle.Reset();
 }
 
@@ -301,6 +309,11 @@ void UWorldWidgetEdManager::OnLevelActorDeleted(AActor* InActor)
 }
 
 void UWorldWidgetEdManager::OnBlueprintCompiled()
+{
+	RefreshWorldWidgetPanel();
+}
+
+void UWorldWidgetEdManager::OnLevelsChanged()
 {
 	RefreshWorldWidgetPanel();
 }

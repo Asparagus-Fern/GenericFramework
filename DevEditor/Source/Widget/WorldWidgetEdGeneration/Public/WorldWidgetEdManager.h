@@ -95,6 +95,9 @@ protected:
 	FDelegateHandle BlueprintCompiledHandle;
 	void OnBlueprintCompiled();
 
+	FDelegateHandle LevelsChangedHandle;
+	void OnLevelsChanged();
+	
 	/* WorldWidgetComponent注册时 */
 	FDelegateHandle WorldWidgetComponentRegisterHandle;
 	void OnWorldWidgetComponentRegister(UWorldWidgetComponent* WorldWidgetComponent);
