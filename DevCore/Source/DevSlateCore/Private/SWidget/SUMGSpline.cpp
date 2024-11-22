@@ -14,11 +14,43 @@ void SUMGSpline::Construct(const FArguments& InArgs)
 	SplineDebugInfo = InArgs._SplineDebugInfo;
 }
 
-FVector2D SUMGSpline::ComputeDesiredSize(float) const
+FVector2D SUMGSpline::ComputeDesiredSize(float LayoutScaleMultiplier) const
 {
-	return FVector2D(200.0f, 200.0f);
-}
+	TArray<FUMGSplinePoint> Points = GetUMGSplineInfo().Points;
 
+	if (Points.IsEmpty())
+	{
+		return FVector2D::ZeroVector;
+	}
+
+	FVector2D Min = Points[0].Location;
+	FVector2D Max = Points[0].Location;
+
+	for (const auto& Point : GetUMGSplineInfo().Points)
+	{
+		if (Point.Location.X < Min.X)
+		{
+			Min.X = Point.Location.X;
+		}
+
+		if (Point.Location.Y < Min.Y)
+		{
+			Min.Y = Point.Location.Y;
+		}
+
+		if (Point.Location.X > Max.X)
+		{
+			Max.X = Point.Location.X;
+		}
+
+		if (Point.Location.Y > Max.Y)
+		{
+			Max.Y = Point.Location.Y;
+		}
+	}
+
+	return Max - Min;
+}
 
 int32 SUMGSpline::OnPaint(const FPaintArgs& Args, const FGeometry& AllottedGeometry, const FSlateRect& MyCullingRect, FSlateWindowElementList& OutDrawElements, int32 LayerId, const FWidgetStyle& InWidgetStyle, bool bParentEnabled) const
 {

@@ -26,41 +26,52 @@ void UCBE_HandleActor::ExecuteButtonEvent_Implementation()
 {
 	Super::ExecuteButtonEvent_Implementation();
 
-	TArray<AActor*> Actors = UManagerProxy::Get()->GetManager<USceneManager>()->FindActors(FindActorHandle);
-	for (const auto& HandleActorMethod : HandleActor.HandleActorMethods)
+	if (USceneManager* SceneManager = UManagerProxy::Get()->GetManager<USceneManager>())
 	{
-		switch (HandleActorMethod)
+		TArray<AActor*> Actors = SceneManager->FindActors(FindActorHandle, true);
+
+		for (const auto& HandleActorMethod : HandleActor.HandleActorMethods)
 		{
-		case EHandleActorMethod::None:
-			break;
-
-		case EHandleActorMethod::HandleActorLocation:
-			for (const auto& Actor : Actors)
+			switch (HandleActorMethod)
 			{
-				Actor->SetActorLocation(HandleActor.NewActorLocation);
-			}
-			break;
+			case EHandleActorMethod::None:
+				break;
 
-		case EHandleActorMethod::HandleActorRotation:
-			for (const auto& Actor : Actors)
-			{
-				Actor->SetActorRotation(HandleActor.NewActorRotation);
-			}
-			break;
+			case EHandleActorMethod::HandleActorLocation:
+				for (const auto& Actor : Actors)
+				{
+					Actor->SetActorLocation(HandleActor.NewActorLocation);
+				}
+				break;
 
-		case EHandleActorMethod::HandleActorScale:
-			for (const auto& Actor : Actors)
-			{
-				Actor->SetActorScale3D(HandleActor.NewActorScale);
-			}
-			break;
+			case EHandleActorMethod::HandleActorRotation:
+				for (const auto& Actor : Actors)
+				{
+					Actor->SetActorRotation(HandleActor.NewActorRotation);
+				}
+				break;
 
-		case EHandleActorMethod::HandleActorHiddenInGame:
-			for (const auto& Actor : Actors)
-			{
-				Actor->SetActorHiddenInGame(HandleActor.NewActorHiddenInGame);
+			case EHandleActorMethod::HandleActorScale:
+				for (const auto& Actor : Actors)
+				{
+					Actor->SetActorScale3D(HandleActor.NewActorScale);
+				}
+				break;
+
+			case EHandleActorMethod::HandleActorHiddenInGame:
+				for (const auto& Actor : Actors)
+				{
+					Actor->SetActorHiddenInGame(HandleActor.NewActorHiddenInGame);
+				}
+				break;
+
+			case EHandleActorMethod::HandleActorOffset:
+				for (const auto& Actor : Actors)
+				{
+					Actor->SetActorLocation(Actor->GetActorLocation() + HandleActor.NewActorOffset);
+				}
+				break;
 			}
-			break;
 		}
 	}
 }

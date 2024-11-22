@@ -143,11 +143,8 @@ UGameplayTagSlot* UBPFunctions_Widget::GetSlot(const FGameplayTag InSlotTag)
 	return nullptr;
 }
 
-UUserWidgetBase* UBPFunctions_Widget::GetSlotWidget(FGameplayTag InSlotTag, TSubclassOf<UUserWidgetBase> InClass)
+UUserWidgetBase* UBPFunctions_Widget::GetSlotWidget(FGameplayTag InSlotTag)
 {
-	ensure(InClass);
-
-
 	if (UScreenWidgetManager* ScreenWidgetManager = UManagerProxy::Get()->GetManager<UScreenWidgetManager>())
 	{
 		return ScreenWidgetManager->GetSlotWidget(InSlotTag);

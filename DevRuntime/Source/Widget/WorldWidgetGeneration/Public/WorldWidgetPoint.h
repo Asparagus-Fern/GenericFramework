@@ -12,7 +12,7 @@ class UWorldWidgetComponent;
 class UUserWidgetBase;
 
 
-UCLASS(HideCategories=(Object,Actor,Collision,Physics,Networking,Input,LevelInstance,Cooking,HLOD,Replication))
+UCLASS(HideCategories=(Object,Collision,Physics,Networking,Input,LevelInstance,Cooking,HLOD,Replication))
 class WORLDWIDGETGENERATION_API AWorldWidgetPoint : public AActor
 {
 	GENERATED_BODY()

@@ -47,6 +47,26 @@ void UUserWidgetBase::NativeConstruct()
 	TakeWidget()->SlatePrepass();
 }
 
+void UUserWidgetBase::SetActiveState_Implementation(bool InActiveState)
+{
+	IProcedureInterface::SetActiveState_Implementation(InActiveState);
+	SetIsActived(InActiveState);
+}
+
+void UUserWidgetBase::SetIsActived(const bool InActived)
+{
+	IProcedureInterface::SetIsActived(InActived);
+
+	if (Execute_HasActivationAnimation(this, InActived))
+	{
+		Execute_SetActiveAnimation(this, InActived ? Execute_GetActiveAnimation(this) : Execute_GetInactiveAnimation(this));
+	}
+	else
+	{
+		SetVisibility(InActived ? ESlateVisibility::Visible : ESlateVisibility::Collapsed);
+	}
+}
+
 bool UUserWidgetBase::HasActivationAnimation_Implementation(const bool InIsActive) const
 {
 	return InIsActive ? IsValid(ActiveAnimation) : IsValid(InactiveAnimation);

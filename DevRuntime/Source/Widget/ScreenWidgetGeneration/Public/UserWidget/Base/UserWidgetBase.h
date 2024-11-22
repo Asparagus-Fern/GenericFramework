@@ -19,9 +19,7 @@ class UWidgetAnimationEvent;
  * 
  */
 UCLASS(Abstract)
-class SCREENWIDGETGENERATION_API UUserWidgetBase : public UUserWidget
-                                                   , public IWidgetAnimationInterface
-                                                   , public IProcedureInterface
+class SCREENWIDGETGENERATION_API UUserWidgetBase : public UUserWidget, public IWidgetAnimationInterface, public IProcedureInterface
 {
 	GENERATED_UCLASS_BODY()
 
@@ -46,6 +44,10 @@ public:
 	/* 表示Widget完全从屏幕移除，即将被垃圾回收 */
 	virtual void NativeOnDestroy() override { IProcedureInterface::NativeOnDestroy(); }
 
+	virtual void SetActiveState_Implementation(bool InActiveState) override;
+	
+	virtual void SetIsActived(const bool InActived) override;
+	
 	/* IWidgetAnimationInterface */
 public:
 	virtual bool HasActivationAnimation_Implementation(bool InIsActive) const override;

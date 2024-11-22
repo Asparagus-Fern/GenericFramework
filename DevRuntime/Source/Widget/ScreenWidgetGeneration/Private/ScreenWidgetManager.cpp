@@ -368,7 +368,6 @@ void UScreenWidgetManager::SetGameHUDActiveState(const bool IsActived)
 
 void UScreenWidgetManager::SetGameHUDActiveState(UGameHUD* GameHUD, const bool IsActived)
 {
-	GameHUD->PlayActivationAnimation(IsActived);
 	GameHUD->SetIsActived(IsActived);
 
 	OnHUDActiveStateChanged.Broadcast(GameHUD, IsActived);

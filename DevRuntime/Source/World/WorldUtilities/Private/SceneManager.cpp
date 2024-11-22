@@ -5,6 +5,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "SceneManagerSetting.h"
 #include "Compass/CompassActor.h"
+#include "Debug/DebugType.h"
 #include "MapScale/MapScaleActor.h"
 
 bool USceneManager::ShouldCreateSubsystem(UObject* Outer) const
@@ -81,12 +82,12 @@ TArray<AActor*> USceneManager::FindActors(const FFindActorHandle& FindActorHandl
 	}
 	else
 	{
-		FFoundActorHandle NewFoundActorHandle;
-		NewFoundActorHandle.FindActorHandle = FindActorHandle;
-		NewFoundActorHandle.FoundActors = FindActorInternal(FindActorHandle);
+		FFoundActorHandle* NewFoundActorHandle = new FFoundActorHandle();
+		NewFoundActorHandle->FindActorHandle = FindActorHandle;
+		NewFoundActorHandle->FoundActors = FindActorInternal(FindActorHandle);
 
-		FoundActorHandles.AddUnique(NewFoundActorHandle);
-		return FoundActorHandle->FoundActors;
+		FoundActorHandles.Add(*NewFoundActorHandle);
+		return NewFoundActorHandle->FoundActors;
 	}
 }
 

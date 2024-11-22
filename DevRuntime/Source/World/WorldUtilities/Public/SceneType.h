@@ -167,7 +167,9 @@ enum class EHandleActorMethod : uint8
 	HandleActorLocation,
 	HandleActorRotation,
 	HandleActorScale,
-	HandleActorHiddenInGame
+	HandleActorHiddenInGame,
+
+	HandleActorOffset,
 };
 
 /**
@@ -196,4 +198,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	bool NewActorHiddenInGame = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FVector NewActorOffset = FVector::ZeroVector;
 };

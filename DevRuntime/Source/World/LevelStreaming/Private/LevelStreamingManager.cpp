@@ -42,6 +42,7 @@ void ULevelStreamingManager::LoadLevel(const TSoftObjectPtr<UWorld>& Level, cons
 	}
 
 	const ULevelStreaming* LevelStreaming = GetLevelStreaming(Level);
+	
 	if (!IsValid(LevelStreaming))
 	{
 		DLOG(DLogWorld, Warning, TEXT("Level Streaming Is Not Found"));

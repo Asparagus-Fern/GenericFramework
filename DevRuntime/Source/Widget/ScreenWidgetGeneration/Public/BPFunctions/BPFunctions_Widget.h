@@ -61,7 +61,7 @@ public:
 	static void SetGameHUDActiveState(UGameHUD* GameHUD, bool IsVisisble);
 
 	/* 通过Tag查找对应的HUD并设置激活状态*/
-	UFUNCTION(BlueprintCallable, Category="BPFunctions_Widget|HUD")
+	UFUNCTION(BlueprintCallable, meta=(GameplayTagFilter="UI.HUD"), Category="BPFunctions_Widget|HUD")
 	static void SetGameHUDActiveStateByTag(FGameplayTag InTag, bool IsVisisble);
 
 	/* UGameplayTagSlot */
@@ -79,7 +79,7 @@ public:
 	static UGameplayTagSlot* GetSlot(FGameplayTag InSlotTag);
 
 	UFUNCTION(BlueprintPure, meta=(GameplayTagFilter="UI.HUD", DeterminesOutputType = "InClass"), Category="BPFunctions_Widget|Slot")
-	static UUserWidgetBase* GetSlotWidget(FGameplayTag InSlotTag, TSubclassOf<UUserWidgetBase> InClass);
+	static UUserWidgetBase* GetSlotWidget(FGameplayTag InSlotTag);
 
 	/* UserWidgetBase */
 public:
