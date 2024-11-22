@@ -23,7 +23,7 @@ public class DevSlateCore : ModuleRules
 				"Projects",
 				"UMG",
 				"CommonUI",
-				"GameplayTags"
+				"GameplayTags",
 			}
 		);
 	}

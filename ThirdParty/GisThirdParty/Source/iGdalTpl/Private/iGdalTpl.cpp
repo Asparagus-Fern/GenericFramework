@@ -26,10 +26,6 @@ void FiGdalTplModule::StartupModule()
 	Tiff_LibraryHandle = FPlatformProcess::GetDllHandle(*Proj_LibraryPath);
     
 	Gdal_LibraryHandle = FPlatformProcess::GetDllHandle(*Gdal_LibraryPath);
-    
-	if (!Gdal_LibraryHandle){
-		FMessageDialog::Open(EAppMsgType::Ok, LOCTEXT("GDALLibrary", "Failed to load GDAL third party library"));
-	}
 }
 
 void FiGdalTplModule::ShutdownModule()

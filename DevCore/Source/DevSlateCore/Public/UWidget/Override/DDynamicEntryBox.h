@@ -10,6 +10,66 @@
 /**
  * 
  */
+USTRUCT(BlueprintType)
+struct FCommonRadialBoxSettings
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (ClampMin = 0, ClampMax = 360))
+	float StartingAngle;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	bool bDistributeItemsEvenly;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (EditCondition = "!bDistributeItemsEvenly", ClampMin = 0, ClampMax = 360))
+	float AngleBetweenItems;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (EditCondition = "bDistributeItemsEvenly", ClampMin = 0, ClampMax = 360))
+	float SectorCentralAngle;
+
+	FCommonRadialBoxSettings()
+		: StartingAngle(0.f)
+		  , bDistributeItemsEvenly(true)
+		  , AngleBetweenItems(0.f)
+		  , SectorCentralAngle(360.f)
+	{
+	}
+
+	FCommonRadialBoxSettings(const float InStartingAngle, const bool InDistributeItemsEvenly, const float InAngleBetweenItems, const float InSectorCentralAngle)
+		: StartingAngle(InStartingAngle)
+		  , bDistributeItemsEvenly(InDistributeItemsEvenly)
+		  , AngleBetweenItems(InAngleBetweenItems)
+		  , SectorCentralAngle(InSectorCentralAngle)
+	{
+	}
+};
+
+static FRadialBoxSettings ConvToRadialBoxSettings(FCommonRadialBoxSettings InCommonRadialBoxSettings)
+{
+	FRadialBoxSettings RadialBoxSettings;
+	RadialBoxSettings.StartingAngle = InCommonRadialBoxSettings.StartingAngle;
+	RadialBoxSettings.AngleBetweenItems = InCommonRadialBoxSettings.AngleBetweenItems;
+	RadialBoxSettings.bDistributeItemsEvenly = InCommonRadialBoxSettings.bDistributeItemsEvenly;
+	RadialBoxSettings.SectorCentralAngle = InCommonRadialBoxSettings.SectorCentralAngle;
+
+	return RadialBoxSettings;
+}
+
+static FCommonRadialBoxSettings ConvToCommonRadialBoxSettings(FRadialBoxSettings InRadialBoxSettings)
+{
+	FCommonRadialBoxSettings CommonRadialBoxSettings;
+	CommonRadialBoxSettings.StartingAngle = InRadialBoxSettings.StartingAngle;
+	CommonRadialBoxSettings.AngleBetweenItems = InRadialBoxSettings.AngleBetweenItems;
+	CommonRadialBoxSettings.bDistributeItemsEvenly = InRadialBoxSettings.bDistributeItemsEvenly;
+	CommonRadialBoxSettings.SectorCentralAngle = InRadialBoxSettings.SectorCentralAngle;
+
+	return CommonRadialBoxSettings;
+}
+
+/**
+ * 
+ */
 UCLASS()
 class DEVSLATECORE_API UDDynamicEntryBox : public UDynamicEntryBox
 {

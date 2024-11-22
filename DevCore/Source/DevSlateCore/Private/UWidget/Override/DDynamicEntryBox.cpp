@@ -9,10 +9,10 @@ void UDDynamicEntryBox::AddEntry(UUserWidget* InUserWidget)
 
 FCommonRadialBoxSettings UDDynamicEntryBox::BP_GetRadialBoxSettings() const
 {
-	return ConvertToCommonRadialBoxSettings(GetRadialBoxSettings());
+	return ConvToCommonRadialBoxSettings(GetRadialBoxSettings());
 }
 
 void UDDynamicEntryBox::BP_SetRadialBoxSettings(FCommonRadialBoxSettings InCommonRadialBoxSettings)
 {
-	SetRadialSettings(ConvertToRadialBoxSettings(InCommonRadialBoxSettings));
+	SetRadialSettings(ConvToRadialBoxSettings(InCommonRadialBoxSettings));
 }

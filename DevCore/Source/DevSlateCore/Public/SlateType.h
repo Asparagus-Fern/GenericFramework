@@ -51,16 +51,6 @@ static ECurveEaseFunction ConvertToCurveEaseFunction(ESequenceTransitionCurve Cu
 /**
  * 
  */
-UENUM(BlueprintType)
-enum class ELineType : uint8
-{
-	Line,
-	Spline,
-};
-
-/**
- * 
- */
 USTRUCT(BlueprintType)
 struct DEVSLATECORE_API FLineSegmentPoint
 {
@@ -77,66 +67,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float Length = 100.f;
 };
-
-/**
- * 
- */
-USTRUCT(BlueprintType)
-struct FCommonRadialBoxSettings
-{
-	GENERATED_BODY()
-
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (ClampMin = 0, ClampMax = 360))
-	float StartingAngle;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	bool bDistributeItemsEvenly;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (EditCondition = "!bDistributeItemsEvenly", ClampMin = 0, ClampMax = 360))
-	float AngleBetweenItems;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (EditCondition = "bDistributeItemsEvenly", ClampMin = 0, ClampMax = 360))
-	float SectorCentralAngle;
-
-	FCommonRadialBoxSettings()
-		: StartingAngle(0.f)
-		  , bDistributeItemsEvenly(true)
-		  , AngleBetweenItems(0.f)
-		  , SectorCentralAngle(360.f)
-	{
-	}
-
-	FCommonRadialBoxSettings(const float InStartingAngle, const bool InDistributeItemsEvenly, const float InAngleBetweenItems, const float InSectorCentralAngle)
-		: StartingAngle(InStartingAngle)
-		  , bDistributeItemsEvenly(InDistributeItemsEvenly)
-		  , AngleBetweenItems(InAngleBetweenItems)
-		  , SectorCentralAngle(InSectorCentralAngle)
-	{
-	}
-};
-
-static FRadialBoxSettings ConvertToRadialBoxSettings(FCommonRadialBoxSettings InCommonRadialBoxSettings)
-{
-	FRadialBoxSettings RadialBoxSettings;
-	RadialBoxSettings.StartingAngle = InCommonRadialBoxSettings.StartingAngle;
-	RadialBoxSettings.AngleBetweenItems = InCommonRadialBoxSettings.AngleBetweenItems;
-	RadialBoxSettings.bDistributeItemsEvenly = InCommonRadialBoxSettings.bDistributeItemsEvenly;
-	RadialBoxSettings.SectorCentralAngle = InCommonRadialBoxSettings.SectorCentralAngle;
-
-	return RadialBoxSettings;
-}
-
-static FCommonRadialBoxSettings ConvertToCommonRadialBoxSettings(FRadialBoxSettings InRadialBoxSettings)
-{
-	FCommonRadialBoxSettings CommonRadialBoxSettings;
-	CommonRadialBoxSettings.StartingAngle = InRadialBoxSettings.StartingAngle;
-	CommonRadialBoxSettings.AngleBetweenItems = InRadialBoxSettings.AngleBetweenItems;
-	CommonRadialBoxSettings.bDistributeItemsEvenly = InRadialBoxSettings.bDistributeItemsEvenly;
-	CommonRadialBoxSettings.SectorCentralAngle = InRadialBoxSettings.SectorCentralAngle;
-
-	return CommonRadialBoxSettings;
-}
 
 /**
  * 
@@ -255,91 +185,4 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditConditionHides, EditCondition = "BoderBrushResource == EBorderBrushResource::Texture2D"))
 	UTexture2D* Texture2D = nullptr;
-};
-
-/**
- * 
- */
-UENUM(BlueprintType)
-enum class ESimpleTextBoxType:uint8
-{
-	Horizontal,
-	Vertical,
-	HorizontalReversal,
-	VerticalReversal
-};
-
-/**
- * 列表样式
- */
-class FListViewItem
-{
-public:
-	FListViewItem() { return; }
-	virtual ~FListViewItem() { return; }
-	virtual TSharedRef<SWidget> MakeWidget() =0;
-};
-
-
-/**
- * 列表信息
- */
-class FListViewInfo
-{
-public:
-	FListViewInfo() { return; }
-	virtual ~FListViewInfo() { return; }
-};
-
-
-/**
- * 
- * @tparam ListViewInfoType 列表信息
- * @tparam ListViewItemType 列表样式
- */
-template <typename ListViewInfoType, typename ListViewItemType>
-class FListViewBase
-{
-public:
-	FListViewBase() { return; }
-	virtual ~FListViewBase() { return; }
-
-	static FListViewBase<ListViewInfoType, ListViewItemType>* New()
-	{
-		FListViewBase<ListViewInfoType, ListViewItemType>* NewListView = new FListViewBase<ListViewInfoType, ListViewItemType>;
-		return NewListView;
-	}
-
-	TSharedPtr<ListViewItemType> GetItem(TSharedRef<ListViewInfoType> InInfo)
-	{
-		return ListViewMap.FindRef(InInfo);
-	}
-
-	TArray<TSharedPtr<ListViewItemType>> GetItems()
-	{
-		TArray<TSharedPtr<ListViewItemType>> Values;
-
-		for (auto& ListView : ListViewMap)
-		{
-			Values.Add(ListView.Value);
-		}
-
-		return Values;
-	}
-
-	TSharedPtr<ListViewInfoType> GetInfo(TSharedRef<ListViewItemType> InItem)
-	{
-		return *ListViewMap.FindKey(InItem);
-	}
-
-	TArray<TSharedPtr<ListViewInfoType>> GetInfos()
-	{
-		TArray<TSharedPtr<ListViewInfoType>> Keys;
-		ListViewMap.GetKeys(Keys);
-
-		return Keys;
-	}
-
-public:
-	TMap<TSharedPtr<ListViewInfoType>, TSharedPtr<ListViewItemType>> ListViewMap;
 };

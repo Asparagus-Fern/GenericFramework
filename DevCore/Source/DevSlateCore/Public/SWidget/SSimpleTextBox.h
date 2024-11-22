@@ -9,6 +9,18 @@
 /**
  * 
  */
+UENUM(BlueprintType)
+enum class ESimpleTextBoxType:uint8
+{
+	Horizontal,
+	Vertical,
+	HorizontalReversal,
+	VerticalReversal
+};
+
+/**
+ * 
+ */
 class DEVSLATECORE_API SSimpleTextBox : public SCompoundWidget
 {
 	SLATE_DECLARE_WIDGET(SSimpleTextBox, SCompoundWidget)
