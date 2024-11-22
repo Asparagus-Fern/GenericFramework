@@ -23,7 +23,7 @@ public:
 public:
 #if WITH_EDITORONLY_DATA
 	UPROPERTY(VisibleAnywhere)
-	FString DoubleClick = "Double Click UMG To Select The Actor";
+	FString MiddleClick = "Mouse Button Middle Click UMG To Select The Actor";
 #endif
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)

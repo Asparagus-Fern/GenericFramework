@@ -10,7 +10,7 @@
  */
 class WORLDWIDGETEDGENERATION_API SWorldWidgetContainer : public SCompoundWidget
 {
-	DECLARE_DELEGATE_OneParam(FOnWorldWidgetDoubleClicked, TSharedPtr<SWorldWidgetContainer>);
+	DECLARE_DELEGATE_OneParam(FOnWorldWidgetMiddleClicked, TSharedPtr<SWorldWidgetContainer>);
 
 public:
 	SLATE_BEGIN_ARGS(SWorldWidgetContainer)
@@ -18,15 +18,15 @@ public:
 		}
 
 		SLATE_DEFAULT_SLOT(FArguments, Content)
-		SLATE_EVENT(FOnWorldWidgetDoubleClicked, OnWorldWidgetDoubleClicked)
+		SLATE_EVENT(FOnWorldWidgetMiddleClicked, OnWorldWidgetMiddleClicked)
 
 	SLATE_END_ARGS()
 
 	void Construct(const FArguments& InArgs);
 
 public:
-	virtual FReply OnMouseButtonDoubleClick(const FGeometry& InMyGeometry, const FPointerEvent& InMouseEvent) override;
+	virtual FReply OnMouseButtonDown(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent) override;
 
 protected:
-	FOnWorldWidgetDoubleClicked OnWorldWidgetDoubleClicked;
+	FOnWorldWidgetMiddleClicked OnWorldWidgetMiddleClicked;
 };

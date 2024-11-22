@@ -9,7 +9,7 @@ BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION
 
 void SWorldWidgetContainer::Construct(const FArguments& InArgs)
 {
-	OnWorldWidgetDoubleClicked = InArgs._OnWorldWidgetDoubleClicked;
+	OnWorldWidgetMiddleClicked = InArgs._OnWorldWidgetMiddleClicked;
 
 	ChildSlot
 	[
@@ -17,10 +17,14 @@ void SWorldWidgetContainer::Construct(const FArguments& InArgs)
 	];
 }
 
-FReply SWorldWidgetContainer::OnMouseButtonDoubleClick(const FGeometry& InMyGeometry, const FPointerEvent& InMouseEvent)
+FReply SWorldWidgetContainer::OnMouseButtonDown(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent)
 {
-	OnWorldWidgetDoubleClicked.ExecuteIfBound(SharedThis(this));
-	return FReply::Handled();
+	if (MouseEvent.IsMouseButtonDown(EKeys::MiddleMouseButton))
+	{
+		OnWorldWidgetMiddleClicked.ExecuteIfBound(SharedThis(this));
+	}
+	
+	return SCompoundWidget::OnMouseButtonDown(MyGeometry, MouseEvent);
 }
 
 END_SLATE_FUNCTION_BUILD_OPTIMIZATION

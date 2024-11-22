@@ -45,7 +45,7 @@ protected:
 	virtual void RemoveWorldWidgetComponent(UWorldWidgetComponent* InWorldWidgetComponent) override;
 	virtual void RefreshWorldWidgetComponent() override;
 
-	virtual void OnWorldWidgetDoubleClicked(TSharedPtr<SWorldWidgetContainer> DoubleClickedContainer);
+	virtual void OnWorldWidgetMiddleClicked(TSharedPtr<SWorldWidgetContainer> DoubleClickedContainer);
 };
 
 /**

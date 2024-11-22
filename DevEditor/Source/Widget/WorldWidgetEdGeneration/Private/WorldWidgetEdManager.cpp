@@ -131,7 +131,7 @@ void UEditorWorldWidgetPanel::AddWorldWidgetComponent(UWorldWidgetComponent* InW
 	WorldWidgets.Add(InWorldWidgetComponent, DuplicateWorldWidget);
 
 	TSharedPtr<SWorldWidgetContainer> NewContainer = SNew(SWorldWidgetContainer)
-		.OnWorldWidgetDoubleClicked_UObject(this, &UEditorWorldWidgetPanel::OnWorldWidgetDoubleClicked)
+		.OnWorldWidgetMiddleClicked_UObject(this, &UEditorWorldWidgetPanel::OnWorldWidgetMiddleClicked)
 		[
 			DuplicateWorldWidget->TakeWidget()
 		];
@@ -198,7 +198,7 @@ void UEditorWorldWidgetPanel::RefreshWorldWidgetComponent()
 	}
 }
 
-void UEditorWorldWidgetPanel::OnWorldWidgetDoubleClicked(TSharedPtr<SWorldWidgetContainer> DoubleClickedContainer)
+void UEditorWorldWidgetPanel::OnWorldWidgetMiddleClicked(TSharedPtr<SWorldWidgetContainer> DoubleClickedContainer)
 {
 	if (const UWorldWidgetComponent* WorldWidgetComponent = *WorldWidgetContainer.FindKey(DoubleClickedContainer))
 	{
