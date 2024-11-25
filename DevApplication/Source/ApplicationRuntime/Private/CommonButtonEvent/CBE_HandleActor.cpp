@@ -14,63 +14,25 @@ void UCBE_HandleActor::NativeOnCreate()
 void UCBE_HandleActor::NativeOnDestroy()
 {
 	Super::NativeOnDestroy();
-	HandleActors.Reset();
 }
 
 bool UCBE_HandleActor::CanExecuteButtonEvent_Implementation()
 {
-	return FindActorHandle.GetIsValid() && HandleActor.GetIsValid();
+	return FindActorHandle.GetIsValid() && !HandleActors.IsEmpty();
 }
 
 void UCBE_HandleActor::ExecuteButtonEvent_Implementation()
 {
 	Super::ExecuteButtonEvent_Implementation();
 
-	if (USceneManager* SceneManager = UManagerProxy::Get()->GetManager<USceneManager>())
+	if (const USceneManager* SceneManager = UManagerProxy::Get()->GetManager<USceneManager>())
 	{
-		TArray<AActor*> Actors = SceneManager->FindActors(FindActorHandle, true);
-
-		for (const auto& HandleActorMethod : HandleActor.HandleActorMethods)
+		const TArray<AActor*> Actors = SceneManager->FindActors(FindActorHandle);
+		for (const auto& HandleActor : HandleActors)
 		{
-			switch (HandleActorMethod)
+			if (HandleActor->CanExecuteHandle())
 			{
-			case EHandleActorMethod::None:
-				break;
-
-			case EHandleActorMethod::HandleActorLocation:
-				for (const auto& Actor : Actors)
-				{
-					Actor->SetActorLocation(HandleActor.NewActorLocation);
-				}
-				break;
-
-			case EHandleActorMethod::HandleActorRotation:
-				for (const auto& Actor : Actors)
-				{
-					Actor->SetActorRotation(HandleActor.NewActorRotation);
-				}
-				break;
-
-			case EHandleActorMethod::HandleActorScale:
-				for (const auto& Actor : Actors)
-				{
-					Actor->SetActorScale3D(HandleActor.NewActorScale);
-				}
-				break;
-
-			case EHandleActorMethod::HandleActorHiddenInGame:
-				for (const auto& Actor : Actors)
-				{
-					Actor->SetActorHiddenInGame(HandleActor.NewActorHiddenInGame);
-				}
-				break;
-
-			case EHandleActorMethod::HandleActorOffset:
-				for (const auto& Actor : Actors)
-				{
-					Actor->SetActorLocation(Actor->GetActorLocation() + HandleActor.NewActorOffset);
-				}
-				break;
+				HandleActor->ExecuteHandle(Actors);
 			}
 		}
 	}

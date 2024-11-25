@@ -31,7 +31,8 @@ public:
 
 	/* USceneManager */
 public:
-	TArray<AActor*> FindActors(const FFindActorHandle& FindActorHandle, bool bUpdate = false);
+	TArray<AActor*> FindActors(const FFindActorHandle& InFindActorHandle, bool bUpdate);
+	TArray<AActor*> FindActors(const FFindActorHandle& InFindActorHandle) const;
 
 	/* Compass */
 public:

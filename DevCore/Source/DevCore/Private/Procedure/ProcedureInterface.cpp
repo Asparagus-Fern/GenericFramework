@@ -10,7 +10,7 @@ void IProcedureInterface::NativeOnActived()
 	{
 		IProcedureInterface::Execute_OnActived(Object);
 		SetIsActived(true);
-		DLOG(DLogManager, Log, TEXT("On Actived : %s"), *Object->GetName());
+		DLOG(DLogProcedure, Log, TEXT("On Actived : %s"), *Object->GetName());
 	}
 }
 
@@ -20,6 +20,6 @@ void IProcedureInterface::NativeOnInactived()
 	{
 		IProcedureInterface::Execute_OnInactived(Object);
 		SetIsActived(false);
-		DLOG(DLogManager, Log, TEXT("On Inactived : %s"), *Object->GetName());
+		DLOG(DLogProcedure, Log, TEXT("On Inactived : %s"), *Object->GetName());
 	}
 }

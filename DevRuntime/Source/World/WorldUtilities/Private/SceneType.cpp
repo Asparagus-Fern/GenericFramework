@@ -13,16 +13,78 @@ bool FFindActorHandle::GetIsValid() const
 		|| (FindActorMethod == EFindActorMethod::Interface && IsValid(ActorInterface));
 }
 
-bool FHandleActor::GetIsValid() const
+bool UHandleActorLocation::CanExecuteHandle()
 {
-	TSet<EHandleActorMethod> ValidHandleActorMethods;
-	for (auto& HandleActorMethod : HandleActorMethods)
+	return bHandleActorLocation || bHandleActorLocationOffset;
+}
+
+void UHandleActorLocation::ExecuteHandle(TArray<AActor*> InActors)
+{
+	for (const auto& InActor : InActors)
 	{
-		if (HandleActorMethod != EHandleActorMethod::None)
+		if (bHandleActorLocation)
 		{
-			ValidHandleActorMethods.Add(HandleActorMethod);
+			InActor->SetActorLocation(NewActorLocation);
+		}
+		if (bHandleActorLocationOffset)
+		{
+			InActor->SetActorLocation(InActor->GetActorLocation() + NewActorLocationOffset);
 		}
 	}
+}
 
-	return !ValidHandleActorMethods.IsEmpty();
+bool UHandleActorRotation::CanExecuteHandle()
+{
+	return bHandleActorRotation || bHandleActorRotationOffset;
+}
+
+void UHandleActorRotation::ExecuteHandle(TArray<AActor*> InActors)
+{
+	for (const auto& InActor : InActors)
+	{
+		if (bHandleActorRotation)
+		{
+			InActor->SetActorRotation(NewActorRotation);
+		}
+		if (bHandleActorRotationOffset)
+		{
+			InActor->SetActorRotation(InActor->GetActorRotation() + NewActorRotationOffset);
+		}
+	}
+}
+
+bool UHandleActorScale::CanExecuteHandle()
+{
+	return bHandleActorScale || bHandleActorScaleOffset;
+}
+
+void UHandleActorScale::ExecuteHandle(TArray<AActor*> InActors)
+{
+	for (const auto& InActor : InActors)
+	{
+		if (bHandleActorScale)
+		{
+			InActor->SetActorScale3D(NewActorScale);
+		}
+		if (bHandleActorScaleOffset)
+		{
+			InActor->SetActorScale3D(InActor->GetActorScale3D() + NewActorScaleOffset);
+		}
+	}
+}
+
+bool UHandleActorHiddenInGame::CanExecuteHandle()
+{
+	return bHandleActorHiddenInGame;
+}
+
+void UHandleActorHiddenInGame::ExecuteHandle(TArray<AActor*> InActors)
+{
+	for (const auto& InActor : InActors)
+	{
+		if (bHandleActorHiddenInGame)
+		{
+			InActor->SetActorHiddenInGame(NewActorHiddenInGame);
+		}
+	}
 }

@@ -30,10 +30,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FFindActorHandle FindActorHandle;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	FHandleActor HandleActor;
-
-protected:
-	UPROPERTY()
-	TArray<AActor*> HandleActors;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced)
+	TArray<UHandleActor*> HandleActors;
 };

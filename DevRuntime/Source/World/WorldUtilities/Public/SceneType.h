@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Object/CommonObject.h"
 #include "SceneType.generated.h"
 
 /**
@@ -160,45 +161,110 @@ public:
 /**
  * 
  */
-UENUM(BlueprintType)
-enum class EHandleActorMethod : uint8
+UCLASS(Abstract, EditInlineNew)
+class WORLDUTILITIES_API UHandleActor : public UCommonObject
 {
-	None,
-	HandleActorLocation,
-	HandleActorRotation,
-	HandleActorScale,
-	HandleActorHiddenInGame,
+	GENERATED_BODY()
 
-	HandleActorOffset,
+public:
+	virtual bool CanExecuteHandle() { return false; }
+	virtual void ExecuteHandle(TArray<AActor*> InActors) { return; }
 };
 
 /**
  * 
  */
-USTRUCT(BlueprintType)
-struct WORLDUTILITIES_API FHandleActor
+UCLASS(BlueprintType)
+class WORLDUTILITIES_API UHandleActorLocation : public UHandleActor
 {
 	GENERATED_BODY()
 
 public:
-	bool GetIsValid() const;
+	virtual bool CanExecuteHandle() override;
+	virtual void ExecuteHandle(TArray<AActor*> InActors) override;
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TSet<EHandleActorMethod> HandleActorMethods;
+	UPROPERTY()
+	bool bHandleActorLocation = false;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(EditCondition = "bHandleActorLocation"))
 	FVector NewActorLocation = FVector::ZeroVector;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY()
+	bool bHandleActorLocationOffset = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(EditCondition = "bHandleActorLocationOffset"))
+	FVector NewActorLocationOffset = FVector::ZeroVector;
+};
+
+/**
+ * 
+ */
+UCLASS(BlueprintType)
+class WORLDUTILITIES_API UHandleActorRotation : public UHandleActor
+{
+	GENERATED_BODY()
+
+public:
+	virtual bool CanExecuteHandle() override;
+	virtual void ExecuteHandle(TArray<AActor*> InActors) override;
+
+public:
+	UPROPERTY()
+	bool bHandleActorRotation = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(EditCondition = "bHandleActorRotation"))
 	FRotator NewActorRotation = FRotator::ZeroRotator;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	FVector NewActorScale = FVector::ZeroVector;
+	UPROPERTY()
+	bool bHandleActorRotationOffset = false;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(EditCondition = "bHandleActorRotationOffset"))
+	FRotator NewActorRotationOffset = FRotator::ZeroRotator;
+};
+
+/**
+ * 
+ */
+UCLASS(BlueprintType)
+class WORLDUTILITIES_API UHandleActorScale : public UHandleActor
+{
+	GENERATED_BODY()
+
+public:
+	virtual bool CanExecuteHandle() override;
+	virtual void ExecuteHandle(TArray<AActor*> InActors) override;
+
+public:
+	UPROPERTY()
+	bool bHandleActorScale = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(EditCondition = "bHandleActorScale"))
+	FVector NewActorScale = FVector(1, 1, 1);
+
+	UPROPERTY()
+	bool bHandleActorScaleOffset = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(EditCondition = "bHandleActorScaleOffset"))
+	FVector NewActorScaleOffset = FVector::ZeroVector;
+};
+
+/**
+ * 
+ */
+UCLASS(BlueprintType)
+class WORLDUTILITIES_API UHandleActorHiddenInGame : public UHandleActor
+{
+	GENERATED_BODY()
+
+public:
+	virtual bool CanExecuteHandle() override;
+	virtual void ExecuteHandle(TArray<AActor*> InActors) override;
+
+public:
+	UPROPERTY()
+	bool bHandleActorHiddenInGame = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(EditCondition = "bHandleActorHiddenInGame"))
 	bool NewActorHiddenInGame = false;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	FVector NewActorOffset = FVector::ZeroVector;
 };

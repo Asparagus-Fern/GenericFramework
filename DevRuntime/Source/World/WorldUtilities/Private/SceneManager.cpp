@@ -43,39 +43,13 @@ void USceneManager::OnWorldEndPlay(UWorld* InWorld)
 	FCoreInternalManager::OnWorldEndPlay(InWorld);
 }
 
-TArray<AActor*> USceneManager::FindActors(const FFindActorHandle& FindActorHandle, const bool bUpdate)
+TArray<AActor*> USceneManager::FindActors(const FFindActorHandle& InFindActorHandle, const bool bUpdate)
 {
-	auto FindActorInternal = [this](const FFindActorHandle& InFindActorHandle)
-	{
-		TArray<AActor*> Actors;
-
-		switch (InFindActorHandle.FindActorMethod)
-		{
-		case EFindActorMethod::Class:
-			UGameplayStatics::GetAllActorsOfClass(this, InFindActorHandle.ActorClass, Actors);
-			break;
-
-		case EFindActorMethod::Tag:
-			UGameplayStatics::GetAllActorsWithTag(this, InFindActorHandle.ActorTag, Actors);
-			break;
-
-		case EFindActorMethod::ClassAndTag:
-			UGameplayStatics::GetAllActorsOfClassWithTag(this, InFindActorHandle.ActorClass, InFindActorHandle.ActorTag, Actors);
-			break;
-
-		case EFindActorMethod::Interface:
-			UGameplayStatics::GetAllActorsWithInterface(this, InFindActorHandle.ActorInterface, Actors);
-			break;
-		}
-
-		return Actors;
-	};
-
-	if (FFoundActorHandle* FoundActorHandle = FoundActorHandles.FindByKey(FindActorHandle))
+	if (FFoundActorHandle* FoundActorHandle = FoundActorHandles.FindByKey(InFindActorHandle))
 	{
 		if (bUpdate)
 		{
-			FoundActorHandle->FoundActors = FindActorInternal(FindActorHandle);
+			FoundActorHandle->FoundActors = FindActors(InFindActorHandle);
 		}
 
 		return FoundActorHandle->FoundActors;
@@ -83,12 +57,38 @@ TArray<AActor*> USceneManager::FindActors(const FFindActorHandle& FindActorHandl
 	else
 	{
 		FFoundActorHandle* NewFoundActorHandle = new FFoundActorHandle();
-		NewFoundActorHandle->FindActorHandle = FindActorHandle;
-		NewFoundActorHandle->FoundActors = FindActorInternal(FindActorHandle);
+		NewFoundActorHandle->FindActorHandle = InFindActorHandle;
+		NewFoundActorHandle->FoundActors = FindActors(InFindActorHandle);
 
 		FoundActorHandles.Add(*NewFoundActorHandle);
 		return NewFoundActorHandle->FoundActors;
 	}
+}
+
+TArray<AActor*> USceneManager::FindActors(const FFindActorHandle& InFindActorHandle) const
+{
+	TArray<AActor*> Actors;
+
+	switch (InFindActorHandle.FindActorMethod)
+	{
+	case EFindActorMethod::Class:
+		UGameplayStatics::GetAllActorsOfClass(this, InFindActorHandle.ActorClass, Actors);
+		break;
+
+	case EFindActorMethod::Tag:
+		UGameplayStatics::GetAllActorsWithTag(this, InFindActorHandle.ActorTag, Actors);
+		break;
+
+	case EFindActorMethod::ClassAndTag:
+		UGameplayStatics::GetAllActorsOfClassWithTag(this, InFindActorHandle.ActorClass, InFindActorHandle.ActorTag, Actors);
+		break;
+
+	case EFindActorMethod::Interface:
+		UGameplayStatics::GetAllActorsWithInterface(this, InFindActorHandle.ActorInterface, Actors);
+		break;
+	}
+
+	return Actors;
 }
 
 float USceneManager::GetPlayerPointToNorthAngle(int32 PlayerIndex) const
