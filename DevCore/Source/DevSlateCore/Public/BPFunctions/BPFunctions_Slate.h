@@ -7,6 +7,7 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "BPFunctions_Slate.generated.h"
 
+class USpline2DSlot;
 class UBackgroundBlurSlot;
 class UWidget;
 class UButtonSlot;
@@ -32,6 +33,9 @@ public:
 
 	UFUNCTION(BlueprintPure, Category="BPFunctions_Slate|Slot")
 	static UBackgroundBlurSlot* SlotAsBackgroundBlurSlot(const UWidget* Widget);
+
+	UFUNCTION(BlueprintPure, Category="BPFunctions_Slate|Slot")
+	static USpline2DSlot* SlotAsSpline2DSlot(const UWidget* Widget);
 
 	/* Image */
 public:

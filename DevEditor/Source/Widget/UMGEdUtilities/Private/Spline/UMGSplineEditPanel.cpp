@@ -5,8 +5,8 @@
 
 #include "EditorStyleSet.h"
 #include "UMGEdUtilitiesSetting.h"
-#include "Spline/UMGSplineBuilder.h"
-#include "Spline/UMGSplineRenderBatch.h"
+#include "..\..\..\..\..\..\DevCore\Source\DevSlateCore\Public\Spline\Spline2DBuilder.h"
+#include "Spline/Spline2DRenderBatch.h"
 #include "Widgets/Input/SSlider.h"
 #include "Styling/ToolBarStyle.h"
 
@@ -306,23 +306,23 @@ int32 SUMGSplineEditPanel::OnPaint(const FPaintArgs& Args, const FGeometry& Allo
 	return ChildrenLayerId + 1;
 }
 
-void SUMGSplineEditPanel::PaintSpline_Default(const FUMGSplineInfo& InSplineInfo, const FGeometry& AllottedGeometry, FSlateWindowElementList& OutDrawElements, int32 LayerId, const FSlateRect& MyCullingRect, ESlateDrawEffect DrawEffects, const FWidgetStyle& InWidgetStyle) const
+void SUMGSplineEditPanel::PaintSpline_Default(const FSpline2DInfo& InSplineInfo, const FGeometry& AllottedGeometry, FSlateWindowElementList& OutDrawElements, int32 LayerId, const FSlateRect& MyCullingRect, ESlateDrawEffect DrawEffects, const FWidgetStyle& InWidgetStyle) const
 {
 	if (InSplineInfo.GetPointNum() > 1)
 	{
 		const FLinearColor InColor = InWidgetStyle.GetColorAndOpacityTint() * InSplineInfo.TintColor;
 		const FColor TintColor = InColor.ToFColor(true);
 
-		const TArray<FUMGSplinePoint>& Points = InSplineInfo.GetPoints();
+		const TArray<FSpline2DPoint>& Points = InSplineInfo.GetPoints();
 
 		for (int32 i = 0; i < Points.Num() - 1; ++i)
 		{
 			FVector2D LocalStart = TransformInfo.InputToLocal(Points[i].Location);
-			FVector2D StartDir = InSplineInfo.SplineType == EUMGSplineType::Linear ? FVector2D::ZeroVector : Points[i].Direction;
+			FVector2D StartDir = InSplineInfo.SplineType == ESpline2DType::Linear ? FVector2D::ZeroVector : Points[i].Direction;
 			StartDir = StartDir * TransformInfo.Scale;
 
 			FVector2D LocalEnd = TransformInfo.InputToLocal(Points[i + 1].Location);
-			FVector2D EndDir = InSplineInfo.SplineType == EUMGSplineType::Linear ? FVector2D::ZeroVector : Points[i + 1].Direction;
+			FVector2D EndDir = InSplineInfo.SplineType == ESpline2DType::Linear ? FVector2D::ZeroVector : Points[i + 1].Direction;
 			EndDir = EndDir * TransformInfo.Scale;
 
 			if ((LocalStart.X != -FLT_MAX) && (LocalStart.Y != -FLT_MAX) && (LocalEnd.X != -FLT_MAX) && (LocalEnd.Y != -FLT_MAX))
@@ -345,11 +345,11 @@ void SUMGSplineEditPanel::PaintSpline_Default(const FUMGSplineInfo& InSplineInfo
 		if (InSplineInfo.bClosedLoop)
 		{
 			const FVector2D LocalStart = TransformInfo.InputToLocal(Points.Last().Location);
-			FVector2D StartDir = InSplineInfo.SplineType == EUMGSplineType::Linear ? FVector2D::ZeroVector : Points.Last().Direction;
+			FVector2D StartDir = InSplineInfo.SplineType == ESpline2DType::Linear ? FVector2D::ZeroVector : Points.Last().Direction;
 			StartDir = StartDir * TransformInfo.Scale;
 
 			const FVector2D LocalEnd = TransformInfo.InputToLocal(Points[0].Location);
-			FVector2D EndDir = InSplineInfo.SplineType == EUMGSplineType::Linear ? FVector2D::ZeroVector : Points[0].Direction;
+			FVector2D EndDir = InSplineInfo.SplineType == ESpline2DType::Linear ? FVector2D::ZeroVector : Points[0].Direction;
 			EndDir = EndDir * TransformInfo.Scale;
 
 			if ((LocalStart.X != -FLT_MAX) && (LocalStart.Y != -FLT_MAX) && (LocalEnd.X != -FLT_MAX) && (LocalEnd.Y != -FLT_MAX))
@@ -371,11 +371,11 @@ void SUMGSplineEditPanel::PaintSpline_Default(const FUMGSplineInfo& InSplineInfo
 	}
 }
 
-void SUMGSplineEditPanel::PaintSpline_CustomVerts(const FUMGSplineInfo& InSplineInfo, const FGeometry& AllottedGeometry, FSlateWindowElementList& OutDrawElements, int32 LayerId, const FSlateRect& MyCullingRect, ESlateDrawEffect DrawEffects, const FWidgetStyle& InWidgetStyle) const
+void SUMGSplineEditPanel::PaintSpline_CustomVerts(const FSpline2DInfo& InSplineInfo, const FGeometry& AllottedGeometry, FSlateWindowElementList& OutDrawElements, int32 LayerId, const FSlateRect& MyCullingRect, ESlateDrawEffect DrawEffects, const FWidgetStyle& InWidgetStyle) const
 {
 	if (InSplineInfo.GetPointNum() > 1)
 	{
-		const TArray<FUMGSplinePoint>& Points = InSplineInfo.GetPoints();
+		const TArray<FSpline2DPoint>& Points = InSplineInfo.GetPoints();
 
 		// 1 is the minimum thickness we support for generating geometry.
 		// The shader takes care of sub-pixel line widths.
@@ -397,22 +397,22 @@ void SUMGSplineEditPanel::PaintSpline_CustomVerts(const FUMGSplineInfo& InSpline
 
 		TArray<FSlateVertex> SlateVerts;
 		TArray<SlateIndex> Indexes;
-		FUMGSplineRenderBatch RenderBatch = FUMGSplineRenderBatch(&SlateVerts, &Indexes);
+		FSpline2DRenderBatch RenderBatch = FSpline2DRenderBatch(&SlateVerts, &Indexes);
 
 		FLinearColor InColor = InWidgetStyle.GetColorAndOpacityTint() * InSplineInfo.TintColor;
 		FColor TintColor = InColor.ToFColor(true);
 		FVector2D StartPosition = TransformInfo.InputToLocal(Points[0].Location);
 		float CustomVertsVCoordScale = InSplineInfo.CustomVertsVCoordScale / TransformInfo.Scale;
-		FUMGLineBuilder SplineBuilder = FUMGLineBuilder(RenderBatch, StartPosition, HalfThickness, InSplineInfo.Thickness, FilterScale, CustomVertsVCoordScale, AllottedGeometry.ToPaintGeometry().GetAccumulatedRenderTransform(), TintColor);
+		FSpline2DBuilder SplineBuilder = FSpline2DBuilder(RenderBatch, StartPosition, HalfThickness, InSplineInfo.Thickness, FilterScale, CustomVertsVCoordScale, AllottedGeometry.ToPaintGeometry().GetAccumulatedRenderTransform(), TintColor);
 
 		for (int32 i = 0; i < Points.Num() - 1; ++i)
 		{
 			FVector2D LocalStart = TransformInfo.InputToLocal(Points[i].Location);
-			FVector2D StartDir = InSplineInfo.SplineType == EUMGSplineType::Linear ? FVector2D::ZeroVector : Points[i].Direction;
+			FVector2D StartDir = InSplineInfo.SplineType == ESpline2DType::Linear ? FVector2D::ZeroVector : Points[i].Direction;
 			StartDir = StartDir * TransformInfo.Scale;
 
 			FVector2D LocalEnd = TransformInfo.InputToLocal(Points[i + 1].Location);
-			FVector2D EndDir = InSplineInfo.SplineType == EUMGSplineType::Linear ? FVector2D::ZeroVector : Points[i + 1].Direction;
+			FVector2D EndDir = InSplineInfo.SplineType == ESpline2DType::Linear ? FVector2D::ZeroVector : Points[i + 1].Direction;
 			EndDir = EndDir * TransformInfo.Scale;
 
 			if ((LocalStart.X != -FLT_MAX) && (LocalStart.Y != -FLT_MAX) && (LocalEnd.X != -FLT_MAX) && (LocalEnd.Y != -FLT_MAX))
@@ -426,11 +426,11 @@ void SUMGSplineEditPanel::PaintSpline_CustomVerts(const FUMGSplineInfo& InSpline
 		if (InSplineInfo.bClosedLoop)
 		{
 			FVector2D LocalStart = TransformInfo.InputToLocal(Points.Last().Location);
-			FVector2D StartDir = InSplineInfo.SplineType == EUMGSplineType::Linear ? FVector2D::ZeroVector : Points.Last().Direction;
+			FVector2D StartDir = InSplineInfo.SplineType == ESpline2DType::Linear ? FVector2D::ZeroVector : Points.Last().Direction;
 			StartDir = StartDir * TransformInfo.Scale;
 
 			FVector2D LocalEnd = TransformInfo.InputToLocal(Points[0].Location);
-			FVector2D EndDir = InSplineInfo.SplineType == EUMGSplineType::Linear ? FVector2D::ZeroVector : Points[0].Direction;
+			FVector2D EndDir = InSplineInfo.SplineType == ESpline2DType::Linear ? FVector2D::ZeroVector : Points[0].Direction;
 			EndDir = EndDir * TransformInfo.Scale;
 
 			if ((LocalStart.X != -FLT_MAX) && (LocalStart.Y != -FLT_MAX) && (LocalEnd.X != -FLT_MAX) && (LocalEnd.Y != -FLT_MAX))
@@ -455,13 +455,13 @@ void SUMGSplineEditPanel::PaintSpline_CustomVerts(const FUMGSplineInfo& InSpline
 	}
 }
 
-void SUMGSplineEditPanel::PaintSplinePoints(const FUMGSplineInfo& InSplineInfo, FSlateWindowElementList& OutDrawElements, int32 LayerId, int32 SelectedLayerId, const FGeometry& AllottedGeometry, const FSlateRect& MyCullingRect, ESlateDrawEffect DrawEffects, const FWidgetStyle& InWidgetStyle) const
+void SUMGSplineEditPanel::PaintSplinePoints(const FSpline2DInfo& InSplineInfo, FSlateWindowElementList& OutDrawElements, int32 LayerId, int32 SelectedLayerId, const FGeometry& AllottedGeometry, const FSlateRect& MyCullingRect, ESlateDrawEffect DrawEffects, const FWidgetStyle& InWidgetStyle) const
 {
 	const FSlateBrush* KeyBrush = FAppStyle::Get().GetBrush("CurveEd.CurveKey");
 	const FLinearColor KeyColor = FAppStyle::Get().GetColor("CurveEd.TangentColor");
 	const FLinearColor KeySelectionColor = FAppStyle::Get().GetBrush("CurveEd.CurveKeySelected")->GetTint(InWidgetStyle);
 
-	const TArray<FUMGSplinePoint>& Points = InSplineInfo.GetPoints();
+	const TArray<FSpline2DPoint>& Points = InSplineInfo.GetPoints();
 
 	// Iterate over each key
 	for (int32 i = 0; i < Points.Num(); ++i)
@@ -487,14 +487,14 @@ void SUMGSplineEditPanel::PaintSplinePoints(const FUMGSplineInfo& InSplineInfo, 
 			TintColor
 		);
 
-		if ((IsSelected || !HideUnselectedTangents) && InSplineInfo.SplineType == EUMGSplineType::Curve)
+		if ((IsSelected || !HideUnselectedTangents) && InSplineInfo.SplineType == ESpline2DType::Curve)
 		{
 			PaintTangent(Points[i], OutDrawElements, LayerId, AllottedGeometry, MyCullingRect, DrawEffects, LayerToUse, InWidgetStyle, IsSelected);
 		}
 	}
 }
 
-void SUMGSplineEditPanel::PaintTangent(const FUMGSplinePoint& SplinePoint, FSlateWindowElementList& OutDrawElements, int32 LayerId, const FGeometry& AllottedGeometry, const FSlateRect& MyCullingRect, ESlateDrawEffect DrawEffects, int32 LayerToUse, const FWidgetStyle& InWidgetStyle, bool bTangentSelected) const
+void SUMGSplineEditPanel::PaintTangent(const FSpline2DPoint& SplinePoint, FSlateWindowElementList& OutDrawElements, int32 LayerId, const FGeometry& AllottedGeometry, const FSlateRect& MyCullingRect, ESlateDrawEffect DrawEffects, int32 LayerToUse, const FWidgetStyle& InWidgetStyle, bool bTangentSelected) const
 {
 	const FVector2D KeyIconLocation = TransformInfo.InputToLocal(SplinePoint.Location);
 	const FVector2D LocalDir = SplinePoint.Direction * TransformInfo.Scale;
@@ -741,7 +741,7 @@ void SUMGSplineEditPanel::ProcessDrag(const FGeometry& InMyGeometry, const FPoin
 		const FVector2D MousePosition = InMyGeometry.AbsoluteToLocal(InMouseEvent.GetScreenSpacePosition());
 		FVector2D Delta = MousePosition - PreDragPointLocations[DraggedPointIndex];
 
-		FUMGSplineInfo NewSplineInfo = SplineInfo.Get();
+		FSpline2DInfo NewSplineInfo = SplineInfo.Get();
 		NewSplineInfo.Points[DraggedPointIndex].Location = TransformInfo.LocalToInput(MousePosition);
 		OnSplineInfoValueChanged.ExecuteIfBound(NewSplineInfo);
 	}
@@ -763,7 +763,7 @@ void SUMGSplineEditPanel::ProcessDrag(const FGeometry& InMyGeometry, const FPoin
 		NewDirection.Normalize();
 		NewDirection = NewDirection * Strength;
 
-		FUMGSplineInfo NewSplineInfo = SplineInfo.Get();
+		FSpline2DInfo NewSplineInfo = SplineInfo.Get();
 		NewSplineInfo.Points[SelectedTangent.PointIndex].Direction = NewDirection;
 		OnSplineInfoValueChanged.ExecuteIfBound(NewSplineInfo);
 	}
@@ -800,7 +800,7 @@ int SUMGSplineEditPanel::HitTestSplinePoints(const FGeometry& InMyGeometry, cons
 {
 	const FVector2D HitPosition = InMyGeometry.AbsoluteToLocal(HitScreenPosition);
 
-	const TArray<FUMGSplinePoint>& Points = SplineInfo.Get().GetPoints();
+	const TArray<FSpline2DPoint>& Points = SplineInfo.Get().GetPoints();
 
 	// Iterate over each key
 	for (int32 i = 0; i < Points.Num(); ++i)
@@ -826,7 +826,7 @@ FSelectedSplineTangent SUMGSplineEditPanel::HitTestCubicTangents(const FGeometry
 
 	const FVector2D HitPosition = InMyGeometry.AbsoluteToLocal(HitScreenPosition);
 
-	const TArray<FUMGSplinePoint>& Points = SplineInfo.Get().GetPoints();
+	const TArray<FSpline2DPoint>& Points = SplineInfo.Get().GetPoints();
 
 	// Iterate over each key
 	for (int32 i = 0; i < Points.Num(); ++i)
@@ -943,11 +943,11 @@ void SUMGSplineEditPanel::AddNewSplinePoint(FGeometry InMyGeometry, FVector2D Sc
 
 	const FVector2D MousePosition = InMyGeometry.AbsoluteToLocal(ScreenPosition);
 
-	FUMGSplinePoint NewPoint;
+	FSpline2DPoint NewPoint;
 	NewPoint.Location = TransformInfo.LocalToInput(MousePosition);
-	NewPoint.Direction = FVector2D(1.0f, 0.0f);
+	NewPoint.Direction = FVector2D(200.0f, 0.0f);
 
-	FUMGSplineInfo NewSplineInfo = SplineInfo.Get();
+	FSpline2DInfo NewSplineInfo = SplineInfo.Get();
 	NewSplineInfo.AddPoint(NewPoint);
 	OnSplineInfoValueChanged.ExecuteIfBound(NewSplineInfo);
 
@@ -960,7 +960,7 @@ void SUMGSplineEditPanel::DeleteSelectedSplinePoint()
 
 	if (SelectedPointIndex != -1 && SplineInfo.Get().Points.Num() > SelectedPointIndex)
 	{
-		FUMGSplineInfo NewSplineInfo = SplineInfo.Get();
+		FSpline2DInfo NewSplineInfo = SplineInfo.Get();
 		NewSplineInfo.DeletePoint(SelectedPointIndex);
 		OnSplineInfoValueChanged.ExecuteIfBound(NewSplineInfo);
 
@@ -1000,7 +1000,7 @@ bool SUMGSplineEditPanel::ZoomToFit(bool bFitHorizontal, bool bFitVertical)
 	float InMinY = FLT_MAX;
 	float InMaxY = -FLT_MAX;
 
-	const TArray<FUMGSplinePoint>& Points = SplineInfo.Get().GetPoints();
+	const TArray<FSpline2DPoint>& Points = SplineInfo.Get().GetPoints();
 
 	// Iterate over each key
 	for (int32 i = 0; i < Points.Num(); ++i)
@@ -1231,7 +1231,7 @@ void SUMGSplineEditPanel::OnSetSplineThickness(float NewValue)
 {
 	const float NewThickness = FMath::Lerp(CONST_SplineThicknessMin, CONST_SplineThicknessMax, NewValue);
 
-	FUMGSplineInfo NewSplineInfo = SplineInfo.Get();
+	FSpline2DInfo NewSplineInfo = SplineInfo.Get();
 	NewSplineInfo.Thickness = NewThickness;
 	OnSplineInfoValueChanged.ExecuteIfBound(NewSplineInfo);
 }

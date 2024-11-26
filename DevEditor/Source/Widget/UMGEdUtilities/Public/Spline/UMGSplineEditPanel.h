@@ -5,7 +5,7 @@
 // Core Include
 #include "CoreMinimal.h"
 #include "Widgets/SCompoundWidget.h"
-#include "UMGSplineType.h"
+#include "..\..\..\..\..\..\DevCore\Source\DevSlateCore\Public\Spline2DType.h"
 #include "Misc/Attribute.h"
 #include "Input/Reply.h"
 #include "Widgets/DeclarativeSyntaxSupport.h"
@@ -78,9 +78,9 @@ public:
 		{
 		}
 
-		SLATE_ATTRIBUTE(FUMGSplineInfo, SplineInfo)
+		SLATE_ATTRIBUTE(FSpline2DInfo, SplineInfo)
 
-		SLATE_EVENT(FOnSplineInfoValueChanged, OnSplineInfoValueChanged)
+		SLATE_EVENT(FOnSpline2DInfoChanged, OnSplineInfoValueChanged)
 
 	SLATE_END_ARGS()
 
@@ -109,16 +109,16 @@ public:
 
 protected:
 	/** Paint a spline with engine default draw function*/
-	void PaintSpline_Default(const FUMGSplineInfo& InSplineInfo, const FGeometry& AllottedGeometry, FSlateWindowElementList& OutDrawElements, int32 LayerId, const FSlateRect& MyCullingRect, ESlateDrawEffect DrawEffects, const FWidgetStyle& InWidgetStyle) const;
+	void PaintSpline_Default(const FSpline2DInfo& InSplineInfo, const FGeometry& AllottedGeometry, FSlateWindowElementList& OutDrawElements, int32 LayerId, const FSlateRect& MyCullingRect, ESlateDrawEffect DrawEffects, const FWidgetStyle& InWidgetStyle) const;
 
 	/** Paint a spline with custom verts draw function*/
-	void PaintSpline_CustomVerts(const FUMGSplineInfo& InSplineInfo, const FGeometry& AllottedGeometry, FSlateWindowElementList& OutDrawElements, int32 LayerId, const FSlateRect& MyCullingRect, ESlateDrawEffect DrawEffects, const FWidgetStyle& InWidgetStyle) const;
+	void PaintSpline_CustomVerts(const FSpline2DInfo& InSplineInfo, const FGeometry& AllottedGeometry, FSlateWindowElementList& OutDrawElements, int32 LayerId, const FSlateRect& MyCullingRect, ESlateDrawEffect DrawEffects, const FWidgetStyle& InWidgetStyle) const;
 
 	/** Paint the keys that make up a curve */
-	void PaintSplinePoints(const FUMGSplineInfo& InSplineInfo, FSlateWindowElementList& OutDrawElements, int32 LayerId, int32 SelectedLayerId, const FGeometry& AllottedGeometry, const FSlateRect& MyCullingRect, ESlateDrawEffect DrawEffects, const FWidgetStyle& InWidgetStyle) const;
+	void PaintSplinePoints(const FSpline2DInfo& InSplineInfo, FSlateWindowElementList& OutDrawElements, int32 LayerId, int32 SelectedLayerId, const FGeometry& AllottedGeometry, const FSlateRect& MyCullingRect, ESlateDrawEffect DrawEffects, const FWidgetStyle& InWidgetStyle) const;
 
 	/** Paint the tangent for a key with cubic curves */
-	void PaintTangent(const FUMGSplinePoint& SplinePoint, FSlateWindowElementList& OutDrawElements, int32 LayerId, const FGeometry& AllottedGeometry, const FSlateRect& MyCullingRect, ESlateDrawEffect DrawEffects, int32 LayerToUse, const FWidgetStyle& InWidgetStyle, bool bTangentSelected) const;
+	void PaintTangent(const FSpline2DPoint& SplinePoint, FSlateWindowElementList& OutDrawElements, int32 LayerId, const FGeometry& AllottedGeometry, const FSlateRect& MyCullingRect, ESlateDrawEffect DrawEffects, int32 LayerToUse, const FWidgetStyle& InWidgetStyle, bool bTangentSelected) const;
 
 	/** Paint Grid lines, these make it easier to visualize relative distance */
 	void PaintGridLines(const FGeometry& AllottedGeometry, FSlateWindowElementList& OutDrawElements, int32 LayerId, const FSlateRect& MyCullingRect, ESlateDrawEffect DrawEffects) const;
@@ -199,7 +199,7 @@ protected:
 	FText GetHelpText() const;
 
 private:
-	TAttribute<FUMGSplineInfo> SplineInfo;
+	TAttribute<FSpline2DInfo> SplineInfo;
 
 	/** The location of mouse during the last OnMouseButtonDown callback in widget local coordinates. */
 	FVector2D MouseDownLocation;
@@ -225,7 +225,7 @@ private:
 
 	int32 SelectedPointIndex = 0;
 
-	FOnSplineInfoValueChanged OnSplineInfoValueChanged;
+	FOnSpline2DInfoChanged OnSplineInfoValueChanged;
 
 	FSplineEditPanelTransform TransformInfo;
 

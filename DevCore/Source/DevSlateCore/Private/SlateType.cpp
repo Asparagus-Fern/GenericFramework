@@ -3,15 +3,7 @@
 
 #include "SlateType.h"
 
-FLineSegmentPoint::FLineSegmentPoint()
-{
-}
-
-FLineSegmentPoint::FLineSegmentPoint(const float InAngle, const float InLength)
-	: Angle(InAngle),
-	  Length(InLength)
-{
-}
+/* ==================== FImageBrush ==================== */
 
 FImageBrush::FImageBrush()
 {
@@ -80,6 +72,8 @@ FImageBrush::FImageBrush(UObject* InResourceObject)
 	  ResourceObject(InResourceObject)
 {
 }
+
+/* ==================== FBorderBrush ==================== */
 
 FBorderBrush::FBorderBrush()
 {

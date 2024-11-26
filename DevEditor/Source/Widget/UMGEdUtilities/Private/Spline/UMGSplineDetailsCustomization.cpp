@@ -7,7 +7,7 @@
 #include "DetailWidgetRow.h"
 #include "UMGEdUtilitiesSetting.h"
 #include "Spline/UMGSplineEditPanel.h"
-#include "UWidget/UMGSpline.h"
+#include "UWidget/Spline2D.h"
 
 
 #define LOCTEXT_NAMESPACE "SplineWidgetDetails"
@@ -25,11 +25,11 @@ void FUMGSplineDetailsCustomization::CustomizeDetails(IDetailLayoutBuilder& Deta
 		return;
 	}
 
-	UUMGSpline* SplineWidget = nullptr;
+	USpline2D* SplineWidget = nullptr;
 	for (int32 ObjectIndex = 0; ObjectIndex < SelectedObjects.Num(); ++ObjectIndex)
 	{
 		UObject* SelectObject = SelectedObjects[ObjectIndex].Get();
-		if (UUMGSpline* TestSplineWidget = Cast<UUMGSpline>(SelectObject))
+		if (USpline2D* TestSplineWidget = Cast<USpline2D>(SelectObject))
 		{
 			SplineWidget = TestSplineWidget;
 			break;
@@ -43,7 +43,7 @@ void FUMGSplineDetailsCustomization::CustomizeDetails(IDetailLayoutBuilder& Deta
 
 	SplineWidgetPtr = SplineWidget;
 
-	PropertySplineInfo = DetailLayout.GetProperty(GET_MEMBER_NAME_CHECKED(UUMGSpline, SplineInfo), UUMGSpline::StaticClass());
+	PropertySplineInfo = DetailLayout.GetProperty(GET_MEMBER_NAME_CHECKED(USpline2D, SplineInfo), USpline2D::StaticClass());
 	check(PropertySplineInfo->IsValidHandle());
 	 
 	IDetailCategoryBuilder& EditSplineCategory = DetailLayout.EditCategory("EditSpline", FText::GetEmpty(), ECategoryPriority::TypeSpecific);
@@ -59,9 +59,9 @@ void FUMGSplineDetailsCustomization::CustomizeDetails(IDetailLayoutBuilder& Deta
 			.HeightOverride(this, &FUMGSplineDetailsCustomization::GetSplineEditPanelHieght)
 			[
 				SNew(SUMGSplineEditPanel)
-				.SplineInfo_UObject(SplineWidget, &UUMGSpline::GetSplineInfo)
+				.SplineInfo_UObject(SplineWidget, &USpline2D::GetSplineInfo)
 				.Clipping(EWidgetClipping::ClipToBounds)
-				.OnSplineInfoValueChanged(FOnSplineInfoValueChanged::CreateSP(this, &FUMGSplineDetailsCustomization::OnSplineInfoValueChanged))
+				.OnSplineInfoValueChanged(FOnSpline2DInfoChanged::CreateSP(this, &FUMGSplineDetailsCustomization::OnSplineInfoValueChanged))
 			]
 		]
 	];
@@ -70,10 +70,10 @@ void FUMGSplineDetailsCustomization::CustomizeDetails(IDetailLayoutBuilder& Deta
 	MyDetailLayout = &DetailLayout;
 }
 
-void FUMGSplineDetailsCustomization::OnSplineInfoValueChanged(const FUMGSplineInfo& NewSplineInfo)
+void FUMGSplineDetailsCustomization::OnSplineInfoValueChanged(const FSpline2DInfo& NewSplineInfo)
 {
 	FString TextValue;
-	FUMGSplineInfo::StaticStruct()->ExportText(TextValue, &NewSplineInfo, &NewSplineInfo, nullptr, EPropertyPortFlags::PPF_None, nullptr);
+	FSpline2DInfo::StaticStruct()->ExportText(TextValue, &NewSplineInfo, &NewSplineInfo, nullptr, EPropertyPortFlags::PPF_None, nullptr);
 
 	const FPropertyAccess::Result Result = PropertySplineInfo->SetValueFromFormattedString(TextValue, EPropertyValueSetFlags::NotTransactable);
 	check(Result == FPropertyAccess::Success);

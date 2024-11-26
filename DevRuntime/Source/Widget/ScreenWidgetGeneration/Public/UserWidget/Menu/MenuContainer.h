@@ -19,15 +19,16 @@ class SCREENWIDGETGENERATION_API UMenuContainer : public UUserWidgetBase
 	GENERATED_UCLASS_BODY()
 
 public:
+	virtual void NativePreConstruct() override;
 	virtual void NativeOnCreate() override;
-	
+
 public:
 	UPROPERTY(Transient, Getter, BlueprintGetter="GetCommonButtonGroup")
 	UCommonButtonGroup* CommonButtonGroup = nullptr;
 
 	UPROPERTY(Transient, Getter, BlueprintGetter="GetMenuStyles")
 	TArray<UMenuStyle*> MenuStyles;
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	bool bIsManagedByGroup = true;
 
@@ -50,4 +51,19 @@ public:
 
 	UFUNCTION(BlueprintPure)
 	TArray<UMenuStyle*> GetMenuStyles() const { return MenuStyles; }
+
+#if WITH_EDITORONLY_DATA
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, AdvancedDisplay)
+	TSubclassOf<UMenuStyle> DesignMenuStyleClass = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, AdvancedDisplay)
+	int32 DesignMenuNum = 5;
+
+protected:
+	UPROPERTY(Transient)
+	TArray<UMenuStyle*> DesignMenuStyles;
+
+#endif
 };

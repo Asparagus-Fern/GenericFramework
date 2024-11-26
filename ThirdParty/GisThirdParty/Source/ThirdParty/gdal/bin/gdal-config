@@ -1,4 +1,8 @@
 #!/bin/sh
+#
+# Copyright Chen Taiye. All Rights Reserved.
+#
+
 CONFIG_LIBS=""-LIBPATH:C:/Program Files/gdal/lib" gdal"
 CONFIG_DEP_LIBS="wbemuuid ws2_32 legacy_stdio_definitions.lib odbccp32.lib psapi D:/GDALCompile/proj/PROJ/lib/proj.lib"
 CONFIG_PREFIX=""C:/Program Files/gdal""

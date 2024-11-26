@@ -1,7 +1,7 @@
 ﻿#include "UMGEdUtilities.h"
 
 #include "Spline/UMGSplineDetailsCustomization.h"
-#include "UWidget/UMGSpline.h"
+#include "UWidget/Spline2D.h"
 
 #define LOCTEXT_NAMESPACE "FUMGEdUtilitiesModule"
 
@@ -10,7 +10,7 @@ void FUMGEdUtilitiesModule::StartupModule()
 	ICommonEdModuleInterface::StartupModule();
 
 	FPropertyEditorModule& PropertyModule = FModuleManager::LoadModuleChecked<FPropertyEditorModule>("PropertyEditor");
-	PropertyModule.RegisterCustomClassLayout(UUMGSpline::StaticClass()->GetFName(), FOnGetDetailCustomizationInstance::CreateStatic(&FUMGSplineDetailsCustomization::MakeInstance));
+	PropertyModule.RegisterCustomClassLayout(USpline2D::StaticClass()->GetFName(), FOnGetDetailCustomizationInstance::CreateStatic(&FUMGSplineDetailsCustomization::MakeInstance));
 
 }
 
@@ -22,7 +22,7 @@ void FUMGEdUtilitiesModule::ShutdownModule()
 		return;
 
 	FPropertyEditorModule& PropertyModule = FModuleManager::LoadModuleChecked<FPropertyEditorModule>("PropertyEditor");
-	PropertyModule.UnregisterCustomClassLayout(UUMGSpline::StaticClass()->GetFName());
+	PropertyModule.UnregisterCustomClassLayout(USpline2D::StaticClass()->GetFName());
 }
 
 #undef LOCTEXT_NAMESPACE

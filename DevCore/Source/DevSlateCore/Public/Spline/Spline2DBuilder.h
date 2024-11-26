@@ -1,4 +1,15 @@
-// Copyright Qibo Pang 2022. All Rights Reserved.
+// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "Kismet/BlueprintFunctionLibrary.h"
+#include "Framework/Application/SlateApplication.h"
+
+class FSpline2DRenderBatch;
+
+/** Notification for FUMGSplineInfo value change */
+DECLARE_DELEGATE_ThreeParams(FOnUMGSplineBuildSegmentAdded, int32/*Index*/, const FVector2D&/*Position*/, float/*Length*/)
 
 /*
 * Below Code mainly copy from SlateCore / ElementBatcher.cpp FLineBuilder, I made a few changes to support:
@@ -6,23 +17,10 @@
 * 2. Made continuous spline geometry
 */
 
-#pragma once
-
-// Core
-#include "CoreMinimal.h"
-#include "Kismet/BlueprintFunctionLibrary.h"
-#include "HAL/PlatformApplicationMisc.h"
-#include "Framework/Application/SlateApplication.h"
-
-class FUMGSplineRenderBatch;
-
-/** Notification for FUMGSplineInfo value change */
-DECLARE_DELEGATE_ThreeParams(FOnUMGSplineBuildSegmentAdded, int32/*Index*/, const FVector2D&/*Position*/, float/*Length*/)
-
 /** Utility class for building a strip of lines. */
-struct DEVSLATECORE_API FUMGLineBuilder
+struct DEVSLATECORE_API FSpline2DBuilder
 {
-	FUMGLineBuilder(FUMGSplineRenderBatch& InRenderBatch, const FVector2D StartPoint, float HalfThickness, float InThickness, float InFilterScale, float InCustomVertsVCoordScale, const FSlateRenderTransform& InRenderTransform, const FColor& InColor);
+	FSpline2DBuilder(FSpline2DRenderBatch& InRenderBatch, const FVector2D StartPoint, float HalfThickness, float InThickness, float InFilterScale, float InCustomVertsVCoordScale, const FSlateRenderTransform& InRenderTransform, const FColor& InColor);
 
 	void SetDelegateOnSegmentAdded(const FOnUMGSplineBuildSegmentAdded& InOnSegmentAdded);
 
@@ -84,12 +82,12 @@ private:
 	/** More general form of the deCasteljauSplit splits the curve into two parts at a point between 0 and 1 along the curve's length. */
 	static void deCasteljauSplit_WithColorGradient(const FVector2D& P0, const FVector2D& P1, const FVector2D& P2, const FVector2D& P3, FVector2D OutCurveParams[7], float SplitPoint = 0.5f);
 
-	static void Subdivide(const FVector2D& P0, const FVector2D& P1, const FVector2D& P2, const FVector2D& P3, FUMGLineBuilder& LineBuilder, float MaxBiasTimesTwo = 2.0f);
+	static void Subdivide(const FVector2D& P0, const FVector2D& P1, const FVector2D& P2, const FVector2D& P3, FSpline2DBuilder& LineBuilder, float MaxBiasTimesTwo = 2.0f);
 
-	static void Subdivide_WithColorGradient(const FLinearColor& StartColor, const FLinearColor& EndColor, const FSlateElementBatcher& InBatcher, const FVector2D& P0, const FVector2D& P1, const FVector2D& P2, const FVector2D& P3, FUMGLineBuilder& LineBuilder, float MaxBiasTimesTwo = 2.0f);
+	static void Subdivide_WithColorGradient(const FLinearColor& StartColor, const FLinearColor& EndColor, const FSlateElementBatcher& InBatcher, const FVector2D& P0, const FVector2D& P1, const FVector2D& P2, const FVector2D& P3, FSpline2DBuilder& LineBuilder, float MaxBiasTimesTwo = 2.0f);
 
 private:
-	FUMGSplineRenderBatch& RenderBatch;
+	FSpline2DRenderBatch& RenderBatch;
 	const FSlateRenderTransform& RenderTransform;
 	FVector2D LastPointAdded[2];
 	FVector2D LastNormal;

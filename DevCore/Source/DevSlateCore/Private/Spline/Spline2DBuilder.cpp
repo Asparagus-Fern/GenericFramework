@@ -1,20 +1,13 @@
-// Copyright Qibo Pang 2022. All Rights Reserved.
+// Fill out your copyright notice in the Description page of Project Settings.
 
-/*
-* Below Code mainly copy from SlateCore / ElementBatcher.cpp FLineBuilder, I made a few changes to support:
-* 1. Add uv information for spline geometry
-* 2. Made continuous spline geometry
-* 3. Calculate spline length when build spline geometry
-*/
-
-#include "Spline/UMGSplineBuilder.h"
+#include "..\..\Public\Spline\Spline2DBuilder.h"
 
 #include "Rendering/DrawElementPayloads.h"
-#include "Spline/UMGSplineRenderBatch.h"
+#include "Spline/Spline2DRenderBatch.h"
 
 const static float CONST_SplineVScale = 0.01f;
 
-FUMGLineBuilder::FUMGLineBuilder(FUMGSplineRenderBatch& InRenderBatch, const FVector2D StartPoint, float HalfThickness, float InThickness, float InFilterScale, float InCustomVertsVCoordScale, const FSlateRenderTransform& InRenderTransform, const FColor& InColor)
+FSpline2DBuilder::FSpline2DBuilder(FSpline2DRenderBatch& InRenderBatch, const FVector2D StartPoint, float HalfThickness, float InThickness, float InFilterScale, float InCustomVertsVCoordScale, const FSlateRenderTransform& InRenderTransform, const FColor& InColor)
 	: RenderBatch(InRenderBatch),
 	  RenderTransform(InRenderTransform),
 	  LastPointAdded(),
@@ -31,7 +24,7 @@ FUMGLineBuilder::FUMGLineBuilder(FUMGSplineRenderBatch& InRenderBatch, const FVe
 	LastPointAdded[0] = LastPointAdded[1] = StartPoint;
 }
 
-void FUMGLineBuilder::SetDelegateOnSegmentAdded(const FOnUMGSplineBuildSegmentAdded& InOnSegmentAdded)
+void FSpline2DBuilder::SetDelegateOnSegmentAdded(const FOnUMGSplineBuildSegmentAdded& InOnSegmentAdded)
 {
 	OnSegmentAdded = InOnSegmentAdded;
 }
@@ -51,7 +44,7 @@ void FUMGLineBuilder::SetDelegateOnSegmentAdded(const FOnUMGSplineBuildSegmentAd
 //                                 d is CapDirection
 //                                 h is Up
 //                                 o is CapOrigin
-void FUMGLineBuilder::MakeCap(const FVector2D& CapOrigin, const FVector2D& CapDirection, const FVector2D& Up, const FColor& Color)
+void FSpline2DBuilder::MakeCap(const FVector2D& CapOrigin, const FVector2D& CapDirection, const FVector2D& Up, const FColor& Color)
 {
 	const uint32 FirstVertIndex = RenderBatch.GetNumVertices();
 
@@ -92,7 +85,7 @@ void FUMGLineBuilder::MakeCap(const FVector2D& CapOrigin, const FVector2D& CapDi
 	RenderBatch.AddIndex(FirstVertIndex + 4);
 }
 
-void FUMGLineBuilder::BuildBezierGeometry_WithColorGradient(const TArray<FSlateGradientStop>& GradientStops, int32 GradientStopIndex, const FVector2D& P0, const FVector2D& P1, const FVector2D& P2, const FVector2D& P3, const FSlateElementBatcher& InBatcher)
+void FSpline2DBuilder::BuildBezierGeometry_WithColorGradient(const TArray<FSlateGradientStop>& GradientStops, int32 GradientStopIndex, const FVector2D& P0, const FVector2D& P1, const FVector2D& P2, const FVector2D& P3, const FSlateElementBatcher& InBatcher)
 {
 	const int32 NumGradientStops = GradientStops.Num();
 	const float SubdivisionPoint = 1.0f / (NumGradientStops - GradientStopIndex);
@@ -112,13 +105,13 @@ void FUMGLineBuilder::BuildBezierGeometry_WithColorGradient(const TArray<FSlateG
 	}
 }
 
-void FUMGLineBuilder::BuildBezierGeometry(const FVector2D& P0, const FVector2D& P1, const FVector2D& P2, const FVector2D& P3)
+void FSpline2DBuilder::BuildBezierGeometry(const FVector2D& P0, const FVector2D& P1, const FVector2D& P2, const FVector2D& P3)
 {
 	Subdivide(P0, P1, P2, P3, *this, 1.0f);
 	//Finish(P3, SingleColor);
 }
 
-void FUMGLineBuilder::Finish(const FVector2D& LastPoint, const FColor& InColor, bool bCloseLoop)
+void FSpline2DBuilder::Finish(const FVector2D& LastPoint, const FColor& InColor, bool bCloseLoop)
 {
 	if (NumPointsAdded < 3)
 	{
@@ -164,7 +157,7 @@ void FUMGLineBuilder::Finish(const FVector2D& LastPoint, const FColor& InColor, 
 	}
 }
 
-void FUMGLineBuilder::AppendPoint(const FVector2D NewPoint, const FColor& InColor)
+void FSpline2DBuilder::AppendPoint(const FVector2D NewPoint, const FColor& InColor)
 {
 	// We only add vertexes for the previous line segment.
 	// This is because we want to average the previous and new normals
@@ -236,7 +229,7 @@ void FUMGLineBuilder::AppendPoint(const FVector2D NewPoint, const FColor& InColo
 * Use manhattan distance: 2*Deviation = |P1Deviation.x| + |P1Deviation.y| + |P2Deviation.x| + |P2Deviation.y|
 *
 */
-float FUMGLineBuilder::ComputeCurviness(const FVector2D& P0, const FVector2D& P1, const FVector2D& P2, const FVector2D& P3)
+float FSpline2DBuilder::ComputeCurviness(const FVector2D& P0, const FVector2D& P1, const FVector2D& P2, const FVector2D& P3)
 {
 	const FVector2D TwoP1Deviations = P0 + P2 - 2 * P1;
 	const FVector2D TwoP2Deviations = P1 + P3 - 2 * P2;
@@ -263,7 +256,7 @@ float FUMGLineBuilder::ComputeCurviness(const FVector2D& P0, const FVector2D& P1
 * The final points L3 and R0 are both the midpoint of (L2,R1)
 *
 */
-void FUMGLineBuilder::deCasteljauSplit(const FVector2D& P0, const FVector2D& P1, const FVector2D& P2, const FVector2D& P3, FVector2D OutCurveParams[7])
+void FSpline2DBuilder::deCasteljauSplit(const FVector2D& P0, const FVector2D& P1, const FVector2D& P2, const FVector2D& P3, FVector2D OutCurveParams[7])
 {
 	FVector2D L1 = (P0 + P1) * 0.5f;
 	FVector2D M = (P1 + P2) * 0.5f;
@@ -284,7 +277,7 @@ void FUMGLineBuilder::deCasteljauSplit(const FVector2D& P0, const FVector2D& P1,
 }
 
 /** More general form of the deCasteljauSplit splits the curve into two parts at a point between 0 and 1 along the curve's length. */
-void FUMGLineBuilder::deCasteljauSplit_WithColorGradient(const FVector2D& P0, const FVector2D& P1, const FVector2D& P2, const FVector2D& P3, FVector2D OutCurveParams[7], float SplitPoint)
+void FSpline2DBuilder::deCasteljauSplit_WithColorGradient(const FVector2D& P0, const FVector2D& P1, const FVector2D& P2, const FVector2D& P3, FVector2D OutCurveParams[7], float SplitPoint)
 {
 	FVector2D L1 = FMath::Lerp(P0, P1, SplitPoint);
 	FVector2D M = FMath::Lerp(P1, P2, SplitPoint);
@@ -304,7 +297,7 @@ void FUMGLineBuilder::deCasteljauSplit_WithColorGradient(const FVector2D& P0, co
 	OutCurveParams[6] = P3;
 }
 
-void FUMGLineBuilder::Subdivide(const FVector2D& P0, const FVector2D& P1, const FVector2D& P2, const FVector2D& P3, FUMGLineBuilder& LineBuilder, float MaxBiasTimesTwo)
+void FSpline2DBuilder::Subdivide(const FVector2D& P0, const FVector2D& P1, const FVector2D& P2, const FVector2D& P3, FSpline2DBuilder& LineBuilder, float MaxBiasTimesTwo)
 {
 	const float Curviness = ComputeCurviness(P0, P1, P2, P3);
 	if (Curviness > MaxBiasTimesTwo)
@@ -322,7 +315,7 @@ void FUMGLineBuilder::Subdivide(const FVector2D& P0, const FVector2D& P1, const 
 	}
 }
 
-void FUMGLineBuilder::Subdivide_WithColorGradient(const FLinearColor& StartColor, const FLinearColor& EndColor, const FSlateElementBatcher& InBatcher, const FVector2D& P0, const FVector2D& P1, const FVector2D& P2, const FVector2D& P3, FUMGLineBuilder& LineBuilder, float MaxBiasTimesTwo)
+void FSpline2DBuilder::Subdivide_WithColorGradient(const FLinearColor& StartColor, const FLinearColor& EndColor, const FSlateElementBatcher& InBatcher, const FVector2D& P0, const FVector2D& P1, const FVector2D& P2, const FVector2D& P3, FSpline2DBuilder& LineBuilder, float MaxBiasTimesTwo)
 {
 	const float Curviness = ComputeCurviness(P0, P1, P2, P3);
 	if (Curviness > MaxBiasTimesTwo)

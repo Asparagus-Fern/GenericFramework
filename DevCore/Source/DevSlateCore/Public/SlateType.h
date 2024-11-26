@@ -12,63 +12,6 @@ class ISlateTextureAtlasInterface;
 class USlateBrushAsset;
 
 /**
- * Types of easing functions for Slate animation curves.  These are used to smooth out animations.
- */
-UENUM(BlueprintType)
-enum class ESequenceTransitionCurve : uint8
-{
-	/** Linear interpolation, with no easing */
-	Linear,
-	/** Quadratic ease in */
-	QuadIn,
-	/** Quadratic ease out */
-	QuadOut,
-	/** Quadratic ease in, quadratic ease out */
-	QuadInOut,
-	/** Cubic ease in */
-	CubicIn,
-	/** Cubic ease out */
-	CubicOut,
-	/** Cubic ease in, cubic ease out */
-	CubicInOut,
-};
-
-static ECurveEaseFunction ConvertToCurveEaseFunction(ESequenceTransitionCurve CurveType)
-{
-	switch (CurveType)
-	{
-	default:
-	case ESequenceTransitionCurve::Linear: return ECurveEaseFunction::Linear;
-	case ESequenceTransitionCurve::QuadIn: return ECurveEaseFunction::QuadIn;
-	case ESequenceTransitionCurve::QuadOut: return ECurveEaseFunction::QuadOut;
-	case ESequenceTransitionCurve::QuadInOut: return ECurveEaseFunction::QuadInOut;
-	case ESequenceTransitionCurve::CubicIn: return ECurveEaseFunction::CubicIn;
-	case ESequenceTransitionCurve::CubicOut: return ECurveEaseFunction::CubicOut;
-	case ESequenceTransitionCurve::CubicInOut: return ECurveEaseFunction::CubicInOut;
-	}
-}
-
-/**
- * 
- */
-USTRUCT(BlueprintType)
-struct DEVSLATECORE_API FLineSegmentPoint
-{
-	GENERATED_BODY()
-
-public:
-	FLineSegmentPoint();
-	FLineSegmentPoint(float InAngle, float InLength);
-
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(ClampMin = -180.f, ClampMax = 180.f))
-	float Angle = 0.f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float Length = 100.f;
-};
-
-/**
  * 
  */
 UENUM(BlueprintType)

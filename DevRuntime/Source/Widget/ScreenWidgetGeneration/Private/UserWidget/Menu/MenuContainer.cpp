@@ -10,10 +10,39 @@
 UMenuContainer::UMenuContainer(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
+	DesignMenuStyleClass = LoadClass<UUserWidget>(nullptr, TEXT("/Script/UMGEditor.WidgetBlueprint'/DevRuntime/ScreenWidgetGeneration/Widget/MenuStyle/WBP_Style_Example.WBP_Style_Example_C'"));
 }
 
 void UMenuContainer::ConstructMenuContainer_Implementation(UMenuStyle* MenuStyle, int32 Index)
 {
+}
+
+void UMenuContainer::NativePreConstruct()
+{
+	Super::NativePreConstruct();
+
+#if WITH_EDITOR
+	if (IsDesignTime())
+	{
+		for (const auto& DesignMenuStyle : DesignMenuStyles)
+		{
+			DestructMenuContainer(DesignMenuStyle);
+			DesignMenuStyle->MarkAsGarbage();
+		}
+
+		DesignMenuStyles.Reset();
+
+		if (IsValid(DesignMenuStyleClass))
+		{
+			for (int Index = 0; Index < DesignMenuNum; Index++)
+			{
+				UMenuStyle* NewDesignMenuStyle = CreateWidget<UMenuStyle>(this, DesignMenuStyleClass);
+				DesignMenuStyles.Add(NewDesignMenuStyle);
+				ConstructMenuContainer(NewDesignMenuStyle, Index);
+			}
+		}
+	}
+#endif
 }
 
 void UMenuContainer::NativeOnCreate()

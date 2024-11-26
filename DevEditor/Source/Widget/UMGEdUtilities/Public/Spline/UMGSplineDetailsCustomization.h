@@ -7,9 +7,9 @@
 #include "Input/Reply.h"
 
 #include "IDetailCustomization.h"
-#include "UMGSplineType.h"
+#include "Spline2DType.h"
 
-class UUMGSpline;
+class USpline2D;
 class IDetailLayoutBuilder;
 
 /**
@@ -25,11 +25,11 @@ public:
 	virtual void CustomizeDetails(IDetailLayoutBuilder& DetailLayout) override;
 
 protected:
-	void OnSplineInfoValueChanged(const FUMGSplineInfo& NewSplineInfo);
+	void OnSplineInfoValueChanged(const FSpline2DInfo& NewSplineInfo);
 	FOptionalSize GetSplineEditPanelHieght() const;
 
 private:
-	TWeakObjectPtr<UUMGSpline> SplineWidgetPtr;
+	TWeakObjectPtr<USpline2D> SplineWidgetPtr;
 
 	IDetailLayoutBuilder* MyDetailLayout;
 
