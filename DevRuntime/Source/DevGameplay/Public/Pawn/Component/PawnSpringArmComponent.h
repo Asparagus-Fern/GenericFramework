@@ -6,6 +6,9 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "PawnSpringArmComponent.generated.h"
 
+/**
+ * 提供SpringArm的平滑过渡
+ */
 UCLASS(ClassGroup=(DevPlugin), meta=(BlueprintSpawnableComponent))
 class DEVGAMEPLAY_API UPawnSpringArmComponent : public USpringArmComponent
 {

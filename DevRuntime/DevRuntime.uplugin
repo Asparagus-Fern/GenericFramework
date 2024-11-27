@@ -91,6 +91,11 @@
 			"Name": "UMGUtilities",
 			"Type": "Runtime",
 			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "CharacterInteractiveSystem",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
 		}
 	]
 }

@@ -11,6 +11,9 @@ class UUserWidgetBase;
 
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_WorldWidget);
 
+/**
+ * 创建出一个基于屏幕的3DUI
+ */
 UCLASS(ClassGroup=(DevPlugin), meta=(BlueprintSpawnableComponent))
 class WORLDWIDGETGENERATION_API UWorldWidgetComponent : public USceneComponent
 {

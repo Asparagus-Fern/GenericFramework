@@ -4,14 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "PickableItemInterface.h"
 #include "PickableItemComponent.generated.h"
 
 /**
  * 
  */
 UCLASS(ClassGroup=(DevPlugin), meta=(BlueprintSpawnableComponent))
-class BACKPACKSYSTEM_API UPickableItemComponent : public UActorComponent, public IPickableItemInterface
+class BACKPACKSYSTEM_API UPickableItemComponent : public UActorComponent
 {
 	GENERATED_BODY()
 

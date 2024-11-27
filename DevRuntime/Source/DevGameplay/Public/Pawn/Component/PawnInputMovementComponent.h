@@ -65,6 +65,9 @@ public:
 	bool ReassessmentTargetArmLength();
 };
 
+/**
+ * 对接增强输入，提供简单运动接口
+ */
 UCLASS(ClassGroup=(DevPlugin), meta=(BlueprintSpawnableComponent))
 class DEVGAMEPLAY_API UPawnInputMovementComponent : public UActorComponent, public IPawnInputMovementInterface
 {

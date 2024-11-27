@@ -1,0 +1,41 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+
+#include "InteractiveDetectionComponent.h"
+
+#include "InteractiveReceptionComponent.h"
+#include "BPFunctions/BPFunctions_Gameplay.h"
+
+UInteractiveDetectionComponent::UInteractiveDetectionComponent()
+{
+	PrimaryComponentTick.bCanEverTick = true;
+	SphereRadius = 200.f;
+}
+
+void UInteractiveDetectionComponent::BeginPlay()
+{
+	Super::BeginPlay();
+
+	OnComponentBeginOverlap.AddDynamic(this, &UInteractiveDetectionComponent::HandleOnComponentBeginOverlap);
+	OnComponentEndOverlap.AddDynamic(this, &UInteractiveDetectionComponent::HandleOnComponentEndOverlap);
+}
+
+void UInteractiveDetectionComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	OnComponentBeginOverlap.RemoveAll(this);
+	OnComponentEndOverlap.RemoveAll(this);
+
+	Super::EndPlay(EndPlayReason);
+}
+
+void UInteractiveDetectionComponent::HandleOnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (!OtherActor->IsA(APawn::StaticClass()))
+	{
+		return;
+	}
+}
+
+void UInteractiveDetectionComponent::HandleOnComponentEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+}
