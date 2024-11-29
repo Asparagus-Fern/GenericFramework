@@ -2,7 +2,7 @@
   "FileVersion": 3,
   "Version": 1,
   "VersionName": "1.0",
-  "FriendlyName": "DevLab",
+  "FriendlyName": "GameplayModule",
   "Description": "",
   "Category": "Other",
   "CreatedBy": "Chen",
@@ -19,34 +19,15 @@
       "Enabled": true
     },
     {
-      "Name": "WidgetModule",
-      "Enabled": true
-    },
-    {
-      "Name": "ZoneGraph",
+      "Name": "CameraModule",
       "Enabled": true
     }
   ],
   "Modules": [
     {
-      "Name": "GameMapSystem",
+      "Name": "DevGameplay",
       "Type": "Runtime",
       "LoadingPhase": "Default"
-    },
-    {
-      "Name": "PropertyDetailViewSystem",
-      "Type": "Runtime",
-      "LoadingPhase": "Default"
-    },
-    {
-      "Name": "BuildingsInteractionSystem",
-      "Type": "Runtime",
-      "LoadingPhase": "Default"
-    },
-    {
-      "Name": "ExtendEdMode",
-      "Type": "Editor",
-      "LoadingPhase": "PostDefault"
     }
   ]
 }

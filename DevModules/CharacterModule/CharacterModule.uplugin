@@ -2,7 +2,7 @@
   "FileVersion": 3,
   "Version": 1,
   "VersionName": "1.0",
-  "FriendlyName": "DevLab",
+  "FriendlyName": "CharacterModule",
   "Description": "",
   "Category": "Other",
   "CreatedBy": "Chen",
@@ -17,36 +17,18 @@
     {
       "Name": "DevCore",
       "Enabled": true
-    },
-    {
-      "Name": "WidgetModule",
-      "Enabled": true
-    },
-    {
-      "Name": "ZoneGraph",
-      "Enabled": true
     }
   ],
   "Modules": [
     {
-      "Name": "GameMapSystem",
+      "Name": "CharacterInteractiveSystem",
       "Type": "Runtime",
       "LoadingPhase": "Default"
     },
     {
-      "Name": "PropertyDetailViewSystem",
+      "Name": "BackpackSystem",
       "Type": "Runtime",
       "LoadingPhase": "Default"
-    },
-    {
-      "Name": "BuildingsInteractionSystem",
-      "Type": "Runtime",
-      "LoadingPhase": "Default"
-    },
-    {
-      "Name": "ExtendEdMode",
-      "Type": "Editor",
-      "LoadingPhase": "PostDefault"
     }
   ]
 }

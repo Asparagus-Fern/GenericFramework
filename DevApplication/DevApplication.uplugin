@@ -19,23 +19,43 @@
       "Enabled": true
     },
     {
-      "Name": "DevRuntime",
-      "Enabled": true
-    },
-    {
-      "Name": "DevEditor",
-      "Enabled": true
-    },
-    {
       "Name": "DevLab",
       "Enabled": true
     },
     {
-      "Name": "DBTween",
+      "Name": "ActiveNodeModule",
       "Enabled": true
     },
     {
-      "Name": "Mannequins",
+      "Name": "CameraModule",
+      "Enabled": true
+    },
+    {
+      "Name": "CharacterModule",
+      "Enabled": true
+    },
+    {
+      "Name": "GameplayModule",
+      "Enabled": true
+    },
+    {
+      "Name": "GISModule",
+      "Enabled": true
+    },
+    {
+      "Name": "MovieSceneModule",
+      "Enabled": true
+    },
+    {
+      "Name": "WidgetModule",
+      "Enabled": true
+    },
+    {
+      "Name": "WorldModule",
+      "Enabled": true
+    },
+    {
+      "Name": "DBTween",
       "Enabled": true
     }
   ],

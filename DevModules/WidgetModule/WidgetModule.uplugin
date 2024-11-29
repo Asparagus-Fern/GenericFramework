@@ -2,7 +2,7 @@
   "FileVersion": 3,
   "Version": 1,
   "VersionName": "1.0",
-  "FriendlyName": "DevLab",
+  "FriendlyName": "WidgetModule",
   "Description": "",
   "Category": "Other",
   "CreatedBy": "Chen",
@@ -17,34 +17,36 @@
     {
       "Name": "DevCore",
       "Enabled": true
-    },
-    {
-      "Name": "WidgetModule",
-      "Enabled": true
-    },
-    {
-      "Name": "ZoneGraph",
-      "Enabled": true
     }
   ],
   "Modules": [
     {
-      "Name": "GameMapSystem",
+      "Name": "UMGUtilities",
       "Type": "Runtime",
       "LoadingPhase": "Default"
     },
     {
-      "Name": "PropertyDetailViewSystem",
+      "Name": "UMGEdUtilities",
+      "Type": "Editor",
+      "LoadingPhase": "Default"
+    },
+    {
+      "Name": "ScreenWidgetGeneration",
       "Type": "Runtime",
       "LoadingPhase": "Default"
     },
     {
-      "Name": "BuildingsInteractionSystem",
+      "Name": "ScreenWidgetEdGeneration",
+      "Type": "Editor",
+      "LoadingPhase": "Default"
+    },
+    {
+      "Name": "WorldWidgetGeneration",
       "Type": "Runtime",
       "LoadingPhase": "Default"
     },
     {
-      "Name": "ExtendEdMode",
+      "Name": "WorldWidgetEdGeneration",
       "Type": "Editor",
       "LoadingPhase": "PostDefault"
     }
