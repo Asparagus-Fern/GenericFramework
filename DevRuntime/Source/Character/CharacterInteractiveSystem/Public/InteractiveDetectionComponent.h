@@ -22,10 +22,6 @@ public:
 
 protected:
 	UFUNCTION()
-	void OnPossessedPawnChanged(APawn* OldPawn, APawn* NewPawn);
-
-protected:
-	UFUNCTION()
 	void HandleOnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 	UFUNCTION()

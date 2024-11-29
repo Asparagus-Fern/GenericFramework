@@ -14,19 +14,27 @@ class DEVCORE_API UBPFunctions_File : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
 
-	/* Folder */
+	/* Directory */
 public:
 	UFUNCTION(BlueprintPure)
-	static bool ExistFolder(const FString& Directory);
+	static bool ExistDirectory(const FString& Directory);
 
 	UFUNCTION(BlueprintPure)
-	static bool CreateFolder(const FString& Directory);
+	static bool CreateDirectory(const FString& Directory);
 
 	UFUNCTION(BlueprintPure)
-	static bool DeleteFolder(const FString& Directory);
+	static bool DeleteDirectory(const FString& Directory);
 
 	UFUNCTION(BlueprintPure)
-	static bool DeleteFolderRecursively(const FString& Directory);
+	static bool DeleteDirectoryRecursively(const FString& Directory);
+
+	/**
+	 * 
+	 * @param DirectoryPath 文件夹绝对路径
+	 * @return 
+	 */
+	UFUNCTION(BlueprintCallable)
+	static bool OpenDirectoryDialog(FString& DirectoryPath);
 
 	/* File */
 public:
@@ -47,4 +55,23 @@ public:
 
 	UFUNCTION(BlueprintPure)
 	static bool IsFileReadOoly(const FString& FileName);
+
+	/**
+	 * 
+	 * @param FileType 筛选文件格式
+	 * @param FilePaths 文件绝对路径
+	 * @return 
+	 */
+	UFUNCTION(BlueprintCallable)
+	static bool OpenFileDialog(FString FileType, TArray<FString>& FilePaths);
+
+	/**
+	 * 
+	 * @param FileName 文件名
+	 * @param FileType 文件后缀
+	 * @param FilePaths 文件保存绝对路径
+	 * @return 
+	 */
+	UFUNCTION(BlueprintCallable)
+	static bool SaveFileDialog(FString FileName, FString FileType, TArray<FString>& FilePaths);
 };

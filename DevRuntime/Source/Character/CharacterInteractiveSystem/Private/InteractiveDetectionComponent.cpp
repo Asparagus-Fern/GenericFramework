@@ -3,7 +3,6 @@
 
 #include "InteractiveDetectionComponent.h"
 
-#include "InteractiveReceptionComponent.h"
 #include "BPFunctions/BPFunctions_Gameplay.h"
 
 UInteractiveDetectionComponent::UInteractiveDetectionComponent()

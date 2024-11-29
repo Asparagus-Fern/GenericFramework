@@ -1,8 +1,8 @@
 ﻿using UnrealBuildTool;
 
-public class GISUtilities : ModuleRules
+public class UnrealGDAL : ModuleRules
 {
-	public GISUtilities(ReadOnlyTargetRules Target) : base(Target)
+	public UnrealGDAL(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 
@@ -10,6 +10,8 @@ public class GISUtilities : ModuleRules
 			new string[]
 			{
 				"Core",
+				"gdal",
+				"GeoReferencing",
 				"DevCore",
 			}
 		);
@@ -21,9 +23,6 @@ public class GISUtilities : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
-
-				"gdal",
-				"GeoReferencing",
 			}
 		);
 	}

@@ -32,6 +32,11 @@ public:
 	{
 		for (const auto& Manager : ManagerMapping)
 		{
+			if (!Manager.Value)
+			{
+				continue;
+			}
+			
 			if (Manager.Value->GetManagerOwner()->GetClass() == T::StaticClass())
 			{
 				return Cast<T>(Manager.Value->GetManagerOwner());

@@ -1,8 +1,8 @@
 ﻿using UnrealBuildTool;
 
-public class GISUtilities : ModuleRules
+public class RoadNetworkSystem : ModuleRules
 {
-	public GISUtilities(ReadOnlyTargetRules Target) : base(Target)
+	public RoadNetworkSystem(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 
@@ -11,6 +11,7 @@ public class GISUtilities : ModuleRules
 			{
 				"Core",
 				"DevCore",
+				"GISUtilities"
 			}
 		);
 
@@ -20,10 +21,7 @@ public class GISUtilities : ModuleRules
 				"CoreUObject",
 				"Engine",
 				"Slate",
-				"SlateCore",
-
-				"gdal",
-				"GeoReferencing",
+				"SlateCore"
 			}
 		);
 	}

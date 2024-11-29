@@ -2,18 +2,15 @@
 
 #include "BPFunctions_GISParse.h"
 
-/*#include "GeographicCoordinates.h"
-
+#include "GeographicCoordinates.h"
+#include "GeoReferencingSystem.h"
 #include "Windows/MinWindows.h"
-#include "Windows/AllowWindowsPlatformTypes.h"
-#include "Windows/PreWindowsApi.h"
+#include "Debug/DebugType.h"
 
+#include "Windows/PreWindowsApi.h"
 #include "gdal_priv.h"
 #include "ogrsf_frmts.h"
-
 #include "Windows/PostWindowsApi.h"
-
-#include "GeoReferencingSystem.h"
 
 FVector ConvertToEngineLocation(AGeoReferencingSystem* GeoReferencingSystem, OGRPoint* InPoint)
 {
@@ -26,7 +23,27 @@ FVector ConvertToEngineLocation(AGeoReferencingSystem* GeoReferencingSystem, OGR
 	return EngineLocation;
 }
 
-bool UBPFunctions_GISParse::ParseSHPAsPoint(AGeoReferencingSystem* MyGeoReferencing, const FString& SHPPath, TArray<FVector>& PointCoordinates)
+FString GetFieldAsString(OGRFeature* InFeature, int Index)
+{
+	double A = InFeature->GetFieldAsDouble(Index);
+	int B = InFeature->GetFieldAsInteger(Index);
+	char** C = InFeature->GetFieldAsStringList(Index);
+	FString D = InFeature->GetFieldAsString(Index);
+
+	bool E = InFeature->IsFieldNull(Index);
+	int F = InFeature->IsFieldSet(Index);
+	OGRField* G = InFeature->GetRawFieldRef(Index);
+
+	OGRFeatureDefn* H = InFeature->GetDefnRef();
+	FString I = InFeature->GetNativeData();
+
+	char** J = InFeature->GetFieldAsStringList(Index);
+	// FString K = *J;
+
+	return "UnKnown Type";
+}
+
+GDALDataset* UBPFunctions_GISParse::LoadSHPDate(AGeoReferencingSystem* MyGeoReferencing, const FString& SHPPath)
 {
 	// 注册所有的驱动
 	GDALAllRegister();
@@ -35,32 +52,34 @@ bool UBPFunctions_GISParse::ParseSHPAsPoint(AGeoReferencingSystem* MyGeoReferenc
 	CPLSetConfigOption("GDAL_FILENAME_IS_UTF8", "YES");
 
 	// 为了使属性表字段支持中文，请添加下面这句
-	//CPLSetConfigOption("SHAPE_ENCODING","CP936");
+	CPLSetConfigOption("SHAPE_ENCODING", "CP936");
 
 	//读取数据，这里以ESRI的shp文件为例
 	FString strDriverName = "ESRI Shapefile";
 
 	//创建一个文件，根据strDriverName扩展名自动判断驱动类型
-	//   Driver oDriver =GetDriverByName(strDriverName);
-	// GDALDriver oDriver=GDALGetDriverByName(TEXT("strDriverName"));
 	GDALDriverH oDriver = GDALGetDriverByName("ESRI Shapefile");
 	if (oDriver == NULL)
 	{
-		// System.out.println(strDriverName+ "驱动没有初始化");
 		FMessageLog("驱动没有初始化").Warning(FText::FromString("\n"));
-		return false;
+		return nullptr;
 	}
 
 	// 读取shp文件
-	//DataSource srcDataSource = ogr.Open(srcFile, 0);
 	GDALDataset* DataSource = static_cast<GDALDataset*>(GDALOpenEx(TCHAR_TO_UTF8(*SHPPath), GDAL_OF_VECTOR, NULL, NULL, NULL));
 
-	if (DataSource == NULL)
+	if (DataSource == nullptr)
 	{
 		FMessageLog("Log").Error(FText::FromString(TEXT("文件读取错误") + CPLGetLastErrorNo()));
 		FMessageLog("Log").Error(FText::FromString(TEXT("Open failed") + CPLGetLastErrorNo()));
-		return false;
 	}
+
+	return DataSource;
+}
+
+bool UBPFunctions_GISParse::ParseSHPAsPoint(AGeoReferencingSystem* MyGeoReferencing, const FString& SHPPath, TArray<FVector>& PointCoordinates)
+{
+	GDALDataset* DataSource = LoadSHPDate(MyGeoReferencing, SHPPath);
 
 	//获取该数据源中的图层个数，如果小于1返回错误，shp只有一个图层，mdb会有多个
 	const int layerCount = DataSource->GetLayerCount();
@@ -108,39 +127,7 @@ bool UBPFunctions_GISParse::ParseSHPAsPoint(AGeoReferencingSystem* MyGeoReferenc
 
 bool UBPFunctions_GISParse::ParseSHPAsLine(AGeoReferencingSystem* MyGeoReferencing, const FString& SHPPath, TArray<FLineCoordinate>& LineCoordinates)
 {
-	// 注册所有的驱动
-	GDALAllRegister();
-
-	// 为了支持中文路径，请添加下面这句代码
-	CPLSetConfigOption("GDAL_FILENAME_IS_UTF8", "YES");
-
-	// 为了使属性表字段支持中文，请添加下面这句
-	//CPLSetConfigOption("SHAPE_ENCODING","CP936");
-
-	//读取数据，这里以ESRI的shp文件为例
-	FString strDriverName = "ESRI Shapefile";
-
-	//创建一个文件，根据strDriverName扩展名自动判断驱动类型
-	//   Driver oDriver =GetDriverByName(strDriverName);
-	// GDALDriver oDriver=GDALGetDriverByName(TEXT("strDriverName"));
-	GDALDriverH oDriver = GDALGetDriverByName("ESRI Shapefile");
-	if (oDriver == NULL)
-	{
-		// System.out.println(strDriverName+ "驱动没有初始化");
-		FMessageLog("驱动没有初始化").Warning(FText::FromString("\n"));
-		return false;
-	}
-
-	// 读取shp文件
-	//DataSource srcDataSource = ogr.Open(srcFile, 0);
-	GDALDataset* DataSource = static_cast<GDALDataset*>(GDALOpenEx(TCHAR_TO_UTF8(*SHPPath), GDAL_OF_VECTOR, NULL, NULL, NULL));
-
-	if (DataSource == NULL)
-	{
-		FMessageLog("Log").Error(FText::FromString(TEXT("文件读取错误") + CPLGetLastErrorNo()));
-		FMessageLog("Log").Error(FText::FromString(TEXT("Open failed") + CPLGetLastErrorNo()));
-		return false;
-	}
+	GDALDataset* DataSource = LoadSHPDate(MyGeoReferencing, SHPPath);
 
 	//获取该数据源中的图层个数，如果小于1返回错误，shp只有一个图层，mdb会有多个
 	const int layerCount = DataSource->GetLayerCount();
@@ -159,17 +146,20 @@ bool UBPFunctions_GISParse::ParseSHPAsLine(AGeoReferencingSystem* MyGeoReferenci
 			// 处理图层获取失败的情况
 			continue;
 		}
-
+		
 		Layer->ResetReading();
 
 		for (auto FeatureIt = 0; FeatureIt < Layer->GetFeatureCount(); FeatureIt++)
 		{
 			OGRFeature* Feature = Layer->GetFeature(FeatureIt);
 
-			// for (int FieldIt = 0; FieldIt < Feature->GetFieldCount(); FieldIt++)
-			// {
-			// 	DLOG(DLogDefault, Log, TEXT("Index : %d, Field : %hs"), Feature->GetFieldCount(), Feature->GetFieldAsString(FieldIt))
-			// }
+			if (FeatureIt == 0)
+			{
+				for (int FieldIt = 0; FieldIt < Feature->GetFieldCount(); FieldIt++)
+				{
+					DLOG(DLogDefault, Log, TEXT("Index : %d, Field : %s"), FieldIt, *GetFieldAsString(Feature,FieldIt))
+				}
+			}
 
 			OGRGeometry* Geometry = Feature->GetGeometryRef();
 			OGRwkbGeometryType GeometryType = Geometry->getGeometryType();
@@ -200,4 +190,4 @@ bool UBPFunctions_GISParse::ParseSHPAsLine(AGeoReferencingSystem* MyGeoReferenci
 	GDALClose(DataSource);
 
 	return true;
-}*/
+}

@@ -29,6 +29,10 @@
 		{
 			"Name": "CommonUI",
 			"Enabled": true
+		},
+		{
+			"Name": "GeoReferencing",
+			"Enabled": true
 		}
 	],
 	"Modules": [
@@ -94,6 +98,16 @@
 		},
 		{
 			"Name": "CharacterInteractiveSystem",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "RoadNetworkSystem",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "UnrealGDAL",
 			"Type": "Runtime",
 			"LoadingPhase": "Default"
 		}

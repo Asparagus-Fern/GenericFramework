@@ -3,28 +3,63 @@
 
 #include "BPFunctions/BPFunctions_File.h"
 
-bool UBPFunctions_File::ExistFolder(const FString& Directory)
+#include "DesktopPlatformModule.h"
+#include "IDesktopPlatform.h"
+
+#if WITH_EDITOR
+#include "EditorDirectories.h"
+#endif
+
+#define LOCTEXT_NAMESPACE "DFileOperations"
+
+bool UBPFunctions_File::ExistDirectory(const FString& Directory)
 {
 	IPlatformFile& PlatformFile = FPlatformFileManager::Get().GetPlatformFile();
 	return PlatformFile.DirectoryExists(*Directory);
 }
 
-bool UBPFunctions_File::CreateFolder(const FString& Directory)
+bool UBPFunctions_File::CreateDirectory(const FString& Directory)
 {
 	IPlatformFile& PlatformFile = FPlatformFileManager::Get().GetPlatformFile();
 	return PlatformFile.CreateDirectoryTree(*Directory);
 }
 
-bool UBPFunctions_File::DeleteFolder(const FString& Directory)
+bool UBPFunctions_File::DeleteDirectory(const FString& Directory)
 {
 	IPlatformFile& PlatformFile = FPlatformFileManager::Get().GetPlatformFile();
 	return PlatformFile.DeleteDirectory(*Directory);
 }
 
-bool UBPFunctions_File::DeleteFolderRecursively(const FString& Directory)
+bool UBPFunctions_File::DeleteDirectoryRecursively(const FString& Directory)
 {
 	IPlatformFile& PlatformFile = FPlatformFileManager::Get().GetPlatformFile();
 	return PlatformFile.DeleteDirectoryRecursively(*Directory);
+}
+
+bool UBPFunctions_File::OpenDirectoryDialog(FString& DirectoryPath)
+{
+	IDesktopPlatform* DesktopPlatform = FDesktopPlatformModule::Get();
+	if (DesktopPlatform != nullptr)
+	{
+		FString DefaultPath;
+
+#if WITH_EDITOR
+		DefaultPath = FEditorDirectories::Get().GetLastDirectory(ELastDirectory::GENERIC_OPEN);
+#endif
+
+		TArray<FString> OpenFiles;
+		if (DesktopPlatform->OpenDirectoryDialog(
+			FSlateApplication::Get().FindBestParentWindowHandleForDialogs(nullptr),
+			LOCTEXT("OpenDirectoryDialogTitle", "Choose a Directory").ToString(),
+			DefaultPath,
+			DirectoryPath
+		))
+		{
+			return true;
+		}
+	}
+
+	return false;
 }
 
 TArray<FString> UBPFunctions_File::FindFiles(const FString& Path, const FString& Extension)
@@ -68,3 +103,100 @@ bool UBPFunctions_File::IsFileReadOoly(const FString& FileName)
 	IFileManager& FileManager = IFileManager::Get();
 	return FileManager.IsReadOnly(*FileName);
 }
+
+bool UBPFunctions_File::OpenFileDialog(FString FileType, TArray<FString>& FilePaths)
+{
+	IDesktopPlatform* DesktopPlatform = FDesktopPlatformModule::Get();
+	if (DesktopPlatform != nullptr)
+	{
+		FString DefaultPath;
+		FString Filter;
+
+		if (FileType.IsEmpty())
+		{
+			Filter = TEXT("All files (*.*)|*.*");
+		}
+		else
+		{
+			Filter = FString::Printf(TEXT("Choose %s Files (*.%s)|*.%s"), *FileType, *FileType, *FileType);
+		}
+
+#if WITH_EDITOR
+		DefaultPath = FEditorDirectories::Get().GetLastDirectory(ELastDirectory::GENERIC_OPEN);
+#endif
+
+		TArray<FString> OpenFiles;
+		if (DesktopPlatform->OpenFileDialog(
+			FSlateApplication::Get().FindBestParentWindowHandleForDialogs(nullptr),
+			LOCTEXT("OpenFileDialogTitle", "Open File...").ToString(),
+			DefaultPath,
+			TEXT(""),
+			Filter, //TEXT("Profile data (*.profViz) | *.profViz"),
+			EFileDialogFlags::Multiple,
+			OpenFiles
+		))
+		{
+			for (auto& OpenFile : OpenFiles)
+			{
+				FilePaths.Add(FPaths::ConvertRelativePathToFull(OpenFile));
+			}
+
+#if WITH_EDITOR
+			if (OpenFiles.IsValidIndex(0))
+			{
+				if (!OpenFiles[0].IsEmpty())
+				{
+					FEditorDirectories::Get().SetLastDirectory(ELastDirectory::GENERIC_OPEN, OpenFiles[0]);
+				}
+			}
+#endif
+
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool UBPFunctions_File::SaveFileDialog(FString FileName, FString FileType, TArray<FString>& FilePaths)
+{
+	if (FileType.IsEmpty())
+	{
+		return false;
+	}
+
+	IDesktopPlatform* DesktopPlatform = FDesktopPlatformModule::Get();
+	if (DesktopPlatform != nullptr)
+	{
+		FString DefaultPath;
+		const FString File = FString::Printf(TEXT("%s.%s"), *FileName, *FileType);
+		const FString Filter = FString::Printf(TEXT("Save Files As (*.%s)|*.%s"), *FileType, *FileType);;
+
+#if WITH_EDITOR
+		DefaultPath = FEditorDirectories::Get().GetLastDirectory(ELastDirectory::GENERIC_OPEN);
+#endif
+
+		TArray<FString> SaveFiles;
+		if (DesktopPlatform->SaveFileDialog(
+			FSlateApplication::Get().FindBestParentWindowHandleForDialogs(nullptr),
+			LOCTEXT("SaveFileDialogTitle", "Save File...").ToString(),
+			DefaultPath,
+			File,
+			Filter,
+			EFileDialogFlags::None,
+			SaveFiles
+		))
+		{
+			for (auto& SaveFile : SaveFiles)
+			{
+				FilePaths.Add(FPaths::ConvertRelativePathToFull(SaveFile));
+			}
+
+			return true;
+		}
+	}
+
+	return false;
+}
+
+#undef LOCTEXT_NAMESPACE
