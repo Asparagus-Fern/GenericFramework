@@ -2,6 +2,7 @@
 
 #include "GDALType.h"
 
+/* ==================== FGDALGeometryType ==================== */
 
 FGDALGeometryType::FGDALGeometryType()
 {
@@ -12,5 +13,16 @@ FGDALGeometryType::FGDALGeometryType(EGDALGeometryType InGDALGeometryType, bool 
 	  bSupportZ(InSupportZ),
 	  bSupportM(InSupportM),
 	  bSupport25D(InSupport25D)
+{
+}
+
+/* ==================== FPointCoordinate ==================== */
+
+FPointCoordinate::FPointCoordinate()
+{
+}
+
+FPointCoordinate::FPointCoordinate(const FVector& InCoordinate)
+	: Coordinate(InCoordinate)
 {
 }

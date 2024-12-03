@@ -59,6 +59,9 @@ public:
 	UFUNCTION(BlueprintPure)
 	FGDALGeometryType GetGeometryType() const;
 
+public:
+	OGRFeatureDefn* GetFeatureDefinition() const { return FeatureDefinition; }
+
 private:
 	OGRFeatureDefn* FeatureDefinition = nullptr;
 	TArray<OGRFieldDefn*> Fields;

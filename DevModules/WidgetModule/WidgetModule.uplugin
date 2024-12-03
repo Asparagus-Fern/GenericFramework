@@ -28,7 +28,7 @@
     {
       "Name": "UMGEdUtilities",
       "Type": "Editor",
-      "LoadingPhase": "Default"
+      "LoadingPhase": "PostDefault"
     },
     {
       "Name": "ScreenWidgetGeneration",
@@ -38,7 +38,7 @@
     {
       "Name": "ScreenWidgetEdGeneration",
       "Type": "Editor",
-      "LoadingPhase": "Default"
+      "LoadingPhase": "PostDefault"
     },
     {
       "Name": "WorldWidgetGeneration",

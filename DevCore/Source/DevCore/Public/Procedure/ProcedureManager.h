@@ -16,6 +16,7 @@ class DEVCORE_API UProcedureManager : public UWorldSubsystem, public FCoreIntern
 {
 	GENERATED_BODY()
 
+	/* todo:以Task方式重写？ */
 public:
 	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;

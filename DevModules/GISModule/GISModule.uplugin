@@ -30,9 +30,14 @@
       "LoadingPhase": "Default"
     },
     {
+      "Name": "UnrealEdGDAL",
+      "Type": "UncookedOnly",
+      "LoadingPhase": "PostDefault"
+    },
+    {
       "Name": "GISUtilities",
       "Type": "Runtime",
-      "LoadingPhase": "PreLoadingScreen"
+      "LoadingPhase": "Default"
     },
     {
       "Name": "RoadNetworkSystem",

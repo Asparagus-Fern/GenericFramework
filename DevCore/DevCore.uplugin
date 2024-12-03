@@ -27,12 +27,12 @@
     {
       "Name": "DevSlateCore",
       "Type": "Runtime",
-      "LoadingPhase": "Default"
+      "LoadingPhase": "PreDefault"
     },
     {
       "Name": "DevCore",
       "Type": "Runtime",
-      "LoadingPhase": "Default"
+      "LoadingPhase": "PreDefault"
     },
     {
       "Name": "DevEdCore",

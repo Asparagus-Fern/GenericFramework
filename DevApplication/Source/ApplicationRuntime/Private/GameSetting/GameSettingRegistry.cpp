@@ -3,6 +3,7 @@
 
 #include "Collection/PropertyCollection.h"
 #include "DataSource/PropertyDataSouceDynamic.h"
+#include "Debug/DebugType.h"
 #include "GameSetting/GameSettingCollection.h"
 #include "GameSetting/GameSettings.h"
 #include "Value/Action/PropertyActionValue.h"
@@ -104,7 +105,7 @@ void UGameSettingRegistry::Initialize()
 			Controller->AddProperty(Test4);
 		}
 
-		DLOG(DLogGameSetting, Warning, TEXT(""))
+		DLOG(DLogDefault, Warning, TEXT(""))
 	}
 
 	/* ==================== Keyboard ==================== */

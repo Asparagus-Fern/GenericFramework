@@ -15,6 +15,8 @@
 
 #include "GDALType.generated.h"
 
+/* ==================== EGDALError ==================== */
+
 UENUM(BlueprintType)
 enum class EGDALError : uint8
 {
@@ -124,6 +126,8 @@ inline OGRErr ConvToOGRError(EGDALError GDALError)
 	return OGRERR_FAILURE;
 }
 
+/* ==================== FGDALGCP ==================== */
+
 USTRUCT(BlueprintType)
 struct FGDALGCP
 {
@@ -158,6 +162,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	double GCPZ;
 };
+
+/* ==================== FGDALGeometryType ==================== */
 
 UENUM(BlueprintType)
 enum class EGDALGeometryType :uint8
@@ -209,7 +215,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	bool bSupport25D = false;
 };
-
 
 inline FGDALGeometryType ConvToGDALGeometryType(OGRwkbGeometryType OGRwkbGeometryType)
 {
@@ -430,4 +435,32 @@ inline FGDALGeometryType ConvToGDALGeometryType(OGRwkbGeometryType OGRwkbGeometr
 	}
 
 	return FGDALGeometryType();
+};
+
+/* ==================== FPointCoordinate ==================== */
+
+USTRUCT(BlueprintType)
+struct FPointCoordinate
+{
+	GENERATED_BODY()
+
+public:
+	FPointCoordinate();
+	FPointCoordinate(const FVector& InCoordinate);
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FVector Coordinate;
+};
+
+/* ==================== FMultiPointCoordinate ==================== */
+
+USTRUCT(BlueprintType)
+struct FMultiPointCoordinate
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TArray<FPointCoordinate> PointCoordinates;
 };

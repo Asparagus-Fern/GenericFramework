@@ -7,6 +7,7 @@
 #include "GDALFeatureDefinition.h"
 #include "ogrsf_frmts.h"
 
+
 void UGDALLayer::Initialize(OGRLayer* InDataSource)
 {
 	DataSource = InDataSource;

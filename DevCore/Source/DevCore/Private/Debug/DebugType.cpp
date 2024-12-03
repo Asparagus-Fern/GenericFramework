@@ -7,7 +7,6 @@ DEFINE_LOG_CATEGORY(DLogUI);
 DEFINE_LOG_CATEGORY(DLogCamera);
 DEFINE_LOG_CATEGORY(DLogWorld);
 DEFINE_LOG_CATEGORY(DLogProperty);
-DEFINE_LOG_CATEGORY(DLogGameSetting);
 
 extern FColor DErrorColor = FColor::Red;
 extern FColor DWarningColor = FColor::Yellow;

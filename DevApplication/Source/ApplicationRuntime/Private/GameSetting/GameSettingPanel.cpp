@@ -15,7 +15,7 @@ void UGameSettingPanel::SetupProperty()
 {
 	Super::SetupProperty();
 
-	DEnsureAlwaysLOG(DLogGameSetting, GetRegistry<UGameSettingRegistry>())
+	DEnsureAlwaysLOG(DLogDefault, GetRegistry<UGameSettingRegistry>())
 	
 	SetPropertyCollection(GetRegistry<UGameSettingRegistry>()->GetGameSettingCollection());
 
