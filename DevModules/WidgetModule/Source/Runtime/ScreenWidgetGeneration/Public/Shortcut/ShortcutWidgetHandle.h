@@ -9,7 +9,7 @@
 #include "Procedure/ProcedureBaseInterface.h"
 #include "ShortcutWidgetHandle.generated.h"
 
-class UScreenWidgetManager;
+class UShortcutWidgetManager;
 
 /**
  * 处理UMG的快捷键操作
@@ -19,7 +19,7 @@ class SCREENWIDGETGENERATION_API UShortcutWidgetHandle : public UCommonObject, p
 {
 	GENERATED_BODY()
 
-	friend UScreenWidgetManager;
+	friend UShortcutWidgetManager;
 
 protected:
 	virtual void NativeOnCreate() override;

@@ -46,10 +46,6 @@ bool FWidgetAnimationTimerHandle::operator==(const UUserWidgetBase* OtherWidget)
 
 /* ==================== UScreenWidgetManager ==================== */
 
-UScreenWidgetManager::FOnInteractableWidgetAdded UScreenWidgetManager::OnInteractableWidgetAdded;
-UScreenWidgetManager::FOnInteractableWidgetRemoved UScreenWidgetManager::OnInteractableWidgetRemoved;
-UScreenWidgetManager::FOnInteractableWidgetClearup UScreenWidgetManager::OnInteractableWidgetClearup;
-
 UScreenWidgetManager::FScreenWidgetDelegate UScreenWidgetManager::PreHUDCreated;
 UScreenWidgetManager::FHUDDelegate UScreenWidgetManager::OnHUDCreated;
 UScreenWidgetManager::FScreenWidgetDelegate UScreenWidgetManager::PostHUDCreated;
@@ -81,9 +77,6 @@ void UScreenWidgetManager::Initialize(FSubsystemCollectionBase& Collection)
 	Super::Initialize(Collection);
 	RegisterManager(this);
 
-	UInteractableUserWidgetBase::AddInteractableWidget.AddUObject(this, &UScreenWidgetManager::AddInteractableWidget);
-	UInteractableUserWidgetBase::RemoveInteractableWidget.AddUObject(this, &UScreenWidgetManager::RemoveInteractableWidget);
-
 	UGameplayTagSlot::OnGameplayTagSlotBuild.AddUObject(this, &UScreenWidgetManager::RegisterSlot);
 	UGameplayTagSlot::OnGameplayTagSlotDestroy.AddUObject(this, &UScreenWidgetManager::UnRegisterSlot);
 }
@@ -95,9 +88,6 @@ void UScreenWidgetManager::Deinitialize()
 
 	UGameplayTagSlot::OnGameplayTagSlotBuild.RemoveAll(this);
 	UGameplayTagSlot::OnGameplayTagSlotDestroy.RemoveAll(this);
-
-	UInteractableUserWidgetBase::AddInteractableWidget.RemoveAll(this);
-	UInteractableUserWidgetBase::RemoveInteractableWidget.RemoveAll(this);
 }
 
 bool UScreenWidgetManager::DoesSupportWorldType(const EWorldType::Type WorldType) const
@@ -149,15 +139,11 @@ void UScreenWidgetManager::OnWorldMatchStarting(UWorld* InWorld)
 void UScreenWidgetManager::OnWorldBeginPlay(UWorld& InWorld)
 {
 	Super::OnWorldBeginPlay(InWorld);
-
-	RegisterShortcutWidgetHandles();
 }
 
 void UScreenWidgetManager::OnWorldEndPlay(UWorld* InWorld)
 {
 	FCoreInternalManager::OnWorldEndPlay(InWorld);
-
-	UnRegisterShortcutWidgetHandles();
 
 	/* 清除插槽 */
 	ClearupSlots();
@@ -166,76 +152,6 @@ void UScreenWidgetManager::OnWorldEndPlay(UWorld* InWorld)
 	PreHUDDestroyed.Broadcast();
 	ClearupGameHUDs();
 	PostHUDDestroyed.Broadcast();
-}
-
-/* ==================== Interactable Widget Group ==================== */
-
-void UScreenWidgetManager::AddInteractableWidget(UInteractableUserWidgetBase* InteractableWidget, FString GroupName)
-{
-	/* 查找按钮组是否存在，不存在则创建 */
-	if (!InteractableWidgetGroups.Contains(GroupName))
-	{
-		UCommonButtonGroup* NewGroup = NewObject<UCommonButtonGroup>(this);
-		InteractableWidgetGroups.FindOrAdd(GroupName, NewGroup);
-	}
-
-	/* 添加到按钮组 */
-	if (IsValid(InteractableWidget->ActiveCommonButton))
-	{
-		InteractableWidgetGroups.FindRef(GroupName)->AddWidget(InteractableWidget->ActiveCommonButton);
-		OnInteractableWidgetAdded.Broadcast(InteractableWidget, GroupName);
-	}
-}
-
-void UScreenWidgetManager::RemoveInteractableWidget(UInteractableUserWidgetBase* InteractableWidget, FString GroupName)
-{
-	/* 查找按钮组并移除指定Widget */
-	UCommonButtonGroup* Group = InteractableWidgetGroups.FindRef(GroupName);
-	if (IsValid(Group))
-	{
-		if (IsValid(InteractableWidget->ActiveCommonButton))
-		{
-			OnInteractableWidgetRemoved.Broadcast(InteractableWidget, GroupName);
-			Group->RemoveWidget(InteractableWidget->ActiveCommonButton);
-		}
-
-		/* 当该组数量为0时，销毁该按钮组 */
-		if (Group->GetButtonCount() == 0)
-		{
-			InteractableWidgetGroups.Remove(GroupName);
-			Group->MarkAsGarbage();
-		}
-	}
-}
-
-void UScreenWidgetManager::ClearupInteractableWidgetGroup(const FString& GroupName, const bool DeselectAll)
-{
-	/* 清除一个按钮组 */
-	if (InteractableWidgetGroups.Contains(GroupName))
-	{
-		UCommonButtonGroup* RemoveGroup = InteractableWidgetGroups.FindAndRemoveChecked(GroupName);
-
-		if (DeselectAll)
-		{
-			RemoveGroup->DeselectAll();
-		}
-
-		RemoveGroup->MarkAsGarbage();
-	}
-
-	OnInteractableWidgetClearup.Broadcast(GroupName);
-}
-
-bool UScreenWidgetManager::FindInteractableWidgetGroup(const FString& GroupName, UCommonButtonGroup*& Group) const
-{
-	/* 查找一个按钮组 */
-	if (InteractableWidgetGroups.Contains(GroupName))
-	{
-		Group = InteractableWidgetGroups.FindRef(GroupName);
-		return true;
-	}
-
-	return false;
 }
 
 /* ==================== Game HUD ==================== */
@@ -726,11 +642,6 @@ void UScreenWidgetManager::ActiveWidget(UUserWidgetBase* InWidget, const FOnWidg
 	ActivedWidgets.Add(InWidget);
 	OnWidgetOpen.Broadcast(InWidget);
 
-	if (UShortcutWidgetHandle* ShortcutWidgetHandle = GetShortcutWidgetHandle(InWidget))
-	{
-		ShortcutWidgetHandle->Link(InWidget);
-	}
-
 	auto OnActiveStateChangedFinish = [this, &InWidget, &OnFinish]()
 	{
 		if (const FWidgetAnimationTimerHandle* Found = WidgetAnimationTimerHandles.FindByKey(InWidget))
@@ -785,11 +696,6 @@ void UScreenWidgetManager::InactiveWidget(UUserWidgetBase* InWidget, FOnWidgetAc
 	}
 
 	InWidget->NativeOnInactived();
-
-	if (UShortcutWidgetHandle* ShortcutWidgetHandle = GetShortcutWidgetHandle(InWidget))
-	{
-		ShortcutWidgetHandle->UnLink();
-	}
 
 	auto OnActiveStateChangedFinish = [this, &InWidget, &OnFinish, &MarkAsGarbage]()
 	{
@@ -993,8 +899,11 @@ void UScreenWidgetManager::HandleSelectMenuRecursive(FGameplayTag MenuTag, bool 
 	{
 		SelectedMenuCache.Remove(MenuTag);
 
-		const FGameplayTag LastMenuTag = SelectedMenuCache.Last();
-		SelectMenu(LastMenuTag);
+		if (!SelectedMenuCache.IsEmpty())
+		{
+			const FGameplayTag LastMenuTag = SelectedMenuCache.Last();
+			SelectMenu(LastMenuTag);
+		}
 	}
 	else
 	{
@@ -1310,85 +1219,6 @@ void UScreenWidgetManager::HandleMenuResponseStateChanged()
 		bProcessingMenuSelection = false;
 		ProcessingMenuIndex = 0;
 	}
-}
-
-void UScreenWidgetManager::RegisterShortcutWidgetHandles()
-{
-	if (!UScreenWidgetManagerSetting::Get()->ShortcutWidgetTable.IsNull())
-	{
-		UDataTable* DataTable = UBPFunctions_Object::LoadObject<UDataTable>(UScreenWidgetManagerSetting::Get()->ShortcutWidgetTable);
-		if (IsValid(DataTable))
-		{
-			if (!DataTable->RowStruct->IsChildOf(FShortcutWidgetTableRow::StaticStruct()))
-			{
-				return;
-			}
-
-			ShortcutWidgetTable = DataTable;
-
-			ShortcutWidgetTable->ForeachRow<FShortcutWidgetTableRow>
-			("", [this](FName Key, const FShortcutWidgetTableRow& Value)
-			 {
-				 if (!Value.ShortcutWidgetHandleClass || !Value.WidgetClass || !IsValid(Value.InputAction))
-				 {
-					 return;
-				 }
-
-				 /* PlayerIndex不存在 */
-				 if (!UGameplayStatics::GetPlayerController(this, Value.PlayerIndex))
-				 {
-					 return;
-				 }
-
-				 /* 相同WidgetClass映射了多个InputAction */
-				 if (IsValid(GetShortcutWidgetHandle(Value.WidgetClass)))
-				 {
-					 return;
-				 }
-
-				 UShortcutWidgetHandle* ShortcutWidgetHandle = NewObject<UShortcutWidgetHandle>(this, Value.ShortcutWidgetHandleClass);
-				 ShortcutWidgetHandle->ShortcutWidgetTableRow = Value;
-				 ShortcutWidgetHandles.Add(ShortcutWidgetHandle);
-
-				 ShortcutWidgetHandle->NativeOnCreate();
-			 }
-			);
-		}
-	}
-}
-
-void UScreenWidgetManager::UnRegisterShortcutWidgetHandles()
-{
-	for (const auto& ShortcutWidgetHandle : ShortcutWidgetHandles)
-	{
-		ShortcutWidgetHandle->NativeOnDestroy();
-	}
-}
-
-UShortcutWidgetHandle* UScreenWidgetManager::GetShortcutWidgetHandle(const UUserWidgetBase* InWidget)
-{
-	for (const auto& ShortcutWidgetHandle : ShortcutWidgetHandles)
-	{
-		if (ShortcutWidgetHandle->Equal(InWidget))
-		{
-			return ShortcutWidgetHandle;
-		}
-	}
-
-	return nullptr;
-}
-
-UShortcutWidgetHandle* UScreenWidgetManager::GetShortcutWidgetHandle(const TSubclassOf<UUserWidgetBase> InWidgetClass)
-{
-	for (const auto& ShortcutWidgetHandle : ShortcutWidgetHandles)
-	{
-		if (ShortcutWidgetHandle->Equal(InWidgetClass))
-		{
-			return ShortcutWidgetHandle;
-		}
-	}
-
-	return nullptr;
 }
 
 #undef LOCTEXT_NAMESPACE

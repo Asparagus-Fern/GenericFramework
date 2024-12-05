@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Procedure/ProcedureInterface.h"
+#include "Debug/DebugType.h"
 
 /**
  * 

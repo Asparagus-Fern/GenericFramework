@@ -3,6 +3,7 @@
 
 #include "BPFunctions/BPFunctions_Widget.h"
 
+#include "InteractableWidgetGroupManager.h"
 #include "ScreenWidgetManager.h"
 #include "Manager/ManagerProxy.h"
 #include "UserWidget/Base/UserWidgetBase.h"
@@ -11,33 +12,33 @@
 
 void UBPFunctions_Widget::AddInteractableWidget(UInteractableUserWidgetBase* InteractableWidget, const FString GroupName)
 {
-	if (UScreenWidgetManager* ScreenWidgetManager = UManagerProxy::Get()->GetManager<UScreenWidgetManager>())
+	if (UInteractableWidgetGroupManager* InteractableWidgetGroupManager = UManagerProxy::Get()->GetManager<UInteractableWidgetGroupManager>())
 	{
-		ScreenWidgetManager->AddInteractableWidget(InteractableWidget, GroupName);
+		InteractableWidgetGroupManager->AddInteractableWidget(InteractableWidget, GroupName);
 	}
 }
 
 void UBPFunctions_Widget::RemoveInteractableWidget(UInteractableUserWidgetBase* InteractableWidget, const FString GroupName)
 {
-	if (UScreenWidgetManager* ScreenWidgetManager = UManagerProxy::Get()->GetManager<UScreenWidgetManager>())
+	if (UInteractableWidgetGroupManager* InteractableWidgetGroupManager = UManagerProxy::Get()->GetManager<UInteractableWidgetGroupManager>())
 	{
-		ScreenWidgetManager->RemoveInteractableWidget(InteractableWidget, GroupName);
+		InteractableWidgetGroupManager->RemoveInteractableWidget(InteractableWidget, GroupName);
 	}
 }
 
 void UBPFunctions_Widget::ClearupInteractableWidgetGroup(const FString& GroupName, const bool DeselectAll)
 {
-	if (UScreenWidgetManager* ScreenWidgetManager = UManagerProxy::Get()->GetManager<UScreenWidgetManager>())
+	if (UInteractableWidgetGroupManager* InteractableWidgetGroupManager = UManagerProxy::Get()->GetManager<UInteractableWidgetGroupManager>())
 	{
-		ScreenWidgetManager->ClearupInteractableWidgetGroup(GroupName, DeselectAll);
+		InteractableWidgetGroupManager->ClearupInteractableWidgetGroup(GroupName, DeselectAll);
 	}
 }
 
 bool UBPFunctions_Widget::GetInteractableWidgetGroups(TMap<FString, UCommonButtonGroup*>& Groups)
 {
-	if (const UScreenWidgetManager* ScreenWidgetManager = UManagerProxy::Get()->GetManager<UScreenWidgetManager>())
+	if (const UInteractableWidgetGroupManager* InteractableWidgetGroupManager = UManagerProxy::Get()->GetManager<UInteractableWidgetGroupManager>())
 	{
-		for (auto& InteractableWidgetGroup : ScreenWidgetManager->InteractableWidgetGroups)
+		for (auto& InteractableWidgetGroup : InteractableWidgetGroupManager->GetInteractableWidgetGroups())
 		{
 			Groups.FindOrAdd(InteractableWidgetGroup.Key, InteractableWidgetGroup.Value);
 		}
@@ -48,9 +49,9 @@ bool UBPFunctions_Widget::GetInteractableWidgetGroups(TMap<FString, UCommonButto
 
 bool UBPFunctions_Widget::FindInteractableWidgetGroup(const FString& GroupName, UCommonButtonGroup*& Group)
 {
-	if (const UScreenWidgetManager* ScreenWidgetManager = UManagerProxy::Get()->GetManager<UScreenWidgetManager>())
+	if (const UInteractableWidgetGroupManager* InteractableWidgetGroupManager = UManagerProxy::Get()->GetManager<UInteractableWidgetGroupManager>())
 	{
-		return ScreenWidgetManager->FindInteractableWidgetGroup(GroupName, Group);
+		return InteractableWidgetGroupManager->FindInteractableWidgetGroup(GroupName, Group);
 	}
 
 	return false;

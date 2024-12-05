@@ -75,40 +75,6 @@ public:
 	virtual void OnWorldBeginPlay(UWorld& InWorld) override;
 	virtual void OnWorldEndPlay(UWorld* InWorld) override;
 
-	/* ==================== Interactable Widget Group ==================== */
-public:
-	DECLARE_EVENT_TwoParams(UScreenWidgetManager, FOnInteractableWidgetAdded, UInteractableUserWidgetBase*, FString);
-
-	DECLARE_EVENT_TwoParams(UScreenWidgetManager, FOnInteractableWidgetRemoved, UInteractableUserWidgetBase*, FString);
-
-	DECLARE_EVENT_OneParam(UScreenWidgetManager, FOnInteractableWidgetClearup, FString);
-
-	/* 当一个InteractableWidget被添加进组时 */
-	static FOnInteractableWidgetAdded OnInteractableWidgetAdded;
-
-	/* 当一个InteractableWidget从组移除时 */
-	static FOnInteractableWidgetRemoved OnInteractableWidgetRemoved;
-
-	/* 当一个组被清除时 */
-	static FOnInteractableWidgetClearup OnInteractableWidgetClearup;
-
-	/* 添加一个InteractableWidget到组 */
-	virtual void AddInteractableWidget(UInteractableUserWidgetBase* InteractableWidget, FString GroupName);
-
-	/* 从组移除一个InteractableWidget */
-	virtual void RemoveInteractableWidget(UInteractableUserWidgetBase* InteractableWidget, FString GroupName);
-
-	/* 清除指定组 */
-	virtual void ClearupInteractableWidgetGroup(const FString& GroupName, bool DeselectAll);
-
-	/* 查询指定组 */
-	virtual bool FindInteractableWidgetGroup(const FString& GroupName, UCommonButtonGroup*& Group) const;
-
-public:
-	/* 当前管理的所有按钮组 */
-	UPROPERTY(Transient, BlueprintReadOnly)
-	TMap<FString, TObjectPtr<UCommonButtonGroup>> InteractableWidgetGroups;
-
 	/* Game HUD */
 public:
 	/* 当前视口所有创建的HUD */
@@ -271,18 +237,4 @@ protected:
 
 	virtual FReply OnMenuResponseStateChanged(UInteractableUserWidgetBase* InteractableWidget, bool TargetEventState);
 	virtual void HandleMenuResponseStateChanged();
-
-	/* Shortcut Widget */
-protected:
-	UPROPERTY(BlueprintReadOnly, Transient)
-	TObjectPtr<UDataTable> ShortcutWidgetTable = nullptr;
-
-	UPROPERTY(Transient)
-	TArray<TObjectPtr<UShortcutWidgetHandle>> ShortcutWidgetHandles;
-
-protected:
-	void RegisterShortcutWidgetHandles();
-	void UnRegisterShortcutWidgetHandles();
-	UShortcutWidgetHandle* GetShortcutWidgetHandle(const UUserWidgetBase* InWidget);
-	UShortcutWidgetHandle* GetShortcutWidgetHandle(TSubclassOf<UUserWidgetBase> InWidgetClass);
 };
