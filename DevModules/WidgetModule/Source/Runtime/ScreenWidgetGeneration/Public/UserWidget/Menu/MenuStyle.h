@@ -12,7 +12,7 @@
 /**
  * 
  */
-UCLASS(Abstract, BlueprintType)
+UCLASS(BlueprintType)
 class SCREENWIDGETGENERATION_API UMenuStyle : public UInteractableUserWidgetBase
 {
 	GENERATED_BODY()

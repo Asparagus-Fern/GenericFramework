@@ -86,6 +86,19 @@ void UWorldWidgetPanel::HandleRemoveFromViewport()
 	CanvasPanel->RemoveFromParent();
 }
 
+bool UWorldWidgetPanel::IsContain(UWorldWidgetComponent* InWorldWidgetComponent)
+{
+	for (const auto& WorldWidget : WorldWidgets)
+	{
+		if (WorldWidget.Key == InWorldWidgetComponent)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
 void UWorldWidgetPanel::AddWorldWidgetComponent(UWorldWidgetComponent* InWorldWidgetComponent)
 {
 	if (IsValid(InWorldWidgetComponent) && !WorldWidgets.Contains(InWorldWidgetComponent))
@@ -117,7 +130,13 @@ void UWorldWidgetPanel::RemoveWorldWidgetComponent(UWorldWidgetComponent* InWorl
 	}
 }
 
-void UWorldWidgetPanel::RefreshWorldWidgetComponent()
+void UWorldWidgetPanel::RefreshWorldWidgetComponent(UWorldWidgetComponent* InWorldWidgetComponent)
+{
+	RemoveWorldWidgetComponent(InWorldWidgetComponent);
+	AddWorldWidgetComponent(InWorldWidgetComponent);
+}
+
+void UWorldWidgetPanel::RefreshAllWorldWidgetComponent()
 {
 	CanvasPanel->ClearChildren();
 
@@ -280,7 +299,7 @@ void UWorldWidgetManager::RefreshWorldWidgetPanel()
 {
 	for (const auto& WorldWidgetPanel : WorldWidgetPanels)
 	{
-		WorldWidgetPanel->RefreshWorldWidgetComponent();
+		WorldWidgetPanel->RefreshAllWorldWidgetComponent();
 	}
 }
 

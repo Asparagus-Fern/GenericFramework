@@ -40,10 +40,11 @@ public:
 	FLevelEditorViewportClient* LevelEditorViewportClient = nullptr;
 	TMap<UWorldWidgetComponent*, TSharedPtr<SWorldWidgetContainer>> WorldWidgetContainer;
 
-protected:
+public:
+	virtual bool IsContain(UWorldWidgetComponent* InWorldWidgetComponent) override;
 	virtual void AddWorldWidgetComponent(UWorldWidgetComponent* InWorldWidgetComponent) override;
 	virtual void RemoveWorldWidgetComponent(UWorldWidgetComponent* InWorldWidgetComponent) override;
-	virtual void RefreshWorldWidgetComponent() override;
+	virtual void RefreshAllWorldWidgetComponent() override;
 
 	virtual void OnWorldWidgetMiddleClicked(TSharedPtr<SWorldWidgetContainer> DoubleClickedContainer);
 };
@@ -89,7 +90,7 @@ protected:
 
 	/* Actor被删除时 */
 	FDelegateHandle LevelActorDeletedHandle;
-	void OnLevelActorDeleted(AActor* InActor);
+	void OnLevelActorDeleted(AActor* Actor);
 
 	/* 蓝图编译时 */
 	FDelegateHandle BlueprintCompiledHandle;

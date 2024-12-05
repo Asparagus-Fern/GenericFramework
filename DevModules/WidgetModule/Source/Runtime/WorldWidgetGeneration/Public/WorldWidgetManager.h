@@ -34,7 +34,7 @@ public:
 public:
 	virtual void HandleAddToViewport() override;
 	virtual void HandleRemoveFromViewport() override;
-	
+
 	/* FWorldWidgetPanel */
 protected:
 	UPROPERTY()
@@ -42,16 +42,20 @@ protected:
 
 public:
 	TMap<UWorldWidgetComponent*, UUserWidgetBase*> GetWorldWidgets() { return WorldWidgets; }
-
-protected:
+	
+	virtual bool IsContain(UWorldWidgetComponent* InWorldWidgetComponent);
+	
 	/* 添加一个WorldWidget进入该Panel */
 	virtual void AddWorldWidgetComponent(UWorldWidgetComponent* InWorldWidgetComponent);
 
 	/* 从该Panel移除一个WorldWidget */
 	virtual void RemoveWorldWidgetComponent(UWorldWidgetComponent* InWorldWidgetComponent);
 
+	/* 刷新该Panel的一个WorldWidget */
+	virtual void RefreshWorldWidgetComponent(UWorldWidgetComponent* InWorldWidgetComponent);
+
 	/* 刷新该Panel的所有WorldWidget */
-	virtual void RefreshWorldWidgetComponent();
+	virtual void RefreshAllWorldWidgetComponent();
 };
 
 

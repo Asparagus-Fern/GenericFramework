@@ -6,7 +6,6 @@
 #include "Collection/PropertyCollection.h"
 #include "Components/TextBlock.h"
 #include "GameSetting/GameSettingRegistry.h"
-#include "GameSetting/GameSettings.h"
 #include "Widget/ListView/PropertyListView.h"
 
 #define LOCTEXT_NAMESPACE "PropertyDetailViewSystem"

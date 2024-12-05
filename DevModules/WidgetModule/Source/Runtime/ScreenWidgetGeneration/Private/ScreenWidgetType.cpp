@@ -17,13 +17,15 @@ FScreenWidgetDelegates::FMenuSelectionDelegate FScreenWidgetDelegates::OnMenuSel
 FScreenWidgetDelegates::FWidgetAnimationDelegate FScreenWidgetDelegates::OnWidgetAnimationFinish;
 
 FMenuInfo::FMenuInfo()
+	: StyleClass(UMenuStyle::StaticClass())
 {
 	ResponseState.Add(ECommonButtonResponseEvent::OnSelected, true);
 	ResponseState.Add(ECommonButtonResponseEvent::OnDeselected, false);
 }
 
 FMenuInfo::FMenuInfo(const FGameplayTag InMenuTag)
-	: MenuTag(InMenuTag)
+	: MenuTag(InMenuTag),
+	  StyleClass(UMenuStyle::StaticClass())
 {
 	ResponseState.Add(ECommonButtonResponseEvent::OnSelected, true);
 	ResponseState.Add(ECommonButtonResponseEvent::OnDeselected, false);
@@ -40,11 +42,13 @@ bool FMenuInfo::operator==(const FGameplayTag InMenuTag) const
 }
 
 FMenuContainerInfo::FMenuContainerInfo()
+	: ContainerClass(UMenuContainer::StaticClass())
 {
 }
 
 FMenuContainerInfo::FMenuContainerInfo(const FGameplayTag InOwnerTag)
-	: OwnerTag(InOwnerTag)
+	: OwnerTag(InOwnerTag),
+	  ContainerClass(UMenuContainer::StaticClass())
 {
 }
 

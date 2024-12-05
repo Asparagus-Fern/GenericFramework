@@ -75,7 +75,7 @@ public:
 	virtual void OnWorldBeginPlay(UWorld& InWorld) override;
 	virtual void OnWorldEndPlay(UWorld* InWorld) override;
 
-	/* Interactable Widget Group */
+	/* ==================== Interactable Widget Group ==================== */
 public:
 	DECLARE_EVENT_TwoParams(UScreenWidgetManager, FOnInteractableWidgetAdded, UInteractableUserWidgetBase*, FString);
 
@@ -83,13 +83,25 @@ public:
 
 	DECLARE_EVENT_OneParam(UScreenWidgetManager, FOnInteractableWidgetClearup, FString);
 
+	/* 当一个InteractableWidget被添加进组时 */
 	static FOnInteractableWidgetAdded OnInteractableWidgetAdded;
+
+	/* 当一个InteractableWidget从组移除时 */
 	static FOnInteractableWidgetRemoved OnInteractableWidgetRemoved;
+
+	/* 当一个组被清除时 */
 	static FOnInteractableWidgetClearup OnInteractableWidgetClearup;
 
+	/* 添加一个InteractableWidget到组 */
 	virtual void AddInteractableWidget(UInteractableUserWidgetBase* InteractableWidget, FString GroupName);
+
+	/* 从组移除一个InteractableWidget */
 	virtual void RemoveInteractableWidget(UInteractableUserWidgetBase* InteractableWidget, FString GroupName);
+
+	/* 清除指定组 */
 	virtual void ClearupInteractableWidgetGroup(const FString& GroupName, bool DeselectAll);
+
+	/* 查询指定组 */
 	virtual bool FindInteractableWidgetGroup(const FString& GroupName, UCommonButtonGroup*& Group) const;
 
 public:
@@ -180,7 +192,7 @@ public:
 
 public:
 	UUserWidgetBase* GetContainerWidget(const FWidgetContainer& WidgetContainer);
-	
+
 	virtual UUserWidgetBase* OpenUserWidget(TSubclassOf<UUserWidgetBase> InWidgetClass, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged());
 	virtual bool OpenUserWidget(UUserWidgetBase* InWidget, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged());
 
@@ -225,6 +237,12 @@ public:
 	virtual void SwitchGameMenu(UGameMenuSetting* InGameMenuSetting);
 	virtual void SelectMenu(FGameplayTag InMenuTag);
 	virtual void DeselectMenu(FGameplayTag InMenuTag);
+
+protected:
+	TArray<FGameplayTag> SelectedMenuCache;
+
+	FDelegateHandle SelectMenuRecursiveHandle;
+	void HandleSelectMenuRecursive(FGameplayTag MenuTag, bool IsSelected);
 
 protected:
 	/* 是否需要清理生成信息 */

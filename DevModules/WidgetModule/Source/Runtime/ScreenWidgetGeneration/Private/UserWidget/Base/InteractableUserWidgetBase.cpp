@@ -27,6 +27,11 @@ UInteractableUserWidgetBase::UInteractableUserWidgetBase(const FObjectInitialize
 
 bool UInteractableUserWidgetBase::Initialize()
 {
+	if (IsDesignTime() && !bPreview)
+	{
+		return Super::Initialize();
+	}
+
 	const bool bInitializedThisCall = Super::Initialize();
 
 	if (bInitializedThisCall)

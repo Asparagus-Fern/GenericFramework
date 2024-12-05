@@ -5,7 +5,6 @@
 #include "DataSource/PropertyDataSouceDynamic.h"
 #include "Debug/DebugType.h"
 #include "GameSetting/GameSettingCollection.h"
-#include "GameSetting/GameSettings.h"
 #include "Value/Action/PropertyActionValue.h"
 #include "Value/Discrete/PropertyDiscreteValueDynamic_Bool.h"
 #include "Value/Discrete/PropertyDiscreteValueDynamic_Enum.h"
@@ -16,7 +15,7 @@
 
 void UGameSettingRegistry::Initialize()
 {
-	if (IsValid(Collection))
+	/*if (IsValid(Collection))
 	{
 		return;
 	}
@@ -29,7 +28,7 @@ void UGameSettingRegistry::Initialize()
 	Collection->SetPropertyContext(UGameSettings::Get());
 	Collection->Initialize();
 
-	/* ==================== Controller ==================== */
+	/* ==================== Controller ==================== #1#
 	{
 		UGameSettingCollection* Controller = NewObject<UGameSettingCollection>(Collection);
 		Controller->SetPropertyName(TEXT("Controller"));
@@ -108,7 +107,7 @@ void UGameSettingRegistry::Initialize()
 		DLOG(DLogDefault, Warning, TEXT(""))
 	}
 
-	/* ==================== Keyboard ==================== */
+	/* ==================== Keyboard ==================== #1#
 	{
 		UGameSettingCollection* Keyboard = NewObject<UGameSettingCollection>(Collection);
 		Keyboard->SetPropertyName(TEXT("Keyboard"));
@@ -117,7 +116,7 @@ void UGameSettingRegistry::Initialize()
 		Collection->AddProperty(Keyboard);
 	}
 
-	/* ==================== Game ==================== */
+	/* ==================== Game ==================== #1#
 	{
 		UGameSettingCollection* Game = NewObject<UGameSettingCollection>(Collection);
 		Game->SetPropertyName(TEXT("Game"));
@@ -126,7 +125,7 @@ void UGameSettingRegistry::Initialize()
 		Collection->AddProperty(Game);
 	}
 
-	/* ==================== ViewAngle ==================== */
+	/* ==================== ViewAngle ==================== #1#
 	{
 		UGameSettingCollection* ViewAngle = NewObject<UGameSettingCollection>(Collection);
 		ViewAngle->SetPropertyName(TEXT("ViewAngle"));
@@ -135,7 +134,7 @@ void UGameSettingRegistry::Initialize()
 		Collection->AddProperty(ViewAngle);
 	}
 
-	/* ==================== Language ==================== */
+	/* ==================== Language ==================== #1#
 	{
 		UGameSettingCollection* Language = NewObject<UGameSettingCollection>(Collection);
 		Language->SetPropertyName(TEXT("Language"));
@@ -144,7 +143,7 @@ void UGameSettingRegistry::Initialize()
 		Collection->AddProperty(Language);
 	}
 
-	/* ==================== Display ==================== */
+	/* ==================== Display ==================== #1#
 	{
 		UGameSettingCollection* Display = NewObject<UGameSettingCollection>(Collection);
 		Display->SetPropertyName(TEXT("Display"));
@@ -153,7 +152,7 @@ void UGameSettingRegistry::Initialize()
 		Collection->AddProperty(Display);
 	}
 
-	/* ==================== Vedio ==================== */
+	/* ==================== Vedio ==================== #1#
 	{
 		UGameSettingCollection* Vedio = NewObject<UGameSettingCollection>(Collection);
 		Vedio->SetPropertyName(TEXT("Vedio"));
@@ -162,7 +161,7 @@ void UGameSettingRegistry::Initialize()
 		Collection->AddProperty(Vedio);
 	}
 
-	/* ==================== Audio ==================== */
+	/* ==================== Audio ==================== #1#
 	{
 		UGameSettingCollection* Audio = NewObject<UGameSettingCollection>(Collection);
 		Audio->SetPropertyName(TEXT("Audio"));
@@ -171,7 +170,7 @@ void UGameSettingRegistry::Initialize()
 		Collection->AddProperty(Audio);
 	}
 
-	/* ==================== AuxiliarySettings ==================== */
+	/* ==================== AuxiliarySettings ==================== #1#
 	{
 		UGameSettingCollection* AuxiliarySettings = NewObject<UGameSettingCollection>(Collection);
 		AuxiliarySettings->SetPropertyName(TEXT("AuxiliarySettings"));
@@ -180,12 +179,12 @@ void UGameSettingRegistry::Initialize()
 		Collection->AddProperty(AuxiliarySettings);
 	}
 
-	RegisterProperty(Collection);
+	RegisterProperty(Collection);*/
 }
 
 void UGameSettingRegistry::SavePropertyChanges()
 {
-	UGameSettings::Get()->SaveSettings();
+	// UGameSettings::Get()->SaveSettings();
 }
 
 #undef LOCTEXT_NAMESPACE

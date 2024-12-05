@@ -125,5 +125,8 @@ void UCommonButton::NativeOnDestroy()
 
 void UCommonButton::HandleResponse(ECommonButtonResponseEvent InResponseEvent)
 {
-	OnButtonResponse.Broadcast(this, InResponseEvent);
+	if (IsValid(GetWorld()) && GetWorld()->IsGameWorld())
+	{
+		OnButtonResponse.Broadcast(this, InResponseEvent);
+	}
 }

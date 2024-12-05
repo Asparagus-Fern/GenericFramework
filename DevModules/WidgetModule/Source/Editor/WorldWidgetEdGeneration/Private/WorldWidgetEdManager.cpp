@@ -18,7 +18,7 @@ void UEditorWorldWidgetPanel::NativeOnCreate()
 {
 	UWorldWidgetPanel::NativeOnCreate();
 
-	RefreshWorldWidgetComponent();
+	RefreshAllWorldWidgetComponent();
 }
 
 void UEditorWorldWidgetPanel::NativeOnRefresh()
@@ -107,6 +107,19 @@ void UEditorWorldWidgetPanel::HandleRemoveFromViewport()
 	}
 }
 
+bool UEditorWorldWidgetPanel::IsContain(UWorldWidgetComponent* InWorldWidgetComponent)
+{
+	for (const auto& WorldWidget : WorldWidgetContainer)
+	{
+		if (WorldWidget.Key == InWorldWidgetComponent)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
 void UEditorWorldWidgetPanel::AddWorldWidgetComponent(UWorldWidgetComponent* InWorldWidgetComponent)
 {
 	/* InWorldWidgetComponent为空 */
@@ -163,7 +176,7 @@ void UEditorWorldWidgetPanel::RemoveWorldWidgetComponent(UWorldWidgetComponent* 
 	WorldWidgetContainer.Remove(InWorldWidgetComponent);
 }
 
-void UEditorWorldWidgetPanel::RefreshWorldWidgetComponent()
+void UEditorWorldWidgetPanel::RefreshAllWorldWidgetComponent()
 {
 	/* 清除当前所有的WorldWidget */
 	{
@@ -295,17 +308,54 @@ void UWorldWidgetEdManager::OnLevelViewportClientListChanged()
 
 void UWorldWidgetEdManager::OnLevelActorAdded(AActor* Actor)
 {
-	RefreshWorldWidgetPanel();
+	// RefreshWorldWidgetPanel();
+
+	for (const auto& Panel : WorldWidgetPanels)
+	{
+		if (const AWorldWidgetPoint* WorldWidgetPoint = Cast<AWorldWidgetPoint>(Actor))
+		{
+			Panel->AddWorldWidgetComponent(WorldWidgetPoint->WorldWidgetComponent);
+		}
+	}
 }
 
 void UWorldWidgetEdManager::OnActorsMoved(TArray<AActor*>& Actors)
 {
-	RefreshWorldWidgetPanel();
+	// RefreshWorldWidgetPanel();
+
+	for (const auto& Panel : WorldWidgetPanels)
+	{
+		for (const auto& Actor : Actors)
+		{
+			if (const AWorldWidgetPoint* WorldWidgetPoint = Cast<AWorldWidgetPoint>(Actor))
+			{
+				if (Panel->IsContain(WorldWidgetPoint->WorldWidgetComponent))
+				{
+					Panel->RefreshWorldWidgetComponent(WorldWidgetPoint->WorldWidgetComponent);
+				}
+				else
+				{
+					Panel->AddWorldWidgetComponent(WorldWidgetPoint->WorldWidgetComponent);
+				}
+			}
+		}
+	}
 }
 
-void UWorldWidgetEdManager::OnLevelActorDeleted(AActor* InActor)
+void UWorldWidgetEdManager::OnLevelActorDeleted(AActor* Actor)
 {
-	RefreshWorldWidgetPanel();
+	// RefreshWorldWidgetPanel();
+
+	for (const auto& Panel : WorldWidgetPanels)
+	{
+		if (const AWorldWidgetPoint* WorldWidgetPoint = Cast<AWorldWidgetPoint>(Actor))
+		{
+			if (Panel->IsContain(WorldWidgetPoint->WorldWidgetComponent))
+			{
+				Panel->RemoveWorldWidgetComponent(WorldWidgetPoint->WorldWidgetComponent);
+			}
+		}
+	}
 }
 
 void UWorldWidgetEdManager::OnBlueprintCompiled()
@@ -320,7 +370,19 @@ void UWorldWidgetEdManager::OnLevelsChanged()
 
 void UWorldWidgetEdManager::OnWorldWidgetComponentRegister(UWorldWidgetComponent* WorldWidgetComponent)
 {
-	RefreshWorldWidgetPanel();
+	// RefreshWorldWidgetPanel();
+
+	for (const auto& Panel : WorldWidgetPanels)
+	{
+		if (Panel->IsContain(WorldWidgetComponent))
+		{
+			Panel->RefreshWorldWidgetComponent(WorldWidgetComponent);
+		}
+		else
+		{
+			Panel->AddWorldWidgetComponent(WorldWidgetComponent);
+		}
+	}
 }
 
 void UWorldWidgetEdManager::GenerateWorldWidgetPanel()

@@ -44,7 +44,7 @@ public:
 	bool bPreview = false;
 
 	/* 不为空时，会创建按钮组，所有相同组名的Widget，会被加入到该按钮组 */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FString GroupName;
 
 	/* 按钮响应设置，只作参数的配置，todo:考虑弃用CommonButton，封装成按钮逻辑基类 */

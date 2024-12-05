@@ -18,8 +18,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnButtonEventHandleFinish);
  * 
  */
 UCLASS(NotBlueprintable)
-class SCREENWIDGETGENERATION_API UCommonButton final : public UCommonButtonBase
-                                                       , public IProcedureInterface
+class SCREENWIDGETGENERATION_API UCommonButton final : public UCommonButtonBase, public IProcedureInterface
 {
 	GENERATED_BODY()
 

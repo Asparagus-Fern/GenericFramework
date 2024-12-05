@@ -915,21 +915,51 @@ void UScreenWidgetManager::SwitchGameMenu(UGameMenuSetting* InGameMenuSetting)
 void UScreenWidgetManager::SelectMenu(const FGameplayTag InMenuTag)
 {
 	FMenuContainerInfo MenuContainerInfo;
-	GameMenu->GetMenuContainerInfo(InMenuTag, MenuContainerInfo);
 
-	if (FMenuGenerateInfo* MenuGenerateInfo = MenuGenerateInfos.FindByKey(MenuContainerInfo))
+	if (GameMenu->GetMenuContainerInfo(InMenuTag, MenuContainerInfo))
 	{
-		const UMenuStyle* MenuStyle = MenuGenerateInfo->GetMenuStyle(InMenuTag);
-
-		if (IsValid(MenuStyle) && IsValid(MenuStyle->ActiveCommonButton) && ActivedWidgets.Contains(MenuGenerateInfo->MenuContainer) && ActivedWidgets.Contains(MenuStyle))
+		if (FMenuGenerateInfo* MenuGenerateInfo = MenuGenerateInfos.FindByKey(MenuContainerInfo))
 		{
-			if (MenuGenerateInfo->MenuContainer->bIsManagedByGroup)
+			const UMenuStyle* MenuStyle = MenuGenerateInfo->GetMenuStyle(InMenuTag);
+
+			if (IsValid(MenuStyle) && IsValid(MenuStyle->ActiveCommonButton) && ActivedWidgets.Contains(MenuGenerateInfo->MenuContainer) && ActivedWidgets.Contains(MenuStyle))
 			{
-				MenuGenerateInfo->MenuContainer->CommonButtonGroup->SelectButtonAtIndex(MenuGenerateInfo->MenuContainer->CommonButtonGroup->FindButtonIndex(MenuStyle->ActiveCommonButton));
+				if (MenuGenerateInfo->MenuContainer->bIsManagedByGroup)
+				{
+					MenuGenerateInfo->MenuContainer->CommonButtonGroup->SelectButtonAtIndex(MenuGenerateInfo->MenuContainer->CommonButtonGroup->FindButtonIndex(MenuStyle->ActiveCommonButton));
+				}
+				else
+				{
+					MenuStyle->ActiveCommonButton->SetSelectedInternal(true);
+				}
 			}
-			else
+		}
+		/* 父级还未创建，递归创建父级，然后再选中自己 */
+		else
+		{
+			SelectedMenuCache.Add(InMenuTag);
+
+			FGameplayTag SelectTag = InMenuTag;
+			FMenuContainerInfo SelectedContainerInfo;
+			while (GameMenu->GetMenuContainerInfo(SelectTag, SelectedContainerInfo))
 			{
-				MenuStyle->ActiveCommonButton->SetSelectedInternal(true);
+				if (!MenuGenerateInfos.FindByKey(SelectedContainerInfo))
+				{
+					SelectTag = SelectedContainerInfo.OwnerTag;
+					SelectedMenuCache.Add(SelectTag);
+				}
+				else
+				{
+					break;
+				}
+			}
+
+			SelectMenuRecursiveHandle = OnMenuSelectionChanged.AddUObject(this, &UScreenWidgetManager::HandleSelectMenuRecursive);
+
+			if (SelectedMenuCache.Num() > 0)
+			{
+				const FGameplayTag LastMenuTag = SelectedMenuCache.Last();
+				SelectMenu(LastMenuTag);
 			}
 		}
 	}
@@ -954,6 +984,22 @@ void UScreenWidgetManager::DeselectMenu(const FGameplayTag InMenuTag)
 				MenuStyle->ActiveCommonButton->SetSelectedInternal(false);
 			}
 		}
+	}
+}
+
+void UScreenWidgetManager::HandleSelectMenuRecursive(FGameplayTag MenuTag, bool IsSelected)
+{
+	if (!SelectedMenuCache.IsEmpty())
+	{
+		SelectedMenuCache.Remove(MenuTag);
+
+		const FGameplayTag LastMenuTag = SelectedMenuCache.Last();
+		SelectMenu(LastMenuTag);
+	}
+	else
+	{
+		OnMenuSelectionChanged.Remove(SelectMenuRecursiveHandle);
+		SelectMenuRecursiveHandle.Reset();
 	}
 }
 
@@ -998,6 +1044,8 @@ void UScreenWidgetManager::GenerateMenu(TArray<FGameplayTag> InMenuTags)
 	/* 参与构建菜单的容器 */
 	TArray<UMenuContainer*> MenuContainers;
 
+	/* todo: CommonButtonGroup必须要有一个Widget才可以切换状态，是否可以分离开，没有样式类也可以对按钮进行切换 */
+
 	/* 构建菜单 */
 	for (auto& MenuInfo : ValidMenuInfos)
 	{
@@ -1011,17 +1059,24 @@ void UScreenWidgetManager::GenerateMenu(TArray<FGameplayTag> InMenuTags)
 		if (!FoundMenuGenerateInfo)
 		{
 			/* 创建菜单容器 */
-			UMenuContainer* MenuContainer;
+			UMenuContainer* MenuContainer = nullptr;
 
-			if (MenuContainerInfo.bUseContainerClass)
+			if (MenuContainerInfo.bUseContainerClass && MenuContainerInfo.ContainerClass)
+			{
 				MenuContainer = CreateWidget<UMenuContainer>(GetWorld(), MenuContainerInfo.ContainerClass);
-			else
+			}
+			else if (!MenuContainerInfo.bUseContainerClass && IsValid(MenuContainerInfo.Container))
+			{
 				MenuContainer = DuplicateObject<UMenuContainer>(MenuContainerInfo.Container, GetWorld());
+			}
 
 			FMenuGenerateInfo NewMenuGenerateInfo = FMenuGenerateInfo(MenuContainerInfo, MenuContainer);
 			MenuGenerateInfos.Add(NewMenuGenerateInfo);
 
-			OpenUserWidget(MenuContainer);
+			if (IsValid(MenuContainer))
+			{
+				OpenUserWidget(MenuContainer);
+			}
 		}
 
 		/* 再次查找 */
@@ -1042,32 +1097,30 @@ void UScreenWidgetManager::GenerateMenu(TArray<FGameplayTag> InMenuTags)
 				MenuStyle = DuplicateObject<UMenuStyle>(MenuInfo.Style, GetWorld());
 			}
 
-			if (!IsValid(MenuStyle))
+			if (IsValid(MenuStyle))
 			{
-				DLOG(DLogUI, Error, TEXT("MenuStyle Is InValid"))
-				continue;
+				MenuStyle->MenuContainer = FoundMenuGenerateInfo->MenuContainer;
+
+				/* 接管菜单的响应处理 */
+				MenuStyle->OnResponseStateChanged.BindUObject(this, &UScreenWidgetManager::OnMenuResponseStateChanged);
+
+				/* 构建菜单样式 */
+				MenuStyle->NativePreConstructMenuStyle(MenuInfo);
 			}
 
-			MenuStyle->MenuContainer = FoundMenuGenerateInfo->MenuContainer;
-
-			/* 接管菜单的响应处理 */
-			MenuStyle->OnResponseStateChanged.BindUObject(this, &UScreenWidgetManager::OnMenuResponseStateChanged);
-
-			/* 构建菜单样式 */
-			MenuStyle->NativePreConstructMenuStyle(MenuInfo);
-
 			/* 构建菜单容器 */
-			const int32 Index = FoundMenuGenerateInfo->MenuContainer->GetCommonButtonGroup()->GetButtonCount();
-			FoundMenuGenerateInfo->MenuStyles.Add(MenuStyle);
-			FoundMenuGenerateInfo->MenuContainer->NativeConstructMenuContainer(MenuStyle, Index);
+			if (FoundMenuGenerateInfo->MenuContainer)
+			{
+				const int32 Index = FoundMenuGenerateInfo->MenuContainer->GetCommonButtonGroup()->GetButtonCount();
+				FoundMenuGenerateInfo->MenuStyles.Add(MenuStyle);
+				FoundMenuGenerateInfo->MenuContainer->NativeConstructMenuContainer(MenuStyle, Index);
+			}
 
-			ActiveWidget(MenuStyle);
-			MenuStyle->NativeConstructMenuStyle(MenuInfo);
-
-			// if (bProcessingMenuSelection)
-			// {
-			// 	MenuStyle->CommonButton->SetIsInteractionEnabled(false);
-			// }
+			if (IsValid(MenuStyle))
+			{
+				ActiveWidget(MenuStyle);
+				MenuStyle->NativeConstructMenuStyle(MenuInfo);
+			}
 		}
 	}
 
@@ -1190,12 +1243,12 @@ void UScreenWidgetManager::HandleMenuResponseStateChanged()
 		const UMenuStyle* PreviousMenuStyle = MenuStyles[ProcessingMenuIndex - 1];
 		const bool PreviousEventState = TargetMenuSelection.FindRef(PreviousMenuStyle);
 
-		OnMenuSelectionChanged.Broadcast(PreviousMenuStyle->GetMenuTag(), PreviousEventState);
-
 		if (PreviousEventState)
 			GenerateMenu(PreviousMenuStyle->GetMenuTag());
 		else
 			DestroyMenu(PreviousMenuStyle->GetMenuTag());
+
+		OnMenuSelectionChanged.Broadcast(PreviousMenuStyle->GetMenuTag(), PreviousEventState);
 	}
 
 	/* 执行当前菜单的事件 */

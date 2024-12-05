@@ -61,5 +61,5 @@ public:
 
 private:
 	OGRGeometry* DataSource = nullptr;
-	FVector GetPointCoordinateInternal(OGRPoint* InPoint){return }
+	FVector GetPointCoordinateInternal(OGRPoint* InPoint) { return FVector::ZeroVector; }
 };
