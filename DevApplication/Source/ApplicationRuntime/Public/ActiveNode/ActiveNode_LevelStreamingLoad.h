@@ -7,7 +7,7 @@
 #include "ActiveNode_LevelStreamingLoad.generated.h"
 
 class UUserWidgetBase;
-class ULoading;
+class ULoadingPanel;
 
 UCLASS(MinimalAPI)
 class AActiveNode_LevelStreamingLoad : public AActiveNode_Load
@@ -21,15 +21,18 @@ public:
 	virtual void Login() override;
 	virtual void Logout() override;
 
+protected:
+	void PostHUDCreated();
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	bool bLoadCurrentWorldLevels = true;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TSubclassOf<ULoading> LoadingClass = nullptr;
+	TSubclassOf<ULoadingPanel> LoadingClass = nullptr;
 
-	UPROPERTY(VisibleAnywhere, Transient)
-	ULoading* LoadingUI = nullptr;
+	UPROPERTY(Transient)
+	ULoadingPanel* LoadingUI = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TArray<TSoftObjectPtr<UWorld>> VisibleLevels;

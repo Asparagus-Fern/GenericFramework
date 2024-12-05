@@ -7,7 +7,7 @@
 #include "LevelStreamingManager.h"
 #include "ScreenWidgetManager.h"
 #include "Manager/ManagerProxy.h"
-#include "UserWidget/Loading/Loading.h"
+#include "UserWidget/Loading/LoadingPanel.h"
 
 AActiveNode_LevelStreamingLoad::AActiveNode_LevelStreamingLoad()
 {
@@ -16,24 +16,34 @@ AActiveNode_LevelStreamingLoad::AActiveNode_LevelStreamingLoad()
 void AActiveNode_LevelStreamingLoad::Login()
 {
 	Super::Login();
+	UScreenWidgetManager::PostHUDCreated.AddUObject(this, &AActiveNode_LevelStreamingLoad::PostHUDCreated);
+}
+
+void AActiveNode_LevelStreamingLoad::Logout()
+{
+	Super::Logout();
+}
+
+void AActiveNode_LevelStreamingLoad::PostHUDCreated()
+{
+	UScreenWidgetManager::PostHUDCreated.RemoveAll(this);
+
+	/* 创建加载页面 */
+	if (UScreenWidgetManager* ScreenWidgetManager = UManagerProxy::Get()->GetManager<UScreenWidgetManager>())
+	{
+		if (LoadingClass)
+		{
+			if (UUserWidgetBase* Widget = ScreenWidgetManager->OpenUserWidget(LoadingClass))
+			{
+				int32 A = GetLoadingNum();
+				LoadingUI = Cast<ULoadingPanel>(Widget);
+				LoadingUI->NativeOnLoadingBegin(GetLoadingNum());
+			}
+		}
+	}
 
 	if (!GetWorld()->IsPartitionedWorld())
 	{
-		/* 创建加载页面 */
-		if (UScreenWidgetManager* ScreenWidgetManager = UManagerProxy::Get()->GetManager<UScreenWidgetManager>())
-		{
-			if (LoadingClass)
-			{
-				if (UUserWidgetBase* Widget = ScreenWidgetManager->OpenUserWidget(LoadingClass))
-				{
-					LoadingUI = Cast<ULoading>(Widget);
-				}
-			}
-		}
-
-		if (IsValid(LoadingUI))
-			LoadingUI->NativeOnLoadingBegin(GetLoadingNum());
-
 		/* 加载关卡 */
 		if (ULevelStreamingManager* LevelStreamingManager = UManagerProxy::Get()->GetManager<ULevelStreamingManager>())
 		{
@@ -49,15 +59,10 @@ void AActiveNode_LevelStreamingLoad::Login()
 
 			return;
 		}
-
-		if (IsValid(LoadingUI))
-			LoadingUI->NativeOnLoadingEnd();
 	}
-}
 
-void AActiveNode_LevelStreamingLoad::Logout()
-{
-	Super::Logout();
+	if (IsValid(LoadingUI))
+		LoadingUI->NativeOnLoadingEnd();
 }
 
 void AActiveNode_LevelStreamingLoad::OnLoadCurrentWorldLevelStreamingOnceFinish_Implementation()
@@ -68,7 +73,7 @@ void AActiveNode_LevelStreamingLoad::NativeOnLoadCurrentWorldLevelStreamingOnceF
 {
 	if (IsValid(LoadingUI))
 		LoadingUI->NativeOnLoadingOnceFinish();
-
+	
 	OnLoadCurrentWorldLevelStreamingOnceFinish();
 }
 
@@ -127,5 +132,17 @@ void AActiveNode_LevelStreamingLoad::NativeOnLoadVisibleLevelsFinish()
 
 int32 AActiveNode_LevelStreamingLoad::GetLoadingNum() const
 {
-	return bLoadCurrentWorldLevels ? (GetWorld()->GetNumLevels() + VisibleLevels.Num()) : VisibleLevels.Num();
+	int32 LoadingNum = 0;
+	const bool bIsPartitionedWorld = GetWorld()->IsPartitionedWorld();
+
+	if (bLoadCurrentWorldLevels)
+	{
+		LoadingNum = bIsPartitionedWorld? VisibleLevels.Num() : GetWorld()->GetStreamingLevels().Num() + VisibleLevels.Num();
+	}
+	else
+	{
+		LoadingNum = VisibleLevels.Num();
+	}
+	
+	return LoadingNum;
 }

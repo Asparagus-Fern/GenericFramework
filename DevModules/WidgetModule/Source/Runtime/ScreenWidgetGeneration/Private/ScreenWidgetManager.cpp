@@ -19,7 +19,7 @@
 #include "UWidget/Override/GameplayTagSlot.h"
 #include "UserWidget/HUD/TemporaryHUD.h"
 
-#define LOCTEXT_NAMESPACE "UScreenWidgetManager"
+#define LOCTEXT_NAMESPACE "ScreenWidgetManager"
 
 /* ==================== FWidgetAnimationTimerHandle ==================== */
 
