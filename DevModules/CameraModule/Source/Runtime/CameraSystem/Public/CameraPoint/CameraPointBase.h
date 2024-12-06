@@ -24,6 +24,10 @@ public:
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	virtual void Tick(float DeltaTime) override;
 
+#if WITH_EDITOR
+	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
+#endif
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="Camera"), Category="Camera Point")
 	FGameplayTag CameraTag;
@@ -34,6 +38,12 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void SetCameraComponent(UCameraComponent* InCameraComponent);
+	
+	UFUNCTION(BlueprintCallable)
+	void SetCameraActorLink(ACameraActor* InCameraActor);
+
+	UFUNCTION(BlueprintCallable)
+	void SetCameraComponentLink(UCameraComponent* InCameraComponent);
 
 public:
 	DECLARE_EVENT_OneParam(ACameraPointBase, FCameraPointDelegate, ACameraPointBase*)
@@ -41,7 +51,17 @@ public:
 	static FCameraPointDelegate OnCameraPointRegister;
 	static FCameraPointDelegate OnCameraPointUnRegister;
 
+protected:
+	virtual void SetCameraComponentInternal(UCameraComponent* InCameraComponent) PURE_VIRTUAL(,);
+	
 #if WITH_EDITOR
+
+public:
+#if WITH_EDITORONLY_DATA
+	/* 用于对接现有的CameraActor，将拷贝该CameraActor所有属性到本相机，包括位置旋转FOV等 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Camera Point (Editor)")
+	ACameraActor* CameraActorLink = nullptr;
+#endif
 
 public:
 	DECLARE_EVENT_TwoParams(ACameraPointBase, FOnCameraPointPilotStateChanged, ACameraPointBase*, bool)

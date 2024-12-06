@@ -4,6 +4,7 @@
 #include "CameraPoint/CameraPointBase.h"
 
 #include "CameraManager.h"
+#include "Camera/CameraActor.h"
 #include "Camera/CameraComponent.h"
 
 UE_DEFINE_GAMEPLAY_TAG(TAG_Camera, "Camera");
@@ -37,6 +38,25 @@ void ACameraPointBase::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
+#if WITH_EDITOR
+
+void ACameraPointBase::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
+{
+	Super::PostEditChangeProperty(PropertyChangedEvent);
+
+	if (PropertyChangedEvent.Property)
+	{
+		const FName PropertyName = PropertyChangedEvent.Property->GetFName();
+
+		if (PropertyName == GET_MEMBER_NAME_CHECKED(ACameraPointBase, CameraActorLink))
+		{
+			SetCameraActorLink(CameraActorLink);
+		}
+	}
+}
+
+#endif
+
 void ACameraPointBase::SetCameraComponent_Implementation(UCameraComponent* InCameraComponent)
 {
 }
@@ -44,6 +64,28 @@ void ACameraPointBase::SetCameraComponent_Implementation(UCameraComponent* InCam
 UCameraComponent* ACameraPointBase::GetCameraComponent_Implementation()
 {
 	return nullptr;
+}
+
+void ACameraPointBase::SetCameraActorLink(ACameraActor* InCameraActor)
+{
+	if (IsValid(InCameraActor))
+	{
+		SetActorLocation(InCameraActor->GetActorLocation());
+		SetCameraComponentLink(InCameraActor->GetCameraComponent());
+
+#if WITH_EDITORONLY_DATA
+		CameraActorLink = nullptr;
+#endif
+	}
+}
+
+void ACameraPointBase::SetCameraComponentLink(UCameraComponent* InCameraComponent)
+{
+	if (IsValid(InCameraComponent))
+	{
+		UCameraComponent* DuplicateCameraComponent = DuplicateObject<UCameraComponent>(InCameraComponent, this);
+		SetCameraComponentInternal(DuplicateCameraComponent);
+	}
 }
 
 #if WITH_EDITOR

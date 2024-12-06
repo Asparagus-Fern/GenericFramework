@@ -3,6 +3,7 @@
 
 #include "CameraPoint/CameraPoint.h"
 
+#include "Camera/CameraActor.h"
 #include "Camera/CameraComponent.h"
 
 ACameraPoint::ACameraPoint()
@@ -18,5 +19,18 @@ UCameraComponent* ACameraPoint::GetCameraComponent_Implementation()
 
 void ACameraPoint::SetCameraComponent_Implementation(UCameraComponent* InCameraComponent)
 {
-	CameraComponent = InCameraComponent;
+	SetCameraComponentInternal(InCameraComponent);
+}
+
+void ACameraPoint::SetCameraComponentInternal(UCameraComponent* InCameraComponent)
+{
+	if (IsValid(InCameraComponent))
+	{
+		AddComponent()
+
+		
+		SetRootComponent(InCameraComponent);
+		InCameraComponent->RegisterComponent();
+		CameraComponent = Cast<UCameraComponent>(GetRootComponent());
+	}
 }

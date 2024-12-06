@@ -3,6 +3,7 @@
 #include "CameraPoint/CineCameraPoint.h"
 
 #include "CineCameraComponent.h"
+#include "Camera/CameraActor.h"
 
 ACineCameraPoint::ACineCameraPoint()
 {
@@ -17,8 +18,17 @@ UCameraComponent* ACineCameraPoint::GetCameraComponent_Implementation()
 
 void ACineCameraPoint::SetCameraComponent_Implementation(UCameraComponent* InCameraComponent)
 {
-	if (UCineCameraComponent* CastComponent = Cast<UCineCameraComponent>(InCameraComponent))
+	SetCameraComponentInternal(InCameraComponent);
+}
+
+void ACineCameraPoint::SetCameraComponentInternal(UCameraComponent* InCameraComponent)
+{
+	if (IsValid(InCameraComponent))
 	{
-		CineCameraComponent = CastComponent;
+		if (UCineCameraComponent* CastComponent = Cast<UCineCameraComponent>(InCameraComponent))
+		{
+			CineCameraComponent = CastComponent;
+			RootComponent = CineCameraComponent;
+		}
 	}
 }
