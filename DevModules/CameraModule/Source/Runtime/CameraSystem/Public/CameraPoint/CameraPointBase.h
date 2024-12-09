@@ -38,12 +38,12 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void SetCameraComponent(UCameraComponent* InCameraComponent);
-	
-	UFUNCTION(BlueprintCallable)
-	void SetCameraActorLink(ACameraActor* InCameraActor);
 
 	UFUNCTION(BlueprintCallable)
-	void SetCameraComponentLink(UCameraComponent* InCameraComponent);
+	void DuplicateFromCameraActor(ACameraActor* InCameraActor);
+
+	UFUNCTION(BlueprintCallable)
+	void DuplicateFromCameraComponent(UCameraComponent* InCameraComponent);
 
 public:
 	DECLARE_EVENT_OneParam(ACameraPointBase, FCameraPointDelegate, ACameraPointBase*)
@@ -52,8 +52,12 @@ public:
 	static FCameraPointDelegate OnCameraPointUnRegister;
 
 protected:
-	virtual void SetCameraComponentInternal(UCameraComponent* InCameraComponent) PURE_VIRTUAL(,);
-	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TObjectPtr<USceneComponent> SceneComponent;
+
+protected:
+	virtual void SetCameraComponentInternal(UCameraComponent* InCameraComponent);
+
 #if WITH_EDITOR
 
 public:

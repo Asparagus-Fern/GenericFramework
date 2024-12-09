@@ -6,6 +6,11 @@
 #include "CameraManager.h"
 #include "Camera/CameraActor.h"
 #include "Camera/CameraComponent.h"
+#include "Kismet/GameplayStatics.h"
+
+#if WITH_EDITOR
+#include "BPFunctions/BPFunctions_EditorScene.h"
+#endif
 
 UE_DEFINE_GAMEPLAY_TAG(TAG_Camera, "Camera");
 
@@ -15,6 +20,9 @@ ACameraPointBase::FCameraPointDelegate ACameraPointBase::OnCameraPointUnRegister
 ACameraPointBase::ACameraPointBase()
 {
 	PrimaryActorTick.bCanEverTick = false;
+
+	SceneComponent = CreateDefaultSubobject<USceneComponent>("SceneComponent");
+	RootComponent = SceneComponent;
 
 #if WITH_EDITORONLY_DATA
 	bIsSpatiallyLoaded = true;
@@ -50,7 +58,7 @@ void ACameraPointBase::PostEditChangeProperty(FPropertyChangedEvent& PropertyCha
 
 		if (PropertyName == GET_MEMBER_NAME_CHECKED(ACameraPointBase, CameraActorLink))
 		{
-			SetCameraActorLink(CameraActorLink);
+			DuplicateFromCameraActor(CameraActorLink);
 		}
 	}
 }
@@ -59,6 +67,7 @@ void ACameraPointBase::PostEditChangeProperty(FPropertyChangedEvent& PropertyCha
 
 void ACameraPointBase::SetCameraComponent_Implementation(UCameraComponent* InCameraComponent)
 {
+	SetCameraComponentInternal(InCameraComponent);
 }
 
 UCameraComponent* ACameraPointBase::GetCameraComponent_Implementation()
@@ -66,12 +75,13 @@ UCameraComponent* ACameraPointBase::GetCameraComponent_Implementation()
 	return nullptr;
 }
 
-void ACameraPointBase::SetCameraActorLink(ACameraActor* InCameraActor)
+void ACameraPointBase::DuplicateFromCameraActor(ACameraActor* InCameraActor)
 {
 	if (IsValid(InCameraActor))
 	{
 		SetActorLocation(InCameraActor->GetActorLocation());
-		SetCameraComponentLink(InCameraActor->GetCameraComponent());
+		SetActorRotation(InCameraActor->GetActorRotation());
+		DuplicateFromCameraComponent(InCameraActor->GetCameraComponent());
 
 #if WITH_EDITORONLY_DATA
 		CameraActorLink = nullptr;
@@ -79,12 +89,28 @@ void ACameraPointBase::SetCameraActorLink(ACameraActor* InCameraActor)
 	}
 }
 
-void ACameraPointBase::SetCameraComponentLink(UCameraComponent* InCameraComponent)
+void ACameraPointBase::DuplicateFromCameraComponent(UCameraComponent* InCameraComponent)
 {
 	if (IsValid(InCameraComponent))
 	{
 		UCameraComponent* DuplicateCameraComponent = DuplicateObject<UCameraComponent>(InCameraComponent, this);
 		SetCameraComponentInternal(DuplicateCameraComponent);
+	}
+}
+
+void ACameraPointBase::SetCameraComponentInternal(UCameraComponent* InCameraComponent)
+{
+	if (IsValid(InCameraComponent))
+	{
+		InCameraComponent->SetRelativeLocation(FVector::ZeroVector);
+		InCameraComponent->SetRelativeRotation(FRotator::ZeroRotator);
+
+		InCameraComponent->AttachToComponent(SceneComponent, FAttachmentTransformRules::KeepRelativeTransform);
+		InCameraComponent->RegisterComponentWithWorld(GetWorld());
+
+#if WITH_EDITOR
+		UBPFunctions_EditorScene::RefreshSelection();
+#endif
 	}
 }
 

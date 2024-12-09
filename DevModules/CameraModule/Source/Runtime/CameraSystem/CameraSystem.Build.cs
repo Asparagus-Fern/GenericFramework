@@ -24,8 +24,13 @@ public class CameraSystem : ModuleRules
 				"GameplayTags",
 				"CinematicCamera",
 				"ScreenWidgetGeneration",
-				"DeveloperSettings"
+				"DeveloperSettings",
 			}
 		);
+
+		if (Target.bBuildEditor)
+		{
+			PrivateDependencyModuleNames.Add("DevEdCore");
+		}
 	}
 }

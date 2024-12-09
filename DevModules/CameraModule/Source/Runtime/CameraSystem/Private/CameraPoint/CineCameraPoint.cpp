@@ -8,17 +8,12 @@
 ACineCameraPoint::ACineCameraPoint()
 {
 	CineCameraComponent = CreateDefaultSubobject<UCineCameraComponent>("CineCamera");
-	RootComponent = CineCameraComponent;
+	CineCameraComponent->SetupAttachment(SceneComponent);
 }
 
 UCameraComponent* ACineCameraPoint::GetCameraComponent_Implementation()
 {
 	return CineCameraComponent;
-}
-
-void ACineCameraPoint::SetCameraComponent_Implementation(UCameraComponent* InCameraComponent)
-{
-	SetCameraComponentInternal(InCameraComponent);
 }
 
 void ACineCameraPoint::SetCameraComponentInternal(UCameraComponent* InCameraComponent)
@@ -27,8 +22,10 @@ void ACineCameraPoint::SetCameraComponentInternal(UCameraComponent* InCameraComp
 	{
 		if (UCineCameraComponent* CastComponent = Cast<UCineCameraComponent>(InCameraComponent))
 		{
-			CineCameraComponent = CastComponent;
-			RootComponent = CineCameraComponent;
+			// CineCameraComponent->DestroyComponent();
+			// CineCameraComponent = Cast<UCineCameraComponent>(GetRootComponent());
 		}
 	}
+
+	Super::SetCameraComponentInternal(InCameraComponent);
 }
