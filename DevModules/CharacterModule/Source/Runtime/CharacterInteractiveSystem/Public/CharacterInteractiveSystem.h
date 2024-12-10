@@ -4,7 +4,7 @@
 #include "Module/CommonModuleInterface.h"
 #include "Modules/ModuleManager.h"
 
-class FCharacterInteractiveSystemModule : public ICommonModuleInterface
+class FCharacterInteractiveSystemModule : public IModuleInterface
 {
 public:
 	virtual void StartupModule() override;

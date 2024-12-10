@@ -4,7 +4,7 @@
 #include "Module/CommonEdModuleInterface.h"
 #include "Modules/ModuleManager.h"
 
-class FUMGEdUtilitiesModule : public ICommonEdModuleInterface
+class FUMGEdUtilitiesModule : public IModuleInterface
 {
 public:
 	virtual void StartupModule() override;

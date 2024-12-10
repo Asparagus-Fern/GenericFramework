@@ -4,8 +4,9 @@
 #include "Module/CommonEdModuleInterface.h"
 #include "Modules/ModuleManager.h"
 
-class FCameraEdSystemModule : public ICommonEdModuleInterface
+class FCameraEdSystemModule : public IModuleInterface
 {
-protected:
-	virtual void LoadDependentModule(TArray<FName>& InDependentModuleName) override;
+public:
+	virtual void StartupModule() override;
+	virtual void ShutdownModule() override;
 };

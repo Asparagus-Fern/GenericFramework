@@ -15,5 +15,6 @@ class DEVCORE_API UCommonObject : public UObject
 	GENERATED_BODY()
 
 public:
+	UCommonObject(const FObjectInitializer& ObjectInitializer);
 	virtual UWorld* GetWorld() const override;
 };

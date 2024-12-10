@@ -4,12 +4,10 @@
 
 void FBackpackSystemModule::StartupModule()
 {
-	ICommonModuleInterface::StartupModule();
 }
 
 void FBackpackSystemModule::ShutdownModule()
 {
-	ICommonModuleInterface::ShutdownModule();
 }
 
 #undef LOCTEXT_NAMESPACE

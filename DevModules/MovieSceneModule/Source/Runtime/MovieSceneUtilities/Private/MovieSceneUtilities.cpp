@@ -7,16 +7,12 @@
 
 void FMovieSceneUtilitiesModule::StartupModule()
 {
-	ICommonModuleInterface::StartupModule();
-
 	ILevelSequenceModule& LevelSequenceModule = FModuleManager::LoadModuleChecked<ILevelSequenceModule>("LevelSequence");
 	OnCreateMovieSceneUMGSpawnerDelegateHandle = LevelSequenceModule.RegisterObjectSpawner(FOnCreateMovieSceneObjectSpawner::CreateStatic(&FMovieSceneUMGSpawner::CreateObjectSpawner));
 }
 
 void FMovieSceneUtilitiesModule::ShutdownModule()
 {
-	ICommonModuleInterface::ShutdownModule();
-
 	ILevelSequenceModule& LevelSequenceModule = FModuleManager::LoadModuleChecked<ILevelSequenceModule>("LevelSequence");
 	LevelSequenceModule.UnregisterObjectSpawner(OnCreateMovieSceneUMGSpawnerDelegateHandle);
 }

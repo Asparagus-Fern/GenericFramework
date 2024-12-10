@@ -4,7 +4,7 @@
 #include "Module/CommonModuleInterface.h"
 #include "Modules/ModuleManager.h"
 
-class FDevGameplayModule : public ICommonModuleInterface
+class FDevGameplayModule : public IModuleInterface
 {
 public:
 	virtual void StartupModule() override;

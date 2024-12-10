@@ -4,10 +4,14 @@
 
 #define LOCTEXT_NAMESPACE "FWorldWidgetEdGenerationModule"
 
-void FWorldWidgetEdGenerationModule::LoadDependentModule(TArray<FName>& InDependentModuleName)
+void FWorldWidgetEdGenerationModule::StartupModule()
 {
-	ICommonEdModuleInterface::LoadDependentModule(InDependentModuleName);
-	InDependentModuleName.Add("WorldWidgetGeneration");
+	IModuleInterface::StartupModule();
+}
+
+void FWorldWidgetEdGenerationModule::ShutdownModule()
+{
+	IModuleInterface::ShutdownModule();
 }
 
 #undef LOCTEXT_NAMESPACE

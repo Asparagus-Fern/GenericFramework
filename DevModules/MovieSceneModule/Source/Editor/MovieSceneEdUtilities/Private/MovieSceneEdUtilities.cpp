@@ -9,8 +9,6 @@
 
 void FMovieSceneEdUtilitiesModule::StartupModule()
 {
-	ICommonEdModuleInterface::StartupModule();
-
 	ILevelSequenceModule& LevelSequenceModule = FModuleManager::LoadModuleChecked<ILevelSequenceModule>("LevelSequence");
 	EditorUMGSpawnerDelegateHandle = LevelSequenceModule.RegisterObjectSpawner(FOnCreateMovieSceneObjectSpawner::CreateStatic(&FMovieSceneUMGEdSpawner::CreateObjectSpawner));
 
@@ -20,8 +18,6 @@ void FMovieSceneEdUtilitiesModule::StartupModule()
 
 void FMovieSceneEdUtilitiesModule::ShutdownModule()
 {
-	ICommonEdModuleInterface::ShutdownModule();
-
 	ISequencerModule& SequencerModule = FModuleManager::Get().LoadModuleChecked<ISequencerModule>("Sequencer");
 	SequencerModule.UnRegisterTrackEditor(UMGTrackCreateEditorHandle);
 

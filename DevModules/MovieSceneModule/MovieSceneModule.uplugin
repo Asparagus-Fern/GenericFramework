@@ -1,34 +1,39 @@
 ﻿{
-  "FileVersion": 3,
-  "Version": 1,
-  "VersionName": "1.0",
-  "FriendlyName": "MovieSceneModule",
-  "Description": "",
-  "Category": "Other",
-  "CreatedBy": "Chen",
-  "CreatedByURL": "",
-  "DocsURL": "",
-  "MarketplaceURL": "",
-  "CanContainContent": true,
-  "IsBetaVersion": false,
-  "IsExperimentalVersion": false,
-  "Installed": false,
-  "Plugins": [
-    {
-      "Name": "DevCore",
-      "Enabled": true
-    }
-  ],
-  "Modules": [
-    {
-      "Name": "MovieSceneUtilities",
-      "Type": "Runtime",
-      "LoadingPhase": "Default"
-    },
-    {
-      "Name": "MovieSceneEdUtilities",
-      "Type": "Editor",
-      "LoadingPhase": "PostDefault"
-    }
-  ]
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "MovieSceneModule",
+	"Description": "",
+	"Category": "Other",
+	"CreatedBy": "Chen",
+	"CreatedByURL": "",
+	"DocsURL": "",
+	"MarketplaceURL": "",
+	"CanContainContent": true,
+	"IsBetaVersion": false,
+	"IsExperimentalVersion": false,
+	"Installed": false,
+	"Plugins": [
+		{
+			"Name": "DevCore",
+			"Enabled": true
+		}
+	],
+	"Modules": [
+		{
+			"Name": "MovieSceneUtilities",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "MovieSceneEdUtilities",
+			"Type": "Editor",
+			"LoadingPhase": "PostDefault"
+		},
+		{
+			"Name": "LevelSequenceController",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	]
 }

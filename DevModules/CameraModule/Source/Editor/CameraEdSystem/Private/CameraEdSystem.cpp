@@ -4,10 +4,14 @@
 
 #define LOCTEXT_NAMESPACE "FCameraEdSystemModule"
 
-void FCameraEdSystemModule::LoadDependentModule(TArray<FName>& InDependentModuleName)
+void FCameraEdSystemModule::StartupModule()
 {
-	ICommonEdModuleInterface::LoadDependentModule(InDependentModuleName);
-	InDependentModuleName.Add("CameraSystem");
+	IModuleInterface::StartupModule();
+}
+
+void FCameraEdSystemModule::ShutdownModule()
+{
+	IModuleInterface::ShutdownModule();
 }
 
 #undef LOCTEXT_NAMESPACE

@@ -4,8 +4,9 @@
 #include "Module/CommonModuleInterface.h"
 #include "Modules/ModuleManager.h"
 
-class FWorldPartitionModule : public ICommonModuleInterface
+class FWorldPartitionModule : public IModuleInterface
 {
 public:
-	virtual void LoadDependentModule(TArray<FName>& InDependentModuleName) override;
+	virtual void StartupModule() override;
+	virtual void ShutdownModule() override;
 };

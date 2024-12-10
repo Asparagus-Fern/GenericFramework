@@ -3,6 +3,11 @@
 
 #include "Object/CommonObject.h"
 
+UCommonObject::UCommonObject(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
+{
+}
+
 UWorld* UCommonObject::GetWorld() const
 {
 	if (!HasAnyFlags(RF_ClassDefaultObject) && ensureMsgf(GetOuter(), TEXT("CommonButtonEvent: %s has a null OuterPrivate in UCommonButtonEvent::GetWorld()"), *GetFullName())

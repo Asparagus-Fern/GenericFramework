@@ -3,8 +3,9 @@
 #include "CoreMinimal.h"
 #include "Module/CommonModuleInterface.h"
 
-class FWorldWidgetGenerationModule : public ICommonModuleInterface
+class FWorldWidgetGenerationModule : public IModuleInterface
 {
 public:
-	virtual void LoadDependentModule(TArray<FName>& InDependentModuleName) override;
+	virtual void StartupModule() override;
+	virtual void ShutdownModule() override;
 };

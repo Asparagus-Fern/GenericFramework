@@ -116,8 +116,14 @@ struct WORLDUTILITIES_API FFindActorHandle
 
 public:
 	FFindActorHandle();
+	FFindActorHandle(FName InActorTag);
+	FFindActorHandle(TSubclassOf<AActor> InActorClass);
+	FFindActorHandle(TSubclassOf<UInterface> InActorInterface);
+	FFindActorHandle(TSubclassOf<AActor> InActorClass, FName InActorTag);
+
 	bool operator==(const FFindActorHandle OtherHandle) const { return ID == OtherHandle.ID; }
 	bool operator==(const FGuid OtherID) const { return ID == OtherID; }
+
 	bool GetIsValid() const;
 
 public:
@@ -168,7 +174,10 @@ class WORLDUTILITIES_API UHandleActor : public UCommonObject
 
 public:
 	virtual bool CanExecuteHandle() { return false; }
-	virtual void ExecuteHandle(TArray<AActor*> InActors) { return; }
+	virtual void PreExecuteHandle(TArray<AActor*> InActors) { return; }
+	virtual void ExecuteHandle(TArray<AActor*> InActors) { ExecuteHandle(InActors, 1.f); }
+	virtual void ExecuteHandle(TArray<AActor*> InActors, float Alpha) { return; }
+	virtual void PostExecuteHandle(TArray<AActor*> InActors) { return; }
 };
 
 /**
@@ -181,7 +190,9 @@ class WORLDUTILITIES_API UHandleActorLocation : public UHandleActor
 
 public:
 	virtual bool CanExecuteHandle() override;
-	virtual void ExecuteHandle(TArray<AActor*> InActors) override;
+	virtual void PreExecuteHandle(TArray<AActor*> InActors) override;
+	virtual void ExecuteHandle(TArray<AActor*> InActors, float Alpha) override;
+	virtual void PostExecuteHandle(TArray<AActor*> InActors) override;
 
 public:
 	UPROPERTY()
@@ -195,6 +206,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(EditCondition = "bHandleActorLocationOffset"))
 	FVector NewActorLocationOffset = FVector::ZeroVector;
+
+private:
+	TArray<FVector> OriginActorLocation;
 };
 
 /**
@@ -207,7 +221,9 @@ class WORLDUTILITIES_API UHandleActorRotation : public UHandleActor
 
 public:
 	virtual bool CanExecuteHandle() override;
-	virtual void ExecuteHandle(TArray<AActor*> InActors) override;
+	virtual void PreExecuteHandle(TArray<AActor*> InActors) override;
+	virtual void ExecuteHandle(TArray<AActor*> InActors, float Alpha) override;
+	virtual void PostExecuteHandle(TArray<AActor*> InActors) override;
 
 public:
 	UPROPERTY()
@@ -221,6 +237,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(EditCondition = "bHandleActorRotationOffset"))
 	FRotator NewActorRotationOffset = FRotator::ZeroRotator;
+
+private:
+	TArray<FRotator> OriginActorRotation;
 };
 
 /**
@@ -233,7 +252,9 @@ class WORLDUTILITIES_API UHandleActorScale : public UHandleActor
 
 public:
 	virtual bool CanExecuteHandle() override;
-	virtual void ExecuteHandle(TArray<AActor*> InActors) override;
+	virtual void PreExecuteHandle(TArray<AActor*> InActors) override;
+	virtual void ExecuteHandle(TArray<AActor*> InActors, float Alpha) override;
+	virtual void PostExecuteHandle(TArray<AActor*> InActors) override;
 
 public:
 	UPROPERTY()
@@ -247,6 +268,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(EditCondition = "bHandleActorScaleOffset"))
 	FVector NewActorScaleOffset = FVector::ZeroVector;
+
+private:
+	TArray<FVector> OriginActorLocation;
 };
 
 /**

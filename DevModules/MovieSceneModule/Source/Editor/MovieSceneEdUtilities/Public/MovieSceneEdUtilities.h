@@ -4,7 +4,7 @@
 #include "Module/CommonEdModuleInterface.h"
 #include "Modules/ModuleManager.h"
 
-class FMovieSceneEdUtilitiesModule : public ICommonEdModuleInterface
+class FMovieSceneEdUtilitiesModule : public IModuleInterface
 {
 public:
 	virtual void StartupModule() override;

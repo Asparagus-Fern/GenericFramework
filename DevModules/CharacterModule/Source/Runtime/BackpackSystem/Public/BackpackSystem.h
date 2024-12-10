@@ -4,7 +4,7 @@
 #include "Module/CommonModuleInterface.h"
 #include "Modules/ModuleManager.h"
 
-class FBackpackSystemModule : public ICommonModuleInterface
+class FBackpackSystemModule : public IModuleInterface
 {
 public:
 	virtual void StartupModule() override;

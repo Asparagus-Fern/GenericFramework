@@ -4,7 +4,7 @@
 #include "Module/CommonModuleInterface.h"
 #include "Modules/ModuleManager.h"
 
-class FRoadNetworkSystemModule : public ICommonModuleInterface
+class FRoadNetworkSystemModule : public IModuleInterface
 {
 public:
 	virtual void StartupModule() override;

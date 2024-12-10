@@ -4,8 +4,9 @@
 #include "Module/CommonModuleInterface.h"
 #include "Modules/ModuleManager.h"
 
-class FCameraSystemModule : public ICommonModuleInterface
+class FCameraSystemModule : public IModuleInterface
 {
 public:
 	virtual void StartupModule() override;
+	virtual void ShutdownModule() override;
 };

@@ -6,7 +6,10 @@
 
 void FCameraSystemModule::StartupModule()
 {
-	ICommonModuleInterface::StartupModule();
+}
+
+void FCameraSystemModule::ShutdownModule()
+{
 }
 
 #undef LOCTEXT_NAMESPACE

@@ -4,11 +4,14 @@
 
 #define LOCTEXT_NAMESPACE "FWorldWidgetGenerationModule"
 
-void FWorldWidgetGenerationModule::LoadDependentModule(TArray<FName>& InDependentModuleName)
+void FWorldWidgetGenerationModule::StartupModule()
 {
-	ICommonModuleInterface::LoadDependentModule(InDependentModuleName);
+	IModuleInterface::StartupModule();
+}
 
-	InDependentModuleName.Add("ScreenWidgetGeneration");
+void FWorldWidgetGenerationModule::ShutdownModule()
+{
+	IModuleInterface::ShutdownModule();
 }
 
 #undef LOCTEXT_NAMESPACE

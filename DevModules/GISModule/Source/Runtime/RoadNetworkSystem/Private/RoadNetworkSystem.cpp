@@ -4,12 +4,10 @@
 
 void FRoadNetworkSystemModule::StartupModule()
 {
-	ICommonModuleInterface::StartupModule();
 }
 
 void FRoadNetworkSystemModule::ShutdownModule()
 {
-	ICommonModuleInterface::ShutdownModule();
 }
 
 #undef LOCTEXT_NAMESPACE

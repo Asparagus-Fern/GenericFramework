@@ -26,11 +26,21 @@ public:
 	virtual void ExecuteButtonEvent_Implementation() override;
 
 public:
+	/*
+	 * true：使用CameraActor的ActorTag查找相机进行切换
+	 * false：查找对应的CameraPoint的CameraTag进行切换
+	 */
+	UPROPERTY(EditAnywhere)
+	bool bUseUnrealCamera = false;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	int32 TargetPlayerIndex = 0;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="Camera"))
-	FGameplayTag TargetCameraTag;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="Camera", EditConditionHides, EditCondition = "!bUseUnrealCamera"))
+	FGameplayTag TargetCameraGameplayTag;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(EditConditionHides, EditCondition = "bUseUnrealCamera"))
+	FName TargetCameraNameTag;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced)
 	UCameraHandle* TargetCameraHandle = nullptr;

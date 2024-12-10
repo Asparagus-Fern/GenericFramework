@@ -1,7 +1,36 @@
 #include "SceneType.h"
 
+#include "BPFunctions/BPFunctions_Math.h"
+
+/* ==================== FFindActorHandle ==================== */
+
 FFindActorHandle::FFindActorHandle()
 	: ID(FGuid::NewGuid())
+{
+}
+
+FFindActorHandle::FFindActorHandle(FName InActorTag)
+	: FindActorMethod(EFindActorMethod::Tag),
+	  ActorTag(InActorTag)
+{
+}
+
+FFindActorHandle::FFindActorHandle(TSubclassOf<AActor> InActorClass)
+	: FindActorMethod(EFindActorMethod::Class),
+	  ActorClass(InActorClass)
+{
+}
+
+FFindActorHandle::FFindActorHandle(TSubclassOf<UInterface> InActorInterface)
+	: FindActorMethod(EFindActorMethod::Interface),
+	  ActorInterface(InActorInterface)
+{
+}
+
+FFindActorHandle::FFindActorHandle(TSubclassOf<AActor> InActorClass, FName InActorTag)
+	: FindActorMethod(EFindActorMethod::ClassAndTag),
+	  ActorTag(InActorTag),
+	  ActorClass(InActorClass)
 {
 }
 
@@ -13,65 +42,124 @@ bool FFindActorHandle::GetIsValid() const
 		|| (FindActorMethod == EFindActorMethod::Interface && IsValid(ActorInterface));
 }
 
+/* ==================== UHandleActorLocation ==================== */
+
 bool UHandleActorLocation::CanExecuteHandle()
 {
 	return bHandleActorLocation || bHandleActorLocationOffset;
 }
 
-void UHandleActorLocation::ExecuteHandle(TArray<AActor*> InActors)
+void UHandleActorLocation::PreExecuteHandle(TArray<AActor*> InActors)
 {
+	Super::PreExecuteHandle(InActors);
+
 	for (const auto& InActor : InActors)
+	{
+		OriginActorLocation.Add(InActor->GetActorLocation());
+	}
+}
+
+void UHandleActorLocation::ExecuteHandle(TArray<AActor*> InActors, float Alpha)
+{
+	for (auto ActorIt = 0; ActorIt < InActors.Num(); ActorIt++)
 	{
 		if (bHandleActorLocation)
 		{
-			InActor->SetActorLocation(NewActorLocation);
+			InActors[ActorIt]->SetActorLocation(FMath::Lerp(OriginActorLocation[ActorIt], NewActorLocation, Alpha));
 		}
+
 		if (bHandleActorLocationOffset)
 		{
-			InActor->SetActorLocation(InActor->GetActorLocation() + NewActorLocationOffset);
+			InActors[ActorIt]->SetActorLocation(OriginActorLocation[ActorIt] + FMath::Lerp(FVector::ZeroVector, NewActorLocationOffset, Alpha));
 		}
 	}
 }
+
+void UHandleActorLocation::PostExecuteHandle(TArray<AActor*> InActors)
+{
+	Super::PostExecuteHandle(InActors);
+	OriginActorLocation.Reset();
+}
+
+/* ==================== UHandleActorRotation ==================== */
 
 bool UHandleActorRotation::CanExecuteHandle()
 {
 	return bHandleActorRotation || bHandleActorRotationOffset;
 }
 
-void UHandleActorRotation::ExecuteHandle(TArray<AActor*> InActors)
+void UHandleActorRotation::PreExecuteHandle(TArray<AActor*> InActors)
 {
+	Super::PreExecuteHandle(InActors);
+
 	for (const auto& InActor : InActors)
+	{
+		OriginActorRotation.Add(InActor->GetActorRotation());
+	}
+}
+
+void UHandleActorRotation::ExecuteHandle(TArray<AActor*> InActors, float Alpha)
+{
+	for (auto ActorIt = 0; ActorIt < InActors.Num(); ActorIt++)
 	{
 		if (bHandleActorRotation)
 		{
-			InActor->SetActorRotation(NewActorRotation);
+			InActors[ActorIt]->SetActorRotation(FMath::Lerp(OriginActorRotation[ActorIt], NewActorRotation, Alpha));
 		}
+
 		if (bHandleActorRotationOffset)
 		{
-			InActor->SetActorRotation(InActor->GetActorRotation() + NewActorRotationOffset);
+			InActors[ActorIt]->SetActorRotation(OriginActorRotation[ActorIt] + FMath::Lerp(FRotator::ZeroRotator, NewActorRotationOffset, Alpha));
 		}
 	}
 }
+
+void UHandleActorRotation::PostExecuteHandle(TArray<AActor*> InActors)
+{
+	Super::PostExecuteHandle(InActors);
+	OriginActorRotation.Reset();
+}
+
+/* ==================== UHandleActorScale ==================== */
 
 bool UHandleActorScale::CanExecuteHandle()
 {
 	return bHandleActorScale || bHandleActorScaleOffset;
 }
 
-void UHandleActorScale::ExecuteHandle(TArray<AActor*> InActors)
+void UHandleActorScale::PreExecuteHandle(TArray<AActor*> InActors)
 {
+	Super::PreExecuteHandle(InActors);
+
 	for (const auto& InActor : InActors)
+	{
+		OriginActorLocation.Add(InActor->GetActorScale());
+	}
+}
+
+void UHandleActorScale::ExecuteHandle(TArray<AActor*> InActors, float Alpha)
+{
+	for (auto ActorIt = 0; ActorIt < InActors.Num(); ActorIt++)
 	{
 		if (bHandleActorScale)
 		{
-			InActor->SetActorScale3D(NewActorScale);
+			InActors[ActorIt]->SetActorScale3D(FMath::Lerp(OriginActorLocation[ActorIt], NewActorScale, Alpha));
 		}
+
 		if (bHandleActorScaleOffset)
 		{
-			InActor->SetActorScale3D(InActor->GetActorScale3D() + NewActorScaleOffset);
+			InActors[ActorIt]->SetActorScale3D(OriginActorLocation[ActorIt] + FMath::Lerp(FVector::ZeroVector, NewActorScaleOffset, Alpha));
 		}
 	}
 }
+
+void UHandleActorScale::PostExecuteHandle(TArray<AActor*> InActors)
+{
+	Super::PostExecuteHandle(InActors);
+	OriginActorLocation.Reset();
+}
+
+/* ==================== UHandleActorHiddenInGame ==================== */
 
 bool UHandleActorHiddenInGame::CanExecuteHandle()
 {

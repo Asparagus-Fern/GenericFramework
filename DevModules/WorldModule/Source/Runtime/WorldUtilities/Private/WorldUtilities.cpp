@@ -4,12 +4,10 @@
 
 void FWorldUtilitiesModule::StartupModule()
 {
-	ICommonModuleInterface::StartupModule();
 }
 
 void FWorldUtilitiesModule::ShutdownModule()
 {
-	ICommonModuleInterface::ShutdownModule();
 }
 
 #undef LOCTEXT_NAMESPACE

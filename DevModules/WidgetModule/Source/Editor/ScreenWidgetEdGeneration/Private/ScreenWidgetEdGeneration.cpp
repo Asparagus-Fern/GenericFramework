@@ -8,8 +8,6 @@
 
 void FScreenWidgetEdGenerationModule::StartupModule()
 {
-	ICommonEdModuleInterface::StartupModule();
-
 	UUMGEditorProjectSettings* UMGEditorProjectSettings = GetMutableDefault<UUMGEditorProjectSettings>();
 	if (IsValid(UMGEditorProjectSettings))
 	{
@@ -29,7 +27,6 @@ void FScreenWidgetEdGenerationModule::StartupModule()
 
 void FScreenWidgetEdGenerationModule::ShutdownModule()
 {
-	ICommonEdModuleInterface::ShutdownModule();
 }
 
 #undef LOCTEXT_NAMESPACE

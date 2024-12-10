@@ -2,10 +2,14 @@
 
 #define LOCTEXT_NAMESPACE "FWorldPartitionModule"
 
-void FWorldPartitionModule::LoadDependentModule(TArray<FName>& InDependentModuleName)
+void FWorldPartitionModule::StartupModule()
 {
-	ICommonModuleInterface::LoadDependentModule(InDependentModuleName);
-	InDependentModuleName.Add("DevCore");
+	IModuleInterface::StartupModule();
+}
+
+void FWorldPartitionModule::ShutdownModule()
+{
+	IModuleInterface::ShutdownModule();
 }
 
 #undef LOCTEXT_NAMESPACE

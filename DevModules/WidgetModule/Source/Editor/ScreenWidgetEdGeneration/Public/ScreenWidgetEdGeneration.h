@@ -4,7 +4,7 @@
 #include "Module/CommonEdModuleInterface.h"
 #include "Modules/ModuleManager.h"
 
-class FScreenWidgetEdGenerationModule : public ICommonEdModuleInterface
+class FScreenWidgetEdGenerationModule : public IModuleInterface
 {
 public:
 	virtual void StartupModule() override;

@@ -7,17 +7,12 @@
 
 void FUMGEdUtilitiesModule::StartupModule()
 {
-	ICommonEdModuleInterface::StartupModule();
-
 	FPropertyEditorModule& PropertyModule = FModuleManager::LoadModuleChecked<FPropertyEditorModule>("PropertyEditor");
 	PropertyModule.RegisterCustomClassLayout(USpline2D::StaticClass()->GetFName(), FOnGetDetailCustomizationInstance::CreateStatic(&FUMGSplineDetailsCustomization::MakeInstance));
-
 }
 
 void FUMGEdUtilitiesModule::ShutdownModule()
 {
-	ICommonEdModuleInterface::ShutdownModule();
-
 	if (!UObjectInitialized())
 		return;
 
