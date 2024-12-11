@@ -18,7 +18,7 @@ AThirdPersonPawn::AThirdPersonPawn(const FObjectInitializer& ObjectInitializer)
 
 	SpringArmComponent = CreateDefaultSubobject<UPawnSpringArmComponent>("SpringArmComponent");
 	SpringArmComponent->SetupAttachment(GetRootComponent());
-	
+
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>("CameraComponent");
 	CameraComponent->SetupAttachment(SpringArmComponent);
 }
@@ -62,8 +62,8 @@ void AThirdPersonPawn::AddLocation_Implementation(FVector2D InValue)
 		FloatingPawnMovement->MaxSpeed = Rate * MovementRate * 1.2f;
 		FloatingPawnMovement->Acceleration = Rate * MovementRate * 2.f;
 		FloatingPawnMovement->Deceleration = Rate * MovementRate * 2.5f;
-
-		const FVector2D Movement = InValue * IPawnInputMovementInterface::Execute_GetMovementSpeedRate(this);
+		
+		const FVector2D Movement = InValue * FMath::Pow(2, IPawnInputMovementInterface::Execute_GetMovementSpeedRate(this));
 		AddMovementInput(UKismetMathLibrary::GetRightVector(GetActorRotation()), Movement.X);
 		AddMovementInput(UKismetMathLibrary::GetForwardVector(GetActorRotation()), Movement.Y);
 	}

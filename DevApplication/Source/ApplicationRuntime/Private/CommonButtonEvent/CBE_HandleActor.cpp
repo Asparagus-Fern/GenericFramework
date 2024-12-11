@@ -30,10 +30,14 @@ void UCBE_HandleActor::ExecuteButtonEvent_Implementation()
 		const TArray<AActor*> Actors = SceneManager->FindActors(FindActorHandle);
 		for (const auto& HandleActor : HandleActors)
 		{
+			HandleActor->PreExecuteHandle(Actors);
+
 			if (HandleActor->CanExecuteHandle())
 			{
 				HandleActor->ExecuteHandle(Actors);
 			}
+
+			HandleActor->PostExecuteHandle(Actors);
 		}
 	}
 }

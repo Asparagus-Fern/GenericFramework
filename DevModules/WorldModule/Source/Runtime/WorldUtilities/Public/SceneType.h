@@ -175,7 +175,7 @@ class WORLDUTILITIES_API UHandleActor : public UCommonObject
 public:
 	virtual bool CanExecuteHandle() { return false; }
 	virtual void PreExecuteHandle(TArray<AActor*> InActors) { return; }
-	virtual void ExecuteHandle(TArray<AActor*> InActors) { ExecuteHandle(InActors, 1.f); }
+	virtual void ExecuteHandle(TArray<AActor*> InActors);
 	virtual void ExecuteHandle(TArray<AActor*> InActors, float Alpha) { return; }
 	virtual void PostExecuteHandle(TArray<AActor*> InActors) { return; }
 };

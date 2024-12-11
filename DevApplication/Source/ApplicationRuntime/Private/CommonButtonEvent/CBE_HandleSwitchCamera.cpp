@@ -44,6 +44,7 @@ void UCBE_HandleSwitchCamera::ExecuteButtonEvent_Implementation()
 		);
 	}
 
+	UCameraHandle* CameraHandle = nullptr;
 	if (UCameraManager* CameraManager = UManagerProxy::Get()->GetManager<UCameraManager>())
 	{
 		if (bUseUnrealCamera)
@@ -55,17 +56,19 @@ void UCBE_HandleSwitchCamera::ExecuteButtonEvent_Implementation()
 				{
 					if (ACameraActor* CameraActor = Cast<ACameraActor>(Actors[0]))
 					{
-						CameraManager->SwitchToCamera(TargetPlayerIndex, CameraActor, TargetCameraHandle, OnSwitchFinish);
+						CameraHandle = CameraManager->SwitchToCamera(TargetPlayerIndex, CameraActor, TargetCameraHandle, OnSwitchFinish);
 					}
 				}
 			}
 		}
 		else
 		{
-			CameraManager->SwitchToCamera(TargetPlayerIndex, TargetCameraGameplayTag, TargetCameraHandle, OnSwitchFinish);
+			CameraHandle = CameraManager->SwitchToCamera(TargetPlayerIndex, TargetCameraGameplayTag, TargetCameraHandle, OnSwitchFinish);
 		}
 	}
 
-	if (bIsAsync)
+	if (!bIsAsync || !IsValid(CameraHandle))
+	{
 		MarkAsActivedFinish();
+	}
 }

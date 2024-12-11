@@ -44,6 +44,11 @@ bool FFindActorHandle::GetIsValid() const
 
 /* ==================== UHandleActorLocation ==================== */
 
+void UHandleActor::ExecuteHandle(TArray<AActor*> InActors)
+{
+	ExecuteHandle(InActors, 1.f);
+}
+
 bool UHandleActorLocation::CanExecuteHandle()
 {
 	return bHandleActorLocation || bHandleActorLocationOffset;
