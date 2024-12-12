@@ -56,14 +56,15 @@ void AThirdPersonPawn::AddLocation_Implementation(FVector2D InValue)
 	const FVector TargetLocation = Execute_GetLocation(this) + (UKismetMathLibrary::GetRightVector(GetActorRotation()) * InValue.X) + (UKismetMathLibrary::GetForwardVector(GetActorRotation()) * InValue.Y);
 	if (Execute_CanMove(this, TargetLocation))
 	{
-		const float Rate = FMath::Abs(FMath::GetMappedRangeValueClamped(FVector2D(0.f, 1.f), FVector2D(0.1f, 0.9f), FMath::Sin(UE_DOUBLE_PI / (180.0) * Execute_GetRotation(this).Pitch))) * SpringArmComponent->TargetArmLength * UE_TWO_PI;
-		const float MovementRate = 1.5f;
+		const float PitchRate = FMath::Pow(2, FMath::Sin(UE_DOUBLE_PI / (180.0) * FMath::Abs(Execute_GetRotation(this).Pitch)));
+		const float Height = FMath::Sin(UE_DOUBLE_PI / (180.0) * FMath::Abs(Execute_GetRotation(this).Pitch)) * SpringArmComponent->TargetArmLength;
+		const float MovementRate = FMath::Pow(2, IPawnInputMovementInterface::Execute_GetMovementSpeedRate(this));
 
-		FloatingPawnMovement->MaxSpeed = Rate * MovementRate * 1.2f;
-		FloatingPawnMovement->Acceleration = Rate * MovementRate * 2.f;
-		FloatingPawnMovement->Deceleration = Rate * MovementRate * 2.5f;
-		
-		const FVector2D Movement = InValue * FMath::Pow(2, IPawnInputMovementInterface::Execute_GetMovementSpeedRate(this));
+		FloatingPawnMovement->MaxSpeed = PitchRate * MovementRate * Height * UE_PI;
+		FloatingPawnMovement->Acceleration = PitchRate * MovementRate * Height * UE_HALF_PI;
+		FloatingPawnMovement->Deceleration = PitchRate * MovementRate * Height * UE_HALF_PI;
+
+		const FVector2D Movement = InValue * MovementRate;
 		AddMovementInput(UKismetMathLibrary::GetRightVector(GetActorRotation()), Movement.X);
 		AddMovementInput(UKismetMathLibrary::GetForwardVector(GetActorRotation()), Movement.Y);
 	}

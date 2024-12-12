@@ -28,8 +28,11 @@ public:
 	virtual bool DoesSupportWorldType(const EWorldType::Type WorldType) const override;
 
 public:
-	// UFUNCTION(BlueprintCallable)
-	// void RegisterLevelSequence(FName SequenceID)
+	UFUNCTION(BlueprintCallable)
+	bool RegisterLevelSequence(FName SequenceID, ULevelSequence* InSequence, FLevelSequenceHandle& LevelSequenceHandle);
+
+	UFUNCTION(BlueprintCallable)
+	void UnRegisterLevelSequence(FName SequenceID);
 
 protected:
 	UPROPERTY(BlueprintReadOnly)

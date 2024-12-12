@@ -9,6 +9,9 @@
 class ULevelSequencePlayer;
 class ALevelSequenceActor;
 
+/**
+ * 
+ */
 USTRUCT(BlueprintType)
 struct FLevelSequenceHandle
 {

@@ -50,7 +50,12 @@ FText UDateTimeWidget::GetFormatDate_Implementation(int32 InYear, int32 InMouth,
 	NumberFormattingOptions.SetUseGrouping(false);
 	NumberFormattingOptions.SetMinimumIntegralDigits(2);
 
-	return FText::Format(LOCTEXT("DateNow", "{Year}.{Mouth}.{Day}"), FText::AsNumber(InYear, &NumberFormattingOptions), FText::AsNumber(InMouth, &NumberFormattingOptions), FText::AsNumber(InDay, &NumberFormattingOptions));
+	FFormatNamedArguments Arguments;
+	Arguments.Add(TEXT("Year"), FText::AsNumber(InYear, &NumberFormattingOptions));
+	Arguments.Add(TEXT("Mouth"), FText::AsNumber(InMouth, &NumberFormattingOptions));
+	Arguments.Add(TEXT("Day"), FText::AsNumber(InDay, &NumberFormattingOptions));
+
+	return FText::Format(LOCTEXT("DateNow", "{Year}.{Mouth}.{Day}"), Arguments);
 }
 
 FText UDateTimeWidget::GetFormatTime_Implementation(int32 InHour, int32 InMinute, int32 InSecond, int32 InMillisecond)
@@ -59,7 +64,12 @@ FText UDateTimeWidget::GetFormatTime_Implementation(int32 InHour, int32 InMinute
 	NumberFormattingOptions.SetUseGrouping(false);
 	NumberFormattingOptions.SetMinimumIntegralDigits(2);
 
-	return FText::Format(LOCTEXT("TimeNow", "{Hour}:{Minute}:{Second}"), FText::AsNumber(InHour, &NumberFormattingOptions), FText::AsNumber(InMinute, &NumberFormattingOptions), FText::AsNumber(InSecond, &NumberFormattingOptions));
+	FFormatNamedArguments Arguments;
+	Arguments.Add(TEXT("Hour"), FText::AsNumber(InHour, &NumberFormattingOptions));
+	Arguments.Add(TEXT("Minute"), FText::AsNumber(InMinute, &NumberFormattingOptions));
+	Arguments.Add(TEXT("Second"), FText::AsNumber(InSecond, &NumberFormattingOptions));
+
+	return FText::Format(LOCTEXT("TimeNow", "{Hour}:{Minute}:{Second}"), Arguments);
 }
 
 FText UDateTimeWidget::GetFormatDayOfWeek_Implementation(EDayInWeek DayInWeek)

@@ -7,7 +7,7 @@
 #include "BPFunctions_DateTimeUtilities.generated.h"
 
 UENUM(BlueprintType)
-enum class EDayInWeek
+enum class EDayInWeek : uint8
 {
 	Monday,
 	Tuesday,
@@ -65,7 +65,7 @@ static EDayInWeek ConvToDayInWeek(EDayOfWeek DayOfWeek)
 }
 
 UENUM(BlueprintType)
-enum class EMonthInYear
+enum class EMonthInYear : uint8
 {
 	January,
 	February,

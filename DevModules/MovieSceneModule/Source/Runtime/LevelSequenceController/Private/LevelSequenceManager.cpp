@@ -28,6 +28,48 @@ bool ULevelSequenceManager::DoesSupportWorldType(const EWorldType::Type WorldTyp
 	return WorldType == EWorldType::Game || WorldType == EWorldType::PIE;
 }
 
+bool ULevelSequenceManager::RegisterLevelSequence(FName SequenceID, ULevelSequence* InSequence, FLevelSequenceHandle& LevelSequenceHandle)
+{
+	if (LevelSequenceHandles.Contains(SequenceID))
+	{
+		DLOG(DLogMovieScene, Warning, TEXT("SequenceID Is Already Register"))
+		return false;
+	}
+
+	if (!IsValid(InSequence) || SequenceID == NAME_None)
+	{
+		DLOG(DLogMovieScene, Error, TEXT("SequenceID / InSequence Is NULL"))
+		return false;
+	}
+
+	ALevelSequenceActor* LevelSequenceActor = nullptr;
+	ULevelSequencePlayer* LevelSequencePlayer = ULevelSequencePlayer::CreateLevelSequencePlayer(this, InSequence, FMovieSceneSequencePlaybackSettings(), LevelSequenceActor);
+
+	if (!IsValid(LevelSequenceActor) || !IsValid(LevelSequencePlayer))
+	{
+		DLOG(DLogMovieScene, Error, TEXT("CreateLevelSequencePlayer Fail"))
+		return false;
+	}
+
+	const FLevelSequenceHandle NewLevelSequenceHandle = FLevelSequenceHandle(SequenceID, LevelSequenceActor, LevelSequencePlayer);
+	LevelSequenceHandle = NewLevelSequenceHandle;
+	LevelSequenceHandles.Add(NewLevelSequenceHandle);
+
+	return true;
+}
+
+void ULevelSequenceManager::UnRegisterLevelSequence(FName SequenceID)
+{
+	if (LevelSequenceHandles.Contains(SequenceID))
+	{
+		DLOG(DLogMovieScene, Warning, TEXT("SequenceID Is Already Register"))
+		return;
+	}
+
+	const FLevelSequenceHandle* Found = LevelSequenceHandles.FindByKey(SequenceID);
+	LevelSequenceHandles.Remove(*Found);
+}
+
 // void ULevelSequenceManager::SetLevelSequence(ULevelSequence* InLevelSequence)
 // {
 // 	if (!IsValid(InLevelSequence))

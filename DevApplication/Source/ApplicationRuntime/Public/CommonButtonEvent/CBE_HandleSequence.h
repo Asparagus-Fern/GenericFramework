@@ -32,8 +32,5 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(EditCondition = "bNewSequence"))
 	FMovieSceneSequencePlaybackSettings Settings;
 
-	// UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	// FWidgetContainer SequenceController;
-
 protected:
 };
