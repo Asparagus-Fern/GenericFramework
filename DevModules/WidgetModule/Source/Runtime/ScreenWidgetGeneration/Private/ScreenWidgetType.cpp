@@ -16,6 +16,15 @@ FScreenWidgetDelegates::FMenuDelegate FScreenWidgetDelegates::OnMenuClicked;
 FScreenWidgetDelegates::FMenuSelectionDelegate FScreenWidgetDelegates::OnMenuSelectionChanged;
 FScreenWidgetDelegates::FWidgetAnimationDelegate FScreenWidgetDelegates::OnWidgetAnimationFinish;
 
+/* ==================== FWidgetContainer ==================== */
+
+bool FWidgetContainer::IsContainerValid() const
+{
+	return bInstance ? IsValid(Widget) : IsValid(WidgetClass);
+}
+
+/* ==================== FMenuInfo ==================== */
+
 FMenuInfo::FMenuInfo()
 	: StyleClass(UMenuStyle::StaticClass())
 {
@@ -40,6 +49,8 @@ bool FMenuInfo::operator==(const FGameplayTag InMenuTag) const
 {
 	return MenuTag == InMenuTag;
 }
+
+/* ==================== FMenuContainerInfo ==================== */
 
 FMenuContainerInfo::FMenuContainerInfo()
 	: ContainerClass(UMenuContainer::StaticClass())
@@ -70,6 +81,8 @@ bool FMenuContainerInfo::operator==(const FGameplayTag OtherMenuTag) const
 {
 	return OwnerTag == OtherMenuTag.RequestDirectParent() && MenuTags.Contains(OtherMenuTag);
 }
+
+/* ==================== FMenuGenerateInfo ==================== */
 
 FMenuGenerateInfo::FMenuGenerateInfo()
 {
@@ -128,6 +141,8 @@ void FMenuGenerateInfo::ClearupGarbageMenuStyle()
 		GarbageMenuStyle->MarkAsGarbage();
 	}
 }
+
+/* ==================== FShortcutWidgetTableRow ==================== */
 
 FShortcutWidgetTableRow::FShortcutWidgetTableRow()
 	: ShortcutWidgetHandleClass(USWH_ToggleOpenWidget::StaticClass()),

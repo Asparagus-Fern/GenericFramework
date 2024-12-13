@@ -25,9 +25,9 @@ protected:
 	virtual void OnManagerInitialized();
 	virtual void OnManagerDeinitialized();
 
-	virtual void OnWorldMatchStarting(UWorld* InWorld);
-	virtual void OnWorldBeginPlay(UWorld* InWorld);
-	virtual void OnWorldEndPlay(UWorld* InWorld);
+	virtual void HandleOnWorldMatchStarting(UWorld* InWorld);
+	virtual void HandleOnWorldBeginPlay(UWorld* InWorld);
+	virtual void HandleOnWorldEndPlay(UWorld* InWorld);
 
 protected:
 	UObject* GetManagerOwner() const;

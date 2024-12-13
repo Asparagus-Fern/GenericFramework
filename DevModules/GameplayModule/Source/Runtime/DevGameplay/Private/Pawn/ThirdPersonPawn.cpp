@@ -140,6 +140,9 @@ void AThirdPersonPawn::OnSwitchCameraFinish(UCameraHandle* InCameraHandle)
 		return;
 	}
 
+	FPawnLockState PreviewLockState = Execute_GetPawnLockState(this);
+	Execute_SetPawnLockState(this, FPawnLockState());
+
 	if (IsValid(DuplicateCameraComponent))
 	{
 		DuplicateCameraComponent->MarkAsGarbage();
@@ -170,15 +173,11 @@ void AThirdPersonPawn::OnSwitchCameraFinish(UCameraHandle* InCameraHandle)
 	CameraComponent->SetActive(false);
 	DuplicateCameraComponent->SetActive(true);
 
-	FViewTargetTransitionParams ViewTargetTransitionParams;
-	ViewTargetTransitionParams.BlendTime = 0.5f;
-
-	FMinimalViewInfo MinimalViewInfo;
-	DuplicateCameraComponent->GetCameraView(0.f, MinimalViewInfo);
-
 	Execute_GetPlayerController(this)->PlayerCameraManager->SetViewTarget(this);
 	// Execute_GetPlayerController(this)->PlayerCameraManager->SetFOV(DuplicateCameraComponent->FieldOfView);
 	// Execute_GetPlayerController(this)->PlayerCameraManager->UpdateCamera(0.f);
+
+	Execute_SetPawnLockState(this, PreviewLockState);
 }
 
 UCameraComponent* AThirdPersonPawn::GetActiveCameraComponent_Implementation()

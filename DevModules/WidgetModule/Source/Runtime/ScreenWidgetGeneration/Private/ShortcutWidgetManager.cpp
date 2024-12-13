@@ -39,9 +39,9 @@ bool UShortcutWidgetManager::DoesSupportWorldType(const EWorldType::Type WorldTy
 	return WorldType == EWorldType::Game || WorldType == EWorldType::PIE;
 }
 
-void UShortcutWidgetManager::OnWorldMatchStarting(UWorld* InWorld)
+void UShortcutWidgetManager::HandleOnWorldMatchStarting(UWorld* InWorld)
 {
-	FCoreInternalManager::OnWorldMatchStarting(InWorld);
+	FCoreInternalManager::HandleOnWorldMatchStarting(InWorld);
 }
 
 void UShortcutWidgetManager::OnWorldBeginPlay(UWorld& InWorld)
@@ -50,9 +50,9 @@ void UShortcutWidgetManager::OnWorldBeginPlay(UWorld& InWorld)
 	RegisterShortcutWidgetHandles();
 }
 
-void UShortcutWidgetManager::OnWorldEndPlay(UWorld* InWorld)
+void UShortcutWidgetManager::HandleOnWorldEndPlay(UWorld* InWorld)
 {
-	FCoreInternalManager::OnWorldEndPlay(InWorld);
+	FCoreInternalManager::HandleOnWorldEndPlay(InWorld);
 	UnRegisterShortcutWidgetHandles();
 }
 

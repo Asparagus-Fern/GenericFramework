@@ -26,9 +26,9 @@ public:
 
 	/* FCoreInternalManager */
 public:
-	virtual void OnWorldMatchStarting(UWorld* InWorld) override;
+	virtual void HandleOnWorldMatchStarting(UWorld* InWorld) override;
 	virtual void OnWorldBeginPlay(UWorld& InWorld) override;
-	virtual void OnWorldEndPlay(UWorld* InWorld) override;
+	virtual void HandleOnWorldEndPlay(UWorld* InWorld) override;
 
 	/* Delegates Bind From UScreenWidgetManager */
 protected:

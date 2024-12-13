@@ -91,15 +91,15 @@ void UMovieSceneUMGEdManager::Deinitialize()
 	LevelViewportClientListChangedHandle.Reset();
 }
 
-void UMovieSceneUMGEdManager::OnWorldBeginPlay(UWorld* InWorld)
+void UMovieSceneUMGEdManager::HandleOnWorldBeginPlay(UWorld* InWorld)
 {
-	FCoreInternalManager::OnWorldBeginPlay(InWorld);
+	FCoreInternalManager::HandleOnWorldBeginPlay(InWorld);
 	DestroyMovieSceneUMGPanels();
 }
 
-void UMovieSceneUMGEdManager::OnWorldEndPlay(UWorld* InWorld)
+void UMovieSceneUMGEdManager::HandleOnWorldEndPlay(UWorld* InWorld)
 {
-	FCoreInternalManager::OnWorldEndPlay(InWorld);
+	FCoreInternalManager::HandleOnWorldEndPlay(InWorld);
 	GenerateMovieSceneUMGPanels();
 }
 

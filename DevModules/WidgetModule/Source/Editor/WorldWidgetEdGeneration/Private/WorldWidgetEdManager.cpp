@@ -283,13 +283,13 @@ bool UWorldWidgetEdManager::DoesSupportWorldType(const EWorldType::Type WorldTyp
 	return WorldType == EWorldType::Editor;
 }
 
-void UWorldWidgetEdManager::OnWorldBeginPlay(UWorld* InWorld)
+void UWorldWidgetEdManager::HandleOnWorldBeginPlay(UWorld* InWorld)
 {
 	/* 运行时开始的时候把编辑器的3DUI清空 */
 	ClearupWorldWidgetPanel();
 }
 
-void UWorldWidgetEdManager::OnWorldEndPlay(UWorld* InWorld)
+void UWorldWidgetEdManager::HandleOnWorldEndPlay(UWorld* InWorld)
 {
 	/* 运行时结束时重新生成编辑器的3DUI */
 	GenerateWorldWidgetPanel();

@@ -48,17 +48,17 @@ void FCoreInternalManager::OnManagerDeinitialized()
 	DLOG(DLogManager, Log, TEXT("On Manager Deinitialized : %s"), *GetManagerOwner()->GetName());
 }
 
-void FCoreInternalManager::OnWorldMatchStarting(UWorld* InWorld)
+void FCoreInternalManager::HandleOnWorldMatchStarting(UWorld* InWorld)
 {
 	DLOG(DLogManager, Log, TEXT("On Manager Match Starting : %s"), *GetManagerOwner()->GetName());
 }
 
-void FCoreInternalManager::OnWorldBeginPlay(UWorld* InWorld)
+void FCoreInternalManager::HandleOnWorldBeginPlay(UWorld* InWorld)
 {
 	DLOG(DLogManager, Log, TEXT("On Manager Begin Play : %s"), *GetManagerOwner()->GetName());
 }
 
-void FCoreInternalManager::OnWorldEndPlay(UWorld* InWorld)
+void FCoreInternalManager::HandleOnWorldEndPlay(UWorld* InWorld)
 {
 	DLOG(DLogManager, Log, TEXT("On Manager End Play : %s"), *GetManagerOwner()->GetName());
 }

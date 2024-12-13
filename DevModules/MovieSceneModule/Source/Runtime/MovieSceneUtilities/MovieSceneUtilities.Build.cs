@@ -21,10 +21,12 @@ public class MovieSceneUtilities : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
-				
+
 				"UMG",
 				"MovieScene",
 				"LevelSequence",
+
+				"ScreenWidgetGeneration"
 			}
 		);
 	}

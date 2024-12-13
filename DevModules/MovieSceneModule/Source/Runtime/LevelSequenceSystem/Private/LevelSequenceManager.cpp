@@ -28,6 +28,22 @@ bool ULevelSequenceManager::DoesSupportWorldType(const EWorldType::Type WorldTyp
 	return WorldType == EWorldType::Game || WorldType == EWorldType::PIE;
 }
 
+bool ULevelSequenceManager::ExistLevelSequenceHandle(FName SequenceID)
+{
+	if (SequenceID == NAME_None)
+	{
+		DLOG(DLogMovieScene, Error, TEXT("SequenceID Is NULL"))
+		return false;
+	}
+
+	if (const FLevelSequenceHandle* Found = LevelSequenceHandles.FindByKey(SequenceID))
+	{
+		return true;
+	}
+
+	return false;
+}
+
 bool ULevelSequenceManager::RegisterLevelSequence(FName SequenceID, ULevelSequence* InSequence, FLevelSequenceHandle& LevelSequenceHandle)
 {
 	if (LevelSequenceHandles.Contains(SequenceID))
@@ -70,39 +86,19 @@ void ULevelSequenceManager::UnRegisterLevelSequence(FName SequenceID)
 	LevelSequenceHandles.Remove(*Found);
 }
 
-// void ULevelSequenceManager::SetLevelSequence(ULevelSequence* InLevelSequence)
-// {
-// 	if (!IsValid(InLevelSequence))
-// 	{
-// 		return;
-// 	}
-//
-// 	InitializeLevelSequence(InLevelSequence);
-//
-// 	if (IsValid(LevelSequenceActor))
-// 	{
-// 		LevelSequenceActor->SetSequence(InLevelSequence);
-// 	}
-// }
-//
-// void ULevelSequenceManager::SetSequencePlaybackSettings(FMovieSceneSequencePlaybackSettings InSettings)
-// {
-// 	if (IsValid(LevelSequencePlayer))
-// 	{
-// 		LevelSequencePlayer->SetPlaybackSettings(InSettings);
-// 	}
-// }
-//
-// void ULevelSequenceManager::InitializeLevelSequence(ULevelSequence* InLevelSequence)
-// {
-// 	if (!IsValid(InLevelSequence))
-// 	{
-// 		return;
-// 	}
-//
-// 	if (!LevelSequenceActor && !LevelSequencePlayer)
-// 	{
-// 		FMovieSceneSequencePlaybackSettings Settings = FMovieSceneSequencePlaybackSettings();
-// 		LevelSequencePlayer = ULevelSequencePlayer::CreateLevelSequencePlayer(GetWorld(), InLevelSequence, Settings, LevelSequenceActor);
-// 	}
-// }
+bool ULevelSequenceManager::GetLevelSequenceHandle(FName SequenceID, FLevelSequenceHandle& LevelSequenceHandle)
+{
+	if (SequenceID == NAME_None)
+	{
+		DLOG(DLogMovieScene, Error, TEXT("SequenceID Is NULL"))
+		return false;
+	}
+
+	if (const FLevelSequenceHandle* Found = LevelSequenceHandles.FindByKey(SequenceID))
+	{
+		LevelSequenceHandle = *Found;
+		return true;
+	}
+
+	return false;
+}

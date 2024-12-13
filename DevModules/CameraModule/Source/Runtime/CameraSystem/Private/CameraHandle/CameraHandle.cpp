@@ -4,6 +4,7 @@
 
 #include "CameraManager.h"
 #include "CameraManagerSetting.h"
+#include "CameraHandle/CameraHandleInterface.h"
 #include "CameraPoint/CameraPointBase.h"
 #include "Kismet/GameplayStatics.h"
 #include "Manager/ManagerProxy.h"
@@ -90,10 +91,11 @@ void UCameraHandle::NativeOnSwitchToCameraPointFinish()
 		ICameraHandleInterface::Execute_HandleSwitchToCameraFinish(Actor, this);
 	}
 
-	if (!TargetCameraPoint->CameraTag.IsValid() && UCameraManagerSetting::Get()->bDestroyEmptyCameraPointAfterSwitchFinish)
+	if (IsValid(TargetCameraPoint) && !TargetCameraPoint->CameraTag.IsValid() && UCameraManagerSetting::Get()->bDestroyEmptyCameraPointAfterSwitchFinish)
 	{
 		TargetCameraPoint->Destroy();
 	}
+
 	OwnerPlayerController = nullptr;
 	TargetCameraPoint = nullptr;
 	OnHandleFinish.Unbind();

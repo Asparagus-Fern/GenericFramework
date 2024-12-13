@@ -89,24 +89,15 @@ void UManagerProxy::InitializeInternal()
 	}
 
 	bIsInitialize = true;
-	FWorldDelegates::OnPostWorldCreation.AddUObject(this, &UManagerProxy::HandleOnWorldCreation);
-	FWorldDelegates::OnWorldBeginTearDown.AddUObject(this, &UManagerProxy::HandleOnWorldBeginTearDown);
+	InitializeWorldInterface();
 }
 
 void UManagerProxy::HandleOnWorldCreation(UWorld* InWorld)
 {
-	InWorld->OnWorldMatchStarting.AddUObject(this, &UManagerProxy::HandleOnWorldMatchStarting, InWorld);
-	InWorld->OnWorldBeginPlay.AddUObject(this, &UManagerProxy::HandleOnWorldBeginPlay, InWorld);
 }
 
 void UManagerProxy::HandleOnWorldBeginTearDown(UWorld* InWorld)
 {
-	if (!InWorld->IsGameWorld())
-	{
-		return;
-	}
-
-	HandleOnWorldEndPlay(InWorld);
 }
 
 void UManagerProxy::HandleOnWorldBeginPlay(UWorld* InWorld)
@@ -119,7 +110,7 @@ void UManagerProxy::HandleOnWorldBeginPlay(UWorld* InWorld)
 
 	for (const auto& Manager : ManagerMapping)
 	{
-		Manager.Value->OnWorldBeginPlay(InWorld);
+		Manager.Value->HandleOnWorldBeginPlay(InWorld);
 	}
 }
 
@@ -133,7 +124,7 @@ void UManagerProxy::HandleOnWorldMatchStarting(UWorld* InWorld)
 
 	for (const auto& Manager : ManagerMapping)
 	{
-		Manager.Value->OnWorldMatchStarting(InWorld);
+		Manager.Value->HandleOnWorldMatchStarting(InWorld);
 	}
 }
 
@@ -141,6 +132,6 @@ void UManagerProxy::HandleOnWorldEndPlay(UWorld* InWorld)
 {
 	for (const auto& Manager : ManagerMapping)
 	{
-		Manager.Value->OnWorldEndPlay(InWorld);
+		Manager.Value->HandleOnWorldEndPlay(InWorld);
 	}
 }

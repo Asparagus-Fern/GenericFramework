@@ -104,9 +104,9 @@ void UInputManager::OnWorldBeginPlay(UWorld& InWorld)
 	}
 }
 
-void UInputManager::OnWorldEndPlay(UWorld* InWorld)
+void UInputManager::HandleOnWorldEndPlay(UWorld* InWorld)
 {
-	FCoreInternalManager::OnWorldEndPlay(InWorld);
+	FCoreInternalManager::HandleOnWorldEndPlay(InWorld);
 }
 
 bool UInputManager::RegisterIdleData(UInputIdle* InputIdle, const FInputIdleDelegate& OnIdle, const FInputIdleDelegate& OnContinue)

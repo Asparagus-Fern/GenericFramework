@@ -1,8 +1,8 @@
 ﻿using UnrealBuildTool;
 
-public class LevelSequenceController : ModuleRules
+public class LevelSequenceSystem : ModuleRules
 {
-	public LevelSequenceController(ReadOnlyTargetRules Target) : base(Target)
+	public LevelSequenceSystem(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 
@@ -24,6 +24,8 @@ public class LevelSequenceController : ModuleRules
 
 				"LevelSequence",
 				"MovieScene",
+
+				"MovieSceneUtilities"
 			}
 		);
 	}

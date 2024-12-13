@@ -193,14 +193,14 @@ void UWorldWidgetManager::Tick(float DeltaTime)
 	}
 }
 
-void UWorldWidgetManager::OnWorldBeginPlay(UWorld* InWorld)
+void UWorldWidgetManager::HandleOnWorldBeginPlay(UWorld* InWorld)
 {
-	FCoreInternalManager::OnWorldBeginPlay(InWorld);
+	FCoreInternalManager::HandleOnWorldBeginPlay(InWorld);
 }
 
-void UWorldWidgetManager::OnWorldEndPlay(UWorld* InWorld)
+void UWorldWidgetManager::HandleOnWorldEndPlay(UWorld* InWorld)
 {
-	FCoreInternalManager::OnWorldEndPlay(InWorld);
+	FCoreInternalManager::HandleOnWorldEndPlay(InWorld);
 
 	/* 从插槽移除3DUI面板 */
 	const FGameplayTag WorldWidgetPanelTag = FGameplayTag::RequestGameplayTag(FName("UI.HUD.Main.WorldWidget"));

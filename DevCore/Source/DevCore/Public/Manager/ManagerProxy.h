@@ -4,16 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "CoreInternalManager.h"
+#include "Interface/WorldInterface.h"
 #include "Object/CommonObject.h"
 #include "ManagerProxy.generated.h"
-
-class FCoreInternalManager;
 
 /**
  * 
  */
 UCLASS(Transient)
-class DEVCORE_API UManagerProxy : public UCommonObject
+class DEVCORE_API UManagerProxy : public UCommonObject, public FWorldInterface
 {
 	GENERATED_BODY()
 
@@ -28,6 +27,24 @@ public:
 	bool IsManagerExist(FGuid InManagerID);
 
 	template <typename T>
+	bool ExistManager()
+	{
+		for (const auto& Manager : ManagerMapping)
+		{
+			if (!Manager.Value)
+			{
+				continue;
+			}
+
+			if (Manager.Value->GetManagerOwner()->GetClass() == T::StaticClass())
+			{
+				return IsManagerExist(Manager.Value);
+			}
+		}
+		return false;
+	}
+
+	template <typename T>
 	T* GetManager()
 	{
 		for (const auto& Manager : ManagerMapping)
@@ -36,7 +53,7 @@ public:
 			{
 				continue;
 			}
-			
+
 			if (Manager.Value->GetManagerOwner()->GetClass() == T::StaticClass())
 			{
 				return Cast<T>(Manager.Value->GetManagerOwner());
@@ -77,15 +94,17 @@ public:
 protected:
 	virtual void InitializeInternal();
 
+	/* FWorldInterface */
+protected:
+	virtual void HandleOnWorldCreation(UWorld* InWorld) override;
+	virtual void HandleOnWorldBeginTearDown(UWorld* InWorld) override;
+
+	virtual void HandleOnWorldBeginPlay(UWorld* InWorld) override;
+	virtual void HandleOnWorldMatchStarting(UWorld* InWorld) override;
+	virtual void HandleOnWorldEndPlay(UWorld* InWorld) override;
+
 private:
 	static UManagerProxy* Instance;
 	bool bIsInitialize = false;
 	TMap<FGuid, FCoreInternalManager*> ManagerMapping;
-
-	void HandleOnWorldCreation(UWorld* InWorld);
-	void HandleOnWorldBeginTearDown(UWorld* InWorld);
-
-	void HandleOnWorldBeginPlay(UWorld* InWorld);
-	void HandleOnWorldMatchStarting(UWorld* InWorld);
-	void HandleOnWorldEndPlay(UWorld* InWorld);
 };

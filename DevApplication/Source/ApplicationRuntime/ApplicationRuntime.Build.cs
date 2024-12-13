@@ -35,8 +35,11 @@ public class ApplicationRuntime : ModuleRules
 				"WorldUtilities",
 				"LevelStreaming",
 				"WorldPartition",
-				"PropertyDetailViewSystem",
+				"MovieSceneUtilities",
+				"LevelSequenceSystem",
 
+				"PropertyDetailViewSystem",
+				
 				"DBTween",
 			}
 		);

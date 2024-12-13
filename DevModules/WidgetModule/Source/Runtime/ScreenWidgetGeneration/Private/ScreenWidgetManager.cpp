@@ -122,9 +122,9 @@ void UScreenWidgetManager::Tick(float DeltaTime)
 	}
 }
 
-void UScreenWidgetManager::OnWorldMatchStarting(UWorld* InWorld)
+void UScreenWidgetManager::HandleOnWorldMatchStarting(UWorld* InWorld)
 {
-	FCoreInternalManager::OnWorldMatchStarting(InWorld);
+	FCoreInternalManager::HandleOnWorldMatchStarting(InWorld);
 
 	if (UScreenWidgetManagerSetting::Get()->AutoCreateGameHUD)
 	{
@@ -141,9 +141,9 @@ void UScreenWidgetManager::OnWorldBeginPlay(UWorld& InWorld)
 	Super::OnWorldBeginPlay(InWorld);
 }
 
-void UScreenWidgetManager::OnWorldEndPlay(UWorld* InWorld)
+void UScreenWidgetManager::HandleOnWorldEndPlay(UWorld* InWorld)
 {
-	FCoreInternalManager::OnWorldEndPlay(InWorld);
+	FCoreInternalManager::HandleOnWorldEndPlay(InWorld);
 
 	/* 清除插槽 */
 	ClearupSlots();

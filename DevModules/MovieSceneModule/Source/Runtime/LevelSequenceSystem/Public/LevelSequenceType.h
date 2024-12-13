@@ -13,7 +13,7 @@ class ALevelSequenceActor;
  * 
  */
 USTRUCT(BlueprintType)
-struct FLevelSequenceHandle
+struct LEVELSEQUENCESYSTEM_API FLevelSequenceHandle
 {
 	GENERATED_BODY()
 

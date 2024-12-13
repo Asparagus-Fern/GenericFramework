@@ -69,8 +69,8 @@ public:
 
 	/* FCoreInternalManager */
 public:
-	virtual void OnWorldBeginPlay(UWorld* InWorld) override;
-	virtual void OnWorldEndPlay(UWorld* InWorld) override;
+	virtual void HandleOnWorldBeginPlay(UWorld* InWorld) override;
+	virtual void HandleOnWorldEndPlay(UWorld* InWorld) override;
 
 protected:
 	/* 编辑器创建时 */
