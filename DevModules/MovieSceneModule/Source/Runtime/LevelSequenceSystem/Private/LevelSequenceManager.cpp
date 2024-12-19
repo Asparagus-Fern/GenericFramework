@@ -5,6 +5,12 @@
 
 #include "LevelSequenceActor.h"
 #include "LevelSequencePlayer.h"
+#include "Handle/HandleManager.h"
+#include "Manager/ManagerStatics.h"
+
+ULevelSequenceManager::ULevelSequenceManager(const FObjectInitializer& ObjectInitializer)
+{
+}
 
 bool ULevelSequenceManager::ShouldCreateSubsystem(UObject* Outer) const
 {
@@ -15,6 +21,8 @@ void ULevelSequenceManager::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
 	RegisterManager(this);
+
+	FGuid A;
 }
 
 void ULevelSequenceManager::Deinitialize()
@@ -28,77 +36,92 @@ bool ULevelSequenceManager::DoesSupportWorldType(const EWorldType::Type WorldTyp
 	return WorldType == EWorldType::Game || WorldType == EWorldType::PIE;
 }
 
-bool ULevelSequenceManager::ExistLevelSequenceHandle(FName SequenceID)
+/* ==================== ULevelSequenceManager ==================== */
+
+ULevelSequenceHandle* ULevelSequenceManager::RegisterLevelSequence(ULevelSequence* InLevelSequence)
 {
-	if (SequenceID == NAME_None)
+	if (!IsValid(InLevelSequence))
 	{
-		DLOG(DLogMovieScene, Error, TEXT("SequenceID Is NULL"))
-		return false;
+		DLOG(DLogMovieScene, Error, TEXT("InSequence Is NULL"))
+		return nullptr;
 	}
 
-	if (const FLevelSequenceHandle* Found = LevelSequenceHandles.FindByKey(SequenceID))
+	if (IsLevelSequenceRegister(InLevelSequence))
 	{
-		return true;
-	}
-
-	return false;
-}
-
-bool ULevelSequenceManager::RegisterLevelSequence(FName SequenceID, ULevelSequence* InSequence, FLevelSequenceHandle& LevelSequenceHandle)
-{
-	if (LevelSequenceHandles.Contains(SequenceID))
-	{
-		DLOG(DLogMovieScene, Warning, TEXT("SequenceID Is Already Register"))
-		return false;
-	}
-
-	if (!IsValid(InSequence) || SequenceID == NAME_None)
-	{
-		DLOG(DLogMovieScene, Error, TEXT("SequenceID / InSequence Is NULL"))
-		return false;
+		DLOG(DLogMovieScene, Log, TEXT("InSequence Is Already Register"))
+		return GetLevelSequenceHandle(InLevelSequence);
 	}
 
 	ALevelSequenceActor* LevelSequenceActor = nullptr;
-	ULevelSequencePlayer* LevelSequencePlayer = ULevelSequencePlayer::CreateLevelSequencePlayer(this, InSequence, FMovieSceneSequencePlaybackSettings(), LevelSequenceActor);
+	ULevelSequencePlayer* LevelSequencePlayer = ULevelSequencePlayer::CreateLevelSequencePlayer(this, InLevelSequence, FMovieSceneSequencePlaybackSettings(), LevelSequenceActor);
 
 	if (!IsValid(LevelSequenceActor) || !IsValid(LevelSequencePlayer))
 	{
 		DLOG(DLogMovieScene, Error, TEXT("CreateLevelSequencePlayer Fail"))
-		return false;
+		return nullptr;
 	}
 
-	const FLevelSequenceHandle NewLevelSequenceHandle = FLevelSequenceHandle(SequenceID, LevelSequenceActor, LevelSequencePlayer);
-	LevelSequenceHandle = NewLevelSequenceHandle;
-	LevelSequenceHandles.Add(NewLevelSequenceHandle);
+	if (UHandleManager* HandleManager = GetManager<UHandleManager>())
+	{
+		if (ULevelSequenceHandle* NewHandle = HandleManager->RegisterHandle<ULevelSequenceHandle>(this, FName(InLevelSequence->GetPackage()->GetName())))
+		{
+			NewHandle->LevelSequenceActor = LevelSequenceActor;
+			NewHandle->LevelSequencePlayer = LevelSequencePlayer;
 
-	return true;
+			IMovieSceneInterface::Execute_LoadMovieSceneDataSource(NewHandle);
+
+			LevelSequenceHandles.Add(NewHandle);
+			return NewHandle;
+		}
+	}
+
+	return nullptr;
 }
 
-void ULevelSequenceManager::UnRegisterLevelSequence(FName SequenceID)
+void ULevelSequenceManager::UnRegisterLevelSequence(ULevelSequence* InLevelSequence)
 {
-	if (LevelSequenceHandles.Contains(SequenceID))
+	if (IsLevelSequenceRegister(InLevelSequence))
 	{
-		DLOG(DLogMovieScene, Warning, TEXT("SequenceID Is Already Register"))
-		return;
+		if (ULevelSequenceHandle* Handle = GetLevelSequenceHandle(InLevelSequence))
+		{
+			UnRegisterLevelSequence(Handle);
+		}
 	}
-
-	const FLevelSequenceHandle* Found = LevelSequenceHandles.FindByKey(SequenceID);
-	LevelSequenceHandles.Remove(*Found);
 }
 
-bool ULevelSequenceManager::GetLevelSequenceHandle(FName SequenceID, FLevelSequenceHandle& LevelSequenceHandle)
+void ULevelSequenceManager::UnRegisterLevelSequence(ULevelSequenceHandle* InLevelSequenceHandle)
 {
-	if (SequenceID == NAME_None)
+	if (LevelSequenceHandles.Contains(InLevelSequenceHandle))
 	{
-		DLOG(DLogMovieScene, Error, TEXT("SequenceID Is NULL"))
-		return false;
-	}
+		LevelSequenceHandles.Remove(InLevelSequenceHandle);
 
-	if (const FLevelSequenceHandle* Found = LevelSequenceHandles.FindByKey(SequenceID))
+		if (UHandleManager* HandleManager = GetManager<UHandleManager>())
+		{
+			HandleManager->UnRegisterHandle(InLevelSequenceHandle);
+		}
+	}
+}
+
+bool ULevelSequenceManager::IsLevelSequenceRegister(const ULevelSequence* InLevelSequence)
+{
+	for (const auto& LevelSequenceHandle : LevelSequenceHandles)
 	{
-		LevelSequenceHandle = *Found;
-		return true;
+		if (LevelSequenceHandle->LevelSequenceActor->GetSequence() == InLevelSequence)
+		{
+			return true;
+		}
 	}
-
 	return false;
+}
+
+ULevelSequenceHandle* ULevelSequenceManager::GetLevelSequenceHandle(const ULevelSequence* InLevelSequence)
+{
+	for (const auto& LevelSequenceHandle : LevelSequenceHandles)
+	{
+		if (LevelSequenceHandle->LevelSequenceActor->GetSequence() == InLevelSequence)
+		{
+			return LevelSequenceHandle;
+		}
+	}
+	return nullptr;
 }

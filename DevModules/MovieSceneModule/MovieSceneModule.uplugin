@@ -21,6 +21,10 @@
     {
       "Name": "WidgetModule",
       "Enabled": true
+    },
+    {
+      "Name": "EventModule",
+      "Enabled": true
     }
   ],
   "Modules": [
@@ -36,6 +40,11 @@
     },
     {
       "Name": "LevelSequenceSystem",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
+    },
+    {
+      "Name": "MediaSystem",
       "Type": "Runtime",
       "LoadingPhase": "Default"
     }

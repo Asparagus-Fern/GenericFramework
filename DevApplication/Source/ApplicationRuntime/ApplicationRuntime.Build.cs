@@ -22,13 +22,16 @@ public class ApplicationRuntime : ModuleRules
 				"Slate",
 				"SlateCore",
 
+				"ModularGameplay",
 				"GameplayTags",
 				"UMG",
 				"LevelSequence",
 				"MovieScene",
+				"MediaAssets",
 
+				"EventUtilities",
 				"DevGameplay",
-				"ActiveNodeSystem",
+				"ActiveNode",
 				"ScreenWidgetGeneration",
 				"WorldWidgetGeneration",
 				"CameraSystem",
@@ -37,9 +40,10 @@ public class ApplicationRuntime : ModuleRules
 				"WorldPartition",
 				"MovieSceneUtilities",
 				"LevelSequenceSystem",
+				"MediaSystem",
 
 				"PropertyDetailViewSystem",
-				
+
 				"DBTween",
 			}
 		);

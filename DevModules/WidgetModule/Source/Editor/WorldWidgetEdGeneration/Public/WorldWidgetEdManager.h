@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "WorldWidgetManager.h"
+#include "Widgets/Layout/SConstraintCanvas.h"
 #include "WorldWidgetEdManager.generated.h"
 
 class SWorldWidgetContainer;
@@ -37,16 +38,17 @@ public:
 
 	/* FEditorWorldWidgetPanel */
 public:
-	FLevelEditorViewportClient* LevelEditorViewportClient = nullptr;
-	TMap<UWorldWidgetComponent*, TSharedPtr<SWorldWidgetContainer>> WorldWidgetContainer;
-
-public:
 	virtual bool IsContain(UWorldWidgetComponent* InWorldWidgetComponent) override;
 	virtual void AddWorldWidgetComponent(UWorldWidgetComponent* InWorldWidgetComponent) override;
 	virtual void RemoveWorldWidgetComponent(UWorldWidgetComponent* InWorldWidgetComponent) override;
 	virtual void RefreshAllWorldWidgetComponent() override;
 
 	virtual void OnWorldWidgetMiddleClicked(TSharedPtr<SWorldWidgetContainer> DoubleClickedContainer);
+
+private:
+	FLevelEditorViewportClient* LevelEditorViewportClient = nullptr;
+	TMap<UWorldWidgetComponent*, TSharedPtr<SWorldWidgetContainer>> WorldWidgetContainer;
+	TMap<UWorldWidgetComponent*, SConstraintCanvas::FSlot*> WorldWidgetSlots;
 };
 
 /**
@@ -79,7 +81,7 @@ protected:
 
 	FDelegateHandle LevelViewportClientListChangedHandle;
 	void OnLevelViewportClientListChanged();
-	
+
 	/* 关卡添加Actor时 */
 	FDelegateHandle LevelActorAddedHandle;
 	void OnLevelActorAdded(AActor* Actor);
@@ -98,7 +100,7 @@ protected:
 
 	FDelegateHandle LevelsChangedHandle;
 	void OnLevelsChanged();
-	
+
 	/* WorldWidgetComponent注册时 */
 	FDelegateHandle WorldWidgetComponentRegisterHandle;
 	void OnWorldWidgetComponentRegister(UWorldWidgetComponent* WorldWidgetComponent);

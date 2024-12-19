@@ -25,6 +25,7 @@ public class LevelSequenceSystem : ModuleRules
 				"LevelSequence",
 				"MovieScene",
 
+				"EventUtilities",
 				"MovieSceneUtilities"
 			}
 		);

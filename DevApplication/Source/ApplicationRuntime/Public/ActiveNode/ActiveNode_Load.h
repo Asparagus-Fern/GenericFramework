@@ -14,6 +14,7 @@ class APPLICATIONRUNTIME_API AActiveNode_Load : public AActiveNode
 
 public:
 	AActiveNode_Load();
+	virtual void BeginPlay() override;
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (Categories = "ActiveNode"))

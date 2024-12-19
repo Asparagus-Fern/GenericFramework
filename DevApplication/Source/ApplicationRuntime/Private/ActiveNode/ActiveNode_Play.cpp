@@ -13,9 +13,9 @@ AActiveNode_Play::AActiveNode_Play()
 {
 }
 
-void AActiveNode_Play::Login()
+void AActiveNode_Play::LoginNode_Implementation()
 {
-	Super::Login();
+	Super::LoginNode_Implementation();
 
 	if (const UScreenWidgetManager* ScreenWidgetManager = UManagerProxy::Get()->GetManager<UScreenWidgetManager>())
 	{
@@ -45,9 +45,9 @@ void AActiveNode_Play::Login()
 	}
 }
 
-void AActiveNode_Play::Logout()
+void AActiveNode_Play::LogoutNode_Implementation()
 {
-	Super::Logout();
+	Super::LogoutNode_Implementation();
 
 	UScreenWidgetManager::PostHUDCreated.RemoveAll(this);
 	UCameraManager::OnCameraPointRegister.RemoveAll(this);

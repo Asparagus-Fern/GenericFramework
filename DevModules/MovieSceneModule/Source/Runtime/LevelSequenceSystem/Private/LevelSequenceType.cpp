@@ -2,14 +2,3 @@
 
 
 #include "LevelSequenceType.h"
-
-FLevelSequenceHandle::FLevelSequenceHandle()
-{
-}
-
-FLevelSequenceHandle::FLevelSequenceHandle(FName InHandleID, ALevelSequenceActor* InLevelSequenceActor, ULevelSequencePlayer* InLevelSequencePlayer)
-	: HandleID(InHandleID),
-	  LevelSequenceActor(InLevelSequenceActor),
-	  LevelSequencePlayer(InLevelSequencePlayer)
-{
-}

@@ -167,6 +167,17 @@ public:
 
 	virtual void MoveUserWidget(FGameplayTag OriginSlotTag, FGameplayTag TargetSlotTag, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged());
 
+public:
+	template <typename T>
+	T* OpenUserWidget(TSubclassOf<UUserWidgetBase> InWidgetClass, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged())
+	{
+		if (UUserWidgetBase* NewWidget = OpenUserWidget(InWidgetClass, OnFinish))
+		{
+			return Cast<T>(NewWidget);
+		}
+		return nullptr;
+	}
+
 protected:
 	virtual void ActiveWidget(UUserWidgetBase* InWidget, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged());
 	virtual void ActiveWidget(UUserWidgetBase* InWidget, bool bIsInstant, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged());

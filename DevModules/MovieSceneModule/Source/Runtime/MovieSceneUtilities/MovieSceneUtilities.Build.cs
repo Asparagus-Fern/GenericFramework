@@ -26,6 +26,7 @@ public class MovieSceneUtilities : ModuleRules
 				"MovieScene",
 				"LevelSequence",
 
+				"EventUtilities",
 				"ScreenWidgetGeneration"
 			}
 		);

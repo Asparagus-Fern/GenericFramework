@@ -19,8 +19,8 @@ class APPLICATIONRUNTIME_API AActiveNode_Play : public AActiveNode
 
 public:
 	AActiveNode_Play();
-	virtual void Login() override;
-	virtual void Logout() override;
+	virtual void LoginNode_Implementation() override;
+	virtual void LogoutNode_Implementation() override;
 
 	/* UI */
 public:

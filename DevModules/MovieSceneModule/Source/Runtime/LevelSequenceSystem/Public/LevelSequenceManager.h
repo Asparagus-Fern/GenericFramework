@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "LevelSequenceType.h"
-#include "MovieSceneSequencePlaybackSettings.h"
+#include "Handle/HandleInterface.h"
+#include "LevelSequenceHandle.h"
 #include "Manager/CoreInternalManager.h"
 #include "Subsystems/WorldSubsystem.h"
 #include "LevelSequenceManager.generated.h"
@@ -19,7 +19,7 @@ class ULevelSequencePlayer;
 UCLASS()
 class LEVELSEQUENCESYSTEM_API ULevelSequenceManager : public UWorldSubsystem, public FCoreInternalManager
 {
-	GENERATED_BODY()
+	GENERATED_UCLASS_BODY()
 
 public:
 	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
@@ -27,20 +27,16 @@ public:
 	virtual void Deinitialize() override;
 	virtual bool DoesSupportWorldType(const EWorldType::Type WorldType) const override;
 
+	/* ULevelSequenceManager */
 public:
-	UFUNCTION(BlueprintPure)
-	bool ExistLevelSequenceHandle(FName SequenceID);
+	virtual ULevelSequenceHandle* RegisterLevelSequence(ULevelSequence* InLevelSequence);
+	virtual void UnRegisterLevelSequence(ULevelSequence* InLevelSequence);
+	virtual void UnRegisterLevelSequence(ULevelSequenceHandle* InLevelSequenceHandle);
 
-	UFUNCTION(BlueprintCallable)
-	bool RegisterLevelSequence(FName SequenceID, ULevelSequence* InSequence, FLevelSequenceHandle& LevelSequenceHandle);
-
-	UFUNCTION(BlueprintCallable)
-	void UnRegisterLevelSequence(FName SequenceID);
-
-	UFUNCTION(BlueprintPure)
-	bool GetLevelSequenceHandle(FName SequenceID, FLevelSequenceHandle& LevelSequenceHandle);
+	bool IsLevelSequenceRegister(const ULevelSequence* InLevelSequence);
+	ULevelSequenceHandle* GetLevelSequenceHandle(const ULevelSequence* InLevelSequence);
 
 protected:
-	UPROPERTY(BlueprintReadOnly)
-	TArray<FLevelSequenceHandle> LevelSequenceHandles;
+	UPROPERTY()
+	TArray<ULevelSequenceHandle*> LevelSequenceHandles;
 };

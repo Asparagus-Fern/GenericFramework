@@ -23,7 +23,11 @@
       "Enabled": true
     },
     {
-      "Name": "ActiveNodeModule",
+      "Name": "EventModule",
+      "Enabled": true
+    },
+    {
+      "Name": "ActiveNode",
       "Enabled": true
     },
     {

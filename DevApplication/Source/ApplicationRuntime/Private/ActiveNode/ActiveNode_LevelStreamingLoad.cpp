@@ -13,15 +13,17 @@ AActiveNode_LevelStreamingLoad::AActiveNode_LevelStreamingLoad()
 {
 }
 
-void AActiveNode_LevelStreamingLoad::Login()
+void AActiveNode_LevelStreamingLoad::LoginNode_Implementation()
 {
-	Super::Login();
+	Super::LoginNode_Implementation();
+
 	UScreenWidgetManager::PostHUDCreated.AddUObject(this, &AActiveNode_LevelStreamingLoad::PostHUDCreated);
+	// PostHUDCreated();
 }
 
-void AActiveNode_LevelStreamingLoad::Logout()
+void AActiveNode_LevelStreamingLoad::LogoutNode_Implementation()
 {
-	Super::Logout();
+	Super::LogoutNode_Implementation();
 }
 
 void AActiveNode_LevelStreamingLoad::PostHUDCreated()
@@ -73,7 +75,7 @@ void AActiveNode_LevelStreamingLoad::NativeOnLoadCurrentWorldLevelStreamingOnceF
 {
 	if (IsValid(LoadingUI))
 		LoadingUI->NativeOnLoadingOnceFinish();
-	
+
 	OnLoadCurrentWorldLevelStreamingOnceFinish();
 }
 
@@ -125,8 +127,7 @@ void AActiveNode_LevelStreamingLoad::NativeOnLoadVisibleLevelsFinish()
 
 	if (ChangeNodeTag.IsValid())
 	{
-		bool bSuccess;
-		UActiveNodeSubsystem::ChangeActiveNodeTo(this, ChangeNodeTag, bSuccess, AActiveNode::StaticClass(), false);
+		UActiveNodeSubsystem::ChangeActiveNodeTo(this, ChangeNodeTag, false);
 	}
 }
 
@@ -137,12 +138,12 @@ int32 AActiveNode_LevelStreamingLoad::GetLoadingNum() const
 
 	if (bLoadCurrentWorldLevels)
 	{
-		LoadingNum = bIsPartitionedWorld? VisibleLevels.Num() : GetWorld()->GetStreamingLevels().Num() + VisibleLevels.Num();
+		LoadingNum = bIsPartitionedWorld ? VisibleLevels.Num() : GetWorld()->GetStreamingLevels().Num() + VisibleLevels.Num();
 	}
 	else
 	{
 		LoadingNum = VisibleLevels.Num();
 	}
-	
+
 	return LoadingNum;
 }

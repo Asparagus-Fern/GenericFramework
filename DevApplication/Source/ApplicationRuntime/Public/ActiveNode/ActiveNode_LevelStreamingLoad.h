@@ -18,8 +18,8 @@ public:
 	AActiveNode_LevelStreamingLoad();
 
 public:
-	virtual void Login() override;
-	virtual void Logout() override;
+	virtual void LoginNode_Implementation() override;
+	virtual void LogoutNode_Implementation() override;
 
 protected:
 	void PostHUDCreated();

@@ -62,7 +62,8 @@ void UEditorWorldWidgetPanel::NativeOnRefresh()
 				if (ResultPosition.X > -TempWorldWidget.Value->GetDesiredSize().X && ResultPosition.X < Viewport->GetSizeXY().X && ResultPosition.Y > -TempWorldWidget.Value->GetDesiredSize().Y && ResultPosition.Y < Viewport->GetSizeXY().Y)
 				{
 					TempWorldWidget.Value->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-					TempWorldWidget.Value->SetRenderTranslation(ResultPosition);
+					WorldWidgetSlots.FindRef(TempWorldWidget.Key)->SetOffset(FMargin(ResultPosition.X, ResultPosition.Y, 0, 0));
+					// TempWorldWidget.Value->SetRenderTranslation(ResultPosition);
 					continue;
 				}
 			}
@@ -141,6 +142,7 @@ void UEditorWorldWidgetPanel::AddWorldWidgetComponent(UWorldWidgetComponent* InW
 	}
 
 	UUserWidgetBase* DuplicateWorldWidget = DuplicateObject(InWorldWidgetComponent->WorldWidget, InWorldWidgetComponent);
+	DuplicateWorldWidget->SetVisibility(ESlateVisibility::HitTestInvisible);
 	WorldWidgets.Add(InWorldWidgetComponent, DuplicateWorldWidget);
 
 	TSharedPtr<SWorldWidgetContainer> NewContainer = SNew(SWorldWidgetContainer)
@@ -149,9 +151,9 @@ void UEditorWorldWidgetPanel::AddWorldWidgetComponent(UWorldWidgetComponent* InW
 			DuplicateWorldWidget->TakeWidget()
 		];
 
-	WorldWidgetContainer.FindOrAdd(InWorldWidgetComponent, NewContainer);
-
+	SConstraintCanvas::FSlot* NewSlot;
 	ConstraintCanvas->AddSlot()
+		.Expose(NewSlot)
 		.AutoSize(true)
 		.Anchors(FAnchors())
 		.Alignment(FVector2D())
@@ -160,6 +162,9 @@ void UEditorWorldWidgetPanel::AddWorldWidgetComponent(UWorldWidgetComponent* InW
 		[
 			NewContainer.ToSharedRef()
 		];
+
+	WorldWidgetContainer.FindOrAdd(InWorldWidgetComponent, NewContainer);
+	WorldWidgetSlots.FindOrAdd(InWorldWidgetComponent, NewSlot);
 }
 
 void UEditorWorldWidgetPanel::RemoveWorldWidgetComponent(UWorldWidgetComponent* InWorldWidgetComponent)
@@ -174,6 +179,7 @@ void UEditorWorldWidgetPanel::RemoveWorldWidgetComponent(UWorldWidgetComponent* 
 
 	WorldWidgets.Remove(InWorldWidgetComponent);
 	WorldWidgetContainer.Remove(InWorldWidgetComponent);
+	WorldWidgetSlots.Remove(InWorldWidgetComponent);
 }
 
 void UEditorWorldWidgetPanel::RefreshAllWorldWidgetComponent()
@@ -188,6 +194,7 @@ void UEditorWorldWidgetPanel::RefreshAllWorldWidgetComponent()
 
 		WorldWidgets.Reset();
 		WorldWidgetContainer.Reset();
+		WorldWidgetSlots.Reset();
 	}
 
 	for (FActorIterator It(GetWorld()); It; ++It)
