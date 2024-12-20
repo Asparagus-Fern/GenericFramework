@@ -16,7 +16,7 @@ class DEVCORE_API UGlobalManagerSetting : public UDeveloperSettings
 public:
 	static ThisClass* Get() { return GetMutableDefault<ThisClass>(); }
 	virtual FName GetContainerName() const override { return "Manager"; }
-	virtual FName GetCategoryName() const override { return "Manager(Global)"; }
+	virtual FName GetCategoryName() const override { return "Global"; }
 	virtual FName GetSectionName() const override { return "Global"; }
 
 public:

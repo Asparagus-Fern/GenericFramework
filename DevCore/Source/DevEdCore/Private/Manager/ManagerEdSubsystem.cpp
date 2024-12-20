@@ -6,7 +6,7 @@
 #include "DevCoreStyle.h"
 #include "ISettingsModule.h"
 #include "LevelEditor.h"
-#include "ManagerSetting/ManagerSettingCommands.h"
+#include "ManagerSetting/DeveloperSettingCommands.h"
 
 #define LOCTEXT_NAMESPACE "UManagerEdSubsystem"
 
@@ -116,8 +116,8 @@ void UManagerEdSubsystem::RegisterToolBarOptionMenu(UToolMenu* InToolMenu)
 
 void UManagerEdSubsystem::RegisterToolBarManagerSettingCommand(TSharedPtr<FUICommandList>& InCommandList)
 {
-	const FManagerSettingCommands& Commands = FManagerSettingCommands::Get();
-	InCommandList->MapAction(Commands.OpenManagerSetting, FExecuteAction::CreateUObject(this, &UManagerEdSubsystem::OpenToolBarManagerSetting));
+	const FDeveloperSettingCommands& Commands = FDeveloperSettingCommands::Get();
+	InCommandList->MapAction(Commands.OpenDeveloperSetting, FExecuteAction::CreateUObject(this, &UManagerEdSubsystem::OpenToolBarManagerSetting));
 }
 
 void UManagerEdSubsystem::RegisterToolBarManagerSetting(FToolMenuSection& ToolMenuSection)
@@ -126,7 +126,7 @@ void UManagerEdSubsystem::RegisterToolBarManagerSetting(FToolMenuSection& ToolMe
 	(
 		FToolMenuEntry::InitToolBarButton
 		(
-			FManagerSettingCommands::Get().OpenManagerSetting,
+			FDeveloperSettingCommands::Get().OpenDeveloperSetting,
 			FText::GetEmpty(),
 			TAttribute<FText>(),
 			FSlateIcon(FDevCoreStyle::GetStyleSetName(), "Manager.ToolbarButton", "Manager.ToolbarButton.Small")
@@ -137,7 +137,7 @@ void UManagerEdSubsystem::RegisterToolBarManagerSetting(FToolMenuSection& ToolMe
 void UManagerEdSubsystem::OpenToolBarManagerSetting()
 {
 	ISettingsModule& SettingsModule = FModuleManager::LoadModuleChecked<ISettingsModule>("Settings");
-	SettingsModule.ShowViewer("Manager", "Manager(Global)", "Global");
+	SettingsModule.ShowViewer("Developer", "Global", "Global");
 }
 
 #undef LOCTEXT_NAMESPACE

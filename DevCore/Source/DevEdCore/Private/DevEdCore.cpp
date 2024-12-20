@@ -7,7 +7,7 @@
 #include "ISettingsEditorModule.h"
 #include "ISettingsModule.h"
 #include "Manager/GlobalManagerSetting.h"
-#include "Manager/ManagerSetting/ManagerSettingCommands.h"
+#include "Manager/ManagerSetting/DeveloperSettingCommands.h"
 
 #define LOCTEXT_NAMESPACE "FDevEdCoreModule"
 
@@ -25,11 +25,11 @@ void FDevEdCoreModule::StartupModule()
 		if (SettingsModule != nullptr)
 		{
 			RegisterManagerSettings(*SettingsModule);
-			SettingsModule->RegisterViewer("Manager", *this);
+			SettingsModule->RegisterViewer("Developer", *this);
 		}
 
 		FGlobalTabmanager::Get()->RegisterNomadTabSpawner(ManagerSettingsTabName, FOnSpawnTab::CreateRaw(this, &FDevEdCoreModule::HandleSpawnSettingsTab))
-			.SetDisplayName(LOCTEXT("ProjectSettingsTabTitle", "Manager Settings"))
+			.SetDisplayName(LOCTEXT("ProjectSettingsTabTitle", "Developer Settings"))
 			.SetMenuType(ETabSpawnerMenuType::Hidden)
 			.SetIcon(FSlateIcon(FAppStyle::GetAppStyleSetName(), "ProjectSettings.TabIcon"));
 	}
@@ -55,7 +55,7 @@ void FDevEdCoreModule::RegisterManagerSettings(ISettingsModule& SettingsModule)
 {
 	SettingsModule.RegisterSettings
 	(
-		"Manager", "Manager(Global)", "Global",
+		"Developer", "Global", "Global",
 		LOCTEXT("ManagerGlobalSettingsSettingsName", "Manager Global Settings"),
 		LOCTEXT("ManagerGlobalSettingsDescription", "Manager Global Settings"),
 		GetMutableDefault<UGlobalManagerSetting>()
@@ -69,12 +69,12 @@ TSharedRef<SDockTab> FDevEdCoreModule::HandleSpawnSettingsTab(const FSpawnTabArg
 
 	if (SettingsModule != nullptr)
 	{
-		const ISettingsContainerPtr SettingsContainer = SettingsModule->GetContainer("Manager");
+		const ISettingsContainerPtr DeveloperSettingsContainer = SettingsModule->GetContainer("Developer");
 
-		if (SettingsContainer.IsValid())
+		if (DeveloperSettingsContainer.IsValid())
 		{
 			ISettingsEditorModule& SettingsEditorModule = FModuleManager::GetModuleChecked<ISettingsEditorModule>("SettingsEditor");
-			const ISettingsEditorModelRef SettingsEditorModel = SettingsEditorModule.CreateModel(SettingsContainer.ToSharedRef());
+			const ISettingsEditorModelRef SettingsEditorModel = SettingsEditorModule.CreateModel(DeveloperSettingsContainer.ToSharedRef());
 
 			SettingsEditor = SettingsEditorModule.CreateEditor(SettingsEditorModel);
 			SettingsEditorModelPtr = SettingsEditorModel;
@@ -91,7 +91,7 @@ TSharedRef<SDockTab> FDevEdCoreModule::HandleSpawnSettingsTab(const FSpawnTabArg
 void FDevEdCoreModule::RegisterCommand()
 {
 	ICommonEdModuleInterface::RegisterCommand();
-	FManagerSettingCommands::Register();
+	FDeveloperSettingCommands::Register();
 }
 
 void FDevEdCoreModule::RegisterAssetActions(TArray<TSharedPtr<FAssetTypeActions>>& OutAssetActions)
@@ -102,7 +102,7 @@ void FDevEdCoreModule::RegisterAssetActions(TArray<TSharedPtr<FAssetTypeActions>
 void FDevEdCoreModule::UnRegisterCommand()
 {
 	ICommonEdModuleInterface::UnRegisterCommand();
-	FManagerSettingCommands::Unregister();
+	FDeveloperSettingCommands::Unregister();
 }
 
 #undef LOCTEXT_NAMESPACE

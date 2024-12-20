@@ -7,7 +7,7 @@
 
 FName UManagerEdSetting::GetCategoryName() const
 {
-	return "Manager(Editor)";
+	return "Editor";
 }
 
 #undef LOCTEXT_NAMESPACE

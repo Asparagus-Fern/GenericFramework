@@ -9,12 +9,12 @@
 
 FName UManagerSetting::GetContainerName() const
 {
-	return "Manager";
+	return "Developer";
 }
 
 FName UManagerSetting::GetCategoryName() const
 {
-	return "Manager(Runtime)";
+	return "Runtime";
 }
 
 FName UManagerSetting::GetSectionName() const
