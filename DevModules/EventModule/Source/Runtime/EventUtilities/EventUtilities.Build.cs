@@ -21,9 +21,6 @@ public class EventUtilities : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
-
-				"LevelSequence",
-				"MovieScene",
 			}
 		);
 	}
