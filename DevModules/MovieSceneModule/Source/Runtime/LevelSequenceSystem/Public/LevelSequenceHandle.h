@@ -24,14 +24,15 @@ public:
 
 	/* FMovieSceneInterface */
 public:
-	virtual void LoadMovieSceneDataSource_Implementation() override;
+	virtual void OpenMovieScene_Implementation() override;
 
 	virtual void Play_Implementation() override;
 	virtual void Pause_Implementation() override;
 	virtual void Stop_Implementation() override;
-	virtual void Seek_Implementation(FTimespan InTime) override;
+	virtual void Seek_Implementation(int32 InDays, int32 InHours, int32 InMinutes, int32 InSeconds, int32 InMicroSeconds) override;
 
-	virtual FTimespan GetTime() override;
+public:
+	virtual FTimespan GetMovieSceneCurrentTime_Implementation() override;
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Transient)

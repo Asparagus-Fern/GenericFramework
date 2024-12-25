@@ -21,10 +21,15 @@ class MOVIESCENEUTILITIES_API IMovieSceneInterface
 {
 	GENERATED_BODY()
 
+	/* Base */
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Movie Scene Interface | Base")
-	void LoadMovieSceneDataSource();
+	void OpenMovieScene();
 
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Movie Scene Interface | Base")
+	void CloseMovieScene();
+
+public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Movie Scene Interface | Base")
 	void SetMovieSceneSetting(FMovieSceneSetting InMovieSceneSetting);
 
@@ -38,8 +43,9 @@ public:
 	void Stop();
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Movie Scene Interface | Base")
-	void Seek(FTimespan InTime);
+	void Seek(int32 InDays, int32 InHours, int32 InMinutes, int32 InSeconds, int32 InMicroSeconds);
 
+	/* Setter */
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Movie Scene Interface | Setter")
 	void SetMovieSceneState(EMovieSceneState InMovieSceneState);
@@ -47,17 +53,25 @@ public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Movie Scene Interface | Setter")
 	void SetMovieSceneLoopSetting(FMovieSceneLoopSetting InMovieSceneLoopSetting);
 
+	/* Delegate */
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Movie Scene Interface | Delegate")
-	void OnMovieSceneFinish();
+	void OnMovieSceneOpenFinish();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Movie Scene Interface | Delegate")
+	void OnMovieScenePlayFinish();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Movie Scene Interface | Delegate")
+	void OnMovieSceneSeekFinish();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Movie Scene Interface | Delegate")
+	void OnMovieSceneCloseFinish();
 
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Movie Scene Interface | UI")
 	void RefreshMovieScenePanel(EMovieSceneState InMovieSceneState, TSubclassOf<UMovieScenePanel> InMovieScenePanelClass);
 
+protected:
 	virtual void OpenMovieScenePanel(TSubclassOf<UMovieScenePanel> InMovieScenePanel) { return; }
 	virtual void CloseMovieScenePanel() { return; }
-
-public:
-	virtual FTimespan GetTime() = 0;
 };

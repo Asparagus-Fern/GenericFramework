@@ -27,11 +27,21 @@ void UCBE_HandleLevelSequence::ExecuteButtonEvent_Implementation()
 				LevelSequenceHandle->LevelSequencePlayer->SetPlaybackSettings(Settings);
 			}
 
+			LevelSequenceHandle->OnPlayFinish.AddUObject(this, &UCBE_HandleLevelSequence::OnPlayFinish);
+
 			IMovieSceneInterface::Execute_SetMovieSceneState(LevelSequenceHandle, MovieSceneState);
 		}
 	}
 
 	if (!bIsAsync)
+	{
+		MarkAsActivedFinish();
+	}
+}
+
+void UCBE_HandleLevelSequence::OnPlayFinish()
+{
+	if (bIsAsync)
 	{
 		MarkAsActivedFinish();
 	}

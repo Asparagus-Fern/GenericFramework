@@ -68,7 +68,7 @@ ULevelSequenceHandle* ULevelSequenceManager::RegisterLevelSequence(ULevelSequenc
 			NewHandle->LevelSequenceActor = LevelSequenceActor;
 			NewHandle->LevelSequencePlayer = LevelSequencePlayer;
 
-			IMovieSceneInterface::Execute_LoadMovieSceneDataSource(NewHandle);
+			IMovieSceneInterface::Execute_OpenMovieScene(NewHandle);
 
 			LevelSequenceHandles.Add(NewHandle);
 			return NewHandle;

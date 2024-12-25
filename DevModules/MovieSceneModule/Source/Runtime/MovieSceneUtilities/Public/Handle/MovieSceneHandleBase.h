@@ -24,6 +24,9 @@ public:
 
 	/* FMovieSceneInterface */
 public:
+	virtual void OpenMovieScene_Implementation() override;
+	virtual void CloseMovieScene_Implementation() override;
+
 	virtual void SetMovieSceneSetting_Implementation(FMovieSceneSetting InMovieSceneSetting) override;
 
 	virtual void RefreshMovieScenePanel_Implementation(EMovieSceneState InMovieSceneState, TSubclassOf<UMovieScenePanel> InMovieScenePanelClass) override;
@@ -32,12 +35,27 @@ public:
 
 	virtual void SetMovieSceneState_Implementation(EMovieSceneState InMovieSceneState) override;
 
-	virtual void OnMovieSceneFinish_Implementation() override;
+	virtual void OnMovieSceneOpenFinish_Implementation() override;
+	virtual void OnMovieScenePlayFinish_Implementation() override;
+	virtual void OnMovieSceneSeekFinish_Implementation() override;
+	virtual void OnMovieSceneCloseFinish_Implementation() override;
 
-	virtual FTimespan GetTime() override;
+	/* UMovieSceneHandleBase */
+public:
+	UFUNCTION(BlueprintNativeEvent, BlueprintPure)
+	FTimespan GetMovieSceneCurrentTime();
 
+public:
+	DECLARE_MULTICAST_DELEGATE(FMovieSceneDelegate)
+
+	FMovieSceneDelegate OnOpenFinish;
+	FMovieSceneDelegate OnPlayFinish;
+	FMovieSceneDelegate OnSeekFinish;
+	FMovieSceneDelegate OnCloseFinish;
+	
 private:
-	uint8 bSeekingTime; 
+	uint8 bEnableLoopFragmentSeek : 1;
+	uint8 bIsSeeking : 1;
 	int32 PlayNum = 0;
 	FTimerHandle LoopFragmentHandle;
 

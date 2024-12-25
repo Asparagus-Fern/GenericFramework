@@ -3,6 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
+#include "Debug/DebugType.h"
 // #include "PropertyType.generated.h"
 
 /**

@@ -35,4 +35,7 @@ public:
 
 	UPROPERTY(EditAnywhere, meta=(EditCondition = "bNewSequencePlaybackSettings"))
 	FMovieSceneSequencePlaybackSettings Settings;
+
+private:
+	void OnPlayFinish();
 };

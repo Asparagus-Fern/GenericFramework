@@ -3,6 +3,8 @@
 
 #include "Collection/PropertyCollection.h"
 
+#include "Debug/DebugType.h"
+
 TArray<UPropertyEntity*> UPropertyCollection::GetChildProperties()
 {
 	return ChildProperties;

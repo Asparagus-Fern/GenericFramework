@@ -29,6 +29,7 @@ public class ApplicationRuntime : ModuleRules
 				"MovieScene",
 				"MediaAssets",
 
+				/* Dev Module */
 				"EventUtilities",
 				"DevGameplay",
 				"ActiveNode",
@@ -41,10 +42,14 @@ public class ApplicationRuntime : ModuleRules
 				"MovieSceneUtilities",
 				"LevelSequenceSystem",
 				"MediaSystem",
+				"PropertyUtilities",
 
+				/* Dev Lab */
 				"PropertyDetailViewSystem",
 
-				"DBTween",
+				/* Marketplace */
+				"DBTween", 
+				"UltraDynamicSkyUtilities",
 			}
 		);
 	}

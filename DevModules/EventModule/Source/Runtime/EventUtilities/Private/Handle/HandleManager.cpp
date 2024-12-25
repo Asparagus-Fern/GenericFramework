@@ -81,9 +81,10 @@ void UHandleManager::UnRegisterHandle(FName InHandleName)
 
 bool UHandleManager::IsHandleRegister(const UHandleBase* InHandle)
 {
-	for (const auto& Handle : Handles)
+	TArray<UHandleBase*> TempHandles = Handles;
+	for (const auto& Handle : TempHandles)
 	{
-		if (Handle->GetHandleID() == InHandle->GetHandleID())
+		if (IsValid(Handle) && Handle->GetHandleID() == InHandle->GetHandleID())
 		{
 			return true;
 		}

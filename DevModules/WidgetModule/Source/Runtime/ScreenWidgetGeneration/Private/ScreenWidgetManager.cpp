@@ -1158,6 +1158,7 @@ void UScreenWidgetManager::HandleMenuResponseStateChanged()
 			DestroyMenu(PreviousMenuStyle->GetMenuTag());
 
 		OnMenuSelectionChanged.Broadcast(PreviousMenuStyle->GetMenuTag(), PreviousEventState);
+		BPDelegate_OnMenuSelectionChanged.Broadcast(PreviousMenuStyle->GetMenuTag(), PreviousEventState);
 	}
 
 	/* 执行当前菜单的事件 */

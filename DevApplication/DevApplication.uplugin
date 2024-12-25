@@ -59,6 +59,14 @@
       "Enabled": true
     },
     {
+      "Name": "PropertyModule",
+      "Enabled": true
+    },
+    {
+      "Name": "UtilityModule",
+      "Enabled": true
+    },
+    {
       "Name": "DBTween",
       "Enabled": true
     }

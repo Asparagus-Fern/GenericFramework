@@ -32,9 +32,20 @@ bool UMediaManager::DoesSupportWorldType(const EWorldType::Type WorldType) const
 	return WorldType == EWorldType::Game || WorldType == EWorldType::PIE;
 }
 
-void UMediaManager::OnWorldBeginPlay(UWorld& InWorld)
+void UMediaManager::HandleOnWorldBeginPlay(UWorld* InWorld)
 {
-	Super::OnWorldBeginPlay(InWorld);
+	FCoreInternalManager::HandleOnWorldBeginPlay(InWorld);
+}
+
+void UMediaManager::HandleOnWorldEndPlay(UWorld* InWorld)
+{
+	FCoreInternalManager::HandleOnWorldEndPlay(InWorld);
+
+	TArray<UMediaHandle*> TempMediaHandles = MediaHandles;
+	for (const auto& TempMediaHandle : TempMediaHandles)
+	{
+		UnRegisterMedia(TempMediaHandle);
+	}
 }
 
 UMediaHandle* UMediaManager::RegisterMedia(UMediaPlayer* InMediaPlayer, UMediaSource* InMediaSource)
@@ -74,7 +85,6 @@ UMediaHandle* UMediaManager::RegisterMedia(UMediaPlayer* InMediaPlayer, UMediaPl
 	{
 		MediaHandle = GetMediaHandle(InMediaPlayer);
 		MediaHandle->MediaPlaylist = InMediaPlayList;
-		IMovieSceneInterface::Execute_LoadMovieSceneDataSource(MediaHandle);
 	}
 	else
 	{
@@ -84,7 +94,7 @@ UMediaHandle* UMediaManager::RegisterMedia(UMediaPlayer* InMediaPlayer, UMediaPl
 			MediaHandle->MediaPlayer = InMediaPlayer;
 			MediaHandle->MediaPlaylist = InMediaPlayList;
 
-			IMovieSceneInterface::Execute_LoadMovieSceneDataSource(MediaHandle);
+			IMovieSceneInterface::Execute_OpenMovieScene(MediaHandle);
 			MediaHandles.Add(MediaHandle);
 		}
 	}
@@ -107,11 +117,12 @@ void UMediaManager::UnRegisterMedia(UMediaHandle* InMediaHandle)
 {
 	if (MediaHandles.Contains(InMediaHandle))
 	{
+		IMovieSceneInterface::Execute_CloseMovieScene(InMediaHandle);
 		MediaHandles.Remove(InMediaHandle);
 
-		if (UHandleManager* HandleManager = GetManager<UHandleManager>())
+		if (UMediaManager* MediaManager = GetManager<UMediaManager>())
 		{
-			HandleManager->UnRegisterHandle(InMediaHandle);
+			MediaManager->UnRegisterMedia(InMediaHandle);
 		}
 	}
 }

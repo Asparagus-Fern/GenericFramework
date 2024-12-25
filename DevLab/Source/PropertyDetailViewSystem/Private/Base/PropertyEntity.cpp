@@ -3,6 +3,8 @@
 
 #include "Base/PropertyEntity.h"
 
+#include "Debug/DebugType.h"
+
 void UPropertyEntity::SetPropertyContext(UObject* InContext)
 {
 	Context = InContext;

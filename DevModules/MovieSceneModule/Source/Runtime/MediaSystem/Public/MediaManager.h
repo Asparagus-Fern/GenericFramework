@@ -26,7 +26,9 @@ public:
 	virtual void Deinitialize() override;
 	virtual bool DoesSupportWorldType(const EWorldType::Type WorldType) const override;
 
-	virtual void OnWorldBeginPlay(UWorld& InWorld) override;
+protected:
+	virtual void HandleOnWorldBeginPlay(UWorld* InWorld) override;
+	virtual void HandleOnWorldEndPlay(UWorld* InWorld) override;
 	
 public:
 	virtual UMediaHandle* RegisterMedia(UMediaPlayer* InMediaPlayer, UMediaSource* InMediaSource);

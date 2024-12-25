@@ -6,6 +6,13 @@
 #include "Procedure/ProcedureInterface.h"
 #include "Debug/DebugType.h"
 
+// #define GENERATE_STATIC_DELEGATE_TwoParams(ClassName, DelegateName, Param1Type, Param1Name, Param2Type, Param2Name) \
+// 	DECLARE_EVENT_TwoParams(ClassName, F##DelegateName, Param1Type, Param2Type); \
+// 	inline static F##DelegateName Delegate_##DelegateName; \
+// 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(F##DelegateName##_BP, Param1Type, Param1Name, Param2Type, Param2Name) \
+// 	UPROPERTY(BlueprintAssignable,BlueprintCallable) \
+// 	F##DelegateName##_BP BPDelegate_##DelegateName;
+
 /**
  * 
  */

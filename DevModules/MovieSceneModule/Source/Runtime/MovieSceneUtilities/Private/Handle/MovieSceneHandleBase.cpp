@@ -4,6 +4,7 @@
 #include "Handle/MovieSceneHandleBase.h"
 
 #include "ScreenWidgetManager.h"
+#include "Handle/HandleManager.h"
 #include "Manager/ManagerStatics.h"
 #include "Widget/MovieScenePanel.h"
 
@@ -11,26 +12,33 @@ void UMovieSceneHandleBase::Tick(float DeltaTime)
 {
 	if (MovieSceneSetting.MovieSceneLoopSetting.bLoopFragment)
 	{
-		if (PlayNum > MovieSceneSetting.MovieSceneLoopSetting.PlayNumToDelayLoop)
-		{
-			// if (bSeekingTime)
-			// {
-			// 	if (GetTime() >= FTimespan::FromSeconds(MovieSceneSetting.MovieSceneLoopSetting.LoopRange.X) && GetTime() <= FTimespan::FromSeconds(MovieSceneSetting.MovieSceneLoopSetting.LoopRange.Y))
-			// 	{
-			// 		bSeekingTime = false;
-			// 	}
-			// }
-			// else
-			// {
-			// 	if (GetTime() < FTimespan::FromSeconds(MovieSceneSetting.MovieSceneLoopSetting.LoopRange.X) || GetTime() > FTimespan::FromSeconds(MovieSceneSetting.MovieSceneLoopSetting.LoopRange.Y))
-			// 	{
-			// 		Execute_Seek(this, FTimespan::FromSeconds(MovieSceneSetting.MovieSceneLoopSetting.LoopRange.X + 0.1f));
-			// 		Execute_Play(this);
-			// 		bSeekingTime = true;
-			// 	}
-			// }
-		}
+		// if (GetMovieSceneCurrentTime() > FTimespan(0, 0, MovieSceneSetting.MovieSceneLoopSetting.LoopRange.Y))
+		// {
+		// 	bEnableLoopFragmentSeek = true;
+		// }
+		//
+		// if (PlayNum >= MovieSceneSetting.MovieSceneLoopSetting.PlayNumToDelayLoop && !bIsSeeking && bEnableLoopFragmentSeek)
+		// {
+		// 	bEnableLoopFragmentSeek = false;
+		// 	bIsSeeking = true;
+		// 	Execute_Seek(this, 0, 0, 0, MovieSceneSetting.MovieSceneLoopSetting.LoopRange.X, 0);
+		// }
 	}
+}
+
+void UMovieSceneHandleBase::OpenMovieScene_Implementation()
+{
+	IMovieSceneInterface::OpenMovieScene_Implementation();
+}
+
+void UMovieSceneHandleBase::CloseMovieScene_Implementation()
+{
+	IMovieSceneInterface::CloseMovieScene_Implementation();
+
+	// if (UHandleManager* HandleManager = GetManager<UHandleManager>())
+	// {
+	// 	HandleManager->UnRegisterHandle(this);
+	// }
 }
 
 void UMovieSceneHandleBase::SetMovieSceneSetting_Implementation(FMovieSceneSetting InMovieSceneSetting)
@@ -93,7 +101,6 @@ void UMovieSceneHandleBase::SetMovieSceneState_Implementation(EMovieSceneState I
 	if (InMovieSceneState == EMovieSceneState::Play)
 	{
 		Execute_Play(this);
-		PlayNum++;
 	}
 	else if (InMovieSceneState == EMovieSceneState::Pause)
 	{
@@ -105,12 +112,32 @@ void UMovieSceneHandleBase::SetMovieSceneState_Implementation(EMovieSceneState I
 	}
 }
 
-void UMovieSceneHandleBase::OnMovieSceneFinish_Implementation()
+void UMovieSceneHandleBase::OnMovieSceneOpenFinish_Implementation()
 {
-	PlayNum++;
+	IMovieSceneInterface::OnMovieSceneOpenFinish_Implementation();
+	OnOpenFinish.Broadcast();
 }
 
-FTimespan UMovieSceneHandleBase::GetTime()
+void UMovieSceneHandleBase::OnMovieScenePlayFinish_Implementation()
+{
+	PlayNum++;
+	bEnableLoopFragmentSeek = true;
+	OnPlayFinish.Broadcast();
+}
+
+void UMovieSceneHandleBase::OnMovieSceneSeekFinish_Implementation()
+{
+	bIsSeeking = false;
+	OnSeekFinish.Broadcast();
+}
+
+void UMovieSceneHandleBase::OnMovieSceneCloseFinish_Implementation()
+{
+	IMovieSceneInterface::OnMovieSceneCloseFinish_Implementation();
+	OnCloseFinish.Broadcast();
+}
+
+FTimespan UMovieSceneHandleBase::GetMovieSceneCurrentTime_Implementation()
 {
 	return FTimespan();
 }

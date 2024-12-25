@@ -11,7 +11,8 @@
 class UCommonButtonCondition;
 
 /**
- * 瞬发类型按钮事件
+ *	todo:流程类将重写
+ * 按钮事件
  */
 UCLASS(Abstract, EditInlineNew)
 class SCREENWIDGETGENERATION_API UCommonButtonEvent : public UProcedureObject

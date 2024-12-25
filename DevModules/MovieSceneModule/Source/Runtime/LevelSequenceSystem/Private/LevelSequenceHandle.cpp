@@ -15,9 +15,9 @@ void ULevelSequenceHandle::ClearHandle_Implementation()
 	}
 }
 
-void ULevelSequenceHandle::LoadMovieSceneDataSource_Implementation()
+void ULevelSequenceHandle::OpenMovieScene_Implementation()
 {
-	IMovieSceneInterface::LoadMovieSceneDataSource_Implementation();
+	Super::OpenMovieScene_Implementation();
 }
 
 void ULevelSequenceHandle::Play_Implementation()
@@ -35,12 +35,13 @@ void ULevelSequenceHandle::Stop_Implementation()
 	LevelSequencePlayer->Stop();
 }
 
-void ULevelSequenceHandle::Seek_Implementation(FTimespan InTime)
+void ULevelSequenceHandle::Seek_Implementation(int32 InDays, int32 InHours, int32 InMinutes, int32 InSeconds, int32 InMicroSeconds)
 {
+	Super::Seek_Implementation(InDays, InHours, InMinutes, InSeconds, InMicroSeconds);
 }
 
-FTimespan ULevelSequenceHandle::GetTime()
+FTimespan ULevelSequenceHandle::GetMovieSceneCurrentTime_Implementation()
 {
-	// LevelSequencePlayer->GetCurrentTime()
-	return FTimespan();
+	// LevelSequencePlayer->GetCurrentTime();
+	return Super::GetMovieSceneCurrentTime_Implementation();
 }
