@@ -8,7 +8,7 @@
 #include "BackpackItemComponent.generated.h"
 
 
-UCLASS(ClassGroup=(DevPlugin), meta=(BlueprintSpawnableComponent))
+UCLASS(ClassGroup=(Developer), meta=(BlueprintSpawnableComponent))
 class BACKPACKSYSTEM_API UBackpackItemComponent : public UActorComponent, public IBackpackItemInterface
 {
 	GENERATED_BODY()

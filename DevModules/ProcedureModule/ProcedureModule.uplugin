@@ -17,11 +17,15 @@
     {
       "Name": "DevCore",
       "Enabled": true
+    },
+    {
+      "Name": "ModularGameplay",
+      "Enabled": true
     }
   ],
   "Modules": [
     {
-      "Name": "ProcedureModule",
+      "Name": "ProcedureFlowSystem",
       "Type": "Runtime",
       "LoadingPhase": "Default"
     }

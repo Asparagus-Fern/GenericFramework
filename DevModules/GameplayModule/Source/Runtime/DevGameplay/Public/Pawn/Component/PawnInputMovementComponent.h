@@ -68,7 +68,7 @@ public:
 /**
  * 对接增强输入，提供简单运动接口
  */
-UCLASS(ClassGroup=(DevPlugin), meta=(BlueprintSpawnableComponent))
+UCLASS(ClassGroup=(Developer), meta=(BlueprintSpawnableComponent))
 class DEVGAMEPLAY_API UPawnInputMovementComponent : public UActorComponent, public IPawnInputMovementInterface
 {
 	GENERATED_BODY()
