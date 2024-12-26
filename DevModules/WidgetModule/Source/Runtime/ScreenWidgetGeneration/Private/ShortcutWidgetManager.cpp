@@ -13,7 +13,7 @@
 
 bool UShortcutWidgetManager::ShouldCreateSubsystem(UObject* Outer) const
 {
-	return Super::ShouldCreateSubsystem(Outer) && UScreenWidgetManagerSetting::Get()->GetEnableManager();
+	return Super::ShouldCreateSubsystem(Outer);
 }
 
 void UShortcutWidgetManager::Initialize(FSubsystemCollectionBase& Collection)
