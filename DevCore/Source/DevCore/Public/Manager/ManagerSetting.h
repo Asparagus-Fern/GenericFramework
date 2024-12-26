@@ -20,10 +20,6 @@ public:
 	virtual FName GetSectionName() const override;
 
 public:
-	UFUNCTION(BlueprintPure)
-	bool GetEnableManager() const;
-
-public:
 	UPROPERTY(Config, EditDefaultsOnly)
-	bool bEnableManager = true;
+	int32 ManagerOrder = 0;
 };

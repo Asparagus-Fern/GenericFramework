@@ -7,5 +7,5 @@
 
 bool UGameMapManager::ShouldCreateSubsystem(UObject* Outer) const
 {
-	return Super::ShouldCreateSubsystem(Outer) && UGameMapManagerSetting::Get()->GetEnableManager();;
+	return Super::ShouldCreateSubsystem(Outer);
 }

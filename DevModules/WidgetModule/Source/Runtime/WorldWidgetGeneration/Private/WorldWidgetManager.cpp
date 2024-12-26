@@ -155,7 +155,7 @@ void UWorldWidgetPanel::RefreshAllWorldWidgetComponent()
 
 bool UWorldWidgetManager::ShouldCreateSubsystem(UObject* Outer) const
 {
-	return Super::ShouldCreateSubsystem(Outer) && UWorldWidgetManagerSetting::Get()->GetEnableManager();
+	return Super::ShouldCreateSubsystem(Outer);
 }
 
 void UWorldWidgetManager::Initialize(FSubsystemCollectionBase& Collection)

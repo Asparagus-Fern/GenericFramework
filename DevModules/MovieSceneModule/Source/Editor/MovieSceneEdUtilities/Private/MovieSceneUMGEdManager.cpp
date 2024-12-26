@@ -62,7 +62,7 @@ void UMovieSceneUMGPanel::RefreshMovieSceneUMG(TArray<UUserWidget*> InUserWidget
 
 bool UMovieSceneUMGEdManager::ShouldCreateSubsystem(UObject* Outer) const
 {
-	return Super::ShouldCreateSubsystem(Outer) && UMovieSceneUMGEdManagerSetting::Get()->GetEnableManager();
+	return Super::ShouldCreateSubsystem(Outer);
 }
 
 void UMovieSceneUMGEdManager::Initialize(FSubsystemCollectionBase& Collection)

@@ -22,9 +22,4 @@ FName UManagerSetting::GetSectionName() const
 	return Super::GetSectionName();
 }
 
-bool UManagerSetting::GetEnableManager() const
-{
-	return bEnableManager && UGlobalManagerSetting::Get()->bEnableAllManager;
-}
-
 #undef LOCTEXT_NAMESPACE

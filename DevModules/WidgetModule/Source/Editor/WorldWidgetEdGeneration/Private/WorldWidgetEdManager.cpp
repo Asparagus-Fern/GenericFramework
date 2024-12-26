@@ -234,7 +234,7 @@ void UEditorWorldWidgetPanel::OnWorldWidgetMiddleClicked(TSharedPtr<SWorldWidget
 
 bool UWorldWidgetEdManager::ShouldCreateSubsystem(UObject* Outer) const
 {
-	return Super::ShouldCreateSubsystem(Outer) && UWorldWidgetEdManagerSetting::Get()->GetEnableManager();
+	return Super::ShouldCreateSubsystem(Outer);
 }
 
 void UWorldWidgetEdManager::Initialize(FSubsystemCollectionBase& Collection)

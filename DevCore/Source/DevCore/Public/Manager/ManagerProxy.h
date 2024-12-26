@@ -12,7 +12,7 @@
  * 
  */
 UCLASS(Transient)
-class DEVCORE_API UManagerProxy : public UCommonObject, public FWorldInterface
+class DEVCORE_API UManagerProxy : public UCommonObject, public IWorldInterface
 {
 	GENERATED_BODY()
 
@@ -20,10 +20,10 @@ public:
 	static UManagerProxy* InitializeManagerProxy();
 	static UManagerProxy* Get();
 
-	void RegisterManager(FCoreInternalManager* InManager);
-	void UnRegisterManager(FCoreInternalManager* InManager);
+	void RegisterManager(IManagerInterface* InManager);
+	void UnRegisterManager(IManagerInterface* InManager);
 
-	bool IsManagerExist(const FCoreInternalManager* InManager);
+	bool IsManagerExist(const IManagerInterface* InManager);
 	bool IsManagerExist(FGuid InManagerID);
 
 	template <typename T>
@@ -91,10 +91,12 @@ public:
 		return Result;
 	}
 
+	void SortManagers();
+
 protected:
 	virtual void InitializeInternal();
-
-	/* FWorldInterface */
+	
+	/* IWorldInterface */
 protected:
 	virtual void HandleOnWorldCreation(UWorld* InWorld) override;
 	virtual void HandleOnWorldBeginTearDown(UWorld* InWorld) override;
@@ -106,5 +108,5 @@ protected:
 private:
 	static UManagerProxy* Instance;
 	bool bIsInitialize = false;
-	TMap<FGuid, FCoreInternalManager*> ManagerMapping;
+	TMap<FGuid, IManagerInterface*> ManagerMapping;
 };

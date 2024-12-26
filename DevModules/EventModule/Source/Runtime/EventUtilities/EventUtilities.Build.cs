@@ -20,10 +20,7 @@ public class EventUtilities : ModuleRules
 				"CoreUObject",
 				"Engine",
 				"Slate",
-				"SlateCore",
-
-				"LevelSequence",
-				"MovieScene",
+				"SlateCore", 
 			}
 		);
 	}

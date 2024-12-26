@@ -14,7 +14,7 @@ UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_WorldWidget);
 /**
  * 创建出一个基于屏幕的3DUI
  */
-UCLASS(ClassGroup=(DevPlugin), meta=(BlueprintSpawnableComponent))
+UCLASS(ClassGroup=(Developer), meta=(BlueprintSpawnableComponent))
 class WORLDWIDGETGENERATION_API UWorldWidgetComponent : public USceneComponent
 {
 	GENERATED_BODY()

@@ -9,7 +9,7 @@
 /**
  * 
  */
-UCLASS(ClassGroup=(DevPlugin), meta=(BlueprintSpawnableComponent))
+UCLASS(ClassGroup=(Developer), meta=(BlueprintSpawnableComponent))
 class BACKPACKSYSTEM_API UPickableItemComponent : public UActorComponent
 {
 	GENERATED_BODY()

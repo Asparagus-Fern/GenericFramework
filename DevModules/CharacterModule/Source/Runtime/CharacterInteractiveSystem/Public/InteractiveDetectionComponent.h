@@ -10,7 +10,7 @@
 /**
  * 提供角色范围内交互检测的能力
  */
-UCLASS(ClassGroup=(DevPlugin), meta=(BlueprintSpawnableComponent))
+UCLASS(ClassGroup=(Developer), meta=(BlueprintSpawnableComponent))
 class CHARACTERINTERACTIVESYSTEM_API UInteractiveDetectionComponent : public USphereComponent
 {
 	GENERATED_BODY()

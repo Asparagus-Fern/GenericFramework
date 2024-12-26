@@ -3,24 +3,41 @@
 
 #include "Interface/WorldInterface.h"
 
-void FWorldInterface::InitializeWorldInterface()
+void IWorldInterface::InitializeWorldInterface()
 {
-	FWorldDelegates::OnPostWorldCreation.AddRaw(this, &FWorldInterface::HandleOnWorldCreationInternal);
-	FWorldDelegates::OnWorldBeginTearDown.AddRaw(this, &FWorldInterface::HandleOnWorldBeginTearDownInternal);
+	FWorldDelegates::OnPostWorldCreation.AddRaw(this, &IWorldInterface::HandleOnWorldCreationInternal);
+	FWorldDelegates::OnWorldBeginTearDown.AddRaw(this, &IWorldInterface::HandleOnWorldBeginTearDownInternal);
 }
 
-void FWorldInterface::HandleOnWorldCreationInternal(UWorld* InWorld)
+IWorldInterface::~IWorldInterface()
 {
-	InWorld->OnWorldMatchStarting.AddRaw(this, &FWorldInterface::HandleOnWorldMatchStarting, InWorld);
-	InWorld->OnWorldBeginPlay.AddRaw(this, &FWorldInterface::HandleOnWorldBeginPlay, InWorld);
 }
 
-void FWorldInterface::HandleOnWorldBeginTearDownInternal(UWorld* InWorld)
+void IWorldInterface::HandleOnWorldCreationInternal(UWorld* InWorld)
 {
-	if (!InWorld->IsGameWorld())
-	{
-		return;
-	}
+	FWorldDelegates::OnPostWorldCreation.RemoveAll(this);
+
+	InWorld->OnWorldMatchStarting.AddRaw(this, &IWorldInterface::HandleOnWorldMatchStartingInternal, InWorld);
+	InWorld->OnWorldBeginPlay.AddRaw(this, &IWorldInterface::HandleOnWorldBeginPlayInternal, InWorld);
+
+	HandleOnWorldCreation(InWorld);
+}
+
+void IWorldInterface::HandleOnWorldBeginTearDownInternal(UWorld* InWorld)
+{
+	FWorldDelegates::OnWorldBeginTearDown.RemoveAll(this);
 
 	HandleOnWorldEndPlay(InWorld);
+}
+
+void IWorldInterface::HandleOnWorldMatchStartingInternal(UWorld* InWorld)
+{
+	InWorld->OnWorldMatchStarting.RemoveAll(this);
+	HandleOnWorldMatchStarting(InWorld);
+}
+
+void IWorldInterface::HandleOnWorldBeginPlayInternal(UWorld* InWorld)
+{
+	InWorld->OnWorldBeginPlay.RemoveAll(this);
+	HandleOnWorldBeginPlay(InWorld);
 }
