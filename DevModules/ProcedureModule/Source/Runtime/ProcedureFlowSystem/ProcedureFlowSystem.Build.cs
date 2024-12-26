@@ -22,7 +22,8 @@ public class ProcedureFlowSystem : ModuleRules
 				"Slate",
 				"SlateCore",
 
-				"GameplayTags"
+				"GameplayTags",
+				"DeveloperSettings"
 			}
 		);
 	}

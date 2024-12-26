@@ -14,7 +14,7 @@ UInteractableWidgetGroupManager::FOnInteractableWidgetClearup UInteractableWidge
 
 bool UInteractableWidgetGroupManager::ShouldCreateSubsystem(UObject* Outer) const
 {
-	return Super::ShouldCreateSubsystem(Outer) && UScreenWidgetManagerSetting::Get()->GetEnableManager();
+	return Super::ShouldCreateSubsystem(Outer);
 }
 
 void UInteractableWidgetGroupManager::Initialize(FSubsystemCollectionBase& Collection)
