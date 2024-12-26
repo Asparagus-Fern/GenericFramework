@@ -67,6 +67,11 @@ void UMovieSceneHandleBase::RefreshMovieScenePanel_Implementation(EMovieSceneSta
 
 void UMovieSceneHandleBase::OpenMovieScenePanel(TSubclassOf<UMovieScenePanel> InMovieScenePanel)
 {
+	if (!InMovieScenePanel)
+	{
+		return;
+	}
+
 	if (UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
 	{
 		if (!IsValid(MovieScenePanel))

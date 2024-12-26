@@ -11,12 +11,12 @@ void IWorldInterface::InitializeWorldInterface()
 
 IWorldInterface::~IWorldInterface()
 {
+	FWorldDelegates::OnPostWorldCreation.RemoveAll(this);
+	FWorldDelegates::OnWorldBeginTearDown.RemoveAll(this);
 }
 
 void IWorldInterface::HandleOnWorldCreationInternal(UWorld* InWorld)
 {
-	FWorldDelegates::OnPostWorldCreation.RemoveAll(this);
-
 	InWorld->OnWorldMatchStarting.AddRaw(this, &IWorldInterface::HandleOnWorldMatchStartingInternal, InWorld);
 	InWorld->OnWorldBeginPlay.AddRaw(this, &IWorldInterface::HandleOnWorldBeginPlayInternal, InWorld);
 
@@ -25,8 +25,6 @@ void IWorldInterface::HandleOnWorldCreationInternal(UWorld* InWorld)
 
 void IWorldInterface::HandleOnWorldBeginTearDownInternal(UWorld* InWorld)
 {
-	FWorldDelegates::OnWorldBeginTearDown.RemoveAll(this);
-
 	HandleOnWorldEndPlay(InWorld);
 }
 
