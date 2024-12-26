@@ -11,7 +11,7 @@
 
 bool UProcedureManager::ShouldCreateSubsystem(UObject* Outer) const
 {
-	return Super::ShouldCreateSubsystem(Outer) && UProcedureManagerSetting::Get()->GetEnableManager();
+	return Super::ShouldCreateSubsystem(Outer);
 }
 
 void UProcedureManager::Initialize(FSubsystemCollectionBase& Collection)

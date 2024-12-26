@@ -2,8 +2,6 @@
 
 #include "Handle/HandleBase.h"
 
-#include "LevelSequenceActor.h"
-#include "LevelSequencePlayer.h"
 #include "Handle/HandleManager.h"
 #include "Manager/ManagerStatics.h"
 

@@ -17,18 +17,24 @@ void UProcedureFlowComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (UProcedureFlowManager* ProcedureFlowManager = GetManager<UProcedureFlowManager>())
+	if (FlowTag.IsValid())
 	{
-		ProcedureFlowManager->RegisterFlow(this);
+		if (UProcedureFlowManager* ProcedureFlowManager = GetManager<UProcedureFlowManager>())
+		{
+			ProcedureFlowManager->RegisterFlow(this);
+		}
 	}
 }
 
 void UProcedureFlowComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-	if (UProcedureFlowManager* ProcedureFlowManager = GetManager<UProcedureFlowManager>())
+	if (FlowTag.IsValid())
 	{
-		ProcedureFlowManager->UnRegisterFlow(this);
+		if (UProcedureFlowManager* ProcedureFlowManager = GetManager<UProcedureFlowManager>())
+		{
+			ProcedureFlowManager->UnRegisterFlow(this);
+		}
 	}
-
+	
 	Super::EndPlay(EndPlayReason);
 }

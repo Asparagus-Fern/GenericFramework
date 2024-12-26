@@ -23,4 +23,10 @@ public:
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="Procedure.Flow"))
 	FGameplayTag FlowTag = FGameplayTag::EmptyTag;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	int32 ProcedureFlowInOrder = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	int32 ProcedureFlowOutOrder = 0;
 };

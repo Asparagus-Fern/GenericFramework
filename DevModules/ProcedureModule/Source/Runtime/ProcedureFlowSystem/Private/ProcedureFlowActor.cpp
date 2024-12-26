@@ -3,10 +3,13 @@
 
 #include "ProcedureFlowActor.h"
 
+#include "ProcedureFlowComponent.h"
+
 
 AProcedureFlowActor::AProcedureFlowActor()
 {
 	PrimaryActorTick.bCanEverTick = true;
+	ProcedureFlowComponent = CreateDefaultSubobject<UProcedureFlowComponent>("Procedure Flow Component");
 }
 
 void AProcedureFlowActor::BeginPlay()
@@ -14,7 +17,7 @@ void AProcedureFlowActor::BeginPlay()
 	Super::BeginPlay();
 }
 
-void AProcedureFlowActor::Tick(float DeltaTime)
+void AProcedureFlowActor::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-	Super::Tick(DeltaTime);
+	Super::EndPlay(EndPlayReason);
 }

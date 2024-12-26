@@ -69,7 +69,7 @@ UScreenWidgetManager::FOnMenuSelectionChanged UScreenWidgetManager::OnMenuSelect
 
 bool UScreenWidgetManager::ShouldCreateSubsystem(UObject* Outer) const
 {
-	return Super::ShouldCreateSubsystem(Outer) && UScreenWidgetManagerSetting::Get()->GetEnableManager();
+	return Super::ShouldCreateSubsystem(Outer);
 }
 
 void UScreenWidgetManager::Initialize(FSubsystemCollectionBase& Collection)

@@ -8,7 +8,7 @@
 
 bool UCharacterManager::ShouldCreateSubsystem(UObject* Outer) const
 {
-	return Super::ShouldCreateSubsystem(Outer) && UCharacterManagerSetting::Get()->GetEnableManager();
+	return Super::ShouldCreateSubsystem(Outer);
 }
 
 void UCharacterManager::Initialize(FSubsystemCollectionBase& Collection)

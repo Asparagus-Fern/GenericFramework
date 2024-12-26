@@ -12,7 +12,7 @@
 
 bool ULevelStreamingManager::ShouldCreateSubsystem(UObject* Outer) const
 {
-	return Super::ShouldCreateSubsystem(Outer) && ULevelStreamingManagerSetting::Get()->GetEnableManager() && !Cast<UWorld>(Outer)->IsPartitionedWorld();
+	return Super::ShouldCreateSubsystem(Outer) && !Cast<UWorld>(Outer)->IsPartitionedWorld();
 }
 
 void ULevelStreamingManager::Initialize(FSubsystemCollectionBase& Collection)

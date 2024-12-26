@@ -3,11 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "Manager/CoreInternalManager.h"
 #include "Subsystems/WorldSubsystem.h"
 #include "ProcedureFlowManager.generated.h"
 
 class UProcedureFlowComponent;
+
 /**
  * 
  */
@@ -22,11 +24,27 @@ public:
 	virtual void Deinitialize() override;
 	virtual bool DoesSupportWorldType(const EWorldType::Type WorldType) const override;
 
+	/* IManagerInterface */
+protected:
+	virtual int32 GetManagerOrder() override { return 1; }
+	virtual void HandleOnWorldMatchStarting(UWorld* InWorld) override;
+
+	/* UProcedureFlowManager */
 public:
 	void RegisterFlow(UProcedureFlowComponent* InComponent);
 	void UnRegisterFlow(UProcedureFlowComponent* InComponent);
+	void EnterProcedureFlow(FGameplayTag InFlowTag);
+	UProcedureFlowComponent* GetProcedureFlowComponent(FGameplayTag InFlowTag);
 
 private:
+	void SortProcedureFlowComponentsAsEnter();
+	void SortProcedureFlowComponentsAsExit();
+	void Execute(const TFunctionRef<void(UProcedureFlowComponent* InComponent)>& Func);
+	
+private:
 	UPROPERTY(Transient)
-	TArray<UProcedureFlowComponent*> ProcedureFlowComponents;
+	FGameplayTag CurrentFlowTag = FGameplayTag::EmptyTag;
+
+	UPROPERTY(Transient)
+	TArray<TObjectPtr<UProcedureFlowComponent>> ProcedureFlowComponents;
 };

@@ -11,7 +11,7 @@
 
 bool UPawnManager::ShouldCreateSubsystem(UObject* Outer) const
 {
-	return Super::ShouldCreateSubsystem(Outer) && UPawnManagerSetting::Get()->GetEnableManager();
+	return Super::ShouldCreateSubsystem(Outer);
 }
 
 void UPawnManager::Initialize(FSubsystemCollectionBase& Collection)

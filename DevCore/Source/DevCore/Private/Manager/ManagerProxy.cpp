@@ -32,7 +32,7 @@ UManagerProxy* UManagerProxy::Get()
 	return Instance;
 }
 
-void UManagerProxy::RegisterManager(FCoreInternalManager* InManager)
+void UManagerProxy::RegisterManager(IManagerInterface* InManager)
 {
 	if (!InManager)
 	{
@@ -46,10 +46,13 @@ void UManagerProxy::RegisterManager(FCoreInternalManager* InManager)
 		return;
 	}
 
-	ManagerMapping.Add(InManager->ManagerID, InManager);
+	ManagerMapping.Add(InManager->GetManagerID(), InManager);
+	SortManagers();
+
+	DLOG(DLogManager, Log, TEXT("%s"), *InManager->GetManagerOwner()->GetName());
 }
 
-void UManagerProxy::UnRegisterManager(FCoreInternalManager* InManager)
+void UManagerProxy::UnRegisterManager(IManagerInterface* InManager)
 {
 	if (!InManager)
 	{
@@ -57,15 +60,21 @@ void UManagerProxy::UnRegisterManager(FCoreInternalManager* InManager)
 		return;
 	}
 
-	if (ManagerMapping.Contains(InManager->ManagerID))
+	if (!IsManagerExist(InManager))
 	{
-		ManagerMapping.Remove(InManager->ManagerID);
+		DLOG(DLogManager, Warning, TEXT("InManager Is Already UnRegisted"))
+		return;
 	}
+
+	ManagerMapping.Remove(InManager->GetManagerID());
+	SortManagers();
+
+	DLOG(DLogManager, Log, TEXT("%s"), *InManager->GetManagerOwner()->GetName());
 }
 
-bool UManagerProxy::IsManagerExist(const FCoreInternalManager* InManager)
+bool UManagerProxy::IsManagerExist(const IManagerInterface* InManager)
 {
-	return IsManagerExist(InManager->ManagerID);
+	return IsManagerExist(InManager->GetManagerID());
 }
 
 bool UManagerProxy::IsManagerExist(FGuid InManagerID)
@@ -81,6 +90,15 @@ bool UManagerProxy::IsManagerExist(FGuid InManagerID)
 	return false;
 }
 
+void UManagerProxy::SortManagers()
+{
+	ManagerMapping.ValueSort([](IManagerInterface& A, IManagerInterface& B)
+		{
+			return A.GetManagerOrder() > B.GetManagerOrder();
+		}
+	);
+}
+
 void UManagerProxy::InitializeInternal()
 {
 	if (bIsInitialize)
@@ -94,37 +112,33 @@ void UManagerProxy::InitializeInternal()
 
 void UManagerProxy::HandleOnWorldCreation(UWorld* InWorld)
 {
+	for (const auto& Manager : ManagerMapping)
+	{
+		static_cast<FCoreInternalManager*>(Manager.Value)->HandleOnWorldCreation(InWorld);
+	}
 }
 
 void UManagerProxy::HandleOnWorldBeginTearDown(UWorld* InWorld)
 {
+	for (const auto& Manager : ManagerMapping)
+	{
+		static_cast<FCoreInternalManager*>(Manager.Value)->HandleOnWorldBeginTearDown(InWorld);
+	}
 }
 
 void UManagerProxy::HandleOnWorldBeginPlay(UWorld* InWorld)
 {
-	InWorld->OnWorldBeginPlay.RemoveAll(this);
-	if (!InWorld->IsGameWorld())
-	{
-		return;
-	}
-
 	for (const auto& Manager : ManagerMapping)
 	{
-		Manager.Value->HandleOnWorldBeginPlay(InWorld);
+		static_cast<FCoreInternalManager*>(Manager.Value)->HandleOnWorldBeginPlay(InWorld);
 	}
 }
 
 void UManagerProxy::HandleOnWorldMatchStarting(UWorld* InWorld)
 {
-	InWorld->OnWorldMatchStarting.RemoveAll(this);
-	if (!InWorld->IsGameWorld())
-	{
-		return;
-	}
-
 	for (const auto& Manager : ManagerMapping)
 	{
-		Manager.Value->HandleOnWorldMatchStarting(InWorld);
+		static_cast<FCoreInternalManager*>(Manager.Value)->HandleOnWorldMatchStarting(InWorld);
 	}
 }
 
@@ -132,6 +146,6 @@ void UManagerProxy::HandleOnWorldEndPlay(UWorld* InWorld)
 {
 	for (const auto& Manager : ManagerMapping)
 	{
-		Manager.Value->HandleOnWorldEndPlay(InWorld);
+		static_cast<FCoreInternalManager*>(Manager.Value)->HandleOnWorldEndPlay(InWorld);
 	}
 }

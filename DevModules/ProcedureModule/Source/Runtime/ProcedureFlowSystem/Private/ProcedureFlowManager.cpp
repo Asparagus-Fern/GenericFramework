@@ -4,6 +4,7 @@
 #include "ProcedureFlowManager.h"
 
 #include "ProcedureFlowComponent.h"
+#include "ProcedureFlowSetting.h"
 
 bool UProcedureFlowManager::ShouldCreateSubsystem(UObject* Outer) const
 {
@@ -27,6 +28,16 @@ bool UProcedureFlowManager::DoesSupportWorldType(const EWorldType::Type WorldTyp
 	return WorldType == EWorldType::Game || WorldType == EWorldType::PIE;
 }
 
+void UProcedureFlowManager::HandleOnWorldMatchStarting(UWorld* InWorld)
+{
+	FCoreInternalManager::HandleOnWorldMatchStarting(InWorld);
+
+	if (const UProcedureFlowComponent* FirstProcedureFlow = GetProcedureFlowComponent(UProcedureFlowSetting::Get()->DefaultFlowTag))
+	{
+		EnterProcedureFlow(FirstProcedureFlow->FlowTag);
+	}
+}
+
 void UProcedureFlowManager::RegisterFlow(UProcedureFlowComponent* InComponent)
 {
 	if (!IsValid(InComponent) || !InComponent->FlowTag.IsValid())
@@ -42,6 +53,11 @@ void UProcedureFlowManager::RegisterFlow(UProcedureFlowComponent* InComponent)
 	}
 
 	ProcedureFlowComponents.Add(InComponent);
+	Execute([](UProcedureFlowComponent* Component)
+		{
+			IProcedureFlowInterface::Execute_OnFlowRegister(Component, Component);
+		}
+	);
 }
 
 void UProcedureFlowManager::UnRegisterFlow(UProcedureFlowComponent* InComponent)
@@ -59,4 +75,76 @@ void UProcedureFlowManager::UnRegisterFlow(UProcedureFlowComponent* InComponent)
 	}
 
 	ProcedureFlowComponents.Remove(InComponent);
+	Execute([](UProcedureFlowComponent* Component)
+		{
+			IProcedureFlowInterface::Execute_OnFlowUnRegister(Component, Component);
+		}
+	);
+}
+
+void UProcedureFlowManager::EnterProcedureFlow(FGameplayTag InFlowTag)
+{
+	if (!InFlowTag.IsValid())
+	{
+		DLOG(DLogProcedure, Error, TEXT("FlowTag Is NULL"))
+		return;
+	}
+
+	if (CurrentFlowTag != InFlowTag)
+	{
+		/* Exit Current Procedure Flow */
+		if (CurrentFlowTag.IsValid())
+		{
+			SortProcedureFlowComponentsAsExit();
+			Execute([](UProcedureFlowComponent* InComponent)
+				{
+				}
+			);
+		}
+	}
+}
+
+UProcedureFlowComponent* UProcedureFlowManager::GetProcedureFlowComponent(FGameplayTag InFlowTag)
+{
+	if (!InFlowTag.IsValid())
+	{
+		DLOG(DLogProcedure, Error, TEXT("FlowTag Is NULL"))
+		return nullptr;
+	}
+
+	for (const auto& ProcedureFlowComponent : ProcedureFlowComponents)
+	{
+		if (ProcedureFlowComponent->FlowTag == InFlowTag)
+		{
+			return ProcedureFlowComponent;
+		}
+	}
+
+	return nullptr;
+}
+
+void UProcedureFlowManager::SortProcedureFlowComponentsAsEnter()
+{
+	ProcedureFlowComponents.Sort([](const UProcedureFlowComponent& A, const UProcedureFlowComponent& B)
+		{
+			return A.ProcedureFlowInOrder > B.ProcedureFlowInOrder;
+		}
+	);
+}
+
+void UProcedureFlowManager::SortProcedureFlowComponentsAsExit()
+{
+	ProcedureFlowComponents.Sort([](const UProcedureFlowComponent& A, const UProcedureFlowComponent& B)
+		{
+			return A.ProcedureFlowOutOrder > B.ProcedureFlowOutOrder;
+		}
+	);
+}
+
+void UProcedureFlowManager::Execute(const TFunctionRef<void(UProcedureFlowComponent* InComponent)>& Func)
+{
+	for (const auto& ProcedureFlowComponent : ProcedureFlowComponents)
+	{
+		Func(ProcedureFlowComponent);
+	}
 }

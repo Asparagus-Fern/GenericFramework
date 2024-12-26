@@ -29,7 +29,7 @@ UCameraManager::FCameraAutoSwitchDelegate UCameraManager::OnCameraLensMovementSt
 
 bool UCameraManager::ShouldCreateSubsystem(UObject* Outer) const
 {
-	return Super::ShouldCreateSubsystem(Outer) && UCameraManagerSetting::Get()->GetEnableManager();
+	return Super::ShouldCreateSubsystem(Outer);
 }
 
 void UCameraManager::Initialize(FSubsystemCollectionBase& Collection)
