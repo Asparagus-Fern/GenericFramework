@@ -11,7 +11,7 @@
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_ProcedureFlow);
 
 UCLASS(ClassGroup=(Developer), meta=(BlueprintSpawnableComponent))
-class PROCEDUREFLOWSYSTEM_API UProcedureFlowComponent : public UActorComponent, public IProcedureFlowInterface
+class PROCEDUREFLOWSYSTEM_API UProcedureFlowComponent : public USceneComponent, public IProcedureFlowInterface
 {
 	GENERATED_BODY()
 
@@ -20,7 +20,29 @@ public:
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
+	/* IProcedureFlowInterface */
 public:
+	virtual void OnProcedureFlowRegister_Implementation(UProcedureFlowComponent* InProcedureFlow) override;
+	virtual void OnProcedureFlowInitialized_Implementation() override;
+	virtual void PreProcedureFlowEnter_Implementation(UProcedureFlowComponent* InProcedureFlow) override;
+	virtual void OnProcedureFlowEnter_Implementation(UProcedureFlowComponent* InProcedureFlow) override;
+	virtual void PostProcedureFlowEnter_Implementation(UProcedureFlowComponent* InProcedureFlow) override;
+	virtual void ReInitProcedureFlow_Implementation() override;
+	virtual void PreProcedureFlowExit_Implementation(UProcedureFlowComponent* InProcedureFlow) override;
+	virtual void OnProcedureFlowExit_Implementation(UProcedureFlowComponent* InProcedureFlow) override;
+	virtual void PostProcedureFlowExit_Implementation(UProcedureFlowComponent* InProcedureFlow) override;
+	virtual void OnProcedureFlowDeinitialize_Implementation() override;
+	virtual void OnProcedureFlowUnRegister_Implementation(UProcedureFlowComponent* InProcedureFlow) override;
+
+public:
+	/* 是否手动注册 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	bool bManualRegister = false;
+
+	/* 即使Owner被隐藏也进行注册 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	bool bRegisterEvenIsHidden = false;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="Procedure.Flow"))
 	FGameplayTag FlowTag = FGameplayTag::EmptyTag;
 

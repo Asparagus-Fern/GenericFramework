@@ -26,6 +26,7 @@ void IWorldInterface::HandleOnWorldCreationInternal(UWorld* InWorld)
 void IWorldInterface::HandleOnWorldBeginTearDownInternal(UWorld* InWorld)
 {
 	HandleOnWorldEndPlay(InWorld);
+	HandleOnWorldBeginTearDown(InWorld);
 }
 
 void IWorldInterface::HandleOnWorldMatchStartingInternal(UWorld* InWorld)

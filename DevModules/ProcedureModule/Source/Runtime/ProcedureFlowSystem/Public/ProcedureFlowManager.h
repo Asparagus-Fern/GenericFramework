@@ -10,6 +10,18 @@
 
 class UProcedureFlowComponent;
 
+DECLARE_MULTICAST_DELEGATE_OneParam(FDelegate_OnProcedureFlowRegister, UProcedureFlowComponent*);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FBPDelegate_OnProcedureFlowRegister, UProcedureFlowComponent*, InComponent);
+
+DECLARE_MULTICAST_DELEGATE_OneParam(FDelegate_OnProcedureFlowEnter, UProcedureFlowComponent*);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FBPDelegate_OnProcedureFlowEnter, UProcedureFlowComponent*, InComponent);
+
+DECLARE_MULTICAST_DELEGATE_OneParam(FDelegate_OnProcedureFlowExit, UProcedureFlowComponent*);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FBPDelegate_OnProcedureFlowExit, UProcedureFlowComponent*, InComponent);
+
+DECLARE_MULTICAST_DELEGATE_OneParam(FDelegate_OnProcedureFlowUnRegister, UProcedureFlowComponent*);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FBPDelegate_OnProcedureFlowUnRegister, UProcedureFlowComponent*, InComponent);
+
 /**
  * 
  */
@@ -26,6 +38,7 @@ public:
 
 	/* IManagerInterface */
 protected:
+	virtual FName GetManagerName() override { return FName("ProcedureFlowManager"); }
 	virtual int32 GetManagerOrder() override { return 1; }
 	virtual void HandleOnWorldMatchStarting(UWorld* InWorld) override;
 
@@ -34,13 +47,35 @@ public:
 	void RegisterFlow(UProcedureFlowComponent* InComponent);
 	void UnRegisterFlow(UProcedureFlowComponent* InComponent);
 	void EnterProcedureFlow(FGameplayTag InFlowTag);
+	void RefreshCurrentProcedureFlow();
+
+	FGameplayTag GetCurrentFlowTag() const;
+	UProcedureFlowComponent* GetCurrentProcedureFlowComponent();
 	UProcedureFlowComponent* GetProcedureFlowComponent(FGameplayTag InFlowTag);
+	TArray<UProcedureFlowComponent*> GetProcedureFlowComponents();
 
 private:
 	void SortProcedureFlowComponentsAsEnter();
 	void SortProcedureFlowComponentsAsExit();
 	void Execute(const TFunctionRef<void(UProcedureFlowComponent* InComponent)>& Func);
-	
+
+public:
+	inline static FDelegate_OnProcedureFlowRegister Delegate_OnProcedureFlowRegister;
+	UPROPERTY(BlueprintAssignable)
+	FBPDelegate_OnProcedureFlowRegister BPDelegate_OnProcedureFlowRegister;
+
+	inline static FDelegate_OnProcedureFlowEnter Delegate_OnProcedureFlowEnter;
+	UPROPERTY(BlueprintAssignable)
+	FBPDelegate_OnProcedureFlowEnter BPDelegate_OnProcedureFlowEnter;
+
+	inline static FDelegate_OnProcedureFlowExit Delegate_OnProcedureFlowExit;
+	UPROPERTY(BlueprintAssignable)
+	FBPDelegate_OnProcedureFlowExit BPDelegate_OnProcedureFlowExit;
+
+	inline static FDelegate_OnProcedureFlowUnRegister Delegate_OnProcedureFlowUnRegister;
+	UPROPERTY(BlueprintAssignable)
+	FBPDelegate_OnProcedureFlowUnRegister BPDelegate_OnProcedureFlowUnRegister;
+
 private:
 	UPROPERTY(Transient)
 	FGameplayTag CurrentFlowTag = FGameplayTag::EmptyTag;

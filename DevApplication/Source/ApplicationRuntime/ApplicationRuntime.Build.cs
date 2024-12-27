@@ -43,12 +43,13 @@ public class ApplicationRuntime : ModuleRules
 				"LevelSequenceSystem",
 				"MediaSystem",
 				"PropertyUtilities",
+				"ProcedureFlowSystem",
 
 				/* Dev Lab */
 				"PropertyDetailViewSystem",
 
 				/* Marketplace */
-				"DBTween", 
+				"DBTween",
 				"UltraDynamicSkyUtilities",
 			}
 		);

@@ -22,4 +22,7 @@ public:
 public:
 	UPROPERTY(Config, EditDefaultsOnly)
 	int32 ManagerOrder = 0;
+
+	UPROPERTY(Config, EditDefaultsOnly)
+	FName ManagerName = NAME_None;
 };

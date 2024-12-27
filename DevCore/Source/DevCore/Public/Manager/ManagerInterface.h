@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 // #include "ManagerInterface.generated.h"
 
+class UManagerInfo;
+
 /**
  * 
  */
@@ -14,18 +16,14 @@ public:
 	virtual ~IManagerInterface() = default;
 
 public:
-	FGuid RegisterManager(UObject* InOwner);
-	void UnRegisterManager();
-
-	UObject* GetManagerOwner() const;
-	FGuid GetManagerID() const;
-	virtual int32 GetManagerOrder();
+	virtual FGuid GetManagerID() const = 0;
+	virtual FName GetManagerName() { return NAME_None; }
+	virtual UObject* GetManagerOwner() const = 0;
+	virtual int32 GetManagerOrder() { return 0; }
+	
+	virtual UManagerInfo* GetManagerInfo() { return nullptr; }
 
 protected:
 	virtual void OnManagerInitialized();
 	virtual void OnManagerDeinitialized();
-
-protected:
-	UObject* Owner = nullptr;
-	FGuid ManagerID;
 };

@@ -37,7 +37,6 @@ void AActiveNode_LevelStreamingLoad::PostHUDCreated()
 		{
 			if (UUserWidgetBase* Widget = ScreenWidgetManager->OpenUserWidget(LoadingClass))
 			{
-				int32 A = GetLoadingNum();
 				LoadingUI = Cast<ULoadingPanel>(Widget);
 				LoadingUI->NativeOnLoadingBegin(GetLoadingNum());
 			}

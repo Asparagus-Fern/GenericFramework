@@ -53,11 +53,15 @@ void UProcedureFlowManager::RegisterFlow(UProcedureFlowComponent* InComponent)
 	}
 
 	ProcedureFlowComponents.Add(InComponent);
-	Execute([](UProcedureFlowComponent* Component)
+	IProcedureFlowInterface::Execute_OnProcedureFlowInitialized(InComponent);
+
+	Execute([InComponent](UProcedureFlowComponent* Component)
 		{
-			IProcedureFlowInterface::Execute_OnFlowRegister(Component, Component);
+			IProcedureFlowInterface::Execute_OnProcedureFlowRegister(Component, InComponent);
 		}
 	);
+
+	BROADCAST_MANAGER_DELEGATE(Delegate_OnProcedureFlowRegister, BPDelegate_OnProcedureFlowRegister, InComponent)
 }
 
 void UProcedureFlowManager::UnRegisterFlow(UProcedureFlowComponent* InComponent)
@@ -75,11 +79,15 @@ void UProcedureFlowManager::UnRegisterFlow(UProcedureFlowComponent* InComponent)
 	}
 
 	ProcedureFlowComponents.Remove(InComponent);
-	Execute([](UProcedureFlowComponent* Component)
+	IProcedureFlowInterface::Execute_OnProcedureFlowDeinitialize(InComponent);
+
+	Execute([InComponent](UProcedureFlowComponent* Component)
 		{
-			IProcedureFlowInterface::Execute_OnFlowUnRegister(Component, Component);
+			IProcedureFlowInterface::Execute_OnProcedureFlowUnRegister(Component, InComponent);
 		}
 	);
+
+	BROADCAST_MANAGER_DELEGATE(Delegate_OnProcedureFlowRegister, BPDelegate_OnProcedureFlowRegister, InComponent)
 }
 
 void UProcedureFlowManager::EnterProcedureFlow(FGameplayTag InFlowTag)
@@ -96,12 +104,66 @@ void UProcedureFlowManager::EnterProcedureFlow(FGameplayTag InFlowTag)
 		if (CurrentFlowTag.IsValid())
 		{
 			SortProcedureFlowComponentsAsExit();
-			Execute([](UProcedureFlowComponent* InComponent)
+			Execute([this, InFlowTag](UProcedureFlowComponent* Component)
 				{
+					IProcedureFlowInterface::Execute_PreProcedureFlowExit(Component, GetProcedureFlowComponent(InFlowTag));
 				}
 			);
+
+			Execute([this, InFlowTag](UProcedureFlowComponent* Component)
+				{
+					IProcedureFlowInterface::Execute_OnProcedureFlowExit(Component, GetProcedureFlowComponent(InFlowTag));
+				}
+			);
+
+			Execute([this, InFlowTag](UProcedureFlowComponent* Component)
+				{
+					IProcedureFlowInterface::Execute_PostProcedureFlowExit(Component, GetProcedureFlowComponent(InFlowTag));
+				}
+			);
+
+			BROADCAST_MANAGER_DELEGATE(Delegate_OnProcedureFlowExit, BPDelegate_OnProcedureFlowExit, GetProcedureFlowComponent(InFlowTag))
 		}
+
+		CurrentFlowTag = InFlowTag;
+
+		SortProcedureFlowComponentsAsEnter();
+
+		Execute([this, InFlowTag](UProcedureFlowComponent* Component)
+			{
+				IProcedureFlowInterface::Execute_PreProcedureFlowEnter(Component, GetProcedureFlowComponent(InFlowTag));
+			}
+		);
+
+		Execute([this, InFlowTag](UProcedureFlowComponent* Component)
+			{
+				IProcedureFlowInterface::Execute_OnProcedureFlowEnter(Component, GetProcedureFlowComponent(InFlowTag));
+			}
+		);
+
+		Execute([this, InFlowTag](UProcedureFlowComponent* Component)
+			{
+				IProcedureFlowInterface::Execute_PostProcedureFlowExit(Component, GetProcedureFlowComponent(InFlowTag));
+			}
+		);
+
+		BROADCAST_MANAGER_DELEGATE(Delegate_OnProcedureFlowEnter, BPDelegate_OnProcedureFlowEnter, GetProcedureFlowComponent(InFlowTag))
 	}
+}
+
+void UProcedureFlowManager::RefreshCurrentProcedureFlow()
+{
+	IProcedureFlowInterface::Execute_ReInitProcedureFlow(GetProcedureFlowComponent(CurrentFlowTag));
+}
+
+FGameplayTag UProcedureFlowManager::GetCurrentFlowTag() const
+{
+	return CurrentFlowTag;
+}
+
+UProcedureFlowComponent* UProcedureFlowManager::GetCurrentProcedureFlowComponent()
+{
+	return GetProcedureFlowComponent(GetCurrentFlowTag());
 }
 
 UProcedureFlowComponent* UProcedureFlowManager::GetProcedureFlowComponent(FGameplayTag InFlowTag)
@@ -121,6 +183,11 @@ UProcedureFlowComponent* UProcedureFlowManager::GetProcedureFlowComponent(FGamep
 	}
 
 	return nullptr;
+}
+
+TArray<UProcedureFlowComponent*> UProcedureFlowManager::GetProcedureFlowComponents()
+{
+	return ProcedureFlowComponents;
 }
 
 void UProcedureFlowManager::SortProcedureFlowComponentsAsEnter()

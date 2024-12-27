@@ -9,7 +9,9 @@
 AProcedureFlowActor::AProcedureFlowActor()
 {
 	PrimaryActorTick.bCanEverTick = true;
+
 	ProcedureFlowComponent = CreateDefaultSubobject<UProcedureFlowComponent>("Procedure Flow Component");
+	RootComponent = ProcedureFlowComponent;
 }
 
 void AProcedureFlowActor::BeginPlay()

@@ -25,7 +25,7 @@ protected:
 	virtual void HandleOnWorldCreation(UWorld* InWorld) { return; }
 	virtual void HandleOnWorldBeginTearDown(UWorld* InWorld) { return; }
 
-	virtual void HandleOnWorldBeginPlay(UWorld* InWorld) { return; }
 	virtual void HandleOnWorldMatchStarting(UWorld* InWorld) { return; }
+	virtual void HandleOnWorldBeginPlay(UWorld* InWorld) { return; }
 	virtual void HandleOnWorldEndPlay(UWorld* InWorld) { return; }
 };

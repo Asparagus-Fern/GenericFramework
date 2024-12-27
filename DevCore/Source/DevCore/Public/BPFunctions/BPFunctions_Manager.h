@@ -6,7 +6,7 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "BPFunctions_Manager.generated.h"
 
-class AManagerActor;
+class UManagerInfo;
 class UManagerProxy;
 
 /**
@@ -21,6 +21,9 @@ public:
 	UFUNCTION(BlueprintPure)
 	static UManagerProxy* GetManagerProxy();
 
-	UFUNCTION(BlueprintPure, meta = (DeterminesOutputType = "InClass"))
-	static AManagerActor* GetManagerActorByClass(const TSubclassOf<AManagerActor> InClass);
+	UFUNCTION(BlueprintPure)
+	static UManagerInfo* GetManagerInfo(FName InManagerName);
+	
+	UFUNCTION(BlueprintPure)
+	static TArray<UManagerInfo*> GetManagerInfos();
 };

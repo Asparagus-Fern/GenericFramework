@@ -8,6 +8,10 @@
 #include "Interface/WorldInterface.h"
 #include "Procedure/ProcedureInterface.h"
 
+#define BROADCAST_MANAGER_DELEGATE(DelegateName, BPDelegateName, ...) \
+	DelegateName.Broadcast(__VA_ARGS__); \
+	BPDelegateName.Broadcast(__VA_ARGS__);
+
 
 /**
  * 
@@ -25,8 +29,13 @@ protected:
 	virtual void OnManagerInitialized() override { return; }
 	virtual void OnManagerDeinitialized() override { return; }
 
-	virtual int32 GetManagerOrder() override;
-	
+	virtual FGuid GetManagerID() const override { return ManagerID; }
+	virtual FName GetManagerName() override { return NAME_None; }
+	virtual UObject* GetManagerOwner() const override { return Owner; }
+	virtual int32 GetManagerOrder() override { return 0; }
+
+	virtual UManagerInfo* GetManagerInfo() override;
+
 	/* IWorldInterface */
 protected:
 	virtual void HandleOnWorldCreation(UWorld* InWorld) override { return; }
@@ -35,4 +44,13 @@ protected:
 	virtual void HandleOnWorldMatchStarting(UWorld* InWorld) override { return; }
 	virtual void HandleOnWorldBeginPlay(UWorld* InWorld) override { return; }
 	virtual void HandleOnWorldEndPlay(UWorld* InWorld) override { return; }
+
+	/* FCoreInternalManager */
+protected:
+	FGuid RegisterManager(UObject* InOwner);
+	void UnRegisterManager();
+
+protected:
+	UObject* Owner = nullptr;
+	FGuid ManagerID;
 };

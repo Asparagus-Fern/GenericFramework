@@ -10,8 +10,8 @@
 /**
  * 
  */
-UCLASS()
-class PROCEDUREFLOWSYSTEM_API UProcedureFlowSetting : public UManagerSetting
+UCLASS(MinimalAPI)
+class UProcedureFlowSetting : public UManagerSetting
 {
 	GENERATED_BODY()
 

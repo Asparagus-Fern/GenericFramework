@@ -11,8 +11,12 @@ UManagerProxy* UBPFunctions_Manager::GetManagerProxy()
 	return UManagerProxy::Get();
 }
 
-AManagerActor* UBPFunctions_Manager::GetManagerActorByClass(const TSubclassOf<AManagerActor> InClass)
+UManagerInfo* UBPFunctions_Manager::GetManagerInfo(FName InManagerName)
 {
-	ensure(InClass);
-	return GetManagerProxy()->GetManager<AManagerActor>();
+	return UManagerProxy::Get()->GetManagerInfo(InManagerName);
+}
+
+TArray<UManagerInfo*> UBPFunctions_Manager::GetManagerInfos()
+{
+	return UManagerProxy::Get()->GetManagerInfos();
 }

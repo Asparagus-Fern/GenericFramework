@@ -10,7 +10,7 @@ public class ProcedureFlowSystem : ModuleRules
 			new string[]
 			{
 				"Core",
-				"DevCore"
+				"DevCore",
 			}
 		);
 
