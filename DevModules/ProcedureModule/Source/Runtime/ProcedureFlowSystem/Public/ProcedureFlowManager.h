@@ -41,6 +41,8 @@ protected:
 	virtual FName GetManagerName() override { return FName("ProcedureFlowManager"); }
 	virtual int32 GetManagerOrder() override { return 1; }
 	virtual void HandleOnWorldMatchStarting(UWorld* InWorld) override;
+	virtual void HandleOnWorldBeginPlay(UWorld* InWorld) override;
+	virtual void HandleOnWorldEndPlay(UWorld* InWorld) override;
 
 	/* UProcedureFlowManager */
 public:
@@ -55,8 +57,8 @@ public:
 	TArray<UProcedureFlowComponent*> GetProcedureFlowComponents();
 
 private:
-	void SortProcedureFlowComponentsAsEnter();
-	void SortProcedureFlowComponentsAsExit();
+	void SortProcedureFlowComponentsAsInitialize();
+	void SortProcedureFlowComponentsAsDeinitialize();
 	void Execute(const TFunctionRef<void(UProcedureFlowComponent* InComponent)>& Func);
 
 public:

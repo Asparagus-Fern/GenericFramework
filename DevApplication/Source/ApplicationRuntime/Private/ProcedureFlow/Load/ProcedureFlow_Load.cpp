@@ -3,19 +3,69 @@
 
 #include "ProcedureFlow/Load/ProcedureFlow_Load.h"
 
-UE_DEFINE_GAMEPLAY_TAG(TAG_ProcedureFlow_Load, "Procedure.Flow.Load");
+#include "ProcedureFlowManager.h"
+#include "ScreenWidgetManager.h"
+#include "UserWidget/Loading/LoadingPanel.h"
+
 
 AProcedureFlow_Load::AProcedureFlow_Load()
 {
 	PrimaryActorTick.bCanEverTick = true;
 }
 
-void AProcedureFlow_Load::BeginPlay()
+void AProcedureFlow_Load::OnProcedureFlowEnter_Implementation()
 {
-	Super::BeginPlay();
+	Super::OnProcedureFlowEnter_Implementation();
+	CreateLoadingPanel();
 }
 
-void AProcedureFlow_Load::EndPlay(const EEndPlayReason::Type EndPlayReason)
+void AProcedureFlow_Load::OnProcedureFlowExit_Implementation()
 {
-	Super::EndPlay(EndPlayReason);
+	Super::OnProcedureFlowExit_Implementation();
+
+	UScreenWidgetManager::PostHUDCreated.RemoveAll(this);
+
+	if (IsValid(LoadingUI))
+	{
+		LoadingUI->NativeOnLoadingEnd();
+		GetManager<UScreenWidgetManager>()->CloseUserWidget(LoadingUI);
+	}
+}
+
+void AProcedureFlow_Load::SwitchToNextProcedureFlow() const
+{
+	if (UProcedureFlowManager* ProcedureFlowManager = GetManager<UProcedureFlowManager>())
+	{
+		ProcedureFlowManager->EnterProcedureFlow(NextProcedureFlowTag);
+	}
+}
+
+void AProcedureFlow_Load::CreateLoadingPanel_Implementation()
+{
+	UScreenWidgetManager::PostHUDCreated.RemoveAll(this);
+
+	if (UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
+	{
+		if (LoadingClass)
+		{
+			LoadingUI = ScreenWidgetManager->OpenUserWidget<ULoadingPanel>(LoadingClass);
+			if (IsValid(LoadingUI))
+			{
+				LoadingUI->NativeOnLoadingBegin(GetLoadingNum());
+			}
+		}
+	}
+}
+
+int32 AProcedureFlow_Load::GetLoadingNum_Implementation()
+{
+	return 0;
+}
+
+void AProcedureFlow_Load::OnLoadingOnceFinish_Implementation()
+{
+	if (IsValid(LoadingUI))
+	{
+		LoadingUI->NativeOnLoadingOnceFinish();
+	}
 }

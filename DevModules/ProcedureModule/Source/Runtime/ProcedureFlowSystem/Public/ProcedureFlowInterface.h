@@ -25,35 +25,23 @@ class PROCEDUREFLOWSYSTEM_API IProcedureFlowInterface
 
 public:
 	UFUNCTION(BlueprintNativeEvent, Category="Procedure Flow Interface")
-	void OnProcedureFlowRegister(UProcedureFlowComponent* InProcedureFlow);
+	void OnProcedureFlowRegister();
 
 	UFUNCTION(BlueprintNativeEvent, Category="Procedure Flow Interface")
 	void OnProcedureFlowInitialized();
 
 	UFUNCTION(BlueprintNativeEvent, Category="Procedure Flow Interface")
-	void PreProcedureFlowEnter(UProcedureFlowComponent* InProcedureFlow);
-
-	UFUNCTION(BlueprintNativeEvent, Category="Procedure Flow Interface")
-	void OnProcedureFlowEnter(UProcedureFlowComponent* InProcedureFlow);
-
-	UFUNCTION(BlueprintNativeEvent, Category="Procedure Flow Interface")
-	void PostProcedureFlowEnter(UProcedureFlowComponent* InProcedureFlow);
+	void OnProcedureFlowEnter();
 
 	UFUNCTION(BlueprintNativeEvent, Category="Procedure Flow Interface")
 	void ReInitProcedureFlow();
-
+	
 	UFUNCTION(BlueprintNativeEvent, Category="Procedure Flow Interface")
-	void PreProcedureFlowExit(UProcedureFlowComponent* InProcedureFlow);
-
-	UFUNCTION(BlueprintNativeEvent, Category="Procedure Flow Interface")
-	void OnProcedureFlowExit(UProcedureFlowComponent* InProcedureFlow);
-
-	UFUNCTION(BlueprintNativeEvent, Category="Procedure Flow Interface")
-	void PostProcedureFlowExit(UProcedureFlowComponent* InProcedureFlow);
+	void OnProcedureFlowExit();
 
 	UFUNCTION(BlueprintNativeEvent, Category="Procedure Flow Interface")
 	void OnProcedureFlowDeinitialize();
 
 	UFUNCTION(BlueprintNativeEvent, Category="Procedure Flow Interface")
-	void OnProcedureFlowUnRegister(UProcedureFlowComponent* InProcedureFlow);
+	void OnProcedureFlowUnRegister();
 };

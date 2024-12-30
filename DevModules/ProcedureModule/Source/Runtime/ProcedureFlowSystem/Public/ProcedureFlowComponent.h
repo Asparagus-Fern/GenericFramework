@@ -22,17 +22,13 @@ public:
 
 	/* IProcedureFlowInterface */
 public:
-	virtual void OnProcedureFlowRegister_Implementation(UProcedureFlowComponent* InProcedureFlow) override;
+	virtual void OnProcedureFlowRegister_Implementation() override;
 	virtual void OnProcedureFlowInitialized_Implementation() override;
-	virtual void PreProcedureFlowEnter_Implementation(UProcedureFlowComponent* InProcedureFlow) override;
-	virtual void OnProcedureFlowEnter_Implementation(UProcedureFlowComponent* InProcedureFlow) override;
-	virtual void PostProcedureFlowEnter_Implementation(UProcedureFlowComponent* InProcedureFlow) override;
+	virtual void OnProcedureFlowEnter_Implementation() override;
 	virtual void ReInitProcedureFlow_Implementation() override;
-	virtual void PreProcedureFlowExit_Implementation(UProcedureFlowComponent* InProcedureFlow) override;
-	virtual void OnProcedureFlowExit_Implementation(UProcedureFlowComponent* InProcedureFlow) override;
-	virtual void PostProcedureFlowExit_Implementation(UProcedureFlowComponent* InProcedureFlow) override;
+	virtual void OnProcedureFlowExit_Implementation() override;
 	virtual void OnProcedureFlowDeinitialize_Implementation() override;
-	virtual void OnProcedureFlowUnRegister_Implementation(UProcedureFlowComponent* InProcedureFlow) override;
+	virtual void OnProcedureFlowUnRegister_Implementation() override;
 
 public:
 	/* 是否手动注册 */
@@ -42,13 +38,13 @@ public:
 	/* 即使Owner被隐藏也进行注册 */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	bool bRegisterEvenIsHidden = false;
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="Procedure.Flow"))
 	FGameplayTag FlowTag = FGameplayTag::EmptyTag;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	int32 ProcedureFlowInOrder = 0;
+	int32 ProcedureFlowInitializedOrder = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	int32 ProcedureFlowOutOrder = 0;
+	int32 ProcedureFlowDeinitializeOrder = 0;
 };

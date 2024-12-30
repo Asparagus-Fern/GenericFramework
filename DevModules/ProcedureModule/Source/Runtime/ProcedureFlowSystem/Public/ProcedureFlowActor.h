@@ -11,7 +11,7 @@
 
 class UProcedureFlowComponent;
 
-UCLASS(HideCategories=(Replication,Collision,HLOD,Physics,Networking,Cooking,Rendering))
+UCLASS(Abstract, HideCategories=(Replication,Collision,HLOD,Physics,Networking,Cooking,Rendering))
 class PROCEDUREFLOWSYSTEM_API AProcedureFlowActor : public AActor, public IProcedureFlowInterface
 {
 	GENERATED_BODY()

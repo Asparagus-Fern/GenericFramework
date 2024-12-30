@@ -10,8 +10,8 @@
 /**
  * 
  */
-UCLASS(MinimalAPI)
-class UProcedureFlowSetting : public UManagerSetting
+UCLASS()
+class PROCEDUREFLOWSYSTEM_API UProcedureFlowSetting : public UManagerSetting
 {
 	GENERATED_BODY()
 
@@ -19,6 +19,6 @@ public:
 	static ThisClass* Get() { return GetMutableDefault<ThisClass>(); }
 
 public:
-	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, meta=(Categories="Procedure.Flow"))
+	UPROPERTY(Config, EditAnywhere, meta=(Categories="Procedure.Flow"))
 	FGameplayTag DefaultFlowTag = FGameplayTag::EmptyTag;
 };

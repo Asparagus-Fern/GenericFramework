@@ -6,9 +6,6 @@
 #include "ProcedureFlow_Load.h"
 #include "ProcedureFlow_LoadLevelStreaming.generated.h"
 
-class ULoadingPanel;
-UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_ProcedureFlow_LoadLevelStreaming);
-
 UCLASS()
 class APPLICATIONRUNTIME_API AProcedureFlow_LoadLevelStreaming : public AProcedureFlow_Load
 {
@@ -18,17 +15,13 @@ public:
 	AProcedureFlow_LoadLevelStreaming();
 
 protected:
-	virtual void OnProcedureFlowEnter_Implementation(UProcedureFlowComponent* InProcedureFlow) override;
-	virtual void OnProcedureFlowExit_Implementation(UProcedureFlowComponent* InProcedureFlow) override;
+	virtual void OnProcedureFlowEnter_Implementation() override;
+	virtual void OnProcedureFlowExit_Implementation() override;
 
 public:
 	/* 是否加载当前世界所有关卡 */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	bool bLoadCurrentWorldLevels = true;
-
-	/* 加载界面UI */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TSubclassOf<ULoadingPanel> LoadingClass = nullptr;
 
 	/* 需要显示的关卡 */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
@@ -50,8 +43,7 @@ protected:
 	UFUNCTION(BlueprintNativeEvent)
 	void OnLoadVisibleLevelsFinish();
 	void NativeOnLoadVisibleLevelsFinish();
-	
-private:
-	UPROPERTY(Transient)
-	ULoadingPanel* LoadingUI = nullptr;
+
+protected:
+	virtual int32 GetLoadingNum_Implementation() override;
 };

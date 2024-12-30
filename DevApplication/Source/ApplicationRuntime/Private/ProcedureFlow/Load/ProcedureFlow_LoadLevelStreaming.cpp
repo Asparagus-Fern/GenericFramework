@@ -6,20 +6,18 @@
 #include "LevelStreamingManager.h"
 #include "ProcedureFlowManager.h"
 
-UE_DEFINE_GAMEPLAY_TAG(TAG_ProcedureFlow_LoadLevelStreaming, "Procedure.Flow.Load.LoadLevelStreaming");
-
 AProcedureFlow_LoadLevelStreaming::AProcedureFlow_LoadLevelStreaming()
 {
 	PrimaryActorTick.bCanEverTick = true;
 }
 
-void AProcedureFlow_LoadLevelStreaming::OnProcedureFlowEnter_Implementation(UProcedureFlowComponent* InProcedureFlow)
+void AProcedureFlow_LoadLevelStreaming::OnProcedureFlowEnter_Implementation()
 {
-	Super::OnProcedureFlowEnter_Implementation(InProcedureFlow);
+	Super::OnProcedureFlowEnter_Implementation();
 
 	if (!GetWorld()->IsPartitionedWorld())
 	{
-		if (ULevelStreamingManager* LevelStreamingManager = UManagerProxy::Get()->GetManager<ULevelStreamingManager>())
+		if (ULevelStreamingManager* LevelStreamingManager = GetManager<ULevelStreamingManager>())
 		{
 			if (bLoadCurrentWorldLevels)
 			{
@@ -33,9 +31,9 @@ void AProcedureFlow_LoadLevelStreaming::OnProcedureFlowEnter_Implementation(UPro
 	}
 }
 
-void AProcedureFlow_LoadLevelStreaming::OnProcedureFlowExit_Implementation(UProcedureFlowComponent* InProcedureFlow)
+void AProcedureFlow_LoadLevelStreaming::OnProcedureFlowExit_Implementation()
 {
-	Super::OnProcedureFlowExit_Implementation(InProcedureFlow);
+	Super::OnProcedureFlowExit_Implementation();
 }
 
 void AProcedureFlow_LoadLevelStreaming::OnLoadCurrentWorldLevelStreamingOnceFinish_Implementation()
@@ -44,6 +42,7 @@ void AProcedureFlow_LoadLevelStreaming::OnLoadCurrentWorldLevelStreamingOnceFini
 
 void AProcedureFlow_LoadLevelStreaming::NativeOnLoadCurrentWorldLevelStreamingOnceFinish()
 {
+	OnLoadingOnceFinish();
 	OnLoadCurrentWorldLevelStreamingOnceFinish();
 }
 
@@ -53,9 +52,10 @@ void AProcedureFlow_LoadLevelStreaming::OnLoadCurrentWorldLevelStreamingFinish_I
 
 void AProcedureFlow_LoadLevelStreaming::NativeOnLoadCurrentWorldLevelStreamingFinish()
 {
+	OnLoadingOnceFinish();
 	OnLoadCurrentWorldLevelStreamingFinish();
 
-	if (ULevelStreamingManager* LevelStreamingManager = UManagerProxy::Get()->GetManager<ULevelStreamingManager>())
+	if (ULevelStreamingManager* LevelStreamingManager = GetManager<ULevelStreamingManager>())
 	{
 		LevelStreamingManager->LoadLevels(VisibleLevels, true, false, FOnHandleLevelStreamingOnceFinish::CreateUObject(this, &AProcedureFlow_LoadLevelStreaming::NativeOnLoadVisibleLevelsOnceFinish), FOnHandleLevelStreamingFinish::CreateUObject(this, &AProcedureFlow_LoadLevelStreaming::NativeOnLoadVisibleLevelsFinish));
 	}
@@ -67,6 +67,7 @@ void AProcedureFlow_LoadLevelStreaming::OnLoadVisibleLevelsOnceFinish_Implementa
 
 void AProcedureFlow_LoadLevelStreaming::NativeOnLoadVisibleLevelsOnceFinish()
 {
+	OnLoadingOnceFinish();
 	OnLoadVisibleLevelsOnceFinish();
 }
 
@@ -76,13 +77,12 @@ void AProcedureFlow_LoadLevelStreaming::OnLoadVisibleLevelsFinish_Implementation
 
 void AProcedureFlow_LoadLevelStreaming::NativeOnLoadVisibleLevelsFinish()
 {
+	OnLoadingOnceFinish();
 	OnLoadVisibleLevelsFinish();
+	SwitchToNextProcedureFlow();
+}
 
-	if (NextProcedureFlowTag.IsValid())
-	{
-		if (UProcedureFlowManager* ProcedureFlowManager = GetManager<UProcedureFlowManager>())
-		{
-			ProcedureFlowManager->EnterProcedureFlow(NextProcedureFlowTag);
-		}
-	}
+int32 AProcedureFlow_LoadLevelStreaming::GetLoadingNum_Implementation()
+{
+	return bLoadCurrentWorldLevels ? (GetWorld()->GetStreamingLevels().Num() + VisibleLevels.Num()) : VisibleLevels.Num();
 }

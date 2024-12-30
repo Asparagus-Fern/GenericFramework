@@ -16,7 +16,7 @@ UProcedureFlowComponent::UProcedureFlowComponent()
 void UProcedureFlowComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 	if (FlowTag.IsValid() && !bManualRegister && (bRegisterEvenIsHidden || (!bRegisterEvenIsHidden && !GetOwner()->IsHidden())))
 	{
 		if (UProcedureFlowManager* ProcedureFlowManager = GetManager<UProcedureFlowManager>())
@@ -39,13 +39,13 @@ void UProcedureFlowComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	Super::EndPlay(EndPlayReason);
 }
 
-void UProcedureFlowComponent::OnProcedureFlowRegister_Implementation(UProcedureFlowComponent* InProcedureFlow)
+void UProcedureFlowComponent::OnProcedureFlowRegister_Implementation()
 {
-	IProcedureFlowInterface::OnProcedureFlowRegister_Implementation(InProcedureFlow);
+	IProcedureFlowInterface::OnProcedureFlowRegister_Implementation();
 
 	if (GetOwner()->GetClass()->ImplementsInterface(UProcedureFlowInterface::StaticClass()))
 	{
-		IProcedureFlowInterface::Execute_OnProcedureFlowRegister(GetOwner(), InProcedureFlow);
+		IProcedureFlowInterface::Execute_OnProcedureFlowRegister(GetOwner());
 	}
 }
 
@@ -59,33 +59,13 @@ void UProcedureFlowComponent::OnProcedureFlowInitialized_Implementation()
 	}
 }
 
-void UProcedureFlowComponent::PreProcedureFlowEnter_Implementation(UProcedureFlowComponent* InProcedureFlow)
+void UProcedureFlowComponent::OnProcedureFlowEnter_Implementation()
 {
-	IProcedureFlowInterface::PreProcedureFlowEnter_Implementation(InProcedureFlow);
+	IProcedureFlowInterface::OnProcedureFlowEnter_Implementation();
 
 	if (GetOwner()->GetClass()->ImplementsInterface(UProcedureFlowInterface::StaticClass()))
 	{
-		IProcedureFlowInterface::Execute_PreProcedureFlowEnter(GetOwner(), InProcedureFlow);
-	}
-}
-
-void UProcedureFlowComponent::OnProcedureFlowEnter_Implementation(UProcedureFlowComponent* InProcedureFlow)
-{
-	IProcedureFlowInterface::OnProcedureFlowEnter_Implementation(InProcedureFlow);
-
-	if (GetOwner()->GetClass()->ImplementsInterface(UProcedureFlowInterface::StaticClass()))
-	{
-		IProcedureFlowInterface::Execute_OnProcedureFlowEnter(GetOwner(), InProcedureFlow);
-	}
-}
-
-void UProcedureFlowComponent::PostProcedureFlowEnter_Implementation(UProcedureFlowComponent* InProcedureFlow)
-{
-	IProcedureFlowInterface::PostProcedureFlowEnter_Implementation(InProcedureFlow);
-
-	if (GetOwner()->GetClass()->ImplementsInterface(UProcedureFlowInterface::StaticClass()))
-	{
-		IProcedureFlowInterface::Execute_PostProcedureFlowEnter(GetOwner(), InProcedureFlow);
+		IProcedureFlowInterface::Execute_OnProcedureFlowEnter(GetOwner());
 	}
 }
 
@@ -99,33 +79,13 @@ void UProcedureFlowComponent::ReInitProcedureFlow_Implementation()
 	}
 }
 
-void UProcedureFlowComponent::PreProcedureFlowExit_Implementation(UProcedureFlowComponent* InProcedureFlow)
+void UProcedureFlowComponent::OnProcedureFlowExit_Implementation()
 {
-	IProcedureFlowInterface::PreProcedureFlowExit_Implementation(InProcedureFlow);
+	IProcedureFlowInterface::OnProcedureFlowExit_Implementation();
 
 	if (GetOwner()->GetClass()->ImplementsInterface(UProcedureFlowInterface::StaticClass()))
 	{
-		IProcedureFlowInterface::Execute_PreProcedureFlowExit(GetOwner(), InProcedureFlow);
-	}
-}
-
-void UProcedureFlowComponent::OnProcedureFlowExit_Implementation(UProcedureFlowComponent* InProcedureFlow)
-{
-	IProcedureFlowInterface::OnProcedureFlowExit_Implementation(InProcedureFlow);
-
-	if (GetOwner()->GetClass()->ImplementsInterface(UProcedureFlowInterface::StaticClass()))
-	{
-		IProcedureFlowInterface::Execute_OnProcedureFlowExit(GetOwner(), InProcedureFlow);
-	}
-}
-
-void UProcedureFlowComponent::PostProcedureFlowExit_Implementation(UProcedureFlowComponent* InProcedureFlow)
-{
-	IProcedureFlowInterface::PostProcedureFlowExit_Implementation(InProcedureFlow);
-
-	if (GetOwner()->GetClass()->ImplementsInterface(UProcedureFlowInterface::StaticClass()))
-	{
-		IProcedureFlowInterface::Execute_PostProcedureFlowExit(GetOwner(), InProcedureFlow);
+		IProcedureFlowInterface::Execute_OnProcedureFlowExit(GetOwner());
 	}
 }
 
@@ -139,12 +99,12 @@ void UProcedureFlowComponent::OnProcedureFlowDeinitialize_Implementation()
 	}
 }
 
-void UProcedureFlowComponent::OnProcedureFlowUnRegister_Implementation(UProcedureFlowComponent* InProcedureFlow)
+void UProcedureFlowComponent::OnProcedureFlowUnRegister_Implementation()
 {
-	IProcedureFlowInterface::OnProcedureFlowUnRegister_Implementation(InProcedureFlow);
+	IProcedureFlowInterface::OnProcedureFlowUnRegister_Implementation();
 
 	if (GetOwner()->GetClass()->ImplementsInterface(UProcedureFlowInterface::StaticClass()))
 	{
-		IProcedureFlowInterface::Execute_OnProcedureFlowUnRegister(GetOwner(), InProcedureFlow);
+		IProcedureFlowInterface::Execute_OnProcedureFlowUnRegister(GetOwner());
 	}
 }
