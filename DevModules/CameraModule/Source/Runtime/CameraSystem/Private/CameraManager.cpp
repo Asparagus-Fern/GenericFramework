@@ -18,9 +18,6 @@
 
 #define LOCTEXT_NAMESPACE "UCoreManager"
 
-UCameraManager::FCameraPointDelegate UCameraManager::OnCameraPointRegister;
-UCameraManager::FCameraPointDelegate UCameraManager::OnCameraPointUnRegister;
-
 UCameraManager::FCameraAutoSwitchDelegate UCameraManager::OnCameraInputIdleReset;
 UCameraManager::FCameraAutoSwitchDelegate UCameraManager::OnCameraAutoSwitchStart;
 UCameraManager::FCameraAutoSwitchDelegate UCameraManager::OnCameraAutoSwitchStop;
@@ -62,7 +59,7 @@ void UCameraManager::AddCameraPoint(ACameraPointBase* InCameraPoint)
 	if (IsValid(InCameraPoint) && InCameraPoint->CameraTag.IsValid() && !CameraPoints.Contains(InCameraPoint->CameraTag))
 	{
 		CameraPoints.FindOrAdd(InCameraPoint->CameraTag, InCameraPoint);
-		OnCameraPointRegister.Broadcast(InCameraPoint);
+		BROADCAST_MANAGER_DELEGATE(Delegate_OnCameraPointRegister, BPDelegate_OnCameraPointRegister, InCameraPoint)
 	}
 }
 
@@ -71,7 +68,7 @@ void UCameraManager::RemoveCameraPoint(ACameraPointBase* InCameraPoint)
 	if (IsValid(InCameraPoint) && InCameraPoint->CameraTag.IsValid() && CameraPoints.Contains(InCameraPoint->CameraTag))
 	{
 		CameraPoints.Remove(InCameraPoint->CameraTag);
-		OnCameraPointUnRegister.Broadcast(InCameraPoint);
+		BROADCAST_MANAGER_DELEGATE(Delegate_OnCameraPointUnRegister, BPDelegate_OnCameraPointUnRegister, InCameraPoint)
 	}
 }
 

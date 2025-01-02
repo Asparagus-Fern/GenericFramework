@@ -12,7 +12,7 @@ class UManagerProxy;
 /**
  * 
  */
-UCLASS(Transient)
+UCLASS()
 class DEVCORE_API UManagerInfo : public UObject, public IManagerInterface
 {
 	GENERATED_BODY()

@@ -3,6 +3,7 @@
 
 #include "ProcedureFlowManager.h"
 
+#include "ProcedureFlowActor.h"
 #include "ProcedureFlowComponent.h"
 #include "ProcedureFlowSetting.h"
 
@@ -37,6 +38,8 @@ void UProcedureFlowManager::HandleOnWorldBeginPlay(UWorld* InWorld)
 {
 	FCoreInternalManager::HandleOnWorldBeginPlay(InWorld);
 
+	/* After Procedure Component BeginPlay, Sort Components And Initialize, Then Enter The Setting Default Procedure FLow Tag*/
+
 	SortProcedureFlowComponentsAsInitialize();
 	Execute([](UProcedureFlowComponent* Component)
 		{
@@ -44,9 +47,12 @@ void UProcedureFlowManager::HandleOnWorldBeginPlay(UWorld* InWorld)
 		}
 	);
 
-	if (const UProcedureFlowComponent* FirstProcedureFlow = GetProcedureFlowComponent(UProcedureFlowSetting::Get()->DefaultFlowTag))
+	if (UProcedureFlowSetting::Get()->AutoEnterDefaultProcedureFlowTag)
 	{
-		EnterProcedureFlow(FirstProcedureFlow->FlowTag);
+		if (const UProcedureFlowComponent* FirstProcedureFlow = GetProcedureFlowComponent(UProcedureFlowSetting::Get()->DefaultProcedureFlowTag))
+		{
+			EnterProcedureFlow(FirstProcedureFlow->ProcedureFlowTag);
+		}
 	}
 }
 
@@ -62,9 +68,20 @@ void UProcedureFlowManager::HandleOnWorldEndPlay(UWorld* InWorld)
 	);
 }
 
-void UProcedureFlowManager::RegisterFlow(UProcedureFlowComponent* InComponent)
+void UProcedureFlowManager::RegisterProcedureFlow(const AProcedureFlowActor* InActor)
 {
-	if (!IsValid(InComponent) || !InComponent->FlowTag.IsValid())
+	if (!IsValid(InActor))
+	{
+		DLOG(DLogProcedure, Error, TEXT("ProcedureFlowActor Is NULL"))
+		return;
+	}
+
+	RegisterProcedureFlow(InActor->ProcedureFlowComponent);
+}
+
+void UProcedureFlowManager::RegisterProcedureFlow(UProcedureFlowComponent* InComponent)
+{
+	if (!IsValid(InComponent) || !InComponent->ProcedureFlowTag.IsValid())
 	{
 		DLOG(DLogProcedure, Error, TEXT("ProcedureFlowComponent / FlowTag Is NULL"))
 		return;
@@ -81,9 +98,20 @@ void UProcedureFlowManager::RegisterFlow(UProcedureFlowComponent* InComponent)
 	BROADCAST_MANAGER_DELEGATE(Delegate_OnProcedureFlowRegister, BPDelegate_OnProcedureFlowRegister, InComponent)
 }
 
-void UProcedureFlowManager::UnRegisterFlow(UProcedureFlowComponent* InComponent)
+void UProcedureFlowManager::UnRegisterProcedureFlow(const AProcedureFlowActor* InActor)
 {
-	if (!IsValid(InComponent) || !InComponent->FlowTag.IsValid())
+	if (!IsValid(InActor))
+	{
+		DLOG(DLogProcedure, Error, TEXT("ProcedureFlowActor Is NULL"))
+		return;
+	}
+
+	UnRegisterProcedureFlow(InActor->ProcedureFlowComponent);
+}
+
+void UProcedureFlowManager::UnRegisterProcedureFlow(UProcedureFlowComponent* InComponent)
+{
+	if (!IsValid(InComponent) || !InComponent->ProcedureFlowTag.IsValid())
 	{
 		DLOG(DLogProcedure, Error, TEXT("ProcedureFlowComponent / FlowTag Is NULL"))
 		return;
@@ -100,48 +128,142 @@ void UProcedureFlowManager::UnRegisterFlow(UProcedureFlowComponent* InComponent)
 	BROADCAST_MANAGER_DELEGATE(Delegate_OnProcedureFlowRegister, BPDelegate_OnProcedureFlowRegister, InComponent)
 }
 
-void UProcedureFlowManager::EnterProcedureFlow(FGameplayTag InFlowTag)
+void UProcedureFlowManager::EnterProcedureFlow(const AProcedureFlowActor* InActor)
 {
-	if (!InFlowTag.IsValid())
+	if (!IsValid(InActor))
+	{
+		DLOG(DLogProcedure, Error, TEXT("ProcedureFlowActor Is NULL"))
+		return;
+	}
+
+	EnterProcedureFlow(InActor->ProcedureFlowComponent);
+}
+
+void UProcedureFlowManager::EnterProcedureFlow(const UProcedureFlowComponent* InComponent)
+{
+	if (!IsValid(InComponent))
+	{
+		DLOG(DLogProcedure, Error, TEXT("ProcedureFlowComponent Is NULL"))
+		return;
+	}
+
+	EnterProcedureFlow(InComponent->ProcedureFlowTag);
+}
+
+void UProcedureFlowManager::EnterProcedureFlow(FGameplayTag InProcedureFlowTag)
+{
+	if (!InProcedureFlowTag.IsValid())
 	{
 		DLOG(DLogProcedure, Error, TEXT("FlowTag Is NULL"))
 		return;
 	}
 
-	if (CurrentFlowTag != InFlowTag)
+	if (CurrentProcedureFlowTag != InProcedureFlowTag)
 	{
-		/* Exit Current Procedure Flow */
-		if (CurrentFlowTag.IsValid())
-		{
-			IProcedureFlowInterface::Execute_OnProcedureFlowExit(GetProcedureFlowComponent(CurrentFlowTag));
-			BROADCAST_MANAGER_DELEGATE(Delegate_OnProcedureFlowExit, BPDelegate_OnProcedureFlowExit, GetProcedureFlowComponent(InFlowTag))
-		}
+		ExitProcedureFlow(CurrentProcedureFlowTag);
+		CurrentProcedureFlowTag = InProcedureFlowTag;
 
-		CurrentFlowTag = InFlowTag;
-
-		IProcedureFlowInterface::Execute_OnProcedureFlowEnter(GetProcedureFlowComponent(CurrentFlowTag));
-		BROADCAST_MANAGER_DELEGATE(Delegate_OnProcedureFlowEnter, BPDelegate_OnProcedureFlowEnter, GetProcedureFlowComponent(InFlowTag))
+		IProcedureFlowInterface::Execute_OnProcedureFlowEnter(GetProcedureFlowComponent(CurrentProcedureFlowTag));
+		BROADCAST_MANAGER_DELEGATE(Delegate_OnProcedureFlowEnter, BPDelegate_OnProcedureFlowEnter, GetProcedureFlowComponent(InProcedureFlowTag))
 	}
 }
 
 void UProcedureFlowManager::RefreshCurrentProcedureFlow()
 {
-	IProcedureFlowInterface::Execute_ReInitProcedureFlow(GetProcedureFlowComponent(CurrentFlowTag));
+	IProcedureFlowInterface::Execute_ReInitProcedureFlow(GetProcedureFlowComponent(CurrentProcedureFlowTag));
 }
 
-FGameplayTag UProcedureFlowManager::GetCurrentFlowTag() const
+void UProcedureFlowManager::ReEnterCurrentProcedureFlow()
 {
-	return CurrentFlowTag;
+	const FGameplayTag ReEnterTag = GetCurrentProcedureFlowTag();
+	ExitProcedureFlow(ReEnterTag);
+	EnterProcedureFlow(ReEnterTag);
+}
+
+void UProcedureFlowManager::ExitProcedureFlow(const AProcedureFlowActor* InActor)
+{
+	if (!IsValid(InActor))
+	{
+		DLOG(DLogProcedure, Error, TEXT("ProcedureFlowActor Is NULL"))
+		return;
+	}
+
+	ExitProcedureFlow(InActor->ProcedureFlowComponent);
+}
+
+void UProcedureFlowManager::ExitProcedureFlow(const UProcedureFlowComponent* InComponent)
+{
+	if (!IsValid(InComponent))
+	{
+		DLOG(DLogProcedure, Error, TEXT("ProcedureFlowComponent Is NULL"))
+		return;
+	}
+
+	ExitProcedureFlow(InComponent->ProcedureFlowTag);
+}
+
+void UProcedureFlowManager::ExitProcedureFlow(FGameplayTag InProcedureFlowTag)
+{
+	if (!InProcedureFlowTag.IsValid())
+	{
+		DLOG(DLogProcedure, Error, TEXT("FlowTag Is NULL"))
+		return;
+	}
+
+	if (CurrentProcedureFlowTag == InProcedureFlowTag)
+	{
+		IProcedureFlowInterface::Execute_OnProcedureFlowExit(GetProcedureFlowComponent(CurrentProcedureFlowTag));
+		BROADCAST_MANAGER_DELEGATE(Delegate_OnProcedureFlowExit, BPDelegate_OnProcedureFlowExit, GetProcedureFlowComponent(InProcedureFlowTag))
+
+		CurrentProcedureFlowTag = FGameplayTag::EmptyTag;
+	}
+}
+
+bool UProcedureFlowManager::IsProcedureFlowActived(const AProcedureFlowActor* InActor) const
+{
+	if (!IsValid(InActor))
+	{
+		DLOG(DLogProcedure, Error, TEXT("ProcedureFlowActor Is NULL"))
+		return false;
+	}
+
+	return IsProcedureFlowActived(InActor->ProcedureFlowComponent);
+}
+
+bool UProcedureFlowManager::IsProcedureFlowActived(const UProcedureFlowComponent* InComponent) const
+{
+	if (!IsValid(InComponent))
+	{
+		DLOG(DLogProcedure, Error, TEXT("ProcedureFlowComponent Is NULL"))
+		return false;
+	}
+
+	return IsProcedureFlowActived(InComponent->ProcedureFlowTag);
+}
+
+bool UProcedureFlowManager::IsProcedureFlowActived(FGameplayTag InProcedureFlowTag) const
+{
+	return InProcedureFlowTag.IsValid() && InProcedureFlowTag == CurrentProcedureFlowTag;
+}
+
+FGameplayTag UProcedureFlowManager::GetCurrentProcedureFlowTag() const
+{
+	return CurrentProcedureFlowTag;
 }
 
 UProcedureFlowComponent* UProcedureFlowManager::GetCurrentProcedureFlowComponent()
 {
-	return GetProcedureFlowComponent(GetCurrentFlowTag());
+	return GetProcedureFlowComponent(GetCurrentProcedureFlowTag());
 }
 
-UProcedureFlowComponent* UProcedureFlowManager::GetProcedureFlowComponent(FGameplayTag InFlowTag)
+TArray<UProcedureFlowComponent*> UProcedureFlowManager::GetProcedureFlowComponents()
 {
-	if (!InFlowTag.IsValid())
+	return ProcedureFlowComponents;
+}
+
+UProcedureFlowComponent* UProcedureFlowManager::GetProcedureFlowComponent(FGameplayTag InProcedureFlowTag)
+{
+	if (!InProcedureFlowTag.IsValid())
 	{
 		DLOG(DLogProcedure, Error, TEXT("FlowTag Is NULL"))
 		return nullptr;
@@ -149,18 +271,13 @@ UProcedureFlowComponent* UProcedureFlowManager::GetProcedureFlowComponent(FGamep
 
 	for (const auto& ProcedureFlowComponent : ProcedureFlowComponents)
 	{
-		if (ProcedureFlowComponent->FlowTag == InFlowTag)
+		if (ProcedureFlowComponent->ProcedureFlowTag == InProcedureFlowTag)
 		{
 			return ProcedureFlowComponent;
 		}
 	}
 
 	return nullptr;
-}
-
-TArray<UProcedureFlowComponent*> UProcedureFlowManager::GetProcedureFlowComponents()
-{
-	return ProcedureFlowComponents;
 }
 
 void UProcedureFlowManager::SortProcedureFlowComponentsAsInitialize()

@@ -20,6 +20,6 @@ public:
 	virtual FName GetSectionName() const override { return "Global"; }
 
 public:
-	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(Config, EditAnywhere)
 	bool bEnableAllManager = true;
 };

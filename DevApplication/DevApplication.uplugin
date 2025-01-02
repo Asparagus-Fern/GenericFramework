@@ -69,6 +69,10 @@
     {
       "Name": "DBTween",
       "Enabled": true
+    },
+    {
+      "Name": "MarketplaceUtilityModule",
+      "Enabled": true
     }
   ],
   "Modules": [

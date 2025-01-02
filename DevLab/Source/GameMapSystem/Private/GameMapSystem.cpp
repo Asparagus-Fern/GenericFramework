@@ -4,12 +4,10 @@
 
 void FGameMapSystemModule::StartupModule()
 {
-	ICommonModuleInterface::StartupModule();
 }
 
 void FGameMapSystemModule::ShutdownModule()
 {
-	ICommonModuleInterface::ShutdownModule();
 }
 
 #undef LOCTEXT_NAMESPACE

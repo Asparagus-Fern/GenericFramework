@@ -2,17 +2,18 @@
 
 #include "CoreMinimal.h"
 #include "ISettingsViewer.h"
-#include "Module/CommonEdModuleInterface.h"
+#include "Factory/AssetTypeActions.h"
 #include "Modules/ModuleManager.h"
 
 class ISettingsModule;
 class ISettingsEditorModel;
 
-class FDevEdCoreModule : public ICommonEdModuleInterface, public ISettingsViewer
+class FDevEdCoreModule : public IModuleInterface, public ISettingsViewer
 {
 	/* IModuleInterface */
 public:
 	virtual void StartupModule() override;
+	virtual void ShutdownModule() override;
 
 	/* ISettingsViewer */
 public:
@@ -21,11 +22,11 @@ public:
 protected:
 	TWeakPtr<ISettingsEditorModel> SettingsEditorModelPtr;
 	void RegisterManagerSettings(ISettingsModule& SettingsModule);
+	void UnRegisterManagerSettings(ISettingsModule& SettingsModule);
 	TSharedRef<SDockTab> HandleSpawnSettingsTab(const FSpawnTabArgs& SpawnTabArgs);
 
 	/* ICommonEdModuleInterface */
 protected:
-	virtual void RegisterCommand() override;
-	virtual void RegisterAssetActions(TArray<TSharedPtr<FAssetTypeActions>>& OutAssetActions) override;
-	virtual void UnRegisterCommand() override;
+	virtual void RegisterCommand();
+	virtual void UnRegisterCommand();
 };

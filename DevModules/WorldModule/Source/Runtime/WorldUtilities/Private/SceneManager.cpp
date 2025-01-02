@@ -3,7 +3,6 @@
 #include "SceneManager.h"
 
 #include "Kismet/GameplayStatics.h"
-#include "SceneManagerSetting.h"
 #include "Compass/CompassActor.h"
 #include "Debug/DebugType.h"
 #include "MapScale/MapScaleActor.h"

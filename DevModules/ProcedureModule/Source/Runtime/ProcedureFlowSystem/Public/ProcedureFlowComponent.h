@@ -40,7 +40,7 @@ public:
 	bool bRegisterEvenIsHidden = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="Procedure.Flow"))
-	FGameplayTag FlowTag = FGameplayTag::EmptyTag;
+	FGameplayTag ProcedureFlowTag = FGameplayTag::EmptyTag;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	int32 ProcedureFlowInitializedOrder = 0;

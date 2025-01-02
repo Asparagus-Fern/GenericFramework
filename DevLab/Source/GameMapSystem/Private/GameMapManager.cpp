@@ -3,8 +3,6 @@
 
 #include "GameMapManager.h"
 
-#include "GameMapManagerSetting.h"
-
 bool UGameMapManager::ShouldCreateSubsystem(UObject* Outer) const
 {
 	return Super::ShouldCreateSubsystem(Outer);

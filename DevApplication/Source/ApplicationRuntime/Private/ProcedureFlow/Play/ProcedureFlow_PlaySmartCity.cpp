@@ -40,7 +40,7 @@ void AProcedureFlow_PlaySmartCity::OnProcedureFlowEnter_Implementation()
 			}
 			else
 			{
-				UCameraManager::OnCameraPointRegister.AddUObject(this, &AProcedureFlow_PlaySmartCity::OnCameraPointRegister);
+				UCameraManager::Delegate_OnCameraPointRegister.AddUObject(this, &AProcedureFlow_PlaySmartCity::OnCameraPointRegister);
 			}
 		}
 	}
@@ -51,7 +51,7 @@ void AProcedureFlow_PlaySmartCity::OnProcedureFlowExit_Implementation()
 	Super::OnProcedureFlowExit_Implementation();
 
 	UScreenWidgetManager::PostHUDCreated.RemoveAll(this);
-	UCameraManager::OnCameraPointRegister.RemoveAll(this);
+	UCameraManager::Delegate_OnCameraPointRegister.RemoveAll(this);
 
 	if (UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
 	{
@@ -85,6 +85,8 @@ void AProcedureFlow_PlaySmartCity::PostHUDCreated()
 
 void AProcedureFlow_PlaySmartCity::OnCameraPointRegister(ACameraPointBase* InCameraPoint)
 {
+	UCameraManager::Delegate_OnCameraPointRegister.RemoveAll(this);
+
 	if (UCameraManager* CameraManager = GetManager<UCameraManager>())
 	{
 		if (InCameraPoint->CameraTag == DefaultCameraTag)

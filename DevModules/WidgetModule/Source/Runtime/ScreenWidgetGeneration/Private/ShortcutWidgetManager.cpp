@@ -42,18 +42,28 @@ bool UShortcutWidgetManager::DoesSupportWorldType(const EWorldType::Type WorldTy
 void UShortcutWidgetManager::HandleOnWorldMatchStarting(UWorld* InWorld)
 {
 	FCoreInternalManager::HandleOnWorldMatchStarting(InWorld);
+
+	if (!UScreenWidgetManagerSetting::Get()->ShortcutWidgetTable.IsNull())
+	{
+		UDataTable* DataTable = UBPFunctions_Object::LoadObject<UDataTable>(UScreenWidgetManagerSetting::Get()->ShortcutWidgetTable);
+		RegisterShortcutWidgetHandles(DataTable);
+	}
 }
 
-void UShortcutWidgetManager::OnWorldBeginPlay(UWorld& InWorld)
+void UShortcutWidgetManager::HandleOnWorldBeginPlay(UWorld* InWorld)
 {
-	Super::OnWorldBeginPlay(InWorld);
-	RegisterShortcutWidgetHandles();
+	FCoreInternalManager::HandleOnWorldBeginPlay(InWorld);
 }
 
 void UShortcutWidgetManager::HandleOnWorldEndPlay(UWorld* InWorld)
 {
 	FCoreInternalManager::HandleOnWorldEndPlay(InWorld);
-	UnRegisterShortcutWidgetHandles();
+
+	TArray<TObjectPtr<UDataTable>> TempShortcutWidgetTables = ShortcutWidgetTables;
+	for (auto& TempShortcutWidgetTable : TempShortcutWidgetTables)
+	{
+		UnRegisterShortcutWidgetHandles(TempShortcutWidgetTable);
+	}
 }
 
 void UShortcutWidgetManager::OnWidgetOpen(UUserWidgetBase* InWidget)
@@ -72,56 +82,82 @@ void UShortcutWidgetManager::OnWidgetClose(UUserWidgetBase* InWidget)
 	}
 }
 
-void UShortcutWidgetManager::RegisterShortcutWidgetHandles()
+void UShortcutWidgetManager::RegisterShortcutWidgetHandles(UDataTable* InShortcutTable)
 {
-	if (!UScreenWidgetManagerSetting::Get()->ShortcutWidgetTable.IsNull())
+	if (IsValid(InShortcutTable))
 	{
-		UDataTable* DataTable = UBPFunctions_Object::LoadObject<UDataTable>(UScreenWidgetManagerSetting::Get()->ShortcutWidgetTable);
-		if (IsValid(DataTable))
+		if (!InShortcutTable->RowStruct->IsChildOf(FShortcutWidgetTableRow::StaticStruct()))
 		{
-			if (!DataTable->RowStruct->IsChildOf(FShortcutWidgetTableRow::StaticStruct()))
-			{
-				return;
-			}
-
-			ShortcutWidgetTable = DataTable;
-
-			ShortcutWidgetTable->ForeachRow<FShortcutWidgetTableRow>
-			("", [this](FName Key, const FShortcutWidgetTableRow& Value)
-			 {
-				 if (!Value.ShortcutWidgetHandleClass || !Value.WidgetClass || !IsValid(Value.InputAction))
-				 {
-					 return;
-				 }
-
-				 /* PlayerIndex不存在 */
-				 if (!UGameplayStatics::GetPlayerController(this, Value.PlayerIndex))
-				 {
-					 return;
-				 }
-
-				 /* 相同WidgetClass映射了多个InputAction */
-				 if (IsValid(GetShortcutWidgetHandle(Value.WidgetClass)))
-				 {
-					 return;
-				 }
-
-				 UShortcutWidgetHandle* ShortcutWidgetHandle = NewObject<UShortcutWidgetHandle>(this, Value.ShortcutWidgetHandleClass);
-				 ShortcutWidgetHandle->ShortcutWidgetTableRow = Value;
-				 ShortcutWidgetHandles.Add(ShortcutWidgetHandle);
-
-				 ShortcutWidgetHandle->NativeOnCreate();
-			 }
-			);
+			return;
 		}
+
+		ShortcutWidgetTables.Add(InShortcutTable);
+
+		InShortcutTable->ForeachRow<FShortcutWidgetTableRow>
+		("", [this](FName Key, const FShortcutWidgetTableRow& Value)
+		 {
+			 if (!Value.ShortcutWidgetHandleClass || !Value.WidgetClass || !IsValid(Value.InputAction))
+			 {
+				 DLOG(DLogUI, Error, TEXT("ShortcutWidgetHandleClass/WidgetClass/InputAction Is NULL"))
+				 return;
+			 }
+
+			 /* PlayerIndex不存在 */
+			 if (!UGameplayStatics::GetPlayerController(this, Value.PlayerIndex))
+			 {
+				 DLOG(DLogUI, Error, TEXT("PlayerIndex Is InValid"))
+				 return;
+			 }
+
+			 /* 相同WidgetClass映射了多个InputAction */
+			 if (IsValid(GetShortcutWidgetHandle(Value.WidgetClass)))
+			 {
+				 /* todo:Use Latest Table Override */
+				 return;
+			 }
+
+			 UShortcutWidgetHandle* ShortcutWidgetHandle = NewObject<UShortcutWidgetHandle>(this, Value.ShortcutWidgetHandleClass);
+			 ShortcutWidgetHandle->ShortcutWidgetTableRow = Value;
+			 ShortcutWidgetHandles.Add(ShortcutWidgetHandle);
+
+			 ShortcutWidgetHandle->NativeOnCreate();
+		 }
+		);
 	}
 }
 
-void UShortcutWidgetManager::UnRegisterShortcutWidgetHandles()
+void UShortcutWidgetManager::UnRegisterShortcutWidgetHandles(UDataTable* InShortcutTable)
 {
-	for (const auto& ShortcutWidgetHandle : ShortcutWidgetHandles)
+	if (IsValid(InShortcutTable))
 	{
-		ShortcutWidgetHandle->NativeOnDestroy();
+		if (!InShortcutTable->RowStruct->IsChildOf(FShortcutWidgetTableRow::StaticStruct()))
+		{
+			return;
+		}
+
+		InShortcutTable->ForeachRow<FShortcutWidgetTableRow>
+		("", [this](FName Key, const FShortcutWidgetTableRow& Value)
+		 {
+			 if (!Value.ShortcutWidgetHandleClass || !Value.WidgetClass || !IsValid(Value.InputAction))
+			 {
+				 DLOG(DLogUI, Error, TEXT("ShortcutWidgetHandleClass/WidgetClass/InputAction Is NULL"))
+				 return;
+			 }
+
+			 /* PlayerIndex不存在 */
+			 if (!UGameplayStatics::GetPlayerController(this, Value.PlayerIndex))
+			 {
+				 DLOG(DLogUI, Error, TEXT("PlayerIndex Is InValid"))
+				 return;
+			 }
+
+			 if (UShortcutWidgetHandle* Handle = GetShortcutWidgetHandle(Value.WidgetClass))
+			 {
+				 Handle->NativeOnDestroy();
+				 ShortcutWidgetHandles.Remove(Handle);
+			 }
+		 }
+		);
 	}
 }
 

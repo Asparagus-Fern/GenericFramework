@@ -1,10 +1,9 @@
 ﻿#pragma once
 
 #include "CoreMinimal.h"
-#include "Module/CommonModuleInterface.h"
 #include "Modules/ModuleManager.h"
 
-class FGameMapSystemModule : public ICommonModuleInterface
+class FGameMapSystemModule : public IModuleInterface
 {
 public:
 	virtual void StartupModule() override;

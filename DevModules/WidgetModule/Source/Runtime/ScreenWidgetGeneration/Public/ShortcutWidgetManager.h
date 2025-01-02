@@ -27,7 +27,7 @@ public:
 	/* FCoreInternalManager */
 public:
 	virtual void HandleOnWorldMatchStarting(UWorld* InWorld) override;
-	virtual void OnWorldBeginPlay(UWorld& InWorld) override;
+	virtual void HandleOnWorldBeginPlay(UWorld* InWorld) override;
 	virtual void HandleOnWorldEndPlay(UWorld* InWorld) override;
 
 	/* Delegates Bind From UScreenWidgetManager */
@@ -36,16 +36,18 @@ protected:
 	virtual void OnWidgetClose(UUserWidgetBase* InWidget);
 
 	/* UShortcutWidgetManager */
+public:
+	void RegisterShortcutWidgetHandles(UDataTable* InShortcutTable);
+	void UnRegisterShortcutWidgetHandles(UDataTable* InShortcutTable);
+
 protected:
 	UPROPERTY(BlueprintReadOnly, Transient)
-	TObjectPtr<UDataTable> ShortcutWidgetTable = nullptr;
+	TArray<TObjectPtr<UDataTable>> ShortcutWidgetTables;
 
 	UPROPERTY(Transient)
 	TArray<TObjectPtr<UShortcutWidgetHandle>> ShortcutWidgetHandles;
 
 protected:
-	void RegisterShortcutWidgetHandles();
-	void UnRegisterShortcutWidgetHandles();
 	UShortcutWidgetHandle* GetShortcutWidgetHandle(const UUserWidgetBase* InWidget);
 	UShortcutWidgetHandle* GetShortcutWidgetHandle(TSubclassOf<UUserWidgetBase> InWidgetClass);
 };

@@ -1,7 +1,6 @@
 ﻿#pragma once
 
 #include "CoreMinimal.h"
-#include "Module/CommonEdModuleInterface.h"
 
 class FWorldWidgetEdGenerationModule : public IModuleInterface
 {

@@ -18,13 +18,14 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnManagerUnRegister, UManagerInfo*,
 /**
  * 
  */
-UCLASS(Transient)
+UCLASS()
 class DEVCORE_API UManagerProxy : public UCommonObject, public IWorldInterface
 {
 	GENERATED_BODY()
 
 public:
 	static UManagerProxy* InitializeManagerProxy();
+	static void DeInitializeManagerProxy();
 	static UManagerProxy* Get();
 
 	void RegisterManager(IManagerInterface* InManager);

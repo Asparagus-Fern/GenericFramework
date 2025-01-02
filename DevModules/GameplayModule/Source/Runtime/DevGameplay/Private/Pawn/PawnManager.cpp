@@ -3,9 +3,7 @@
 
 #include "Pawn/PawnManager.h"
 
-#include "Kismet/GameplayStatics.h"
 #include "Pawn/DevPawn.h"
-#include "Pawn/PawnManagerSetting.h"
 
 #define LOCTEXT_NAMESPACE "UPawnManager"
 

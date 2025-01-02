@@ -3,9 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Module/CommonModuleInterface.h"
 
-class FDevCoreModule : public ICommonModuleInterface
+class FDevCoreModule : public IModuleInterface
 {
 public:
 	virtual void StartupModule() override;

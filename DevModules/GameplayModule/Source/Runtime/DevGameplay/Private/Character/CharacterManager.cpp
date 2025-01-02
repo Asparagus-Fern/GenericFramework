@@ -3,7 +3,6 @@
 
 #include "Character/CharacterManager.h"
 
-#include "Character/CharacterManagerSetting.h"
 #include "Character/DevCharacter.h"
 
 bool UCharacterManager::ShouldCreateSubsystem(UObject* Outer) const

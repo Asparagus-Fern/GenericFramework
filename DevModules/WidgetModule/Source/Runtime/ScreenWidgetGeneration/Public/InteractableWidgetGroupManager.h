@@ -10,6 +10,15 @@
 class UInteractableUserWidgetBase;
 class UCommonButtonGroup;
 
+DECLARE_MULTICAST_DELEGATE_TwoParams(FDelegate_OnInteractableWidgetAdded, UInteractableUserWidgetBase*, FString);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FBPDelegate_OnInteractableWidgetAdded, UInteractableUserWidgetBase*, InWidget, FString, InGroupName);
+
+DECLARE_MULTICAST_DELEGATE_TwoParams(FDelegate_OnInteractableWidgetRemoved, UInteractableUserWidgetBase*, FString);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FBPDelegate_OnInteractableWidgetRemoved, UInteractableUserWidgetBase*, InWidget, FString, InGroupName);
+
+DECLARE_MULTICAST_DELEGATE_OneParam(FDelegate_OnInteractableWidgetClearup, FString);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FBPDelegate_OnInteractableWidgetClearup, FString, InGroupName);
+
 /**
  * 管理可交互UI的分组
  */
@@ -25,21 +34,6 @@ public:
 	virtual bool DoesSupportWorldType(const EWorldType::Type WorldType) const override;
 
 public:
-	DECLARE_EVENT_TwoParams(UScreenWidgetManager, FOnInteractableWidgetAdded, UInteractableUserWidgetBase*, FString);
-
-	DECLARE_EVENT_TwoParams(UScreenWidgetManager, FOnInteractableWidgetRemoved, UInteractableUserWidgetBase*, FString);
-
-	DECLARE_EVENT_OneParam(UScreenWidgetManager, FOnInteractableWidgetClearup, FString);
-
-	/* 当一个InteractableWidget被添加进组时 */
-	static FOnInteractableWidgetAdded OnInteractableWidgetAdded;
-
-	/* 当一个InteractableWidget从组移除时 */
-	static FOnInteractableWidgetRemoved OnInteractableWidgetRemoved;
-
-	/* 当一个组被清除时 */
-	static FOnInteractableWidgetClearup OnInteractableWidgetClearup;
-	
 	/* 添加一个InteractableWidget到组 */
 	UFUNCTION(BlueprintCallable)
 	void AddInteractableWidget(UInteractableUserWidgetBase* InteractableWidget, FString GroupName);
@@ -55,6 +49,19 @@ public:
 	/* 查询指定组 */
 	UFUNCTION(BlueprintCallable)
 	bool FindInteractableWidgetGroup(const FString& GroupName, UCommonButtonGroup*& Group) const;
+
+public:
+	inline static FDelegate_OnInteractableWidgetAdded Delegate_OnInteractableWidgetAdded;
+	UPROPERTY(BlueprintAssignable)
+	FBPDelegate_OnInteractableWidgetAdded BPDelegate_OnInteractableWidgetAdded;
+
+	inline static FDelegate_OnInteractableWidgetRemoved Delegate_OnInteractableWidgetRemoved;
+	UPROPERTY(BlueprintAssignable)
+	FBPDelegate_OnInteractableWidgetRemoved BPDelegate_OnInteractableWidgetRemoved;
+
+	inline static FDelegate_OnInteractableWidgetClearup Delegate_OnInteractableWidgetClearup;
+	UPROPERTY(BlueprintAssignable)
+	FBPDelegate_OnInteractableWidgetClearup BPDelegate_OnInteractableWidgetClearup;
 
 public:
 	TMap<FString, TObjectPtr<UCommonButtonGroup>> GetInteractableWidgetGroups() const { return InteractableWidgetGroups; }

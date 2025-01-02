@@ -40,10 +40,10 @@ public:
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FVector2D Location;
+	FVector2D Location = FVector2D::ZeroVector;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FVector2D Direction;
+	FVector2D Direction = FVector2D::ZeroVector;
 };
 
 /**

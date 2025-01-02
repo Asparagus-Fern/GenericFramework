@@ -4,12 +4,10 @@
 
 void FBuildingsInteractionSystemModule::StartupModule()
 {
-	ICommonModuleInterface::StartupModule();
 }
 
 void FBuildingsInteractionSystemModule::ShutdownModule()
 {
-	ICommonModuleInterface::ShutdownModule();
 }
 
 #undef LOCTEXT_NAMESPACE

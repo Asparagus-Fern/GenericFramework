@@ -13,12 +13,16 @@
 UCLASS()
 class PROCEDUREFLOWSYSTEM_API UProcedureFlowSetting : public UManagerSetting
 {
-	GENERATED_BODY()
+	GENERATED_UCLASS_BODY()
 
 public:
 	static ThisClass* Get() { return GetMutableDefault<ThisClass>(); }
 
 public:
+	/* If True, Enter Default Procedure Flow After BeginPlay */
+	UPROPERTY(Config, EditAnywhere)
+	bool AutoEnterDefaultProcedureFlowTag = true;
+
 	UPROPERTY(Config, EditAnywhere, meta=(Categories="Procedure.Flow"))
-	FGameplayTag DefaultFlowTag = FGameplayTag::EmptyTag;
+	FGameplayTag DefaultProcedureFlowTag = FGameplayTag::EmptyTag;
 };

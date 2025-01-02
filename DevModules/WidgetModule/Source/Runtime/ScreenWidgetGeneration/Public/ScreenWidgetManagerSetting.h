@@ -14,7 +14,7 @@ class UGameHUD;
 UCLASS()
 class SCREENWIDGETGENERATION_API UScreenWidgetManagerSetting : public UManagerSetting
 {
-	GENERATED_BODY()
+	GENERATED_UCLASS_BODY()
 
 public:
 	static ThisClass* Get() { return GetMutableDefault<ThisClass>(); }

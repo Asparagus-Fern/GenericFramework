@@ -3,8 +3,6 @@
 
 #include "Procedure/ProcedureManager.h"
 
-#include "BPFunctions/BPFunctions_Object.h"
-#include "Procedure/ProcedureManagerSetting.h"
 #include "Procedure/ProcedureProxy.h"
 
 #define LOCTEXT_NAMESPACE "UProcedureManager"

@@ -5,7 +5,6 @@
 
 #include "ScreenWidgetManager.h"
 #include "WorldWidgetComponent.h"
-#include "WorldWidgetManagerSetting.h"
 #include "Blueprint/WidgetLayoutLibrary.h"
 #include "Components/CanvasPanel.h"
 #include "Components/CanvasPanelSlot.h"

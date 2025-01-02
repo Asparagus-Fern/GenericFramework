@@ -15,10 +15,13 @@ static const FName ManagerSettingsTabName("ManagerSettings");
 
 void FDevEdCoreModule::StartupModule()
 {
-	ICommonEdModuleInterface::StartupModule();
+	IModuleInterface::StartupModule();
+
+	RegisterCommand();
+
 	FAssetToolsModule::GetModule().Get().RegisterAdvancedAssetCategory("DevFramework", LOCTEXT("DisplayName", "DevFramework"));
 
-	/* 创建管理类的设置 */
+	/* Create Developer Settings */
 	{
 		ISettingsModule* SettingsModule = FModuleManager::GetModulePtr<ISettingsModule>("Settings");
 
@@ -33,6 +36,21 @@ void FDevEdCoreModule::StartupModule()
 			.SetMenuType(ETabSpawnerMenuType::Hidden)
 			.SetIcon(FSlateIcon(FAppStyle::GetAppStyleSetName(), "ProjectSettings.TabIcon"));
 	}
+}
+
+void FDevEdCoreModule::ShutdownModule()
+{
+	IModuleInterface::ShutdownModule();
+
+	ISettingsModule* SettingsModule = FModuleManager::GetModulePtr<ISettingsModule>("Settings");
+
+	if (SettingsModule != nullptr)
+	{
+		UnRegisterManagerSettings(*SettingsModule);
+		SettingsModule->UnregisterViewer("Developer");
+	}
+
+	UnRegisterCommand();
 }
 
 void FDevEdCoreModule::ShowSettings(const FName& CategoryName, const FName& SectionName)
@@ -60,6 +78,11 @@ void FDevEdCoreModule::RegisterManagerSettings(ISettingsModule& SettingsModule)
 		LOCTEXT("ManagerGlobalSettingsDescription", "Manager Global Settings"),
 		GetMutableDefault<UGlobalManagerSetting>()
 	);
+}
+
+void FDevEdCoreModule::UnRegisterManagerSettings(ISettingsModule& SettingsModule)
+{
+	SettingsModule.UnregisterSettings("Developer", "Global", "Global");
 }
 
 TSharedRef<SDockTab> FDevEdCoreModule::HandleSpawnSettingsTab(const FSpawnTabArgs& SpawnTabArgs)
@@ -90,18 +113,11 @@ TSharedRef<SDockTab> FDevEdCoreModule::HandleSpawnSettingsTab(const FSpawnTabArg
 
 void FDevEdCoreModule::RegisterCommand()
 {
-	ICommonEdModuleInterface::RegisterCommand();
 	FDeveloperSettingCommands::Register();
-}
-
-void FDevEdCoreModule::RegisterAssetActions(TArray<TSharedPtr<FAssetTypeActions>>& OutAssetActions)
-{
-	ICommonEdModuleInterface::RegisterAssetActions(OutAssetActions);
 }
 
 void FDevEdCoreModule::UnRegisterCommand()
 {
-	ICommonEdModuleInterface::UnRegisterCommand();
 	FDeveloperSettingCommands::Unregister();
 }
 

@@ -16,10 +16,10 @@ struct FLineCoordinate
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FVector StartPointCoordinate;
+	FVector StartPointCoordinate = FVector::ZeroVector;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FVector EndPointCoordinate;
+	FVector EndPointCoordinate = FVector::ZeroVector;
 };
 
 /**

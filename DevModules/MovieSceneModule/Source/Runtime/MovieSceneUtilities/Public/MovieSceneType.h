@@ -76,7 +76,7 @@ public:
 	int32 PlayNumToDelayLoop = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditCondition = "bLoopFragment"))
-	FVector2D LoopRange;
+	FVector2D LoopRange = FVector2D::ZeroVector;
 	
 	// UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditConditionHides, EditCondition = "bLoopFragment"))
 	// FMovieSceneTime LoopTimeStart;

@@ -3,8 +3,6 @@
 
 #include "BuildingsInteractionManager.h"
 
-#include "BuildingsInteractionManagerSetting.h"
-
 bool UBuildingsInteractionManager::ShouldCreateSubsystem(UObject* Outer) const
 {
 	return Super::ShouldCreateSubsystem(Outer);

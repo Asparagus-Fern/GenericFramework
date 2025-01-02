@@ -17,22 +17,22 @@ void UProcedureFlowComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (FlowTag.IsValid() && !bManualRegister && (bRegisterEvenIsHidden || (!bRegisterEvenIsHidden && !GetOwner()->IsHidden())))
+	if (ProcedureFlowTag.IsValid() && !bManualRegister && (bRegisterEvenIsHidden || (!bRegisterEvenIsHidden && !GetOwner()->IsHidden())))
 	{
 		if (UProcedureFlowManager* ProcedureFlowManager = GetManager<UProcedureFlowManager>())
 		{
-			ProcedureFlowManager->RegisterFlow(this);
+			ProcedureFlowManager->RegisterProcedureFlow(this);
 		}
 	}
 }
 
 void UProcedureFlowComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-	if (FlowTag.IsValid())
+	if (ProcedureFlowTag.IsValid())
 	{
 		if (UProcedureFlowManager* ProcedureFlowManager = GetManager<UProcedureFlowManager>())
 		{
-			ProcedureFlowManager->UnRegisterFlow(this);
+			ProcedureFlowManager->UnRegisterProcedureFlow(this);
 		}
 	}
 

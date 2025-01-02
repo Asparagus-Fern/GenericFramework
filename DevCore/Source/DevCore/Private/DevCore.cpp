@@ -8,13 +8,12 @@
 
 void FDevCoreModule::StartupModule()
 {
-	ICommonModuleInterface::StartupModule();
 	UManagerProxy::InitializeManagerProxy();
 }
 
 void FDevCoreModule::ShutdownModule()
 {
-	ICommonModuleInterface::ShutdownModule();
+	UManagerProxy::DeInitializeManagerProxy();
 }
 
 #undef LOCTEXT_NAMESPACE

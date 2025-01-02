@@ -44,6 +44,7 @@ public class ApplicationRuntime : ModuleRules
 				"MediaSystem",
 				"PropertyUtilities",
 				"ProcedureFlowSystem",
+				"ProcedureTaskSystem",
 
 				/* Dev Lab */
 				"PropertyDetailViewSystem",

@@ -39,7 +39,7 @@ void AActiveNode_Play::LoginNode_Implementation()
 			}
 			else
 			{
-				UCameraManager::OnCameraPointRegister.AddUObject(this, &AActiveNode_Play::OnCameraPointRegister);
+				UCameraManager::Delegate_OnCameraPointRegister.AddUObject(this, &AActiveNode_Play::OnCameraPointRegister);
 			}
 		}
 	}
@@ -50,7 +50,7 @@ void AActiveNode_Play::LogoutNode_Implementation()
 	Super::LogoutNode_Implementation();
 
 	UScreenWidgetManager::PostHUDCreated.RemoveAll(this);
-	UCameraManager::OnCameraPointRegister.RemoveAll(this);
+	UCameraManager::Delegate_OnCameraPointRegister.RemoveAll(this);
 
 	if (UScreenWidgetManager* ScreenWidgetManager = UManagerProxy::Get()->GetManager<UScreenWidgetManager>())
 	{
@@ -84,7 +84,7 @@ void AActiveNode_Play::PostHUDCreated()
 
 void AActiveNode_Play::OnCameraPointRegister(ACameraPointBase* InCameraPoint)
 {
-	UCameraManager::OnCameraPointRegister.RemoveAll(this);
+	UCameraManager::Delegate_OnCameraPointRegister.RemoveAll(this);
 
 	if (UCameraManager* CameraManager = UManagerProxy::Get()->GetManager<UCameraManager>())
 	{

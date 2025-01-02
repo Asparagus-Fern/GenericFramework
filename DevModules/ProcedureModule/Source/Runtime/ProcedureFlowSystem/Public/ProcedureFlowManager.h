@@ -8,6 +8,7 @@
 #include "Subsystems/WorldSubsystem.h"
 #include "ProcedureFlowManager.generated.h"
 
+class AProcedureFlowActor;
 class UProcedureFlowComponent;
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FDelegate_OnProcedureFlowRegister, UProcedureFlowComponent*);
@@ -46,15 +47,44 @@ protected:
 
 	/* UProcedureFlowManager */
 public:
-	void RegisterFlow(UProcedureFlowComponent* InComponent);
-	void UnRegisterFlow(UProcedureFlowComponent* InComponent);
-	void EnterProcedureFlow(FGameplayTag InFlowTag);
-	void RefreshCurrentProcedureFlow();
+	void RegisterProcedureFlow(const AProcedureFlowActor* InActor);
+	void RegisterProcedureFlow(UProcedureFlowComponent* InComponent);
 
-	FGameplayTag GetCurrentFlowTag() const;
+	void UnRegisterProcedureFlow(const AProcedureFlowActor* InActor);
+	void UnRegisterProcedureFlow(UProcedureFlowComponent* InComponent);
+
+	void EnterProcedureFlow(const AProcedureFlowActor* InActor);
+	void EnterProcedureFlow(const UProcedureFlowComponent* InComponent);
+	void EnterProcedureFlow(FGameplayTag InProcedureFlowTag);
+
+	void RefreshCurrentProcedureFlow();
+	void ReEnterCurrentProcedureFlow();
+
+	void ExitProcedureFlow(const AProcedureFlowActor* InActor);
+	void ExitProcedureFlow(const UProcedureFlowComponent* InComponent);
+	void ExitProcedureFlow(FGameplayTag InProcedureFlowTag);
+
+	bool IsProcedureFlowActived(const AProcedureFlowActor* InActor) const;
+	bool IsProcedureFlowActived(const UProcedureFlowComponent* InComponent) const;
+	bool IsProcedureFlowActived(FGameplayTag InProcedureFlowTag) const;
+
+	FGameplayTag GetCurrentProcedureFlowTag() const;
 	UProcedureFlowComponent* GetCurrentProcedureFlowComponent();
-	UProcedureFlowComponent* GetProcedureFlowComponent(FGameplayTag InFlowTag);
+
+	template <typename T>
+	T* GetCurrentProcedureFlowComponent()
+	{
+		return Cast<T>(GetCurrentProcedureFlowComponent());
+	}
+
 	TArray<UProcedureFlowComponent*> GetProcedureFlowComponents();
+	UProcedureFlowComponent* GetProcedureFlowComponent(FGameplayTag InProcedureFlowTag);
+
+	template <typename T>
+	T* GetProcedureFlowComponent(FGameplayTag InProcedureFlowTag)
+	{
+		return Cast<T>(GetProcedureFlowComponent(InProcedureFlowTag));
+	}
 
 private:
 	void SortProcedureFlowComponentsAsInitialize();
@@ -80,7 +110,7 @@ public:
 
 private:
 	UPROPERTY(Transient)
-	FGameplayTag CurrentFlowTag = FGameplayTag::EmptyTag;
+	FGameplayTag CurrentProcedureFlowTag = FGameplayTag::EmptyTag;
 
 	UPROPERTY(Transient)
 	TArray<TObjectPtr<UProcedureFlowComponent>> ProcedureFlowComponents;

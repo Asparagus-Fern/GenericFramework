@@ -5,6 +5,7 @@
 
 #include "Debug/DebugType.h"
 #include "Manager/CoreInternalManager.h"
+#include "Manager/GlobalManagerSetting.h"
 
 UManagerProxy* UManagerProxy::Instance = nullptr;
 
@@ -21,6 +22,15 @@ UManagerProxy* UManagerProxy::InitializeManagerProxy()
 	return Instance;
 }
 
+void UManagerProxy::DeInitializeManagerProxy()
+{
+	if (Instance)
+	{
+		Instance->RemoveFromRoot();
+		Instance->MarkAsGarbage();
+	}
+}
+
 UManagerProxy* UManagerProxy::Get()
 {
 	if (!Instance)
@@ -34,6 +44,12 @@ UManagerProxy* UManagerProxy::Get()
 
 void UManagerProxy::RegisterManager(IManagerInterface* InManager)
 {
+	if (!UGlobalManagerSetting::Get()->bEnableAllManager)
+	{
+		DLOG(DLogManager, Log, TEXT("Disable Manager Register"))
+		return;
+	}
+
 	if (!InManager)
 	{
 		DLOG(DLogManager, Error, TEXT("InManager Is NULL"))
@@ -46,7 +62,9 @@ void UManagerProxy::RegisterManager(IManagerInterface* InManager)
 		return;
 	}
 
-	UManagerInfo* NewManagerInfo = NewObject<UManagerInfo>(this);
+	UManagerInfo* NewManagerInfo = NewObject<UManagerInfo>();
+	NewManagerInfo->AddToRoot();
+
 	NewManagerInfo->InitializeManagerInfo(InManager);
 	ManagerInfos.Add(NewManagerInfo);
 
@@ -71,13 +89,17 @@ void UManagerProxy::UnRegisterManager(const IManagerInterface* InManager)
 	}
 
 	UManagerInfo* RemoveManagerInfo = GetManagerInfo(InManager);
-	ManagerInfos.Remove(RemoveManagerInfo);
-	RemoveManagerInfo->MarkAsGarbage();
+	if (IsValid(RemoveManagerInfo))
+	{
+		OnManagerUnRegister.Broadcast(RemoveManagerInfo);
 
-	OnManagerRegister.Broadcast(RemoveManagerInfo);
+		ManagerInfos.Remove(RemoveManagerInfo);
+		RemoveManagerInfo->RemoveFromRoot();
+		RemoveManagerInfo->MarkAsGarbage();
 
-	SortManagers();
-	DLOG(DLogManager, Log, TEXT("%s"), *InManager->GetManagerOwner()->GetName());
+		SortManagers();
+		DLOG(DLogManager, Log, TEXT("%s"), *InManager->GetManagerOwner()->GetName());
+	}
 }
 
 bool UManagerProxy::IsManagerExist(const IManagerInterface* InManager)

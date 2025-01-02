@@ -15,6 +15,9 @@ class UCameraComponent;
 class UCameraHandle;
 class ACameraPointBase;
 
+DECLARE_MULTICAST_DELEGATE_OneParam(FDelegate_CameraPointDelegate, ACameraPointBase*);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FBPDelegate_CameraPointDelegate, ACameraPointBase*, InCameraPoint);
+
 /**
  * 
  */
@@ -31,12 +34,6 @@ public:
 
 	/* UCameraManager */
 public:
-	DECLARE_EVENT_OneParam(UCameraManager, FCameraPointDelegate, ACameraPointBase*)
-
-	static FCameraPointDelegate OnCameraPointRegister;
-	static FCameraPointDelegate OnCameraPointUnRegister;
-
-public:
 	/* 已注册的相机点位 */
 	UPROPERTY(BlueprintReadOnly, Transient)
 	TMap<FGameplayTag, ACameraPointBase*> CameraPoints;
@@ -52,6 +49,15 @@ public:
 	/* 上一次的相机标签 */
 	UPROPERTY(BlueprintReadOnly, Transient, meta=(Categories="Camera"))
 	TMap<int32, FGameplayTag> PreviousCameraTag;
+
+public:
+	inline static FDelegate_CameraPointDelegate Delegate_OnCameraPointRegister;
+	UPROPERTY(BlueprintAssignable)
+	FBPDelegate_CameraPointDelegate BPDelegate_OnCameraPointRegister;
+
+	inline static FDelegate_CameraPointDelegate Delegate_OnCameraPointUnRegister;
+	UPROPERTY(BlueprintAssignable)
+	FBPDelegate_CameraPointDelegate BPDelegate_OnCameraPointUnRegister;
 
 public:
 	virtual void AddCameraPoint(ACameraPointBase* InCameraPoint);
@@ -87,6 +93,7 @@ protected:
 	UCameraHandle* GetCameraHandle(const APlayerController* InPlayerController);
 	void UpdateCameraTag(int32 InPlayerIndex, FGameplayTag InCameraTag);
 	void HandleSwitchToCameraFinish(UCameraHandle* InCameraHandle);
+
 
 	/* UCameraInputIdle */
 public:

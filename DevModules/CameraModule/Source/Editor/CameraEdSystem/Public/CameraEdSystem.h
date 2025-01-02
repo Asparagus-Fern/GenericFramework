@@ -1,7 +1,6 @@
 ﻿#pragma once
 
 #include "CoreMinimal.h"
-#include "Module/CommonEdModuleInterface.h"
 #include "Modules/ModuleManager.h"
 
 class FCameraEdSystemModule : public IModuleInterface

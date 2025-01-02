@@ -27,7 +27,7 @@ public:
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UMediaPlayer> MediaPlayer = nullptr;
 
-	UPROPERTY(EditAnywhere, meta=(EditConditionHides, EditCondition = "MovieSceneState == EMovieSceneState::Play"))
+	UPROPERTY(EditAnywhere)
 	TArray<TObjectPtr<UMediaSource>> MediaSources;
 
 	UPROPERTY(EditAnywhere)

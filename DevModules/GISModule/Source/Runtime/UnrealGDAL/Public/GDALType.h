@@ -144,23 +144,23 @@ public:
 
 	/** Pixel (x) location of GCP on raster */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	double GCPPixel;
+	double GCPPixel = 0.f;
 
 	/** Line (y) location of GCP on raster */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	double GCPLine;
+	double GCPLine = 0.f;
 
 	/** X position of GCP in georeferenced space */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	double GCPX;
+	double GCPX = 0.f;
 
 	/** Y position of GCP in georeferenced space */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	double GCPY;
+	double GCPY = 0.f;
 
 	/** Elevation of GCP, or zero if not known */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	double GCPZ;
+	double GCPZ = 0.f;
 };
 
 /* ==================== FGDALGeometryType ==================== */
@@ -450,7 +450,7 @@ public:
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	FVector Coordinate;
+	FVector Coordinate = FVector::ZeroVector;
 };
 
 /* ==================== FMultiPointCoordinate ==================== */

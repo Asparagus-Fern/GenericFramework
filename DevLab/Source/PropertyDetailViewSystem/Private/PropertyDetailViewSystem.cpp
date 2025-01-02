@@ -4,12 +4,10 @@
 
 void FPropertyDetailViewSystemModule::StartupModule()
 {
-	ICommonModuleInterface::StartupModule();
 }
 
 void FPropertyDetailViewSystemModule::ShutdownModule()
 {
-	ICommonModuleInterface::ShutdownModule();
 }
 
 #undef LOCTEXT_NAMESPACE

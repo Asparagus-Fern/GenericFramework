@@ -1,8 +1,8 @@
 ﻿using UnrealBuildTool;
 
-public class UltraDynamicSkyUtilities : ModuleRules
+public class ProcedureTaskSystem : ModuleRules
 {
-	public UltraDynamicSkyUtilities(ReadOnlyTargetRules Target) : base(Target)
+	public ProcedureTaskSystem(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 
@@ -10,7 +10,7 @@ public class UltraDynamicSkyUtilities : ModuleRules
 			new string[]
 			{
 				"Core",
-				"UltraDynamicSky"
+				"DevCore"
 			}
 		);
 
@@ -20,9 +20,7 @@ public class UltraDynamicSkyUtilities : ModuleRules
 				"CoreUObject",
 				"Engine",
 				"Slate",
-				"SlateCore",
-
-				"DeveloperSettings"
+				"SlateCore"
 			}
 		);
 	}

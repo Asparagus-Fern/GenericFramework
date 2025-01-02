@@ -41,16 +41,17 @@ protected:
 	virtual void HandleOnWorldCreation(UWorld* InWorld) override { return; }
 	virtual void HandleOnWorldBeginTearDown(UWorld* InWorld) override { return; }
 
-	virtual void HandleOnWorldMatchStarting(UWorld* InWorld) override { return; }
-	virtual void HandleOnWorldBeginPlay(UWorld* InWorld) override { return; }
+	/* Call Only In Runtime */
+protected:
+	virtual void HandleOnWorldMatchStarting(UWorld* InWorld) override { return; } /* Initialize Manager, Bind Delegate... */
+	virtual void HandleOnWorldBeginPlay(UWorld* InWorld) override { return; } /* Actor And Component Is Already BeginPlay */
 	virtual void HandleOnWorldEndPlay(UWorld* InWorld) override { return; }
 
 	/* FCoreInternalManager */
 protected:
-	FGuid RegisterManager(UObject* InOwner);
-	void UnRegisterManager();
-
-protected:
 	UObject* Owner = nullptr;
 	FGuid ManagerID;
+
+	FGuid RegisterManager(UObject* InOwner);
+	void UnRegisterManager();
 };

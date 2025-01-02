@@ -9,7 +9,7 @@
 #include "ProcedureManager.generated.h"
 
 /**
- * todo:封装到模块
+ * todo:废弃重写
  */
 UCLASS()
 class DEVCORE_API UProcedureManager : public UWorldSubsystem, public FCoreInternalManager

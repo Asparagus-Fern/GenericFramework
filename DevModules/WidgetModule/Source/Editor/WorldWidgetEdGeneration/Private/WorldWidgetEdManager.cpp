@@ -7,7 +7,6 @@
 #include "LevelEditorViewport.h"
 #include "SWorldWidgetContainer.h"
 #include "WorldWidgetComponent.h"
-#include "WorldWidgetEdManagerSetting.h"
 #include "WorldWidgetPoint.h"
 #include "BPFunctions/BPFunctions_EditorScene.h"
 #include "BPFunctions/BPFunctions_EditorWidget.h"
