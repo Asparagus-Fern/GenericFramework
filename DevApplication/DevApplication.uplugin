@@ -63,7 +63,7 @@
       "Enabled": true
     },
     {
-      "Name": "UtilityModule",
+      "Name": "ProcedureModule",
       "Enabled": true
     },
     {
@@ -71,7 +71,11 @@
       "Enabled": true
     },
     {
-      "Name": "MarketplaceUtilityModule",
+      "Name": "UltraDynamicSky",
+      "Enabled": true
+    },
+    {
+      "Name": "ElectraPlayer",
       "Enabled": true
     }
   ],
