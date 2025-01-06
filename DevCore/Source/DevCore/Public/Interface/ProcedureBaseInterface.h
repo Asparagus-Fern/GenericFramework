@@ -25,15 +25,12 @@ public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Procedure Base Interface")
 	void OnCreate();
 	virtual void NativeOnCreate();
-
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Procedure Base Interface")
-	void OnDestroy();
-	virtual void NativeOnDestroy();
-
+	
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Procedure Base Interface")
 	void OnRefresh();
 	virtual void NativeOnRefresh();
 
-public:
-	virtual int32 GetProcedureOrder() { return 0; }
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Procedure Base Interface")
+	void OnDestroy();
+	virtual void NativeOnDestroy();
 };

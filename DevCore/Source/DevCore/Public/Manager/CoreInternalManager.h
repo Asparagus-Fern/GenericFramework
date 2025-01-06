@@ -6,12 +6,10 @@
 #include "Debug/DebugType.h"
 #include "Manager/ManagerInterface.h"
 #include "Interface/WorldInterface.h"
-#include "Procedure/ProcedureInterface.h"
 
 #define BROADCAST_MANAGER_DELEGATE(DelegateName, BPDelegateName, ...) \
 	DelegateName.Broadcast(__VA_ARGS__); \
 	BPDelegateName.Broadcast(__VA_ARGS__);
-
 
 /**
  * 

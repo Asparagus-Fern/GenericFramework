@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "CommonObject.h"
-#include "Procedure/ProcedureBaseInterface.h"
+#include "Interface/ProcedureBaseInterface.h"
 #include "ViewportPanel.generated.h"
 
 class SConstraintCanvas;

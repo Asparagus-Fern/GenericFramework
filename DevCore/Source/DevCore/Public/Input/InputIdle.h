@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
-#include "Procedure/ProcedureBaseInterface.h"
 #include "InputIdle.generated.h"
 
 class UInputManager;

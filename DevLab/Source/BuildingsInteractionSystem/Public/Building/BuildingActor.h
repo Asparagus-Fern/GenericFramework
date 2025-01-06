@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Procedure/ProcedureInterface.h"
+#include "Interface/ProcedureInterface.h"
 #include "BuildingActor.generated.h"
 
 class UFloorBodyComponent;

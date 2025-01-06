@@ -7,7 +7,7 @@
 #include "GameplayTagContainer.h"
 #include "Animation/WidgetAnimationInterface.h"
 #include "Blueprint/UserWidget.h"
-#include "Procedure/ProcedureInterface.h"
+#include "Interface/ProcedureInterface.h"
 #include "UserWidgetBase.generated.h"
 
 class UTemporaryHUD;

@@ -9,6 +9,7 @@
 UScreenWidgetManagerSetting::UScreenWidgetManagerSetting(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
+#if WITH_EDITOR
 	if (const TSubclassOf<UGameHUD> MainHUD = LoadClass<UGameHUD>(nullptr,TEXT("/Script/UMGEditor.WidgetBlueprint'/DevApplication/_Develop/UI/HUD/WBP_HUD_Main.WBP_HUD_Main_C'")))
 	{
 		GameHUDClasses.Add(MainHUD.Get());
@@ -37,4 +38,5 @@ UScreenWidgetManagerSetting::UScreenWidgetManagerSetting(const FObjectInitialize
 			}
 		}
 	}
+#endif
 }

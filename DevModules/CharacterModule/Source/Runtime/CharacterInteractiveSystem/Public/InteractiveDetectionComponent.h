@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "Components/SphereComponent.h"
-#include "Procedure/ProcedureInterface.h"
 #include "InteractiveDetectionComponent.generated.h"
 
 /**

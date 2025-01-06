@@ -1,6 +1,7 @@
 #include "Debug/DebugType.h"
 
 DEFINE_LOG_CATEGORY(DLogDefault);
+DEFINE_LOG_CATEGORY(DLogObject);
 DEFINE_LOG_CATEGORY(DLogManager);
 DEFINE_LOG_CATEGORY(DLogProcedure);
 DEFINE_LOG_CATEGORY(DLogUI);

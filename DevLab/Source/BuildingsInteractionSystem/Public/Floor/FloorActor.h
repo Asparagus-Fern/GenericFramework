@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Interface/FloorBodyInteractionInterface.h"
-#include "Procedure/ProcedureInterface.h"
+#include "Interface/ProcedureInterface.h"
 #include "FloorActor.generated.h"
 
 class ABuildingActor;

@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ProcedureInterface.h"
 #include "Common/CommonObject.h"
+#include "Interface/ProcedureInterface.h"
 #include "ProcedureObject.generated.h"
 
 /**

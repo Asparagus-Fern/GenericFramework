@@ -1,7 +1,6 @@
 #pragma once
 
 #include "NativeGameplayTags.h"
-#include "ProcedureInterface.h"
 #include "ProcedureType.generated.h"
 
 class UProcedureProxy;

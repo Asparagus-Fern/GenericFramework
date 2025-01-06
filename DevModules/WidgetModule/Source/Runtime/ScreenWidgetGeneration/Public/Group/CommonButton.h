@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "CommonButtonBase.h"
 #include "ScreenWidgetType.h"
-#include "Procedure/ProcedureInterface.h"
+#include "Interface/ProcedureInterface.h"
 #include "CommonButton.generated.h"
 
 class UScreenWidgetManager;

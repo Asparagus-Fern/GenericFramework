@@ -6,7 +6,7 @@
 #include "InputAction.h"
 #include "ScreenWidgetType.h"
 #include "Common/CommonObject.h"
-#include "Procedure/ProcedureBaseInterface.h"
+#include "Interface/ProcedureBaseInterface.h"
 #include "ShortcutWidgetHandle.generated.h"
 
 class UShortcutWidgetManager;
