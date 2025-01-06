@@ -37,7 +37,7 @@
     {
       "Name": "DevEdCore",
       "Type": "Editor",
-      "LoadingPhase": "Default"
+      "LoadingPhase": "PreDefault"
     }
   ]
 }

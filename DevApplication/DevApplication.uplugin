@@ -93,7 +93,7 @@
     {
       "Name": "ApplicationDeveloper",
       "Type": "UncookedOnly",
-      "LoadingPhase": "Default"
+      "LoadingPhase": "PostDefault"
     }
   ]
 }
