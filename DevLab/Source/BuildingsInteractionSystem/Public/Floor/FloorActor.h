@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Actor/CommonActor.h"
 #include "Interface/FloorBodyInteractionInterface.h"
 #include "Procedure/ProcedureInterface.h"
 #include "FloorActor.generated.h"
@@ -15,7 +14,7 @@ class UFloorBodyComponent;
  * 
  */
 UCLASS()
-class BUILDINGSINTERACTIONSYSTEM_API AFloorActor : public ACommonActor, public IProcedureInterface, public IFloorBodyInteractionInterface
+class BUILDINGSINTERACTIONSYSTEM_API AFloorActor : public AActor, public IProcedureInterface, public IFloorBodyInteractionInterface
 {
 	GENERATED_BODY()
 

@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Object/TickableObject.h"
+#include "Common/TickableObject.h"
 #include "CameraLensMovement.generated.h"
 
 /**

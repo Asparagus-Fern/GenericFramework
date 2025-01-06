@@ -1,8 +1,8 @@
 ﻿using UnrealBuildTool;
 
-public class ScreenWidgetEdGeneration : ModuleRules
+public class MenuGeneration : ModuleRules
 {
-	public ScreenWidgetEdGeneration(ReadOnlyTargetRules Target) : base(Target)
+	public MenuGeneration(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 
@@ -11,7 +11,6 @@ public class ScreenWidgetEdGeneration : ModuleRules
 			{
 				"Core",
 				"DevCore",
-				"DevEdCore",
 			}
 		);
 
@@ -22,10 +21,8 @@ public class ScreenWidgetEdGeneration : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
-
-				"UnrealEd",
-				"UMG",
-				"UMGEditor",
+				
+				"GameplayTags",
 
 				"ScreenWidgetGeneration"
 			}

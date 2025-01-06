@@ -25,7 +25,7 @@ public:
 public:
 	/* 获取Player当前朝向和指定北方向间的夹角 */
 	UFUNCTION(BlueprintPure)
-	static float GetPlayerPointToNorthAngle(int32 PlayerIndex = 0);
+	static float GetPlayerForwardAngle(int32 PlayerIndex = 0);
 
 	/* 获取高度的格式化文本 */
 	UFUNCTION(BlueprintPure)

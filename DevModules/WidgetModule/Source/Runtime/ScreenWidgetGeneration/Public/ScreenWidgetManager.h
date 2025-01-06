@@ -205,8 +205,6 @@ public:
 	UPROPERTY(BlueprintAssignable, BlueprintCallable)
 	FOnMenuSelectionChanged_BP BPDelegate_OnMenuSelectionChanged;
 
-	// GENERATE_STATIC_DELEGATE_TwoParams(UScreenWidgetManager, OnMenuSelectionChanged, FGameplayTag, InTag, bool, bSelection)
-
 public:
 	/* 当前菜单数据 */
 	UPROPERTY(BlueprintReadOnly, Transient)

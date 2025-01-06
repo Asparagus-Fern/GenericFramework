@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "CommonObject.h"
 #include "Procedure/ProcedureBaseInterface.h"
-#include "GamePanel.generated.h"
+#include "ViewportPanel.generated.h"
 
 class SConstraintCanvas;
 class UCanvasPanel;
@@ -14,7 +14,7 @@ class UCanvasPanel;
  * 
  */
 UCLASS()
-class DEVCORE_API UGamePanel : public UCommonObject, public IProcedureBaseInterface
+class DEVCORE_API UViewportPanel : public UCommonObject, public IProcedureBaseInterface
 {
 	GENERATED_BODY()
 

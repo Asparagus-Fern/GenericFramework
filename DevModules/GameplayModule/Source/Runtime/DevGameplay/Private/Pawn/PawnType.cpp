@@ -5,30 +5,19 @@
 
 bool FPawnLocationLimit::CanMove(const FVector& TargetLocation) const
 {
-	TRange<double> Range;
-
+	if (bLimitLocationX && (TargetLocation.X <= LocationXRange.X || TargetLocation.X >= LocationXRange.Y))
 	{
-		Range = TRange<double>::Exclusive(LocationXRange.X, LocationXRange.Y);
-		if (bLimitLocationX && !Range.Contains(TargetLocation.X))
-		{
-			return false;
-		}
+		return false;
 	}
 
+	if (bLimitLocationY && (TargetLocation.Y <= LocationYRange.X || TargetLocation.Y >= LocationYRange.Y))
 	{
-		Range = TRange<double>::Exclusive(LocationYRange.X, LocationYRange.Y);
-		if (bLimitLocationY && !Range.Contains(TargetLocation.Y))
-		{
-			return false;
-		}
+		return false;
 	}
 
+	if (bLimitLocationZ && (TargetLocation.Z <= LocationZRange.X || TargetLocation.Z >= LocationZRange.Y))
 	{
-		Range = TRange<double>::Exclusive(LocationZRange.X, LocationZRange.Y);
-		if (bLimitLocationZ && !Range.Contains(TargetLocation.Z))
-		{
-			return false;
-		}
+		return false;
 	}
 
 	return true;
@@ -36,30 +25,19 @@ bool FPawnLocationLimit::CanMove(const FVector& TargetLocation) const
 
 bool FPawnRotationLimit::CanTurn(const FRotator& TargetRotation) const
 {
-	TRange<double> Range;
-
+	if (bLimitPitch && (TargetRotation.Pitch <= PitchRange.X || TargetRotation.Pitch >= PitchRange.Y))
 	{
-		Range = TRange<double>::Exclusive(PitchRange.X, PitchRange.Y);
-		if (bLimitPitch && !Range.Contains(TargetRotation.Pitch))
-		{
-			return false;
-		}
+		return false;
 	}
 
+	if (bLimitYaw && (TargetRotation.Yaw <= YawRange.X || TargetRotation.Yaw >= YawRange.Y))
 	{
-		Range = TRange<double>::Exclusive(YawRange.X, YawRange.Y);
-		if (bLimitYaw && !Range.Contains(TargetRotation.Yaw))
-		{
-			return false;
-		}
+		return false;
 	}
 
+	if (bLimitRoll && (TargetRotation.Roll <= RollRange.X || TargetRotation.Roll >= RollRange.Y))
 	{
-		Range = TRange<double>::Exclusive(RollRange.X, RollRange.Y);
-		if (bLimitYaw && !Range.Contains(TargetRotation.Roll))
-		{
-			return false;
-		}
+		return false;
 	}
 
 	return true;
@@ -67,8 +45,7 @@ bool FPawnRotationLimit::CanTurn(const FRotator& TargetRotation) const
 
 bool FSpringArmLimit::CanZoom(float TargetSpringArmLength) const
 {
-	const TRange<double> Range = TRange<double>::Exclusive(SpringArmLengthRange.X, SpringArmLengthRange.Y);
-	if (bLimitSpringArmLength && !Range.Contains(TargetSpringArmLength))
+	if (bLimitSpringArmLength && (TargetSpringArmLength <= SpringArmLengthRange.X || TargetSpringArmLength >= SpringArmLengthRange.Y))
 	{
 		return false;
 	}

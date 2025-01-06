@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Object/CommonObject.h"
+#include "Common/CommonObject.h"
 #include "HandleBase.generated.h"
 
 /**

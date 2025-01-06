@@ -1,7 +1,6 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
-
-#include "ShortcutWidgetManager.h"
+#include "Manager/ShortcutWidgetManager.h"
 
 #include "ScreenWidgetManager.h"
 #include "ScreenWidgetManagerSetting.h"

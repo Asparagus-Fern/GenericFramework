@@ -3,8 +3,8 @@
 
 #include "BPFunctions/BPFunctions_Widget.h"
 
-#include "InteractableWidgetGroupManager.h"
 #include "ScreenWidgetManager.h"
+#include "Manager/InteractableWidgetGroupManager.h"
 #include "Manager/ManagerProxy.h"
 #include "UserWidget/Base/UserWidgetBase.h"
 

@@ -5,8 +5,8 @@
 #include "CoreMinimal.h"
 #include "CoreInternalManager.h"
 #include "ManagerInfo.h"
+#include "Common/CommonObject.h"
 #include "Interface/WorldInterface.h"
-#include "Object/CommonObject.h"
 #include "ManagerProxy.generated.h"
 
 class UManagerInfo;

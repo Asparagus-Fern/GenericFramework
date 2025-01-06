@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "InputAction.h"
 #include "ScreenWidgetType.h"
-#include "Object/CommonObject.h"
+#include "Common/CommonObject.h"
 #include "Procedure/ProcedureBaseInterface.h"
 #include "ShortcutWidgetHandle.generated.h"
 

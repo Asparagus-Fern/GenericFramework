@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "ProcedureType.h"
-#include "Object/CommonObject.h"
+#include "Common/CommonObject.h"
 #include "UObject/Object.h"
 #include "ProcedureProxy.generated.h"
 

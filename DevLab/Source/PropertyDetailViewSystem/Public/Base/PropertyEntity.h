@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "PropertyEditCondition.h"
 #include "PropertyType.h"
-#include "Object/CommonObject.h"
+#include "Common/CommonObject.h"
 #include "PropertyEntity.generated.h"
 
 class UPropertyRegistry;

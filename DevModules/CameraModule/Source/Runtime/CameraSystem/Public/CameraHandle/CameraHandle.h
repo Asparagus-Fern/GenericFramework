@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Common/CommonObject.h"
 #include "Debug/DebugType.h"
-#include "Object/CommonObject.h"
 #include "CameraHandle.generated.h"
 
 class UCameraComponent;

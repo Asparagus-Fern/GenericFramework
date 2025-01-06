@@ -1,7 +1,7 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Object/CommonObject.h"
+#include "Common/CommonObject.h"
 
 UCommonObject::UCommonObject(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)

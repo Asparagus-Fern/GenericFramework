@@ -1,11 +1,11 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Object/GamePanel.h"
+#include "Common/ViewportPanel.h"
 
 #include "Components/CanvasPanel.h"
 
-void UGamePanel::NativeOnCreate()
+void UViewportPanel::NativeOnCreate()
 {
 	IProcedureBaseInterface::NativeOnCreate();
 
@@ -19,12 +19,12 @@ void UGamePanel::NativeOnCreate()
 	HandleAddToViewport();
 }
 
-void UGamePanel::NativeOnRefresh()
+void UViewportPanel::NativeOnRefresh()
 {
 	IProcedureBaseInterface::NativeOnRefresh();
 }
 
-void UGamePanel::NativeOnDestroy()
+void UViewportPanel::NativeOnDestroy()
 {
 	IProcedureBaseInterface::NativeOnDestroy();
 	

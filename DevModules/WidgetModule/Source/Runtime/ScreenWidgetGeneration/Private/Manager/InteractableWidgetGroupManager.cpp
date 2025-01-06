@@ -1,9 +1,7 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
+#include "Manager/InteractableWidgetGroupManager.h"
 
-#include "InteractableWidgetGroupManager.h"
-
-#include "ScreenWidgetManagerSetting.h"
 #include "Group/CommonButton.h"
 #include "Group/CommonButtonGroup.h"
 #include "UserWidget/Base/InteractableUserWidgetBase.h"

@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "PropertyType.h"
-#include "Object/CommonObject.h"
+#include "Common/CommonObject.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "PropertyRegistry.generated.h"
 

@@ -23,10 +23,6 @@
       "Enabled": true
     },
     {
-      "Name": "EventModule",
-      "Enabled": true
-    },
-    {
       "Name": "ActiveNode",
       "Enabled": true
     },
@@ -36,6 +32,10 @@
     },
     {
       "Name": "CharacterModule",
+      "Enabled": true
+    },
+    {
+      "Name": "EventModule",
       "Enabled": true
     },
     {
@@ -51,11 +51,7 @@
       "Enabled": true
     },
     {
-      "Name": "WidgetModule",
-      "Enabled": true
-    },
-    {
-      "Name": "WorldModule",
+      "Name": "ProcedureModule",
       "Enabled": true
     },
     {
@@ -63,7 +59,11 @@
       "Enabled": true
     },
     {
-      "Name": "ProcedureModule",
+      "Name": "WidgetModule",
+      "Enabled": true
+    },
+    {
+      "Name": "WorldModule",
       "Enabled": true
     },
     {

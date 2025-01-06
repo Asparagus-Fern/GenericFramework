@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Object/CommonObject.h"
+#include "Common/CommonObject.h"
 #include "CommonButtonCondition.generated.h"
 
 class UCommonButton;

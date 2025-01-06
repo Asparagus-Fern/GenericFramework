@@ -4,8 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
+#include "Common/ViewportPanel.h"
 #include "Manager/TickableInternalManager.h"
-#include "Object/GamePanel.h"
 #include "WorldWidgetManager.generated.h"
 
 class UWorldWidgetComponent;
@@ -18,7 +18,7 @@ class UWorldWidgetComponent;
  * 
  */
 UCLASS()
-class WORLDWIDGETGENERATION_API UWorldWidgetPanel : public UGamePanel
+class WORLDWIDGETGENERATION_API UWorldWidgetPanel : public UViewportPanel
 {
 	GENERATED_BODY()
 

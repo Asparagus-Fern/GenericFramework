@@ -1,54 +1,59 @@
 ﻿{
-  "FileVersion": 3,
-  "Version": 1,
-  "VersionName": "1.0",
-  "FriendlyName": "WidgetModule",
-  "Description": "",
-  "Category": "Other",
-  "CreatedBy": "Chen",
-  "CreatedByURL": "",
-  "DocsURL": "",
-  "MarketplaceURL": "",
-  "CanContainContent": true,
-  "IsBetaVersion": false,
-  "IsExperimentalVersion": false,
-  "Installed": false,
-  "Plugins": [
-    {
-      "Name": "DevCore",
-      "Enabled": true
-    }
-  ],
-  "Modules": [
-    {
-      "Name": "UMGUtilities",
-      "Type": "Runtime",
-      "LoadingPhase": "Default"
-    },
-    {
-      "Name": "UMGEdUtilities",
-      "Type": "Editor",
-      "LoadingPhase": "PostDefault"
-    },
-    {
-      "Name": "ScreenWidgetGeneration",
-      "Type": "Runtime",
-      "LoadingPhase": "Default"
-    },
-    {
-      "Name": "ScreenWidgetEdGeneration",
-      "Type": "Editor",
-      "LoadingPhase": "PostDefault"
-    },
-    {
-      "Name": "WorldWidgetGeneration",
-      "Type": "Runtime",
-      "LoadingPhase": "Default"
-    },
-    {
-      "Name": "WorldWidgetEdGeneration",
-      "Type": "Editor",
-      "LoadingPhase": "PostDefault"
-    }
-  ]
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "WidgetModule",
+	"Description": "",
+	"Category": "Other",
+	"CreatedBy": "Chen",
+	"CreatedByURL": "",
+	"DocsURL": "",
+	"MarketplaceURL": "",
+	"CanContainContent": true,
+	"IsBetaVersion": false,
+	"IsExperimentalVersion": false,
+	"Installed": false,
+	"Plugins": [
+		{
+			"Name": "DevCore",
+			"Enabled": true
+		}
+	],
+	"Modules": [
+		{
+			"Name": "UMGUtilities",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "UMGEdUtilities",
+			"Type": "Editor",
+			"LoadingPhase": "PostDefault"
+		},
+		{
+			"Name": "ScreenWidgetGeneration",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "ScreenWidgetEdGeneration",
+			"Type": "Editor",
+			"LoadingPhase": "PostDefault"
+		},
+		{
+			"Name": "WorldWidgetGeneration",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "WorldWidgetEdGeneration",
+			"Type": "Editor",
+			"LoadingPhase": "PostDefault"
+		},
+		{
+			"Name": "MenuGeneration",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	]
 }

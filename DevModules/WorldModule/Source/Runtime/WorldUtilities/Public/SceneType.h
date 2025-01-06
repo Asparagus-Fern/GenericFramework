@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Object/CommonObject.h"
+#include "Common/CommonObject.h"
 #include "SceneType.generated.h"
 
 /**

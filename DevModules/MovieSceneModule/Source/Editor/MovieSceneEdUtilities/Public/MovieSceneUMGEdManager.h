@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "EditorSubsystem.h"
 #include "Manager/CoreInternalManager.h"
-#include "Object/GamePanel.h"
+#include "Common/ViewportPanel.h"
 #include "TrackEditor/MovieSceneUMGTrackEditor.h"
 #include "MovieSceneUMGEdManager.generated.h"
 
@@ -16,7 +16,7 @@ class ISequencer;
  * 
  */
 UCLASS(MinimalAPI)
-class UMovieSceneUMGPanel : public UGamePanel
+class UMovieSceneUMGPanel : public UViewportPanel
 {
 	GENERATED_BODY()
 

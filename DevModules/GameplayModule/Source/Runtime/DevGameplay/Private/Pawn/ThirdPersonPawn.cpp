@@ -57,12 +57,27 @@ void AThirdPersonPawn::AddLocation_Implementation(FVector2D InValue)
 	if (Execute_CanMove(this, TargetLocation))
 	{
 		const float PitchRate = FMath::Pow(2, FMath::Sin(UE_DOUBLE_PI / (180.0) * FMath::Abs(Execute_GetRotation(this).Pitch)));
-		const float Height = FMath::Sin(UE_DOUBLE_PI / (180.0) * FMath::Abs(Execute_GetRotation(this).Pitch)) * SpringArmComponent->TargetArmLength;
 		const float MovementRate = FMath::Pow(2, IPawnInputMovementInterface::Execute_GetMovementSpeedRate(this));
 
-		FloatingPawnMovement->MaxSpeed = PitchRate * MovementRate * Height * UE_PI;
-		FloatingPawnMovement->Acceleration = PitchRate * MovementRate * Height * UE_HALF_PI;
-		FloatingPawnMovement->Deceleration = PitchRate * MovementRate * Height * UE_HALF_PI;
+		FloatingPawnMovement->MaxSpeed = PitchRate * MovementRate * UE_PI;
+		FloatingPawnMovement->Acceleration = PitchRate * MovementRate * UE_HALF_PI;
+		FloatingPawnMovement->Deceleration = PitchRate * MovementRate * UE_HALF_PI;
+
+		const float Height = FMath::Sin(UE_DOUBLE_PI / (180.0) * FMath::Abs(Execute_GetRotation(this).Pitch)) * SpringArmComponent->TargetArmLength;
+		if (Height > 0)
+		{
+			FloatingPawnMovement->MaxSpeed *= Height;
+			FloatingPawnMovement->Acceleration *= Height;
+			FloatingPawnMovement->Deceleration *= Height;
+		}
+
+		// DLOG(DLogDefault, Warning, TEXT("PitchRate : %f"), PitchRate)
+		// DLOG(DLogDefault, Warning, TEXT("Height : %f"), Height)
+		// DLOG(DLogDefault, Warning, TEXT("MovementRate : %f"), MovementRate)
+		//
+		// DLOG(DLogDefault, Warning, TEXT("MaxSpeed : %f"), FloatingPawnMovement->MaxSpeed)
+		// DLOG(DLogDefault, Warning, TEXT("Acceleration : %f"), FloatingPawnMovement->Acceleration)
+		// DLOG(DLogDefault, Warning, TEXT("Deceleration : %f"), FloatingPawnMovement->Deceleration)
 
 		const FVector2D Movement = InValue * MovementRate;
 		AddMovementInput(UKismetMathLibrary::GetRightVector(GetActorRotation()), Movement.X);
@@ -72,11 +87,16 @@ void AThirdPersonPawn::AddLocation_Implementation(FVector2D InValue)
 
 void AThirdPersonPawn::AddRotation_Implementation(FVector2D InValue)
 {
-	const FRotator TargetRotation = Execute_GetRotation(this) + FRotator(InValue.Y, InValue.X, 0.f);
+	const float Pitch = InValue.Y * IPawnInputMovementInterface::Execute_GetRotationSpeedRate(this);
+	const float Yaw = InValue.X * IPawnInputMovementInterface::Execute_GetRotationSpeedRate(this);
+	const FRotator TargetRotation = Execute_GetRotation(this) + FRotator(Pitch, Yaw, 0.f);
+
+	// DLOG(DLogDefault, Warning, TEXT("TargetRotation : %s"), *TargetRotation.ToString())
+
 	if (Execute_CanTurn(this, TargetRotation))
 	{
-		AddActorWorldRotation(FRotator(0.f, InValue.X * IPawnInputMovementInterface::Execute_GetRotationSpeedRate(this), 0.f));
-		SpringArmComponent->AddRelativeRotation(FRotator(InValue.Y * IPawnInputMovementInterface::Execute_GetRotationSpeedRate(this), 0.f, 0.f));
+		AddActorWorldRotation(FRotator(0.f, Yaw, 0.f));
+		SpringArmComponent->AddRelativeRotation(FRotator(Pitch, 0.f, 0.f));
 	}
 }
 
