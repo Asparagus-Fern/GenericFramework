@@ -134,7 +134,7 @@ void UDevFrameworkEdSubsystem::RegisterToolBarDeveloperSetting(FToolMenuSection&
 			FDeveloperSettingCommands::Get().OpenDeveloperSetting,
 			FText::GetEmpty(),
 			TAttribute<FText>(),
-			FSlateIcon(FDevCoreStyle::GetStyleSetName(), "Manager.ToolbarButton", "Manager.ToolbarButton.Small")
+			FSlateIcon(FDevCoreStyle::GetStyleSetName(), "Developer.ToolbarButton", "Developer.ToolbarButton.Small")
 		)
 	);
 }

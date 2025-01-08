@@ -9,9 +9,8 @@
 #include "Manager/GlobalManagerSetting.h"
 #include "Manager/ManagerSetting/DeveloperSettingCommands.h"
 
-#define LOCTEXT_NAMESPACE "FDevEdCoreModule"
 
-static const FName ManagerSettingsTabName("ManagerSettings");
+#define LOCTEXT_NAMESPACE "FDevEdCoreModule"
 
 void FDevEdCoreModule::StartupModule()
 {
@@ -19,7 +18,7 @@ void FDevEdCoreModule::StartupModule()
 
 	RegisterCommand();
 
-	FAssetToolsModule::GetModule().Get().RegisterAdvancedAssetCategory("DevFramework", LOCTEXT("DisplayName", "DevFramework"));
+	FAssetToolsModule::GetModule().Get().RegisterAdvancedAssetCategory(DeveloperAssetCategoryName, LOCTEXT("DisplayName", "DevFramework"));
 
 	/* Create Developer Settings */
 	{
@@ -31,7 +30,7 @@ void FDevEdCoreModule::StartupModule()
 			SettingsModule->RegisterViewer("Developer", *this);
 		}
 
-		FGlobalTabmanager::Get()->RegisterNomadTabSpawner(ManagerSettingsTabName, FOnSpawnTab::CreateRaw(this, &FDevEdCoreModule::HandleSpawnSettingsTab))
+		FGlobalTabmanager::Get()->RegisterNomadTabSpawner(DeveloperSettingsTabName, FOnSpawnTab::CreateRaw(this, &FDevEdCoreModule::HandleSpawnSettingsTab))
 			.SetDisplayName(LOCTEXT("ProjectSettingsTabTitle", "Developer Settings"))
 			.SetMenuType(ETabSpawnerMenuType::Hidden)
 			.SetIcon(FSlateIcon(FAppStyle::GetAppStyleSetName(), "ProjectSettings.TabIcon"));
@@ -55,7 +54,7 @@ void FDevEdCoreModule::ShutdownModule()
 
 void FDevEdCoreModule::ShowSettings(const FName& CategoryName, const FName& SectionName)
 {
-	FGlobalTabmanager::Get()->TryInvokeTab(ManagerSettingsTabName);
+	FGlobalTabmanager::Get()->TryInvokeTab(DeveloperSettingsTabName);
 	const ISettingsEditorModelPtr SettingsEditorModel = SettingsEditorModelPtr.Pin();
 
 	if (SettingsEditorModel.IsValid())

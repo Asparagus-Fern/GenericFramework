@@ -73,10 +73,6 @@
     {
       "Name": "UltraDynamicSky",
       "Enabled": true
-    },
-    {
-      "Name": "ElectraPlayer",
-      "Enabled": true
     }
   ],
   "Modules": [

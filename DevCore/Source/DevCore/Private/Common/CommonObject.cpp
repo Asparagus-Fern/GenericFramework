@@ -20,27 +20,24 @@ UWorld* UCommonObject::GetWorld() const
 	return nullptr;
 }
 
+void UCommonObject::PostLoad()
+{
+	UObject::PostLoad();
+	Initialize();
+}
+
 void UCommonObject::BeginDestroy()
 {
-	// NativeDeInitialize();
-	// OnDeInitialized();
-	// DLOG(DLogObject, Log, TEXT("On DeInitialize : %s"), *GetName());
-
+	DeInitialize();
 	UObject::BeginDestroy();
 }
 
-void UCommonObject::OnInitialized_Implementation()
+void UCommonObject::Initialize()
 {
+	DLOG(DLogObject, Log, TEXT("On Initialized : %s"), *GetName());
 }
 
-void UCommonObject::NativeInitialize()
+void UCommonObject::DeInitialize()
 {
-}
-
-void UCommonObject::OnDeInitialized_Implementation()
-{
-}
-
-void UCommonObject::NativeDeInitialize()
-{
+	DLOG(DLogObject, Log, TEXT("On DeInitialized : %s"), *GetName());
 }

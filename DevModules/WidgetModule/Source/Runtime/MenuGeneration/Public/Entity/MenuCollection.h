@@ -19,8 +19,8 @@ class MENUGENERATION_API UMenuCollection : public UCommonObject
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	UDataTable* MenuTagTable = nullptr;
-	
+	TObjectPtr<UDataTable> MenuTagTable = nullptr;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	FGameplayTag OwnerTag = FGameplayTag::EmptyTag;
 
@@ -34,7 +34,7 @@ public:
 	bool ContainerMenu(FGameplayTag InMenuTag);
 	bool ContainerMenu(const UMenuEntity* InMenuEntity);
 
-private:
-	UPROPERTY()
+protected:
+	UPROPERTY(BlueprintReadOnly)
 	FGameplayTagContainer GameplayTagContainer;
 };

@@ -18,30 +18,10 @@ class DEVCORE_API UCommonObject : public UObject
 public:
 	UCommonObject(const FObjectInitializer& ObjectInitializer);
 	virtual UWorld* GetWorld() const override;
+	virtual void PostLoad() override;
 	virtual void BeginDestroy() override;
 
-public:
-	UFUNCTION(BlueprintNativeEvent)
-	void OnInitialized();
-	virtual void NativeInitialize();
-
-	UFUNCTION(BlueprintNativeEvent)
-	void OnDeInitialized();
-	virtual void NativeDeInitialize();
+protected:
+	virtual void Initialize();
+	virtual void DeInitialize();
 };
-
-// template <class T>
-// FUNCTION_NON_NULL_RETURN_START
-// T* NewCommonObject(UObject* Outer = (UObject*)GetTransientPackage())
-// FUNCTION_NON_NULL_RETURN_END
-// {
-// 	T* Object = NewObject<T>(Outer);
-// 	if (UCommonObject* CommonObject = Cast<UCommonObject>(Object))
-// 	{
-// 		CommonObject->NativeInitialize();
-// 		CommonObject->OnInitialized();
-// 		DLOG(DLogObject, Log, TEXT("On Initialize : %s"), *CommonObject->GetName());
-// 	}
-//
-// 	return Object;
-// }

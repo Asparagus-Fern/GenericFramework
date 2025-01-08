@@ -53,8 +53,8 @@ void FDevCoreStyle::FStyle::Initialize()
 
 	SetParentStyleName("CoreStyle");
 
-	Set("Manager.ToolbarButton", new IMAGE_BRUSH_SVG("Icons/Manager", Icon20x20));
-	Set("Manager.ToolbarButton.Small", new IMAGE_BRUSH_SVG("Icons/Manager", Icon16x16));
+	Set("Developer.ToolbarButton", new IMAGE_BRUSH_SVG("Icons/Manager", Icon20x20));
+	Set("Developer.ToolbarButton.Small", new IMAGE_BRUSH_SVG("Icons/Manager", Icon16x16));
 }
 
 

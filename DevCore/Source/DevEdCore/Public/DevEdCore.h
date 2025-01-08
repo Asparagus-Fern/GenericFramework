@@ -8,6 +8,9 @@
 class ISettingsModule;
 class ISettingsEditorModel;
 
+static const FName DeveloperAssetCategoryName("Developer");
+static const FName DeveloperSettingsTabName("DeveloperSettings");
+
 class FDevEdCoreModule : public IModuleInterface, public ISettingsViewer
 {
 	/* IModuleInterface */

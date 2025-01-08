@@ -25,10 +25,6 @@
     {
       "Name": "EventModule",
       "Enabled": true
-    },
-    {
-      "Name": "ElectraPlayer",
-      "Enabled": true
     }
   ],
   "Modules": [

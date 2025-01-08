@@ -79,6 +79,7 @@ void UMenuCollection::GenerateMenu(UDataTable* InMenuTagTable)
 		 GameplayTagContainer.AddTag(MenuTag);
 
 		 UMenuEntity* NewMenu = NewObject<UMenuEntity>(this);
+		 NewMenu->MenuTag = MenuTag;
 		 NewMenu->MenuMainName = Value.MenuMainName;
 		 NewMenu->MenuSubName = Value.MenuSubName;
 		 NewMenu->MenuToolTip = Value.MenuToolTip;
