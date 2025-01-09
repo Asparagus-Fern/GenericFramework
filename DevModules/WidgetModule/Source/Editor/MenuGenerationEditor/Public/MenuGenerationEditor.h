@@ -16,10 +16,15 @@ private:
 	void RegisterBlueprintEditorTab(FWorkflowAllowedTabSet& TabFactories, FName InModeName, TSharedPtr<FBlueprintEditor> BlueprintEditor);
 	void RegisterBlueprintEditorLayout(FLayoutExtender& Extender);
 	void OnAssetEditorOpened(UObject* InObject);
-	
-	FDelegateHandle BlueprintEditorTabSpawnerHandle, BlueprintEditorLayoutExtensionHandle, AssetEditorOpenedHandle;
+	void OnAssetEditorClosed(UObject* InObject, EAssetEditorCloseReason InCloseReason);
+
+	TSharedPtr<SDockTab> MenuCollectionHierarchyTab;
+	FDelegateHandle BlueprintEditorTabSpawnerHandle, BlueprintEditorLayoutExtensionHandle, AssetEditorOpenedHandle, AssetEditorClosedHandle;
 };
 
+/**
+ * 
+ */
 struct FMenuCollectionEditorSummoner : public FWorkflowTabFactory
 {
 	FMenuCollectionEditorSummoner(TSharedPtr<FBlueprintEditor> BlueprintEditor);

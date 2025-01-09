@@ -16,6 +16,9 @@ void FMenuGenerationEditorModule::StartupModule()
 
 	UAssetEditorSubsystem* AssetEditorSubsystem = GEditor->GetEditorSubsystem<UAssetEditorSubsystem>();
 	AssetEditorOpenedHandle = AssetEditorSubsystem->OnAssetEditorOpened().AddRaw(this, &FMenuGenerationEditorModule::OnAssetEditorOpened);
+	AssetEditorClosedHandle = AssetEditorSubsystem->OnAssetEditorRequestClose().AddRaw(this, &FMenuGenerationEditorModule::OnAssetEditorClosed);
+
+	
 }
 
 void FMenuGenerationEditorModule::ShutdownModule()
@@ -33,11 +36,14 @@ void FMenuGenerationEditorModule::RegisterBlueprintEditorTab(FWorkflowAllowedTab
 	{
 		TabFactories.RegisterFactory(MakeShared<FMenuCollectionEditorSummoner>(BlueprintEditor));
 	}
+	else
+	{
+	}
 }
 
 void FMenuGenerationEditorModule::RegisterBlueprintEditorLayout(FLayoutExtender& Extender)
 {
-	Extender.ExtendLayout(FTabId("ContentBrowserTab1"), ELayoutExtensionPosition::Before, FTabManager::FTab(MenuCollectionHierarchyTabID, ETabState::OpenedTab));
+	Extender.ExtendLayout(FTabId("MyBlueprint"), ELayoutExtensionPosition::Below, FTabManager::FTab(MenuCollectionHierarchyTabID, ETabState::OpenedTab));
 }
 
 void FMenuGenerationEditorModule::OnAssetEditorOpened(UObject* InObject)
@@ -49,9 +55,29 @@ void FMenuGenerationEditorModule::OnAssetEditorOpened(UObject* InObject)
 			const TSharedPtr<FBlueprintEditor> BlueprintEditor = UBPFunctions_BlueprintEditor::GetBlueprintEditor(Blueprint);
 			if (BlueprintEditor.IsValid())
 			{
-				if (!BlueprintEditor->GetTabManager()->FindExistingLiveTab(MenuCollectionHierarchyTabID).IsValid())
+				const TSharedPtr<SDockTab> HierarchyTab = BlueprintEditor->GetTabManager()->FindExistingLiveTab(MenuCollectionHierarchyTabID);
+				if (!HierarchyTab.IsValid())
 				{
 					BlueprintEditor->GetTabManager()->TryInvokeTab(MenuCollectionHierarchyTabID);
+				}
+			}
+		}
+	}
+}
+
+void FMenuGenerationEditorModule::OnAssetEditorClosed(UObject* InObject, EAssetEditorCloseReason InCloseReason)
+{
+	if (const UBlueprint* Blueprint = Cast<UBlueprint>(InObject))
+	{
+		if (Blueprint->GeneratedClass->IsChildOf(UMenuCollection::StaticClass()))
+		{
+			const TSharedPtr<FBlueprintEditor> BlueprintEditor = UBPFunctions_BlueprintEditor::GetBlueprintEditor(Blueprint);
+			if (BlueprintEditor.IsValid())
+			{
+				const TSharedPtr<SDockTab> HierarchyTab = BlueprintEditor->GetTabManager()->FindExistingLiveTab(MenuCollectionHierarchyTabID);
+				if (HierarchyTab.IsValid())
+				{
+					HierarchyTab->RequestCloseTab();
 				}
 			}
 		}

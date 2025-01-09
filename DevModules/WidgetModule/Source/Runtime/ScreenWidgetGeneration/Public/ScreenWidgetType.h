@@ -18,7 +18,6 @@ class UMenuContainer;
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Menu);
 
 /**
- * todo:替换成模板类
  * 一个在类和实例间切换的Widget容器
  */
 USTRUCT(BlueprintType)

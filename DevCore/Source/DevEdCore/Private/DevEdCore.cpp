@@ -9,7 +9,6 @@
 #include "Manager/GlobalManagerSetting.h"
 #include "Manager/ManagerSetting/DeveloperSettingCommands.h"
 
-
 #define LOCTEXT_NAMESPACE "FDevEdCoreModule"
 
 void FDevEdCoreModule::StartupModule()
@@ -17,8 +16,6 @@ void FDevEdCoreModule::StartupModule()
 	IModuleInterface::StartupModule();
 
 	RegisterCommand();
-
-	FAssetToolsModule::GetModule().Get().RegisterAdvancedAssetCategory(DeveloperAssetCategoryName, LOCTEXT("DisplayName", "DevFramework"));
 
 	/* Create Developer Settings */
 	{

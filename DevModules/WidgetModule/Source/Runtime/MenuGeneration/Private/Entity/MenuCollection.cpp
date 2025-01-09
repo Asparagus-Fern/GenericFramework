@@ -9,6 +9,24 @@
 #include "Debug/DebugType.h"
 #include "Entity/MenuEntity.h"
 
+void UMenuCollection::ReGenerateMenu()
+{
+	ReGenerateMenu(MenuTagTable);
+}
+
+void UMenuCollection::ReGenerateMenu(UDataTable* InMenuTagTable)
+{
+	Modify();
+
+	ClearupMenu();
+	GenerateMenu(InMenuTagTable);
+}
+
+void UMenuCollection::GenerateMenu()
+{
+	GenerateMenu(MenuTagTable);
+}
+
 void UMenuCollection::GenerateMenu(UDataTable* InMenuTagTable)
 {
 	if (!IsValid(MenuTagTable))
@@ -17,7 +35,7 @@ void UMenuCollection::GenerateMenu(UDataTable* InMenuTagTable)
 		return;
 	}
 
-	if (!MenuTagTable->RowStruct->IsChildOf(FMenuTagTableRow::StaticStruct()))
+	if (!MenuTagTable->RowStruct->IsChildOf(FGameplayTagTableRow::StaticStruct()))
 	{
 		DNOTIFY(TEXT("MenuTagTable is not a GameplayTag Table"))
 		return;
@@ -31,13 +49,13 @@ void UMenuCollection::GenerateMenu(UDataTable* InMenuTagTable)
 	GameplayTagContainer.AddTag(RootMenuTag);
 
 	/* Get The Owner Tag */
-	MenuTagTable->ForeachRow<FMenuTagTableRow>
-	("", [this, RootMenuTag](FName Key, const FMenuTagTableRow& Value)
+	MenuTagTable->ForeachRow<FGameplayTagTableRow>
+	("", [this, RootMenuTag](FName Key, const FGameplayTagTableRow& Value)
 	 {
-		 const FGameplayTag MenuTag = FGameplayTag::RequestGameplayTag(Value.MenuTag);
+		 const FGameplayTag MenuTag = FGameplayTag::RequestGameplayTag(Value.Tag);
 		 if (UBPFunctions_GameplayTag::GetDirectGameplayTagParent(MenuTag) == RootMenuTag)
 		 {
-			 OwnerTag = FGameplayTag::EmptyTag;
+			 OwnerTag = MenuTag;
 		 }
 	 }
 	);
@@ -49,10 +67,10 @@ void UMenuCollection::GenerateMenu(UDataTable* InMenuTagTable)
 	}
 
 	/* Fill Menu Tag In GameplayTagContainer */
-	MenuTagTable->ForeachRow<FMenuTagTableRow>
-	("", [this, RootMenuTag](FName Key, const FMenuTagTableRow& Value)
+	MenuTagTable->ForeachRow<FGameplayTagTableRow>
+	("", [this, RootMenuTag](FName Key, const FGameplayTagTableRow& Value)
 	 {
-		 const FGameplayTag MenuTag = FGameplayTag::RequestGameplayTag(Value.MenuTag);
+		 const FGameplayTag MenuTag = FGameplayTag::RequestGameplayTag(Value.Tag);
 
 		 /* Skip The Tag Not Under The RootMenuTag */
 		 if (!MenuTag.GetGameplayTagParents().HasTag(RootMenuTag))
@@ -80,11 +98,14 @@ void UMenuCollection::GenerateMenu(UDataTable* InMenuTagTable)
 
 		 UMenuEntity* NewMenu = NewObject<UMenuEntity>(this);
 		 NewMenu->MenuTag = MenuTag;
-		 NewMenu->MenuMainName = Value.MenuMainName;
-		 NewMenu->MenuSubName = Value.MenuSubName;
-		 NewMenu->MenuToolTip = Value.MenuToolTip;
-		 NewMenu->MenuIcon = Value.MenuIcon;
+		 NewMenu->MenuMainName = FText::FromString(Value.DevComment);
 
+		 if (MenuTag == OwnerTag)
+		 {
+			 NewMenu->bIsRoot = true;
+		 }
+
+		 NewMenu->Initialize();
 		 MenuEntities.Add(NewMenu);
 	 }
 	);
@@ -133,4 +154,55 @@ bool UMenuCollection::ContainerMenu(const UMenuEntity* InMenuEntity)
 		}
 	}
 	return false;
+}
+
+UMenuEntity* UMenuCollection::GetRootMenuEntity()
+{
+	return GetMenuEntity(OwnerTag);
+}
+
+UMenuEntity* UMenuCollection::GetMenuEntity(FGameplayTag InMenuTag)
+{
+	if (!InMenuTag.IsValid())
+	{
+		DLOG(DLogUI, Error, TEXT("InMenuTag Is NULL"))
+		return nullptr;
+	}
+
+	for (const auto& MenuEntity : MenuEntities)
+	{
+		if (MenuEntity->MenuTag == InMenuTag)
+		{
+			return MenuEntity;
+		}
+	}
+	return nullptr;
+}
+
+TArray<UMenuEntity*> UMenuCollection::GetMenuEntities(const TArray<FGameplayTag>& InMenuTags)
+{
+	TArray<UMenuEntity*> Result;
+	for (const auto& MenuEntity : MenuEntities)
+	{
+		if (InMenuTags.Contains(MenuEntity->MenuTag))
+		{
+			Result.Add(MenuEntity);
+		}
+	}
+	return Result;
+}
+
+UMenuEntity* UMenuCollection::GetParentMenuEntity(FGameplayTag InMenuTag)
+{
+	return GetMenuEntity(UBPFunctions_GameplayTag::GetDirectGameplayTagParent(InMenuTag));
+}
+
+TArray<UMenuEntity*> UMenuCollection::GetChildMenuEntities(FGameplayTag InMenuTag)
+{
+	return GetMenuEntities(UBPFunctions_GameplayTag::GetGameplayTagChildren(InMenuTag).GetGameplayTagArray());
+}
+
+TArray<UMenuEntity*> UMenuCollection::GetDirectChildMenuEntities(FGameplayTag InMenuTag)
+{
+	return GetMenuEntities(UBPFunctions_GameplayTag::GetDirectGameplayTagChildren(InMenuTag).GetGameplayTagArray());
 }

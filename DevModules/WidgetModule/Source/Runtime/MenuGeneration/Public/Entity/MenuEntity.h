@@ -19,8 +19,12 @@ class MENUGENERATION_API UMenuEntity : public UCommonObject
 {
 	GENERATED_BODY()
 
+	friend UMenuCollection;
+
 public:
-	/* Init */
+	UMenuEntity(const FObjectInitializer& ObjectInitializer);
+	virtual void Initialize() override;
+	virtual void DeInitialize() override;
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="UI.Menu"))
@@ -88,6 +92,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced, meta=(EditConditionHides, EditCondition = "!bUseStyleClass"))
 	UMenuStyle* Style = nullptr;
 
+public:
+	bool IsRootMenu() const { return bIsRoot; }
+
 private:
+	uint8 bIsRoot : 1;
+	uint8 bIsGroup : 1;
 	TWeakPtr<UMenuCollection> Collection;
 };

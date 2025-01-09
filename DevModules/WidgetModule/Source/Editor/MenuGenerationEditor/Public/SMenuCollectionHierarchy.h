@@ -4,12 +4,17 @@
 
 #include "CoreMinimal.h"
 #include "BlueprintEditor.h"
+#include "GameplayTagContainer.h"
+#include "SMenuCollectionHierarchyRow.h"
 #include "Widgets/SCompoundWidget.h"
+
+class UMenuEntity;
+class UMenuCollection;
 
 /**
  * 
  */
-class MENUGENERATIONEDITOR_API SMenuCollectionHierarchy : public SCompoundWidget
+class SMenuCollectionHierarchy : public SCompoundWidget
 {
 public:
 	SLATE_BEGIN_ARGS(SMenuCollectionHierarchy)
@@ -18,6 +23,26 @@ public:
 
 	SLATE_END_ARGS()
 
-	/** Constructs this widget with InArgs */
 	void Construct(const FArguments& InArgs, TWeakPtr<FBlueprintEditor> InBlueprintEditor);
+	void RefreshHierarchy();
+
+protected:
+	TSharedRef<ITableRow> OnGenerateHierarchyRow(FMenuCollectionHierarchyRowPtr Row, const TSharedRef<STableViewBase>& OwnerTable);
+	void OnGetHierarchyRowChildren(FMenuCollectionHierarchyRowPtr Row, TArray<FMenuCollectionHierarchyRowPtr>& OutChildren);
+	void OnSelectionChanged(FMenuCollectionHierarchyRowPtr InItem, ESelectInfo::Type SelectInfo);
+
+private:
+	TSharedPtr<SOverlay> ContentOverlay = nullptr;
+	TWeakPtr<FBlueprintEditor> BlueprintEditor = nullptr;
+	TObjectPtr<UBlueprint> Blueprint = nullptr;
+
+	TArray<FMenuCollectionHierarchyRowPtr> TreeViewRootObjects;
+	TMap<FGameplayTag, FMenuCollectionHierarchyRowPtr> TreeViewObjects;
+	TSharedPtr<STreeView<FMenuCollectionHierarchyRowPtr>> HierarchyTreeView;
+
+	FReply HandleRefreshHierarchy();
+	FReply HandleGenerateHierarchy();
+
+	UMenuCollection* GetMenuCollectionCDO();
+	void MakeErrorHierarchy() const;
 };

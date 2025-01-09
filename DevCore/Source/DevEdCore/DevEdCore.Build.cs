@@ -37,6 +37,7 @@ public class DevEdCore : ModuleRules
 				"GraphEditor",
 				"BlueprintGraph",
 				"SubobjectEditor",
+				"AssetDefinition"
 			}
 		);
 	}

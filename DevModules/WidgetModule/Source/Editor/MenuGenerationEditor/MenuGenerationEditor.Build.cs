@@ -11,9 +11,7 @@ public class MenuGenerationEditor : ModuleRules
 			{
 				"Core",
 
-				"AssetDefinition",
-				"EngineAssetDefinitions",
-
+				"DevCore",
 				"DevEdCore",
 				"MenuGeneration",
 			}
@@ -28,7 +26,10 @@ public class MenuGenerationEditor : ModuleRules
 				"SlateCore",
 
 				"UnrealEd",
-				"Kismet"
+				"Kismet",
+				"InputCore",
+				"AssetDefinition",
+				"GameplayTags",
 			}
 		);
 	}
