@@ -18,6 +18,7 @@ void UMediaHandle::OpenMovieScene_Implementation()
 	Super::OpenMovieScene_Implementation();
 
 	MediaPlayer->OpenPlaylist(MediaPlaylist);
+	Execute_Pause(this);
 
 	MediaPlayer->OnMediaOpened.AddDynamic(this, &UMediaHandle::OnMediaOpened);
 	// MediaPlayer->OnEndReached.AddDynamic(this, &UMediaHandle::OnEndReached);
@@ -32,18 +33,21 @@ void UMediaHandle::CloseMovieScene_Implementation()
 
 	MediaPlayer->OnMediaOpened.RemoveAll(this);
 	MediaPlayer->OnPlaybackSuspended.RemoveAll(this);
-	// MediaPlayer->OnEndReached.RemoveAll(this);
 	MediaPlayer->OnSeekCompleted.RemoveAll(this);
 	MediaPlayer->OnMediaClosed.RemoveAll(this);
 
 	MediaPlayer->Close();
 }
 
+void UMediaHandle::Open_Implementation()
+{
+	Super::Open_Implementation();
+	MediaPlayer->OpenPlaylist(MediaPlaylist);
+}
+
 void UMediaHandle::Play_Implementation()
 {
 	Super::Play_Implementation();
-	MediaPlayer->OpenPlaylist(MediaPlaylist);
-
 	MediaPlayer->Play();
 }
 
@@ -80,6 +84,17 @@ void UMediaHandle::SetMovieSceneLoopSetting_Implementation(FMovieSceneLoopSettin
 			MediaPlayer->SetLooping(InMovieSceneLoopSetting.bEnableLoop);
 		}
 	}
+}
+
+void UMediaHandle::OnOpenMovieScenePanelFinish(UUserWidgetBase* InWidget)
+{
+	Super::OnOpenMovieScenePanelFinish(InWidget);
+	Execute_Play(this);
+}
+
+void UMediaHandle::OnCloseMovieScenePanelFinish(UUserWidgetBase* InWidget)
+{
+	Super::OnCloseMovieScenePanelFinish(InWidget);
 }
 
 FTimespan UMediaHandle::GetMovieSceneCurrentTime_Implementation()

@@ -50,21 +50,6 @@ void UMovieSceneHandleBase::SetMovieSceneSetting_Implementation(FMovieSceneSetti
 	MovieSceneSetting = InMovieSceneSetting;
 }
 
-void UMovieSceneHandleBase::RefreshMovieScenePanel_Implementation(EMovieSceneState InMovieSceneState, TSubclassOf<UMovieScenePanel> InMovieScenePanelClass)
-{
-	if (InMovieSceneState != MovieSceneSetting.MovieSceneState)
-	{
-		if (InMovieSceneState == EMovieSceneState::Play)
-		{
-			OpenMovieScenePanel(InMovieScenePanelClass);
-		}
-		else if (InMovieSceneState == EMovieSceneState::Stop)
-		{
-			CloseMovieScenePanel();
-		}
-	}
-}
-
 void UMovieSceneHandleBase::OpenMovieScenePanel(TSubclassOf<UMovieScenePanel> InMovieScenePanel)
 {
 	if (!InMovieScenePanel)
@@ -74,31 +59,24 @@ void UMovieSceneHandleBase::OpenMovieScenePanel(TSubclassOf<UMovieScenePanel> In
 
 	if (UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
 	{
-		if (!IsValid(MovieScenePanel))
-		{
-			MovieScenePanel = ScreenWidgetManager->OpenUserWidget<UMovieScenePanel>(InMovieScenePanel);
-		}
-		else
-		{
-			if (MovieScenePanel->GetClass() != InMovieScenePanel)
-			{
-				ScreenWidgetManager->CloseUserWidget(MovieScenePanel);
-				MovieScenePanel = ScreenWidgetManager->OpenUserWidget<UMovieScenePanel>(InMovieScenePanel);
-			}
-			else
-			{
-				ScreenWidgetManager->OpenUserWidget(MovieScenePanel);
-			}
-		}
+		MovieScenePanel = ScreenWidgetManager->OpenUserWidget<UMovieScenePanel>(InMovieScenePanel, FOnWidgetActiveStateChanged::CreateUObject(this, &UMovieSceneHandleBase::OnOpenMovieScenePanelFinish));
 	}
+}
+
+void UMovieSceneHandleBase::OnOpenMovieScenePanelFinish(UUserWidgetBase* InWidget)
+{
 }
 
 void UMovieSceneHandleBase::CloseMovieScenePanel()
 {
 	if (UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
 	{
-		ScreenWidgetManager->CloseUserWidget(MovieScenePanel);
+		ScreenWidgetManager->CloseUserWidget(MovieScenePanel, FOnWidgetActiveStateChanged::CreateUObject(this, &UMovieSceneHandleBase::OnCloseMovieScenePanelFinish));
 	}
+}
+
+void UMovieSceneHandleBase::OnCloseMovieScenePanelFinish(UUserWidgetBase* InWidget)
+{
 }
 
 void UMovieSceneHandleBase::SetMovieSceneState_Implementation(EMovieSceneState InMovieSceneState)
@@ -121,7 +99,7 @@ void UMovieSceneHandleBase::OnMovieSceneOpenFinish_Implementation()
 {
 	IMovieSceneInterface::OnMovieSceneOpenFinish_Implementation();
 
-	Execute_RefreshMovieScenePanel(this, MovieSceneSetting.MovieSceneState, MovieSceneSetting.MovieScenePanel);
+	OpenMovieScenePanel(MovieSceneSetting.MovieScenePanel);
 	OnOpenFinish.Broadcast();
 }
 
@@ -142,7 +120,7 @@ void UMovieSceneHandleBase::OnMovieSceneCloseFinish_Implementation()
 {
 	IMovieSceneInterface::OnMovieSceneCloseFinish_Implementation();
 
-	Execute_RefreshMovieScenePanel(this, MovieSceneSetting.MovieSceneState, MovieSceneSetting.MovieScenePanel);
+	CloseMovieScenePanel();
 	OnCloseFinish.Broadcast();
 }
 

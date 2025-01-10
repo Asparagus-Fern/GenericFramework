@@ -85,6 +85,7 @@ UMediaHandle* UMediaManager::RegisterMedia(UMediaPlayer* InMediaPlayer, UMediaPl
 	{
 		MediaHandle = GetMediaHandle(InMediaPlayer);
 		MediaHandle->MediaPlaylist = InMediaPlayList;
+		IMovieSceneInterface::Execute_Open(MediaHandle);
 	}
 	else
 	{

@@ -8,6 +8,7 @@
 
 #include "MovieSceneHandleBase.generated.h"
 
+class UUserWidgetBase;
 /**
  * 
  */
@@ -29,9 +30,10 @@ public:
 
 	virtual void SetMovieSceneSetting_Implementation(FMovieSceneSetting InMovieSceneSetting) override;
 
-	virtual void RefreshMovieScenePanel_Implementation(EMovieSceneState InMovieSceneState, TSubclassOf<UMovieScenePanel> InMovieScenePanelClass) override;
 	virtual void OpenMovieScenePanel(TSubclassOf<UMovieScenePanel> InMovieScenePanel) override;
+	virtual void OnOpenMovieScenePanelFinish(UUserWidgetBase* InWidget) override;
 	virtual void CloseMovieScenePanel() override;
+	virtual void OnCloseMovieScenePanelFinish(UUserWidgetBase* InWidget) override;
 
 	virtual void SetMovieSceneState_Implementation(EMovieSceneState InMovieSceneState) override;
 
@@ -52,7 +54,7 @@ public:
 	FMovieSceneDelegate OnPlayFinish;
 	FMovieSceneDelegate OnSeekFinish;
 	FMovieSceneDelegate OnCloseFinish;
-	
+
 private:
 	uint8 bEnableLoopFragmentSeek : 1;
 	uint8 bIsSeeking : 1;

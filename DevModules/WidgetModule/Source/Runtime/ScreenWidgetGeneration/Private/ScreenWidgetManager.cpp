@@ -495,15 +495,7 @@ bool UScreenWidgetManager::OpenUserWidget(UUserWidgetBase* InWidget, FOnWidgetAc
 
 		if (IsValid(RemoveWidget))
 		{
-			InactiveWidget
-			(
-				RemoveWidget,
-				FOnWidgetActiveStateChanged::CreateLambda([this, &InWidget, &OnFinish](UUserWidgetBase*)
-					{
-						ActiveWidget(InWidget, OnFinish);
-					}
-				)
-			);
+			InactiveWidget(RemoveWidget, FOnWidgetActiveStateChanged::CreateUObject(this, &UScreenWidgetManager::OnInactiveWidgetFinish, InWidget, OnFinish));
 		}
 		else
 		{
@@ -624,9 +616,16 @@ void UScreenWidgetManager::MoveUserWidget(FGameplayTag OriginSlotTag, FGameplayT
 
 void UScreenWidgetManager::ActiveWidget(UUserWidgetBase* InWidget, const FOnWidgetActiveStateChanged OnFinish)
 {
-	if (!IsValid(InWidget) || ActivedWidgets.Contains(InWidget))
+	if (!IsValid(InWidget))
 	{
 		DLOG(DLogUI, Error, TEXT("InWidget Is NULL"))
+		OnFinish.ExecuteIfBound(InWidget);
+		return;
+	}
+
+	if (ActivedWidgets.Contains(InWidget))
+	{
+		DLOG(DLogUI, Warning, TEXT("InWidget Is Already Actived"))
 		OnFinish.ExecuteIfBound(InWidget);
 		return;
 	}
@@ -642,29 +641,14 @@ void UScreenWidgetManager::ActiveWidget(UUserWidgetBase* InWidget, const FOnWidg
 	ActivedWidgets.Add(InWidget);
 	OnWidgetOpen.Broadcast(InWidget);
 
-	auto OnActiveStateChangedFinish = [this, &InWidget, &OnFinish]()
-	{
-		if (const FWidgetAnimationTimerHandle* Found = WidgetAnimationTimerHandles.FindByKey(InWidget))
-		{
-			Found->OnFinish.ExecuteIfBound(Found->Widget);
-			WidgetAnimationTimerHandles.Remove(*Found);
-		}
-		else
-		{
-			OnFinish.ExecuteIfBound(InWidget);
-		}
-
-		InWidget->NativeOnActived();
-	};
-
-	const FTimerHandle TimerHandle = PlayWidgetAnimation(InWidget, true, FTimerDelegate::CreateLambda(OnActiveStateChangedFinish));
+	const FTimerHandle TimerHandle = PlayWidgetAnimation(InWidget, true, FTimerDelegate::CreateUObject(this, &UScreenWidgetManager::OnActiveAnimationPlayFinish, InWidget, OnFinish));
 	if (TimerHandle.IsValid())
 	{
 		WidgetAnimationTimerHandles.Add(FWidgetAnimationTimerHandle(TimerHandle, InWidget, OnFinish));
 		return;
 	}
 
-	OnActiveStateChangedFinish();
+	OnActiveAnimationPlayFinish(InWidget, OnFinish);
 }
 
 void UScreenWidgetManager::ActiveWidget(UUserWidgetBase* InWidget, const bool bIsInstant, const FOnWidgetActiveStateChanged OnFinish)
@@ -697,45 +681,14 @@ void UScreenWidgetManager::InactiveWidget(UUserWidgetBase* InWidget, FOnWidgetAc
 
 	InWidget->NativeOnInactived();
 
-	auto OnActiveStateChangedFinish = [this, &InWidget, &OnFinish, &MarkAsGarbage]()
-	{
-		RemoveTemporaryGameHUD(InWidget);
-
-		if (InWidget->IsA<UGameHUD>())
-		{
-			RemoveGameHUD(Cast<UGameHUD>(InWidget));
-		}
-
-		if (const FWidgetAnimationTimerHandle* Found = WidgetAnimationTimerHandles.FindByKey(InWidget))
-		{
-			Found->OnFinish.ExecuteIfBound(Found->Widget);
-			WidgetAnimationTimerHandles.Remove(*Found);
-		}
-		else
-		{
-			OnFinish.ExecuteIfBound(InWidget);
-		}
-
-		InWidget->RemoveFromParent();
-		ActivedWidgets.Remove(InWidget);
-		OnWidgetClose.Broadcast(InWidget);
-
-		InWidget->NativeOnDestroy();
-
-		if (MarkAsGarbage)
-		{
-			InWidget->MarkAsGarbage();
-		}
-	};
-
-	const FTimerHandle TimerHandle = PlayWidgetAnimation(InWidget, false, FTimerDelegate::CreateLambda(OnActiveStateChangedFinish));
+	const FTimerHandle TimerHandle = PlayWidgetAnimation(InWidget, false, FTimerDelegate::CreateUObject(this, &UScreenWidgetManager::OnInactiveAnimationPlayFinish, InWidget, OnFinish));
 	if (TimerHandle.IsValid())
 	{
 		WidgetAnimationTimerHandles.Add(FWidgetAnimationTimerHandle(TimerHandle, InWidget, OnFinish));
 		return;
 	}
 
-	OnActiveStateChangedFinish();
+	OnInactiveAnimationPlayFinish(InWidget, OnFinish);
 }
 
 void UScreenWidgetManager::InactiveWidget(UUserWidgetBase* InWidget, const bool bIsInstant, const FOnWidgetActiveStateChanged OnFinish, const bool MarkAsGarbage)
@@ -762,6 +715,11 @@ void UScreenWidgetManager::InactiveWidget(UUserWidgetBase* InWidget, const bool 
 	}
 }
 
+void UScreenWidgetManager::OnInactiveWidgetFinish(UUserWidgetBase* OldWidget, UUserWidgetBase* NewWidget, FOnWidgetActiveStateChanged OnFinish)
+{
+	ActiveWidget(NewWidget, OnFinish);
+}
+
 FTimerHandle UScreenWidgetManager::PlayWidgetAnimation(UUserWidgetBase* InWidget, const bool InIsActive, FTimerDelegate const& InDelegate)
 {
 	FTimerHandle TimerHandle;
@@ -777,6 +735,50 @@ FTimerHandle UScreenWidgetManager::PlayWidgetAnimation(UUserWidgetBase* InWidget
 	}
 
 	return TimerHandle;
+}
+
+void UScreenWidgetManager::OnActiveAnimationPlayFinish(UUserWidgetBase* InWidget, FOnWidgetActiveStateChanged OnFinish)
+{
+	TArray<FWidgetAnimationTimerHandle> TempHandles = WidgetAnimationTimerHandles;
+	if (const FWidgetAnimationTimerHandle* Found = TempHandles.FindByKey(InWidget))
+	{
+		Found->OnFinish.ExecuteIfBound(Found->Widget);
+		WidgetAnimationTimerHandles.Remove(*Found);
+	}
+	else
+	{
+		OnFinish.ExecuteIfBound(InWidget);
+	}
+
+	InWidget->NativeOnActived();
+}
+
+void UScreenWidgetManager::OnInactiveAnimationPlayFinish(UUserWidgetBase* InWidget, FOnWidgetActiveStateChanged OnFinish)
+{
+	RemoveTemporaryGameHUD(InWidget);
+
+	if (InWidget->IsA<UGameHUD>())
+	{
+		RemoveGameHUD(Cast<UGameHUD>(InWidget));
+	}
+
+	TArray<FWidgetAnimationTimerHandle> TempHandles = WidgetAnimationTimerHandles;
+	if (const FWidgetAnimationTimerHandle* Found = TempHandles.FindByKey(InWidget))
+	{
+		Found->OnFinish.ExecuteIfBound(Found->Widget);
+		WidgetAnimationTimerHandles.Remove(*Found);
+	}
+	else
+	{
+		OnFinish.ExecuteIfBound(InWidget);
+	}
+
+	InWidget->RemoveFromParent();
+	ActivedWidgets.Remove(InWidget);
+	OnWidgetClose.Broadcast(InWidget);
+
+	InWidget->NativeOnDestroy();
+	InWidget->MarkAsGarbage();
 }
 
 /* ==================== Game Menu ==================== */

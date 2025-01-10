@@ -6,6 +6,7 @@
 #include "MovieSceneType.h"
 #include "MovieSceneInterface.generated.h"
 
+class UUserWidgetBase;
 class UMovieScenePanel;
 
 UINTERFACE(MinimalAPI)
@@ -32,6 +33,9 @@ public:
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Movie Scene Interface | Base")
 	void SetMovieSceneSetting(FMovieSceneSetting InMovieSceneSetting);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Movie Scene Interface | Base")
+	void Open();
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Movie Scene Interface | Base")
 	void Play();
@@ -67,11 +71,9 @@ public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Movie Scene Interface | Delegate")
 	void OnMovieSceneCloseFinish();
 
-public:
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Movie Scene Interface | UI")
-	void RefreshMovieScenePanel(EMovieSceneState InMovieSceneState, TSubclassOf<UMovieScenePanel> InMovieScenePanelClass);
-
 protected:
 	virtual void OpenMovieScenePanel(TSubclassOf<UMovieScenePanel> InMovieScenePanel) { return; }
+	virtual void OnOpenMovieScenePanelFinish(UUserWidgetBase* InWidget) { return; }
 	virtual void CloseMovieScenePanel() { return; }
+	virtual void OnCloseMovieScenePanelFinish(UUserWidgetBase* InWidget) { return; }
 };

@@ -28,7 +28,8 @@ public:
 public:
 	virtual void OpenMovieScene_Implementation() override;
 	virtual void CloseMovieScene_Implementation() override;
-	
+
+	virtual void Open_Implementation() override;
 	virtual void Play_Implementation() override;
 	virtual void Pause_Implementation() override;
 	virtual void Stop_Implementation() override;
@@ -36,6 +37,9 @@ public:
 
 	virtual void SetMovieSceneLoopSetting_Implementation(FMovieSceneLoopSetting InMovieSceneLoopSetting) override;
 
+	virtual void OnOpenMovieScenePanelFinish(UUserWidgetBase* InWidget) override;
+	virtual void OnCloseMovieScenePanelFinish(UUserWidgetBase* InWidget) override;
+	
 	/* UMovieSceneHandleBase */
 public:
 	virtual FTimespan GetMovieSceneCurrentTime_Implementation() override;

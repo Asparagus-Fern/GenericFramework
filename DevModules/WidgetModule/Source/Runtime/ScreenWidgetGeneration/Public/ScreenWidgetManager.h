@@ -182,8 +182,11 @@ protected:
 	virtual void ActiveWidget(UUserWidgetBase* InWidget, bool bIsInstant, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged());
 	virtual void InactiveWidget(UUserWidgetBase* InWidget, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged(), bool MarkAsGarbage = true);
 	virtual void InactiveWidget(UUserWidgetBase* InWidget, bool bIsInstant, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged(), bool MarkAsGarbage = true);
+	void OnInactiveWidgetFinish(UUserWidgetBase* OldWidget, UUserWidgetBase* NewWidget, FOnWidgetActiveStateChanged OnFinish);
 
 	virtual FTimerHandle PlayWidgetAnimation(UUserWidgetBase* InWidget, bool InIsActive, FTimerDelegate const& InDelegate);
+	void OnActiveAnimationPlayFinish(UUserWidgetBase* InWidget, FOnWidgetActiveStateChanged OnFinish);
+	void OnInactiveAnimationPlayFinish(UUserWidgetBase* InWidget, FOnWidgetActiveStateChanged OnFinish);
 
 public:
 	/* 当前显示在屏幕上的所有UI */
