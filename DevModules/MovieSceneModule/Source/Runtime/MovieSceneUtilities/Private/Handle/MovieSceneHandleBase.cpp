@@ -43,7 +43,7 @@ void UMovieSceneHandleBase::CloseMovieScene_Implementation()
 
 void UMovieSceneHandleBase::SetMovieSceneSetting_Implementation(FMovieSceneSetting InMovieSceneSetting)
 {
-	Execute_RefreshMovieScenePanel(this, InMovieSceneSetting.MovieSceneState, InMovieSceneSetting.MovieScenePanel);
+	// Execute_RefreshMovieScenePanel(this, InMovieSceneSetting.MovieSceneState, InMovieSceneSetting.MovieScenePanel);
 	Execute_SetMovieSceneLoopSetting(this, InMovieSceneSetting.MovieSceneLoopSetting);
 
 	Execute_SetMovieSceneState(this, InMovieSceneSetting.MovieSceneState);
@@ -120,6 +120,8 @@ void UMovieSceneHandleBase::SetMovieSceneState_Implementation(EMovieSceneState I
 void UMovieSceneHandleBase::OnMovieSceneOpenFinish_Implementation()
 {
 	IMovieSceneInterface::OnMovieSceneOpenFinish_Implementation();
+
+	Execute_RefreshMovieScenePanel(this, MovieSceneSetting.MovieSceneState, MovieSceneSetting.MovieScenePanel);
 	OnOpenFinish.Broadcast();
 }
 
@@ -139,6 +141,8 @@ void UMovieSceneHandleBase::OnMovieSceneSeekFinish_Implementation()
 void UMovieSceneHandleBase::OnMovieSceneCloseFinish_Implementation()
 {
 	IMovieSceneInterface::OnMovieSceneCloseFinish_Implementation();
+
+	Execute_RefreshMovieScenePanel(this, MovieSceneSetting.MovieSceneState, MovieSceneSetting.MovieScenePanel);
 	OnCloseFinish.Broadcast();
 }
 

@@ -8,6 +8,14 @@
 #include "BPFunctions/BPFunctions_GameplayTag.h"
 #include "Debug/DebugType.h"
 #include "Entity/MenuEntity.h"
+#include "Entity/MenuGroupEntity.h"
+
+UMenuCollection::UMenuCollection(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
+{
+	MenuClass = UMenuEntity::StaticClass();
+	MenuGroupClass = UMenuGroupEntity::StaticClass();
+}
 
 void UMenuCollection::ReGenerateMenu()
 {
@@ -38,6 +46,12 @@ void UMenuCollection::GenerateMenu(UDataTable* InMenuTagTable)
 	if (!MenuTagTable->RowStruct->IsChildOf(FGameplayTagTableRow::StaticStruct()))
 	{
 		DNOTIFY(TEXT("MenuTagTable is not a GameplayTag Table"))
+		return;
+	}
+
+	if (!MenuClass || !MenuGroupClass)
+	{
+		DNOTIFY(TEXT("MenuClass/MenuGroupClass is NULL"))
 		return;
 	}
 
@@ -96,14 +110,19 @@ void UMenuCollection::GenerateMenu(UDataTable* InMenuTagTable)
 		 /* Add In GameplayTagContainer And Make MenuEntity */
 		 GameplayTagContainer.AddTag(MenuTag);
 
-		 UMenuEntity* NewMenu = NewObject<UMenuEntity>(this);
+		 UMenuEntity* NewMenu = nullptr;
+
+		 if (UBPFunctions_GameplayTag::GetDirectGameplayTagChildren(MenuTag).IsEmpty())
+		 {
+			 NewMenu = NewObject<UMenuEntity>(this, MenuClass);
+		 }
+		 else
+		 {
+			 NewMenu = NewObject<UMenuGroupEntity>(this, MenuGroupClass);
+		 }
+
 		 NewMenu->MenuTag = MenuTag;
 		 NewMenu->MenuMainName = FText::FromString(Value.DevComment);
-
-		 if (MenuTag == OwnerTag)
-		 {
-			 NewMenu->bIsRoot = true;
-		 }
 
 		 NewMenu->Initialize();
 		 MenuEntities.Add(NewMenu);

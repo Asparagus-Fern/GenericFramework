@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
+#include "MenuType.h"
 #include "Common/CommonObject.h"
 #include "MenuEntity.generated.h"
 
@@ -18,8 +19,6 @@ UCLASS()
 class MENUGENERATION_API UMenuEntity : public UCommonObject
 {
 	GENERATED_BODY()
-
-	friend UMenuCollection;
 
 public:
 	UMenuEntity(const FObjectInitializer& ObjectInitializer);
@@ -71,17 +70,6 @@ public:
 	bool bDefaultSelected = false;
 
 	UPROPERTY()
-	bool bUseContainerClass = true;
-
-	/* 菜单容器类 */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(EditConditionHides, EditCondition = "bUseContainerClass"))
-	TSubclassOf<UMenuContainer> ContainerClass = nullptr;
-
-	/* 菜单容器 */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced, meta=(EditConditionHides, EditCondition = "!bUseContainerClass"))
-	UMenuContainer* Container = nullptr;
-
-	UPROPERTY()
 	bool bUseStyleClass = true;
 
 	/* 菜单样式类 */
@@ -95,7 +83,7 @@ public:
 public:
 	bool IsRootMenu() const { return bIsRoot; }
 
-private:
+protected:
 	uint8 bIsRoot : 1;
 	uint8 bIsGroup : 1;
 	TWeakPtr<UMenuCollection> Collection;

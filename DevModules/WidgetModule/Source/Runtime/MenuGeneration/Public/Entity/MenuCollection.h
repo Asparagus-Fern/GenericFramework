@@ -18,8 +18,17 @@ class MENUGENERATION_API UMenuCollection : public UCommonObject
 	GENERATED_BODY()
 
 public:
+	UMenuCollection(const FObjectInitializer& ObjectInitializer);
+
+public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TObjectPtr<UDataTable> MenuTagTable = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TSubclassOf<UMenuEntity> MenuClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TSubclassOf<UMenuEntity> MenuGroupClass;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	FGameplayTag OwnerTag = FGameplayTag::EmptyTag;

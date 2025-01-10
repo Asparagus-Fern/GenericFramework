@@ -3,6 +3,8 @@
 
 #include "Entity/MenuEntity.h"
 
+#include "BPFunctions/BPFunctions_GameplayTag.h"
+
 UMenuEntity::UMenuEntity(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
@@ -13,6 +15,12 @@ UMenuEntity::UMenuEntity(const FObjectInitializer& ObjectInitializer)
 void UMenuEntity::Initialize()
 {
 	Super::Initialize();
+
+	const FGameplayTag RootMenuTag = FGameplayTag::RequestGameplayTag("UI.Menu");
+	if (UBPFunctions_GameplayTag::GetDirectGameplayTagParent(MenuTag) == RootMenuTag)
+	{
+		bIsRoot = true;
+	}
 }
 
 void UMenuEntity::DeInitialize()
