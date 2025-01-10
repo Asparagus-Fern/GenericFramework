@@ -106,7 +106,7 @@ void UMenuCollection::GenerateMenu(UDataTable* InMenuTagTable)
 			 DLOG(DLogUI, Warning, TEXT("MenuTag : %s Is Already Generated"), *MenuTag.ToString())
 			 return;
 		 }
-
+		
 		 /* Add In GameplayTagContainer And Make MenuEntity */
 		 GameplayTagContainer.AddTag(MenuTag);
 

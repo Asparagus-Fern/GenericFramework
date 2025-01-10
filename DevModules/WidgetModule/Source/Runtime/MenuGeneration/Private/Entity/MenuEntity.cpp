@@ -27,3 +27,39 @@ void UMenuEntity::DeInitialize()
 {
 	Super::DeInitialize();
 }
+
+FString UMenuEntity::GetEventName() const
+{
+	FString Result = "Event";
+	for (auto& Split : SplitMenuTag())
+	{
+		Result += ("_" + Split);
+	}
+	return Result;
+}
+
+TArray<FString> UMenuEntity::SplitMenuTag() const
+{
+	TArray<FString> Results;
+
+	TArray<FString> SplitWithPoint;
+	FString SplitString = MenuTag.ToString();
+	while (SplitString.Contains("."))
+	{
+		FString Split;
+		SplitString.Split(".", &Split, &SplitString);
+		SplitWithPoint.Add(Split);
+	}
+
+	for (auto& Split : SplitWithPoint)
+	{
+		if (Split.Contains("_"))
+		{
+			FString Result;
+			Split.Split("_", nullptr, &Result);
+			Results.Add(Result);
+		}
+	}
+
+	return Results;
+}

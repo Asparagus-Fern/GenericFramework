@@ -29,8 +29,9 @@ public:
 protected:
 	TSharedRef<ITableRow> OnGenerateHierarchyRow(FMenuCollectionHierarchyRowPtr Row, const TSharedRef<STableViewBase>& OwnerTable);
 	void OnGetHierarchyRowChildren(FMenuCollectionHierarchyRowPtr Row, TArray<FMenuCollectionHierarchyRowPtr>& OutChildren);
-	void OnSelectionChanged(FMenuCollectionHierarchyRowPtr InItem, ESelectInfo::Type SelectInfo);
-
+	void OnItemSelectionChanged(FMenuCollectionHierarchyRowPtr InItem, ESelectInfo::Type SelectInfo);
+	void OnItemDoubleClicked(FMenuCollectionHierarchyRowPtr InItem);
+	
 private:
 	TSharedPtr<SOverlay> ContentOverlay = nullptr;
 	TWeakPtr<FBlueprintEditor> BlueprintEditor = nullptr;

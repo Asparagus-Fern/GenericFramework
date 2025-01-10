@@ -88,7 +88,8 @@ void SMenuCollectionHierarchy::RefreshHierarchy()
 					.TreeItemsSource(&TreeViewRootObjects)
 					.OnGenerateRow(this, &SMenuCollectionHierarchy::OnGenerateHierarchyRow)
 					.OnGetChildren(this, &SMenuCollectionHierarchy::OnGetHierarchyRowChildren)
-					.OnSelectionChanged(this, &SMenuCollectionHierarchy::OnSelectionChanged)
+					.OnSelectionChanged(this, &SMenuCollectionHierarchy::OnItemSelectionChanged)
+					.OnMouseButtonDoubleClick(this, &SMenuCollectionHierarchy::OnItemDoubleClicked)
 				];
 
 			for (auto& TreeViewObject : TreeViewObjects)
@@ -122,8 +123,19 @@ void SMenuCollectionHierarchy::OnGetHierarchyRowChildren(FMenuCollectionHierarch
 	}
 }
 
-void SMenuCollectionHierarchy::OnSelectionChanged(FMenuCollectionHierarchyRowPtr InItem, ESelectInfo::Type SelectInfo)
+void SMenuCollectionHierarchy::OnItemSelectionChanged(FMenuCollectionHierarchyRowPtr InItem, ESelectInfo::Type SelectInfo)
 {
+	if (BlueprintEditor.Pin() && InItem.IsValid())
+	{
+		BlueprintEditor.Pin()->GetInspector()->GetPropertyView()->SetObject(InItem->GetMenuEntity());
+	}
+}
+
+void SMenuCollectionHierarchy::OnItemDoubleClicked(FMenuCollectionHierarchyRowPtr InItem)
+{
+	if (BlueprintEditor.Pin() && InItem.IsValid())
+	{
+	}
 }
 
 FReply SMenuCollectionHierarchy::HandleRefreshHierarchy()

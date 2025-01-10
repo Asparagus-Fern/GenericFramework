@@ -39,4 +39,5 @@ public:
 
 private:
 	FMenuCollectionHierarchyRowPtr MenuCollectionHierarchyRowPtr;
+	FText GetHierarchyRowName() const;
 };

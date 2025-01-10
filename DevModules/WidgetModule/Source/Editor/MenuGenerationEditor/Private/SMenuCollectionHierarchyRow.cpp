@@ -4,6 +4,7 @@
 #include "SMenuCollectionHierarchyRow.h"
 
 #include "SlateOptMacros.h"
+#include "SMenuCollectionHierarchy.h"
 #include "Entity/MenuEntity.h"
 
 FMenuCollectionHierarchyRow::FMenuCollectionHierarchyRow(TObjectPtr<UMenuEntity> InMenuEntity)
@@ -27,9 +28,18 @@ void SMenuCollectionHierarchyRow::Construct(const FArguments& InArgs, const FMen
 		ChildSlot
 		[
 			SNew(STextBlock)
-			.Text(FText::FromString(MenuCollectionHierarchyRowPtr->GetMenuEntity()->MenuTag.ToString()))
+			.Text(this, &SMenuCollectionHierarchyRow::GetHierarchyRowName)
 		];
 	}
+}
+
+FText SMenuCollectionHierarchyRow::GetHierarchyRowName() const
+{
+	if (MenuCollectionHierarchyRowPtr.IsValid())
+	{
+		return FText::FromString(MenuCollectionHierarchyRowPtr->GetMenuEntity()->MenuTag.ToString() + "(" + MenuCollectionHierarchyRowPtr->GetMenuEntity()->MenuMainName.ToString() + ")");
+	}
+	return FText::FromString("Error Menu Entity");
 }
 
 END_SLATE_FUNCTION_BUILD_OPTIMIZATION
