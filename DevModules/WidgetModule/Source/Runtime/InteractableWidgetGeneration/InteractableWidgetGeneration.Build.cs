@@ -1,8 +1,8 @@
 ﻿using UnrealBuildTool;
 
-public class MenuGeneration : ModuleRules
+public class InteractableWidgetGeneration : ModuleRules
 {
-	public MenuGeneration(ReadOnlyTargetRules Target) : base(Target)
+	public InteractableWidgetGeneration(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 
@@ -10,8 +10,9 @@ public class MenuGeneration : ModuleRules
 			new string[]
 			{
 				"Core",
+
 				"DevCore",
-				"DevSlateCore"
+				"ScreenWidgetGeneration"
 			}
 		);
 
@@ -21,11 +22,7 @@ public class MenuGeneration : ModuleRules
 				"CoreUObject",
 				"Engine",
 				"Slate",
-				"SlateCore",
-
-				"GameplayTags",
-
-				"ScreenWidgetGeneration"
+				"SlateCore"
 			}
 		);
 	}

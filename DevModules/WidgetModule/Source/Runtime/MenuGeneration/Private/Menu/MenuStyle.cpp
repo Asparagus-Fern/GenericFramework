@@ -1,7 +1,7 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "UserWidget/Menu/MenuStyle.h"
+#include "Menu/MenuStyle.h"
 
 #include "Event/CommonButtonEvent.h"
 #include "UserWidget/Base/UserWidgetBase.h"

@@ -1,11 +1,11 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "UserWidget/Menu/MenuContainer.h"
+#include "Menu/MenuContainer.h"
 
 #include "ScreenWidgetManager.h"
 #include "Group/CommonButtonGroup.h"
-#include "UserWidget/Menu/MenuStyle.h"
+#include "Menu/MenuStyle.h"
 
 UMenuContainer::UMenuContainer(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)

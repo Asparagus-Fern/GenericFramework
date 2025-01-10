@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "CommonButtonBase.h"
 #include "ScreenWidgetType.h"
-#include "UserWidgetBase.h"
+#include "UserWidget/Base/UserWidgetBase.h"
 #include "InteractableUserWidgetBase.generated.h"
 
 class UScreenWidgetManager;
@@ -15,7 +15,7 @@ class UProcedureProxy;
  * 
  */
 UCLASS(Abstract)
-class SCREENWIDGETGENERATION_API UInteractableUserWidgetBase : public UUserWidgetBase
+class INTERACTABLEWIDGETGENERATION_API UInteractableUserWidgetBase : public UUserWidgetBase
 {
 	GENERATED_BODY()
 

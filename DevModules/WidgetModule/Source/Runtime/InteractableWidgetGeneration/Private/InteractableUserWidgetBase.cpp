@@ -1,7 +1,7 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "UserWidget/Base/InteractableUserWidgetBase.h"
+#include "InteractableUserWidgetBase.h"
 
 #include "ScreenWidgetManager.h"
 #include "Animation/WidgetAnimation.h"

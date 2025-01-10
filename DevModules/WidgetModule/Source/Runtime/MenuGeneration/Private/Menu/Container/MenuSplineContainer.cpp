@@ -1,10 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "UserWidget/Menu/Container/MenuSplineContainer.h"
+#include "Menu/Container/MenuSplineContainer.h"
 
 #include "BPFunctions/BPFunctions_Slate.h"
-#include "UserWidget/Menu/MenuStyle.h"
+#include "Menu/MenuStyle.h"
 #include "UWidget/Spline2D.h"
 #include "UWidget/Spline2DSlot.h"
 

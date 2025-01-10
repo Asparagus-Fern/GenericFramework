@@ -127,26 +127,7 @@ protected:
 	/* 移除该Widget的临时HUD，如果有其他Widget正在使用该临时HUD，将不被移除 */
 	void RemoveTemporaryGameHUD(UUserWidgetBase* InWidget);
 
-	/* UGameplayTagSlot */
-public:
-	DECLARE_EVENT_OneParam(UScreenWidgetManager, FSlotDelegate, UGameplayTagSlot*);
 
-	static FSlotDelegate OnSlotRegister;
-	static FSlotDelegate OnSlotUnRegister;
-	static FScreenWidgetDelegate OnSlslotClearup;
-
-public:
-	/* 当前视口所有以注册的插槽 */
-	UPROPERTY(BlueprintReadOnly, Transient)
-	TArray<TObjectPtr<UGameplayTagSlot>> Slots;
-
-public:
-	void RegisterSlot(UGameplayTagSlot* InSlot);
-	void UnRegisterSlot(UGameplayTagSlot* InSlot);
-	void ClearupSlots();
-
-	UGameplayTagSlot* GetSlot(FGameplayTag InSlotTag) const;
-	UUserWidgetBase* GetSlotWidget(FGameplayTag InSlotTag);
 
 	/* User Widget Base */
 public:

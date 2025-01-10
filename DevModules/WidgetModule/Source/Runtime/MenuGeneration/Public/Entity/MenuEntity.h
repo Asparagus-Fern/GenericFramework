@@ -82,7 +82,6 @@ public:
 
 public:
 	bool IsRootMenu() const { return bIsRoot; }
-	FString GetEventName() const;
 
 protected:
 	uint8 bIsRoot : 1;
@@ -90,5 +89,6 @@ protected:
 	TWeakPtr<UMenuCollection> Collection;
 
 private:
+	FString GetEventName() const;
 	TArray<FString> SplitMenuTag() const;
 };

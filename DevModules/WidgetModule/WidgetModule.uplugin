@@ -35,14 +35,19 @@
       "LoadingPhase": "PostDefault"
     },
     {
-      "Name": "ScreenWidgetGeneration",
+      "Name": "GameHUDModule",
       "Type": "Runtime",
       "LoadingPhase": "Default"
     },
     {
-      "Name": "ScreenWidgetEdGeneration",
-      "Type": "Editor",
-      "LoadingPhase": "PostDefault"
+      "Name": "WidgetGeneration",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
+    },
+    {
+      "Name": "InteractableWidgetGeneration",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
     },
     {
       "Name": "WorldWidgetGeneration",
@@ -63,6 +68,16 @@
       "Name": "MenuGenerationEditor",
       "Type": "Editor",
       "LoadingPhase": "PostEngineInit"
+    },
+    {
+      "Name": "ScreenWidgetGeneration",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
+    },
+    {
+      "Name": "ScreenWidgetEdGeneration",
+      "Type": "Editor",
+      "LoadingPhase": "PostDefault"
     }
   ]
 }

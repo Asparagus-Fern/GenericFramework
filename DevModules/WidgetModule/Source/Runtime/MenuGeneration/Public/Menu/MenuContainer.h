@@ -14,7 +14,7 @@ class UCommonButtonGroupBase;
  * 
  */
 UCLASS()
-class SCREENWIDGETGENERATION_API UMenuContainer : public UUserWidgetBase
+class MENUGENERATION_API UMenuContainer : public UUserWidgetBase
 {
 	GENERATED_UCLASS_BODY()
 

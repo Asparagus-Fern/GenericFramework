@@ -785,19 +785,19 @@ void UScreenWidgetManager::OnInactiveAnimationPlayFinish(UUserWidgetBase* InWidg
 
 void UScreenWidgetManager::SwitchGameMenu(UGameMenuSetting* InGameMenuSetting)
 {
-	if (GameMenu == InGameMenuSetting)
+	/*if (GameMenu == InGameMenuSetting)
 	{
 		DLOG(DLogUI, Warning, TEXT("Can not Switch The Same Game Menu Setting"))
 		return;
 	}
 
-	/* 销毁菜单 */
+	/* 销毁菜单 #1#
 	if (IsValid(GameMenu))
 	{
 		TArray<FMenuGenerateInfo> TempMenuGenerateInfos = MenuGenerateInfos;
 		if (TempMenuGenerateInfos.IsValidIndex(0))
 		{
-			/* 当存在选中菜单时，退出所有的选中菜单再进行销毁 */
+			/* 当存在选中菜单时，退出所有的选中菜单再进行销毁 #1#
 			if (IsValid(TempMenuGenerateInfos[0].ActivedMenuStyle))
 			{
 				DeselectMenu(TempMenuGenerateInfos[0].ActivedMenuStyle->GetMenuTag());
@@ -808,21 +808,21 @@ void UScreenWidgetManager::SwitchGameMenu(UGameMenuSetting* InGameMenuSetting)
 			}
 		}
 
-		/* 不存在选中菜单时，直接进行销毁 */
+		/* 不存在选中菜单时，直接进行销毁 #1#
 		DestroyMenu(GameMenu->GetRootMenuTag());
 	}
 
-	/* 生成新的菜单 */
+	/* 生成新的菜单 #1#
 	GameMenu = InGameMenuSetting;
 	if (IsValid(GameMenu))
 	{
 		GenerateMenu(GameMenu->GetRootMenuTag());
-	}
+	}*/
 }
 
 void UScreenWidgetManager::SelectMenu(const FGameplayTag InMenuTag)
 {
-	FMenuContainerInfo MenuContainerInfo;
+	/*FMenuContainerInfo MenuContainerInfo;
 
 	if (GameMenu->GetMenuContainerInfo(InMenuTag, MenuContainerInfo))
 	{
@@ -842,7 +842,7 @@ void UScreenWidgetManager::SelectMenu(const FGameplayTag InMenuTag)
 				}
 			}
 		}
-		/* 父级还未创建，递归创建父级，然后再选中自己 */
+		/* 父级还未创建，递归创建父级，然后再选中自己 #1#
 		else
 		{
 			SelectedMenuCache.Add(InMenuTag);
@@ -870,12 +870,12 @@ void UScreenWidgetManager::SelectMenu(const FGameplayTag InMenuTag)
 				SelectMenu(LastMenuTag);
 			}
 		}
-	}
+	}*/
 }
 
 void UScreenWidgetManager::DeselectMenu(const FGameplayTag InMenuTag)
 {
-	FMenuContainerInfo MenuContainerInfo;
+	/*FMenuContainerInfo MenuContainerInfo;
 	GameMenu->GetMenuContainerInfo(InMenuTag, MenuContainerInfo);
 
 	if (FMenuGenerateInfo* MenuGenerateInfo = MenuGenerateInfos.FindByKey(MenuContainerInfo))
@@ -892,12 +892,12 @@ void UScreenWidgetManager::DeselectMenu(const FGameplayTag InMenuTag)
 				MenuStyle->ActiveCommonButton->SetSelectedInternal(false);
 			}
 		}
-	}
+	}*/
 }
 
 void UScreenWidgetManager::HandleSelectMenuRecursive(FGameplayTag MenuTag, bool IsSelected)
 {
-	if (!SelectedMenuCache.IsEmpty())
+	/*if (!SelectedMenuCache.IsEmpty())
 	{
 		SelectedMenuCache.Remove(MenuTag);
 
@@ -911,36 +911,36 @@ void UScreenWidgetManager::HandleSelectMenuRecursive(FGameplayTag MenuTag, bool 
 	{
 		OnMenuSelectionChanged.Remove(SelectMenuRecursiveHandle);
 		SelectMenuRecursiveHandle.Reset();
-	}
+	}*/
 }
 
 TArray<UMenuStyle*> UScreenWidgetManager::GetMenuStyles()
 {
 	TArray<UMenuStyle*> MenuStyles;
 
-	for (auto& MenuGenerateInfo : MenuGenerateInfos)
+	/*for (auto& MenuGenerateInfo : MenuGenerateInfos)
 	{
 		MenuStyles.Append(MenuGenerateInfo.MenuStyles);
-	}
+	}*/
 
 	return MenuStyles;
 }
 
 void UScreenWidgetManager::GenerateMenu(const FGameplayTag InMenuTag)
 {
-	if (InMenuTag.IsValid())
+	/*if (InMenuTag.IsValid())
 	{
 		GenerateMenu(GameMenu->GetDirectChildMenuTags(InMenuTag));
 	}
 	else
 	{
 		DLOG(DLogUI, Error, TEXT("Fail To Generate Menu"))
-	}
+	}*/
 }
 
 void UScreenWidgetManager::GenerateMenu(TArray<FGameplayTag> InMenuTags)
 {
-	/* 筛选有效的MenuInfo */
+	/*/* 筛选有效的MenuInfo #1#
 	TArray<FMenuInfo> ValidMenuInfos;
 	for (const auto& InMenuTag : InMenuTags)
 	{
@@ -952,24 +952,24 @@ void UScreenWidgetManager::GenerateMenu(TArray<FGameplayTag> InMenuTags)
 		}
 	}
 
-	/* 参与构建菜单的容器 */
+	/* 参与构建菜单的容器 #1#
 	TArray<UMenuContainer*> MenuContainers;
 
-	/* todo: CommonButtonGroup必须要有一个Widget才可以切换状态，是否可以分离开，没有样式类也可以对按钮进行切换 */
+	/* todo: CommonButtonGroup必须要有一个Widget才可以切换状态，是否可以分离开，没有样式类也可以对按钮进行切换 #1#
 
-	/* 构建菜单 */
+	/* 构建菜单 #1#
 	for (auto& MenuInfo : ValidMenuInfos)
 	{
 		FMenuContainerInfo MenuContainerInfo;
 		GameMenu->GetMenuContainerInfo(MenuInfo.MenuTag, MenuContainerInfo);
 
-		/* 查找MenuGenerateInfo是否存在 */
+		/* 查找MenuGenerateInfo是否存在 #1#
 		FMenuGenerateInfo* FoundMenuGenerateInfo = MenuGenerateInfos.FindByKey(MenuContainerInfo);
 
-		/* 不存在则创建新的MenuGenerateInfo */
+		/* 不存在则创建新的MenuGenerateInfo #1#
 		if (!FoundMenuGenerateInfo)
 		{
-			/* 创建菜单容器 */
+			/* 创建菜单容器 #1#
 			UMenuContainer* MenuContainer = nullptr;
 
 			if (MenuContainerInfo.bUseContainerClass && MenuContainerInfo.ContainerClass)
@@ -990,13 +990,13 @@ void UScreenWidgetManager::GenerateMenu(TArray<FGameplayTag> InMenuTags)
 			}
 		}
 
-		/* 再次查找 */
+		/* 再次查找 #1#
 		FoundMenuGenerateInfo = MenuGenerateInfos.FindByKey(MenuContainerInfo);
 		if (FoundMenuGenerateInfo && ActivedWidgets.Contains(FoundMenuGenerateInfo->MenuContainer))
 		{
 			MenuContainers.Add(FoundMenuGenerateInfo->MenuContainer);
 
-			/* 创建菜单样式 */
+			/* 创建菜单样式 #1#
 			UMenuStyle* MenuStyle = nullptr;
 
 			if (MenuInfo.bUseStyleClass && IsValid(MenuInfo.StyleClass))
@@ -1012,14 +1012,14 @@ void UScreenWidgetManager::GenerateMenu(TArray<FGameplayTag> InMenuTags)
 			{
 				MenuStyle->MenuContainer = FoundMenuGenerateInfo->MenuContainer;
 
-				/* 接管菜单的响应处理 */
+				/* 接管菜单的响应处理 #1#
 				MenuStyle->OnResponseStateChanged.BindUObject(this, &UScreenWidgetManager::OnMenuResponseStateChanged);
 
-				/* 构建菜单样式 */
+				/* 构建菜单样式 #1#
 				MenuStyle->NativePreConstructMenuStyle(MenuInfo);
 			}
 
-			/* 构建菜单容器 */
+			/* 构建菜单容器 #1#
 			if (FoundMenuGenerateInfo->MenuContainer)
 			{
 				const int32 Index = FoundMenuGenerateInfo->MenuContainer->GetCommonButtonGroup()->GetButtonCount();
@@ -1035,30 +1035,30 @@ void UScreenWidgetManager::GenerateMenu(TArray<FGameplayTag> InMenuTags)
 		}
 	}
 
-	/* 构建菜单容器完成后 */
+	/* 构建菜单容器完成后 #1#
 	for (auto& MenuContainer : MenuContainers)
 	{
 		MenuContainer->NativePostConstructMenuContainer();
 	}
 
-	/* 是否默认选中 */
+	/* 是否默认选中 #1#
 	for (auto& MenuInfo : ValidMenuInfos)
 	{
 		if (!MenuInfo.bHidden && MenuInfo.bIsEnable && MenuInfo.bSelectable && MenuInfo.bIsSelected)
 		{
 			SelectMenu(MenuInfo.MenuTag);
 		}
-	}
+	}*/
 }
 
 void UScreenWidgetManager::DestroyMenu(FGameplayTag InMenuTag)
 {
-	DestroyMenu(GameMenu->GetDirectChildMenuTags(InMenuTag));
+	/*DestroyMenu(GameMenu->GetDirectChildMenuTags(InMenuTag));*/
 }
 
 void UScreenWidgetManager::DestroyMenu(TArray<FGameplayTag> InMenuTags)
 {
-	const auto OnMenuInactived = FOnWidgetActiveStateChanged::CreateLambda([this](UUserWidgetBase* InWidget)
+	/*const auto OnMenuInactived = FOnWidgetActiveStateChanged::CreateLambda([this](UUserWidgetBase* InWidget)
 		{
 			const UMenuStyle* MenuStyle = Cast<UMenuStyle>(InWidget);
 			if (IsValid(MenuStyle))
@@ -1094,12 +1094,12 @@ void UScreenWidgetManager::DestroyMenu(TArray<FGameplayTag> InMenuTags)
 				InactiveWidget(MenuStyle, OnMenuInactived);
 			}
 		}
-	}
+	}*/
 }
 
 FReply UScreenWidgetManager::OnMenuResponseStateChanged(UInteractableUserWidgetBase* InteractableWidget, const bool TargetEventState)
 {
-	if (UMenuStyle* TargetMenuStyle = Cast<UMenuStyle>(InteractableWidget))
+	/*if (UMenuStyle* TargetMenuStyle = Cast<UMenuStyle>(InteractableWidget))
 	{
 		const FMenuInfo MenuInfo = TargetMenuStyle->GetMenuInfo();
 		DPRINT(Log, TEXT("MenuInfo : %s,Seletion : %d"), *MenuInfo.MenuMainName.ToString(), TargetEventState)
@@ -1116,7 +1116,7 @@ FReply UScreenWidgetManager::OnMenuResponseStateChanged(UInteractableUserWidgetB
 
 			TargetMenuSelection.FindOrAdd(TargetMenuStyle, TargetEventState);
 
-			/* 查找该菜单的子菜单信息 */
+			/* 查找该菜单的子菜单信息 #1#
 			TArray<FMenuGenerateInfo*> ChildMenuGenerateInfos;
 			for (auto& MenuTag : GameMenu->GetDirectChildMenuTags(TargetMenuStyle->GetMenuTag()))
 			{
@@ -1129,7 +1129,7 @@ FReply UScreenWidgetManager::OnMenuResponseStateChanged(UInteractableUserWidgetB
 				}
 			}
 
-			/* 取消选中子菜单 */
+			/* 取消选中子菜单 #1#
 			for (const auto& ChildMenuGenerateInfo : ChildMenuGenerateInfos)
 			{
 				ChildMenuGenerateInfo->MenuContainer->CommonButtonGroup->SetSelectionRequired(false);
@@ -1138,17 +1138,17 @@ FReply UScreenWidgetManager::OnMenuResponseStateChanged(UInteractableUserWidgetB
 
 			return FReply::Handled();
 		}
-	}
+	}*/
 
 	return FReply::Unhandled();
 }
 
 void UScreenWidgetManager::HandleMenuResponseStateChanged()
 {
-	TArray<UMenuStyle*> MenuStyles;
+	/*TArray<UMenuStyle*> MenuStyles;
 	TargetMenuSelection.GetKeys(MenuStyles);
 
-	/* 在每次菜单事件完成之后，移除子菜单或生成子菜单，如果存在的话 */
+	/* 在每次菜单事件完成之后，移除子菜单或生成子菜单，如果存在的话 #1#
 	if (ProcessingMenuIndex > 0)
 	{
 		const UMenuStyle* PreviousMenuStyle = MenuStyles[ProcessingMenuIndex - 1];
@@ -1163,7 +1163,7 @@ void UScreenWidgetManager::HandleMenuResponseStateChanged()
 		BPDelegate_OnMenuSelectionChanged.Broadcast(PreviousMenuStyle->GetMenuTag(), PreviousEventState);
 	}
 
-	/* 执行当前菜单的事件 */
+	/* 执行当前菜单的事件 #1#
 	if (MenuStyles.IsValidIndex(ProcessingMenuIndex))
 	{
 		UMenuStyle* TargetMenuStyle = MenuStyles[ProcessingMenuIndex];
@@ -1174,13 +1174,13 @@ void UScreenWidgetManager::HandleMenuResponseStateChanged()
 		FMenuGenerateInfo* MenuGenerateInfo = MenuGenerateInfos.FindByKey(MenuContainerInfo);
 		const bool TargetEventState = TargetMenuSelection.FindRef(TargetMenuStyle);
 
-		/* 标记当前激活的菜单 */
+		/* 标记当前激活的菜单 #1#
 		if (TargetEventState)
 			MenuGenerateInfo->ActivedMenuStyle = TargetMenuStyle;
 		else
 			MenuGenerateInfo->ActivedMenuStyle = nullptr;
 
-		/* 执行菜单事件 */
+		/* 执行菜单事件 #1#
 		if (!TargetMenuStyle->GetResponseEvents(TargetEventState).IsEmpty())
 		{
 			if (UProcedureProxy* ProcedureProxy = TargetMenuStyle->HandleButtonResponseEvent(TargetMenuStyle->GetResponseEvents(TargetEventState), TargetEventState, FSimpleDelegate::CreateUObject(this, &UScreenWidgetManager::HandleMenuResponseStateChanged)))
@@ -1190,11 +1190,11 @@ void UScreenWidgetManager::HandleMenuResponseStateChanged()
 			}
 		}
 
-		/* 没有菜单事件 */
+		/* 没有菜单事件 #1#
 		ProcessingMenuIndex++;
 		HandleMenuResponseStateChanged();
 	}
-	/* 所有菜单都已经触发 */
+	/* 所有菜单都已经触发 #1#
 	else
 	{
 		// for (const auto& MenuStyle : GetMenuStyles())
@@ -1202,7 +1202,7 @@ void UScreenWidgetManager::HandleMenuResponseStateChanged()
 		// 	MenuStyle->CommonButton->SetIsInteractionEnabled(true);
 		// }
 
-		/* 当所有的事件都已退出，且存在WaitingGameMenu时，表明当前正在切换一个菜单数据，销毁并创建新的菜单数据 */
+		/* 当所有的事件都已退出，且存在WaitingGameMenu时，表明当前正在切换一个菜单数据，销毁并创建新的菜单数据 #1#
 		if (bSwitchingGameMenu)
 		{
 			bSwitchingGameMenu = false;
@@ -1221,7 +1221,7 @@ void UScreenWidgetManager::HandleMenuResponseStateChanged()
 		TargetMenuSelection.Reset();
 		bProcessingMenuSelection = false;
 		ProcessingMenuIndex = 0;
-	}
+	}*/
 }
 
 #undef LOCTEXT_NAMESPACE

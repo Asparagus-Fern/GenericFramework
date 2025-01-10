@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UserWidgetBase.h"
+#include "UserWidget/Base/UserWidgetBase.h"
 #include "InteractableUserWidgetGroup.generated.h"
 
 class UCommonButtonGroup;
@@ -13,7 +13,7 @@ class UInteractableUserWidgetBase;
  * 
  */
 UCLASS()
-class SCREENWIDGETGENERATION_API UInteractableUserWidgetGroup : public UUserWidgetBase
+class INTERACTABLEWIDGETGENERATION_API UInteractableUserWidgetGroup : public UUserWidgetBase
 {
 	GENERATED_BODY()
 

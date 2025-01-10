@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UserWidget/Menu/MenuContainer.h"
+#include "Menu/MenuContainer.h"
 #include "MenuSplineContainer.generated.h"
 
 class USpline2D;
@@ -12,7 +12,7 @@ class USpline2D;
  * 
  */
 UCLASS()
-class SCREENWIDGETGENERATION_API UMenuSplineContainer : public UMenuContainer
+class MENUGENERATION_API UMenuSplineContainer : public UMenuContainer
 {
 	GENERATED_BODY()
 
