@@ -4,21 +4,21 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
-#include "UserWidget/Base/UserWidgetBase.h"
+#include "Base/UserWidgetBase.h"
 #include "GameHUD.generated.h"
 
 /**
  * 
  */
 UCLASS(Abstract)
-class SCREENWIDGETGENERATION_API UGameHUD : public UUserWidgetBase
+class UMGUTILITIES_API UGameHUD : public UUserWidgetBase
 {
 	GENERATED_BODY()
 
 public:
-	virtual void NativeDestruct() override;
-	
-public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="UI.HUD"))
+	FGameplayTag HUDTag;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	int32 ViewportZOrder = 0;
 };

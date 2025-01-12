@@ -17,10 +17,6 @@
     {
       "Name": "DevCore",
       "Enabled": true
-    },
-    {
-      "Name": "EngineAssetDefinitions",
-      "Enabled": true
     }
   ],
   "Modules": [

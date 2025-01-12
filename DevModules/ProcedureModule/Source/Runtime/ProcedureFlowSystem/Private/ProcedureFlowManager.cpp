@@ -95,7 +95,7 @@ void UProcedureFlowManager::RegisterProcedureFlow(UProcedureFlowComponent* InCom
 
 	ProcedureFlowComponents.Add(InComponent);
 	IProcedureFlowInterface::Execute_OnProcedureFlowRegister(InComponent);
-	BROADCAST_MANAGER_DELEGATE(Delegate_OnProcedureFlowRegister, BPDelegate_OnProcedureFlowRegister, InComponent)
+	BROADCAST_UNIFIED_DELEGATE(Delegate_OnProcedureFlowRegister, BPDelegate_OnProcedureFlowRegister, InComponent)
 }
 
 void UProcedureFlowManager::UnRegisterProcedureFlow(const AProcedureFlowActor* InActor)
@@ -125,7 +125,7 @@ void UProcedureFlowManager::UnRegisterProcedureFlow(UProcedureFlowComponent* InC
 
 	ProcedureFlowComponents.Remove(InComponent);
 	IProcedureFlowInterface::Execute_OnProcedureFlowUnRegister(InComponent);
-	BROADCAST_MANAGER_DELEGATE(Delegate_OnProcedureFlowRegister, BPDelegate_OnProcedureFlowRegister, InComponent)
+	BROADCAST_UNIFIED_DELEGATE(Delegate_OnProcedureFlowRegister, BPDelegate_OnProcedureFlowRegister, InComponent)
 }
 
 void UProcedureFlowManager::EnterProcedureFlow(const AProcedureFlowActor* InActor)
@@ -164,7 +164,7 @@ void UProcedureFlowManager::EnterProcedureFlow(FGameplayTag InProcedureFlowTag)
 		CurrentProcedureFlowTag = InProcedureFlowTag;
 
 		IProcedureFlowInterface::Execute_OnProcedureFlowEnter(GetProcedureFlowComponent(CurrentProcedureFlowTag));
-		BROADCAST_MANAGER_DELEGATE(Delegate_OnProcedureFlowEnter, BPDelegate_OnProcedureFlowEnter, GetProcedureFlowComponent(InProcedureFlowTag))
+		BROADCAST_UNIFIED_DELEGATE(Delegate_OnProcedureFlowEnter, BPDelegate_OnProcedureFlowEnter, GetProcedureFlowComponent(InProcedureFlowTag))
 	}
 }
 
@@ -213,7 +213,7 @@ void UProcedureFlowManager::ExitProcedureFlow(FGameplayTag InProcedureFlowTag)
 	if (CurrentProcedureFlowTag == InProcedureFlowTag)
 	{
 		IProcedureFlowInterface::Execute_OnProcedureFlowExit(GetProcedureFlowComponent(CurrentProcedureFlowTag));
-		BROADCAST_MANAGER_DELEGATE(Delegate_OnProcedureFlowExit, BPDelegate_OnProcedureFlowExit, GetProcedureFlowComponent(InProcedureFlowTag))
+		BROADCAST_UNIFIED_DELEGATE(Delegate_OnProcedureFlowExit, BPDelegate_OnProcedureFlowExit, GetProcedureFlowComponent(InProcedureFlowTag))
 
 		CurrentProcedureFlowTag = FGameplayTag::EmptyTag;
 	}

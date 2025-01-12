@@ -76,58 +76,13 @@ public:
 
 	/* Game HUD */
 public:
-	/* 当前视口所有创建的HUD */
-	UPROPERTY(Transient, BlueprintReadOnly)
-	TArray<TObjectPtr<UGameHUD>> GameHUDs;
+
 
 private:
 	bool bIsHUDCreated = false;
 
 public:
-	DECLARE_EVENT_OneParam(UScreenWidgetManager, FHUDDelegate, UGameHUD*);
-
-	DECLARE_EVENT_TwoParams(UScreenWidgetManager, FOnHUDActiveStateChanged, UGameHUD*, bool);
-
-	static FScreenWidgetDelegate PreHUDCreated;
-	static FHUDDelegate OnHUDCreated;
-	static FScreenWidgetDelegate PostHUDCreated;
-	static FScreenWidgetDelegate PreHUDDestroyed;
-	static FHUDDelegate OnHUDDestroyed;
-	static FScreenWidgetDelegate PostHUDDestroyed;
-
-	static FOnHUDActiveStateChanged OnHUDActiveStateChanged;
-
-public:
-	void CreateGameHUDs(TArray<TSoftClassPtr<UGameHUD>> InGameHUDClasses, bool bAddToViewport = true);
-	void CreateGameHUDs(TArray<TSubclassOf<UGameHUD>> InGameHUDClasses, bool bAddToViewport = true);
-	void CreateGameHUDs(TArray<UGameHUD*> InGameHUDs, bool bAddToViewport = true);
-	void CreateGameHUD(UGameHUD* GameHUD, bool bAddToViewport = true);
-	void ClearupGameHUDs();
-	void RemoveGameHUD(UGameHUD* GameHUD);
-	void RemoveGameHUD(FGameplayTag InTag);
-
-	/* 从标签查找HUD */
-	virtual TArray<UGameHUD*> GetGameHUDByTag(FGameplayTag InTag);
-
-	/* 设置所有HUD的显隐 */
-	virtual void SetGameHUDActiveState(bool IsActived);
-
-	/* 设置指定HUD的显隐 */
-	virtual void SetGameHUDActiveState(UGameHUD* GameHUD, bool IsActived);
-
-	/* 从标签查找HUD并设置显隐 */
-	virtual void SetGameHUDActiveState(FGameplayTag InTag, bool IsActived);
-
 	bool IsGameHUDCreated() const { return bIsHUDCreated; }
-
-protected:
-	/* 创建该Widget的临时HUD，在移除该Widget时将，如果其他Widget没有使用到该临时HUD，将被移除 */
-	void AddTemporaryGameHUD(UUserWidgetBase* InWidget);
-
-	/* 移除该Widget的临时HUD，如果有其他Widget正在使用该临时HUD，将不被移除 */
-	void RemoveTemporaryGameHUD(UUserWidgetBase* InWidget);
-
-
 
 	/* User Widget Base */
 public:

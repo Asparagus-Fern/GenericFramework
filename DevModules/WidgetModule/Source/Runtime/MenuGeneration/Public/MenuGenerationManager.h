@@ -23,7 +23,7 @@ public:
 	virtual void Deinitialize() override;
 	virtual bool DoesSupportWorldType(const EWorldType::Type WorldType) const override;
 
-private:
+protected:
 	UPROPERTY(BlueprintReadOnly, Transient)
 	TArray<TObjectPtr<UMenuCollection>> MenuCollections;
 };

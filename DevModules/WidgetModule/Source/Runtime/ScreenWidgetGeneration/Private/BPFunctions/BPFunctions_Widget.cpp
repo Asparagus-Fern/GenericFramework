@@ -105,44 +105,11 @@ void UBPFunctions_Widget::SetGameHUDActiveStateByTag(const FGameplayTag InTag, c
 	}
 }
 
-/* ==================== UGameplayTagSlot ==================== */
 
-void UBPFunctions_Widget::RegisterSlot(UGameplayTagSlot* InSlot)
-{
-	if (UScreenWidgetManager* ScreenWidgetManager = UManagerProxy::Get()->GetManager<UScreenWidgetManager>())
-	{
-		ScreenWidgetManager->RegisterSlot(InSlot);
-	}
-}
 
-void UBPFunctions_Widget::UnRegisterSlot(UGameplayTagSlot* InSlot)
-{
-	if (UScreenWidgetManager* ScreenWidgetManager = UManagerProxy::Get()->GetManager<UScreenWidgetManager>())
-	{
-		ScreenWidgetManager->UnRegisterSlot(InSlot);
-	}
-}
 
-bool UBPFunctions_Widget::GetSlots(TArray<UGameplayTagSlot*>& Slots)
-{
-	if (const UScreenWidgetManager* ScreenWidgetManager = UManagerProxy::Get()->GetManager<UScreenWidgetManager>())
-	{
-		Slots = ScreenWidgetManager->Slots;
-		return true;
-	}
 
-	return false;
-}
 
-UGameplayTagSlot* UBPFunctions_Widget::GetSlot(const FGameplayTag InSlotTag)
-{
-	if (const UScreenWidgetManager* ScreenWidgetManager = UManagerProxy::Get()->GetManager<UScreenWidgetManager>())
-	{
-		return ScreenWidgetManager->GetSlot(InSlotTag);
-	}
-
-	return nullptr;
-}
 
 UUserWidgetBase* UBPFunctions_Widget::GetSlotWidget(FGameplayTag InSlotTag)
 {

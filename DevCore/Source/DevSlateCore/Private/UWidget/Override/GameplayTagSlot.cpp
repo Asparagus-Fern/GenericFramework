@@ -4,8 +4,8 @@
 
 UE_DEFINE_GAMEPLAY_TAG(TAG_HUD, "UI.HUD");
 
-UGameplayTagSlot::FGameplayTagSlotDelegate UGameplayTagSlot::OnGameplayTagSlotBuild;
-UGameplayTagSlot::FGameplayTagSlotDelegate UGameplayTagSlot::OnGameplayTagSlotDestroy;
+UGameplayTagSlot::FGameplayTagSlotDelegate UGameplayTagSlot::OnBuildGameplayTagSlot;
+UGameplayTagSlot::FGameplayTagSlotDelegate UGameplayTagSlot::OnRemoveGameplayTagSlot;
 
 TSharedRef<SWidget> UGameplayTagSlot::RebuildWidget()
 {
@@ -23,7 +23,7 @@ TSharedRef<SWidget> UGameplayTagSlot::RebuildWidget()
 	{
 		if (SlotTag.IsValid() && !bManualRegistration)
 		{
-			OnGameplayTagSlotBuild.Broadcast(this);
+			OnBuildGameplayTagSlot.Broadcast(this);
 		}
 
 		return Super::RebuildWidget();
@@ -38,7 +38,7 @@ void UGameplayTagSlot::ReleaseSlateResources(bool bReleaseChildren)
 	{
 		if (SlotTag.IsValid())
 		{
-			OnGameplayTagSlotDestroy.Broadcast(this);
+			OnRemoveGameplayTagSlot.Broadcast(this);
 		}
 	}
 }

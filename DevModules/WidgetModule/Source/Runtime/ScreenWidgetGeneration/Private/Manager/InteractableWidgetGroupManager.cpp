@@ -47,7 +47,7 @@ void UInteractableWidgetGroupManager::AddInteractableWidget(UInteractableUserWid
 	if (IsValid(InteractableWidget->ActiveCommonButton))
 	{
 		InteractableWidgetGroups.FindRef(GroupName)->AddWidget(InteractableWidget->ActiveCommonButton);
-		BROADCAST_MANAGER_DELEGATE(Delegate_OnInteractableWidgetAdded, BPDelegate_OnInteractableWidgetAdded, InteractableWidget, GroupName)
+		BROADCAST_UNIFIED_DELEGATE(Delegate_OnInteractableWidgetAdded, BPDelegate_OnInteractableWidgetAdded, InteractableWidget, GroupName)
 	}
 }
 
@@ -59,7 +59,7 @@ void UInteractableWidgetGroupManager::RemoveInteractableWidget(UInteractableUser
 	{
 		if (IsValid(InteractableWidget->ActiveCommonButton))
 		{
-			BROADCAST_MANAGER_DELEGATE(Delegate_OnInteractableWidgetRemoved, BPDelegate_OnInteractableWidgetRemoved, InteractableWidget, GroupName)
+			BROADCAST_UNIFIED_DELEGATE(Delegate_OnInteractableWidgetRemoved, BPDelegate_OnInteractableWidgetRemoved, InteractableWidget, GroupName)
 			Group->RemoveWidget(InteractableWidget->ActiveCommonButton);
 		}
 
@@ -87,7 +87,7 @@ void UInteractableWidgetGroupManager::ClearupInteractableWidgetGroup(const FStri
 		RemoveGroup->MarkAsGarbage();
 	}
 
-	BROADCAST_MANAGER_DELEGATE(Delegate_OnInteractableWidgetClearup, BPDelegate_OnInteractableWidgetClearup, GroupName)
+	BROADCAST_UNIFIED_DELEGATE(Delegate_OnInteractableWidgetClearup, BPDelegate_OnInteractableWidgetClearup, GroupName)
 }
 
 bool UInteractableWidgetGroupManager::FindInteractableWidgetGroup(const FString& GroupName, UCommonButtonGroup*& Group) const

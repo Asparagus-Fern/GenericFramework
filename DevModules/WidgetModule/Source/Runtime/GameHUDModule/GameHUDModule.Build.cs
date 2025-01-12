@@ -11,6 +11,8 @@ public class GameHUDModule : ModuleRules
 			{
 				"Core",
 				"DevCore",
+				"DevSlateCore",
+				"UMGUtilities"
 			}
 		);
 
@@ -20,7 +22,11 @@ public class GameHUDModule : ModuleRules
 				"CoreUObject",
 				"Engine",
 				"Slate",
-				"SlateCore"
+				"SlateCore",
+
+				"UMG",
+				"GameplayTags",
+				"DeveloperSettings"
 			}
 		);
 	}

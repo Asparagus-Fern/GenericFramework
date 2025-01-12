@@ -16,28 +16,50 @@ class DEVCORE_API UBPFunctions_Object : public UBlueprintFunctionLibrary
 
 public:
 	template <typename T>
-	static TSubclassOf<T> LoadClass(TSoftClassPtr<T> InSoftClassPtr)
+	static TSubclassOf<T> LoadClass(TSoftClassPtr<T> InSoftClass)
 	{
-		if (InSoftClassPtr.IsPending())
+		if (InSoftClass.IsPending())
 		{
-			return InSoftClassPtr.LoadSynchronous();
+			return InSoftClass.LoadSynchronous();
 		}
 		else
 		{
-			return InSoftClassPtr.Get();
+			return InSoftClass.Get();
 		}
 	}
 
 	template <typename T>
-	static T* LoadObject(TSoftObjectPtr<T> InSoftObjectPtr)
+	static TArray<TSubclassOf<T>> LoadClass(TArray<TSoftClassPtr<T>> InSoftClasses)
 	{
-		if (InSoftObjectPtr.IsPending())
+		TArray<TSubclassOf<T>> Result;
+		for (auto& InSoftClass : InSoftClasses)
 		{
-			return InSoftObjectPtr.LoadSynchronous();
+			Result.Add(LoadClass(InSoftClass));
+		}
+		return Result;
+	}
+
+	template <typename T>
+	static T* LoadObject(TSoftObjectPtr<T> InSoftObject)
+	{
+		if (InSoftObject.IsPending())
+		{
+			return InSoftObject.LoadSynchronous();
 		}
 		else
 		{
-			return InSoftObjectPtr.Get();
+			return InSoftObject.Get();
 		}
+	}
+
+	template <typename T>
+	static TArray<T*> LoadObject(TArray<TSoftObjectPtr<T>> InSoftObjects)
+	{
+		TArray<T*> Result;
+		for (auto& InSoftObject : InSoftObjects)
+		{
+			Result.Add(LoadObject(InSoftObject));
+		}
+		return Result;
 	}
 };

@@ -39,8 +39,8 @@ public:
 
 public:
 	DECLARE_MULTICAST_DELEGATE_OneParam(FGameplayTagSlotDelegate, UGameplayTagSlot*)
-	static FGameplayTagSlotDelegate OnGameplayTagSlotBuild;
-	static FGameplayTagSlotDelegate OnGameplayTagSlotDestroy;
+	static FGameplayTagSlotDelegate OnBuildGameplayTagSlot;
+	static FGameplayTagSlotDelegate OnRemoveGameplayTagSlot;
 
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSlotContentChanged, UWidget*, Widget);
 

@@ -59,7 +59,7 @@ void UCameraManager::AddCameraPoint(ACameraPointBase* InCameraPoint)
 	if (IsValid(InCameraPoint) && InCameraPoint->CameraTag.IsValid() && !CameraPoints.Contains(InCameraPoint->CameraTag))
 	{
 		CameraPoints.FindOrAdd(InCameraPoint->CameraTag, InCameraPoint);
-		BROADCAST_MANAGER_DELEGATE(Delegate_OnCameraPointRegister, BPDelegate_OnCameraPointRegister, InCameraPoint)
+		BROADCAST_UNIFIED_DELEGATE(Delegate_OnCameraPointRegister, BPDelegate_OnCameraPointRegister, InCameraPoint)
 	}
 }
 
@@ -68,7 +68,7 @@ void UCameraManager::RemoveCameraPoint(ACameraPointBase* InCameraPoint)
 	if (IsValid(InCameraPoint) && InCameraPoint->CameraTag.IsValid() && CameraPoints.Contains(InCameraPoint->CameraTag))
 	{
 		CameraPoints.Remove(InCameraPoint->CameraTag);
-		BROADCAST_MANAGER_DELEGATE(Delegate_OnCameraPointUnRegister, BPDelegate_OnCameraPointUnRegister, InCameraPoint)
+		BROADCAST_UNIFIED_DELEGATE(Delegate_OnCameraPointUnRegister, BPDelegate_OnCameraPointUnRegister, InCameraPoint)
 	}
 }
 

@@ -64,19 +64,9 @@ public:
 	UFUNCTION(BlueprintCallable, meta=(GameplayTagFilter="UI.HUD"), Category="BPFunctions_Widget|HUD")
 	static void SetGameHUDActiveStateByTag(FGameplayTag InTag, bool IsVisisble);
 
-	/* UGameplayTagSlot */
-public:
-	UFUNCTION(BlueprintCallable, Category="BPFunctions_Widget|Slot")
-	static void RegisterSlot(UGameplayTagSlot* InSlot);
 
-	UFUNCTION(BlueprintCallable, Category="BPFunctions_Widget|Slot")
-	static void UnRegisterSlot(UGameplayTagSlot* InSlot);
 
-	UFUNCTION(BlueprintPure, Category="BPFunctions_Widget|Slot")
-	static bool GetSlots(TArray<UGameplayTagSlot*>& Slots);
 
-	UFUNCTION(BlueprintPure, meta=(GameplayTagFilter="UI.HUD"), Category="BPFunctions_Widget|Slot")
-	static UGameplayTagSlot* GetSlot(FGameplayTag InSlotTag);
 
 	UFUNCTION(BlueprintPure, meta=(GameplayTagFilter="UI.HUD", DeterminesOutputType = "InClass"), Category="BPFunctions_Widget|Slot")
 	static UUserWidgetBase* GetSlotWidget(FGameplayTag InSlotTag);

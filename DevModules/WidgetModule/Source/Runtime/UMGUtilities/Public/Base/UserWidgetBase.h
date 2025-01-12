@@ -8,6 +8,7 @@
 #include "Animation/WidgetAnimationInterface.h"
 #include "Blueprint/UserWidget.h"
 #include "Interface/ProcedureInterface.h"
+#include "Interface/ProcedureInterface.h"
 #include "UserWidgetBase.generated.h"
 
 class UTemporaryHUD;
@@ -19,7 +20,7 @@ class UWidgetAnimationEvent;
  * 
  */
 UCLASS(Abstract)
-class SCREENWIDGETGENERATION_API UUserWidgetBase : public UUserWidget, public IWidgetAnimationInterface, public IProcedureInterface
+class UMGUTILITIES_API UUserWidgetBase : public UUserWidget, public IWidgetAnimationInterface, public IProcedureInterface
 {
 	GENERATED_UCLASS_BODY()
 
@@ -45,25 +46,32 @@ public:
 	virtual void NativeOnDestroy() override { IProcedureInterface::NativeOnDestroy(); }
 
 	virtual void SetActiveState_Implementation(bool InActiveState) override;
-	
+
 	virtual void SetIsActived(const bool InActived) override;
-	
+
 	/* IWidgetAnimationInterface */
 public:
-	virtual bool HasActivationAnimation_Implementation(bool InIsActive) const override;
-	virtual UWidgetAnimation* GetActiveAnimation_Implementation() const override;
+	UFUNCTION(BlueprintPure)
+	virtual bool HasWidgetAnimation(bool InIsActive) const override;
+
+	UFUNCTION(BlueprintPure)
+	virtual UWidgetAnimation* GetActiveAnimation() const override;
+
+	UFUNCTION(BlueprintPure)
+	virtual UWidgetAnimation* GetInactiveAnimation() const override;
+
+	UFUNCTION(BlueprintCallable)
+	virtual void PlayWidgetAnimation(bool InIsActive) override;
+
+	UFUNCTION(BlueprintPure)
+	virtual float GetWidgetAnimationDuration(bool InIsActive) override;
+
 	virtual void SetActiveAnimation_Implementation(UWidgetAnimation* InAnimation) override;
-	virtual UWidgetAnimation* GetInactiveAnimation_Implementation() const override;
 	virtual void SetInactiveAnimation_Implementation(UWidgetAnimation* InAnimation) override;
-	virtual void PlayActivationAnimation_Implementation(bool InIsActive) override;
-	virtual float GetActivationAnimationDuration_Implementation(bool InIsActive) override;
 
+	/* UUserWidgetBase */
 public:
-	/* 表示自身标签，用于指定获取Widget */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="UI"))
-	FGameplayTag SelfTag;
-
-	/* 表示所在插槽标签 */
+	/* 所在插槽标签 */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="UI.HUD"))
 	FGameplayTag SlotTag;
 
@@ -79,7 +87,7 @@ public:
 	UPROPERTY(meta=(BindWidgetAnimOptional), Transient)
 	UWidgetAnimation* InactiveAnimation = nullptr;
 
-public:
+protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, AdvancedDisplay)
 	FVector2D Anchor = FVector2D(.5f, 1.f);
 

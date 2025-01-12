@@ -7,7 +7,7 @@
 #include "Manager/ManagerInterface.h"
 #include "Interface/WorldInterface.h"
 
-#define BROADCAST_MANAGER_DELEGATE(DelegateName, BPDelegateName, ...) \
+#define BROADCAST_UNIFIED_DELEGATE(DelegateName, BPDelegateName, ...) \
 	DelegateName.Broadcast(__VA_ARGS__); \
 	BPDelegateName.Broadcast(__VA_ARGS__);
 

@@ -1,7 +1,7 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "UserWidget/Base/UserWidgetBase.h"
+#include "Base/UserWidgetBase.h"
 
 #include "Animation/WidgetAnimation.h"
 
@@ -57,9 +57,9 @@ void UUserWidgetBase::SetIsActived(const bool InActived)
 {
 	IProcedureInterface::SetIsActived(InActived);
 
-	if (Execute_HasActivationAnimation(this, InActived))
+	if (HasWidgetAnimation(InActived))
 	{
-		Execute_SetActiveAnimation(this, InActived ? Execute_GetActiveAnimation(this) : Execute_GetInactiveAnimation(this));
+		PlayWidgetAnimation(InActived);
 	}
 	else
 	{
@@ -67,12 +67,14 @@ void UUserWidgetBase::SetIsActived(const bool InActived)
 	}
 }
 
-bool UUserWidgetBase::HasActivationAnimation_Implementation(const bool InIsActive) const
+/* ==================== IWidgetAnimationInterface ==================== */
+
+bool UUserWidgetBase::HasWidgetAnimation(const bool InIsActive) const
 {
 	return InIsActive ? IsValid(ActiveAnimation) : IsValid(InactiveAnimation);
 }
 
-UWidgetAnimation* UUserWidgetBase::GetActiveAnimation_Implementation() const
+UWidgetAnimation* UUserWidgetBase::GetActiveAnimation() const
 {
 	return ActiveAnimation;
 }
@@ -83,7 +85,7 @@ void UUserWidgetBase::SetActiveAnimation_Implementation(UWidgetAnimation* InAnim
 	ActiveAnimation = InAnimation;
 }
 
-UWidgetAnimation* UUserWidgetBase::GetInactiveAnimation_Implementation() const
+UWidgetAnimation* UUserWidgetBase::GetInactiveAnimation() const
 {
 	return InactiveAnimation;
 }
@@ -94,43 +96,23 @@ void UUserWidgetBase::SetInactiveAnimation_Implementation(UWidgetAnimation* InAn
 	InactiveAnimation = InAnimation;
 }
 
-void UUserWidgetBase::PlayActivationAnimation_Implementation(bool InIsActive)
+void UUserWidgetBase::PlayWidgetAnimation(bool InIsActive)
 {
-	IWidgetAnimationInterface::PlayActivationAnimation_Implementation(InIsActive);
+	IWidgetAnimationInterface::PlayWidgetAnimation(InIsActive);
 
-	if (InIsActive)
+	if (UWidgetAnimation* Animation = InIsActive ? GetActiveAnimation() : GetInactiveAnimation())
 	{
-		if (IsValid(Execute_GetActiveAnimation(this)))
-		{
-			PlayAnimation(Execute_GetActiveAnimation(this));
-		}
-	}
-	else
-	{
-		if (IsValid(Execute_GetInactiveAnimation(this)))
-		{
-			PlayAnimation(Execute_GetInactiveAnimation(this));
-		}
+		PlayAnimation(Animation);
 	}
 }
 
-float UUserWidgetBase::GetActivationAnimationDuration_Implementation(const bool InIsActive)
+float UUserWidgetBase::GetWidgetAnimationDuration(const bool InIsActive)
 {
-	IWidgetAnimationInterface::GetActivationAnimationDuration_Implementation(InIsActive);
+	IWidgetAnimationInterface::GetWidgetAnimationDuration(InIsActive);
 
-	if (InIsActive)
+	if (UWidgetAnimation* Animation = InIsActive ? GetActiveAnimation() : GetInactiveAnimation())
 	{
-		if (IsValid(Execute_GetActiveAnimation(this)))
-		{
-			return Execute_GetActiveAnimation(this)->GetEndTime();
-		}
-	}
-	else
-	{
-		if (IsValid(Execute_GetInactiveAnimation(this)))
-		{
-			return Execute_GetInactiveAnimation(this)->GetEndTime();
-		}
+		return Animation->GetEndTime();
 	}
 
 	return 0.f;

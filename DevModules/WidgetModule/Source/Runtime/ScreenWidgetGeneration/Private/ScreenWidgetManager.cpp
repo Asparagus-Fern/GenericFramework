@@ -76,18 +76,12 @@ void UScreenWidgetManager::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
 	RegisterManager(this);
-
-	UGameplayTagSlot::OnGameplayTagSlotBuild.AddUObject(this, &UScreenWidgetManager::RegisterSlot);
-	UGameplayTagSlot::OnGameplayTagSlotDestroy.AddUObject(this, &UScreenWidgetManager::UnRegisterSlot);
 }
 
 void UScreenWidgetManager::Deinitialize()
 {
 	Super::Deinitialize();
 	UnRegisterManager();
-
-	UGameplayTagSlot::OnGameplayTagSlotBuild.RemoveAll(this);
-	UGameplayTagSlot::OnGameplayTagSlotDestroy.RemoveAll(this);
 }
 
 bool UScreenWidgetManager::DoesSupportWorldType(const EWorldType::Type WorldType) const
@@ -126,14 +120,7 @@ void UScreenWidgetManager::HandleOnWorldMatchStarting(UWorld* InWorld)
 {
 	FCoreInternalManager::HandleOnWorldMatchStarting(InWorld);
 
-	if (UScreenWidgetManagerSetting::Get()->AutoCreateGameHUD)
-	{
-		PreHUDCreated.Broadcast();
-		CreateGameHUDs(UScreenWidgetManagerSetting::Get()->GameHUDClasses, true);
-
-		bIsHUDCreated = true;
-		PostHUDCreated.Broadcast();
-	}
+	
 }
 
 void UScreenWidgetManager::OnWorldBeginPlay(UWorld& InWorld)
@@ -154,140 +141,11 @@ void UScreenWidgetManager::HandleOnWorldEndPlay(UWorld* InWorld)
 	PostHUDDestroyed.Broadcast();
 }
 
-/* ==================== Game HUD ==================== */
 
-void UScreenWidgetManager::CreateGameHUDs(TArray<TSoftClassPtr<UGameHUD>> InGameHUDClasses, const bool bAddToViewport)
-{
-	TArray<TSubclassOf<UGameHUD>> GameHUDClasses;
-	for (const auto& GameHUD : GameHUDs)
-	{
-		GameHUDClasses.Add(GameHUD->GetClass());
-	}
 
-	for (const auto& GameHUDClass : InGameHUDClasses)
-	{
-		if (GameHUDClass.IsNull())
-			continue;
 
-		TSubclassOf<UGameHUD> LoadHUDClass = UBPFunctions_Object::LoadClass<UGameHUD>(GameHUDClass);
 
-		/* 以创建的HUD不再创建 */
-		if (GameHUDClasses.Contains(LoadHUDClass))
-			continue;
 
-		if (IsValid(LoadHUDClass))
-		{
-			UGameHUD* NewHUD = CreateWidget<UGameHUD>(GetWorld(), LoadHUDClass);
-			CreateGameHUD(NewHUD, bAddToViewport);
-		}
-	}
-}
-
-void UScreenWidgetManager::CreateGameHUDs(TArray<TSubclassOf<UGameHUD>> InGameHUDClasses, const bool bAddToViewport)
-{
-	TArray<TSubclassOf<UGameHUD>> GameHUDClasses;
-	for (const auto& GameHUD : GameHUDs)
-	{
-		GameHUDClasses.Add(GameHUD->GetClass());
-	}
-
-	for (const auto& GameHUDClass : InGameHUDClasses)
-	{
-		/* 以创建的HUD不再创建 */
-		if (GameHUDClasses.Contains(GameHUDClass))
-			continue;
-
-		if (IsValid(GameHUDClass))
-		{
-			UGameHUD* NewHUD = CreateWidget<UGameHUD>(GetWorld(), GameHUDClass);
-			CreateGameHUD(NewHUD, bAddToViewport);
-		}
-	}
-}
-
-void UScreenWidgetManager::CreateGameHUDs(TArray<UGameHUD*> InGameHUDs, const bool bAddToViewport)
-{
-	for (const auto& GameHUD : InGameHUDs)
-	{
-		CreateGameHUD(GameHUD, bAddToViewport);
-	}
-}
-
-void UScreenWidgetManager::CreateGameHUD(UGameHUD* GameHUD, bool bAddToViewport)
-{
-	if (!GameHUDs.Contains(GameHUD))
-	{
-		GameHUDs.Add(GameHUD);
-		ActiveWidget(GameHUD);
-
-		if (bAddToViewport)
-		{
-			GameHUD->AddToViewport(GameHUD->ViewportZOrder);
-		}
-
-		OnHUDCreated.Broadcast(GameHUD);
-	}
-}
-
-void UScreenWidgetManager::ClearupGameHUDs()
-{
-	TArray<UGameHUD*> TempGameHUDs = GameHUDs;
-	for (const auto& GameHUD : TempGameHUDs)
-	{
-		RemoveGameHUD(GameHUD);
-	}
-}
-
-void UScreenWidgetManager::RemoveGameHUD(UGameHUD* GameHUD)
-{
-	if (GameHUDs.Contains(GameHUD))
-	{
-		GameHUDs.Remove(GameHUD);
-		InactiveWidget(GameHUD, true);
-
-		OnHUDDestroyed.Broadcast(GameHUD);
-	}
-}
-
-void UScreenWidgetManager::RemoveGameHUD(const FGameplayTag InTag)
-{
-	TArray<UGameHUD*> TempGameHUDs = GameHUDs;
-	for (const auto& GameHUD : TempGameHUDs)
-	{
-		if (GameHUD->SelfTag == InTag)
-		{
-			RemoveGameHUD(GameHUD);
-		}
-	}
-}
-
-TArray<UGameHUD*> UScreenWidgetManager::GetGameHUDByTag(const FGameplayTag InTag)
-{
-	TArray<UGameHUD*> Result;
-	for (auto& HUD : GameHUDs)
-	{
-		if (HUD->SelfTag == InTag)
-		{
-			Result.Add(HUD);
-		}
-	}
-	return Result;
-}
-
-void UScreenWidgetManager::SetGameHUDActiveState(const bool IsActived)
-{
-	for (const auto& GameHUD : GameHUDs)
-	{
-		SetGameHUDActiveState(GameHUD, IsActived);
-	}
-}
-
-void UScreenWidgetManager::SetGameHUDActiveState(UGameHUD* GameHUD, const bool IsActived)
-{
-	GameHUD->SetIsActived(IsActived);
-
-	OnHUDActiveStateChanged.Broadcast(GameHUD, IsActived);
-}
 
 void UScreenWidgetManager::SetGameHUDActiveState(const FGameplayTag InTag, const bool IsActived)
 {
@@ -295,150 +153,6 @@ void UScreenWidgetManager::SetGameHUDActiveState(const FGameplayTag InTag, const
 	{
 		SetGameHUDActiveState(GameHUD, IsActived);
 	}
-}
-
-void UScreenWidgetManager::AddTemporaryGameHUD(UUserWidgetBase* InWidget)
-{
-	TArray<TSubclassOf<UGameHUD>> GameHUDClasses;
-	for (const auto& GameHUD : GameHUDs)
-	{
-		GameHUDClasses.Add(GameHUD->GetClass());
-	}
-
-	/* 确保已经创建的HUD不会被二次创建 */
-	for (auto& TemporaryHUDClass : InWidget->TemporaryHUDs)
-	{
-		if (!GameHUDClasses.Contains(TemporaryHUDClass))
-		{
-			UGameHUD* NewTemporaryHUD = CreateWidget<UGameHUD>(GetWorld(), TemporaryHUDClass);
-			CreateGameHUD(NewTemporaryHUD, false);
-		}
-		else
-		{
-			for (const auto& GameHUD : GameHUDs)
-			{
-				if (GameHUD.GetClass() == TemporaryHUDClass)
-				{
-					ActiveWidget(GameHUD);
-				}
-			}
-		}
-	}
-}
-
-void UScreenWidgetManager::RemoveTemporaryGameHUD(UUserWidgetBase* InWidget)
-{
-	/* 获取当前激活的所有Widget的临时HUD类集合，不包括InWidget */
-	TArray<TSubclassOf<UGameHUD>> ActivedWidgetTemporaryHUDClasses;
-	for (const auto& ActivedWidget : ActivedWidgets)
-	{
-		if (ActivedWidget == InWidget)
-		{
-			continue;
-		}
-
-		for (auto& TemporaryHUDClass : ActivedWidget->TemporaryHUDs)
-		{
-			ActivedWidgetTemporaryHUDClasses.Add(TemporaryHUDClass);
-		}
-	}
-
-	/* 需要移除的HUD */
-	TArray<TSubclassOf<UGameHUD>> RemoveHUDClasses;
-	for (auto& TemporaryHUDClass : InWidget->TemporaryHUDs)
-	{
-		/* 这个HUD正在被其他激活的Widget使用，不移除 */
-		if (ActivedWidgetTemporaryHUDClasses.Contains(TemporaryHUDClass))
-		{
-			continue;
-		}
-
-		RemoveHUDClasses.Add(TemporaryHUDClass);
-	}
-
-	/* 移除HUD */
-	for (auto& RemoveHUDClass : RemoveHUDClasses)
-	{
-		TArray<UGameHUD*> TempGameHUDs = GameHUDs;
-		for (const auto& TempGameHUD : TempGameHUDs)
-		{
-			if (TempGameHUD->GetClass() == RemoveHUDClass)
-			{
-				RemoveGameHUD(TempGameHUD);
-			}
-		}
-	}
-}
-
-/* ==================== UGameplayTagSlot ==================== */
-
-void UScreenWidgetManager::RegisterSlot(UGameplayTagSlot* InSlot)
-{
-	if (!IsValid(InSlot) || !InSlot->SlotTag.IsValid() || Slots.Contains(InSlot))
-	{
-		DLOG(DLogUI, Warning, TEXT("Fail To RegisterSlot"))
-		return;
-	}
-
-	Slots.Add(InSlot);
-	InSlot->ClearChildren();
-
-	OnSlotRegister.Broadcast(InSlot);
-}
-
-void UScreenWidgetManager::UnRegisterSlot(UGameplayTagSlot* InSlot)
-{
-	if (!IsValid(InSlot) || !InSlot->SlotTag.IsValid() || !Slots.Contains(InSlot))
-	{
-		DLOG(DLogUI, Warning, TEXT("Fail To UnRegisterSlot"))
-		return;
-	}
-
-	OnSlotUnRegister.Broadcast(InSlot);
-	Slots.Remove(InSlot);
-}
-
-void UScreenWidgetManager::ClearupSlots()
-{
-	TArray<UUserWidgetBase*> TempActivedWidgets = ActivedWidgets;
-	for (const auto& TempActivedWidget : TempActivedWidgets)
-	{
-		InactiveWidget(TempActivedWidget, true);
-	}
-
-	OnSlslotClearup.Broadcast();
-	Slots.Reset();
-}
-
-UGameplayTagSlot* UScreenWidgetManager::GetSlot(const FGameplayTag InSlotTag) const
-{
-	if (!InSlotTag.IsValid())
-	{
-		return nullptr;
-	}
-
-	for (const auto& Slot : Slots)
-	{
-		if (Slot->SlotTag == InSlotTag)
-		{
-			return Slot;
-		}
-	}
-
-	return nullptr;
-}
-
-UUserWidgetBase* UScreenWidgetManager::GetSlotWidget(const FGameplayTag InSlotTag)
-{
-	for (const auto& ActivedWidget : ActivedWidgets)
-	{
-		if (ActivedWidget->SlotTag == InSlotTag)
-		{
-			return ActivedWidget;
-		}
-	}
-
-	return nullptr;
 }
 
 /* ==================== User Widget Base ==================== */

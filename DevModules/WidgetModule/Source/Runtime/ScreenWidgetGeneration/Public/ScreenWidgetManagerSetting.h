@@ -20,14 +20,6 @@ public:
 	static ThisClass* Get() { return GetMutableDefault<ThisClass>(); }
 
 public:
-	/* 在世界开始时，将GameHUDClasses创建到屏幕 */
-	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category="HUD")
-	bool AutoCreateGameHUD = true;
-
-	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, DisplayName="Game HUD Classes", Category="HUD")
-	TArray<TSoftClassPtr<UGameHUD>> GameHUDClasses;
-
-public:
 	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category="Shortcut Widget")
 	TSoftObjectPtr<UDataTable> ShortcutWidgetTable = nullptr;
 };
