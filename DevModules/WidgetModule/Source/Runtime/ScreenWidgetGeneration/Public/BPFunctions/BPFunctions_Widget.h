@@ -28,10 +28,10 @@ class SCREENWIDGETGENERATION_API UBPFunctions_Widget : public UBlueprintFunction
 	/* Interactable Widget Group */
 public:
 	UFUNCTION(BlueprintCallable, Category="BPFunctions_Widget|Interactable")
-	static void AddInteractableWidget(UInteractableUserWidgetBase* InteractableWidget, FString GroupName);
+	static void AddInteractableWidget(UInteractableWidgetBase* InteractableWidget, FString GroupName);
 
 	UFUNCTION(BlueprintCallable, Category="BPFunctions_Widget|Interactable")
-	static void RemoveInteractableWidget(UInteractableUserWidgetBase* InteractableWidget, FString GroupName);
+	static void RemoveInteractableWidget(UInteractableWidgetBase* InteractableWidget, FString GroupName);
 
 	UFUNCTION(BlueprintCallable, Category="BPFunctions_Widget|Interactable")
 	static void ClearupInteractableWidgetGroup(const FString& GroupName, bool DeselectAll);

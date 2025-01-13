@@ -45,12 +45,25 @@ protected:
 	virtual void HandleOnWorldMatchStarting(UWorld* InWorld) override;
 	virtual void HandleOnWorldEndPlay(UWorld* InWorld) override;
 
+	/* Delegate From WidgetManager */
+private:
+	void PreWidgetOpened(UUserWidgetBase* InWidget);
+	void PostWidgetClosed(UUserWidgetBase* InWidget);
+
 	/* UGameplayTagSlot */
 public:
 	void RegisterSlot(UGameplayTagSlot* InSlot);
 	void UnRegisterSlot(UGameplayTagSlot* InSlot);
+
+	UGameplayTagSlot* GetSlot(UUserWidgetBase* InWidget) const;
 	UGameplayTagSlot* GetSlot(FGameplayTag InSlotTag) const;
 	TArray<UGameplayTagSlot*> GetSlots() { return Slots; }
+
+	UUserWidgetBase* GetSlotWidget(FGameplayTag InSlotTag) const;
+	TArray<UUserWidgetBase*> GetSlotWidgets() const;
+
+	bool AddSlotWidget(UUserWidgetBase* InWidget);
+	bool RemoveSlotWidget(UUserWidgetBase* InWidget);
 
 public:
 	inline static FDelegate_OnSlotRegister Delegate_OnSlotRegister;

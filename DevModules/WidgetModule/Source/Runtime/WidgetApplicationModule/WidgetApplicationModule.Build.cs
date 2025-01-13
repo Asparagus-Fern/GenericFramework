@@ -1,8 +1,8 @@
 ﻿using UnrealBuildTool;
 
-public class GameHUDModule : ModuleRules
+public class WidgetApplicationModule : ModuleRules
 {
-	public GameHUDModule(ReadOnlyTargetRules Target) : base(Target)
+	public WidgetApplicationModule(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 
@@ -10,9 +10,9 @@ public class GameHUDModule : ModuleRules
 			new string[]
 			{
 				"Core",
+
 				"DevCore",
 				"DevSlateCore",
-				"WidgetGeneration"
 			}
 		);
 
@@ -25,8 +25,14 @@ public class GameHUDModule : ModuleRules
 				"SlateCore",
 
 				"UMG",
-				"GameplayTags",
-				"DeveloperSettings"
+				"InputCore",
+				"CommonUI",
+
+				"GameHUDModule",
+				"WidgetGeneration",
+				"InteractableWidgetGeneration",
+				"WorldWidgetGeneration",
+				"MenuGeneration"
 			}
 		);
 	}

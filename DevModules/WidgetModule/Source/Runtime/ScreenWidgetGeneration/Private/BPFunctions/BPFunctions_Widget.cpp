@@ -10,7 +10,7 @@
 
 /* ==================== Interactable Widget Group ==================== */
 
-void UBPFunctions_Widget::AddInteractableWidget(UInteractableUserWidgetBase* InteractableWidget, const FString GroupName)
+void UBPFunctions_Widget::AddInteractableWidget(UInteractableWidgetBase* InteractableWidget, const FString GroupName)
 {
 	if (UInteractableWidgetGroupManager* InteractableWidgetGroupManager = UManagerProxy::Get()->GetManager<UInteractableWidgetGroupManager>())
 	{
@@ -18,7 +18,7 @@ void UBPFunctions_Widget::AddInteractableWidget(UInteractableUserWidgetBase* Int
 	}
 }
 
-void UBPFunctions_Widget::RemoveInteractableWidget(UInteractableUserWidgetBase* InteractableWidget, const FString GroupName)
+void UBPFunctions_Widget::RemoveInteractableWidget(UInteractableWidgetBase* InteractableWidget, const FString GroupName)
 {
 	if (UInteractableWidgetGroupManager* InteractableWidgetGroupManager = UManagerProxy::Get()->GetManager<UInteractableWidgetGroupManager>())
 	{

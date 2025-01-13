@@ -8,7 +8,7 @@
 class UScreenWidgetManager;
 class UShortcutWidgetHandle;
 class UInputAction;
-class UInteractableUserWidgetBase;
+class UInteractableWidgetBase;
 class UUserWidgetBase;
 class UCommonButtonEvent;
 class UCommonButtonGroup;

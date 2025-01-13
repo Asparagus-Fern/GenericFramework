@@ -19,34 +19,6 @@ class UGameHUD;
 class UGameMenuSetting;
 class UUserWidgetBase;
 
-DECLARE_DELEGATE_OneParam(FOnWidgetActiveStateChanged, UUserWidgetBase*);
-
-/**
- * 处理UMG的动画过渡
- */
-USTRUCT()
-struct FWidgetAnimationTimerHandle
-{
-	GENERATED_BODY()
-
-public:
-	FWidgetAnimationTimerHandle();
-	FWidgetAnimationTimerHandle(FTimerHandle InTimerHandle, UUserWidgetBase* InWidget, const FOnWidgetActiveStateChanged& Finish);
-
-	bool operator==(const FWidgetAnimationTimerHandle& Other) const;
-	bool operator==(const UUserWidgetBase* OtherWidget) const;
-
-public:
-	UPROPERTY()
-	FTimerHandle TimerHandle;
-
-	UPROPERTY()
-	UUserWidgetBase* Widget = nullptr;
-
-public:
-	FOnWidgetActiveStateChanged OnFinish;
-};
-
 /**
  * 
  */
@@ -73,65 +45,6 @@ public:
 	virtual void HandleOnWorldMatchStarting(UWorld* InWorld) override;
 	virtual void OnWorldBeginPlay(UWorld& InWorld) override;
 	virtual void HandleOnWorldEndPlay(UWorld* InWorld) override;
-
-	/* Game HUD */
-public:
-
-
-private:
-	bool bIsHUDCreated = false;
-
-public:
-	bool IsGameHUDCreated() const { return bIsHUDCreated; }
-
-	/* User Widget Base */
-public:
-	DECLARE_EVENT_OneParam(UScreenWidgetManager, FUserWidgetBaseDelegate, UUserWidgetBase*);
-
-	static FUserWidgetBaseDelegate OnWidgetOpen;
-	static FUserWidgetBaseDelegate OnWidgetClose;
-
-public:
-	UUserWidgetBase* GetContainerWidget(const FWidgetContainer& WidgetContainer);
-
-	virtual UUserWidgetBase* OpenUserWidget(TSubclassOf<UUserWidgetBase> InWidgetClass, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged());
-	virtual bool OpenUserWidget(UUserWidgetBase* InWidget, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged());
-
-	virtual bool CloseUserWidget(FGameplayTag InSlotTag, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged(), bool MarkAsGarbage = true);
-	virtual bool CloseUserWidget(UUserWidgetBase* InWidget, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged(), bool MarkAsGarbage = true);
-
-	virtual void MoveUserWidget(FGameplayTag OriginSlotTag, FGameplayTag TargetSlotTag, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged());
-
-public:
-	template <typename T>
-	T* OpenUserWidget(TSubclassOf<UUserWidgetBase> InWidgetClass, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged())
-	{
-		if (UUserWidgetBase* NewWidget = OpenUserWidget(InWidgetClass, OnFinish))
-		{
-			return Cast<T>(NewWidget);
-		}
-		return nullptr;
-	}
-
-protected:
-	virtual void ActiveWidget(UUserWidgetBase* InWidget, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged());
-	virtual void ActiveWidget(UUserWidgetBase* InWidget, bool bIsInstant, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged());
-	virtual void InactiveWidget(UUserWidgetBase* InWidget, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged(), bool MarkAsGarbage = true);
-	virtual void InactiveWidget(UUserWidgetBase* InWidget, bool bIsInstant, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged(), bool MarkAsGarbage = true);
-	void OnInactiveWidgetFinish(UUserWidgetBase* OldWidget, UUserWidgetBase* NewWidget, FOnWidgetActiveStateChanged OnFinish);
-
-	virtual FTimerHandle PlayWidgetAnimation(UUserWidgetBase* InWidget, bool InIsActive, FTimerDelegate const& InDelegate);
-	void OnActiveAnimationPlayFinish(UUserWidgetBase* InWidget, FOnWidgetActiveStateChanged OnFinish);
-	void OnInactiveAnimationPlayFinish(UUserWidgetBase* InWidget, FOnWidgetActiveStateChanged OnFinish);
-
-public:
-	/* 当前显示在屏幕上的所有UI */
-	UPROPERTY(BlueprintReadOnly, Transient)
-	TArray<TObjectPtr<UUserWidgetBase>> ActivedWidgets;
-
-protected:
-	UPROPERTY(Transient)
-	TArray<FWidgetAnimationTimerHandle> WidgetAnimationTimerHandles;
 
 	/* Game Menu */
 public:
@@ -189,6 +102,6 @@ protected:
 	virtual void DestroyMenu(FGameplayTag InMenuTag);
 	virtual void DestroyMenu(TArray<FGameplayTag> InMenuTags);
 
-	virtual FReply OnMenuResponseStateChanged(UInteractableUserWidgetBase* InteractableWidget, bool TargetEventState);
+	virtual FReply OnMenuResponseStateChanged(UInteractableWidgetBase* InteractableWidget, bool TargetEventState);
 	virtual void HandleMenuResponseStateChanged();
 };

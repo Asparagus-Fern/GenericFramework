@@ -9,7 +9,7 @@
 #include "CommonButton.generated.h"
 
 class UScreenWidgetManager;
-class UInteractableUserWidgetBase;
+class UInteractableWidgetBase;
 class UCommonButtonEvent;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnButtonEventHandleFinish);
@@ -23,7 +23,7 @@ class SCREENWIDGETGENERATION_API UCommonButton final : public UCommonButtonBase,
 	GENERATED_BODY()
 
 	friend UCommonButtonGroup;
-	friend UInteractableUserWidgetBase;
+	friend UInteractableWidgetBase;
 	friend UScreenWidgetManager;
 
 public:

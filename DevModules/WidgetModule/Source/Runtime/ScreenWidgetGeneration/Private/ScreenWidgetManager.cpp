@@ -12,56 +12,12 @@
 #include "Input/InputManager.h"
 #include "Kismet/GameplayStatics.h"
 #include "Shortcut/ShortcutWidgetHandle.h"
-#include "UserWidget/Base/UserWidgetBase.h"
-#include "UserWidget/HUD/GameHUD.h"
-#include "UserWidget/Menu/MenuContainer.h"
-#include "UserWidget/Menu/MenuStyle.h"
 #include "UWidget/Override/GameplayTagSlot.h"
-#include "UserWidget/HUD/TemporaryHUD.h"
 
 #define LOCTEXT_NAMESPACE "ScreenWidgetManager"
 
-/* ==================== FWidgetAnimationTimerHandle ==================== */
-
-FWidgetAnimationTimerHandle::FWidgetAnimationTimerHandle()
-{
-}
-
-FWidgetAnimationTimerHandle::FWidgetAnimationTimerHandle(FTimerHandle InTimerHandle, UUserWidgetBase* InWidget, const FOnWidgetActiveStateChanged& Finish)
-	: TimerHandle(InTimerHandle),
-	  Widget(InWidget),
-	  OnFinish(Finish)
-{
-}
-
-bool FWidgetAnimationTimerHandle::operator==(const FWidgetAnimationTimerHandle& Other) const
-{
-	return Widget == Other.Widget;
-}
-
-bool FWidgetAnimationTimerHandle::operator==(const UUserWidgetBase* OtherWidget) const
-{
-	return Widget == OtherWidget;
-}
 
 /* ==================== UScreenWidgetManager ==================== */
-
-UScreenWidgetManager::FScreenWidgetDelegate UScreenWidgetManager::PreHUDCreated;
-UScreenWidgetManager::FHUDDelegate UScreenWidgetManager::OnHUDCreated;
-UScreenWidgetManager::FScreenWidgetDelegate UScreenWidgetManager::PostHUDCreated;
-
-UScreenWidgetManager::FScreenWidgetDelegate UScreenWidgetManager::PreHUDDestroyed;
-UScreenWidgetManager::FHUDDelegate UScreenWidgetManager::OnHUDDestroyed;
-UScreenWidgetManager::FScreenWidgetDelegate UScreenWidgetManager::PostHUDDestroyed;
-
-UScreenWidgetManager::FSlotDelegate UScreenWidgetManager::OnSlotRegister;
-UScreenWidgetManager::FSlotDelegate UScreenWidgetManager::OnSlotUnRegister;
-UScreenWidgetManager::FScreenWidgetDelegate UScreenWidgetManager::OnSlslotClearup;
-
-UScreenWidgetManager::FUserWidgetBaseDelegate UScreenWidgetManager::OnWidgetOpen;
-UScreenWidgetManager::FUserWidgetBaseDelegate UScreenWidgetManager::OnWidgetClose;
-
-UScreenWidgetManager::FOnHUDActiveStateChanged UScreenWidgetManager::OnHUDActiveStateChanged;
 
 UScreenWidgetManager::FOnMenuSelectionChanged UScreenWidgetManager::OnMenuSelectionChanged;
 
@@ -119,8 +75,6 @@ void UScreenWidgetManager::Tick(float DeltaTime)
 void UScreenWidgetManager::HandleOnWorldMatchStarting(UWorld* InWorld)
 {
 	FCoreInternalManager::HandleOnWorldMatchStarting(InWorld);
-
-	
 }
 
 void UScreenWidgetManager::OnWorldBeginPlay(UWorld& InWorld)
@@ -131,33 +85,11 @@ void UScreenWidgetManager::OnWorldBeginPlay(UWorld& InWorld)
 void UScreenWidgetManager::HandleOnWorldEndPlay(UWorld* InWorld)
 {
 	FCoreInternalManager::HandleOnWorldEndPlay(InWorld);
-
-	/* 清除插槽 */
-	ClearupSlots();
-
-	/* 清除HUD */
-	PreHUDDestroyed.Broadcast();
-	ClearupGameHUDs();
-	PostHUDDestroyed.Broadcast();
-}
-
-
-
-
-
-
-
-void UScreenWidgetManager::SetGameHUDActiveState(const FGameplayTag InTag, const bool IsActived)
-{
-	for (const auto& GameHUD : GetGameHUDByTag(InTag))
-	{
-		SetGameHUDActiveState(GameHUD, IsActived);
-	}
 }
 
 /* ==================== User Widget Base ==================== */
 
-UUserWidgetBase* UScreenWidgetManager::GetContainerWidget(const FWidgetContainer& WidgetContainer)
+/*UUserWidgetBase* UScreenWidgetManager::GetContainerWidget(const FWidgetContainer& WidgetContainer)
 {
 	if (WidgetContainer.bInstance && IsValid(WidgetContainer.Widget))
 	{
@@ -171,100 +103,6 @@ UUserWidgetBase* UScreenWidgetManager::GetContainerWidget(const FWidgetContainer
 	return nullptr;
 }
 
-UUserWidgetBase* UScreenWidgetManager::OpenUserWidget(const TSubclassOf<UUserWidgetBase> InWidgetClass, const FOnWidgetActiveStateChanged OnFinish)
-{
-	UUserWidgetBase* NewWidget = CreateWidget<UUserWidgetBase>(GetWorld(), InWidgetClass);
-	if (OpenUserWidget(NewWidget, OnFinish))
-	{
-		return NewWidget;
-	}
-	else
-	{
-		return nullptr;
-	}
-}
-
-bool UScreenWidgetManager::OpenUserWidget(UUserWidgetBase* InWidget, FOnWidgetActiveStateChanged OnFinish)
-{
-	if (!IsValid(InWidget) || !InWidget->SlotTag.IsValid())
-	{
-		DLOG(DLogUI, Warning, TEXT("Fail To Open User Widget"))
-		return false;
-	}
-
-	AddTemporaryGameHUD(InWidget);
-
-	const UGameplayTagSlot* Slot = GetSlot(InWidget->SlotTag);
-	if (IsValid(Slot))
-	{
-		/* 查找当前插槽是否已有其他Widget */
-		UUserWidgetBase* RemoveWidget = nullptr;
-		for (const auto& ActivedWidget : ActivedWidgets)
-		{
-			if (ActivedWidget->SlotTag == InWidget->SlotTag)
-			{
-				RemoveWidget = ActivedWidget;
-			}
-		}
-
-		if (IsValid(RemoveWidget))
-		{
-			InactiveWidget(RemoveWidget, FOnWidgetActiveStateChanged::CreateUObject(this, &UScreenWidgetManager::OnInactiveWidgetFinish, InWidget, OnFinish));
-		}
-		else
-		{
-			ActiveWidget(InWidget, OnFinish);
-		}
-	}
-
-	return true;
-}
-
-bool UScreenWidgetManager::CloseUserWidget(const FGameplayTag InSlotTag, const FOnWidgetActiveStateChanged OnFinish, const bool MarkAsGarbage)
-{
-	if (!InSlotTag.IsValid())
-	{
-		DLOG(DLogUI, Error, TEXT("SlotTag Is NULL"))
-		return false;
-	}
-
-	bool bHasWidgetClose = false;;
-	TArray<UUserWidgetBase*> TempActivedWidgets = ActivedWidgets;
-
-	/* 查找是否有与插槽标签匹配的Widget */
-	for (const auto& TempActivedWidget : TempActivedWidgets)
-	{
-		if (TempActivedWidget->SlotTag == InSlotTag)
-		{
-			if (!bHasWidgetClose)
-			{
-				bHasWidgetClose = true;
-			}
-
-			CloseUserWidget(TempActivedWidget, OnFinish, MarkAsGarbage);
-		}
-	}
-
-	/* 当前没有指定插槽标签的Widget */
-	if (!bHasWidgetClose)
-	{
-		OnFinish.ExecuteIfBound(nullptr);
-	}
-
-	return true;
-}
-
-bool UScreenWidgetManager::CloseUserWidget(UUserWidgetBase* InWidget, const FOnWidgetActiveStateChanged OnFinish, const bool MarkAsGarbage)
-{
-	if (!IsValid(InWidget))
-	{
-		DLOG(DLogUI, Error, TEXT("InWidget Is NULL"))
-		return false;
-	}
-
-	InactiveWidget(InWidget, OnFinish, MarkAsGarbage);
-	return true;
-}
 
 void UScreenWidgetManager::MoveUserWidget(FGameplayTag OriginSlotTag, FGameplayTag TargetSlotTag, FOnWidgetActiveStateChanged OnFinish)
 {
@@ -286,7 +124,7 @@ void UScreenWidgetManager::MoveUserWidget(FGameplayTag OriginSlotTag, FGameplayT
 	return;
 
 	/*
-	/* Widget进入 #1#
+	/* Widget进入 #2#
 	auto OnWidgetMoveIn = [this, &MoveWidget, &OnFinish]()
 	{
 		if (const FWidgetAnimationTimerHandle* Found = WidgetAnimationTimerHandles.FindByKey(MoveWidget))
@@ -300,7 +138,7 @@ void UScreenWidgetManager::MoveUserWidget(FGameplayTag OriginSlotTag, FGameplayT
 		}
 	};
 
-	/* Widget移出 #1#
+	/* Widget移出 #2#
 	auto OnWidgetMoveOut = [this, &MoveWidget, &TargetWidgetSlot, &OnFinish, &OnWidgetMoveIn]()
 	{
 		TargetWidgetSlot->AddChild(MoveWidget);
@@ -318,182 +156,15 @@ void UScreenWidgetManager::MoveUserWidget(FGameplayTag OriginSlotTag, FGameplayT
 		OnWidgetMoveIn();
 	};
 
-	/* 如果有动画的话 #1#
+	/* 如果有动画的话 #2#
 	const FTimerHandle TimerHandle = PlayWidgetAnimation(MoveWidget, false, FTimerDelegate::CreateLambda(OnWidgetMoveOut));
 	if (TimerHandle.IsValid())
 	{
 		return;
 	}
 
-	OnWidgetMoveOut();*/
-}
-
-void UScreenWidgetManager::ActiveWidget(UUserWidgetBase* InWidget, const FOnWidgetActiveStateChanged OnFinish)
-{
-	if (!IsValid(InWidget))
-	{
-		DLOG(DLogUI, Error, TEXT("InWidget Is NULL"))
-		OnFinish.ExecuteIfBound(InWidget);
-		return;
-	}
-
-	if (ActivedWidgets.Contains(InWidget))
-	{
-		DLOG(DLogUI, Warning, TEXT("InWidget Is Already Actived"))
-		OnFinish.ExecuteIfBound(InWidget);
-		return;
-	}
-
-	AddTemporaryGameHUD(InWidget);
-
-	if (UGameplayTagSlot* Slot = GetSlot(InWidget->SlotTag))
-	{
-		Slot->AddChild(InWidget);
-	}
-
-	InWidget->NativeOnCreate();
-	ActivedWidgets.Add(InWidget);
-	OnWidgetOpen.Broadcast(InWidget);
-
-	const FTimerHandle TimerHandle = PlayWidgetAnimation(InWidget, true, FTimerDelegate::CreateUObject(this, &UScreenWidgetManager::OnActiveAnimationPlayFinish, InWidget, OnFinish));
-	if (TimerHandle.IsValid())
-	{
-		WidgetAnimationTimerHandles.Add(FWidgetAnimationTimerHandle(TimerHandle, InWidget, OnFinish));
-		return;
-	}
-
-	OnActiveAnimationPlayFinish(InWidget, OnFinish);
-}
-
-void UScreenWidgetManager::ActiveWidget(UUserWidgetBase* InWidget, const bool bIsInstant, const FOnWidgetActiveStateChanged OnFinish)
-{
-	if (bIsInstant)
-	{
-		if (UGameplayTagSlot* Slot = GetSlot(InWidget->SlotTag))
-		{
-			Slot->AddChild(InWidget);
-		}
-
-		InWidget->NativeOnCreate();
-		ActivedWidgets.Add(InWidget);
-		OnFinish.ExecuteIfBound(InWidget);
-	}
-	else
-	{
-		ActiveWidget(InWidget, OnFinish);
-	}
-}
-
-void UScreenWidgetManager::InactiveWidget(UUserWidgetBase* InWidget, FOnWidgetActiveStateChanged OnFinish, bool MarkAsGarbage)
-{
-	if (!IsValid(InWidget) || !ActivedWidgets.Contains(InWidget))
-	{
-		DLOG(DLogUI, Error, TEXT("InWidget Is NULL"))
-		OnFinish.ExecuteIfBound(InWidget);
-		return;
-	}
-
-	InWidget->NativeOnInactived();
-
-	const FTimerHandle TimerHandle = PlayWidgetAnimation(InWidget, false, FTimerDelegate::CreateUObject(this, &UScreenWidgetManager::OnInactiveAnimationPlayFinish, InWidget, OnFinish));
-	if (TimerHandle.IsValid())
-	{
-		WidgetAnimationTimerHandles.Add(FWidgetAnimationTimerHandle(TimerHandle, InWidget, OnFinish));
-		return;
-	}
-
-	OnInactiveAnimationPlayFinish(InWidget, OnFinish);
-}
-
-void UScreenWidgetManager::InactiveWidget(UUserWidgetBase* InWidget, const bool bIsInstant, const FOnWidgetActiveStateChanged OnFinish, const bool MarkAsGarbage)
-{
-	if (bIsInstant)
-	{
-		if (UGameplayTagSlot* Slot = GetSlot(InWidget->SlotTag))
-		{
-			Slot->RemoveChild(InWidget);
-		}
-
-		InWidget->NativeOnDestroy();
-		ActivedWidgets.Remove(InWidget);
-		OnFinish.ExecuteIfBound(InWidget);
-
-		if (MarkAsGarbage)
-		{
-			InWidget->MarkAsGarbage();
-		}
-	}
-	else
-	{
-		InactiveWidget(InWidget, OnFinish, MarkAsGarbage);
-	}
-}
-
-void UScreenWidgetManager::OnInactiveWidgetFinish(UUserWidgetBase* OldWidget, UUserWidgetBase* NewWidget, FOnWidgetActiveStateChanged OnFinish)
-{
-	ActiveWidget(NewWidget, OnFinish);
-}
-
-FTimerHandle UScreenWidgetManager::PlayWidgetAnimation(UUserWidgetBase* InWidget, const bool InIsActive, FTimerDelegate const& InDelegate)
-{
-	FTimerHandle TimerHandle;
-
-	if (IWidgetAnimationInterface::Execute_HasActivationAnimation(InWidget, InIsActive))
-	{
-		IWidgetAnimationInterface::Execute_PlayActivationAnimation(InWidget, InIsActive);
-
-		if (IWidgetAnimationInterface::Execute_GetActivationAnimationDuration(InWidget, InIsActive) > 0.f)
-		{
-			GetWorld()->GetTimerManager().SetTimer(TimerHandle, InDelegate, IWidgetAnimationInterface::Execute_GetActivationAnimationDuration(InWidget, InIsActive), false);
-		}
-	}
-
-	return TimerHandle;
-}
-
-void UScreenWidgetManager::OnActiveAnimationPlayFinish(UUserWidgetBase* InWidget, FOnWidgetActiveStateChanged OnFinish)
-{
-	TArray<FWidgetAnimationTimerHandle> TempHandles = WidgetAnimationTimerHandles;
-	if (const FWidgetAnimationTimerHandle* Found = TempHandles.FindByKey(InWidget))
-	{
-		Found->OnFinish.ExecuteIfBound(Found->Widget);
-		WidgetAnimationTimerHandles.Remove(*Found);
-	}
-	else
-	{
-		OnFinish.ExecuteIfBound(InWidget);
-	}
-
-	InWidget->NativeOnActived();
-}
-
-void UScreenWidgetManager::OnInactiveAnimationPlayFinish(UUserWidgetBase* InWidget, FOnWidgetActiveStateChanged OnFinish)
-{
-	RemoveTemporaryGameHUD(InWidget);
-
-	if (InWidget->IsA<UGameHUD>())
-	{
-		RemoveGameHUD(Cast<UGameHUD>(InWidget));
-	}
-
-	TArray<FWidgetAnimationTimerHandle> TempHandles = WidgetAnimationTimerHandles;
-	if (const FWidgetAnimationTimerHandle* Found = TempHandles.FindByKey(InWidget))
-	{
-		Found->OnFinish.ExecuteIfBound(Found->Widget);
-		WidgetAnimationTimerHandles.Remove(*Found);
-	}
-	else
-	{
-		OnFinish.ExecuteIfBound(InWidget);
-	}
-
-	InWidget->RemoveFromParent();
-	ActivedWidgets.Remove(InWidget);
-	OnWidgetClose.Broadcast(InWidget);
-
-	InWidget->NativeOnDestroy();
-	InWidget->MarkAsGarbage();
-}
+	OnWidgetMoveOut();#1#
+}*/
 
 /* ==================== Game Menu ==================== */
 
@@ -811,7 +482,7 @@ void UScreenWidgetManager::DestroyMenu(TArray<FGameplayTag> InMenuTags)
 	}*/
 }
 
-FReply UScreenWidgetManager::OnMenuResponseStateChanged(UInteractableUserWidgetBase* InteractableWidget, const bool TargetEventState)
+FReply UScreenWidgetManager::OnMenuResponseStateChanged(UInteractableWidgetBase* InteractableWidget, const bool TargetEventState)
 {
 	/*if (UMenuStyle* TargetMenuStyle = Cast<UMenuStyle>(InteractableWidget))
 	{

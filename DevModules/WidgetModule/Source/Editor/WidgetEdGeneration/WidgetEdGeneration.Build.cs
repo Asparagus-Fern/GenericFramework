@@ -1,8 +1,8 @@
 ﻿using UnrealBuildTool;
 
-public class WidgetGeneration : ModuleRules
+public class WidgetEdGeneration : ModuleRules
 {
-	public WidgetGeneration(ReadOnlyTargetRules Target) : base(Target)
+	public WidgetEdGeneration(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 
@@ -11,7 +11,8 @@ public class WidgetGeneration : ModuleRules
 			{
 				"Core",
 				"DevCore",
-				"DevSlateCore",
+				"DevEdCore",
+				"DevSlateCore"
 			}
 		);
 
@@ -23,12 +24,17 @@ public class WidgetGeneration : ModuleRules
 				"Slate",
 				"SlateCore",
 
-				"UMG",
-				"GameplayTags",
-				"CommonUI",
 				"InputCore",
+				"BlueprintGraph",
+				"KismetCompiler",
+				"GraphEditor",
+				"UnrealEd",
+				"Kismet",
+				"ToolMenus",
+				"EditorStyle",
+				"DeveloperSettings",
 
-				"GameHUDModule"
+				"WidgetGeneration"
 			}
 		);
 	}

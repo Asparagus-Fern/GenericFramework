@@ -36,7 +36,6 @@ public class ApplicationRuntime : ModuleRules
 				"EventUtilities",
 				"DevGameplay",
 				
-				"UMGUtilities",
 				"ScreenWidgetGeneration",
 				"WorldWidgetGeneration",
 				"MenuGeneration",

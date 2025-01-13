@@ -32,9 +32,6 @@ public:
 	void OnInactived();
 	virtual void NativeOnInactived();
 
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Procedure Interface")
-	void SetActiveState(bool InActiveState);
-
 public:
 	virtual bool GetIsActived() const { return bIsActived; }
 	virtual void SetIsActived(const bool InActived) { bIsActived = InActived; }

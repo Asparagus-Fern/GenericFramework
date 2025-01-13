@@ -21,22 +21,17 @@
   ],
   "Modules": [
     {
-      "Name": "UMGUtilities",
+      "Name": "WidgetGeneration",
       "Type": "Runtime",
       "LoadingPhase": "Default"
     },
     {
-      "Name": "UMGEdUtilities",
+      "Name": "WidgetEdGeneration",
       "Type": "Editor",
-      "LoadingPhase": "PostDefault"
+      "LoadingPhase": "Default"
     },
     {
       "Name": "GameHUDModule",
-      "Type": "Runtime",
-      "LoadingPhase": "Default"
-    },
-    {
-      "Name": "WidgetGeneration",
       "Type": "Runtime",
       "LoadingPhase": "Default"
     },
@@ -74,6 +69,11 @@
       "Name": "ScreenWidgetEdGeneration",
       "Type": "Editor",
       "LoadingPhase": "PostDefault"
+    },
+    {
+      "Name": "WidgetApplicationModule",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
     }
   ]
 }

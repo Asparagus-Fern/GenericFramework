@@ -12,7 +12,7 @@ public class InteractableWidgetGeneration : ModuleRules
 				"Core",
 
 				"DevCore",
-				"ScreenWidgetGeneration"
+				"WidgetGeneration",
 			}
 		);
 
@@ -22,7 +22,10 @@ public class InteractableWidgetGeneration : ModuleRules
 				"CoreUObject",
 				"Engine",
 				"Slate",
-				"SlateCore"
+				"SlateCore",
+
+				"UMG",
+				"InputCore"
 			}
 		);
 	}

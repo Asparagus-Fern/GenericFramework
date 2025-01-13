@@ -13,7 +13,7 @@
  * 
  */
 UCLASS(BlueprintType)
-class MENUGENERATION_API UMenuStyle : public UInteractableUserWidgetBase
+class MENUGENERATION_API UMenuStyle : public UInteractableWidgetBase
 {
 	GENERATED_BODY()
 
