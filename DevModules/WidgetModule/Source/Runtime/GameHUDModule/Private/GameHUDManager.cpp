@@ -61,7 +61,9 @@ void UGameHUDManager::HandleOnWorldMatchStarting(UWorld* InWorld)
 
 	if (UGameHUDSetting::Get()->AutoCreateGameHUD)
 	{
+		BROADCAST_UNIFIED_DELEGATE(Delegate_PreHUDCreated, BPDelegate_PreHUDCreated);
 		CreateGameHUDs(UGameHUDSetting::Get()->GameHUDClasses, true);
+		BROADCAST_UNIFIED_DELEGATE(Delegate_PostHUDCreated, BPDelegate_PostHUDCreated);
 	}
 }
 
@@ -267,7 +269,7 @@ void UGameHUDManager::CreateGameHUDs(TArray<TSoftClassPtr<UGameHUD>> InGameHUDCl
 void UGameHUDManager::CreateGameHUDs(TArray<TSubclassOf<UGameHUD>> InGameHUDClasses, const bool bAddToViewport)
 {
 	TArray<TSubclassOf<UGameHUD>> CurrentGameHUDClasses = GetCurrentGameHUDClasses();
-	TArray<UGameHUD*> GameHUDs;
+	TArray<UGameHUD*> GameHUDsNeedToCreated;
 
 	for (const auto& GameHUDClass : InGameHUDClasses)
 	{
@@ -284,10 +286,10 @@ void UGameHUDManager::CreateGameHUDs(TArray<TSubclassOf<UGameHUD>> InGameHUDClas
 			continue;
 		}
 
-		GameHUDs.Add(CreateWidget<UGameHUD>(GetWorld(), GameHUDClass));
+		GameHUDsNeedToCreated.Add(CreateWidget<UGameHUD>(GetWorld(), GameHUDClass));
 	}
 
-	CreateGameHUDs(GameHUDs, bAddToViewport);
+	CreateGameHUDs(GameHUDsNeedToCreated, bAddToViewport);
 }
 
 void UGameHUDManager::CreateGameHUDs(TArray<UGameHUD*> InGameHUDs, const bool bAddToViewport)

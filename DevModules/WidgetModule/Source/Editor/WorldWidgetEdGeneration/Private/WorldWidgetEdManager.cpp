@@ -10,7 +10,8 @@
 #include "WorldWidgetPoint.h"
 #include "BPFunctions/BPFunctions_EditorScene.h"
 #include "BPFunctions/BPFunctions_EditorWidget.h"
-#include "UserWidget/Base/UserWidgetBase.h"
+#include "UWidget/SimpleTextBox.h"
+#include "Base/UserWidgetBase.h"
 #include "Widgets/Layout/SConstraintCanvas.h"
 
 void UEditorWorldWidgetPanel::NativeOnCreate()

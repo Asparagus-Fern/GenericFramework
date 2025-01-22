@@ -10,8 +10,18 @@ public class MenuGeneration : ModuleRules
 			new string[]
 			{
 				"Core",
+
+				"GameplayTags",
+				"UMG",
+				"CommonUI",
+				"CommonInput",
+				"EnhancedInput",
+				"InputCore",
+
 				"DevCore",
-				"DevSlateCore"
+				"DevSlateCore",
+				"WidgetGeneration",
+				"InteractableWidgetGeneration"
 			}
 		);
 
@@ -22,10 +32,6 @@ public class MenuGeneration : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
-
-				"GameplayTags",
-
-				"ScreenWidgetGeneration"
 			}
 		);
 	}

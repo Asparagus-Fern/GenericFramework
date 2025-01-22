@@ -29,6 +29,7 @@ void IStateInterface::NativeOnActivedFinish()
 {
 	if (UObject* Object = Cast<UObject>(this))
 	{
+		OnActivedFinishDelegate.Broadcast(Object);
 		IStateInterface::Execute_OnActivedFinish(Object);
 		DLOG(DLogProcedure, Log, TEXT("On Actived Finish : %s"), *Object->GetName());
 	}
@@ -48,6 +49,7 @@ void IStateInterface::NativeOnInactived()
 
 	if (UObject* Object = Cast<UObject>(this))
 	{
+		OnInactivedFinishDelegate.Broadcast(Object);
 		IStateInterface::Execute_OnInactived(Object);
 		DLOG(DLogProcedure, Log, TEXT("On Inactived : %s"), *Object->GetName());
 	}

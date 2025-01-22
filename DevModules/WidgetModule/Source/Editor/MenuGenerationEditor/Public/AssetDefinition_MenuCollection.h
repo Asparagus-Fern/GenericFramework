@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Asset/AssetDefinitionBase.h"
-#include "Entity/MenuCollection.h"
+// #include "Entity/MenuCollection.h"
 // #include "AssetDefinition_MenuCollection.generated.h"
 
 /**

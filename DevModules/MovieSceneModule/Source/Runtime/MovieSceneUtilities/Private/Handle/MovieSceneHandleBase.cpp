@@ -3,7 +3,6 @@
 
 #include "Handle/MovieSceneHandleBase.h"
 
-#include "ScreenWidgetManager.h"
 #include "Handle/HandleManager.h"
 #include "Manager/ManagerStatics.h"
 #include "Widget/MovieScenePanel.h"
@@ -57,10 +56,10 @@ void UMovieSceneHandleBase::OpenMovieScenePanel(TSubclassOf<UMovieScenePanel> In
 		return;
 	}
 
-	if (UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
-	{
-		MovieScenePanel = ScreenWidgetManager->OpenUserWidget<UMovieScenePanel>(InMovieScenePanel, FOnWidgetActiveStateChanged::CreateUObject(this, &UMovieSceneHandleBase::OnOpenMovieScenePanelFinish));
-	}
+	// if (UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
+	// {
+	// 	MovieScenePanel = ScreenWidgetManager->OpenUserWidget<UMovieScenePanel>(InMovieScenePanel, FOnWidgetActiveStateChanged::CreateUObject(this, &UMovieSceneHandleBase::OnOpenMovieScenePanelFinish));
+	// }
 }
 
 void UMovieSceneHandleBase::OnOpenMovieScenePanelFinish(UUserWidgetBase* InWidget)
@@ -69,10 +68,10 @@ void UMovieSceneHandleBase::OnOpenMovieScenePanelFinish(UUserWidgetBase* InWidge
 
 void UMovieSceneHandleBase::CloseMovieScenePanel()
 {
-	if (UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
-	{
-		ScreenWidgetManager->CloseUserWidget(MovieScenePanel, FOnWidgetActiveStateChanged::CreateUObject(this, &UMovieSceneHandleBase::OnCloseMovieScenePanelFinish));
-	}
+	// if (UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
+	// {
+	// 	ScreenWidgetManager->CloseUserWidget(MovieScenePanel, FOnWidgetActiveStateChanged::CreateUObject(this, &UMovieSceneHandleBase::OnCloseMovieScenePanelFinish));
+	// }
 }
 
 void UMovieSceneHandleBase::OnCloseMovieScenePanelFinish(UUserWidgetBase* InWidget)

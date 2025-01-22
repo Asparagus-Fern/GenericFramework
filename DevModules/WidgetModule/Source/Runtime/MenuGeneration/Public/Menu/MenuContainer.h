@@ -3,12 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ScreenWidgetType.h"
-#include "UserWidget/Base/UserWidgetBase.h"
+#include "Base/UserWidgetBase.h"
 #include "MenuContainer.generated.h"
 
 class UMenuStyle;
-class UCommonButtonGroupBase;
 
 /**
  * 
@@ -23,8 +21,8 @@ public:
 	virtual void NativeOnCreate() override;
 
 public:
-	UPROPERTY(Transient, Getter, BlueprintGetter="GetCommonButtonGroup")
-	UCommonButtonGroup* CommonButtonGroup = nullptr;
+	// UPROPERTY(Transient, Getter, BlueprintGetter="GetCommonButtonGroup")
+	// UCommonButtonGroup* CommonButtonGroup = nullptr;
 
 	UPROPERTY(Transient, Getter, BlueprintGetter="GetMenuStyles")
 	TArray<UMenuStyle*> MenuStyles;
@@ -46,8 +44,8 @@ public:
 	virtual void NativePostConstructMenuContainer();
 
 public:
-	UFUNCTION(BlueprintPure)
-	UCommonButtonGroup* GetCommonButtonGroup() const { return CommonButtonGroup; }
+	// UFUNCTION(BlueprintPure)
+	// UCommonButtonGroup* GetCommonButtonGroup() const { return CommonButtonGroup; }
 
 	UFUNCTION(BlueprintPure)
 	TArray<UMenuStyle*> GetMenuStyles() const { return MenuStyles; }

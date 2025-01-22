@@ -5,7 +5,7 @@
 
 #include "SlateOptMacros.h"
 #include "BPFunctions/BPFunctions_GameplayTag.h"
-#include "Entity/MenuCollection.h"
+#include "Collection/MenuCollection.h"
 #include "Entity/MenuEntity.h"
 
 BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION

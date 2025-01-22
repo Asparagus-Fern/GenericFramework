@@ -3,7 +3,7 @@
 #include "BlueprintEditorModule.h"
 #include "SMenuCollectionHierarchy.h"
 #include "BPFunctions/BPFunctions_BlueprintEditor.h"
-#include "Entity/MenuCollection.h"
+#include "Collection/MenuCollection.h"
 #include "Framework/Docking/LayoutExtender.h"
 
 #define LOCTEXT_NAMESPACE "FMenuGenerationEditorModule"

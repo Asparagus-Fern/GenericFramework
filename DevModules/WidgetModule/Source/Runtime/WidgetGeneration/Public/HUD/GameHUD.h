@@ -11,7 +11,7 @@
  * 
  */
 UCLASS(Abstract)
-class UMGUTILITIES_API UGameHUD : public UUserWidgetBase
+class WIDGETGENERATION_API UGameHUD : public UUserWidgetBase
 {
 	GENERATED_BODY()
 

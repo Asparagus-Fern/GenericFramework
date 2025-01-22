@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "SlateType.h"
-#include "UserWidget/Base/UserWidgetBase.h"
+#include "Base/UserWidgetBase.h"
 #include "GameMapBackground.generated.h"
 
 /**

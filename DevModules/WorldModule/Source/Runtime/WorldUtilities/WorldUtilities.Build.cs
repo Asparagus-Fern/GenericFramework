@@ -25,7 +25,7 @@ public class WorldUtilities : ModuleRules
 				"UMG",
 				"DeveloperSettings",
 				
-				"ScreenWidgetGeneration"
+				"WidgetGeneration",
 			}
 		);
 	}

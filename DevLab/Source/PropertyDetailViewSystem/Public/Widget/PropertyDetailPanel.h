@@ -3,7 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UserWidget/Base/UserWidgetBase.h"
+#include "Base/UserWidgetBase.h"
+
 #include "PropertyDetailPanel.generated.h"
 
 class UPropertyCollection;

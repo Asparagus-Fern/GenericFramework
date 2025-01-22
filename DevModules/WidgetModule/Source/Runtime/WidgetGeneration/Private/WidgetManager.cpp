@@ -168,7 +168,7 @@ bool UWidgetManager::OpenUserWidget(UUserWidgetBase* InWidget, FOnWidgetActiveSt
 	return false;
 }
 
-bool UWidgetManager::CloseUserWidget(FGameplayTag InSlotTag, FOnWidgetActiveStateChanged OnFinish, bool MarkAsGarbage)
+bool UWidgetManager::CloseUserWidget(FGameplayTag InSlotTag, bool MarkAsGarbage, FOnWidgetActiveStateChanged OnFinish)
 {
 	if (!InSlotTag.IsValid())
 	{
@@ -180,7 +180,7 @@ bool UWidgetManager::CloseUserWidget(FGameplayTag InSlotTag, FOnWidgetActiveStat
 	{
 		if (UUserWidgetBase* Widget = FWidgetHUDDelegate::RequestGameplayTagSlotWidget.Execute(InSlotTag))
 		{
-			return CloseUserWidget(Widget, OnFinish, MarkAsGarbage);
+			return CloseUserWidget(Widget, MarkAsGarbage, OnFinish);
 		}
 	}
 
@@ -189,7 +189,7 @@ bool UWidgetManager::CloseUserWidget(FGameplayTag InSlotTag, FOnWidgetActiveStat
 	return false;
 }
 
-bool UWidgetManager::CloseUserWidget(UUserWidgetBase* InWidget, FOnWidgetActiveStateChanged OnFinish, bool MarkAsGarbage)
+bool UWidgetManager::CloseUserWidget(UUserWidgetBase* InWidget, bool MarkAsGarbage, FOnWidgetActiveStateChanged OnFinish)
 {
 	if (!IsValid(InWidget))
 	{
@@ -198,7 +198,7 @@ bool UWidgetManager::CloseUserWidget(UUserWidgetBase* InWidget, FOnWidgetActiveS
 		return false;
 	}
 
-	InactiveWidget(InWidget, OnFinish, MarkAsGarbage);
+	InactiveWidget(InWidget, MarkAsGarbage, OnFinish);
 	return true;
 }
 
@@ -231,7 +231,7 @@ void UWidgetManager::ActiveWidget(UUserWidgetBase* InWidget, FOnWidgetActiveStat
 	}
 }
 
-void UWidgetManager::InactiveWidget(UUserWidgetBase* InWidget, FOnWidgetActiveStateChanged OnFinish, bool MarkAsGarbage)
+void UWidgetManager::InactiveWidget(UUserWidgetBase* InWidget, bool MarkAsGarbage, FOnWidgetActiveStateChanged OnFinish)
 {
 	if (!IsValid(InWidget))
 	{

@@ -5,8 +5,10 @@
 #include "CoreMinimal.h"
 #include "Widgets/SCompoundWidget.h"
 
-class SMenuCollectionHierarchy;
+class UMenuEntityBase;
+class UMenuGroupEntity;
 class UMenuEntity;
+class SMenuCollectionHierarchy;
 
 /**
  * 
@@ -14,11 +16,12 @@ class UMenuEntity;
 struct FMenuCollectionHierarchyRow final : TSharedFromThis<FMenuCollectionHierarchyRow>
 {
 public:
-	FMenuCollectionHierarchyRow(TObjectPtr<UMenuEntity> InMenuEntity);
+	FMenuCollectionHierarchyRow(TObjectPtr<UMenuEntityBase> InMenuEntity);
 	UMenuEntity* GetMenuEntity() const;
+	UMenuGroupEntity* GetMenuGroupEntity() const;
 
 private:
-	TObjectPtr<UMenuEntity> MenuEntity = nullptr;
+	TObjectPtr<UMenuEntityBase> MenuEntity = nullptr;
 };
 
 typedef TSharedPtr<FMenuCollectionHierarchyRow> FMenuCollectionHierarchyRowPtr;

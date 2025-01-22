@@ -33,8 +33,9 @@ public class WidgetEdGeneration : ModuleRules
 				"ToolMenus",
 				"EditorStyle",
 				"DeveloperSettings",
+				"UMGEditor",
 
-				"WidgetGeneration"
+				"WidgetGeneration",
 			}
 		);
 	}

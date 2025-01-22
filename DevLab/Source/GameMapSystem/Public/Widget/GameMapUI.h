@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameMapType.h"
 #include "SlateType.h"
-#include "UserWidget/Base/UserWidgetBase.h"
+#include "Base/UserWidgetBase.h"
 #include "GameMapUI.generated.h"
 
 class UGameMapPlayer;

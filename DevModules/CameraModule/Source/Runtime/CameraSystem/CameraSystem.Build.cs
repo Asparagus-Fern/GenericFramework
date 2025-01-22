@@ -21,10 +21,12 @@ public class CameraSystem : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
+
 				"GameplayTags",
 				"CinematicCamera",
-				"ScreenWidgetGeneration",
 				"DeveloperSettings",
+
+				"WidgetGeneration"
 			}
 		);
 

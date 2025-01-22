@@ -25,8 +25,8 @@ protected:
 
 	/* UI */
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="UI")
-	UGameMenuSetting* DefaultGameMenu = nullptr;
+	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="UI")
+	// UGameMenuSetting* DefaultGameMenu = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="UI")
 	TArray<TSubclassOf<UUserWidgetBase>> DefaultOpenWidgetClasses;

@@ -4,10 +4,7 @@
 #include "ProcedureFlow/Play/ProcedureFlow_PlaySmartCity.h"
 
 #include "CameraManager.h"
-#include "ScreenWidgetManager.h"
 #include "CameraHandle/CameraHandle.h"
-#include "DataAsset/GameMenuSetting.h"
-
 
 AProcedureFlow_PlaySmartCity::AProcedureFlow_PlaySmartCity()
 {
@@ -18,17 +15,17 @@ void AProcedureFlow_PlaySmartCity::OnProcedureFlowEnter_Implementation()
 {
 	Super::OnProcedureFlowEnter_Implementation();
 
-	if (const UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
-	{
-		if (ScreenWidgetManager->IsGameHUDCreated())
-		{
-			PostHUDCreated();
-		}
-		else
-		{
-			UScreenWidgetManager::PostHUDCreated.AddUObject(this, &AProcedureFlow_PlaySmartCity::PostHUDCreated);
-		}
-	}
+	// if (const UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
+	// {
+		// if (ScreenWidgetManager->IsGameHUDCreated())
+		// {
+		// 	PostHUDCreated();
+		// }
+		// else
+		// {
+		// 	UScreenWidgetManager::PostHUDCreated.AddUObject(this, &AProcedureFlow_PlaySmartCity::PostHUDCreated);
+		// }
+	// }
 
 	if (UCameraManager* CameraManager = GetManager<UCameraManager>())
 	{
@@ -50,37 +47,37 @@ void AProcedureFlow_PlaySmartCity::OnProcedureFlowExit_Implementation()
 {
 	Super::OnProcedureFlowExit_Implementation();
 
-	UScreenWidgetManager::PostHUDCreated.RemoveAll(this);
+	// UScreenWidgetManager::PostHUDCreated.RemoveAll(this);
 	UCameraManager::Delegate_OnCameraPointRegister.RemoveAll(this);
 
-	if (UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
-	{
-		for (const auto& DefaultOpenWidget : DefaultOpenWidgets)
-		{
-			ScreenWidgetManager->CloseUserWidget(DefaultOpenWidget);
-		}
-	}
+	// if (UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
+	// {
+	// 	for (const auto& DefaultOpenWidget : DefaultOpenWidgets)
+	// 	{
+	// 		ScreenWidgetManager->CloseUserWidget(DefaultOpenWidget);
+	// 	}
+	// }
 }
 
 void AProcedureFlow_PlaySmartCity::PostHUDCreated()
 {
-	UScreenWidgetManager::PostHUDCreated.RemoveAll(this);
+	// UScreenWidgetManager::PostHUDCreated.RemoveAll(this);
 
-	if (UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
-	{
-		for (const auto& DefaultOpenWidgetClass : DefaultOpenWidgetClasses)
-		{
-			if (UUserWidgetBase* Widget = ScreenWidgetManager->OpenUserWidget(DefaultOpenWidgetClass))
-			{
-				DefaultOpenWidgets.Add(Widget);
-			}
-		}
-
-		if (IsValid(DefaultGameMenu))
-		{
-			ScreenWidgetManager->SwitchGameMenu(DefaultGameMenu);
-		}
-	}
+	// if (UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
+	// {
+	// 	for (const auto& DefaultOpenWidgetClass : DefaultOpenWidgetClasses)
+	// 	{
+			// if (UUserWidgetBase* Widget = ScreenWidgetManager->OpenUserWidget(DefaultOpenWidgetClass))
+			// {
+			// 	DefaultOpenWidgets.Add(Widget);
+			// }
+	// 	}
+	//
+	// 	if (IsValid(DefaultGameMenu))
+	// 	{
+	// 		ScreenWidgetManager->SwitchGameMenu(DefaultGameMenu);
+	// 	}
+	// }
 }
 
 void AProcedureFlow_PlaySmartCity::OnCameraPointRegister(ACameraPointBase* InCameraPoint)

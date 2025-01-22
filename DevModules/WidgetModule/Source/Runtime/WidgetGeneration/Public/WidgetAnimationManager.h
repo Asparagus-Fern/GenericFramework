@@ -33,7 +33,7 @@ public:
 	UUserWidgetBase* Widget = nullptr;
 
 	UPROPERTY()
-	bool bIsActive = false;;
+	bool bIsActive = false;
 
 	UPROPERTY()
 	FTimerHandle TimerHandle;
@@ -42,8 +42,8 @@ public:
 /**
  * 
  */
-UCLASS()
-class WIDGETGENERATION_API UWidgetAnimationManager : public UWorldSubsystem, public FCoreInternalManager
+UCLASS(MinimalAPI)
+class UWidgetAnimationManager : public UWorldSubsystem, public FCoreInternalManager
 {
 	GENERATED_BODY()
 
@@ -59,10 +59,8 @@ private:
 	void OnWidgetClosed(UUserWidgetBase* InWidget);
 
 	/* UWidgetAnimationManager */
-private:
-	bool PlayWidgetAnimation(UUserWidgetBase* InWidget, bool InIsActive, const FTimerDelegate& InDelegate);
-	void OnActiveAnimationPlayFinish(UUserWidgetBase* InWidget);
-	void OnInactiveAnimationPlayFinish(UUserWidgetBase* InWidget);
+public:
+	bool PlayWidgetAnimation(UUserWidgetBase* InWidget, bool InIsActive, const FTimerDelegate& InDelegate = FTimerDelegate());
 
 public:
 	inline static FDelegate_OnWidgetAnimationPlayFinish Delegate_OnWidgetAnimationPlayFinish;
@@ -72,4 +70,7 @@ public:
 private:
 	UPROPERTY(Transient)
 	TArray<FWidgetAnimationTimerHandle> WidgetAnimationTimerHandles;
+
+	void OnActiveAnimationPlayFinish(UUserWidgetBase* InWidget);
+	void OnInactiveAnimationPlayFinish(UUserWidgetBase* InWidget);
 };

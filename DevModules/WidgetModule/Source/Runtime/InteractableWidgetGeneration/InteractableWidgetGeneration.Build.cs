@@ -11,7 +11,15 @@ public class InteractableWidgetGeneration : ModuleRules
 			{
 				"Core",
 
+				"UMG",
+				"CommonInput",
+				"EnhancedInput",
+				"InputCore",
+				"CommonUI",
+				"GameplayTags",
+
 				"DevCore",
+				"DevSlateCore",
 				"WidgetGeneration",
 			}
 		);
@@ -23,9 +31,6 @@ public class InteractableWidgetGeneration : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
-
-				"UMG",
-				"InputCore"
 			}
 		);
 	}

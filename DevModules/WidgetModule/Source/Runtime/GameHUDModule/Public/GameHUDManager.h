@@ -18,6 +18,9 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FBPDelegate_OnSlotRegister, UGamepla
 DECLARE_MULTICAST_DELEGATE_OneParam(FDelegate_OnSlotUnRegister, UGameplayTagSlot*);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FBPDelegate_OnSlotUnRegister, UGameplayTagSlot*, InSlot);
 
+DECLARE_MULTICAST_DELEGATE(FDelegate_HUDDelegate);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FBPDelegate_HUDDelegate);
+
 DECLARE_MULTICAST_DELEGATE_OneParam(FDelegate_OnHUDCreated, UGameHUD*);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FBPDelegate_OnHUDCreated, UGameHUD*, InHUD);
 
@@ -118,9 +121,17 @@ protected:
 	TArray<TSubclassOf<UGameHUD>> GetCurrentGameHUDClasses();
 
 public:
+	inline static FDelegate_HUDDelegate Delegate_PreHUDCreated;
+	UPROPERTY(BlueprintAssignable)
+	FBPDelegate_HUDDelegate BPDelegate_PreHUDCreated;
+
 	inline static FDelegate_OnHUDCreated Delegate_OnHUDCreated;
 	UPROPERTY(BlueprintAssignable)
 	FBPDelegate_OnHUDCreated BPDelegate_OnHUDCreated;
+
+	inline static FDelegate_HUDDelegate Delegate_PostHUDCreated;
+	UPROPERTY(BlueprintAssignable)
+	FBPDelegate_HUDDelegate BPDelegate_PostHUDCreated;
 
 	inline static FDelegate_OnHUDDestroyed Delegate_OnHUDDestroyed;
 	UPROPERTY(BlueprintAssignable)

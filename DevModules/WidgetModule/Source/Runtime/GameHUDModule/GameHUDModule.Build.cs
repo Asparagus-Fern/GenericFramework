@@ -10,9 +10,13 @@ public class GameHUDModule : ModuleRules
 			new string[]
 			{
 				"Core",
+
+				"UMG",
+				"GameplayTags",
+				"DeveloperSettings",
+
 				"DevCore",
 				"DevSlateCore",
-				"WidgetGeneration"
 			}
 		);
 
@@ -24,9 +28,7 @@ public class GameHUDModule : ModuleRules
 				"Slate",
 				"SlateCore",
 
-				"UMG",
-				"GameplayTags",
-				"DeveloperSettings"
+				"WidgetGeneration"
 			}
 		);
 	}

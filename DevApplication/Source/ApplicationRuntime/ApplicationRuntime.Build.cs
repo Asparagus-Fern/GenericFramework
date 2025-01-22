@@ -29,29 +29,29 @@ public class ApplicationRuntime : ModuleRules
 				"MovieScene",
 				"MediaAssets",
 
-				/* AIRT */
-				"ActiveNode",
-				
 				/* Dev Module */
 				"EventUtilities",
 				"DevGameplay",
-				
-				"ScreenWidgetGeneration",
+
+				"WidgetGeneration",
+				"InteractableWidgetGeneration",
+				"GameHUDModule",
 				"WorldWidgetGeneration",
 				"MenuGeneration",
-				
+				"WidgetApplicationModule",
+
 				"CameraSystem",
-				
+
 				"WorldUtilities",
 				"LevelStreaming",
 				"WorldPartition",
-				
+
 				"MovieSceneUtilities",
 				"LevelSequenceSystem",
 				"MediaSystem",
-				
+
 				"PropertyUtilities",
-				
+
 				"ProcedureFlowSystem",
 				"ProcedureTaskSystem",
 

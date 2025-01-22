@@ -3,13 +3,15 @@
 
 #include "WorldWidgetManager.h"
 
-#include "ScreenWidgetManager.h"
+#include "GameHUDManager.h"
 #include "WorldWidgetComponent.h"
 #include "Blueprint/WidgetLayoutLibrary.h"
 #include "Components/CanvasPanel.h"
 #include "Components/CanvasPanelSlot.h"
 #include "Manager/ManagerProxy.h"
 #include "UWidget/Override/GameplayTagSlot.h"
+#include "Base/UserWidgetBase.h"
+#include "Manager/ManagerStatics.h"
 
 void UWorldWidgetPanel::NativeOnCreate()
 {
@@ -72,7 +74,7 @@ void UWorldWidgetPanel::HandleAddToViewport()
 	const FGameplayTag WorldWidgetPanelTag = FGameplayTag::RequestGameplayTag(FName("UI.HUD.Main.WorldWidget"));
 	if (WorldWidgetPanelTag.IsValid())
 	{
-		UGameplayTagSlot* Slot = UManagerProxy::Get()->GetManager<UScreenWidgetManager>()->GetSlot(WorldWidgetPanelTag);
+		UGameplayTagSlot* Slot = GetManager<UGameHUDManager>()->GetSlot(WorldWidgetPanelTag);
 		if (IsValid(Slot))
 		{
 			Slot->SetContent(CanvasPanel);
@@ -162,7 +164,7 @@ void UWorldWidgetManager::Initialize(FSubsystemCollectionBase& Collection)
 	Super::Initialize(Collection);
 	RegisterManager(this);
 
-	UScreenWidgetManager::PostHUDCreated.AddUObject(this, &UWorldWidgetManager::GenerateWorldWidgetPanel);
+	UGameHUDManager::Delegate_PostHUDCreated.AddUObject(this, &UWorldWidgetManager::GenerateWorldWidgetPanel);
 	UWorldWidgetComponent::OnWorldWidgetPointBeginPlay.AddUObject(this, &UWorldWidgetManager::RegisterWorldWidgetComponent);
 	UWorldWidgetComponent::OnWorldWidgetPointEndPlay.AddUObject(this, &UWorldWidgetManager::UnRegisterWorldWidgetComponent);
 }
@@ -174,7 +176,7 @@ void UWorldWidgetManager::Deinitialize()
 
 	UWorldWidgetComponent::OnWorldWidgetPointBeginPlay.RemoveAll(this);
 	UWorldWidgetComponent::OnWorldWidgetPointEndPlay.RemoveAll(this);
-	UScreenWidgetManager::PostHUDCreated.RemoveAll(this);
+	UGameHUDManager::Delegate_PostHUDCreated.RemoveAll(this);
 }
 
 bool UWorldWidgetManager::DoesSupportWorldType(const EWorldType::Type WorldType) const
@@ -205,9 +207,9 @@ void UWorldWidgetManager::HandleOnWorldEndPlay(UWorld* InWorld)
 	const FGameplayTag WorldWidgetPanelTag = FGameplayTag::RequestGameplayTag(FName("UI.HUD.Main.WorldWidget"));
 	if (WorldWidgetPanelTag.IsValid())
 	{
-		if (const UScreenWidgetManager* ScreenWidgetManager = UManagerProxy::Get()->GetManager<UScreenWidgetManager>())
+		if (const UGameHUDManager* GameHUDManager = GetManager<UGameHUDManager>())
 		{
-			UGameplayTagSlot* Slot = ScreenWidgetManager->GetSlot(WorldWidgetPanelTag);
+			UGameplayTagSlot* Slot = GameHUDManager->GetSlot(WorldWidgetPanelTag);
 			if (IsValid(Slot))
 			{
 				Slot->ClearChildren();

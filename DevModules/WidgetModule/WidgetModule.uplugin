@@ -28,7 +28,7 @@
     {
       "Name": "WidgetEdGeneration",
       "Type": "Editor",
-      "LoadingPhase": "Default"
+      "LoadingPhase": "PostEngineInit"
     },
     {
       "Name": "GameHUDModule",
@@ -59,16 +59,6 @@
       "Name": "MenuGenerationEditor",
       "Type": "Editor",
       "LoadingPhase": "PostEngineInit"
-    },
-    {
-      "Name": "ScreenWidgetGeneration",
-      "Type": "Runtime",
-      "LoadingPhase": "Default"
-    },
-    {
-      "Name": "ScreenWidgetEdGeneration",
-      "Type": "Editor",
-      "LoadingPhase": "PostDefault"
     },
     {
       "Name": "WidgetApplicationModule",

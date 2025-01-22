@@ -4,7 +4,7 @@
 #include "Blueprint/MenuCollectionBlueprint.h"
 
 #include "Blueprint/MenuCollectionBlueprintGeneratedClass.h"
-#include "Entity/MenuCollection.h"
+#include "Collection/MenuCollection.h"
 
 UMenuCollectionBlueprint::UMenuCollectionBlueprint()
 {

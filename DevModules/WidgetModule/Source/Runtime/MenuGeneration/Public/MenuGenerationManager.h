@@ -23,6 +23,11 @@ public:
 	virtual void Deinitialize() override;
 	virtual bool DoesSupportWorldType(const EWorldType::Type WorldType) const override;
 
+public:
+	UMenuCollection* RegisterMenuCollection(TSubclassOf<UMenuCollection> InCollection, bool InActived = true);
+	void RegisterMenuCollection(UMenuCollection* InCollection, bool InActived = true);
+	void UnRegisterMenuCollection(UMenuCollection* InCollection);
+
 protected:
 	UPROPERTY(BlueprintReadOnly, Transient)
 	TArray<TObjectPtr<UMenuCollection>> MenuCollections;

@@ -10,7 +10,7 @@ public class PropertyDetailViewSystem : ModuleRules
 			new string[]
 			{
 				"Core",
-				"DevCore",
+				"DevCore", 
 			}
 		);
 
@@ -28,7 +28,7 @@ public class PropertyDetailViewSystem : ModuleRules
 				"InputCore",
 				"GameplayTags",
 
-				"ScreenWidgetGeneration",
+				"WidgetGeneration",
 			}
 		);
 	}

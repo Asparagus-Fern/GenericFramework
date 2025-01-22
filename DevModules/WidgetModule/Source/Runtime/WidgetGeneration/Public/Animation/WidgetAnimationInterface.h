@@ -22,11 +22,15 @@ class WIDGETGENERATION_API IWidgetAnimationInterface
 	GENERATED_BODY()
 
 public:
-	virtual bool HasWidgetAnimation(bool InIsActive) const { return false; }
-	virtual UWidgetAnimation* GetActiveAnimation() const { return nullptr; }
-	virtual UWidgetAnimation* GetInactiveAnimation() const { return nullptr; }
-	virtual void PlayWidgetAnimation(bool InIsActive) { return; }
-	virtual float GetWidgetAnimationDuration(bool InIsActive) { return 0.f; }
+	virtual bool HasWidgetAnimation(bool InIsActive) const;
+	virtual bool IsPlayingWidgetAnimation(bool InIsActive) const;
+	virtual UWidgetAnimation* GetActiveAnimation() const;
+	virtual UWidgetAnimation* GetInactiveAnimation() const;
+	virtual void PlayWidgetAnimation(bool InIsActive);
+	virtual void PlayWidgetAnimationRollback(bool InIsActive);
+	virtual void PauseWidgetAnimation(bool InIsActive);
+	virtual void StopWidgetAnimation(bool InIsActive);
+	virtual float GetWidgetAnimationDuration(bool InIsActive);
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Widget Animation Interface")
 	void SetActiveAnimation(UWidgetAnimation* InAnimation);

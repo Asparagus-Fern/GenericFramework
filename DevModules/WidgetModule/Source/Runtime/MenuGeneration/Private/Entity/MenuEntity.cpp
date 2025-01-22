@@ -3,24 +3,14 @@
 
 #include "Entity/MenuEntity.h"
 
-#include "BPFunctions/BPFunctions_GameplayTag.h"
-
 UMenuEntity::UMenuEntity(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
-	bIsRoot = false;
-	bIsGroup = false;
 }
 
 void UMenuEntity::Initialize()
 {
 	Super::Initialize();
-
-	const FGameplayTag RootMenuTag = FGameplayTag::RequestGameplayTag("UI.Menu");
-	if (UBPFunctions_GameplayTag::GetDirectGameplayTagParent(MenuTag) == RootMenuTag)
-	{
-		bIsRoot = true;
-	}
 }
 
 void UMenuEntity::DeInitialize()
@@ -28,38 +18,24 @@ void UMenuEntity::DeInitialize()
 	Super::DeInitialize();
 }
 
-FString UMenuEntity::GetEventName() const
+void UMenuEntity::OnActived_Implementation()
 {
-	FString Result = "Event";
-	for (auto& Split : SplitMenuTag())
-	{
-		Result += ("_" + Split);
-	}
-	return Result;
+	Super::OnActived_Implementation();
 }
 
-TArray<FString> UMenuEntity::SplitMenuTag() const
+void UMenuEntity::OnInactived_Implementation()
 {
-	TArray<FString> Results;
+	Super::OnInactived_Implementation();
+}
 
-	TArray<FString> SplitWithPoint;
-	FString SplitString = MenuTag.ToString();
-	while (SplitString.Contains("."))
-	{
-		FString Split;
-		SplitString.Split(".", &Split, &SplitString);
-		SplitWithPoint.Add(Split);
-	}
+void UMenuEntity::OnSelected_Implementation()
+{
+	Super::OnSelected_Implementation();
+	NativeOnActived();
+}
 
-	for (auto& Split : SplitWithPoint)
-	{
-		if (Split.Contains("_"))
-		{
-			FString Result;
-			Split.Split("_", nullptr, &Result);
-			Results.Add(Result);
-		}
-	}
-
-	return Results;
+void UMenuEntity::OnDeSelected_Implementation()
+{
+	Super::OnDeSelected_Implementation();
+	NativeOnInactived();
 }

@@ -3,10 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ScreenWidgetType.h"
 #include "Base/UserWidgetBase.h"
 #include "Components/CanvasPanelSlot.h"
-#include "UserWidget/Base/UserWidgetBase.h"
 #include "DynamicPositionWidget.generated.h"
 
 class UCanvasPanelSlot;
@@ -33,8 +31,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FVector2D Position = FVector2D::Zero();
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	FWidgetContainer WidgetContainer;
+	// UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	// FWidgetContainer WidgetContainer;
 };
 
 /**

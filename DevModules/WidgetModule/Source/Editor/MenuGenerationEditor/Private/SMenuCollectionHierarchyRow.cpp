@@ -6,15 +6,21 @@
 #include "SlateOptMacros.h"
 #include "SMenuCollectionHierarchy.h"
 #include "Entity/MenuEntity.h"
+#include "Entity/MenuGroupEntity.h"
 
-FMenuCollectionHierarchyRow::FMenuCollectionHierarchyRow(TObjectPtr<UMenuEntity> InMenuEntity)
+FMenuCollectionHierarchyRow::FMenuCollectionHierarchyRow(TObjectPtr<UMenuEntityBase> InMenuEntity)
 {
 	MenuEntity = InMenuEntity;
 }
 
 UMenuEntity* FMenuCollectionHierarchyRow::GetMenuEntity() const
 {
-	return MenuEntity;
+	return Cast<UMenuEntity>(MenuEntity);
+}
+
+UMenuGroupEntity* FMenuCollectionHierarchyRow::GetMenuGroupEntity() const
+{
+	return Cast<UMenuGroupEntity>(MenuEntity);
 }
 
 BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION

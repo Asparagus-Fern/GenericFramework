@@ -10,7 +10,7 @@
  * 
  */
 UCLASS(Abstract)
-class UMGUTILITIES_API UTemporaryHUD : public UGameHUD
+class WIDGETGENERATION_API UTemporaryHUD : public UGameHUD
 {
 	GENERATED_BODY()
 };

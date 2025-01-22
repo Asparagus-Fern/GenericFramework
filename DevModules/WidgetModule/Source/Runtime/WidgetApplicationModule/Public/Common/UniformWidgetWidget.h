@@ -34,8 +34,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TEnumAsByte<EVerticalAlignment> VerticalAlignment = VAlign_Center;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	FWidgetContainer WidgetContainer;
+	// UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	// FWidgetContainer WidgetContainer;
 };
 
 /**

@@ -23,13 +23,13 @@ public class WorldWidgetEdGeneration : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
-				
+
 				"UMG",
 				"LevelEditor",
 				"UnrealEd",
 				"InputCore",
-				
-				"ScreenWidgetGeneration",
+
+				"WidgetGeneration",
 				"WorldWidgetGeneration",
 			}
 		);

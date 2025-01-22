@@ -6,6 +6,9 @@
 #include "UObject/Interface.h"
 #include "StateInterface.generated.h"
 
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnActivedFinish, UObject*)
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnInactivedFinish, UObject*)
+
 // This class does not need to be modified.
 UINTERFACE()
 class UStateInterface : public UInterface
@@ -56,7 +59,12 @@ public:
 	bool GetGarbageAtDestroy() const { return bGarbageAtDestroy; }
 	void SetGarbageAtDestroy(const bool InGarbageAtDestroy) { bGarbageAtDestroy = InGarbageAtDestroy; }
 
+	FOnActivedFinish GetOnActivedFinishDelegate() { return OnActivedFinishDelegate; }
+	FOnInactivedFinish GetOnInactivedFinishDelegate() { return OnInactivedFinishDelegate; }
+
 protected:
 	bool bIsActived = false;
 	bool bGarbageAtDestroy = false;
+	FOnActivedFinish OnActivedFinishDelegate;
+	FOnInactivedFinish OnInactivedFinishDelegate;
 };

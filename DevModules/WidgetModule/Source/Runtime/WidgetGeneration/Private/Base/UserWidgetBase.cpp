@@ -3,22 +3,14 @@
 
 #include "Base/UserWidgetBase.h"
 
+#include "CommonInputSubsystem.h"
 #include "Animation/WidgetAnimation.h"
+#include "Input/CommonUIActionRouterBase.h"
+#include "Input/CommonUIInputTypes.h"
 
 UUserWidgetBase::UUserWidgetBase(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
-}
-
-void UUserWidgetBase::NativePreConstruct()
-{
-	Super::NativePreConstruct();
-
-	if (ActiveAnimation)
-	{
-		float A = ActiveAnimation->GetStartTime();
-		float B = ActiveAnimation->GetEndTime();
-	}
 }
 
 void UUserWidgetBase::NativeConstruct()
@@ -30,7 +22,7 @@ void UUserWidgetBase::NativeConstruct()
 	{
 		if (UWidgetAnimation* WidgetAnimation = Cast<UWidgetAnimation>(ObjectProperty->GetObjectPropertyValue(ObjectProperty->ContainerPtrToValuePtr<void>(this))))
 		{
-			ActiveAnimation = WidgetAnimation;
+			ActivedAnimation = WidgetAnimation;
 		}
 	}
 
@@ -39,7 +31,7 @@ void UUserWidgetBase::NativeConstruct()
 	{
 		if (UWidgetAnimation* WidgetAnimation = Cast<UWidgetAnimation>(ObjectProperty->GetObjectPropertyValue(ObjectProperty->ContainerPtrToValuePtr<void>(this))))
 		{
-			InactiveAnimation = WidgetAnimation;
+			InactivedAnimation = WidgetAnimation;
 		}
 	}
 
@@ -47,14 +39,26 @@ void UUserWidgetBase::NativeConstruct()
 	TakeWidget()->SlatePrepass();
 }
 
+void UUserWidgetBase::NativeDestruct()
+{
+	Super::NativeDestruct();
+}
+
+FVector2D UUserWidgetBase::GetAnchorOffset() const
+{
+	return FVector2D(-(GetDesiredSize().X * Anchor.X), -(GetDesiredSize().Y * Anchor.Y));
+}
+
+/* ==================== IStateInterface ==================== */
+
 bool UUserWidgetBase::GetIsActived() const
 {
-	return IProcedureInterface::GetIsActived();
+	return IStateInterface::GetIsActived();
 }
 
 void UUserWidgetBase::SetIsActived(const bool InActived)
 {
-	IProcedureInterface::SetIsActived(InActived);
+	IStateInterface::SetIsActived(InActived);
 
 	if (HasWidgetAnimation(InActived))
 	{
@@ -70,29 +74,41 @@ void UUserWidgetBase::SetIsActived(const bool InActived)
 
 bool UUserWidgetBase::HasWidgetAnimation(const bool InIsActive) const
 {
-	return InIsActive ? IsValid(ActiveAnimation) : IsValid(InactiveAnimation);
+	return InIsActive ? IsValid(ActivedAnimation) : IsValid(InactivedAnimation);
+}
+
+bool UUserWidgetBase::IsPlayingWidgetAnimation(bool InIsActive) const
+{
+	const bool Result = IWidgetAnimationInterface::IsPlayingWidgetAnimation(InIsActive);
+
+	if (const UWidgetAnimation* Animation = InIsActive ? GetActiveAnimation() : GetInactiveAnimation())
+	{
+		return IsAnimationPlaying(Animation);
+	}
+
+	return Result;
 }
 
 UWidgetAnimation* UUserWidgetBase::GetActiveAnimation() const
 {
-	return ActiveAnimation;
+	return ActivedAnimation;
 }
 
 void UUserWidgetBase::SetActiveAnimation_Implementation(UWidgetAnimation* InAnimation)
 {
 	IWidgetAnimationInterface::SetActiveAnimation_Implementation(InAnimation);
-	ActiveAnimation = InAnimation;
+	ActivedAnimation = InAnimation;
 }
 
 UWidgetAnimation* UUserWidgetBase::GetInactiveAnimation() const
 {
-	return InactiveAnimation;
+	return InactivedAnimation;
 }
 
 void UUserWidgetBase::SetInactiveAnimation_Implementation(UWidgetAnimation* InAnimation)
 {
 	IWidgetAnimationInterface::SetInactiveAnimation_Implementation(InAnimation);
-	InactiveAnimation = InAnimation;
+	InactivedAnimation = InAnimation;
 }
 
 void UUserWidgetBase::PlayWidgetAnimation(bool InIsActive)
@@ -105,19 +121,44 @@ void UUserWidgetBase::PlayWidgetAnimation(bool InIsActive)
 	}
 }
 
+void UUserWidgetBase::PlayWidgetAnimationRollback(bool InIsActive)
+{
+	IWidgetAnimationInterface::PlayWidgetAnimationRollback(InIsActive);
+
+	if (const UWidgetAnimation* Animation = InIsActive ? GetActiveAnimation() : GetInactiveAnimation())
+	{
+		ReverseAnimation(Animation);
+	}
+}
+
+void UUserWidgetBase::PauseWidgetAnimation(bool InIsActive)
+{
+	IWidgetAnimationInterface::PauseWidgetAnimation(InIsActive);
+
+	if (const UWidgetAnimation* Animation = InIsActive ? GetActiveAnimation() : GetInactiveAnimation())
+	{
+		PauseAnimation(Animation);
+	}
+}
+
+void UUserWidgetBase::StopWidgetAnimation(bool InIsActive)
+{
+	IWidgetAnimationInterface::StopWidgetAnimation(InIsActive);
+
+	if (const UWidgetAnimation* Animation = InIsActive ? GetActiveAnimation() : GetInactiveAnimation())
+	{
+		StopAnimation(Animation);
+	}
+}
+
 float UUserWidgetBase::GetWidgetAnimationDuration(const bool InIsActive)
 {
-	IWidgetAnimationInterface::GetWidgetAnimationDuration(InIsActive);
+	const float Result = IWidgetAnimationInterface::GetWidgetAnimationDuration(InIsActive);
 
-	if (UWidgetAnimation* Animation = InIsActive ? GetActiveAnimation() : GetInactiveAnimation())
+	if (const UWidgetAnimation* Animation = InIsActive ? GetActiveAnimation() : GetInactiveAnimation())
 	{
 		return Animation->GetEndTime();
 	}
 
-	return 0.f;
-}
-
-FVector2D UUserWidgetBase::GetAnchorOffset() const
-{
-	return FVector2D(-(GetDesiredSize().X * Anchor.X), -(GetDesiredSize().Y * Anchor.Y));
+	return Result;
 }

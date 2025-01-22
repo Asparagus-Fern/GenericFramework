@@ -2,7 +2,6 @@
 
 #include "Common/UniformWidgetWidget.h"
 
-#include "ScreenWidgetManager.h"
 #include "Components/UniformGridPanel.h"
 #include "Components/UniformGridSlot.h"
 #include "Manager/ManagerProxy.h"
@@ -22,26 +21,26 @@ void UUniformWidgetWidget::NativePreConstruct()
 		{
 			if (IsDesignTime())
 			{
-				if (IsValid(UniformGridPanelWidget.WidgetContainer.WidgetClass))
-				{
-					UUserWidget* Widget = CreateWidget<UUserWidgetBase>(this, UniformGridPanelWidget.WidgetContainer.WidgetClass);
-					UUniformGridSlot* UniformGridSlot = UniformGridPanel->AddChildToUniformGrid(Widget, UniformGridPanelWidget.Row, UniformGridPanelWidget.Colum);
-					UniformGridSlot->SetHorizontalAlignment(UniformGridPanelWidget.HorizontalAlignment);
-					UniformGridSlot->SetVerticalAlignment(UniformGridPanelWidget.VerticalAlignment);
-				}
+				// if (IsValid(UniformGridPanelWidget.WidgetContainer.WidgetClass))
+				// {
+				// 	UUserWidget* Widget = CreateWidget<UUserWidgetBase>(this, UniformGridPanelWidget.WidgetContainer.WidgetClass);
+				// 	UUniformGridSlot* UniformGridSlot = UniformGridPanel->AddChildToUniformGrid(Widget, UniformGridPanelWidget.Row, UniformGridPanelWidget.Colum);
+				// 	UniformGridSlot->SetHorizontalAlignment(UniformGridPanelWidget.HorizontalAlignment);
+				// 	UniformGridSlot->SetVerticalAlignment(UniformGridPanelWidget.VerticalAlignment);
+				// }
 			}
 			else
 			{
-				if (UScreenWidgetManager* ScreenWidgetManager = UManagerProxy::Get()->GetManager<UScreenWidgetManager>())
-				{
-					UUserWidgetBase* ContainerWidget = ScreenWidgetManager->GetContainerWidget(UniformGridPanelWidget.WidgetContainer);
-					if (IsValid(ContainerWidget))
-					{
-						UUniformGridSlot* UniformGridSlot = UniformGridPanel->AddChildToUniformGrid(ContainerWidget, UniformGridPanelWidget.Row, UniformGridPanelWidget.Colum);
-						UniformGridSlot->SetHorizontalAlignment(UniformGridPanelWidget.HorizontalAlignment);
-						UniformGridSlot->SetVerticalAlignment(UniformGridPanelWidget.VerticalAlignment);
-					}
-				}
+				// if (UScreenWidgetManager* ScreenWidgetManager = UManagerProxy::Get()->GetManager<UScreenWidgetManager>())
+				// {
+				// 	UUserWidgetBase* ContainerWidget = ScreenWidgetManager->GetContainerWidget(UniformGridPanelWidget.WidgetContainer);
+				// 	if (IsValid(ContainerWidget))
+				// 	{
+				// 		UUniformGridSlot* UniformGridSlot = UniformGridPanel->AddChildToUniformGrid(ContainerWidget, UniformGridPanelWidget.Row, UniformGridPanelWidget.Colum);
+				// 		UniformGridSlot->SetHorizontalAlignment(UniformGridPanelWidget.HorizontalAlignment);
+				// 		UniformGridSlot->SetVerticalAlignment(UniformGridPanelWidget.VerticalAlignment);
+				// 	}
+				// }
 			}
 		}
 	}

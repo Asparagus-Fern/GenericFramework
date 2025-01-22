@@ -19,15 +19,15 @@ class GAMEHUDMODULE_API UBPFunctions_GameHUD : public UBlueprintFunctionLibrary
 
 	/* UGameplayTagSlot */
 public:
-	UFUNCTION(BlueprintCallable, Category="BPFunctions_Widget|Slot")
+	UFUNCTION(BlueprintCallable)
 	static void RegisterSlot(UGameplayTagSlot* InSlot);
 
-	UFUNCTION(BlueprintCallable, Category="BPFunctions_Widget|Slot")
+	UFUNCTION(BlueprintCallable)
 	static void UnRegisterSlot(UGameplayTagSlot* InSlot);
 
-	UFUNCTION(BlueprintPure, Category="BPFunctions_Widget|Slot")
+	UFUNCTION(BlueprintPure)
 	static bool GetSlots(TArray<UGameplayTagSlot*>& Slots);
 
-	UFUNCTION(BlueprintPure, meta=(GameplayTagFilter="UI.HUD"), Category="BPFunctions_Widget|Slot")
+	UFUNCTION(BlueprintPure, meta=(GameplayTagFilter="UI.HUD"))
 	static UGameplayTagSlot* GetSlot(FGameplayTag InSlotTag);
 };

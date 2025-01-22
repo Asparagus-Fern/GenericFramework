@@ -29,16 +29,13 @@ void SGenericButton::Construct(const FArguments& InArgs)
 	);
 
 	SetCanTick(false);
-
-	// Set the hover state to indicate that we want to override the default behavior
-	// SetHover(false);
+	SetHover(false);
 
 	OnReceivedFocus = InArgs._OnReceivedFocus;
 	OnLostFocus = InArgs._OnLostFocus;
-	bIsButtonActived = InArgs._IsButtonActived;
-	// bIsButtonEnabled = InArgs._IsButtonEnabled;
-	// bIsInteractionEnabled = InArgs._IsInteractionEnabled;
-	// bHovered = false;
+	bIsButtonEnabled = InArgs._IsButtonEnabled;
+	bIsInteractionEnabled = InArgs._IsInteractionEnabled;
+	bHovered = false;
 }
 
 void SGenericButton::OnMouseEnter(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent)
@@ -53,6 +50,31 @@ void SGenericButton::OnMouseEnter(const FGeometry& MyGeometry, const FPointerEve
 
 		// SButton won't be able to correctly detect hover changes since we manually set hover, do our own detection
 		if (!bWasHovered && IsHovered())
+		{
+			ExecuteHoverStateChanged(true);
+		}
+	}
+}
+
+void SGenericButton::OnMouseLeave(const FPointerEvent& MouseEvent)
+{
+	if (MouseEvent.IsTouchEvent())
+	{
+		if (HasMouseCapture())
+		{
+			Release();
+		}
+	}
+	else
+	{
+		const bool bWasHovered = IsHovered();
+
+		bHovered = false;
+		SetHover(false);
+		SButton::OnMouseLeave(MouseEvent);
+
+		// SButton won't be able to correctly detect hover changes since we manually set hover, do our own detection
+		if (bWasHovered && !IsHovered())
 		{
 			ExecuteHoverStateChanged(true);
 		}
@@ -85,9 +107,111 @@ FReply SGenericButton::OnMouseButtonUp(const FGeometry& MyGeometry, const FPoint
 	return Reply;
 }
 
+FReply SGenericButton::OnMouseButtonDoubleClick(const FGeometry& InMyGeometry, const FPointerEvent& InMouseEvent)
+{
+	if (!IsInteractable())
+	{
+		return FReply::Handled();
+	}
+
+	if (OnDoubleClicked.IsBound())
+	{
+		FReply Reply = OnDoubleClicked.Execute();
+		if (Reply.IsEventHandled())
+		{
+			return Reply;
+		}
+	}
+
+	FReply Reply = OnMouseButtonDown(InMyGeometry, InMouseEvent);
+	if (Reply.IsEventHandled())
+	{
+		return Reply;
+	}
+
+	return SButton::OnMouseButtonDoubleClick(InMyGeometry, InMouseEvent);
+}
+
+FReply SGenericButton::OnTouchMoved(const FGeometry& MyGeometry, const FPointerEvent& InTouchEvent)
+{
+	FReply Reply = FReply::Handled();
+
+	if (HasMouseCapture())
+	{
+		if (!MyGeometry.IsUnderLocation(InTouchEvent.GetScreenSpacePosition()))
+		{
+			Release();
+			Reply.ReleaseMouseCapture();
+		}
+	}
+	else
+	{
+		Reply = SButton::OnTouchMoved(MyGeometry, InTouchEvent);
+	}
+
+	return Reply;
+}
+
+FReply SGenericButton::OnKeyDown(const FGeometry& MyGeometry, const FKeyEvent& InKeyEvent)
+{
+	return SButton::OnKeyDown(MyGeometry, InKeyEvent);
+}
+
+FReply SGenericButton::OnKeyUp(const FGeometry& MyGeometry, const FKeyEvent& InKeyEvent)
+{
+	return SButton::OnKeyUp(MyGeometry, InKeyEvent);
+}
+
+FReply SGenericButton::OnFocusReceived(const FGeometry& MyGeometry, const FFocusEvent& InFocusEvent)
+{
+	FReply ReturnReply = SButton::OnFocusReceived(MyGeometry, InFocusEvent);
+	OnReceivedFocus.ExecuteIfBound();
+
+	return ReturnReply;
+}
+
+void SGenericButton::OnFocusLost(const FFocusEvent& InFocusEvent)
+{
+	OnLostFocus.ExecuteIfBound();
+}
+
+int32 SGenericButton::OnPaint(const FPaintArgs& Args, const FGeometry& AllottedGeometry, const FSlateRect& MyCullingRect, FSlateWindowElementList& OutDrawElements, int32 LayerId, const FWidgetStyle& InWidgetStyle, bool bParentEnabled) const
+{
+	bool bEnabled = bParentEnabled && bIsButtonEnabled;
+	return SButton::OnPaint(Args, AllottedGeometry, MyCullingRect, OutDrawElements, LayerId, InWidgetStyle, bEnabled);
+}
+
 bool SGenericButton::IsInteractable() const
 {
-	return bIsButtonActived;
+	return bIsButtonEnabled && bIsInteractionEnabled;
+}
+
+void SGenericButton::SetIsButtonEnabled(bool bInIsButtonEnabled)
+{
+	bIsButtonEnabled = bInIsButtonEnabled;
+}
+
+void SGenericButton::SetIsInteractionEnabled(bool bInIsInteractionEnabled)
+{
+	if (bIsInteractionEnabled == bInIsInteractionEnabled)
+	{
+		return;
+	}
+
+	const bool bWasHovered = IsHovered();
+	bIsInteractionEnabled = bInIsInteractionEnabled;
+
+	const bool bIsHoveredNow = bHovered && bInIsInteractionEnabled;
+	if (bWasHovered != bIsHoveredNow)
+	{
+		SetHover(bIsHoveredNow);
+		ExecuteHoverStateChanged(false);
+	}
+}
+
+void SGenericButton::SetIsButtonFocusable(bool bInIsButtonFocusable)
+{
+	SetIsFocusable(bInIsButtonFocusable);
 }
 
 END_SLATE_FUNCTION_BUILD_OPTIMIZATION

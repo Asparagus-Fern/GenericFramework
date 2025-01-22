@@ -11,8 +11,6 @@ public class WorldWidgetGeneration : ModuleRules
 			{
 				"Core",
 				"DevCore",
-				"ScreenWidgetGeneration",
-				"DeveloperSettings"
 			}
 		);
 
@@ -27,6 +25,10 @@ public class WorldWidgetGeneration : ModuleRules
 				"UMG",
 				"CommonUI",
 				"GameplayTags",
+				"DeveloperSettings",
+
+				"WidgetGeneration",
+				"GameHUDModule",
 			}
 		);
 	}

@@ -3,14 +3,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "MenuEntity.h"
+#include "MenuEntityBase.h"
 #include "MenuGroupEntity.generated.h"
+
+class UInteractableWidgetEntityGroup;
+class UMenuContainer;
 
 /**
  * 
  */
 UCLASS()
-class MENUGENERATION_API UMenuGroupEntity : public UMenuEntity
+class MENUGENERATION_API UMenuGroupEntity : public UMenuEntityBase
 {
 	GENERATED_BODY()
 
@@ -20,14 +23,14 @@ public:
 	virtual void DeInitialize() override;
 
 public:
-	UPROPERTY()
-	bool bUseContainerClass = false;
+	virtual void OnActived_Implementation() override;
+	virtual void OnInactived_Implementation() override;
 
-	/* 菜单容器类 */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(EditConditionHides, EditCondition = "bUseContainerClass"))
-	TSubclassOf<UMenuContainer> ContainerClass = nullptr;
+protected:
+	UPROPERTY(Transient)
+	TObjectPtr<UInteractableWidgetEntityGroup> EntityGroup = nullptr;
 
-	/* 菜单容器 */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced, meta=(EditConditionHides, EditCondition = "!bUseContainerClass"))
-	UMenuContainer* Container = nullptr;
+public:
+	UFUNCTION(BlueprintPure)
+	TArray<UMenuEntityBase*> GetChildrenEntities() const;
 };

@@ -21,15 +21,15 @@ void UCarouselNavBar::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	if (Button_Left)
-	{
-		Button_Left->OnClicked.AddDynamic(this, &UCarouselNavBar::OnPreviewButtonClicked);
-	}
-
-	if (Button_Right)
-	{
-		Button_Right->OnClicked.AddDynamic(this, &UCarouselNavBar::OnNextButtonClicked);
-	}
+	// if (Button_Left)
+	// {
+	// 	Button_Left->OnClicked.AddDynamic(this, &UCarouselNavBar::OnPreviewButtonClicked);
+	// }
+	//
+	// if (Button_Right)
+	// {
+	// 	Button_Right->OnClicked.AddDynamic(this, &UCarouselNavBar::OnNextButtonClicked);
+	// }
 
 	if (CarouselContent)
 	{
@@ -41,15 +41,15 @@ void UCarouselNavBar::NativeDestruct()
 {
 	Super::NativeDestruct();
 
-	if (Button_Left)
-	{
-		Button_Left->OnClicked.RemoveAll(this);
-	}
-
-	if (Button_Right)
-	{
-		Button_Right->OnClicked.RemoveAll(this);
-	}
+	// if (Button_Left)
+	// {
+	// 	Button_Left->OnClicked.RemoveAll(this);
+	// }
+	//
+	// if (Button_Right)
+	// {
+	// 	Button_Right->OnClicked.RemoveAll(this);
+	// }
 
 	if (CarouselContent)
 	{

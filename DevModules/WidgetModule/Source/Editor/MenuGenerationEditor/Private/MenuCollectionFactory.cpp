@@ -3,8 +3,6 @@
 
 #include "MenuCollectionFactory.h"
 
-#include "Entity/MenuCollection.h"
-
 #define LOCTEXT_NAMESPACE "UMenuCollectionFactory"
 
 // UMenuCollectionFactory::UMenuCollectionFactory()

@@ -19,7 +19,7 @@ public:
 			  , _TouchMethod(EButtonTouchMethod::DownAndUp)
 			  , _PressMethod(EButtonPressMethod::DownAndUp)
 			  , _IsFocusable(true)
-			  , _IsButtonActived(true)
+			  , _IsInteractionEnabled(true)
 		{
 		}
 
@@ -37,21 +37,32 @@ public:
 		SLATE_ARGUMENT(bool, IsFocusable)
 		SLATE_EVENT(FSimpleDelegate, OnReceivedFocus)
 		SLATE_EVENT(FSimpleDelegate, OnLostFocus)
-		SLATE_ARGUMENT(bool, IsButtonActived)
+
+		SLATE_ARGUMENT(bool, IsButtonEnabled)
+		SLATE_ARGUMENT(bool, IsInteractionEnabled)
+
 	SLATE_END_ARGS()
 
 	void Construct(const FArguments& InArgs);
 
 public:
 	virtual void OnMouseEnter(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent) override;
-
 	virtual void OnMouseLeave(const FPointerEvent& MouseEvent) override;
-
 	virtual FReply OnMouseButtonDown(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent) override;
-
 	virtual FReply OnMouseButtonUp(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent) override;
-
+	virtual FReply OnMouseButtonDoubleClick(const FGeometry& InMyGeometry, const FPointerEvent& InMouseEvent) override;
+	virtual FReply OnTouchMoved(const FGeometry& MyGeometry, const FPointerEvent& InTouchEvent) override;
+	virtual FReply OnKeyDown(const FGeometry& MyGeometry, const FKeyEvent& InKeyEvent) override;
+	virtual FReply OnKeyUp(const FGeometry& MyGeometry, const FKeyEvent& InKeyEvent) override;
+	virtual FReply OnFocusReceived(const FGeometry& MyGeometry, const FFocusEvent& InFocusEvent) override;
+	virtual void OnFocusLost(const FFocusEvent& InFocusEvent) override;
+	virtual int32 OnPaint(const FPaintArgs& Args, const FGeometry& AllottedGeometry, const FSlateRect& MyCullingRect, FSlateWindowElementList& OutDrawElements, int32 LayerId, const FWidgetStyle& InWidgetStyle, bool bParentEnabled) const override;
 	virtual bool IsInteractable() const override;
+
+public:
+	void SetIsButtonEnabled(bool bInIsButtonEnabled);
+	void SetIsInteractionEnabled(bool bInIsInteractionEnabled);
+	void SetIsButtonFocusable(bool bInIsButtonFocusable);
 
 private:
 	FOnClicked OnDoubleClicked;
@@ -62,6 +73,11 @@ private:
 	/** Delegate fired whenever focus is lost */
 	FSimpleDelegate OnLostFocus;
 
+	/** True if the button is enabled */
+	bool bIsButtonEnabled = true;
+
 	/** True If Button Event Enable */
-	bool bIsButtonActived = true;
+	bool bIsInteractionEnabled = true;
+
+	bool bHovered = false;
 };
