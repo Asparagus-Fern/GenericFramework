@@ -26,10 +26,13 @@ public class MenuGenerationEditor : ModuleRules
 				"SlateCore",
 
 				"UnrealEd",
+				"BlueprintGraph",
 				"Kismet",
 				"InputCore",
 				"AssetDefinition",
 				"GameplayTags",
+				"PropertyEditor",
+				"StructUtilsEditor",
 			}
 		);
 	}

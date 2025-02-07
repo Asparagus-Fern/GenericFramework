@@ -6,6 +6,7 @@
 #include "WidgetAnimationManager.h"
 #include "Base/UserWidgetBase.h"
 #include "Blueprint/UserWidget.h"
+#include "UWidget/Override/GameplayTagSlot.h"
 
 /* ==================== FReplaceWidgetHandle ==================== */
 
@@ -57,12 +58,12 @@ void UWidgetManager::HandleOnWorldEndPlay(UWorld* InWorld)
 {
 	FCoreInternalManager::HandleOnWorldEndPlay(InWorld);
 
-	if (FWidgetHUDDelegate::RequestRemoveGameplayTagSlotWidget.IsBound())
+	if (RequestRemoveGameplayTagSlotWidget.IsBound())
 	{
 		for (auto& ActivedWidget : ActivedWidgets)
 		{
 			ActivedWidget->NativeOnInactived();
-			FWidgetHUDDelegate::RequestRemoveGameplayTagSlotWidget.Execute(ActivedWidget);
+			RequestRemoveGameplayTagSlotWidget.Execute(ActivedWidget);
 			ActivedWidget->NativeOnInactivedFinish();
 		}
 	}
@@ -136,9 +137,9 @@ bool UWidgetManager::OpenUserWidget(UUserWidgetBase* InWidget, FOnWidgetActiveSt
 	BROADCAST_UNIFIED_DELEGATE(Delegate_PreWidgetOpened, BPDelegate_PreWidgetOpened, InWidget);
 
 	const UGameplayTagSlot* Slot = nullptr;
-	if (FWidgetHUDDelegate::RequestGameplayTagSlot.IsBound())
+	if (RequestGameplayTagSlot.IsBound())
 	{
-		Slot = FWidgetHUDDelegate::RequestGameplayTagSlot.Execute(InWidget);
+		Slot = RequestGameplayTagSlot.Execute(InWidget);
 	}
 
 	if (IsValid(Slot))
@@ -146,9 +147,9 @@ bool UWidgetManager::OpenUserWidget(UUserWidgetBase* InWidget, FOnWidgetActiveSt
 		InWidget->NativeOnCreate();
 
 		UUserWidgetBase* RemoveWidget = nullptr;
-		if (FWidgetHUDDelegate::RequestGameplayTagSlotWidget.IsBound())
+		if (RequestGameplayTagSlotWidget.IsBound())
 		{
-			RemoveWidget = FWidgetHUDDelegate::RequestGameplayTagSlotWidget.Execute(InWidget->SlotTag);
+			RemoveWidget = RequestGameplayTagSlotWidget.Execute(InWidget->SlotTag);
 		}
 
 		if (IsValid(RemoveWidget))
@@ -176,9 +177,9 @@ bool UWidgetManager::CloseUserWidget(FGameplayTag InSlotTag, bool MarkAsGarbage,
 		return false;
 	}
 
-	if (FWidgetHUDDelegate::RequestGameplayTagSlotWidget.IsBound())
+	if (RequestGameplayTagSlotWidget.IsBound())
 	{
-		if (UUserWidgetBase* Widget = FWidgetHUDDelegate::RequestGameplayTagSlotWidget.Execute(InSlotTag))
+		if (UUserWidgetBase* Widget = RequestGameplayTagSlotWidget.Execute(InSlotTag))
 		{
 			return CloseUserWidget(Widget, MarkAsGarbage, OnFinish);
 		}
@@ -218,9 +219,9 @@ void UWidgetManager::ActiveWidget(UUserWidgetBase* InWidget, FOnWidgetActiveStat
 		return;
 	}
 
-	if (FWidgetHUDDelegate::RequestAddGameplayTagSlotWidget.IsBound())
+	if (RequestAddGameplayTagSlotWidget.IsBound())
 	{
-		if (FWidgetHUDDelegate::RequestAddGameplayTagSlotWidget.Execute(InWidget))
+		if (RequestAddGameplayTagSlotWidget.Execute(InWidget))
 		{
 			ActivedWidgets.Add(InWidget);
 			InWidget->NativeOnActived();

@@ -24,9 +24,9 @@ public:
 	virtual bool DoesSupportWorldType(const EWorldType::Type WorldType) const override;
 
 public:
-	UMenuCollection* RegisterMenuCollection(TSubclassOf<UMenuCollection> InCollection, bool InActived = true);
-	void RegisterMenuCollection(UMenuCollection* InCollection, bool InActived = true);
-	void UnRegisterMenuCollection(UMenuCollection* InCollection);
+	UMenuCollection* RegisterMenuCollection(TSubclassOf<UMenuCollection> InCollectionClass, bool InActived = true);
+	bool RegisterMenuCollection(UMenuCollection* InCollection, bool InActived = true);
+	bool UnRegisterMenuCollection(UMenuCollection* InCollection);
 
 protected:
 	UPROPERTY(BlueprintReadOnly, Transient)

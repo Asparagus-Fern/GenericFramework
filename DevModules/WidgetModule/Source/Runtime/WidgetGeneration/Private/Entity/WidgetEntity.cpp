@@ -6,48 +6,71 @@
 #include "WidgetManager.h"
 #include "Manager/ManagerStatics.h"
 
-void UWidgetEntity::OnCreate_Implementation()
+
+bool FDisplayWidget::HasValidWidget() const
 {
-	IStateInterface::OnCreate_Implementation();
+	return (bUseClass && IsValid(WidgetClass)) || (!bUseClass && IsValid(WidgetRef));
 }
 
-void UWidgetEntity::OnDestroy_Implementation()
+UUserWidgetBase* FDisplayWidget::GetWidget()
 {
-	IStateInterface::OnDestroy_Implementation();
+	return GetWidget<UUserWidgetBase>();
+}
+
+void UWidgetEntity::NativeOnCreate()
+{
+	IStateInterface::NativeOnCreate();
+}
+
+void UWidgetEntity::NativeOnDestroy()
+{
+	IStateInterface::NativeOnDestroy();
 }
 
 void UWidgetEntity::OpenEntityWidget_Implementation()
 {
 	IWidgetEntityInterface::OpenEntityWidget_Implementation();
 
-	if (UWidgetManager* WidgetManager = GetManager<UWidgetManager>())
+	if (UUserWidgetBase* Widget = GetWidget())
 	{
-		WidgetManager->OpenUserWidget(GetWidget());
+		if (!Widget->WidgetEntity.IsValid())
+		{
+			Widget->WidgetEntity = this;
+		}
+
+		OnEntityWidgetInitialized();
 	}
 }
 
 void UWidgetEntity::CloseEntityWidget_Implementation()
 {
 	IWidgetEntityInterface::CloseEntityWidget_Implementation();
+	OnEntityWidgetDeinitialized();
+}
 
+void UWidgetEntity::OnEntityWidgetInitialized()
+{
+	if (UWidgetManager* WidgetManager = GetManager<UWidgetManager>())
+	{
+		WidgetManager->OpenUserWidget(GetWidget());
+	}
+}
+
+void UWidgetEntity::OnEntityWidgetDeinitialized()
+{
 	if (UWidgetManager* WidgetManager = GetManager<UWidgetManager>())
 	{
 		WidgetManager->CloseUserWidget(GetWidget(), false);
 	}
 }
 
-bool UWidgetEntity::HasValidWidget() const
-{
-	return (bUseClass && IsValid(WidgetClass)) || (!bUseClass && IsValid(WidgetRef));
-}
-
 UUserWidgetBase* UWidgetEntity::GetWidgetByClass(TSubclassOf<UUserWidgetBase> InClass)
 {
 	ensure(InClass);
-	return GetWidget<UUserWidgetBase>();
+	return DisplayWidget.GetWidget<UUserWidgetBase>();
 }
 
 UUserWidgetBase* UWidgetEntity::GetWidget()
 {
-	return GetWidget<UUserWidgetBase>();
+	return DisplayWidget.GetWidget<UUserWidgetBase>();
 }

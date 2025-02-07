@@ -21,7 +21,8 @@ public class MenuGeneration : ModuleRules
 				"DevCore",
 				"DevSlateCore",
 				"WidgetGeneration",
-				"InteractableWidgetGeneration"
+				"GameHUDModule",
+				"InteractableWidgetGeneration",
 			}
 		);
 

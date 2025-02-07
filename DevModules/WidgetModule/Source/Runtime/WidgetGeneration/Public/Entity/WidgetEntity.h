@@ -5,14 +5,13 @@
 #include "CoreMinimal.h"
 #include "Common/CommonObject.h"
 #include "WidgetEntityInterface.h"
+#include "WidgetManager.h"
 #include "Base/UserWidgetBase.h"
+#include "Manager/ManagerStatics.h"
 #include "WidgetEntity.generated.h"
 
-/**
- * 
- */
-UCLASS(Abstract)
-class WIDGETGENERATION_API UWidgetEntity : public UCommonObject, public IStateInterface, public IWidgetEntityInterface
+USTRUCT(BlueprintType)
+struct WIDGETGENERATION_API FDisplayWidget
 {
 	GENERATED_BODY()
 
@@ -26,34 +25,17 @@ public:
 	UPROPERTY(EditAnywhere, Instanced, meta=(EditConditionHides, EditCondition = "!bUseClass"))
 	UUserWidgetBase* WidgetRef = nullptr;
 
-	/* IStateInterface */
 public:
-	virtual void OnCreate_Implementation() override;
-	virtual void OnDestroy_Implementation() override;
-
-	/* IWidgetEntityInterface */
-public:
-	virtual void OpenEntityWidget_Implementation() override;
-	virtual void CloseEntityWidget_Implementation() override;
-
-	/* UWidgetEntity */
-public:
-	UFUNCTION(BlueprintPure)
 	bool HasValidWidget() const;
-
-	UFUNCTION(BlueprintPure, meta = (DeterminesOutputType = "InClass"))
-	UUserWidgetBase* GetWidgetByClass(TSubclassOf<UUserWidgetBase> InClass);
-
-	UFUNCTION(BlueprintPure)
 	UUserWidgetBase* GetWidget();
 
 public:
 	template <typename T>
 	T* GetWidget()
 	{
-		if (IsValid(Widget))
+		if (IsValid(WidgetInternal))
 		{
-			return Cast<T>(Widget);
+			return Cast<T>(WidgetInternal);
 		}
 
 		if (!HasValidWidget())
@@ -65,13 +47,13 @@ public:
 		T* Result = nullptr;
 		if (bUseClass)
 		{
-			Widget = CreateWidget<UUserWidgetBase>(GetWorld(), WidgetClass);
-			Result = Cast<T>(Widget);
+			WidgetInternal = CreateWidget<UUserWidgetBase>(GetManager<UWidgetManager>()->GetWorld(), WidgetClass);
+			Result = Cast<T>(WidgetInternal);
 		}
 		else
 		{
-			Widget = WidgetRef;
-			Result = Cast<T>(Widget);
+			WidgetInternal = WidgetRef;
+			Result = Cast<T>(WidgetInternal);
 		}
 
 		return Result;
@@ -79,5 +61,40 @@ public:
 
 protected:
 	UPROPERTY()
-	TObjectPtr<UUserWidgetBase> Widget = nullptr;
+	TObjectPtr<UUserWidgetBase> WidgetInternal = nullptr;
+};
+
+/**
+ * 
+ */
+UCLASS(Abstract)
+class WIDGETGENERATION_API UWidgetEntity : public UCommonObject, public IStateInterface, public IWidgetEntityInterface
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere)
+	FDisplayWidget DisplayWidget;
+
+	/* IStateInterface */
+public:
+	virtual void NativeOnCreate() override;
+	virtual void NativeOnDestroy() override;
+
+	/* IWidgetEntityInterface */
+public:
+	virtual void OpenEntityWidget_Implementation() override;
+	virtual void CloseEntityWidget_Implementation() override;
+
+protected:
+	virtual void OnEntityWidgetInitialized();
+	virtual void OnEntityWidgetDeinitialized();
+
+	/* UWidgetEntity */
+public:
+	UFUNCTION(BlueprintPure, meta = (DeterminesOutputType = "InClass"))
+	UUserWidgetBase* GetWidgetByClass(TSubclassOf<UUserWidgetBase> InClass);
+
+	UFUNCTION(BlueprintPure)
+	UUserWidgetBase* GetWidget();
 };

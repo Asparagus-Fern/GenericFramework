@@ -25,16 +25,16 @@ void UMenuSplineContainer::ConstructMenuContainer_Implementation(UMenuStyle* Men
 	}
 }
 
-void UMenuSplineContainer::DestructMenuContainer_Implementation(UMenuStyle* MenuStyle)
-{
-	Super::DestructMenuContainer_Implementation(MenuStyle);
-
-	if (Spline2D)
-	{
-		Spline2D->RemoveChild(MenuStyle);
-		UpdateMenuPositionAtSpline();
-	}
-}
+// void UMenuSplineContainer::DestructMenuContainer_Implementation(UMenuStyle* MenuStyle)
+// {
+// 	Super::DestructMenuContainer_Implementation(MenuStyle);
+//
+// 	if (Spline2D)
+// 	{
+// 		Spline2D->RemoveChild(MenuStyle);
+// 		UpdateMenuPositionAtSpline();
+// 	}
+// }
 
 void UMenuSplineContainer::UpdateMenuPositionAtSpline_Implementation()
 {

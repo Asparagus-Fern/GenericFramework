@@ -3,12 +3,15 @@
 
 #include "Collection/MenuCollection.h"
 
+#include "GameHUDManager.h"
 #include "GameplayTagsManager.h"
 #include "MenuType.h"
+#include "WidgetEntityManager.h"
 #include "BPFunctions/BPFunctions_GameplayTag.h"
 #include "Debug/DebugType.h"
 #include "Entity/MenuEntity.h"
 #include "Entity/MenuGroupEntity.h"
+#include "Manager/ManagerStatics.h"
 
 UMenuCollection::UMenuCollection(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -17,13 +20,20 @@ UMenuCollection::UMenuCollection(const FObjectInitializer& ObjectInitializer)
 	MenuGroupClass = UMenuGroupEntity::StaticClass();
 }
 
+void UMenuCollection::NativeOnCreate()
+{
+	IStateInterface::NativeOnCreate();
+
+	UGameHUDManager::Delegate_PostHUDCreated.AddUObject(this, &UMenuCollection::PostHUDCreated);
+}
+
 void UMenuCollection::NativeOnActived()
 {
 	IStateInterface::NativeOnActived();
 
-	if (UMenuEntityBase* RootEntity = GetRootMenuEntity())
+	for (auto& MenuEntity : MenuEntities)
 	{
-		RootEntity->NativeOnActived();
+		MenuEntity->Collection = this;
 	}
 }
 
@@ -34,7 +44,17 @@ void UMenuCollection::NativeOnInactived()
 	if (UMenuEntityBase* RootEntity = GetRootMenuEntity())
 	{
 		RootEntity->NativeOnInactived();
+
+		if (UWidgetEntityManager* WidgetEntityManager = GetManager<UWidgetEntityManager>())
+		{
+			WidgetEntityManager->UnRegisterWidgetEntity(RootEntity);
+		}
 	}
+}
+
+void UMenuCollection::NativeOnDestroy()
+{
+	IStateInterface::NativeOnDestroy();
 }
 
 bool UMenuCollection::GetIsActived() const
@@ -46,6 +66,26 @@ void UMenuCollection::SetIsActived(const bool InActived)
 {
 	IStateInterface::SetIsActived(InActived);
 }
+
+void UMenuCollection::PostHUDCreated()
+{
+	UGameHUDManager::Delegate_PostHUDCreated.RemoveAll(this);
+
+	if (GetIsActived())
+	{
+		if (UMenuEntityBase* RootEntity = GetRootMenuEntity())
+		{
+			if (UWidgetEntityManager* WidgetEntityManager = GetManager<UWidgetEntityManager>())
+			{
+				WidgetEntityManager->RegisterWidgetEntity(RootEntity);
+			}
+
+			RootEntity->NativeOnActived();
+		}
+	}
+}
+
+#if WITH_EDITOR
 
 void UMenuCollection::ReGenerateMenu()
 {
@@ -168,6 +208,8 @@ void UMenuCollection::ClearupMenu()
 	GameplayTagContainer.Reset();
 }
 
+#endif
+
 bool UMenuCollection::IsContainMenuTag(const FGameplayTag InMenuTag)
 {
 	if (!InMenuTag.IsValid())
@@ -253,10 +295,6 @@ TArray<UMenuEntityBase*> UMenuCollection::GetChildMenuEntities(FGameplayTag InMe
 TArray<UMenuEntityBase*> UMenuCollection::GetDirectChildMenuEntities(FGameplayTag InMenuTag)
 {
 	return GetMenuEntities(UBPFunctions_GameplayTag::GetDirectGameplayTagChildren(InMenuTag).GetGameplayTagArray());
-}
-
-void UMenuCollection::ActiveMenus(UMenuEntityBase* InEntities)
-{
 }
 
 void UMenuCollection::ActiveMenu(UMenuEntityBase* InEntity)

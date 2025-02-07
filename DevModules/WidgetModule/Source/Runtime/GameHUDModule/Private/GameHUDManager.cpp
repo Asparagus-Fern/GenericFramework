@@ -19,7 +19,6 @@ bool UGameHUDManager::ShouldCreateSubsystem(UObject* Outer) const
 void UGameHUDManager::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
-	RegisterManager(this);
 
 	UGameplayTagSlot::OnBuildGameplayTagSlot.AddUObject(this, &UGameHUDManager::RegisterSlot);
 	UGameplayTagSlot::OnRemoveGameplayTagSlot.AddUObject(this, &UGameHUDManager::UnRegisterSlot);
@@ -27,10 +26,12 @@ void UGameHUDManager::Initialize(FSubsystemCollectionBase& Collection)
 	UWidgetManager::Delegate_PreWidgetOpened.AddUObject(this, &UGameHUDManager::PreWidgetOpened);
 	UWidgetManager::Delegate_PostWidgetClosed.AddUObject(this, &UGameHUDManager::PostWidgetClosed);
 
-	FWidgetHUDDelegate::RequestGameplayTagSlot.BindUObject(this, &UGameHUDManager::GetSlot);
-	FWidgetHUDDelegate::RequestGameplayTagSlotWidget.BindUObject(this, &UGameHUDManager::GetSlotWidget);
-	FWidgetHUDDelegate::RequestAddGameplayTagSlotWidget.BindUObject(this, &UGameHUDManager::AddSlotWidget);
-	FWidgetHUDDelegate::RequestRemoveGameplayTagSlotWidget.BindUObject(this, &UGameHUDManager::RemoveSlotWidget);
+	UWidgetManager::RequestGameplayTagSlot.BindUObject(this, &UGameHUDManager::GetSlot);
+	UWidgetManager::RequestGameplayTagSlotWidget.BindUObject(this, &UGameHUDManager::GetSlotWidget);
+	UWidgetManager::RequestAddGameplayTagSlotWidget.BindUObject(this, &UGameHUDManager::AddSlotWidget);
+	UWidgetManager::RequestRemoveGameplayTagSlotWidget.BindUObject(this, &UGameHUDManager::RemoveSlotWidget);
+
+	RegisterManager(this);
 }
 
 void UGameHUDManager::Deinitialize()
@@ -44,10 +45,10 @@ void UGameHUDManager::Deinitialize()
 	UWidgetManager::Delegate_PreWidgetOpened.RemoveAll(this);
 	UWidgetManager::Delegate_PostWidgetClosed.RemoveAll(this);
 
-	FWidgetHUDDelegate::RequestGameplayTagSlot.Unbind();
-	FWidgetHUDDelegate::RequestGameplayTagSlotWidget.Unbind();
-	FWidgetHUDDelegate::RequestAddGameplayTagSlotWidget.Unbind();
-	FWidgetHUDDelegate::RequestRemoveGameplayTagSlotWidget.Unbind();
+	UWidgetManager::RequestGameplayTagSlot.Unbind();
+	UWidgetManager::RequestGameplayTagSlotWidget.Unbind();
+	UWidgetManager::RequestAddGameplayTagSlotWidget.Unbind();
+	UWidgetManager::RequestRemoveGameplayTagSlotWidget.Unbind();
 }
 
 bool UGameHUDManager::DoesSupportWorldType(const EWorldType::Type WorldType) const

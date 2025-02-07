@@ -94,7 +94,7 @@ protected:
 	UFUNCTION()
 	virtual void HandleFocusLost();
 
-public:
+protected:
 	virtual void NativeOnEnabled();
 	virtual void NativeOnDisabled();
 	virtual void NativeOnPressed();
@@ -113,53 +113,53 @@ public:
 	virtual void NativeInputMethodChanged(ECommonInputType CurrentInputType);
 	virtual void NativeOnButtonStyleChanged();
 
-protected:
-	UPROPERTY(BlueprintAssignable, Category = "Events", meta = (AllowPrivateAccess = true))
+public:
+	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FInteractableWidgetEvent OnButtonEnabled;
 
-	UPROPERTY(BlueprintAssignable, Category = "Events", meta = (AllowPrivateAccess = true))
+	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FInteractableWidgetEvent OnButtonDisabled;
 
-	UPROPERTY(BlueprintAssignable, Category = "Events", meta = (AllowPrivateAccess = true))
+	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FInteractableWidgetEvent OnButtonPressed;
 
-	UPROPERTY(BlueprintAssignable, Category = "Events", meta = (AllowPrivateAccess = true))
+	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FInteractableWidgetEvent OnButtonReleased;
 
-	UPROPERTY(BlueprintAssignable, Category = "Events", meta = (AllowPrivateAccess = true))
+	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FInteractableWidgetEvent OnButtonHovered;
 
-	UPROPERTY(BlueprintAssignable, Category = "Events", meta = (AllowPrivateAccess = true))
+	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FInteractableWidgetEvent OnButtonUnhovered;
 
-	UPROPERTY(BlueprintAssignable, Category = "Events", meta = (AllowPrivateAccess = true))
+	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FInteractableWidgetEvent OnButtonClicked;
 
-	UPROPERTY(BlueprintAssignable, Category = "Events", meta = (AllowPrivateAccess = true))
+	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FInteractableWidgetEvent OnButtonDoubleClicked;
 
-	UPROPERTY(BlueprintAssignable, Category = "Events", meta = (AllowPrivateAccess = true))
+	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FOnSelectedStateChangedEvent OnButtonSelectionChanged;
 
-	UPROPERTY(BlueprintAssignable, Category = "Events", meta = (AllowPrivateAccess = true))
+	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FInteractableWidgetEvent OnButtonFocusReceived;
 
-	UPROPERTY(BlueprintAssignable, Category = "Events", meta = (AllowPrivateAccess = true))
+	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FInteractableWidgetEvent OnButtonFocusLost;
 
-	UPROPERTY(BlueprintAssignable, Category = "Events", meta = (AllowPrivateAccess = true))
+	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FOnButtonLockEvent OnButtonLockedChanged;
 
-	UPROPERTY(BlueprintAssignable, Category = "Events", meta = (AllowPrivateAccess = true))
+	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FInteractableWidgetEvent OnButtonLockClicked;
 
-	UPROPERTY(BlueprintAssignable, Category = "Events", meta = (AllowPrivateAccess = true))
+	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FInteractableWidgetEvent OnButtonLockDoubleClicked;
 
-	UPROPERTY(BlueprintAssignable, Category = "Events", meta = (AllowPrivateAccess = true))
+	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FOnButtonInputMethodChangedEvent OnButtonInputMethodChanged;
 
-	UPROPERTY(BlueprintAssignable, Category = "Events", meta = (AllowPrivateAccess = true))
+	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FInteractableWidgetEvent OnButtonStyleChanged;
 
 public:

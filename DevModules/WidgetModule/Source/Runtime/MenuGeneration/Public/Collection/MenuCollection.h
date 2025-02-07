@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
 #include "Common/CommonObject.h"
+#include "Entity/WidgetEntity.h"
 #include "Interface/StateInterface.h"
 #include "MenuCollection.generated.h"
 
@@ -25,14 +26,20 @@ public:
 
 	/* IStateInterface */
 public:
+	virtual void NativeOnCreate() override;
 	virtual void NativeOnActived() override;
 	virtual void NativeOnInactived() override;
+	virtual void NativeOnDestroy() override;
 
 	UFUNCTION(BlueprintPure)
 	virtual bool GetIsActived() const override;
 
 	UFUNCTION(BlueprintCallable)
 	virtual void SetIsActived(const bool InActived) override;
+
+	/* Delegate From GameHUDManager */
+protected:
+	void PostHUDCreated();
 
 	/* UMenuCollection */
 public:
@@ -48,8 +55,10 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	FGameplayTag OwnerTag = FGameplayTag::EmptyTag;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced, meta = (TitleProperty = "MenuMainName"))
 	TArray<TObjectPtr<UMenuEntityBase>> MenuEntities;
+	
+#if WITH_EDITOR
 
 public:
 	void ReGenerateMenu();
@@ -60,6 +69,9 @@ public:
 
 	void ClearupMenu();
 
+#endif
+
+public:
 	UFUNCTION(BlueprintPure)
 	bool IsContainMenuTag(FGameplayTag InMenuTag);
 
@@ -85,9 +97,6 @@ public:
 	TArray<UMenuEntityBase*> GetDirectChildMenuEntities(FGameplayTag InMenuTag);
 
 public:
-	UFUNCTION(BlueprintCallable)
-	void ActiveMenus(UMenuEntityBase* InEntities);
-
 	UFUNCTION(BlueprintCallable)
 	void ActiveMenu(UMenuEntityBase* InEntity);
 

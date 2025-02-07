@@ -22,7 +22,7 @@ class INTERACTABLEWIDGETGENERATION_API UInteractableWidgetEntityGroup : public U
 public:
 	virtual void OnCreate_Implementation() override;
 	virtual void OnDestroy_Implementation() override;
-
+	
 	/* UInteractableWidgetEntityGroup */
 public:
 	UFUNCTION(BlueprintCallable)
@@ -122,6 +122,15 @@ public:
 			RemoveEntity(InEntity);
 		}
 	}
+
+protected:
+	virtual void HandleOnEntityPressed(UInteractableWidgetEntity* InEntity);
+	virtual void HandleOnEntityReleased(UInteractableWidgetEntity* InEntity);
+	virtual void HandleOnEntityHovered(UInteractableWidgetEntity* InEntity);
+	virtual void HandleOnEntityUnhovered(UInteractableWidgetEntity* InEntity);
+	virtual void HandleOnEntityClicked(UInteractableWidgetEntity* InEntity);
+	virtual void HandleOnEntityDoubleClicked(UInteractableWidgetEntity* InEntity);
+	virtual void HandleOnEntitySelectionChanged(UInteractableWidgetEntity* InEntity, bool Selection);
 
 protected:
 	UPROPERTY()

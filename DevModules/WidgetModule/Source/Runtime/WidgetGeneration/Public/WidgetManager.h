@@ -6,6 +6,7 @@
 #include "WidgetDelegate.h"
 #include "Manager/CoreInternalManager.h"
 #include "Subsystems/WorldSubsystem.h"
+#include "UWidget/Override/GameplayTagSlot.h"
 #include "WidgetManager.generated.h"
 
 class UUserWidgetBase;
@@ -88,10 +89,22 @@ public:
 	virtual bool CloseUserWidget(UUserWidgetBase* InWidget, bool MarkAsGarbage = true, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged());
 
 	TArray<UUserWidgetBase*> GetActivedWidgets() { return ActivedWidgets; }
-
-private:
+	
 	virtual void ActiveWidget(UUserWidgetBase* InWidget, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged());
 	virtual void InactiveWidget(UUserWidgetBase* InWidget, bool MarkAsGarbage = true, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged());
+
+public:
+	DECLARE_DELEGATE_RetVal_OneParam(UGameplayTagSlot*, FGetGameplayTagSlot, UUserWidgetBase*)
+	inline static FGetGameplayTagSlot RequestGameplayTagSlot;
+
+	DECLARE_DELEGATE_RetVal_OneParam(UUserWidgetBase*, FGetGameplayTagSlotWidget, FGameplayTag)
+	inline static FGetGameplayTagSlotWidget RequestGameplayTagSlotWidget;
+
+	DECLARE_DELEGATE_RetVal_OneParam(bool, FAddGameplayTagSlotWidget, UUserWidgetBase*)
+	inline static FAddGameplayTagSlotWidget RequestAddGameplayTagSlotWidget;
+
+	DECLARE_DELEGATE_RetVal_OneParam(bool, FRemoveGameplayTagSlotWidget, UUserWidgetBase*)
+	inline static FRemoveGameplayTagSlotWidget RequestRemoveGameplayTagSlotWidget;
 
 public:
 	inline static FDelegate_PreWidgetOpened Delegate_PreWidgetOpened;

@@ -1,101 +1,24 @@
 ﻿#include "MenuGenerationEditor.h"
 
-#include "BlueprintEditorModule.h"
-#include "SMenuCollectionHierarchy.h"
-#include "BPFunctions/BPFunctions_BlueprintEditor.h"
-#include "Collection/MenuCollection.h"
-#include "Framework/Docking/LayoutExtender.h"
+#include "MenuCollectionCustomization.h"
+#include "MenuEntityEventCustomization.h"
 
 #define LOCTEXT_NAMESPACE "FMenuGenerationEditorModule"
 
 void FMenuGenerationEditorModule::StartupModule()
 {
-	FBlueprintEditorModule& BlueprintEditorModule = FModuleManager::LoadModuleChecked<FBlueprintEditorModule>("Kismet");
-	BlueprintEditorTabSpawnerHandle = BlueprintEditorModule.OnRegisterTabsForEditor().AddRaw(this, &FMenuGenerationEditorModule::RegisterBlueprintEditorTab);
-	BlueprintEditorLayoutExtensionHandle = BlueprintEditorModule.OnRegisterLayoutExtensions().AddRaw(this, &FMenuGenerationEditorModule::RegisterBlueprintEditorLayout);
-
-	UAssetEditorSubsystem* AssetEditorSubsystem = GEditor->GetEditorSubsystem<UAssetEditorSubsystem>();
-	AssetEditorOpenedHandle = AssetEditorSubsystem->OnAssetEditorOpened().AddRaw(this, &FMenuGenerationEditorModule::OnAssetEditorOpened);
-	AssetEditorClosedHandle = AssetEditorSubsystem->OnAssetEditorRequestClose().AddRaw(this, &FMenuGenerationEditorModule::OnAssetEditorClosed);
-
-	
+	FPropertyEditorModule& PropertyEditorModule = FModuleManager::LoadModuleChecked<FPropertyEditorModule>("PropertyEditor");
+	PropertyEditorModule.RegisterCustomClassLayout("MenuCollection", FOnGetDetailCustomizationInstance::CreateStatic(&FMenuCollectionCustomization::MakeInstance));
+	PropertyEditorModule.RegisterCustomPropertyTypeLayout("MenuEntityEvent", FOnGetPropertyTypeCustomizationInstance::CreateStatic(&FMenuEntityEventCustomization::MakeInstance));
 }
 
 void FMenuGenerationEditorModule::ShutdownModule()
 {
-	if (FBlueprintEditorModule* BlueprintEditorModule = FModuleManager::GetModulePtr<FBlueprintEditorModule>("Kismet"))
+	if (FPropertyEditorModule* PropertyEditorModule = FModuleManager::GetModulePtr<FPropertyEditorModule>("PropertyEditor"))
 	{
-		BlueprintEditorModule->OnRegisterTabsForEditor().Remove(BlueprintEditorTabSpawnerHandle);
-		BlueprintEditorModule->OnRegisterLayoutExtensions().Remove(BlueprintEditorLayoutExtensionHandle);
+		PropertyEditorModule->UnregisterCustomClassLayout("MenuCollection");
+		PropertyEditorModule->UnregisterCustomPropertyTypeLayout("MenuEntityEvent");
 	}
-}
-
-void FMenuGenerationEditorModule::RegisterBlueprintEditorTab(FWorkflowAllowedTabSet& TabFactories, FName InModeName, TSharedPtr<FBlueprintEditor> BlueprintEditor)
-{
-	if (BlueprintEditor->GetBlueprintObj()->GeneratedClass->IsChildOf(UMenuCollection::StaticClass()))
-	{
-		TabFactories.RegisterFactory(MakeShared<FMenuCollectionEditorSummoner>(BlueprintEditor));
-	}
-	else
-	{
-	}
-}
-
-void FMenuGenerationEditorModule::RegisterBlueprintEditorLayout(FLayoutExtender& Extender)
-{
-	Extender.ExtendLayout(FTabId("MyBlueprint"), ELayoutExtensionPosition::Below, FTabManager::FTab(MenuCollectionHierarchyTabID, ETabState::OpenedTab));
-}
-
-void FMenuGenerationEditorModule::OnAssetEditorOpened(UObject* InObject)
-{
-	if (const UBlueprint* Blueprint = Cast<UBlueprint>(InObject))
-	{
-		if (Blueprint->GeneratedClass->IsChildOf(UMenuCollection::StaticClass()))
-		{
-			const TSharedPtr<FBlueprintEditor> BlueprintEditor = UBPFunctions_BlueprintEditor::GetBlueprintEditor(Blueprint);
-			if (BlueprintEditor.IsValid())
-			{
-				const TSharedPtr<SDockTab> HierarchyTab = BlueprintEditor->GetTabManager()->FindExistingLiveTab(MenuCollectionHierarchyTabID);
-				if (!HierarchyTab.IsValid())
-				{
-					BlueprintEditor->GetTabManager()->TryInvokeTab(MenuCollectionHierarchyTabID);
-				}
-			}
-		}
-	}
-}
-
-void FMenuGenerationEditorModule::OnAssetEditorClosed(UObject* InObject, EAssetEditorCloseReason InCloseReason)
-{
-	if (const UBlueprint* Blueprint = Cast<UBlueprint>(InObject))
-	{
-		if (Blueprint->GeneratedClass->IsChildOf(UMenuCollection::StaticClass()))
-		{
-			const TSharedPtr<FBlueprintEditor> BlueprintEditor = UBPFunctions_BlueprintEditor::GetBlueprintEditor(Blueprint);
-			if (BlueprintEditor.IsValid())
-			{
-				const TSharedPtr<SDockTab> HierarchyTab = BlueprintEditor->GetTabManager()->FindExistingLiveTab(MenuCollectionHierarchyTabID);
-				if (HierarchyTab.IsValid())
-				{
-					HierarchyTab->RequestCloseTab();
-				}
-			}
-		}
-	}
-}
-
-FMenuCollectionEditorSummoner::FMenuCollectionEditorSummoner(TSharedPtr<FBlueprintEditor> BlueprintEditor)
-	: FWorkflowTabFactory(MenuCollectionHierarchyTabID, BlueprintEditor)
-	  , WeakBlueprintEditor(BlueprintEditor)
-{
-	bIsSingleton = true;
-	TabLabel = LOCTEXT("MenuCollectionHierarchyTabName", "Hierarchy");
-	TabIcon = FSlateIcon(FAppStyle::GetAppStyleSetName(), "ContentBrowser.ShowSourcesView");
-}
-
-TSharedRef<SWidget> FMenuCollectionEditorSummoner::CreateTabBody(const FWorkflowTabSpawnInfo& Info) const
-{
-	return SNew(SMenuCollectionHierarchy, WeakBlueprintEditor);
 }
 
 #undef LOCTEXT_NAMESPACE

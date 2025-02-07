@@ -12,6 +12,7 @@
 #include "Interface/StateInterface.h"
 #include "UserWidgetBase.generated.h"
 
+class UWidgetEntity;
 class UCommonUISubsystemBase;
 class UCommonInputSubsystem;
 class UTemporaryHUD;
@@ -25,15 +26,18 @@ class UWidgetAnimationEvent;
 UCLASS(Abstract)
 class WIDGETGENERATION_API UUserWidgetBase : public UCommonUserWidget, public IWidgetAnimationInterface, public IStateInterface
 {
-	GENERATED_UCLASS_BODY()
+	GENERATED_BODY()
+
+	friend UWidgetEntity;
 
 protected:
+	UUserWidgetBase(const FObjectInitializer& ObjectInitializer);;
+	virtual void NativeConstruct() override;
+	virtual void NativeDestruct() override;
+
 #if WITH_EDITOR
 	virtual const FText GetPaletteCategory() override { return NSLOCTEXT("DevWidget", "DevUserWidget", "User Widget Base"); }
 #endif
-
-	virtual void NativeConstruct() override;
-	virtual void NativeDestruct() override;
 
 	/* ==================== UUserWidgetBase ==================== */
 public:
@@ -51,6 +55,10 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, AdvancedDisplay)
 	int32 ZOrder = 0;
+
+protected:
+	UPROPERTY()
+	TWeakObjectPtr<UWidgetEntity> WidgetEntity = nullptr;
 
 public:
 	UFUNCTION(BlueprintPure)
@@ -98,7 +106,7 @@ public:
 
 	UFUNCTION(BlueprintPure)
 	virtual bool IsPlayingWidgetAnimation(bool InIsActive) const override;
-	
+
 	UFUNCTION(BlueprintPure)
 	virtual UWidgetAnimation* GetActiveAnimation() const override;
 

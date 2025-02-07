@@ -13,6 +13,7 @@ void UInteractableWidgetEntityGroup::OnCreate_Implementation()
 void UInteractableWidgetEntityGroup::OnDestroy_Implementation()
 {
 	IStateInterface::OnDestroy_Implementation();
+	ClearupEntity();
 }
 
 void UInteractableWidgetEntityGroup::AddEntities(TArray<UInteractableWidgetEntity*> InEntities)
@@ -38,6 +39,14 @@ void UInteractableWidgetEntityGroup::AddEntity(UInteractableWidgetEntity* InEnti
 	}
 
 	Entities.Add(InEntity);
+
+	InEntity->GetOnEntityPressed().AddUObject(this, &UInteractableWidgetEntityGroup::HandleOnEntityPressed);
+	InEntity->GetOnEntityReleased().AddUObject(this, &UInteractableWidgetEntityGroup::HandleOnEntityReleased);
+	InEntity->GetOnEntityHovered().AddUObject(this, &UInteractableWidgetEntityGroup::HandleOnEntityHovered);
+	InEntity->GetOnEntityUnhovered().AddUObject(this, &UInteractableWidgetEntityGroup::HandleOnEntityUnhovered);
+	InEntity->GetOnEntityClicked().AddUObject(this, &UInteractableWidgetEntityGroup::HandleOnEntityClicked);
+	InEntity->GetOnEntityDoubleClicked().AddUObject(this, &UInteractableWidgetEntityGroup::HandleOnEntityDoubleClicked);
+	InEntity->GetOnEntitySelectionChanged().AddUObject(this, &UInteractableWidgetEntityGroup::HandleOnEntitySelectionChanged);
 
 	if (!HasSelectedEntity() && InEntity->bDefaultSelected)
 	{
@@ -71,6 +80,14 @@ void UInteractableWidgetEntityGroup::RemoveEntity(UInteractableWidgetEntity* InE
 	{
 		DeselectAll();
 	}
+
+	InEntity->GetOnEntityPressed().RemoveAll(this);
+	InEntity->GetOnEntityReleased().RemoveAll(this);
+	InEntity->GetOnEntityHovered().RemoveAll(this);
+	InEntity->GetOnEntityUnhovered().RemoveAll(this);
+	InEntity->GetOnEntityClicked().RemoveAll(this);
+	InEntity->GetOnEntityDoubleClicked().RemoveAll(this);
+	InEntity->GetOnEntitySelectionChanged().RemoveAll(this);
 
 	Entities.Remove(InEntity);
 }
@@ -129,32 +146,7 @@ void UInteractableWidgetEntityGroup::SetSelectedEntity(UInteractableWidgetEntity
 		return;
 	}
 
-	if (!HasSelectedEntity())
-	{
-		SelectedEntity = InEntity;
-		InEntity->NativeOnSelected();
-		return;
-	}
-
-	if (SelectedEntity == InEntity)
-	{
-		if (InEntity->bToggleable)
-		{
-			InEntity->NativeOnDeSelected();
-
-			LastSelectedEntity = SelectedEntity;
-			SelectedEntity = nullptr;
-		}
-	}
-	else
-	{
-		SelectedEntity->NativeOnDeSelected();
-
-		LastSelectedEntity = SelectedEntity;
-		SelectedEntity = InEntity;
-
-		InEntity->NativeOnSelected();
-	}
+	HandleOnEntitySelectionChanged(InEntity, true);
 }
 
 void UInteractableWidgetEntityGroup::SetSelectedEntityByIndex(int32 Index)
@@ -245,7 +237,7 @@ void UInteractableWidgetEntityGroup::DeselectAll()
 {
 	if (HasSelectedEntity())
 	{
-		SelectedEntity->NativeOnDeSelected();
+		SelectedEntity->InternalChangeSelection(false);
 		LastSelectedEntity = SelectedEntity;
 		SelectedEntity = nullptr;
 	}
@@ -280,4 +272,65 @@ int32 UInteractableWidgetEntityGroup::FindEntityIndex(UInteractableWidgetEntity*
 TArray<UInteractableWidgetEntity*> UInteractableWidgetEntityGroup::GetEntities() const
 {
 	return Entities;
+}
+
+void UInteractableWidgetEntityGroup::HandleOnEntityPressed(UInteractableWidgetEntity* InEntity)
+{
+	InEntity->InternalPressed();
+}
+
+void UInteractableWidgetEntityGroup::HandleOnEntityReleased(UInteractableWidgetEntity* InEntity)
+{
+	InEntity->InternalReleased();
+}
+
+void UInteractableWidgetEntityGroup::HandleOnEntityHovered(UInteractableWidgetEntity* InEntity)
+{
+	InEntity->InternalHovered();
+}
+
+void UInteractableWidgetEntityGroup::HandleOnEntityUnhovered(UInteractableWidgetEntity* InEntity)
+{
+	InEntity->InternalUnhovered();
+}
+
+void UInteractableWidgetEntityGroup::HandleOnEntityClicked(UInteractableWidgetEntity* InEntity)
+{
+	InEntity->InternalClicked();
+	HandleOnEntitySelectionChanged(InEntity, true);
+}
+
+void UInteractableWidgetEntityGroup::HandleOnEntityDoubleClicked(UInteractableWidgetEntity* InEntity)
+{
+	InEntity->InternalDoubleClicked();
+}
+
+void UInteractableWidgetEntityGroup::HandleOnEntitySelectionChanged(UInteractableWidgetEntity* InEntity, bool Selection)
+{
+	if (!HasSelectedEntity())
+	{
+		SelectedEntity = InEntity;
+		InEntity->InternalChangeSelection(true);
+		return;
+	}
+
+	if (SelectedEntity == InEntity)
+	{
+		if (InEntity->bToggleable)
+		{
+			InEntity->InternalChangeSelection(false);
+
+			LastSelectedEntity = SelectedEntity;
+			SelectedEntity = nullptr;
+		}
+	}
+	else
+	{
+		SelectedEntity->InternalChangeSelection(false);
+
+		LastSelectedEntity = SelectedEntity;
+		SelectedEntity = InEntity;
+
+		InEntity->InternalChangeSelection(true);
+	}
 }

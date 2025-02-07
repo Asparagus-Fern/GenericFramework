@@ -27,25 +27,25 @@ bool UMenuGenerationManager::DoesSupportWorldType(const EWorldType::Type WorldTy
 	return WorldType == EWorldType::Game || WorldType == EWorldType::PIE;
 }
 
-UMenuCollection* UMenuGenerationManager::RegisterMenuCollection(TSubclassOf<UMenuCollection> InCollection, bool InActived)
+UMenuCollection* UMenuGenerationManager::RegisterMenuCollection(TSubclassOf<UMenuCollection> InCollectionClass, bool InActived)
 {
-	UMenuCollection* NewCollection = NewObject<UMenuCollection>(this, InCollection);
+	UMenuCollection* NewCollection = NewObject<UMenuCollection>(this, InCollectionClass);
 	RegisterMenuCollection(NewCollection, InActived);
 	return NewCollection;
 }
 
-void UMenuGenerationManager::RegisterMenuCollection(UMenuCollection* InCollection, bool InActived)
+bool UMenuGenerationManager::RegisterMenuCollection(UMenuCollection* InCollection, bool InActived)
 {
 	if (!IsValid(InCollection))
 	{
 		DLOG(DLogUI, Error, TEXT("InCollection Is InValid"))
-		return;
+		return false;
 	}
 
 	if (MenuCollections.Contains(InCollection))
 	{
 		DLOG(DLogUI, Warning, TEXT("InCollection Is Already Register"))
-		return;
+		return false;
 	}
 
 	InCollection->NativeOnCreate();
@@ -55,20 +55,22 @@ void UMenuGenerationManager::RegisterMenuCollection(UMenuCollection* InCollectio
 	{
 		InCollection->NativeOnActived();
 	}
+
+	return true;
 }
 
-void UMenuGenerationManager::UnRegisterMenuCollection(UMenuCollection* InCollection)
+bool UMenuGenerationManager::UnRegisterMenuCollection(UMenuCollection* InCollection)
 {
 	if (!IsValid(InCollection))
 	{
 		DLOG(DLogUI, Error, TEXT("InCollection Is InValid"))
-		return;
+		return false;
 	}
 
 	if (!MenuCollections.Contains(InCollection))
 	{
 		DLOG(DLogUI, Warning, TEXT("InCollection Is Already UnRegister"))
-		return;
+		return false;
 	}
 
 	if (InCollection->GetIsActived())
@@ -78,4 +80,6 @@ void UMenuGenerationManager::UnRegisterMenuCollection(UMenuCollection* InCollect
 
 	InCollection->NativeOnDestroy();
 	MenuCollections.Remove(InCollection);
+
+	return true;
 }

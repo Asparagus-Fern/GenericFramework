@@ -19,7 +19,6 @@ class MENUGENERATION_API UMenuSplineContainer : public UMenuContainer
 public:
 	virtual void SynchronizeProperties() override;
 	virtual void ConstructMenuContainer_Implementation(UMenuStyle* MenuStyle, int32 Index) override;
-	virtual void DestructMenuContainer_Implementation(UMenuStyle* MenuStyle) override;
 
 public:
 	UPROPERTY(EditAnywhere)

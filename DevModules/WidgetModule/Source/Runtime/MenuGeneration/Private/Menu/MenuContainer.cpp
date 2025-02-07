@@ -3,6 +3,8 @@
 
 #include "Menu/MenuContainer.h"
 
+#include "Components/PanelWidget.h"
+#include "Entity/MenuGroupEntity.h"
 #include "Menu/MenuStyle.h"
 
 UMenuContainer::UMenuContainer(const FObjectInitializer& ObjectInitializer)
@@ -13,10 +15,6 @@ UMenuContainer::UMenuContainer(const FObjectInitializer& ObjectInitializer)
 #endif
 }
 
-void UMenuContainer::ConstructMenuContainer_Implementation(UMenuStyle* MenuStyle, int32 Index)
-{
-}
-
 void UMenuContainer::NativePreConstruct()
 {
 	Super::NativePreConstruct();
@@ -24,9 +22,13 @@ void UMenuContainer::NativePreConstruct()
 #if WITH_EDITOR
 	if (IsDesignTime())
 	{
+		if (IsValid(Content))
+		{
+			Content->ClearChildren();
+		}
+
 		for (const auto& DesignMenuStyle : DesignMenuStyles)
 		{
-			DestructMenuContainer(DesignMenuStyle);
 			DesignMenuStyle->MarkAsGarbage();
 		}
 
@@ -45,12 +47,8 @@ void UMenuContainer::NativePreConstruct()
 #endif
 }
 
-void UMenuContainer::NativeOnCreate()
+void UMenuContainer::ConstructMenuContainer_Implementation(UMenuStyle* MenuStyle, int32 Index)
 {
-	Super::NativeOnCreate();
-
-	// CommonButtonGroup = NewObject<UCommonButtonGroup>(this, "CommonButtonGroup");
-	MenuStyles.Reset();
 }
 
 void UMenuContainer::NativeConstructMenuContainer(UMenuStyle* MenuStyle, int32 Index)
@@ -62,36 +60,7 @@ void UMenuContainer::NativeConstructMenuContainer(UMenuStyle* MenuStyle, int32 I
 	}
 
 	MenuStyles.Add(MenuStyle);
-
-	/* 将菜单加入到CommonButtonGroup管理 */
-	// if (bIsManagedByGroup && IsValid(MenuStyle->ActiveCommonButton))
-	// {
-	// 	CommonButtonGroup->AddWidget(MenuStyle->ActiveCommonButton);
-	// }
-
 	ConstructMenuContainer(MenuStyle, Index);
-}
-
-void UMenuContainer::DestructMenuContainer_Implementation(UMenuStyle* MenuStyle)
-{
-}
-
-void UMenuContainer::NativeDestructMenuContainer(UMenuStyle* MenuStyle)
-{
-	if (!IsValid(MenuStyle) || !MenuStyles.Contains(MenuStyle))
-	{
-		DLOG(DLogUI, Error, TEXT("Fail To Construct Menu Container"))
-		return;
-	}
-
-	DestructMenuContainer(MenuStyle);
-
-	MenuStyles.Remove(MenuStyle);
-
-	// if (bIsManagedByGroup && IsValid(MenuStyle->ActiveCommonButton))
-	// {
-	// 	CommonButtonGroup->RemoveWidget(MenuStyle->ActiveCommonButton);
-	// }
 }
 
 void UMenuContainer::PostConstructMenuContainer_Implementation()
@@ -101,4 +70,13 @@ void UMenuContainer::PostConstructMenuContainer_Implementation()
 void UMenuContainer::NativePostConstructMenuContainer()
 {
 	PostConstructMenuContainer();
+}
+
+UMenuGroupEntity* UMenuContainer::GetMenuGroupEntity() const
+{
+	if (WidgetEntity.IsValid())
+	{
+		return Cast<UMenuGroupEntity>(WidgetEntity);
+	}
+	return nullptr;
 }

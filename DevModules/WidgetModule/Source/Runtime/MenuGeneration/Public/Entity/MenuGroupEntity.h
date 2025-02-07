@@ -23,14 +23,19 @@ public:
 	virtual void DeInitialize() override;
 
 public:
+	UPROPERTY(EditAnywhere)
+	FDisplayWidget ChildWidget;
+
+	/* IStateInterface */
+public:
 	virtual void OnActived_Implementation() override;
 	virtual void OnInactived_Implementation() override;
+	
+public:
+	UFUNCTION(BlueprintPure)
+	TArray<UMenuEntityBase*> GetChildrenEntities() const;
 
 protected:
 	UPROPERTY(Transient)
 	TObjectPtr<UInteractableWidgetEntityGroup> EntityGroup = nullptr;
-
-public:
-	UFUNCTION(BlueprintPure)
-	TArray<UMenuEntityBase*> GetChildrenEntities() const;
 };

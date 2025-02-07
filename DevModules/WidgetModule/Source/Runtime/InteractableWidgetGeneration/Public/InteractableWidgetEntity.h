@@ -6,8 +6,10 @@
 #include "Entity/WidgetEntity.h"
 #include "InteractableWidgetEntity.generated.h"
 
+class UInteractableWidgetBase;
 class UInteractableWidgetEntity;
 
+DECLARE_MULTICAST_DELEGATE_OneParam(FInteractableWidgetEntityEvent, UInteractableWidgetEntity*)
 DECLARE_MULTICAST_DELEGATE_TwoParams(FOnEntitySelectionChanged, UInteractableWidgetEntity*, bool)
 
 /**
@@ -17,6 +19,13 @@ UCLASS(Abstract)
 class INTERACTABLEWIDGETGENERATION_API UInteractableWidgetEntity : public UWidgetEntity
 {
 	GENERATED_BODY()
+
+	friend class UInteractableWidgetEntityGroup;
+
+	/* IWidgetEntityInterface */
+public:
+	virtual void OpenEntityWidget_Implementation() override;
+	virtual void CloseEntityWidget_Implementation() override;
 
 public:
 	/* 坍塌，不可视，且不占据布局 */
@@ -44,17 +53,97 @@ public:
 	bool bDefaultSelected = false;
 
 public:
-	UFUNCTION(BlueprintNativeEvent)
-	void OnSelected();
-	void NativeOnSelected();
+	UFUNCTION(BlueprintCallable)
+	void Pressed();
 
-	UFUNCTION(BlueprintNativeEvent)
-	void OnDeSelected();
-	void NativeOnDeSelected();
+	UFUNCTION(BlueprintCallable)
+	void Released();
 
-public:
-	FOnEntitySelectionChanged GetOnEntitySelectionChanged() { return OnEntitySelectionChanged; }
+	UFUNCTION(BlueprintCallable)
+	void Hovered();
+
+	UFUNCTION(BlueprintCallable)
+	void Unhovered();
+
+	UFUNCTION(BlueprintCallable)
+	void Clicked();
+
+	UFUNCTION(BlueprintCallable)
+	void DoubleClicked();
+
+	UFUNCTION(BlueprintCallable)
+	void ChangeSelection(bool Selection);
 
 protected:
-	FOnEntitySelectionChanged OnEntitySelectionChanged;
+	virtual void InternalPressed();
+	virtual void InternalReleased();
+	virtual void InternalHovered();
+	virtual void InternalUnhovered();
+	virtual void InternalClicked();
+	virtual void InternalDoubleClicked();
+	virtual void InternalChangeSelection(bool Selection);
+
+	/* Binding From Widget (If Exist) */
+private:
+	UFUNCTION()
+	void HandleOnEntityPressed(UInteractableWidgetBase* Button);
+
+	UFUNCTION()
+	void HandleOnEntityReleased(UInteractableWidgetBase* Button);
+
+	UFUNCTION()
+	void HandleOnEntityHovered(UInteractableWidgetBase* Button);
+
+	UFUNCTION()
+	void HandleOnEntityUnhovered(UInteractableWidgetBase* Button);
+
+	UFUNCTION()
+	void HandleOnEntityClicked(UInteractableWidgetBase* Button);
+
+	UFUNCTION()
+	void HandleOnEntityDoubleClicked(UInteractableWidgetBase* Button);
+
+	UFUNCTION()
+	void HandleOnEntitySelectionChanged(UInteractableWidgetBase* Button, bool Selection);
+
+	/* Implementation Event */
+protected:
+	UFUNCTION(BlueprintNativeEvent)
+	void OnEntityPressed();
+
+	UFUNCTION(BlueprintNativeEvent)
+	void OnEntityReleased();
+
+	UFUNCTION(BlueprintNativeEvent)
+	void OnEntityHovered();
+
+	UFUNCTION(BlueprintNativeEvent)
+	void OnEntityUnhovered();
+
+	UFUNCTION(BlueprintNativeEvent)
+	void OnEntityClicked();
+
+	UFUNCTION(BlueprintNativeEvent)
+	void OnEntityDoubleClicked();
+
+	UFUNCTION(BlueprintNativeEvent)
+	void OnEntitySelectionChanged(bool Selection);
+
+public:
+	FInteractableWidgetEntityEvent& GetOnEntityPressed() { return OnEntityPressedDelegate; }
+	FInteractableWidgetEntityEvent& GetOnEntityReleased() { return OnEntityReleasedDelegate; }
+	FInteractableWidgetEntityEvent& GetOnEntityHovered() { return OnEntityHoveredDelegate; }
+	FInteractableWidgetEntityEvent& GetOnEntityUnhovered() { return OnEntityUnhoveredDelegate; }
+	FInteractableWidgetEntityEvent& GetOnEntityClicked() { return OnEntityClickedDelegate; }
+	FInteractableWidgetEntityEvent& GetOnEntityDoubleClicked() { return OnEntityDoubleClickedDelegate; }
+	FOnEntitySelectionChanged& GetOnEntitySelectionChanged() { return OnEntitySelectionChangedDelegate; }
+
+protected:
+	FInteractableWidgetEntityEvent OnEntityPressedDelegate;
+	FInteractableWidgetEntityEvent OnEntityReleasedDelegate;
+	FInteractableWidgetEntityEvent OnEntityHoveredDelegate;
+	FInteractableWidgetEntityEvent OnEntityUnhoveredDelegate;
+	FInteractableWidgetEntityEvent OnEntityClickedDelegate;
+	FInteractableWidgetEntityEvent OnEntityDoubleClickedDelegate;
+	FOnEntitySelectionChanged OnEntitySelectionChangedDelegate;
 };

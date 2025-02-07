@@ -6,6 +6,7 @@
 #include "Base/UserWidgetBase.h"
 #include "MenuContainer.generated.h"
 
+class UMenuGroupEntity;
 class UMenuStyle;
 
 /**
@@ -18,17 +19,6 @@ class MENUGENERATION_API UMenuContainer : public UUserWidgetBase
 
 public:
 	virtual void NativePreConstruct() override;
-	virtual void NativeOnCreate() override;
-
-public:
-	// UPROPERTY(Transient, Getter, BlueprintGetter="GetCommonButtonGroup")
-	// UCommonButtonGroup* CommonButtonGroup = nullptr;
-
-	UPROPERTY(Transient, Getter, BlueprintGetter="GetMenuStyles")
-	TArray<UMenuStyle*> MenuStyles;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	bool bIsManagedByGroup = true;
 
 public:
 	UFUNCTION(BlueprintNativeEvent)
@@ -36,19 +26,19 @@ public:
 	virtual void NativeConstructMenuContainer(UMenuStyle* MenuStyle, int32 Index);
 
 	UFUNCTION(BlueprintNativeEvent)
-	void DestructMenuContainer(UMenuStyle* MenuStyle);
-	virtual void NativeDestructMenuContainer(UMenuStyle* MenuStyle);
-
-	UFUNCTION(BlueprintNativeEvent)
 	void PostConstructMenuContainer();
 	virtual void NativePostConstructMenuContainer();
 
-public:
-	// UFUNCTION(BlueprintPure)
-	// UCommonButtonGroup* GetCommonButtonGroup() const { return CommonButtonGroup; }
-
 	UFUNCTION(BlueprintPure)
-	TArray<UMenuStyle*> GetMenuStyles() const { return MenuStyles; }
+	UMenuGroupEntity* GetMenuGroupEntity() const;
+
+protected:
+	UPROPERTY(Transient, BlueprintReadOnly, Transient)
+	TArray<UMenuStyle*> MenuStyles;
+
+private:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget, AllowPrivateAccess = "true"))
+	TObjectPtr<class UPanelWidget> Content;
 
 #if WITH_EDITORONLY_DATA
 

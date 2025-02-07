@@ -22,13 +22,13 @@ public:
 	virtual void Initialize() override;
 	virtual void DeInitialize() override;
 
+	/* IWidgetEntityInterface */
+protected:
+	virtual void OnEntityWidgetInitialized() override;
+	virtual void OnEntityWidgetDeinitialized() override;
+	
 	/* IStateInterface */
-public:
+protected:
 	virtual void OnActived_Implementation() override;
 	virtual void OnInactived_Implementation() override;
-
-	/* UInteractableWidgetEntity */
-public:
-	virtual void OnSelected_Implementation() override;
-	virtual void OnDeSelected_Implementation() override;
 };
