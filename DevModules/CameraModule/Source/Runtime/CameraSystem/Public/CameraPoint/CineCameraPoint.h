@@ -14,17 +14,15 @@ class CAMERASYSTEM_API ACineCameraPoint : public ACameraPointBase
 	GENERATED_BODY()
 
 public:
-	ACineCameraPoint();
+	ACineCameraPoint(const FObjectInitializer& ObjectInitializer);
 
 	/* ACameraPointBase */
 public:
 	virtual UCameraComponent* GetCameraComponent_Implementation() override;
-
-protected:
-	virtual void SetCameraComponentInternal(UCameraComponent* InCameraComponent) override;
+	virtual void SetCameraComponent_Implementation(UCameraComponent* InCameraComponent) override;
 
 	/* ACineCameraPoint */
 public:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Camera Point")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	UCineCameraComponent* CineCameraComponent = nullptr;
 };

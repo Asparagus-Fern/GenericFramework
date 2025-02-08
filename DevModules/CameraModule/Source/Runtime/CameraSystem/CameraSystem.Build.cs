@@ -26,12 +26,14 @@ public class CameraSystem : ModuleRules
 				"CinematicCamera",
 				"DeveloperSettings",
 
-				"WidgetGeneration"
+				"WidgetGeneration",
 			}
 		);
 
 		if (Target.bBuildEditor)
 		{
+			PrivateDependencyModuleNames.Add("UnrealEd");
+			PrivateDependencyModuleNames.Add("LevelEditor");
 			PrivateDependencyModuleNames.Add("DevEdCore");
 		}
 	}

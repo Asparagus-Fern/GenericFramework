@@ -3,13 +3,14 @@
 
 #include "CameraPoint/CameraPoint.h"
 
-#include "Camera/CameraActor.h"
 #include "Camera/CameraComponent.h"
+#include "GameFramework/SpringArmComponent.h"
 
-ACameraPoint::ACameraPoint()
+ACameraPoint::ACameraPoint(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
 {
-	CameraComponent = CreateDefaultSubobject<UCameraComponent>("Camera");
-	CameraComponent->SetupAttachment(SceneComponent);
+	CameraComponent = CreateDefaultSubobject<UCameraComponent>("CameraComponent");
+	CameraComponent->SetupAttachment(SpringArmComponent);
 }
 
 UCameraComponent* ACameraPoint::GetCameraComponent_Implementation()
@@ -17,8 +18,10 @@ UCameraComponent* ACameraPoint::GetCameraComponent_Implementation()
 	return CameraComponent;
 }
 
-void ACameraPoint::SetCameraComponentInternal(UCameraComponent* InCameraComponent)
+void ACameraPoint::SetCameraComponent_Implementation(UCameraComponent* InCameraComponent)
 {
+	Super::SetCameraComponent_Implementation(InCameraComponent);
+
 	if (IsValid(InCameraComponent))
 	{
 		/* todo: 拷贝的CameraComponent被未知移除掉了 */
@@ -40,6 +43,4 @@ void ACameraPoint::SetCameraComponentInternal(UCameraComponent* InCameraComponen
 		CameraComponent->SetOrthoWidth(InCameraComponent->OrthoWidth);
 		CameraComponent->PostProcessSettings = InCameraComponent->PostProcessSettings;
 	}
-
-	// Super::SetCameraComponentInternal(InCameraComponent);
 }

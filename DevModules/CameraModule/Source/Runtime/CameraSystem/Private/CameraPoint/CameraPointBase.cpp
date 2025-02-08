@@ -4,11 +4,15 @@
 #include "CameraPoint/CameraPointBase.h"
 
 #include "CameraManager.h"
+#include "BPFunctions/BPFunctions_Gameplay.h"
 #include "Camera/CameraActor.h"
 #include "Camera/CameraComponent.h"
-#include "Kismet/GameplayStatics.h"
+#include "Components/SphereComponent.h"
+#include "GameFramework/SpringArmComponent.h"
 
 #if WITH_EDITOR
+#include "LevelEditorSubsystem.h"
+#include "LevelEditorViewport.h"
 #include "BPFunctions/BPFunctions_EditorScene.h"
 #endif
 
@@ -17,12 +21,24 @@ UE_DEFINE_GAMEPLAY_TAG(TAG_Camera, "Camera");
 ACameraPointBase::FCameraPointDelegate ACameraPointBase::OnCameraPointRegister;
 ACameraPointBase::FCameraPointDelegate ACameraPointBase::OnCameraPointUnRegister;
 
-ACameraPointBase::ACameraPointBase()
+ACameraPointBase::ACameraPointBase(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
 {
 	PrimaryActorTick.bCanEverTick = false;
 
 	SceneComponent = CreateDefaultSubobject<USceneComponent>("SceneComponent");
 	RootComponent = SceneComponent;
+
+	SphereComponent = CreateDefaultSubobject<USphereComponent>("SphereComponent");
+	SphereComponent->SetSphereRadius(30.f);
+	SphereComponent->SetEnableGravity(false);
+	SphereComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	SphereComponent->SetupAttachment(RootComponent);
+
+	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>("SpringComponent");
+	SpringArmComponent->TargetArmLength = 0.f;
+	SpringArmComponent->bDoCollisionTest = false;
+	SpringArmComponent->SetupAttachment(SphereComponent);
 
 #if WITH_EDITORONLY_DATA
 	bIsSpatiallyLoaded = true;
@@ -65,27 +81,76 @@ void ACameraPointBase::PostEditChangeProperty(FPropertyChangedEvent& PropertyCha
 
 #endif
 
-void ACameraPointBase::SetCameraComponent_Implementation(UCameraComponent* InCameraComponent)
-{
-	SetCameraComponentInternal(InCameraComponent);
-}
-
 UCameraComponent* ACameraPointBase::GetCameraComponent_Implementation()
 {
 	return nullptr;
+}
+
+void ACameraPointBase::SetCameraComponent_Implementation(UCameraComponent* InCameraComponent)
+{
+}
+
+#if WITH_EDITOR
+
+void ACameraPointBase::CopyFromViewportCamera()
+{
+	Modify();
+
+	SpringArmComponent->TargetArmLength = 0.f;
+
+	const FVector Location = GCurrentLevelEditingViewportClient->GetViewLocation();
+	const FRotator Rotation = GCurrentLevelEditingViewportClient->GetViewRotation();
+
+	SetActorLocation(Location);
+	SetActorRotation(Rotation);
+
+	RefreshFocus();
+}
+
+void ACameraPointBase::RefreshFocus()
+{
+	FHitResult HitResult;
+	UBPFunctions_Gameplay::GetActorForwardHitResult(this, HitResult);
+	if (HitResult.bBlockingHit)
+	{
+		SetActorLocation(HitResult.Location);
+		SpringArmComponent->TargetArmLength = HitResult.Distance;
+	}
+
+	UBPFunctions_EditorScene::RefreshSelection();
+}
+
+void ACameraPointBase::ToggleLock()
+{
+	GEditor->ToggleSelectedActorMovementLock();
+}
+
+void ACameraPointBase::PilotCamera()
+{
+	ULevelEditorSubsystem* LevelEditorSubsystem = GEditor->GetEditorSubsystem<ULevelEditorSubsystem>();
+	LevelEditorSubsystem->PilotLevelActor(this);
+}
+
+void ACameraPointBase::EjectPilotCamera()
+{
+	ULevelEditorSubsystem* LevelEditorSubsystem = GEditor->GetEditorSubsystem<ULevelEditorSubsystem>();
+	LevelEditorSubsystem->EjectPilotLevelActor();
 }
 
 void ACameraPointBase::DuplicateFromCameraActor(ACameraActor* InCameraActor)
 {
 	if (IsValid(InCameraActor))
 	{
+		Modify();
+
+		SpringArmComponent->TargetArmLength = 0.f;
 		SetActorLocation(InCameraActor->GetActorLocation());
 		SetActorRotation(InCameraActor->GetActorRotation());
-		DuplicateFromCameraComponent(InCameraActor->GetCameraComponent());
 
-#if WITH_EDITORONLY_DATA
+		DuplicateFromCameraComponent(InCameraActor->GetCameraComponent());
+		RefreshFocus();
+
 		CameraActorLink = nullptr;
-#endif
 	}
 }
 
@@ -94,44 +159,10 @@ void ACameraPointBase::DuplicateFromCameraComponent(UCameraComponent* InCameraCo
 	if (IsValid(InCameraComponent))
 	{
 		UCameraComponent* DuplicateCameraComponent = DuplicateObject<UCameraComponent>(InCameraComponent, this);
-		SetCameraComponentInternal(DuplicateCameraComponent);
-	}
-}
+		SetCameraComponent(DuplicateCameraComponent);
 
-void ACameraPointBase::SetCameraComponentInternal(UCameraComponent* InCameraComponent)
-{
-	if (IsValid(InCameraComponent))
-	{
-		InCameraComponent->SetRelativeLocation(FVector::ZeroVector);
-		InCameraComponent->SetRelativeRotation(FRotator::ZeroRotator);
-
-		InCameraComponent->AttachToComponent(SceneComponent, FAttachmentTransformRules::KeepRelativeTransform);
-		InCameraComponent->RegisterComponentWithWorld(GetWorld());
-
-#if WITH_EDITOR
 		UBPFunctions_EditorScene::RefreshSelection();
-#endif
 	}
-}
-
-#if WITH_EDITOR
-
-ACameraPointBase::FCameraPointDelegate ACameraPointBase::OnCopyViewportCamera;
-ACameraPointBase::FOnCameraPointPilotStateChanged ACameraPointBase::OnCameraPointPilotStateChanged;
-
-void ACameraPointBase::CopyFromViewportCamera_Implementation()
-{
-	OnCopyViewportCamera.Broadcast(this);
-}
-
-void ACameraPointBase::PilotCamera_Implementation()
-{
-	OnCameraPointPilotStateChanged.Broadcast(this, true);
-}
-
-void ACameraPointBase::StopPilotCamera_Implementation()
-{
-	OnCameraPointPilotStateChanged.Broadcast(this, false);
 }
 
 #endif

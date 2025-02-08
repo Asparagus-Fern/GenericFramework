@@ -170,33 +170,19 @@ void AThirdPersonPawn::OnSwitchCameraFinish(UCameraHandle* InCameraHandle)
 
 	const FVector CameraLocation = InCameraHandle->TargetCameraPoint->GetActorLocation();
 	const FRotator CameraRotation = InCameraHandle->TargetCameraPoint->GetActorRotation();
+	const float CameraSpringArmLength = InCameraHandle->TargetCameraPoint->SpringArmComponent->TargetArmLength;
 
 	DuplicateCameraComponent = DuplicateObject<UCameraComponent>(InCameraHandle->TargetCameraPoint->GetCameraComponent(), this);
-	DuplicateCameraComponent->SetRelativeLocation(FVector::ZeroVector);
-	DuplicateCameraComponent->SetRelativeRotation(FRotator::ZeroRotator);
-
 	DuplicateCameraComponent->AttachToComponent(SpringArmComponent, FAttachmentTransformRules::KeepRelativeTransform);
 
-	SpringArmComponent->SetTargetArmLength(0.01f);
 	Execute_SetLocation(this, CameraLocation);
 	Execute_SetRotation(this, CameraRotation);
-
-	FHitResult HitResult;
-	const FVector Start = Execute_GetLocation(this);
-	const FVector End = GetActiveCameraComponent()->GetForwardVector() * UE_BIG_NUMBER + Start;
-	if (GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility))
-	{
-		Execute_SetLocation(this, HitResult.Location);
-		SpringArmComponent->SetTargetArmLength(HitResult.Distance);
-	}
+	SpringArmComponent->SetTargetArmLength(CameraSpringArmLength);
 
 	CameraComponent->SetActive(false);
 	DuplicateCameraComponent->SetActive(true);
 
 	Execute_GetPlayerController(this)->PlayerCameraManager->SetViewTarget(this);
-	// Execute_GetPlayerController(this)->PlayerCameraManager->SetFOV(DuplicateCameraComponent->FieldOfView);
-	// Execute_GetPlayerController(this)->PlayerCameraManager->UpdateCamera(0.f);
-
 	Execute_SetPawnLockState(this, PreviewLockState);
 }
 

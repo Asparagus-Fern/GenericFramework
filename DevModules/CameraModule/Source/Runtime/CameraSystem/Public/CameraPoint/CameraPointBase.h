@@ -8,6 +8,8 @@
 #include "GameFramework/Actor.h"
 #include "CameraPointBase.generated.h"
 
+class USpringArmComponent;
+class USphereComponent;
 class UCameraComponent;
 class UCameraHandle;
 
@@ -19,7 +21,7 @@ class CAMERASYSTEM_API ACameraPointBase : public AActor
 	GENERATED_BODY()
 
 public:
-	ACameraPointBase();
+	ACameraPointBase(const FObjectInitializer& ObjectInitializer);
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	virtual void Tick(float DeltaTime) override;
@@ -32,6 +34,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="Camera"), Category="Camera Point")
 	FGameplayTag CameraTag;
 
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
+	TObjectPtr<USceneComponent> SceneComponent = nullptr;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
+	TObjectPtr<USphereComponent> SphereComponent = nullptr;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
+	TObjectPtr<USpringArmComponent> SpringArmComponent = nullptr;
+
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintPure)
 	UCameraComponent* GetCameraComponent();
@@ -39,24 +50,11 @@ public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void SetCameraComponent(UCameraComponent* InCameraComponent);
 
-	UFUNCTION(BlueprintCallable)
-	void DuplicateFromCameraActor(ACameraActor* InCameraActor);
-
-	UFUNCTION(BlueprintCallable)
-	void DuplicateFromCameraComponent(UCameraComponent* InCameraComponent);
-
 public:
 	DECLARE_EVENT_OneParam(ACameraPointBase, FCameraPointDelegate, ACameraPointBase*)
 
 	static FCameraPointDelegate OnCameraPointRegister;
 	static FCameraPointDelegate OnCameraPointUnRegister;
-
-protected:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	TObjectPtr<USceneComponent> SceneComponent;
-
-protected:
-	virtual void SetCameraComponentInternal(UCameraComponent* InCameraComponent);
 
 #if WITH_EDITOR
 
@@ -68,21 +66,29 @@ public:
 #endif
 
 public:
-	DECLARE_EVENT_TwoParams(ACameraPointBase, FOnCameraPointPilotStateChanged, ACameraPointBase*, bool)
-
-	static FCameraPointDelegate OnCopyViewportCamera;
-	static FOnCameraPointPilotStateChanged OnCameraPointPilotStateChanged;
-
-public:
-	/* 从当前视口拷贝位置与旋转到该相机 */
-	UFUNCTION(CallInEditor, BlueprintNativeEvent, Category="Camera Point (Editor)")
+	/* Copy Current Level Viewport Location And Rotation To Self */
+	UFUNCTION(CallInEditor, Category="Camera Point (Editor)")
 	void CopyFromViewportCamera();
 
-	UFUNCTION(CallInEditor, BlueprintNativeEvent, Category="Camera Point (Editor)")
+	/* Refresh The Camera Focus Point */
+	UFUNCTION(CallInEditor, Category="Camera Point (Editor)")
+	void RefreshFocus();
+
+	/* Toggle To Lock Camera Movement */
+	UFUNCTION(CallInEditor, Category="Camera Point (Editor)")
+	void ToggleLock();
+
+	UFUNCTION(CallInEditor, Category="Camera Point (Editor)")
 	void PilotCamera();
 
-	UFUNCTION(CallInEditor, BlueprintNativeEvent, Category="Camera Point (Editor)")
-	void StopPilotCamera();
+	UFUNCTION(CallInEditor, Category="Camera Point (Editor)")
+	void EjectPilotCamera();
+
+	UFUNCTION(BlueprintCallable)
+	void DuplicateFromCameraActor(ACameraActor* InCameraActor);
+
+	UFUNCTION(BlueprintCallable)
+	void DuplicateFromCameraComponent(UCameraComponent* InCameraComponent);
 
 #endif
 };

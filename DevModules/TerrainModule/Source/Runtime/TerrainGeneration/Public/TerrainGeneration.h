@@ -3,7 +3,7 @@
 #include "CoreMinimal.h"
 #include "Modules/ModuleManager.h"
 
-class FCameraEdSystemModule : public IModuleInterface
+class FTerrainGenerationModule : public IModuleInterface
 {
 public:
 	virtual void StartupModule() override;

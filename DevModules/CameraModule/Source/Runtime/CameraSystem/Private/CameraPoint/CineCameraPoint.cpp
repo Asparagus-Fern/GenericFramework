@@ -3,12 +3,13 @@
 #include "CameraPoint/CineCameraPoint.h"
 
 #include "CineCameraComponent.h"
-#include "Camera/CameraActor.h"
+#include "GameFramework/SpringArmComponent.h"
 
-ACineCameraPoint::ACineCameraPoint()
+ACineCameraPoint::ACineCameraPoint(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
 {
 	CineCameraComponent = CreateDefaultSubobject<UCineCameraComponent>("CineCamera");
-	CineCameraComponent->SetupAttachment(SceneComponent);
+	CineCameraComponent->SetupAttachment(SpringArmComponent);
 }
 
 UCameraComponent* ACineCameraPoint::GetCameraComponent_Implementation()
@@ -16,16 +17,14 @@ UCameraComponent* ACineCameraPoint::GetCameraComponent_Implementation()
 	return CineCameraComponent;
 }
 
-void ACineCameraPoint::SetCameraComponentInternal(UCameraComponent* InCameraComponent)
+void ACineCameraPoint::SetCameraComponent_Implementation(UCameraComponent* InCameraComponent)
 {
+	Super::SetCameraComponent_Implementation(InCameraComponent);
+
 	if (IsValid(InCameraComponent))
 	{
 		if (UCineCameraComponent* CastComponent = Cast<UCineCameraComponent>(InCameraComponent))
 		{
-			// CineCameraComponent->DestroyComponent();
-			// CineCameraComponent = Cast<UCineCameraComponent>(GetRootComponent());
 		}
 	}
-
-	Super::SetCameraComponentInternal(InCameraComponent);
 }

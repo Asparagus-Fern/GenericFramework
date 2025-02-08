@@ -15,14 +15,14 @@ class LEVELSTREAMING_API UHandleLevelAsyncAction : public UBlueprintAsyncActionB
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintCallable, meta = ( BlueprintInternalUseOnly = "true"))
-	static UHandleLevelAsyncAction* LoadLevel( TSoftObjectPtr<UWorld> Level, bool bMakeVisibleAfterLoad, bool bShouldBlockOnLoad);
+	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"))
+	static UHandleLevelAsyncAction* LoadLevel(TSoftObjectPtr<UWorld> Level, bool bMakeVisibleAfterLoad, bool bShouldBlockOnLoad);
 
-	UFUNCTION(BlueprintCallable, meta = ( BlueprintInternalUseOnly = "true"))
-	static UHandleLevelAsyncAction* UnloadLevel( TSoftObjectPtr<UWorld> Level, bool bShouldBlockOnUnload);
+	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"))
+	static UHandleLevelAsyncAction* UnloadLevel(TSoftObjectPtr<UWorld> Level, bool bShouldBlockOnUnload);
 
-	UFUNCTION(BlueprintCallable, meta = ( BlueprintInternalUseOnly = "true"))
-	static UHandleLevelAsyncAction* SetLevelVisibility( TSoftObjectPtr<UWorld> Level, bool bVisible);
+	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"))
+	static UHandleLevelAsyncAction* SetLevelVisibility(TSoftObjectPtr<UWorld> Level, bool bVisible);
 
 public:
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FHandleLevelFinish);

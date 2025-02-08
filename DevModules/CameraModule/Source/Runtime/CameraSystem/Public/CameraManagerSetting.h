@@ -20,7 +20,4 @@ public:
 public:
 	UPROPERTY(Config, EditAnywhere)
 	bool bDestroyEmptyCameraPointAfterSwitchFinish = true;
-
-	UPROPERTY(Config, EditAnywhere)
-	bool bUpdatePawnCenterPointAfterSwitchFinish = true;
 };

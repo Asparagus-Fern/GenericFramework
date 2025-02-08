@@ -13,8 +13,6 @@ bool UCameraHandle_Teleport::HandleSwitchToCameraPoint_Implementation(APlayerCon
 {
 	if (Super::HandleSwitchToCameraPoint_Implementation(InPlayerController, InCameraPoint))
 	{
-		bUpdatePawnCenterPointAfterSwitchFinish = UCameraManagerSetting::Get()->bUpdatePawnCenterPointAfterSwitchFinish;
-		UCameraManagerSetting::Get()->bUpdatePawnCenterPointAfterSwitchFinish = true;
 		NativeOnSwitchToCameraPointFinish();
 		return true;
 	}
@@ -25,5 +23,4 @@ bool UCameraHandle_Teleport::HandleSwitchToCameraPoint_Implementation(APlayerCon
 void UCameraHandle_Teleport::OnSwitchToCameraPointFinish_Implementation()
 {
 	Super::OnSwitchToCameraPointFinish_Implementation();
-	UCameraManagerSetting::Get()->bUpdatePawnCenterPointAfterSwitchFinish = bUpdatePawnCenterPointAfterSwitchFinish;
 }

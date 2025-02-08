@@ -16,27 +16,27 @@ class LEVELSTREAMING_API UHandleLevelsAsyncAction : public UBlueprintAsyncAction
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintCallable, meta = ( BlueprintInternalUseOnly = "true"))
-	static UHandleLevelsAsyncAction* LoadLevels(TArray<TSoftObjectPtr<UWorld>> Levels, bool bMakeVisibleAfterLoad, bool bShouldBlockOnLoad);
+	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"))
+	static UHandleLevelsAsyncAction* AsyncLoadLevels(TArray<TSoftObjectPtr<UWorld>> Levels, bool bMakeVisibleAfterLoad, bool bShouldBlockOnLoad);
 
-	UFUNCTION(BlueprintCallable, meta = ( BlueprintInternalUseOnly = "true"))
-	static UHandleLevelsAsyncAction* LoadLevelsBySetting(TArray<FLoadLevelStreamingSetting> LoadLevelStreamingSettings);
+	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"))
+	static UHandleLevelsAsyncAction* AsyncLoadLevelsBySetting(TArray<FLoadLevelStreamingSetting> LoadLevelStreamingSettings);
 
-	UFUNCTION(BlueprintCallable, meta = ( BlueprintInternalUseOnly = "true"))
-	static UHandleLevelsAsyncAction* UnloadLevels(TArray<TSoftObjectPtr<UWorld>> Levels, bool bShouldBlockOnUnload);
+	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"))
+	static UHandleLevelsAsyncAction* AsyncUnloadLevels(TArray<TSoftObjectPtr<UWorld>> Levels, bool bShouldBlockOnUnload);
 
-	UFUNCTION(BlueprintCallable, meta = ( BlueprintInternalUseOnly = "true"))
-	static UHandleLevelsAsyncAction* UnloadLevelsBySetting(TArray<FUnloadLevelStreamingSetting> UnloadLevelStreamingSettings);
+	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"))
+	static UHandleLevelsAsyncAction* AsyncUnloadLevelsBySetting(TArray<FUnloadLevelStreamingSetting> UnloadLevelStreamingSettings);
 
-	UFUNCTION(BlueprintCallable, meta = ( BlueprintInternalUseOnly = "true"))
-	static UHandleLevelsAsyncAction* SetLevelsVisibility(TArray<TSoftObjectPtr<UWorld>> Levels, bool bVisible);
+	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"))
+	static UHandleLevelsAsyncAction* AsyncSetLevelsVisibility(TArray<TSoftObjectPtr<UWorld>> Levels, bool bVisible);
 
 public:
-	UFUNCTION(BlueprintCallable, meta = ( BlueprintInternalUseOnly = "true"))
-	static UHandleLevelsAsyncAction* LoadCurrentWorldLevelStreaming();
+	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"))
+	static UHandleLevelsAsyncAction* AsyncLoadCurrentWorldLevelStreaming();
 
-	UFUNCTION(BlueprintCallable, meta = ( BlueprintInternalUseOnly = "true"))
-	static UHandleLevelsAsyncAction* UnLoadCurrentWorldLevelStreaming();
+	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"))
+	static UHandleLevelsAsyncAction* AsyncUnLoadCurrentWorldLevelStreaming();
 
 public:
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FHandleLevelOnceFinish);

@@ -2,10 +2,10 @@
   "FileVersion": 3,
   "Version": 1,
   "VersionName": "1.0",
-  "FriendlyName": "CameraModule",
+  "FriendlyName": "TerrainModule",
   "Description": "",
   "Category": "Other",
-  "CreatedBy": "Chen",
+  "CreatedBy": "",
   "CreatedByURL": "",
   "DocsURL": "",
   "MarketplaceURL": "",
@@ -17,15 +17,11 @@
     {
       "Name": "DevCore",
       "Enabled": true
-    },
-    {
-      "Name": "WidgetModule",
-      "Enabled": true
     }
   ],
   "Modules": [
     {
-      "Name": "CameraSystem",
+      "Name": "TerrainGeneration",
       "Type": "Runtime",
       "LoadingPhase": "Default"
     }

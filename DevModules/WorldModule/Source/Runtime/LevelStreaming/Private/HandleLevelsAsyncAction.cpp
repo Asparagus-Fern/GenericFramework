@@ -6,7 +6,7 @@
 #include "LevelStreamingManager.h"
 #include "Manager/ManagerProxy.h"
 
-UHandleLevelsAsyncAction* UHandleLevelsAsyncAction::LoadLevels(const TArray<TSoftObjectPtr<UWorld>> Levels, const bool bMakeVisibleAfterLoad, const bool bShouldBlockOnLoad)
+UHandleLevelsAsyncAction* UHandleLevelsAsyncAction::AsyncLoadLevels(const TArray<TSoftObjectPtr<UWorld>> Levels, const bool bMakeVisibleAfterLoad, const bool bShouldBlockOnLoad)
 {
 	UHandleLevelsAsyncAction* NewAction = NewObject<UHandleLevelsAsyncAction>();
 
@@ -18,7 +18,7 @@ UHandleLevelsAsyncAction* UHandleLevelsAsyncAction::LoadLevels(const TArray<TSof
 	return NewAction;
 }
 
-UHandleLevelsAsyncAction* UHandleLevelsAsyncAction::LoadLevelsBySetting(const TArray<FLoadLevelStreamingSetting> LoadLevelStreamingSettings)
+UHandleLevelsAsyncAction* UHandleLevelsAsyncAction::AsyncLoadLevelsBySetting(const TArray<FLoadLevelStreamingSetting> LoadLevelStreamingSettings)
 {
 	UHandleLevelsAsyncAction* NewAction = NewObject<UHandleLevelsAsyncAction>();
 
@@ -30,7 +30,7 @@ UHandleLevelsAsyncAction* UHandleLevelsAsyncAction::LoadLevelsBySetting(const TA
 	return NewAction;
 }
 
-UHandleLevelsAsyncAction* UHandleLevelsAsyncAction::UnloadLevels(const TArray<TSoftObjectPtr<UWorld>> Levels, const bool bShouldBlockOnUnload)
+UHandleLevelsAsyncAction* UHandleLevelsAsyncAction::AsyncUnloadLevels(const TArray<TSoftObjectPtr<UWorld>> Levels, const bool bShouldBlockOnUnload)
 {
 	UHandleLevelsAsyncAction* NewAction = NewObject<UHandleLevelsAsyncAction>();
 
@@ -42,7 +42,7 @@ UHandleLevelsAsyncAction* UHandleLevelsAsyncAction::UnloadLevels(const TArray<TS
 	return NewAction;
 }
 
-UHandleLevelsAsyncAction* UHandleLevelsAsyncAction::UnloadLevelsBySetting(const TArray<FUnloadLevelStreamingSetting> UnloadLevelStreamingSettings)
+UHandleLevelsAsyncAction* UHandleLevelsAsyncAction::AsyncUnloadLevelsBySetting(const TArray<FUnloadLevelStreamingSetting> UnloadLevelStreamingSettings)
 {
 	UHandleLevelsAsyncAction* NewAction = NewObject<UHandleLevelsAsyncAction>();
 
@@ -54,7 +54,7 @@ UHandleLevelsAsyncAction* UHandleLevelsAsyncAction::UnloadLevelsBySetting(const 
 	return NewAction;
 }
 
-UHandleLevelsAsyncAction* UHandleLevelsAsyncAction::SetLevelsVisibility(const TArray<TSoftObjectPtr<UWorld>> Levels, const bool bVisible)
+UHandleLevelsAsyncAction* UHandleLevelsAsyncAction::AsyncSetLevelsVisibility(const TArray<TSoftObjectPtr<UWorld>> Levels, const bool bVisible)
 {
 	UHandleLevelsAsyncAction* NewAction = NewObject<UHandleLevelsAsyncAction>();
 
@@ -66,7 +66,7 @@ UHandleLevelsAsyncAction* UHandleLevelsAsyncAction::SetLevelsVisibility(const TA
 	return NewAction;
 }
 
-UHandleLevelsAsyncAction* UHandleLevelsAsyncAction::LoadCurrentWorldLevelStreaming()
+UHandleLevelsAsyncAction* UHandleLevelsAsyncAction::AsyncLoadCurrentWorldLevelStreaming()
 {
 	UHandleLevelsAsyncAction* NewAction = NewObject<UHandleLevelsAsyncAction>();
 
@@ -78,7 +78,7 @@ UHandleLevelsAsyncAction* UHandleLevelsAsyncAction::LoadCurrentWorldLevelStreami
 	return NewAction;
 }
 
-UHandleLevelsAsyncAction* UHandleLevelsAsyncAction::UnLoadCurrentWorldLevelStreaming()
+UHandleLevelsAsyncAction* UHandleLevelsAsyncAction::AsyncUnLoadCurrentWorldLevelStreaming()
 {
 	UHandleLevelsAsyncAction* NewAction = NewObject<UHandleLevelsAsyncAction>();
 

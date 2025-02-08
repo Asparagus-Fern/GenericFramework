@@ -16,17 +16,15 @@ class CAMERASYSTEM_API ACameraPoint : public ACameraPointBase
 	GENERATED_BODY()
 
 public:
-	ACameraPoint();
+	ACameraPoint(const FObjectInitializer& ObjectInitializer);
 
 	/* ACameraPointBase */
 public:
 	virtual UCameraComponent* GetCameraComponent_Implementation() override;
-
-protected:
-	virtual void SetCameraComponentInternal(UCameraComponent* InCameraComponent) override;
+	virtual void SetCameraComponent_Implementation(UCameraComponent* InCameraComponent) override;
 
 	/* ACameraPoint */
 public:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Camera Point")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	UCameraComponent* CameraComponent = nullptr;
 };
