@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
+#include "WorldWidgetComponent.h"
 #include "Common/ViewportPanel.h"
 #include "Manager/TickableInternalManager.h"
 #include "WorldWidgetManager.generated.h"
@@ -42,9 +43,11 @@ protected:
 
 public:
 	TMap<UWorldWidgetComponent*, UUserWidgetBase*> GetWorldWidgets() { return WorldWidgets; }
-	
+
 	virtual bool IsContain(UWorldWidgetComponent* InWorldWidgetComponent);
-	
+
+	virtual void AddWorldWidgetComponent(AActor* InActor);
+
 	/* 添加一个WorldWidget进入该Panel */
 	virtual void AddWorldWidgetComponent(UWorldWidgetComponent* InWorldWidgetComponent);
 
@@ -85,17 +88,23 @@ public:
 
 	/* UWorldWidgetManager */
 public:
-	/* 注册一个3DUI点位 */
-	virtual void RegisterWorldWidgetComponent(UWorldWidgetComponent* WorldWidgetPoint);
-
-	/* 反注册一个3DUI点位 */
-	virtual void UnRegisterWorldWidgetComponent(UWorldWidgetComponent* WorldWidgetPoint);
-
 	TArray<UWorldWidgetComponent*> GetWorldWidgetComponents() { return WorldWidgetComponents; }
+
+	TArray<UWorldWidgetComponent*> GetWorldWidgetComponents2D();
+
+	TArray<UWorldWidgetComponent*> GetWorldWidgetComponents3D();
 
 	UWorldWidgetComponent* FindWorldWidgetComponent(FGameplayTag WorldWidgetTag);
 
 	TArray<UWorldWidgetComponent*> FindWorldWidgetComponents(FGameplayTag WorldWidgetTag);
+
+	void SetWorldWidgetComponentActiveState(AActor* InActor, bool IsActive);
+
+	void SetWorldWidgetComponentActiveState(UWorldWidgetComponent* InWorldWidgetComponent, bool IsActive);
+
+	void SetWorldWidgetPaintMethod(UWorldWidgetComponent* InWorldWidgetComponent, EWorldWidgetPaintMethod WorldWidgetPaintMethod);
+
+	void SetWorldWidgetLookAtSetting(UWorldWidgetComponent* InWorldWidgetComponent, FWorldWidgetLookAtSetting WorldWidgetLookAtSetting);
 
 protected:
 	UPROPERTY(Transient)
@@ -105,24 +114,35 @@ protected:
 	TArray<UWorldWidgetPanel*> WorldWidgetPanels;
 
 protected:
-	/* 在HUD创建之后创建3DUI面板 */
+	virtual void RegisterWorldWidgetComponent(UWorldWidgetComponent* WorldWidgetPoint);
+
+	virtual void UnRegisterWorldWidgetComponent(UWorldWidgetComponent* WorldWidgetPoint);
+
+	virtual void TryToAddWorldWidgetComponent(AActor* InActor);
+
+	virtual void TryToAddWorldWidgetComponent(UWorldWidgetComponent* InWorldWidgetComponent);
+
+	virtual void TryToRemoveWorldWidgetComponent(AActor* InActor);
+
+	virtual void TryToRemoveWorldWidgetComponent(UWorldWidgetComponent* InWorldWidgetComponent);
+
+	virtual void RefreshWorldWidgetComponents2DLookAtRotation(TArray<UWorldWidgetComponent*> InWorldWidgetComponents);
+
+	virtual void RefreshWorldWidgetComponents3DLookAtRotation(TArray<UWorldWidgetComponent*> InWorldWidgetComponents);
+
+	virtual void RefreshAllWorldWidgetComponents();
+
+	/* 2D */
+protected:
+	/* Generate World Widget Panel Post HUD Created */
 	virtual void GenerateWorldWidgetPanel();
 
-	/* 创建3DUI面板 */
+	/* Create Panel */
 	virtual UWorldWidgetPanel* CreateWorldWidgetPanel();
 
-	/* 刷新所有的3DUI面板 */
-	virtual void RefreshWorldWidgetPanel();
-
-	/* 移除指定3DUI面板 */
+	/* Remove Panel */
 	virtual void RemoveWorldWidgetPanel(UWorldWidgetPanel* InWorldWidgetPanel);
 
-	/* 清除所有3DUI面板 */
-	virtual void ClearupWorldWidgetPanel();
-
-	/* 尝试将一个3DUI添加到3DUI面板 */
-	virtual void TryToAddWorldWidgetComponent(UWorldWidgetComponent* WorldWidgetComponent);
-
-	/* 尝试将一个3DUI从3DUI面板移除 */
-	virtual void TryToRemoveWorldWidgetComponent(UWorldWidgetComponent* WorldWidgetComponent);
+	/* Clear All Panel */
+	virtual void ClearAllWorldWidgetPanel();
 };

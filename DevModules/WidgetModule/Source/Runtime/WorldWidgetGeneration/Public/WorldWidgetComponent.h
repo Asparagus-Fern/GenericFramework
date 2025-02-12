@@ -7,9 +7,54 @@
 #include "Components/SceneComponent.h"
 #include "WorldWidgetComponent.generated.h"
 
+class UWidgetComponent;
 class UUserWidgetBase;
 
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_WorldWidget);
+
+UENUM(BlueprintType)
+enum class EWorldWidgetPaintMethod : uint8
+{
+	PaintInScreen,
+	PaintInWorld
+};
+
+USTRUCT(BlueprintType)
+struct FWorldWidgetLookAtSetting
+{
+	GENERATED_BODY()
+
+public:
+	bool operator==(const FWorldWidgetLookAtSetting Other) const
+	{
+		return bEnableLookAtPlayerCamera == Other.bEnableLookAtPlayerCamera
+			&& LookAtPlayerIndex == Other.LookAtPlayerIndex
+			&& LookAtPitch == Other.LookAtPitch
+			&& LookAtYaw == Other.LookAtYaw
+			&& LookAtRoll == Other.LookAtRoll;
+	}
+
+	bool operator!=(const FWorldWidgetLookAtSetting Other) const
+	{
+		return !(*this == Other);
+	}
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bEnableLookAtPlayerCamera = true;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditCondition = "bEnableLookAtPlayerCamera"))
+	int32 LookAtPlayerIndex = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditCondition = "bEnableLookAtPlayerCamera"))
+	bool LookAtPitch = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditCondition = "bEnableLookAtPlayerCamera"))
+	bool LookAtYaw = true;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditCondition = "bEnableLookAtPlayerCamera"))
+	bool LookAtRoll = false;
+};
 
 /**
  * 创建出一个基于屏幕的3DUI
@@ -22,30 +67,48 @@ class WORLDWIDGETGENERATION_API UWorldWidgetComponent : public USceneComponent
 public:
 	UWorldWidgetComponent();
 	virtual void OnRegister() override;
+	virtual void OnUnregister() override;
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 public:
 	DECLARE_EVENT_OneParam(UWorldWidgetComponent, FWorldWidgetComponentDelegate, UWorldWidgetComponent*);
 
-	static FWorldWidgetComponentDelegate OnWorldWidgetComponentRegister;
-	static FWorldWidgetComponentDelegate OnWorldWidgetPointBeginPlay;
-	static FWorldWidgetComponentDelegate OnWorldWidgetPointEndPlay;
+	inline static FWorldWidgetComponentDelegate OnWorldWidgetComponentRegister;
+	inline static FWorldWidgetComponentDelegate OnWorldWidgetComponentUnRegister;
+	inline static FWorldWidgetComponentDelegate OnWorldWidgetPointBeginPlay;
+	inline static FWorldWidgetComponentDelegate OnWorldWidgetPointEndPlay;
 
 public:
-	/* 是否自动注册 */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	bool bIsAutoRegister = true;
-
-	/* 当为false时自动激活显示，为true则手动控制显示 */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	bool bIsManualActive = false;
-
-	/* 可通过标签获取到所有该标签组件 */
+	/* Unique Tag */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="UI.WorldWidget"))
 	FGameplayTag WorldWidgetTag = FGameplayTag::EmptyTag;
 
+	/* If True, It Will not Appear After Register, You Need To Call ChangeWorldWidgetComponentActiveState To Show It */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	bool bIsManualActive = false;
+
+	/* Method Decide How The Widget Paint */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	EWorldWidgetPaintMethod WorldWidgetPaintMethod = EWorldWidgetPaintMethod::PaintInScreen;
+
+	/* Setting Decide How The Widget Look at Player */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FWorldWidgetLookAtSetting WorldWidgetLookAtSetting;
+
 	/* UI */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced)
-	UUserWidgetBase* WorldWidget = nullptr;
+	TObjectPtr<UUserWidgetBase> WorldWidget = nullptr;
+
+public:
+	void RefreshWidgetComponent();
+	void ClearWidgetComponent();
+	UWidgetComponent* GetWidgetComponent() const { return WidgetComponent; }
+
+protected:
+	virtual UWidgetComponent* CreateWidgetComponent();
+
+protected:
+	UPROPERTY()
+	TObjectPtr<UWidgetComponent> WidgetComponent = nullptr;
 };

@@ -5,12 +5,52 @@
 
 #include "CommonInputSubsystem.h"
 #include "Animation/WidgetAnimation.h"
+#include "Blueprint/WidgetTree.h"
+#include "Components/ScaleBox.h"
+#include "Components/ScaleBoxSlot.h"
 #include "Input/CommonUIActionRouterBase.h"
 #include "Input/CommonUIInputTypes.h"
 
 UUserWidgetBase::UUserWidgetBase(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
+}
+
+bool UUserWidgetBase::Initialize()
+{
+	const bool bInitializedThisCall = Super::Initialize();
+
+	if (bInitializedThisCall)
+	{
+		UScaleBox* NewScaleBox = WidgetTree->ConstructWidget<UScaleBox>(UScaleBox::StaticClass(), FName(TEXT("ScaleBox")));
+		NewScaleBox->SetStretch(EStretch::UserSpecified);
+		NewScaleBox->SetStretchDirection(EStretchDirection::Both);
+		ScaleBox = NewScaleBox;
+
+		if (WidgetTree->RootWidget)
+		{
+			UScaleBoxSlot* NewSlot = Cast<UScaleBoxSlot>(ScaleBox->AddChild(WidgetTree->RootWidget));
+			NewSlot->SetHorizontalAlignment(EHorizontalAlignment::HAlign_Fill);
+			NewSlot->SetVerticalAlignment(EVerticalAlignment::VAlign_Fill);
+		}
+
+		WidgetTree->RootWidget = NewScaleBox;
+	}
+
+	/* 传递当前UI，计算Slate所需大小 */
+	TakeWidget()->SlatePrepass();
+
+	return bInitializedThisCall;
+}
+
+void UUserWidgetBase::NativePreConstruct()
+{
+	Super::NativePreConstruct();
+
+	if (ScaleBox.IsValid())
+	{
+		ScaleBox->SetUserSpecifiedScale(Scale);
+	}
 }
 
 void UUserWidgetBase::NativeConstruct()

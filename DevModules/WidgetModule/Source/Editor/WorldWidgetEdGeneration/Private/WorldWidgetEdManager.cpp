@@ -12,6 +12,8 @@
 #include "BPFunctions/BPFunctions_EditorWidget.h"
 #include "UWidget/SimpleTextBox.h"
 #include "Base/UserWidgetBase.h"
+#include "Components/WidgetComponent.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "Widgets/Layout/SConstraintCanvas.h"
 
 void UEditorWorldWidgetPanel::NativeOnCreate()
@@ -121,23 +123,33 @@ bool UEditorWorldWidgetPanel::IsContain(UWorldWidgetComponent* InWorldWidgetComp
 	return false;
 }
 
+void UEditorWorldWidgetPanel::AddWorldWidgetComponent(AActor* InActor)
+{
+	Super::AddWorldWidgetComponent(InActor);
+}
+
 void UEditorWorldWidgetPanel::AddWorldWidgetComponent(UWorldWidgetComponent* InWorldWidgetComponent)
 {
-	/* InWorldWidgetComponent为空 */
+	if (InWorldWidgetComponent->WorldWidgetPaintMethod != EWorldWidgetPaintMethod::PaintInScreen)
+	{
+		return;
+	}
+
 	if (!IsValid(InWorldWidgetComponent))
 	{
+		DLOG(DLogUI, Error, TEXT("InWorldWidgetComponent Is NULL"))
 		return;
 	}
 
-	/* 该WorldWidget组件没有指定WorldWidget */
 	if (!IsValid(InWorldWidgetComponent->WorldWidget))
 	{
+		DLOG(DLogUI, Warning, TEXT("WorldWidgetComponent %s Has a InValid WorldWidget"), *InWorldWidgetComponent->GetName())
 		return;
 	}
 
-	/* 该WorldWidget组件已被创建 */
 	if (WorldWidgets.Contains(InWorldWidgetComponent))
 	{
+		DLOG(DLogUI, Warning, TEXT("This WorldWidget Already Created"))
 		return;
 	}
 
@@ -200,21 +212,7 @@ void UEditorWorldWidgetPanel::RefreshAllWorldWidgetComponent()
 	for (FActorIterator It(GetWorld()); It; ++It)
 	{
 		AActor* Actor = *It;
-
-		if (const AWorldWidgetPoint* WorldWidgetPoint = Cast<AWorldWidgetPoint>(Actor))
-		{
-			AddWorldWidgetComponent(WorldWidgetPoint->WorldWidgetComponent);
-		}
-		else
-		{
-			TArray<UWorldWidgetComponent*> WorldWidgetComponents;
-			Actor->GetComponents(UWorldWidgetComponent::StaticClass(), WorldWidgetComponents);
-
-			for (const auto& WorldWidgetComponent : WorldWidgetComponents)
-			{
-				AddWorldWidgetComponent(WorldWidgetComponent);
-			}
-		}
+		AddWorldWidgetComponent(Actor);
 	}
 }
 
@@ -256,6 +254,7 @@ void UWorldWidgetEdManager::Initialize(FSubsystemCollectionBase& Collection)
 	}
 
 	WorldWidgetComponentRegisterHandle = UWorldWidgetComponent::OnWorldWidgetComponentRegister.AddUObject(this, &UWorldWidgetEdManager::OnWorldWidgetComponentRegister);
+	WorldWidgetComponentUnRegisterHandle = UWorldWidgetComponent::OnWorldWidgetComponentUnRegister.AddUObject(this, &UWorldWidgetEdManager::OnWorldWidgetComponentUnRegister);
 
 	GenerateWorldWidgetPanel();
 }
@@ -283,6 +282,7 @@ void UWorldWidgetEdManager::Deinitialize()
 	LevelsChangedHandle.Reset();
 
 	WorldWidgetComponentRegisterHandle.Reset();
+	WorldWidgetComponentUnRegisterHandle.Reset();
 }
 
 bool UWorldWidgetEdManager::DoesSupportWorldType(const EWorldType::Type WorldType) const
@@ -293,7 +293,7 @@ bool UWorldWidgetEdManager::DoesSupportWorldType(const EWorldType::Type WorldTyp
 void UWorldWidgetEdManager::HandleOnWorldBeginPlay(UWorld* InWorld)
 {
 	/* 运行时开始的时候把编辑器的3DUI清空 */
-	ClearupWorldWidgetPanel();
+	ClearAllWorldWidgetPanel();
 }
 
 void UWorldWidgetEdManager::HandleOnWorldEndPlay(UWorld* InWorld)
@@ -305,91 +305,51 @@ void UWorldWidgetEdManager::HandleOnWorldEndPlay(UWorld* InWorld)
 void UWorldWidgetEdManager::OnLevelEditorCreated(TSharedPtr<ILevelEditor> LevelEditor)
 {
 	GenerateWorldWidgetPanel();
+	RefreshAllWorldWidgetComponents();
 }
 
 void UWorldWidgetEdManager::OnLevelViewportClientListChanged()
 {
-	ClearupWorldWidgetPanel();
+	ClearAllWorldWidgetPanel();
 	GenerateWorldWidgetPanel();
 }
 
 void UWorldWidgetEdManager::OnLevelActorAdded(AActor* Actor)
 {
-	// RefreshWorldWidgetPanel();
-
-	for (const auto& Panel : WorldWidgetPanels)
-	{
-		if (const AWorldWidgetPoint* WorldWidgetPoint = Cast<AWorldWidgetPoint>(Actor))
-		{
-			Panel->AddWorldWidgetComponent(WorldWidgetPoint->WorldWidgetComponent);
-		}
-	}
+	TryToAddWorldWidgetComponent(Actor);
 }
 
 void UWorldWidgetEdManager::OnActorsMoved(TArray<AActor*>& Actors)
 {
-	// RefreshWorldWidgetPanel();
-
-	for (const auto& Panel : WorldWidgetPanels)
+	for (const auto& Actor : Actors)
 	{
-		for (const auto& Actor : Actors)
-		{
-			if (const AWorldWidgetPoint* WorldWidgetPoint = Cast<AWorldWidgetPoint>(Actor))
-			{
-				if (Panel->IsContain(WorldWidgetPoint->WorldWidgetComponent))
-				{
-					Panel->RefreshWorldWidgetComponent(WorldWidgetPoint->WorldWidgetComponent);
-				}
-				else
-				{
-					Panel->AddWorldWidgetComponent(WorldWidgetPoint->WorldWidgetComponent);
-				}
-			}
-		}
+		TryToAddWorldWidgetComponent(Actor);
 	}
 }
 
 void UWorldWidgetEdManager::OnLevelActorDeleted(AActor* Actor)
 {
-	// RefreshWorldWidgetPanel();
-
-	for (const auto& Panel : WorldWidgetPanels)
-	{
-		if (const AWorldWidgetPoint* WorldWidgetPoint = Cast<AWorldWidgetPoint>(Actor))
-		{
-			if (Panel->IsContain(WorldWidgetPoint->WorldWidgetComponent))
-			{
-				Panel->RemoveWorldWidgetComponent(WorldWidgetPoint->WorldWidgetComponent);
-			}
-		}
-	}
+	TryToRemoveWorldWidgetComponent(Actor);
 }
 
 void UWorldWidgetEdManager::OnBlueprintCompiled()
 {
-	RefreshWorldWidgetPanel();
+	RefreshAllWorldWidgetComponents();
 }
 
 void UWorldWidgetEdManager::OnLevelsChanged()
 {
-	RefreshWorldWidgetPanel();
+	RefreshAllWorldWidgetComponents();
 }
 
 void UWorldWidgetEdManager::OnWorldWidgetComponentRegister(UWorldWidgetComponent* WorldWidgetComponent)
 {
-	// RefreshWorldWidgetPanel();
+	TryToAddWorldWidgetComponent(WorldWidgetComponent);
+}
 
-	for (const auto& Panel : WorldWidgetPanels)
-	{
-		if (Panel->IsContain(WorldWidgetComponent))
-		{
-			Panel->RefreshWorldWidgetComponent(WorldWidgetComponent);
-		}
-		else
-		{
-			Panel->AddWorldWidgetComponent(WorldWidgetComponent);
-		}
-	}
+void UWorldWidgetEdManager::OnWorldWidgetComponentUnRegister(UWorldWidgetComponent* WorldWidgetComponent)
+{
+	TryToRemoveWorldWidgetComponent(WorldWidgetComponent);
 }
 
 void UWorldWidgetEdManager::GenerateWorldWidgetPanel()
@@ -411,6 +371,44 @@ UWorldWidgetPanel* UWorldWidgetEdManager::CreateWorldWidgetPanel()
 	WorldWidgetPanels.Add(NewEditorWorldWidgetPanel);
 
 	return NewEditorWorldWidgetPanel;
+}
+
+void UWorldWidgetEdManager::RefreshWorldWidgetComponents3DLookAtRotation(TArray<UWorldWidgetComponent*> InWorldWidgetComponents)
+{
+	// Super::RefreshWorldWidgetComponents3D(InWorldWidgetComponents);
+
+	for (const auto& WorldWidgetComponent : InWorldWidgetComponents)
+	{
+		/* Disable Look At Player */
+		if (!WorldWidgetComponent->WorldWidgetLookAtSetting.bEnableLookAtPlayerCamera)
+		{
+			continue;
+		}
+
+		if (UWidgetComponent* WidgetComponent = WorldWidgetComponent->GetWidgetComponent())
+		{
+			if (GCurrentLevelEditingViewportClient)
+			{
+				const FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(WidgetComponent->GetComponentLocation(), GCurrentLevelEditingViewportClient->GetViewLocation());
+				FRotator WidgetComponentRotation = WidgetComponent->GetRelativeRotation();
+
+				if (WorldWidgetComponent->WorldWidgetLookAtSetting.LookAtPitch)
+				{
+					WidgetComponentRotation.Pitch = LookAtRotation.Pitch;
+				}
+				if (WorldWidgetComponent->WorldWidgetLookAtSetting.LookAtYaw)
+				{
+					WidgetComponentRotation.Yaw = LookAtRotation.Yaw;
+				}
+				if (WorldWidgetComponent->WorldWidgetLookAtSetting.LookAtRoll)
+				{
+					WidgetComponentRotation.Roll = LookAtRotation.Roll;
+				}
+
+				WidgetComponent->SetRelativeRotation(WidgetComponentRotation);
+			}
+		}
+	}
 }
 
 #undef LOCTEXT_NAMESPACE

@@ -39,6 +39,7 @@ public:
 	/* FEditorWorldWidgetPanel */
 public:
 	virtual bool IsContain(UWorldWidgetComponent* InWorldWidgetComponent) override;
+	virtual void AddWorldWidgetComponent(AActor* InActor) override;
 	virtual void AddWorldWidgetComponent(UWorldWidgetComponent* InWorldWidgetComponent) override;
 	virtual void RemoveWorldWidgetComponent(UWorldWidgetComponent* InWorldWidgetComponent) override;
 	virtual void RefreshAllWorldWidgetComponent() override;
@@ -105,7 +106,11 @@ protected:
 	FDelegateHandle WorldWidgetComponentRegisterHandle;
 	void OnWorldWidgetComponentRegister(UWorldWidgetComponent* WorldWidgetComponent);
 
+	FDelegateHandle WorldWidgetComponentUnRegisterHandle;
+	void OnWorldWidgetComponentUnRegister(UWorldWidgetComponent* WorldWidgetComponent);
+
 protected:
 	virtual void GenerateWorldWidgetPanel() override;
 	virtual UWorldWidgetPanel* CreateWorldWidgetPanel() override;
+	virtual void RefreshWorldWidgetComponents3DLookAtRotation(TArray<UWorldWidgetComponent*> InWorldWidgetComponents) override;
 };

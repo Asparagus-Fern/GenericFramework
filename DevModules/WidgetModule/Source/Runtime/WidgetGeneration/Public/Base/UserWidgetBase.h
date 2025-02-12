@@ -31,7 +31,9 @@ class WIDGETGENERATION_API UUserWidgetBase : public UCommonUserWidget, public IW
 	friend UWidgetEntity;
 
 protected:
-	UUserWidgetBase(const FObjectInitializer& ObjectInitializer);;
+	UUserWidgetBase(const FObjectInitializer& ObjectInitializer);
+	virtual bool Initialize() override;
+	virtual void NativePreConstruct() override;
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
 
@@ -41,47 +43,57 @@ protected:
 
 	/* ==================== UUserWidgetBase ==================== */
 public:
-	/* 所在插槽标签 */
+	UFUNCTION(BlueprintPure)
+	FVector2D GetAnchorOffset() const;
+
+public:
+	/* Unique Tag To Mark Which Slot To Add This Widget */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="UI.HUD"))
 	FGameplayTag SlotTag;
 
-	/* 临时的HUD会在使用时创建，在所有使用到该HUD的Widget都被关闭之后移除 */
+	/* While This Widget Is Opening, The Temporary HUD Will be Added, To Provide The Slot This Widget Need */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TArray<TSubclassOf<UTemporaryHUD>> TemporaryHUDs;
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, AdvancedDisplay)
-	FVector2D Anchor = FVector2D(.5f, 1.f);
-
+	/* Widget ZOrder, Usefully In WorldWidgetComponent3D, It Decide a Widget How To Hierarchical */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, AdvancedDisplay)
 	int32 ZOrder = 0;
 
+	/* Widget Scale, Usefully In WorldWidgetComponent3D, It Can Make Widget More Clear */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, AdvancedDisplay)
+	float Scale = 1.f;
+
+	/* Widget Anchor, Usefully In WorldWidgetComponent3D, It Decide a Widget How To Surrounding you */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, AdvancedDisplay)
+	FVector2D Anchor = FVector2D(.5f, 1.f);
+
 protected:
+	/* It Can be NULL, Unless This Widget Is Opened By Entity */
 	UPROPERTY()
 	TWeakObjectPtr<UWidgetEntity> WidgetEntity = nullptr;
 
-public:
-	UFUNCTION(BlueprintPure)
-	FVector2D GetAnchorOffset() const;
+private:
+	TWeakObjectPtr<class UScaleBox> ScaleBox;
 
 	/* ==================== IStateInterface ==================== */
 public:
-	/* 表示Widget已经创建，但未添加到屏幕 */
+	/* Widget Is Created, But Not At Screen */
 	virtual void NativeOnCreate() override { IStateInterface::NativeOnCreate(); }
 
-	/* 表示Widget已添加到屏幕 */
+	/* Widget Is Adding To Screen */
 	virtual void NativeOnActived() override { IStateInterface::NativeOnActived(); }
 
-	/* 表示Widget已显示 */
+	/* Widget Is Already Added */
 	virtual void NativeOnActivedFinish() override { IStateInterface::NativeOnActivedFinish(); }
 
-	/* 表示Widget即将从屏幕移除 */
+	/* Widget Is Pre Remove From Screen */
 	virtual void NativeOnInactived() override { IStateInterface::NativeOnInactived(); }
 
-	/* 表示Widget已经从屏幕移除 */
+	/* Widget Is Removed From Screen */
 	virtual void NativeOnInactivedFinish() override { IStateInterface::NativeOnInactivedFinish(); }
 
-	/* 表示Widget即将被垃圾回收 */
+	/* Widget Is Pre Mark As Garbage */
 	virtual void NativeOnDestroy() override { IStateInterface::NativeOnDestroy(); }
 
 	UFUNCTION(BlueprintPure)
@@ -92,11 +104,11 @@ public:
 
 	/* ==================== IWidgetAnimationInterface ==================== */
 public:
-	/* 创建时的动画 */
+	/* Animation While Widget Is Opening */
 	UPROPERTY(meta=(BindWidgetAnimOptional), Transient)
 	UWidgetAnimation* ActivedAnimation = nullptr;
 
-	/* 移除时的动画 */
+	/* Animation While Widget Is PreClosed */
 	UPROPERTY(meta=(BindWidgetAnimOptional), Transient)
 	UWidgetAnimation* InactivedAnimation = nullptr;
 
