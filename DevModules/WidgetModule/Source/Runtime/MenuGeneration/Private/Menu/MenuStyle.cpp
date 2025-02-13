@@ -14,11 +14,7 @@ void UMenuStyle::NativeConstructMenuStyle()
 	ConstructMenuStyle();
 }
 
-UMenuEntityBase* UMenuStyle::GetMenuEntityBase() const
+UMenuEntityBase* UMenuStyle::GetMenuEntityBase()
 {
-	if (WidgetEntity.IsValid())
-	{
-		return Cast<UMenuEntityBase>(WidgetEntity);
-	}
-	return nullptr;
+	return GetWidgetEntity<UMenuEntityBase>();
 }

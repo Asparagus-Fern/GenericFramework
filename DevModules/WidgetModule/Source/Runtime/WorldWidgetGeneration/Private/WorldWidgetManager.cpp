@@ -311,6 +311,8 @@ void UWorldWidgetManager::SetWorldWidgetComponentActiveState(UWorldWidgetCompone
 	{
 		TryToRemoveWorldWidgetComponent(InWorldWidgetComponent);
 	}
+
+	BROADCAST_UNIFIED_DELEGATE(Delegate_OnWorldWidgetComponentActiveStateChanged, BPDelegate_OnWorldWidgetComponentActiveStateChanged, InWorldWidgetComponent, IsActive);
 }
 
 void UWorldWidgetManager::SetWorldWidgetPaintMethod(UWorldWidgetComponent* InWorldWidgetComponent, EWorldWidgetPaintMethod WorldWidgetPaintMethod)
@@ -333,37 +335,40 @@ void UWorldWidgetManager::SetWorldWidgetLookAtSetting(UWorldWidgetComponent* InW
 	}
 }
 
-void UWorldWidgetManager::RegisterWorldWidgetComponent(UWorldWidgetComponent* WorldWidgetPoint)
+void UWorldWidgetManager::RegisterWorldWidgetComponent(UWorldWidgetComponent* InWorldWidgetComponent)
 {
-	if (!IsValid(WorldWidgetPoint))
+	if (!IsValid(InWorldWidgetComponent))
 	{
 		DLOG(DLogUI, Error, TEXT("WorldWidgetPoint Is NULL"))
 	}
 
-	if (WorldWidgetComponents.Contains(WorldWidgetPoint))
+	if (WorldWidgetComponents.Contains(InWorldWidgetComponent))
 	{
 		DLOG(DLogUI, Warning, TEXT("WorldWidgetPoint Is Already Register"))
 	}
 
-	if (!WorldWidgetPoint->bIsManualActive)
+	if (!InWorldWidgetComponent->bIsManualActive)
 	{
-		TryToAddWorldWidgetComponent(WorldWidgetPoint);
+		SetWorldWidgetComponentActiveState(InWorldWidgetComponent, true);
 	}
+
+	BROADCAST_UNIFIED_DELEGATE(Delegate_OnWorldWidgetComponentRegister, BPDelegate_OnWorldWidgetComponentRegister, InWorldWidgetComponent);
 }
 
-void UWorldWidgetManager::UnRegisterWorldWidgetComponent(UWorldWidgetComponent* WorldWidgetPoint)
+void UWorldWidgetManager::UnRegisterWorldWidgetComponent(UWorldWidgetComponent* InWorldWidgetComponent)
 {
-	if (!IsValid(WorldWidgetPoint))
+	if (!IsValid(InWorldWidgetComponent))
 	{
 		DLOG(DLogUI, Error, TEXT("WorldWidgetPoint Is NULL"))
 	}
 
-	if (WorldWidgetComponents.Contains(WorldWidgetPoint))
+	if (WorldWidgetComponents.Contains(InWorldWidgetComponent))
 	{
 		DLOG(DLogUI, Warning, TEXT("WorldWidgetPoint Is Already UnRegister"))
 	}
 
-	TryToRemoveWorldWidgetComponent(WorldWidgetPoint);
+	SetWorldWidgetComponentActiveState(InWorldWidgetComponent, false);
+	BROADCAST_UNIFIED_DELEGATE(Delegate_OnWorldWidgetComponentUnRegister, BPDelegate_OnWorldWidgetComponentUnRegister, InWorldWidgetComponent);
 }
 
 void UWorldWidgetManager::TryToAddWorldWidgetComponent(AActor* InActor)

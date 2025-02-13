@@ -30,7 +30,7 @@ public:
 	virtual void NativePostConstructMenuContainer();
 
 	UFUNCTION(BlueprintPure)
-	UMenuGroupEntity* GetMenuGroupEntity() const;
+	UMenuGroupEntity* GetMenuGroupEntity();
 
 protected:
 	UPROPERTY(Transient, BlueprintReadOnly, Transient)

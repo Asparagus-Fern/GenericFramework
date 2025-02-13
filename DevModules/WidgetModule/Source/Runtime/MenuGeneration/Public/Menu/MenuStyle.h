@@ -22,5 +22,5 @@ public:
 	virtual void NativeConstructMenuStyle();
 
 	UFUNCTION(BlueprintPure)
-	UMenuEntityBase* GetMenuEntityBase() const;
+	UMenuEntityBase* GetMenuEntityBase();
 };

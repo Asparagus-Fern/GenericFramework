@@ -28,6 +28,7 @@ public:
 public:
 	bool HasValidWidget() const;
 	UUserWidgetBase* GetWidget();
+	void SetWidget(UUserWidgetBase* InWidget);
 
 public:
 	template <typename T>
@@ -97,4 +98,7 @@ public:
 
 	UFUNCTION(BlueprintPure)
 	UUserWidgetBase* GetWidget();
+
+	UFUNCTION(BlueprintCallable)
+	void SetWidget(UUserWidgetBase* InWidget);
 };

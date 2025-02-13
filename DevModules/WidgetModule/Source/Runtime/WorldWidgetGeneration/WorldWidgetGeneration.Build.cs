@@ -29,6 +29,7 @@ public class WorldWidgetGeneration : ModuleRules
 
 				"WidgetGeneration",
 				"GameHUDModule",
+				"InteractableWidgetGeneration",
 			}
 		);
 	}

@@ -84,6 +84,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="UI.WorldWidget"))
 	FGameplayTag WorldWidgetTag = FGameplayTag::EmptyTag;
 
+	/* Group Tag, The Same GroupTag Will Be Register In WorldWidgetGroupManager */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="UI.WorldWidget"))
+	FGameplayTag GroupTag = FGameplayTag::EmptyTag;
+
 	/* If True, It Will not Appear After Register, You Need To Call ChangeWorldWidgetComponentActiveState To Show It */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	bool bIsManualActive = false;
@@ -91,6 +95,10 @@ public:
 	/* Method Decide How The Widget Paint */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	EWorldWidgetPaintMethod WorldWidgetPaintMethod = EWorldWidgetPaintMethod::PaintInScreen;
+
+	/* If True, The Widget Will Always In The Front Of Other Actor In World */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(EditConditionHides, EditCondition = "WorldWidgetPaintMethod == EWorldWidgetPaintMethod::PaintInWorld"))
+	bool bAlwaysInFront = true;
 
 	/* Setting Decide How The Widget Look at Player */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)

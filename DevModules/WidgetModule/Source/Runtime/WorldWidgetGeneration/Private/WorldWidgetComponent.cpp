@@ -3,6 +3,7 @@
 
 #include "WorldWidgetComponent.h"
 
+#include "DWidgetComponent.h"
 #include "Base/UserWidgetBase.h"
 #include "Components/WidgetComponent.h"
 
@@ -63,12 +64,18 @@ void UWorldWidgetComponent::ClearWidgetComponent()
 
 UWidgetComponent* UWorldWidgetComponent::CreateWidgetComponent()
 {
-	UWidgetComponent* Result = Cast<UWidgetComponent>(GetOwner()->AddComponentByClass(UWidgetComponent::StaticClass(), false, FTransform::Identity, false));
+	UDWidgetComponent* Result = Cast<UDWidgetComponent>(GetOwner()->AddComponentByClass(UDWidgetComponent::StaticClass(), false, FTransform::Identity, false));
 	Result->SetWidgetSpace(EWidgetSpace::World);
 	Result->SetDrawAtDesiredSize(false);
 	Result->SetBlendMode(EWidgetBlendMode::Transparent);
 	Result->SetTintColorAndOpacity(FLinearColor::White);
 	Result->SetManuallyRedraw(true);
+
+	if (UMaterialInstance* Material = LoadObject<UMaterialInstance>(NULL,TEXT("/Script/Engine.MaterialInstanceConstant'/WidgetModule/Material/Widget3DPassThrough_Translucent_OneSided.Widget3DPassThrough_Translucent_OneSided'")))
+	{
+		Result->SetMaterial(0, Material);
+		Material->GetMaterial()->bDisableDepthTest = bAlwaysInFront;
+	}
 
 	return Result;
 }

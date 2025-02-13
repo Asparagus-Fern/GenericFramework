@@ -72,11 +72,7 @@ void UMenuContainer::NativePostConstructMenuContainer()
 	PostConstructMenuContainer();
 }
 
-UMenuGroupEntity* UMenuContainer::GetMenuGroupEntity() const
+UMenuGroupEntity* UMenuContainer::GetMenuGroupEntity()
 {
-	if (WidgetEntity.IsValid())
-	{
-		return Cast<UMenuGroupEntity>(WidgetEntity);
-	}
-	return nullptr;
+	return GetWidgetEntity<UMenuGroupEntity>();
 }

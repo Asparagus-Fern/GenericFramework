@@ -3,6 +3,7 @@
 
 #include "InteractableWidgetEntityGroup.h"
 
+#include "InteractableWidgetBase.h"
 #include "InteractableWidgetEntity.h"
 
 void UInteractableWidgetEntityGroup::OnCreate_Implementation()
@@ -54,6 +55,30 @@ void UInteractableWidgetEntityGroup::AddEntity(UInteractableWidgetEntity* InEnti
 	}
 }
 
+void UInteractableWidgetEntityGroup::AddWidgets(TArray<UInteractableWidgetBase*> InWidgets)
+{
+	for (const auto& InWidget : InWidgets)
+	{
+		AddWidget(InWidget);
+	}
+}
+
+void UInteractableWidgetEntityGroup::AddWidget(UInteractableWidgetBase* InWidget)
+{
+	if (!IsValid(InWidget))
+	{
+		DLOG(DLogUI, Error, TEXT("InWidget Is InValid"))
+		return;
+	}
+
+	UInteractableWidgetEntity* NewEntity = NewObject<UInteractableWidgetEntity>(InWidget);
+	NewEntity->SetWidget(InWidget);
+	NewEntity->BindWidgetEvent();
+	InWidget->SetWidgetEntity(NewEntity);
+
+	AddEntity(NewEntity);
+}
+
 void UInteractableWidgetEntityGroup::RemoveEntities(TArray<UInteractableWidgetEntity*> InEntities)
 {
 	for (const auto& InEntity : InEntities)
@@ -102,6 +127,29 @@ void UInteractableWidgetEntityGroup::RemoveEntityByIndex(int32 Index)
 	{
 		DLOG(DLogUI, Warning, TEXT("Index Is InValid"))
 	}
+}
+
+void UInteractableWidgetEntityGroup::RemoveWidgets(TArray<UInteractableWidgetBase*> InWidgets)
+{
+	for (const auto& InWidget : InWidgets)
+	{
+		RemoveWidget(InWidget);
+	}
+}
+
+void UInteractableWidgetEntityGroup::RemoveWidget(UInteractableWidgetBase* InWidget)
+{
+	if (!IsValid(InWidget))
+	{
+		DLOG(DLogUI, Error, TEXT("InWidget Is InValid"))
+		return;
+	}
+
+	UInteractableWidgetEntity* Entity = InWidget->GetWidgetEntity<UInteractableWidgetEntity>();
+	InWidget->SetWidgetEntity(nullptr);
+
+	RemoveEntity(Entity);
+	Entity->MarkAsGarbage();
 }
 
 void UInteractableWidgetEntityGroup::ClearupEntity()
@@ -277,32 +325,38 @@ TArray<UInteractableWidgetEntity*> UInteractableWidgetEntityGroup::GetEntities()
 void UInteractableWidgetEntityGroup::HandleOnEntityPressed(UInteractableWidgetEntity* InEntity)
 {
 	InEntity->InternalPressed();
+	OnEntityPressed.Broadcast(InEntity);
 }
 
 void UInteractableWidgetEntityGroup::HandleOnEntityReleased(UInteractableWidgetEntity* InEntity)
 {
 	InEntity->InternalReleased();
+	OnEntityReleased.Broadcast(InEntity);
 }
 
 void UInteractableWidgetEntityGroup::HandleOnEntityHovered(UInteractableWidgetEntity* InEntity)
 {
 	InEntity->InternalHovered();
+	OnEntityHovered.Broadcast(InEntity);
 }
 
 void UInteractableWidgetEntityGroup::HandleOnEntityUnhovered(UInteractableWidgetEntity* InEntity)
 {
 	InEntity->InternalUnhovered();
+	OnEntityUnhovered.Broadcast(InEntity);
 }
 
 void UInteractableWidgetEntityGroup::HandleOnEntityClicked(UInteractableWidgetEntity* InEntity)
 {
 	InEntity->InternalClicked();
+	OnEntityClicked.Broadcast(InEntity);
 	HandleOnEntitySelectionChanged(InEntity, true);
 }
 
 void UInteractableWidgetEntityGroup::HandleOnEntityDoubleClicked(UInteractableWidgetEntity* InEntity)
 {
 	InEntity->InternalDoubleClicked();
+	OnEntityDoubleClicked.Broadcast(InEntity);
 }
 
 void UInteractableWidgetEntityGroup::HandleOnEntitySelectionChanged(UInteractableWidgetEntity* InEntity, bool Selection)
@@ -311,6 +365,7 @@ void UInteractableWidgetEntityGroup::HandleOnEntitySelectionChanged(UInteractabl
 	{
 		SelectedEntity = InEntity;
 		InEntity->InternalChangeSelection(true);
+		OnEntitySelectionChanged.Broadcast(InEntity, true);
 		return;
 	}
 
@@ -322,15 +377,19 @@ void UInteractableWidgetEntityGroup::HandleOnEntitySelectionChanged(UInteractabl
 
 			LastSelectedEntity = SelectedEntity;
 			SelectedEntity = nullptr;
+
+			OnEntitySelectionChanged.Broadcast(InEntity, false);
 		}
 	}
 	else
 	{
 		SelectedEntity->InternalChangeSelection(false);
+		OnEntitySelectionChanged.Broadcast(SelectedEntity, false);
 
 		LastSelectedEntity = SelectedEntity;
 		SelectedEntity = InEntity;
 
 		InEntity->InternalChangeSelection(true);
+		OnEntitySelectionChanged.Broadcast(InEntity, true);
 	}
 }

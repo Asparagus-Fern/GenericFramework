@@ -7,6 +7,7 @@
 #include "Subsystems/WorldSubsystem.h"
 #include "TerrainGenerationManager.generated.h"
 
+class ALandscape;
 /**
  * 
  */
@@ -20,4 +21,11 @@ public:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void Deinitialize() override;
 	virtual bool DoesSupportWorldType(const EWorldType::Type WorldType) const override;
+
+public:
+	virtual void HandleOnWorldMatchStarting(UWorld* InWorld) override;
+	void CreateNewTerrain();
+
+private:
+	TObjectPtr<ALandscape> Terrain;
 };

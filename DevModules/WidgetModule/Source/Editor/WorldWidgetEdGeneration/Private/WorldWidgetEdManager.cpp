@@ -187,6 +187,11 @@ void UEditorWorldWidgetPanel::RemoveWorldWidgetComponent(UWorldWidgetComponent* 
 		return;
 	}
 
+	if (!WorldWidgets.Contains(InWorldWidgetComponent))
+	{
+		return;
+	}
+
 	ConstraintCanvas->RemoveSlot(WorldWidgetContainer.FindRef(InWorldWidgetComponent).ToSharedRef());
 
 	WorldWidgets.Remove(InWorldWidgetComponent);

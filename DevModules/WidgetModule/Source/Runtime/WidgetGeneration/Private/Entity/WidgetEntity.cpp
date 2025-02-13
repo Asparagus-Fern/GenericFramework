@@ -9,12 +9,26 @@
 
 bool FDisplayWidget::HasValidWidget() const
 {
-	return (bUseClass && IsValid(WidgetClass)) || (!bUseClass && IsValid(WidgetRef));
+	return IsValid(WidgetInternal) || (bUseClass && IsValid(WidgetClass)) || (!bUseClass && IsValid(WidgetRef));
 }
 
 UUserWidgetBase* FDisplayWidget::GetWidget()
 {
 	return GetWidget<UUserWidgetBase>();
+}
+
+void FDisplayWidget::SetWidget(UUserWidgetBase* InWidget)
+{
+	if (!IsValid(InWidget))
+	{
+		DLOG(DLogUI, Warning, TEXT("InWidget Is InValid"))
+		return;
+	}
+
+	if (InWidget != WidgetInternal)
+	{
+		WidgetInternal = InWidget;
+	}
 }
 
 void UWidgetEntity::NativeOnCreate()
@@ -33,11 +47,7 @@ void UWidgetEntity::OpenEntityWidget_Implementation()
 
 	if (UUserWidgetBase* Widget = GetWidget())
 	{
-		if (!Widget->WidgetEntity.IsValid())
-		{
-			Widget->WidgetEntity = this;
-		}
-
+		Widget->SetWidgetEntity(this);
 		OnEntityWidgetInitialized();
 	}
 }
@@ -73,4 +83,9 @@ UUserWidgetBase* UWidgetEntity::GetWidgetByClass(TSubclassOf<UUserWidgetBase> In
 UUserWidgetBase* UWidgetEntity::GetWidget()
 {
 	return DisplayWidget.GetWidget<UUserWidgetBase>();
+}
+
+void UWidgetEntity::SetWidget(UUserWidgetBase* InWidget)
+{
+	DisplayWidget.SetWidget(InWidget);
 }

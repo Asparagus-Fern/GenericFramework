@@ -10,6 +10,10 @@
 
 class UInteractableWidgetEntity;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FGroupEntityEvent, UInteractableWidgetEntity*, InEntity);
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGroupEntitySelectionChanged, UInteractableWidgetEntity*, InEntity, bool, Selection);
+
 /**
  * 
  */
@@ -22,7 +26,7 @@ class INTERACTABLEWIDGETGENERATION_API UInteractableWidgetEntityGroup : public U
 public:
 	virtual void OnCreate_Implementation() override;
 	virtual void OnDestroy_Implementation() override;
-	
+
 	/* UInteractableWidgetEntityGroup */
 public:
 	UFUNCTION(BlueprintCallable)
@@ -32,6 +36,12 @@ public:
 	void AddEntity(UInteractableWidgetEntity* InEntity);
 
 	UFUNCTION(BlueprintCallable)
+	void AddWidgets(TArray<UInteractableWidgetBase*> InWidgets);
+
+	UFUNCTION(BlueprintCallable)
+	void AddWidget(UInteractableWidgetBase* InWidget);
+
+	UFUNCTION(BlueprintCallable)
 	void RemoveEntities(TArray<UInteractableWidgetEntity*> InEntities);
 
 	UFUNCTION(BlueprintCallable)
@@ -39,6 +49,12 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void RemoveEntityByIndex(int32 Index);
+
+	UFUNCTION(BlueprintCallable)
+	void RemoveWidgets(TArray<UInteractableWidgetBase*> InWidgets);
+
+	UFUNCTION(BlueprintCallable)
+	void RemoveWidget(UInteractableWidgetBase* InWidget);
 
 	UFUNCTION(BlueprintCallable)
 	void ClearupEntity();
@@ -131,6 +147,28 @@ protected:
 	virtual void HandleOnEntityClicked(UInteractableWidgetEntity* InEntity);
 	virtual void HandleOnEntityDoubleClicked(UInteractableWidgetEntity* InEntity);
 	virtual void HandleOnEntitySelectionChanged(UInteractableWidgetEntity* InEntity, bool Selection);
+
+public:
+	UPROPERTY(BlueprintAssignable)
+	FGroupEntityEvent OnEntityPressed;
+
+	UPROPERTY(BlueprintAssignable)
+	FGroupEntityEvent OnEntityReleased;
+
+	UPROPERTY(BlueprintAssignable)
+	FGroupEntityEvent OnEntityHovered;
+
+	UPROPERTY(BlueprintAssignable)
+	FGroupEntityEvent OnEntityUnhovered;
+
+	UPROPERTY(BlueprintAssignable)
+	FGroupEntityEvent OnEntityClicked;
+
+	UPROPERTY(BlueprintAssignable)
+	FGroupEntityEvent OnEntityDoubleClicked;
+
+	UPROPERTY(BlueprintAssignable)
+	FGroupEntitySelectionChanged OnEntitySelectionChanged;
 
 protected:
 	UPROPERTY()

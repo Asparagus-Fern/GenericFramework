@@ -8,7 +8,17 @@
 void UInteractableWidgetEntity::OpenEntityWidget_Implementation()
 {
 	Super::OpenEntityWidget_Implementation();
+	BindWidgetEvent();
+}
 
+void UInteractableWidgetEntity::CloseEntityWidget_Implementation()
+{
+	Super::CloseEntityWidget_Implementation();
+	UnBindWidgetEvent();
+}
+
+void UInteractableWidgetEntity::BindWidgetEvent()
+{
 	if (UInteractableWidgetBase* Widget = Cast<UInteractableWidgetBase>(GetWidget()))
 	{
 		Widget->OnButtonPressed.AddUniqueDynamic(this, &UInteractableWidgetEntity::HandleOnEntityPressed);
@@ -21,10 +31,8 @@ void UInteractableWidgetEntity::OpenEntityWidget_Implementation()
 	}
 }
 
-void UInteractableWidgetEntity::CloseEntityWidget_Implementation()
+void UInteractableWidgetEntity::UnBindWidgetEvent()
 {
-	Super::CloseEntityWidget_Implementation();
-
 	if (UInteractableWidgetBase* Widget = Cast<UInteractableWidgetBase>(GetWidget()))
 	{
 		Widget->OnButtonPressed.RemoveAll(this);

@@ -3,12 +3,13 @@
 
 #include "BPFunctions_WorldWidget.h"
 
+#include "WorldWidgetGroupManager.h"
 #include "WorldWidgetManager.h"
-#include "Manager/ManagerProxy.h"
+#include "Manager/ManagerStatics.h"
 
 TArray<UWorldWidgetComponent*> UBPFunctions_WorldWidget::GetWorldWidgetComponents()
 {
-	if (UWorldWidgetManager* WorldWidgetManager = UManagerProxy::Get()->GetManager<UWorldWidgetManager>())
+	if (UWorldWidgetManager* WorldWidgetManager = GetManager<UWorldWidgetManager>())
 	{
 		return WorldWidgetManager->GetWorldWidgetComponents();
 	}
@@ -18,7 +19,7 @@ TArray<UWorldWidgetComponent*> UBPFunctions_WorldWidget::GetWorldWidgetComponent
 
 TArray<UWorldWidgetComponent*> UBPFunctions_WorldWidget::GetWorldWidgetComponents2D()
 {
-	if (UWorldWidgetManager* WorldWidgetManager = UManagerProxy::Get()->GetManager<UWorldWidgetManager>())
+	if (UWorldWidgetManager* WorldWidgetManager = GetManager<UWorldWidgetManager>())
 	{
 		return WorldWidgetManager->GetWorldWidgetComponents2D();
 	}
@@ -28,7 +29,7 @@ TArray<UWorldWidgetComponent*> UBPFunctions_WorldWidget::GetWorldWidgetComponent
 
 TArray<UWorldWidgetComponent*> UBPFunctions_WorldWidget::GetWorldWidgetComponents3D()
 {
-	if (UWorldWidgetManager* WorldWidgetManager = UManagerProxy::Get()->GetManager<UWorldWidgetManager>())
+	if (UWorldWidgetManager* WorldWidgetManager = GetManager<UWorldWidgetManager>())
 	{
 		return WorldWidgetManager->GetWorldWidgetComponents3D();
 	}
@@ -38,7 +39,7 @@ TArray<UWorldWidgetComponent*> UBPFunctions_WorldWidget::GetWorldWidgetComponent
 
 UWorldWidgetComponent* UBPFunctions_WorldWidget::FindWorldWidgetComponent(FGameplayTag WorldWidgetTag)
 {
-	if (UWorldWidgetManager* WorldWidgetManager = UManagerProxy::Get()->GetManager<UWorldWidgetManager>())
+	if (UWorldWidgetManager* WorldWidgetManager = GetManager<UWorldWidgetManager>())
 	{
 		return WorldWidgetManager->FindWorldWidgetComponent(WorldWidgetTag);
 	}
@@ -48,7 +49,7 @@ UWorldWidgetComponent* UBPFunctions_WorldWidget::FindWorldWidgetComponent(FGamep
 
 TArray<UWorldWidgetComponent*> UBPFunctions_WorldWidget::FindWorldWidgetComponents(FGameplayTag WorldWidgetTag)
 {
-	if (UWorldWidgetManager* WorldWidgetManager = UManagerProxy::Get()->GetManager<UWorldWidgetManager>())
+	if (UWorldWidgetManager* WorldWidgetManager = GetManager<UWorldWidgetManager>())
 	{
 		return WorldWidgetManager->FindWorldWidgetComponents(WorldWidgetTag);
 	}
@@ -58,7 +59,7 @@ TArray<UWorldWidgetComponent*> UBPFunctions_WorldWidget::FindWorldWidgetComponen
 
 void UBPFunctions_WorldWidget::SetWorldWidgetComponentActiveStateWithActor(AActor* InActor, bool IsActive)
 {
-	if (UWorldWidgetManager* WorldWidgetManager = UManagerProxy::Get()->GetManager<UWorldWidgetManager>())
+	if (UWorldWidgetManager* WorldWidgetManager = GetManager<UWorldWidgetManager>())
 	{
 		return WorldWidgetManager->SetWorldWidgetComponentActiveState(InActor, IsActive);
 	}
@@ -66,7 +67,7 @@ void UBPFunctions_WorldWidget::SetWorldWidgetComponentActiveStateWithActor(AActo
 
 void UBPFunctions_WorldWidget::SetWorldWidgetComponentActiveStateWithComponent(UWorldWidgetComponent* InWorldWidgetComponent, bool IsActive)
 {
-	if (UWorldWidgetManager* WorldWidgetManager = UManagerProxy::Get()->GetManager<UWorldWidgetManager>())
+	if (UWorldWidgetManager* WorldWidgetManager = GetManager<UWorldWidgetManager>())
 	{
 		return WorldWidgetManager->SetWorldWidgetComponentActiveState(InWorldWidgetComponent, IsActive);
 	}
@@ -74,7 +75,7 @@ void UBPFunctions_WorldWidget::SetWorldWidgetComponentActiveStateWithComponent(U
 
 void UBPFunctions_WorldWidget::SetWorldWidgetPaintMethod(UWorldWidgetComponent* InWorldWidgetComponent, EWorldWidgetPaintMethod WorldWidgetPaintMethod)
 {
-	if (UWorldWidgetManager* WorldWidgetManager = UManagerProxy::Get()->GetManager<UWorldWidgetManager>())
+	if (UWorldWidgetManager* WorldWidgetManager = GetManager<UWorldWidgetManager>())
 	{
 		return WorldWidgetManager->SetWorldWidgetPaintMethod(InWorldWidgetComponent, WorldWidgetPaintMethod);
 	}
@@ -82,8 +83,17 @@ void UBPFunctions_WorldWidget::SetWorldWidgetPaintMethod(UWorldWidgetComponent* 
 
 void UBPFunctions_WorldWidget::SetWorldWidgetLookAtSetting(UWorldWidgetComponent* InWorldWidgetComponent, FWorldWidgetLookAtSetting WorldWidgetLookAtSetting)
 {
-	if (UWorldWidgetManager* WorldWidgetManager = UManagerProxy::Get()->GetManager<UWorldWidgetManager>())
+	if (UWorldWidgetManager* WorldWidgetManager = GetManager<UWorldWidgetManager>())
 	{
 		return WorldWidgetManager->SetWorldWidgetLookAtSetting(InWorldWidgetComponent, WorldWidgetLookAtSetting);
 	}
+}
+
+UInteractableWidgetEntityGroup* UBPFunctions_WorldWidget::GetWorldWidgetGroup(FGameplayTag InGroupTag)
+{
+	if (UWorldWidgetGroupManager* WorldWidgetGroupManager = GetManager<UWorldWidgetGroupManager>())
+	{
+		return WorldWidgetGroupManager->GetWorldWidgetGroup(InGroupTag);
+	}
+	return nullptr;
 }

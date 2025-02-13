@@ -15,7 +15,7 @@ DECLARE_MULTICAST_DELEGATE_TwoParams(FOnEntitySelectionChanged, UInteractableWid
 /**
  * 
  */
-UCLASS(Abstract)
+UCLASS()
 class INTERACTABLEWIDGETGENERATION_API UInteractableWidgetEntity : public UWidgetEntity
 {
 	GENERATED_BODY()
@@ -26,6 +26,10 @@ class INTERACTABLEWIDGETGENERATION_API UInteractableWidgetEntity : public UWidge
 public:
 	virtual void OpenEntityWidget_Implementation() override;
 	virtual void CloseEntityWidget_Implementation() override;
+
+protected:
+	virtual void BindWidgetEvent();
+	virtual void UnBindWidgetEvent();
 
 public:
 	/* 坍塌，不可视，且不占据布局 */

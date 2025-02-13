@@ -15,6 +15,15 @@ class UWorldWidgetManager;
 class UCanvasPanel;
 class UWorldWidgetComponent;
 
+DECLARE_MULTICAST_DELEGATE_OneParam(FDelegate_OnWorldWidgetComponentRegister, UWorldWidgetComponent*);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FBPDelegate_OnWorldWidgetComponentRegister, UWorldWidgetComponent*, InWorldWidgetComponent);
+
+DECLARE_MULTICAST_DELEGATE_TwoParams(FDelegate_OnWorldWidgetComponentActiveStateChanged, UWorldWidgetComponent*, bool);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FBPDelegate_OnWorldWidgetComponentActiveStateChanged, UWorldWidgetComponent*, InWorldWidgetComponent, bool, IsActive);
+
+DECLARE_MULTICAST_DELEGATE_OneParam(FDelegate_OnWorldWidgetComponentUnRegister, UWorldWidgetComponent*);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FBPDelegate_OnWorldWidgetComponentUnRegister, UWorldWidgetComponent*, InWorldWidgetComponent);
+
 /**
  * 
  */
@@ -106,6 +115,19 @@ public:
 
 	void SetWorldWidgetLookAtSetting(UWorldWidgetComponent* InWorldWidgetComponent, FWorldWidgetLookAtSetting WorldWidgetLookAtSetting);
 
+public:
+	inline static FDelegate_OnWorldWidgetComponentRegister Delegate_OnWorldWidgetComponentRegister;
+	UPROPERTY(BlueprintAssignable)
+	FBPDelegate_OnWorldWidgetComponentRegister BPDelegate_OnWorldWidgetComponentRegister;
+
+	inline static FDelegate_OnWorldWidgetComponentActiveStateChanged Delegate_OnWorldWidgetComponentActiveStateChanged;
+	UPROPERTY(BlueprintAssignable)
+	FBPDelegate_OnWorldWidgetComponentActiveStateChanged BPDelegate_OnWorldWidgetComponentActiveStateChanged;
+
+	inline static FDelegate_OnWorldWidgetComponentUnRegister Delegate_OnWorldWidgetComponentUnRegister;
+	UPROPERTY(BlueprintAssignable)
+	FBPDelegate_OnWorldWidgetComponentUnRegister BPDelegate_OnWorldWidgetComponentUnRegister;
+
 protected:
 	UPROPERTY(Transient)
 	TArray<UWorldWidgetComponent*> WorldWidgetComponents;
@@ -114,9 +136,9 @@ protected:
 	TArray<UWorldWidgetPanel*> WorldWidgetPanels;
 
 protected:
-	virtual void RegisterWorldWidgetComponent(UWorldWidgetComponent* WorldWidgetPoint);
+	virtual void RegisterWorldWidgetComponent(UWorldWidgetComponent* InWorldWidgetComponent);
 
-	virtual void UnRegisterWorldWidgetComponent(UWorldWidgetComponent* WorldWidgetPoint);
+	virtual void UnRegisterWorldWidgetComponent(UWorldWidgetComponent* InWorldWidgetComponent);
 
 	virtual void TryToAddWorldWidgetComponent(AActor* InActor);
 

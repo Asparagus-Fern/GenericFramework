@@ -21,7 +21,9 @@ public class TerrainGeneration : ModuleRules
 				"CoreUObject",
 				"Engine",
 				"Slate",
-				"SlateCore"
+				"SlateCore",
+
+				"Landscape"
 			}
 		);
 	}

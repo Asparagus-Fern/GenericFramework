@@ -68,13 +68,32 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, AdvancedDisplay)
 	FVector2D Anchor = FVector2D(.5f, 1.f);
 
-protected:
+private:
+	TWeakObjectPtr<class UScaleBox> ScaleBox;
+
+
+	/* ==================== WidgetEntity ==================== */
+public:
+	UFUNCTION(BlueprintPure)
+	UWidgetEntity* GetWidgetEntity();
+
+	UFUNCTION(BlueprintPure, meta = (DeterminesOutputType = "InClass"))
+	UWidgetEntity* GetWidgetEntityByClass(TSubclassOf<UWidgetEntity> InClass);
+
+	UFUNCTION(BlueprintCallable)
+	void SetWidgetEntity(UWidgetEntity* InWidgetEntity);
+
+public:
+	template <typename T>
+	T* GetWidgetEntity()
+	{
+		return Cast<T>(WidgetEntity);
+	}
+
+private:
 	/* It Can be NULL, Unless This Widget Is Opened By Entity */
 	UPROPERTY()
 	TWeakObjectPtr<UWidgetEntity> WidgetEntity = nullptr;
-
-private:
-	TWeakObjectPtr<class UScaleBox> ScaleBox;
 
 	/* ==================== IStateInterface ==================== */
 public:

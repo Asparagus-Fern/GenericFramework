@@ -10,6 +10,8 @@
 
 class AWorldWidgetPoint;
 class UWorldWidgetComponent;
+class UInteractableWidgetEntityGroup;
+
 /**
  * 
  */
@@ -45,4 +47,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	static void SetWorldWidgetLookAtSetting(UWorldWidgetComponent* InWorldWidgetComponent, FWorldWidgetLookAtSetting WorldWidgetLookAtSetting);
+
+public:
+	UFUNCTION(BlueprintPure, meta=(GameplayTagFilter="UI.WorldWidget"))
+	static UInteractableWidgetEntityGroup* GetWorldWidgetGroup(FGameplayTag InGroupTag);
 };

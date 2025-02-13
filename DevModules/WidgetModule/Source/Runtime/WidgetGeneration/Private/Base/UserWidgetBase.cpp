@@ -8,6 +8,7 @@
 #include "Blueprint/WidgetTree.h"
 #include "Components/ScaleBox.h"
 #include "Components/ScaleBoxSlot.h"
+#include "Entity/WidgetEntity.h"
 #include "Input/CommonUIActionRouterBase.h"
 #include "Input/CommonUIInputTypes.h"
 
@@ -87,6 +88,29 @@ void UUserWidgetBase::NativeDestruct()
 FVector2D UUserWidgetBase::GetAnchorOffset() const
 {
 	return FVector2D(-(GetDesiredSize().X * Anchor.X), -(GetDesiredSize().Y * Anchor.Y));
+}
+
+/* ==================== WidgetEntity ==================== */
+
+UWidgetEntity* UUserWidgetBase::GetWidgetEntity()
+{
+	return GetWidgetEntity<UWidgetEntity>();
+}
+
+UWidgetEntity* UUserWidgetBase::GetWidgetEntityByClass(TSubclassOf<UWidgetEntity> InClass)
+{
+	ensure(InClass);
+	return GetWidgetEntity<UWidgetEntity>();
+}
+
+void UUserWidgetBase::SetWidgetEntity(UWidgetEntity* InWidgetEntity)
+{
+	if (!IsValid(InWidgetEntity))
+	{
+		DLOG(DLogUI, Error, TEXT("InWidgetEntity Is InValid"))
+	}
+
+	WidgetEntity = InWidgetEntity;
 }
 
 /* ==================== IStateInterface ==================== */
