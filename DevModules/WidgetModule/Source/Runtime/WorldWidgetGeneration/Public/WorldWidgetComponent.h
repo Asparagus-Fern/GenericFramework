@@ -70,6 +70,7 @@ public:
 	virtual void OnUnregister() override;
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+	virtual void OnHiddenInGameChanged() override;
 
 public:
 	DECLARE_EVENT_OneParam(UWorldWidgetComponent, FWorldWidgetComponentDelegate, UWorldWidgetComponent*);

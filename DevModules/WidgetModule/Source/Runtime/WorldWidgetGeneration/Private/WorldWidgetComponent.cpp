@@ -38,6 +38,11 @@ void UWorldWidgetComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	OnWorldWidgetPointEndPlay.Broadcast(this);
 }
 
+void UWorldWidgetComponent::OnHiddenInGameChanged()
+{
+	Super::OnHiddenInGameChanged();
+}
+
 void UWorldWidgetComponent::RefreshWidgetComponent()
 {
 	ClearWidgetComponent();
@@ -48,6 +53,8 @@ void UWorldWidgetComponent::RefreshWidgetComponent()
 		WidgetComponent->SetPivot(WorldWidget->Anchor);
 		WidgetComponent->SetWidget(WorldWidget);
 		WidgetComponent->SetDrawSize(WorldWidget->GetDesiredSize());
+
+		WorldWidget->SetIsActived(true);
 	}
 
 	WidgetComponent->RequestRenderUpdate();
@@ -59,6 +66,12 @@ void UWorldWidgetComponent::ClearWidgetComponent()
 	{
 		WidgetComponent->DestroyComponent();
 		WidgetComponent = nullptr;
+
+		if (WorldWidget)
+		{
+			WorldWidget->SetIsActived(false);
+			
+		}
 	}
 }
 

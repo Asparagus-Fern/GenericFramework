@@ -124,13 +124,16 @@ void UUserWidgetBase::SetIsActived(const bool InActived)
 {
 	IStateInterface::SetIsActived(InActived);
 
-	if (HasWidgetAnimation(InActived))
+	if (InActived != GetIsActived())
 	{
-		PlayWidgetAnimation(InActived);
-	}
-	else
-	{
-		SetVisibility(InActived ? ESlateVisibility::Visible : ESlateVisibility::Collapsed);
+		if (HasWidgetAnimation(InActived))
+		{
+			PlayWidgetAnimation(InActived);
+		}
+		else
+		{
+			SetVisibility(InActived ? ESlateVisibility::Visible : ESlateVisibility::Collapsed);
+		}
 	}
 }
 

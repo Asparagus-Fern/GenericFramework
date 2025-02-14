@@ -361,7 +361,7 @@ void UWorldWidgetManager::UnRegisterWorldWidgetComponent(UWorldWidgetComponent* 
 	{
 		DLOG(DLogUI, Error, TEXT("WorldWidgetPoint Is NULL"))
 	}
-
+	
 	if (WorldWidgetComponents.Contains(InWorldWidgetComponent))
 	{
 		DLOG(DLogUI, Warning, TEXT("WorldWidgetPoint Is Already UnRegister"))
