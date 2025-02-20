@@ -16,7 +16,10 @@ class EVENTUTILITIES_API UHandleBase : public UCommonObject
 
 public:
 	FGuid GetHandleID() const { return HandleID; }
-	void SetHandleID(FGuid InHandleID) { HandleID = InHandleID; }
+
+public:
+	virtual void OnRegister() { return; }
+	virtual void OnUnRegister() { return; }
 
 public:
 	UFUNCTION(BlueprintCallable)

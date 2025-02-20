@@ -10,7 +10,8 @@
 #include "Entity/WidgetEntity.h"
 
 UUserWidgetBase::UUserWidgetBase(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+	: Super(ObjectInitializer),
+	  bHasInitialized(false)
 {
 }
 
@@ -42,6 +43,11 @@ bool UUserWidgetBase::Initialize()
 	}
 
 	return bInitializedThisCall;
+}
+
+void UUserWidgetBase::NativeOnInitialized()
+{
+	Super::NativeOnInitialized();
 }
 
 void UUserWidgetBase::NativePreConstruct()
@@ -119,46 +125,59 @@ void UUserWidgetBase::SetIsActived(const bool InActived)
 {
 	if (InActived != GetIsActived())
 	{
-		IStateInterface::SetIsActived(InActived);
+		bIsActived = InActived;
 
-		if (const UWorld* World = GetWorld())
+		if (!bHasInitialized)
 		{
-			/* Check Is Game World */
-			if (!World->IsGameWorld())
-			{
-				if (InActived)
-				{
-					SetVisibility(ESlateVisibility::Visible);
-				}
-				else
-				{
-					SetVisibility(ESlateVisibility::Collapsed);
-				}
-				return;
-			}
+			Initialize();
+			bHasInitialized = true;
+		}
 
-			/*	Check Has Widget Animation */
-			if (!HasWidgetAnimation(InActived))
-			{
-				if (InActived)
-				{
-					OnWidgetActiveAnimationFinish();
-				}
-				else
-				{
-					OnWidgetInactiveAnimationFinish();
-				}
-				return;
-			}
+		OnActiveStateChanged();
+	}
+}
 
-			/* Play Widget Animation */
-			if (InActived)
+void UUserWidgetBase::OnActiveStateChanged()
+{
+	IStateInterface::OnActiveStateChanged();
+
+	if (const UWorld* World = GetWorld())
+	{
+		/* Check Is Game World */
+		if (!World->IsGameWorld())
+		{
+			if (GetIsActived())
 			{
 				SetVisibility(ESlateVisibility::Visible);
 			}
-
-			PlayWidgetAnimation(InActived);
+			else
+			{
+				SetVisibility(ESlateVisibility::Collapsed);
+			}
+			return;
 		}
+
+		/*	Check Has Widget Animation */
+		if (!HasWidgetAnimation(GetIsActived()))
+		{
+			if (GetIsActived())
+			{
+				OnWidgetActiveAnimationFinish();
+			}
+			else
+			{
+				OnWidgetInactiveAnimationFinish();
+			}
+			return;
+		}
+
+		/* Play Widget Animation */
+		if (GetIsActived())
+		{
+			SetVisibility(ESlateVisibility::Visible);
+		}
+
+		PlayWidgetAnimation(GetIsActived());
 	}
 }
 

@@ -77,3 +77,14 @@ void IStateInterface::NativeOnDestroy()
 		}
 	}
 }
+
+bool IStateInterface::GetIsActived() const
+{
+	return bIsActived;
+}
+
+void IStateInterface::SetIsActived(const bool InActived)
+{
+	bIsActived = InActived;
+	OnActiveStateChanged();
+}

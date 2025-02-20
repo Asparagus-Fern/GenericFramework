@@ -13,6 +13,9 @@ class UUserWidgetBase;
 
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_WorldWidget);
 
+/**
+ * 
+ */
 UENUM(BlueprintType)
 enum class EWorldWidgetPaintMethod : uint8
 {
@@ -20,6 +23,9 @@ enum class EWorldWidgetPaintMethod : uint8
 	PaintInWorld
 };
 
+/**
+ * 
+ */
 USTRUCT(BlueprintType)
 struct FWorldWidgetLookAtSetting
 {
@@ -58,9 +64,9 @@ public:
 };
 
 /**
- * 创建出一个基于屏幕的3DUI
+ * 
  */
-UCLASS(ClassGroup=(Developer), meta=(BlueprintSpawnableComponent), ShowCategories=(Activation))
+UCLASS(ClassGroup=(Developer), meta=(BlueprintSpawnableComponent), ShowCategories=(Activation), HideCategories=(UserInterface))
 class WORLDWIDGETGENERATION_API UWorldWidgetComponent : public UWidgetComponent
 {
 	GENERATED_BODY()
@@ -98,7 +104,7 @@ public:
 	bool bAlwaysInFront = true;
 
 	/* Setting Decide How The Widget Look at Player */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(EditConditionHides, EditCondition = "WorldWidgetPaintMethod == EWorldWidgetPaintMethod::PaintInWorld"))
 	FWorldWidgetLookAtSetting WorldWidgetLookAtSetting;
 
 	/* UI */

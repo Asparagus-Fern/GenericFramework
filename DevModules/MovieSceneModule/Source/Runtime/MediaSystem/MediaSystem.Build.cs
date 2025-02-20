@@ -26,7 +26,6 @@ public class MediaSystem : ModuleRules
 				"MediaAssets",
 				"ElectraPlayerPlugin",
 				
-				"WidgetGeneration",
 				"EventUtilities",
 				"MovieSceneUtilities"
 			}

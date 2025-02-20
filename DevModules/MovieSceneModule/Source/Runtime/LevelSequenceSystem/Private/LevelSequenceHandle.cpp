@@ -3,45 +3,15 @@
 #include "LevelSequenceHandle.h"
 
 #include "LevelSequenceActor.h"
-#include "LevelSequenceManager.h"
 #include "LevelSequencePlayer.h"
+#include "Handle/HandleManager.h"
 #include "Manager/ManagerStatics.h"
 
-void ULevelSequenceHandle::ClearHandle_Implementation()
+ULevelSequenceHandle* ULevelSequenceHandle::Register(FName HandleName)
 {
-	if (ULevelSequenceManager* LevelSequenceManager = GetManager<ULevelSequenceManager>())
+	if (UHandleManager* HandleManager = GetManager<UHandleManager>())
 	{
-		LevelSequenceManager->UnRegisterLevelSequence(this);
+		return HandleManager->RegisterHandle<ULevelSequenceHandle>(HandleName);
 	}
-}
-
-void ULevelSequenceHandle::OpenMovieScene_Implementation()
-{
-	Super::OpenMovieScene_Implementation();
-}
-
-void ULevelSequenceHandle::Play_Implementation()
-{
-	LevelSequencePlayer->Play();
-}
-
-void ULevelSequenceHandle::Pause_Implementation()
-{
-	LevelSequencePlayer->Pause();
-}
-
-void ULevelSequenceHandle::Stop_Implementation()
-{
-	LevelSequencePlayer->Stop();
-}
-
-void ULevelSequenceHandle::Seek_Implementation(int32 InDays, int32 InHours, int32 InMinutes, int32 InSeconds, int32 InMicroSeconds)
-{
-	Super::Seek_Implementation(InDays, InHours, InMinutes, InSeconds, InMicroSeconds);
-}
-
-FTimespan ULevelSequenceHandle::GetMovieSceneCurrentTime_Implementation()
-{
-	// LevelSequencePlayer->GetCurrentTime();
-	return Super::GetMovieSceneCurrentTime_Implementation();
+	return nullptr;
 }

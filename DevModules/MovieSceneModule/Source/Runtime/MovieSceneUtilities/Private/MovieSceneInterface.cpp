@@ -3,5 +3,12 @@
 
 #include "MovieSceneInterface.h"
 
+void IMovieSceneInterface::OpenMovieScene()
+{
+	OnMovieSceneOpened();
+}
 
-// Add default functionality here for any IMovieSceneInterface functions that are not pure virtual.
+void IMovieSceneInterface::CloseMovieScene()
+{
+	OnMovieSceneClosed();
+}

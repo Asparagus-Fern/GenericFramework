@@ -14,7 +14,7 @@ class ULevelSequenceHandle;
  * 
  */
 UCLASS()
-class EVENTUTILITIES_API UHandleManager : public UEngineSubsystem, public FCoreInternalManager, public FHandleInterface
+class EVENTUTILITIES_API UHandleManager : public UEngineSubsystem, public FCoreInternalManager
 {
 	GENERATED_BODY()
 
@@ -25,39 +25,33 @@ public:
 
 	/* FHandleInterface */
 public:
-	virtual UHandleBase* RegisterHandle(UObject* Outer, TSubclassOf<UHandleBase> InHandleClass) override;
-	virtual UHandleBase* RegisterHandle(UObject* Outer, TSubclassOf<UHandleBase> InHandleClass, FGuid InHandleID) override;
-	virtual UHandleBase* RegisterHandle(UObject* Outer, TSubclassOf<UHandleBase> InHandleClass, FName InHandleName) override;
+	virtual void RegisterHandle(UHandleBase* InHandle);
+	virtual UHandleBase* RegisterHandle(TSubclassOf<UHandleBase> InHandleClass, FName InHandleName = NAME_None);
+	virtual UHandleBase* RegisterHandle(UObject* Outer, TSubclassOf<UHandleBase> InHandleClass, FName InHandleName = NAME_None);
 
-	virtual void UnRegisterHandle(UHandleBase* InHandle) override;
-	virtual void UnRegisterHandle(FGuid InHandleID) override;
-	virtual void UnRegisterHandle(FName InHandleName) override;
+	virtual void UnRegisterHandle(UHandleBase* InHandle);
+	virtual void UnRegisterHandle(FGuid InHandleID);
+	virtual void UnRegisterHandle(FName InHandleName);
 
-	virtual bool IsHandleRegister(const UHandleBase* InHandle) override;
-	virtual bool IsHandleRegister(FGuid InHandleID) override;
-	virtual bool IsHandleRegister(FName InHandleName) override;
+	virtual bool IsHandleRegister(const UHandleBase* InHandle);
+	virtual bool IsHandleRegister(FGuid InHandleID);
+	virtual bool IsHandleRegister(FName InHandleName);
 
-	virtual TArray<UHandleBase*> GetAllHandles() override { return Handles; }
+	virtual TArray<UHandleBase*> GetAllHandles() { return Handles; }
 
-	virtual UHandleBase* GetHandle(FGuid InHandleID) override;
-	virtual UHandleBase* GetHandle(FName InHandleName) override;
+	virtual UHandleBase* GetHandle(FGuid InHandleID);
+	virtual UHandleBase* GetHandle(FName InHandleName);
 
 	/* UHandleManager */
 public:
 	template <typename T>
-	T* RegisterHandle(UObject* Outer)
+	T* RegisterHandle(FName InHandleName = NAME_None)
 	{
-		return Cast<T>(RegisterHandle(Outer, T::StaticClass()));
+		return Cast<T>(RegisterHandle(T::StaticClass(), InHandleName));
 	}
-
+	
 	template <typename T>
-	T* RegisterHandle(UObject* Outer, FGuid InHandleID)
-	{
-		return Cast<T>(RegisterHandle(Outer, T::StaticClass(), InHandleID));
-	}
-
-	template <typename T>
-	T* RegisterHandle(UObject* Outer, FName InHandleName)
+	T* RegisterHandle(UObject* Outer, FName InHandleName= NAME_None)
 	{
 		return Cast<T>(RegisterHandle(Outer, T::StaticClass(), InHandleName));
 	}

@@ -42,11 +42,13 @@ void UWorldWidgetManager::RegisterWorldWidgetComponent(UWorldWidgetComponent* In
 	if (!IsValid(InWorldWidgetComponent))
 	{
 		DLOG(DLogUI, Error, TEXT("WorldWidgetPoint Is NULL"))
+		return;
 	}
 
 	if (WorldWidgetComponents.Contains(InWorldWidgetComponent))
 	{
 		DLOG(DLogUI, Warning, TEXT("WorldWidgetPoint Is Already Register"))
+		return;
 	}
 
 	WorldWidgetComponents.Add(InWorldWidgetComponent);
@@ -58,11 +60,13 @@ void UWorldWidgetManager::UnRegisterWorldWidgetComponent(UWorldWidgetComponent* 
 	if (!IsValid(InWorldWidgetComponent))
 	{
 		DLOG(DLogUI, Error, TEXT("WorldWidgetPoint Is NULL"))
+		return;
 	}
 
 	if (WorldWidgetComponents.Contains(InWorldWidgetComponent))
 	{
 		DLOG(DLogUI, Warning, TEXT("WorldWidgetPoint Is Already UnRegister"))
+		return;
 	}
 
 	WorldWidgetComponents.Remove(InWorldWidgetComponent);

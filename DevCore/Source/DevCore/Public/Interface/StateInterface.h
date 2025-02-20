@@ -53,8 +53,8 @@ public:
 	virtual void NativeOnDestroy();
 
 public:
-	virtual bool GetIsActived() const { return bIsActived; }
-	virtual void SetIsActived(const bool InActived) { bIsActived = InActived; }
+	virtual bool GetIsActived() const;
+	virtual void SetIsActived(const bool InActived);
 
 	bool GetGarbageAtDestroy() const { return bGarbageAtDestroy; }
 	void SetGarbageAtDestroy(const bool InGarbageAtDestroy) { bGarbageAtDestroy = InGarbageAtDestroy; }
@@ -67,4 +67,6 @@ protected:
 	bool bGarbageAtDestroy = false;
 	FOnActivedFinish OnActivedFinishDelegate;
 	FOnInactivedFinish OnInactivedFinishDelegate;
+
+	virtual void OnActiveStateChanged() { return; }
 };

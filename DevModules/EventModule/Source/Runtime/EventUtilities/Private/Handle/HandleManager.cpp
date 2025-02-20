@@ -20,38 +20,39 @@ void UHandleManager::Deinitialize()
 	UnRegisterManager();
 }
 
-UHandleBase* UHandleManager::RegisterHandle(UObject* Outer, TSubclassOf<UHandleBase> InHandleClass)
+void UHandleManager::RegisterHandle(UHandleBase* InHandle)
 {
-	UHandleBase* NewHandle = NewObject<UHandleBase>(Outer, InHandleClass);
-	Handles.Add(NewHandle);
-	return NewHandle;
-}
-
-UHandleBase* UHandleManager::RegisterHandle(UObject* Outer, TSubclassOf<UHandleBase> InHandleClass, FGuid InHandleID)
-{
-	if (!InHandleID.IsValid())
+	if (!IsValid(InHandle))
 	{
-		DLOG(DLogEvent, Error, TEXT("InHandleID Is Not Valid"))
-		return nullptr;
+		return;
 	}
 
-	UHandleBase* NewHandle = NewObject<UHandleBase>(Outer, InHandleClass);
-	NewHandle->SetHandleID(InHandleID);
-	Handles.Add(NewHandle);
-	return NewHandle;
+	if (Handles.Contains(InHandle))
+	{
+		return;
+	}
+
+	Handles.Add(InHandle);
+	InHandle->OnRegister();
+}
+
+UHandleBase* UHandleManager::RegisterHandle(TSubclassOf<UHandleBase> InHandleClass, FName InHandleName)
+{
+	return RegisterHandle(nullptr, InHandleClass, InHandleName);
 }
 
 UHandleBase* UHandleManager::RegisterHandle(UObject* Outer, TSubclassOf<UHandleBase> InHandleClass, FName InHandleName)
 {
-	if (InHandleName == NAME_None)
+	UObject* HandleOuter = IsValid(Outer) ? Outer : this;
+	UHandleBase* NewHandle = NewObject<UHandleBase>(HandleOuter, InHandleClass);
+
+	if (InHandleName != NAME_None)
 	{
-		DLOG(DLogEvent, Error, TEXT("InHandleName Is NULL"))
-		return nullptr;
+		NewHandle->SetHandleName(InHandleName);
 	}
 
-	UHandleBase* NewHandle = NewObject<UHandleBase>(Outer, InHandleClass);
-	NewHandle->SetHandleName(InHandleName);
-	Handles.Add(NewHandle);
+	RegisterHandle(NewHandle);
+
 	return NewHandle;
 }
 
@@ -59,6 +60,7 @@ void UHandleManager::UnRegisterHandle(UHandleBase* InHandle)
 {
 	if (IsHandleRegister(InHandle))
 	{
+		InHandle->OnUnRegister();
 		Handles.Remove(InHandle);
 	}
 }
@@ -67,7 +69,7 @@ void UHandleManager::UnRegisterHandle(FGuid InHandleID)
 {
 	if (IsHandleRegister(InHandleID))
 	{
-		Handles.Remove(GetHandle(InHandleID));
+		UnRegisterHandle(GetHandle(InHandleID));
 	}
 }
 
@@ -75,7 +77,7 @@ void UHandleManager::UnRegisterHandle(FName InHandleName)
 {
 	if (IsHandleRegister(InHandleName))
 	{
-		Handles.Remove(GetHandle(InHandleName));
+		UnRegisterHandle(GetHandle(InHandleName));
 	}
 }
 

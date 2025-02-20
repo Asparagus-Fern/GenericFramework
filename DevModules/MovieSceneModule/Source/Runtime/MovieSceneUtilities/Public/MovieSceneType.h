@@ -77,12 +77,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditCondition = "bLoopFragment"))
 	FVector2D LoopRange = FVector2D::ZeroVector;
-	
-	// UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditConditionHides, EditCondition = "bLoopFragment"))
-	// FMovieSceneTime LoopTimeStart;
-	//
-	// UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditConditionHides, EditCondition = "bLoopFragment"))
-	// FMovieSceneTime LoopTimeEnd;
+
 };
 
 /**

@@ -18,21 +18,13 @@ class LEVELSEQUENCESYSTEM_API ULevelSequenceHandle : public UMovieSceneHandleBas
 {
 	GENERATED_BODY()
 
-	/* UHandleBase */
 public:
-	virtual void ClearHandle_Implementation() override;
+	UFUNCTION(BlueprintCallable, DisplayName="RegisterLevelSequenceHandle")
+	static ULevelSequenceHandle* Register(FName HandleName = NAME_None);
 
 	/* FMovieSceneInterface */
 public:
-	virtual void OpenMovieScene_Implementation() override;
-
-	virtual void Play_Implementation() override;
-	virtual void Pause_Implementation() override;
-	virtual void Stop_Implementation() override;
-	virtual void Seek_Implementation(int32 InDays, int32 InHours, int32 InMinutes, int32 InSeconds, int32 InMicroSeconds) override;
-
-public:
-	virtual FTimespan GetMovieSceneCurrentTime_Implementation() override;
+	
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Transient)

@@ -34,6 +34,7 @@ protected:
 	UUserWidgetBase(const FObjectInitializer& ObjectInitializer);
 	virtual void OnWidgetRebuilt() override;
 	virtual bool Initialize() override;
+	virtual void NativeOnInitialized() override;
 	virtual void NativePreConstruct() override;
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
@@ -64,6 +65,9 @@ public:
 	/* Widget Anchor, Usefully In WorldWidgetComponent3D, It Decide a Widget How To Surrounding you */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, AdvancedDisplay)
 	FVector2D Anchor = FVector2D(.5f, 1.f);
+
+protected:
+	uint8 bHasInitialized : 1;
 
 private:
 	TWeakObjectPtr<class UScaleBox> ScaleBox;
@@ -117,6 +121,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	virtual void SetIsActived(const bool InActived) override;
+
+protected:
+	virtual void OnActiveStateChanged() override;
 
 	/* ==================== IWidgetAnimationInterface ==================== */
 public:
