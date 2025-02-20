@@ -4,9 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "NativeGameplayTags.h"
-#include "Components/SceneComponent.h"
+#include "Components/WidgetComponent.h"
 #include "WorldWidgetComponent.generated.h"
 
+class SEditorWorldWidget;
 class UWidgetComponent;
 class UUserWidgetBase;
 
@@ -59,26 +60,25 @@ public:
 /**
  * 创建出一个基于屏幕的3DUI
  */
-UCLASS(ClassGroup=(Developer), meta=(BlueprintSpawnableComponent))
-class WORLDWIDGETGENERATION_API UWorldWidgetComponent : public USceneComponent
+UCLASS(ClassGroup=(Developer), meta=(BlueprintSpawnableComponent), ShowCategories=(Activation))
+class WORLDWIDGETGENERATION_API UWorldWidgetComponent : public UWidgetComponent
 {
 	GENERATED_BODY()
 
 public:
-	UWorldWidgetComponent();
+	UWorldWidgetComponent(const FObjectInitializer& ObjectInitializer);
 	virtual void OnRegister() override;
 	virtual void OnUnregister() override;
-	virtual void BeginPlay() override;
-	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
-	virtual void OnHiddenInGameChanged() override;
+	virtual void SetActive(bool bNewActive, bool bReset) override;
+	virtual void Activate(bool bReset) override;
+	virtual void Deactivate() override;
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 public:
 	DECLARE_EVENT_OneParam(UWorldWidgetComponent, FWorldWidgetComponentDelegate, UWorldWidgetComponent*);
 
 	inline static FWorldWidgetComponentDelegate OnWorldWidgetComponentRegister;
 	inline static FWorldWidgetComponentDelegate OnWorldWidgetComponentUnRegister;
-	inline static FWorldWidgetComponentDelegate OnWorldWidgetPointBeginPlay;
-	inline static FWorldWidgetComponentDelegate OnWorldWidgetPointEndPlay;
 
 public:
 	/* Unique Tag */
@@ -86,12 +86,8 @@ public:
 	FGameplayTag WorldWidgetTag = FGameplayTag::EmptyTag;
 
 	/* Group Tag, The Same GroupTag Will Be Register In WorldWidgetGroupManager */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="UI.WorldWidget"))
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, meta=(Categories="UI.WorldWidget"))
 	FGameplayTag GroupTag = FGameplayTag::EmptyTag;
-
-	/* If True, It Will not Appear After Register, You Need To Call ChangeWorldWidgetComponentActiveState To Show It */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	bool bIsManualActive = false;
 
 	/* Method Decide How The Widget Paint */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
@@ -110,14 +106,37 @@ public:
 	TObjectPtr<UUserWidgetBase> WorldWidget = nullptr;
 
 public:
-	void RefreshWidgetComponent();
-	void ClearWidgetComponent();
-	UWidgetComponent* GetWidgetComponent() const { return WidgetComponent; }
+	UPROPERTY(Interp, Category="Rendering", Getter, Setter, BlueprintGetter="GetWidgetVisibility", BlueprintSetter="SetWidgetVisibility")
+	bool WidgetVisibility;
+
+	UFUNCTION(BlueprintPure)
+	bool GetWidgetVisibility() const;
+
+	UFUNCTION(BlueprintCallable)
+	void SetWidgetVisibility(bool InWidgetVisibility);
+
+public:
+	virtual void ChangeWidgetActiveState(bool IsActive);
+	virtual void UpdateWorldWidget();
+	virtual void UpdateWorldWidgetLookAtRotation();
+	virtual void UpdateWorldWidgetLookAtRotation(FVector InLocation);
 
 protected:
-	virtual UWidgetComponent* CreateWidgetComponent();
+	UFUNCTION()
+	virtual void OnWidgetActiveAnimationFinish();
+
+	UFUNCTION()
+	virtual void OnWidgetInactiveAnimationFinish();
+
+private:
+	bool bIsActived;
+	FWidgetAnimationDynamicEvent WidgetActiveAnimationFinishBinding;
+	FWidgetAnimationDynamicEvent WidgetInactiveAnimationFinishBinding;
+
+#if WITH_EDITOR
 
 protected:
-	UPROPERTY()
-	TObjectPtr<UWidgetComponent> WidgetComponent = nullptr;
+	virtual void EditorUpdateWorldWidgetLookAtRotation();
+
+#endif
 };

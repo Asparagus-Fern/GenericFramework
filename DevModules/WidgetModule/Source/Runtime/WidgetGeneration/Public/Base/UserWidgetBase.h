@@ -32,6 +32,7 @@ class WIDGETGENERATION_API UUserWidgetBase : public UCommonUserWidget, public IW
 
 protected:
 	UUserWidgetBase(const FObjectInitializer& ObjectInitializer);
+	virtual void OnWidgetRebuilt() override;
 	virtual bool Initialize() override;
 	virtual void NativePreConstruct() override;
 	virtual void NativeConstruct() override;
@@ -42,10 +43,6 @@ protected:
 #endif
 
 	/* ==================== UUserWidgetBase ==================== */
-public:
-	UFUNCTION(BlueprintPure)
-	FVector2D GetAnchorOffset() const;
-
 public:
 	/* Unique Tag To Mark Which Slot To Add This Widget */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="UI.HUD"))
@@ -161,4 +158,15 @@ public:
 
 	virtual void SetActiveAnimation_Implementation(UWidgetAnimation* InAnimation) override;
 	virtual void SetInactiveAnimation_Implementation(UWidgetAnimation* InAnimation) override;
+
+protected:
+	UFUNCTION()
+	virtual void OnWidgetActiveAnimationFinish();
+
+	UFUNCTION()
+	virtual void OnWidgetInactiveAnimationFinish();
+
+private:
+	FWidgetAnimationDynamicEvent WidgetActiveAnimationFinishBinding;
+	FWidgetAnimationDynamicEvent WidgetInactiveAnimationFinishBinding;
 };

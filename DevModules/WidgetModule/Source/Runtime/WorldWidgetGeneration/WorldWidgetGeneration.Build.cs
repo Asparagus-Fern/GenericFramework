@@ -26,11 +26,19 @@ public class WorldWidgetGeneration : ModuleRules
 				"CommonUI",
 				"GameplayTags",
 				"DeveloperSettings",
+				"InputCore",
 
 				"WidgetGeneration",
 				"GameHUDModule",
 				"InteractableWidgetGeneration",
 			}
 		);
+
+		if (Target.bBuildEditor)
+		{
+			PublicDependencyModuleNames.Add("DevEdCore");
+			PrivateDependencyModuleNames.Add("LevelEditor");
+			PrivateDependencyModuleNames.Add("UnrealEd");
+		}
 	}
 }

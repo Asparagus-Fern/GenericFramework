@@ -1,13 +1,13 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "SWorldWidgetContainer.h"
+#include "SEditorWorldWidget.h"
 
 #include "SlateOptMacros.h"
 
 BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION
 
-void SWorldWidgetContainer::Construct(const FArguments& InArgs)
+void SEditorWorldWidget::Construct(const FArguments& InArgs)
 {
 	OnWorldWidgetMiddleClicked = InArgs._OnWorldWidgetMiddleClicked;
 
@@ -17,7 +17,7 @@ void SWorldWidgetContainer::Construct(const FArguments& InArgs)
 	];
 }
 
-FReply SWorldWidgetContainer::OnMouseButtonDown(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent)
+FReply SEditorWorldWidget::OnMouseButtonDown(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent)
 {
 	if (MouseEvent.IsMouseButtonDown(EKeys::MiddleMouseButton))
 	{

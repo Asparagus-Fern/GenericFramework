@@ -3,21 +3,50 @@
 
 #include "WorldWidgetComponent.h"
 
-#include "DWidgetComponent.h"
+#include "Animation/WidgetAnimation.h"
 #include "Base/UserWidgetBase.h"
+#include "BPFunctions/BPFunctions_Gameplay.h"
 #include "Components/WidgetComponent.h"
+#include "Kismet/KismetMathLibrary.h"
+
+#if WITH_EDITOR
+#include "LevelEditorViewport.h"
+#endif
 
 UE_DEFINE_GAMEPLAY_TAG(TAG_WorldWidget, "UI.WorldWidget");
 
-UWorldWidgetComponent::UWorldWidgetComponent()
+UWorldWidgetComponent::UWorldWidgetComponent(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
 {
 	PrimaryComponentTick.bCanEverTick = true;
+	bTickInEditor = true;
+	bAutoActivate = true;
+
+	Space = EWidgetSpace::Screen;
+	bDrawAtDesiredSize = false;
+	BlendMode = EWidgetBlendMode::Transparent;
+	TintColorAndOpacity = FLinearColor::White;
+	bManuallyRedraw = false;
+	DrawSize = FIntPoint::ZeroValue;
+	bReceiveHardwareInput = true;
+
+	WidgetVisibility = bAutoActivate;
+
+	bIsActived = bAutoActivate;
+
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface> TranslucentMaterial_OneSided_Finder(TEXT("/Script/Engine.MaterialInstanceConstant'/WidgetModule/Material/Widget3DPassThrough_Translucent_OneSided.Widget3DPassThrough_Translucent_OneSided'"));
+	if (TranslucentMaterial_OneSided_Finder.Succeeded())
+	{
+		TranslucentMaterial_OneSided = TranslucentMaterial_OneSided_Finder.Object;
+	}
 }
 
 void UWorldWidgetComponent::OnRegister()
 {
-	Super::OnRegister();
+	UpdateWorldWidget();
 	OnWorldWidgetComponentRegister.Broadcast(this);
+
+	Super::OnRegister();
 }
 
 void UWorldWidgetComponent::OnUnregister()
@@ -26,69 +55,195 @@ void UWorldWidgetComponent::OnUnregister()
 	Super::OnUnregister();
 }
 
-void UWorldWidgetComponent::BeginPlay()
+void UWorldWidgetComponent::SetActive(bool bNewActive, bool bReset)
 {
-	Super::BeginPlay();
-	OnWorldWidgetPointBeginPlay.Broadcast(this);
-}
+	bIsActived = bNewActive;
 
-void UWorldWidgetComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
-{
-	Super::EndPlay(EndPlayReason);
-	OnWorldWidgetPointEndPlay.Broadcast(this);
-}
-
-void UWorldWidgetComponent::OnHiddenInGameChanged()
-{
-	Super::OnHiddenInGameChanged();
-}
-
-void UWorldWidgetComponent::RefreshWidgetComponent()
-{
-	ClearWidgetComponent();
-	WidgetComponent = CreateWidgetComponent();
-
-	if (WorldWidget)
+	if (bNewActive)
 	{
-		WidgetComponent->SetPivot(WorldWidget->Anchor);
-		WidgetComponent->SetWidget(WorldWidget);
-		WidgetComponent->SetDrawSize(WorldWidget->GetDesiredSize());
+		Super::SetActive(bNewActive, bReset);
+	}
+	else
+	{
+		ChangeWidgetActiveState(false);
+	}
+}
 
-		WorldWidget->SetIsActived(true);
+void UWorldWidgetComponent::Activate(bool bReset)
+{
+	Super::Activate(bReset);
+	ChangeWidgetActiveState(true);
+}
+
+void UWorldWidgetComponent::Deactivate()
+{
+	Super::Deactivate();
+}
+
+void UWorldWidgetComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+{
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	UpdateWorldWidgetLookAtRotation();
+}
+
+bool UWorldWidgetComponent::GetWidgetVisibility() const
+{
+	return WidgetVisibility;
+}
+
+void UWorldWidgetComponent::SetWidgetVisibility(bool InWidgetVisibility)
+{
+	if (WidgetVisibility != InWidgetVisibility)
+	{
+		WidgetVisibility = InWidgetVisibility;
+		ChangeWidgetActiveState(WidgetVisibility);
+	}
+}
+
+void UWorldWidgetComponent::ChangeWidgetActiveState(bool IsActive)
+{
+	if (!IsValid(WorldWidget))
+	{
+		DLOG(DLogUI, Warning, TEXT("WorldWidget Is NULL"))
+		SetDrawSize(FIntPoint::ZeroValue);
+		return;
 	}
 
-	WidgetComponent->RequestRenderUpdate();
+	if (WidgetActiveAnimationFinishBinding.IsBound() && WidgetActiveAnimationFinishBinding.GetUObject() != WorldWidget)
+	{
+		WidgetActiveAnimationFinishBinding.Unbind();
+	}
+
+	if (WidgetInactiveAnimationFinishBinding.IsBound() && WidgetInactiveAnimationFinishBinding.GetUObject() != WorldWidget)
+	{
+		WidgetInactiveAnimationFinishBinding.Unbind();
+	}
+
+	UWidgetAnimation* ActiveAnimation = WorldWidget->GetActiveAnimation();
+	UWidgetAnimation* InactiveAnimation = WorldWidget->GetInactiveAnimation();
+
+	if (IsActive && IsValid(ActiveAnimation))
+	{
+		WidgetActiveAnimationFinishBinding.BindDynamic(this, &UWorldWidgetComponent::OnWidgetActiveAnimationFinish);
+		WorldWidget->BindToAnimationFinished(ActiveAnimation, WidgetActiveAnimationFinishBinding);
+	}
+	else if (!IsActive && IsValid(InactiveAnimation))
+	{
+		WidgetInactiveAnimationFinishBinding.BindDynamic(this, &UWorldWidgetComponent::OnWidgetInactiveAnimationFinish);
+		WorldWidget->BindToAnimationFinished(InactiveAnimation, WidgetInactiveAnimationFinishBinding);
+	}
+
+	UpdateWorldWidget();
+	WorldWidget->SetIsActived(IsActive);
 }
 
-void UWorldWidgetComponent::ClearWidgetComponent()
+void UWorldWidgetComponent::UpdateWorldWidget()
 {
-	if (WidgetComponent)
+	if (WorldWidgetPaintMethod == EWorldWidgetPaintMethod::PaintInScreen)
 	{
-		WidgetComponent->DestroyComponent();
-		WidgetComponent = nullptr;
+		SetWidgetSpace(EWidgetSpace::Screen);
 
-		if (WorldWidget)
+		if (IsValid(WorldWidget))
 		{
-			WorldWidget->SetIsActived(false);
-			
+			SetWidget(WorldWidget);
+			UpdateWidget();
+		}
+	}
+	else if (WorldWidgetPaintMethod == EWorldWidgetPaintMethod::PaintInWorld)
+	{
+		SetWidgetSpace(EWidgetSpace::World);
+
+		if (IsValid(WorldWidget))
+		{
+			WorldWidget->TakeWidget()->SlatePrepass();
+			SetDrawSize(WorldWidget->GetDesiredSize());
+			SetPivot(WorldWidget->Anchor);
+			SetWidget(WorldWidget);
 		}
 	}
 }
 
-UWidgetComponent* UWorldWidgetComponent::CreateWidgetComponent()
+void UWorldWidgetComponent::UpdateWorldWidgetLookAtRotation()
 {
-	UDWidgetComponent* Result = Cast<UDWidgetComponent>(GetOwner()->AddComponentByClass(UDWidgetComponent::StaticClass(), false, FTransform::Identity, false));
-	Result->SetWidgetSpace(EWidgetSpace::World);
-	Result->SetDrawAtDesiredSize(false);
-	Result->SetBlendMode(EWidgetBlendMode::Transparent);
-	Result->SetTintColorAndOpacity(FLinearColor::White);
-	Result->SetManuallyRedraw(true);
-
-	if (UMaterialInstance* Material = LoadObject<UMaterialInstance>(NULL,TEXT("/Script/Engine.MaterialInstanceConstant'/WidgetModule/Material/Widget3DPassThrough_Translucent_OneSided.Widget3DPassThrough_Translucent_OneSided'")))
+	if (!WorldWidgetLookAtSetting.bEnableLookAtPlayerCamera)
 	{
-		Result->SetMaterial(0, Material);
-		Material->GetMaterial()->bDisableDepthTest = bAlwaysInFront;
+		return;
 	}
 
-	return Result;
+	const UWorld* World = GetWorld();
+	if (!World->IsGameWorld())
+	{
+#if WITH_EDITOR
+		EditorUpdateWorldWidgetLookAtRotation();
+#endif
+		return;
+	}
+
+	APlayerController* PC = UBPFunctions_Gameplay::GetPlayerControllerByClass(World, APlayerController::StaticClass(), WorldWidgetLookAtSetting.LookAtPlayerIndex);
+	if (!IsValid(PC))
+	{
+		/* Can Not Find PlayerController */
+		return;
+	}
+
+	const FVector CameraLocation = PC->PlayerCameraManager->GetCameraLocation();
+	UpdateWorldWidgetLookAtRotation(CameraLocation);
 }
+
+void UWorldWidgetComponent::UpdateWorldWidgetLookAtRotation(FVector InLocation)
+{
+	if (WorldWidgetPaintMethod == EWorldWidgetPaintMethod::PaintInScreen)
+	{
+	}
+	else if (WorldWidgetPaintMethod == EWorldWidgetPaintMethod::PaintInWorld)
+	{
+		const FRotator FollowRotation = UKismetMathLibrary::FindLookAtRotation(GetComponentLocation(), InLocation);
+		FRotator WidgetComponentRotation = FRotator::ZeroRotator;
+
+		if (WorldWidgetLookAtSetting.LookAtPitch)
+		{
+			WidgetComponentRotation.Pitch = FollowRotation.Pitch;
+		}
+		if (WorldWidgetLookAtSetting.LookAtYaw)
+		{
+			WidgetComponentRotation.Yaw = FollowRotation.Yaw;
+		}
+		if (WorldWidgetLookAtSetting.LookAtRoll)
+		{
+			WidgetComponentRotation.Roll = FollowRotation.Roll;
+		}
+
+		SetRelativeRotation(WidgetComponentRotation);
+	}
+}
+
+void UWorldWidgetComponent::OnWidgetActiveAnimationFinish()
+{
+	WidgetActiveAnimationFinishBinding.Unbind();
+}
+
+void UWorldWidgetComponent::OnWidgetInactiveAnimationFinish()
+{
+	WidgetInactiveAnimationFinishBinding.Unbind();
+
+	if (!bIsActived)
+	{
+		SetDrawSize(FIntPoint::ZeroValue);
+		Deactivate();
+	}
+}
+
+#if WITH_EDITOR
+
+void UWorldWidgetComponent::EditorUpdateWorldWidgetLookAtRotation()
+{
+	if (WorldWidgetPaintMethod == EWorldWidgetPaintMethod::PaintInScreen)
+	{
+	}
+	else if (WorldWidgetPaintMethod == EWorldWidgetPaintMethod::PaintInWorld)
+	{
+		UpdateWorldWidgetLookAtRotation(GCurrentLevelEditingViewportClient->GetViewLocation());
+	}
+}
+
+#endif

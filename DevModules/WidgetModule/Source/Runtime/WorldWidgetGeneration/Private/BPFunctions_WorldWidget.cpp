@@ -57,38 +57,6 @@ TArray<UWorldWidgetComponent*> UBPFunctions_WorldWidget::FindWorldWidgetComponen
 	return TArray<UWorldWidgetComponent*>{};
 }
 
-void UBPFunctions_WorldWidget::SetWorldWidgetComponentActiveStateWithActor(AActor* InActor, bool IsActive)
-{
-	if (UWorldWidgetManager* WorldWidgetManager = GetManager<UWorldWidgetManager>())
-	{
-		return WorldWidgetManager->SetWorldWidgetComponentActiveState(InActor, IsActive);
-	}
-}
-
-void UBPFunctions_WorldWidget::SetWorldWidgetComponentActiveStateWithComponent(UWorldWidgetComponent* InWorldWidgetComponent, bool IsActive)
-{
-	if (UWorldWidgetManager* WorldWidgetManager = GetManager<UWorldWidgetManager>())
-	{
-		return WorldWidgetManager->SetWorldWidgetComponentActiveState(InWorldWidgetComponent, IsActive);
-	}
-}
-
-void UBPFunctions_WorldWidget::SetWorldWidgetPaintMethod(UWorldWidgetComponent* InWorldWidgetComponent, EWorldWidgetPaintMethod WorldWidgetPaintMethod)
-{
-	if (UWorldWidgetManager* WorldWidgetManager = GetManager<UWorldWidgetManager>())
-	{
-		return WorldWidgetManager->SetWorldWidgetPaintMethod(InWorldWidgetComponent, WorldWidgetPaintMethod);
-	}
-}
-
-void UBPFunctions_WorldWidget::SetWorldWidgetLookAtSetting(UWorldWidgetComponent* InWorldWidgetComponent, FWorldWidgetLookAtSetting WorldWidgetLookAtSetting)
-{
-	if (UWorldWidgetManager* WorldWidgetManager = GetManager<UWorldWidgetManager>())
-	{
-		return WorldWidgetManager->SetWorldWidgetLookAtSetting(InWorldWidgetComponent, WorldWidgetLookAtSetting);
-	}
-}
-
 UInteractableWidgetEntityGroup* UBPFunctions_WorldWidget::GetWorldWidgetGroup(FGameplayTag InGroupTag)
 {
 	if (UWorldWidgetGroupManager* WorldWidgetGroupManager = GetManager<UWorldWidgetGroupManager>())

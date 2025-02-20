@@ -3,18 +3,21 @@
 
 #include "Base/UserWidgetBase.h"
 
-#include "CommonInputSubsystem.h"
 #include "Animation/WidgetAnimation.h"
 #include "Blueprint/WidgetTree.h"
 #include "Components/ScaleBox.h"
 #include "Components/ScaleBoxSlot.h"
 #include "Entity/WidgetEntity.h"
-#include "Input/CommonUIActionRouterBase.h"
-#include "Input/CommonUIInputTypes.h"
 
 UUserWidgetBase::UUserWidgetBase(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
+}
+
+void UUserWidgetBase::OnWidgetRebuilt()
+{
+	Super::OnWidgetRebuilt();
+	NativePreConstruct();
 }
 
 bool UUserWidgetBase::Initialize()
@@ -38,9 +41,6 @@ bool UUserWidgetBase::Initialize()
 		WidgetTree->RootWidget = NewScaleBox;
 	}
 
-	/* 传递当前UI，计算Slate所需大小 */
-	TakeWidget()->SlatePrepass();
-
 	return bInitializedThisCall;
 }
 
@@ -63,7 +63,7 @@ void UUserWidgetBase::NativeConstruct()
 	{
 		if (UWidgetAnimation* WidgetAnimation = Cast<UWidgetAnimation>(ObjectProperty->GetObjectPropertyValue(ObjectProperty->ContainerPtrToValuePtr<void>(this))))
 		{
-			ActivedAnimation = WidgetAnimation;
+			Execute_SetActiveAnimation(this, WidgetAnimation);
 		}
 	}
 
@@ -72,7 +72,7 @@ void UUserWidgetBase::NativeConstruct()
 	{
 		if (UWidgetAnimation* WidgetAnimation = Cast<UWidgetAnimation>(ObjectProperty->GetObjectPropertyValue(ObjectProperty->ContainerPtrToValuePtr<void>(this))))
 		{
-			InactivedAnimation = WidgetAnimation;
+			Execute_SetInactiveAnimation(this, WidgetAnimation);
 		}
 	}
 
@@ -83,11 +83,6 @@ void UUserWidgetBase::NativeConstruct()
 void UUserWidgetBase::NativeDestruct()
 {
 	Super::NativeDestruct();
-}
-
-FVector2D UUserWidgetBase::GetAnchorOffset() const
-{
-	return FVector2D(-(GetDesiredSize().X * Anchor.X), -(GetDesiredSize().Y * Anchor.Y));
 }
 
 /* ==================== WidgetEntity ==================== */
@@ -122,17 +117,47 @@ bool UUserWidgetBase::GetIsActived() const
 
 void UUserWidgetBase::SetIsActived(const bool InActived)
 {
-	IStateInterface::SetIsActived(InActived);
-
 	if (InActived != GetIsActived())
 	{
-		if (HasWidgetAnimation(InActived))
+		IStateInterface::SetIsActived(InActived);
+
+		if (const UWorld* World = GetWorld())
 		{
+			/* Check Is Game World */
+			if (!World->IsGameWorld())
+			{
+				if (InActived)
+				{
+					SetVisibility(ESlateVisibility::Visible);
+				}
+				else
+				{
+					SetVisibility(ESlateVisibility::Collapsed);
+				}
+				return;
+			}
+
+			/*	Check Has Widget Animation */
+			if (!HasWidgetAnimation(InActived))
+			{
+				if (InActived)
+				{
+					OnWidgetActiveAnimationFinish();
+				}
+				else
+				{
+					OnWidgetInactiveAnimationFinish();
+				}
+				return;
+			}
+
+			/* Play Widget Animation */
+			if (InActived)
+			{
+				SetVisibility(ESlateVisibility::Visible);
+			}
+
 			PlayWidgetAnimation(InActived);
-		}
-		else
-		{
-			SetVisibility(InActived ? ESlateVisibility::Visible : ESlateVisibility::Collapsed);
 		}
 	}
 }
@@ -164,7 +189,16 @@ UWidgetAnimation* UUserWidgetBase::GetActiveAnimation() const
 void UUserWidgetBase::SetActiveAnimation_Implementation(UWidgetAnimation* InAnimation)
 {
 	IWidgetAnimationInterface::SetActiveAnimation_Implementation(InAnimation);
+
+	if (IsValid(ActivedAnimation))
+	{
+		UnbindFromAnimationFinished(ActivedAnimation, WidgetActiveAnimationFinishBinding);
+	}
+
 	ActivedAnimation = InAnimation;
+	WidgetActiveAnimationFinishBinding.BindDynamic(this, &UUserWidgetBase::OnWidgetActiveAnimationFinish);
+
+	BindToAnimationFinished(ActivedAnimation, WidgetActiveAnimationFinishBinding);
 }
 
 UWidgetAnimation* UUserWidgetBase::GetInactiveAnimation() const
@@ -175,7 +209,25 @@ UWidgetAnimation* UUserWidgetBase::GetInactiveAnimation() const
 void UUserWidgetBase::SetInactiveAnimation_Implementation(UWidgetAnimation* InAnimation)
 {
 	IWidgetAnimationInterface::SetInactiveAnimation_Implementation(InAnimation);
+
+	if (IsValid(InactivedAnimation))
+	{
+		UnbindFromAnimationFinished(InactivedAnimation, WidgetInactiveAnimationFinishBinding);
+	}
+
 	InactivedAnimation = InAnimation;
+	WidgetInactiveAnimationFinishBinding.BindDynamic(this, &UUserWidgetBase::OnWidgetInactiveAnimationFinish);
+
+	BindToAnimationFinished(InactivedAnimation, WidgetInactiveAnimationFinishBinding);
+}
+
+void UUserWidgetBase::OnWidgetActiveAnimationFinish()
+{
+}
+
+void UUserWidgetBase::OnWidgetInactiveAnimationFinish()
+{
+	SetVisibility(ESlateVisibility::Collapsed);
 }
 
 void UUserWidgetBase::PlayWidgetAnimation(bool InIsActive)

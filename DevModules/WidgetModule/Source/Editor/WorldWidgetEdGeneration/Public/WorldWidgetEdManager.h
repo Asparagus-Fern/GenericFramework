@@ -4,56 +4,31 @@
 
 #include "CoreMinimal.h"
 #include "WorldWidgetManager.h"
+#include "Common/CommonObject.h"
 #include "Widgets/Layout/SConstraintCanvas.h"
 #include "WorldWidgetEdManager.generated.h"
 
-class SWorldWidgetContainer;
-class UWorldWidgetEdManager;
-class UWorldWidgetComponent;
+class SEditorWorldWidget;
 class ILevelEditor;
+class UUserWidgetBase;
 class SConstraintCanvas;
-class SLevelViewport;
 
-
-/**
- * 将WorldWidget显示Level Editor Viewport的面板
- */
-UCLASS(MinimalAPI)
-class UEditorWorldWidgetPanel : public UWorldWidgetPanel
+struct FEditorWorldWidget
 {
-	GENERATED_BODY()
-
-	friend UWorldWidgetEdManager;
-
-	/* IProcedureBaseInterface */
 public:
-	virtual void NativeOnCreate() override;
-	virtual void NativeOnRefresh() override;
-	virtual void NativeOnDestroy() override;
+	FEditorWorldWidget() { return; }
+	bool operator==(const FEditorWorldWidget& Other) const { return LevelEditorViewportClient == Other.LevelEditorViewportClient; }
+	bool operator==(const FLevelEditorViewportClient* Other) const { return LevelEditorViewportClient == Other; }
 
-	/* UGamePanel */
 public:
-	virtual void HandleAddToViewport() override;
-	virtual void HandleRemoveFromViewport() override;
-
-	/* FEditorWorldWidgetPanel */
-public:
-	virtual bool IsContain(UWorldWidgetComponent* InWorldWidgetComponent) override;
-	virtual void AddWorldWidgetComponent(AActor* InActor) override;
-	virtual void AddWorldWidgetComponent(UWorldWidgetComponent* InWorldWidgetComponent) override;
-	virtual void RemoveWorldWidgetComponent(UWorldWidgetComponent* InWorldWidgetComponent) override;
-	virtual void RefreshAllWorldWidgetComponent() override;
-
-	virtual void OnWorldWidgetMiddleClicked(TSharedPtr<SWorldWidgetContainer> DoubleClickedContainer);
-
-private:
 	FLevelEditorViewportClient* LevelEditorViewportClient = nullptr;
-	TMap<UWorldWidgetComponent*, TSharedPtr<SWorldWidgetContainer>> WorldWidgetContainer;
-	TMap<UWorldWidgetComponent*, SConstraintCanvas::FSlot*> WorldWidgetSlots;
+	TSharedPtr<SConstraintCanvas> ConstraintCanvas = nullptr;
+	TMap<UWorldWidgetComponent*, TSharedPtr<SEditorWorldWidget>> EditorWorldWidgets;
+	TMap<UWorldWidgetComponent*, SConstraintCanvas::FSlot*> EditorWorldWidgetSlots;
 };
 
 /**
- * WorldWidget在编辑器的管理类，将WorldWidget显示在编辑器视口
+ * 
  */
 UCLASS(MinimalAPI)
 class UWorldWidgetEdManager : public UWorldWidgetManager
@@ -67,50 +42,33 @@ public:
 	virtual bool DoesSupportWorldType(const EWorldType::Type WorldType) const override;
 
 	/* FTickableGameObject */
-public:
+protected:
+	virtual bool IsTickable() const override { return true; }
 	virtual bool IsTickableInEditor() const override { return true; }
+	virtual void Tick(float DeltaTime) override;
 
 	/* FCoreInternalManager */
-public:
+protected:
 	virtual void HandleOnWorldBeginPlay(UWorld* InWorld) override;
 	virtual void HandleOnWorldEndPlay(UWorld* InWorld) override;
 
 protected:
-	/* 编辑器创建时 */
+	TArray<FEditorWorldWidget> EditorWorldWidgets;
+
 	FDelegateHandle LevelEditorCreatedHandle;
 	void OnLevelEditorCreated(TSharedPtr<ILevelEditor> LevelEditor);
 
 	FDelegateHandle LevelViewportClientListChangedHandle;
 	void OnLevelViewportClientListChanged();
 
-	/* 关卡添加Actor时 */
-	FDelegateHandle LevelActorAddedHandle;
-	void OnLevelActorAdded(AActor* Actor);
+	void GenerateEditorWorldWidgets();
 
-	/* Actor被移动时 */
-	FDelegateHandle ActorsMovedHandle;
-	void OnActorsMoved(TArray<AActor*>& Actors);
+	void InitializeEditorWorldWidgets();
+	void DeinitializeEditorWorldWidgets();
 
-	/* Actor被删除时 */
-	FDelegateHandle LevelActorDeletedHandle;
-	void OnLevelActorDeleted(AActor* Actor);
+	virtual void RegisterWorldWidgetComponent(UWorldWidgetComponent* InWorldWidgetComponent) override;
+	virtual void UnRegisterWorldWidgetComponent(UWorldWidgetComponent* InWorldWidgetComponent) override;
 
-	/* 蓝图编译时 */
-	FDelegateHandle BlueprintCompiledHandle;
-	void OnBlueprintCompiled();
-
-	FDelegateHandle LevelsChangedHandle;
-	void OnLevelsChanged();
-
-	/* WorldWidgetComponent注册时 */
-	FDelegateHandle WorldWidgetComponentRegisterHandle;
-	void OnWorldWidgetComponentRegister(UWorldWidgetComponent* WorldWidgetComponent);
-
-	FDelegateHandle WorldWidgetComponentUnRegisterHandle;
-	void OnWorldWidgetComponentUnRegister(UWorldWidgetComponent* WorldWidgetComponent);
-
-protected:
-	virtual void GenerateWorldWidgetPanel() override;
-	virtual UWorldWidgetPanel* CreateWorldWidgetPanel() override;
-	virtual void RefreshWorldWidgetComponents3DLookAtRotation(TArray<UWorldWidgetComponent*> InWorldWidgetComponents) override;
+	virtual void AddWorldWidgetToScreen(UWorldWidgetComponent* InWorldWidgetComponent);
+	virtual void RemoveWorldWidgetFromScreen(UWorldWidgetComponent* InWorldWidgetComponent);
 };

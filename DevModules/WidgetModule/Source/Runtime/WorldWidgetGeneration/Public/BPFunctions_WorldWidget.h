@@ -35,19 +35,7 @@ public:
 
 	UFUNCTION(BlueprintPure, meta=(GameplayTagFilter="UI.WorldWidget"))
 	static TArray<UWorldWidgetComponent*> FindWorldWidgetComponents(FGameplayTag WorldWidgetTag);
-
-	UFUNCTION(BlueprintCallable, DisplayName="SetWorldWidgetComponentActiveState(Actor)")
-	static void SetWorldWidgetComponentActiveStateWithActor(AActor* InActor, bool IsActive);
-
-	UFUNCTION(BlueprintCallable, DisplayName="SetWorldWidgetComponentActiveState(Component)")
-	static void SetWorldWidgetComponentActiveStateWithComponent(UWorldWidgetComponent* InWorldWidgetComponent, bool IsActive);
-
-	UFUNCTION(BlueprintCallable)
-	static void SetWorldWidgetPaintMethod(UWorldWidgetComponent* InWorldWidgetComponent, EWorldWidgetPaintMethod WorldWidgetPaintMethod);
-
-	UFUNCTION(BlueprintCallable)
-	static void SetWorldWidgetLookAtSetting(UWorldWidgetComponent* InWorldWidgetComponent, FWorldWidgetLookAtSetting WorldWidgetLookAtSetting);
-
+	
 public:
 	UFUNCTION(BlueprintPure, meta=(GameplayTagFilter="UI.WorldWidget"))
 	static UInteractableWidgetEntityGroup* GetWorldWidgetGroup(FGameplayTag InGroupTag);

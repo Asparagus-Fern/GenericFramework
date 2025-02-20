@@ -8,12 +8,12 @@
 /**
  * 
  */
-class WORLDWIDGETEDGENERATION_API SWorldWidgetContainer : public SCompoundWidget
+class WORLDWIDGETEDGENERATION_API SEditorWorldWidget : public SCompoundWidget
 {
-	DECLARE_DELEGATE_OneParam(FOnWorldWidgetMiddleClicked, TSharedPtr<SWorldWidgetContainer>);
+	DECLARE_DELEGATE_OneParam(FOnWorldWidgetMiddleClicked, TSharedPtr<SEditorWorldWidget>);
 
 public:
-	SLATE_BEGIN_ARGS(SWorldWidgetContainer)
+	SLATE_BEGIN_ARGS(SEditorWorldWidget)
 		{
 		}
 
