@@ -19,7 +19,11 @@ UCLASS()
 class LEVELSEQUENCESYSTEM_API ULevelSequenceHandle : public UMovieSceneHandleBase
 {
 	GENERATED_BODY()
-	
+
+public:
+	UFUNCTION(BlueprintCallable, meta=(HandleName = "DefaultLevelSequenceHandle"))
+	static ULevelSequenceHandle* RegisterLevelSequenceHandle(FName HandleName, ULevelSequence* InLevelSequence, FMovieSceneSequencePlaybackSettings InSettings = FMovieSceneSequencePlaybackSettings());
+
 	/* IMovieSceneInterface */
 protected:
 	virtual void OnMovieSceneOpened() override;
@@ -30,6 +34,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	virtual void PlayMovieScene() override;
 
+	UFUNCTION(BlueprintCallable)
+	virtual void PlayMovieSceneFromStart() override;
+	
 	/**
 	 * Start playback from the current time cursor position, looping the specified number of times.
 	 * @param NumLoops - The number of loops to play. -1 indicates infinite looping.

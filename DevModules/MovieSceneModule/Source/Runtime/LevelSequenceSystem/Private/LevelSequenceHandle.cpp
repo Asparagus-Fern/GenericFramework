@@ -4,6 +4,47 @@
 
 #include "LevelSequenceActor.h"
 #include "LevelSequencePlayer.h"
+#include "Handle/HandleManager.h"
+#include "Manager/ManagerStatics.h"
+
+ULevelSequenceHandle* ULevelSequenceHandle::RegisterLevelSequenceHandle(FName HandleName, ULevelSequence* InLevelSequence, FMovieSceneSequencePlaybackSettings InSettings)
+{
+	ULevelSequenceHandle* NewHandle = nullptr;
+
+	if (HandleName == NAME_None)
+	{
+		DLOG(DLogMovieScene, Error, TEXT("HandleName Is InValid"))
+		return NewHandle;
+	}
+
+	if (!IsValid(InLevelSequence))
+	{
+		DLOG(DLogMovieScene, Error, TEXT("InLevelSequence Is InValid"))
+		return NewHandle;
+	}
+
+	if (UHandleManager* HandleManager = GetManager<UHandleManager>())
+	{
+		if (HandleManager->IsHandleRegister(HandleName))
+		{
+			NewHandle = HandleManager->GetHandle<ULevelSequenceHandle>(HandleName);
+			NewHandle->CloseMovieScene();
+		}
+		else
+		{
+			NewHandle = HandleManager->RegisterHandle<ULevelSequenceHandle>(HandleName);
+		}
+
+		ALevelSequenceActor* LevelSequenceActor = nullptr;
+		ULevelSequencePlayer* LevelSequencePlayer = ULevelSequencePlayer::CreateLevelSequencePlayer(NewHandle, InLevelSequence, InSettings, LevelSequenceActor);
+
+		NewHandle->LevelSequenceActor = LevelSequenceActor;
+		NewHandle->LevelSequencePlayer = LevelSequencePlayer;
+
+		NewHandle->OpenMovieScene();
+	}
+	return NewHandle;
+}
 
 void ULevelSequenceHandle::OnMovieSceneOpened()
 {
@@ -41,6 +82,12 @@ void ULevelSequenceHandle::PlayMovieScene()
 {
 	LevelSequencePlayer->Play();
 	Super::PlayMovieScene();
+}
+
+void ULevelSequenceHandle::PlayMovieSceneFromStart()
+{
+	LevelSequencePlayer->SetPlaybackPosition(FMovieSceneSequencePlaybackParams(0, EUpdatePositionMethod::Play));
+	Super::PlayMovieSceneFromStart();
 }
 
 void ULevelSequenceHandle::PlayLoopingMovieScene(int32 NumLoops)

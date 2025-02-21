@@ -27,6 +27,7 @@ public:
 	virtual void CloseMovieScene();
 
 	virtual void PlayMovieScene() { OnMovieScenePlay(); }
+	virtual void PlayMovieSceneFromStart() { OnMovieScenePlay(); }
 	virtual void PlayLoopingMovieScene(int32 NumLoops = -1) { OnMovieScenePlay(); }
 	virtual void PlayReverseMovieScene() { OnMovieScenePlayReverse(); }
 	virtual void PauseMovieScene() { OnMovieScenePause(); }
@@ -47,7 +48,7 @@ public:
 
 	virtual float GetPlayRate() { return 1.f; }
 	virtual void SetPlayRate(float InPlayRate) { return; }
-	
+
 protected:
 	virtual void OnMovieSceneOpened() { return; }
 	virtual void OnMovieSceneClosed() { return; }
