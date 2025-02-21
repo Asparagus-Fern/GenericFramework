@@ -14,7 +14,7 @@ class ULevelSequenceHandle;
  * 
  */
 UCLASS()
-class EVENTUTILITIES_API UHandleManager : public UEngineSubsystem, public FCoreInternalManager
+class EVENTUTILITIES_API UHandleManager : public UWorldSubsystem, public FCoreInternalManager
 {
 	GENERATED_BODY()
 
@@ -22,6 +22,7 @@ public:
 	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void Deinitialize() override;
+	virtual bool DoesSupportWorldType(const EWorldType::Type WorldType) const override;
 
 	/* FHandleInterface */
 public:
@@ -49,9 +50,9 @@ public:
 	{
 		return Cast<T>(RegisterHandle(T::StaticClass(), InHandleName));
 	}
-	
+
 	template <typename T>
-	T* RegisterHandle(UObject* Outer, FName InHandleName= NAME_None)
+	T* RegisterHandle(UObject* Outer, FName InHandleName = NAME_None)
 	{
 		return Cast<T>(RegisterHandle(Outer, T::StaticClass(), InHandleName));
 	}

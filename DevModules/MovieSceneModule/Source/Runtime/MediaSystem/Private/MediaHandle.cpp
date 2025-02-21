@@ -5,14 +5,16 @@
 
 #include "IMediaModule.h"
 #include "MediaPlayer.h"
+#include "MediaPlaylist.h"
 #include "Handle/HandleManager.h"
 #include "Manager/ManagerStatics.h"
 
 UMediaHandle* UMediaHandle::Register(FName HandleName)
 {
+	UMediaHandle* NewHandle = nullptr;
 	if (UHandleManager* HandleManager = GetManager<UHandleManager>())
 	{
-		return HandleManager->RegisterHandle<UMediaHandle>(HandleName);
+		NewHandle = HandleManager->RegisterHandle<UMediaHandle>(HandleName);
 	}
-	return nullptr;
+	return NewHandle;
 }

@@ -16,11 +16,12 @@ class SConstraintCanvas;
 struct FEditorWorldWidget
 {
 public:
-	FEditorWorldWidget() { return; }
+	FEditorWorldWidget();
 	bool operator==(const FEditorWorldWidget& Other) const { return LevelEditorViewportClient == Other.LevelEditorViewportClient; }
 	bool operator==(const FLevelEditorViewportClient* Other) const { return LevelEditorViewportClient == Other; }
 
 public:
+	uint8 bInitialized : 1;
 	FLevelEditorViewportClient* LevelEditorViewportClient = nullptr;
 	TSharedPtr<SConstraintCanvas> ConstraintCanvas = nullptr;
 	TMap<UWorldWidgetComponent*, TSharedPtr<SEditorWorldWidget>> EditorWorldWidgets;

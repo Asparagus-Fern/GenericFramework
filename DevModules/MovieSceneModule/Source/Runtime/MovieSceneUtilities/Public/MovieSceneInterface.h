@@ -22,19 +22,40 @@ class MOVIESCENEUTILITIES_API IMovieSceneInterface
 {
 	GENERATED_BODY()
 
-protected:
+public:
 	virtual void OpenMovieScene();
 	virtual void CloseMovieScene();
 
+	virtual void PlayMovieScene() { OnMovieScenePlay(); }
+	virtual void PlayLoopingMovieScene(int32 NumLoops = -1) { OnMovieScenePlay(); }
+	virtual void PlayReverseMovieScene() { OnMovieScenePlayReverse(); }
+	virtual void PauseMovieScene() { OnMovieScenePause(); }
+	virtual void StopMovieScene() { OnMovieSceneStop(); }
+	virtual void SeekMovieScene(FTimecode SeekTime) { OnMovieSceneSeek(); }
+
+	virtual void ChangeMovieSceneDirection() { return; }
+
+	virtual bool IsPlaying() { return false; }
+	virtual bool IsPaused() { return false; }
+	virtual bool IsReversed() { return false; }
+
+	virtual FTimecode GetCurrentTime() { return FTimecode(); }
+	virtual FTimecode GetDuration() { return FTimecode(); }
+
+	virtual FFrameRate GetFrameRate() { return FFrameRate(); }
+	virtual void SetFrameRate(FFrameRate FrameRate) { return; }
+
+	virtual float GetPlayRate() { return 1.f; }
+	virtual void SetPlayRate(float InPlayRate) { return; }
+	
+protected:
 	virtual void OnMovieSceneOpened() { return; }
 	virtual void OnMovieSceneClosed() { return; }
 
-public:
-	virtual void PlayMovieScene() { return; }
-	virtual void PlayReverseMovieScene() { return; }
-	virtual void PauseMovieScene() { return; }
-	virtual void StopMovieScene() { return; }
-	virtual void SeekMovieScene(int32 InDays, int32 InHours, int32 InMinutes, int32 InSeconds, int32 InMicroSeconds) { return; }
-
-protected:
+	virtual void OnMovieScenePlay() { return; }
+	virtual void OnMovieScenePlayReverse() { return; }
+	virtual void OnMovieScenePause() { return; }
+	virtual void OnMovieSceneStop() { return; }
+	virtual void OnMovieSceneSeek() { return; }
+	virtual void OnMovieScenePlayFinish() { return; }
 };

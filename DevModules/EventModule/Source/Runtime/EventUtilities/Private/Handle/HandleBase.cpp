@@ -5,6 +5,14 @@
 #include "Handle/HandleManager.h"
 #include "Manager/ManagerStatics.h"
 
+void UHandleBase::UnRegister()
+{
+	if (UHandleManager* HandleManager = GetManager<UHandleManager>())
+	{
+		HandleManager->UnRegisterHandle(this);
+	}
+}
+
 FName UHandleBase::GetHandleName()
 {
 	return HandleName;
@@ -53,12 +61,4 @@ bool UHandleBase::IsHandleValid_Implementation()
 bool UHandleBase::IsHandleInValid_Implementation()
 {
 	return !IsHandleValid();
-}
-
-void UHandleBase::ClearHandle_Implementation()
-{
-	if (UHandleManager* HandleManager = GetManager<UHandleManager>())
-	{
-		HandleManager->UnRegisterHandle(this);
-	}
 }

@@ -12,6 +12,11 @@
 
 #define LOCTEXT_NAMESPACE "UWorldWidgetManager"
 
+FEditorWorldWidget::FEditorWorldWidget()
+	: bInitialized(false)
+{
+}
+
 bool UWorldWidgetEdManager::ShouldCreateSubsystem(UObject* Outer) const
 {
 	return Super::ShouldCreateSubsystem(Outer);
@@ -131,23 +136,25 @@ void UWorldWidgetEdManager::GenerateEditorWorldWidgets()
 	{
 		if (!EditorWorldWidgets.Contains(LevelEditorViewportClient))
 		{
-			TSharedRef<SConstraintCanvas> ConstraintCanvas = SNew(SConstraintCanvas);
+			const TSharedRef<SConstraintCanvas> ConstraintCanvas = SNew(SConstraintCanvas);
 
 			FEditorWorldWidget NewEditorWorldWidget = FEditorWorldWidget();
 			NewEditorWorldWidget.LevelEditorViewportClient = LevelEditorViewportClient;
 			NewEditorWorldWidget.ConstraintCanvas = ConstraintCanvas;
 			EditorWorldWidgets.Add(NewEditorWorldWidget);
-
-			UBPFunctions_EditorWidget::AddToEditorViewport(LevelEditorViewportClient, ConstraintCanvas);
 		}
 	}
 }
 
 void UWorldWidgetEdManager::InitializeEditorWorldWidgets()
 {
-	for (const auto& EditorWorldWidget : EditorWorldWidgets)
+	for (auto& EditorWorldWidget : EditorWorldWidgets)
 	{
-		UBPFunctions_EditorWidget::AddToEditorViewport(EditorWorldWidget.LevelEditorViewportClient, EditorWorldWidget.ConstraintCanvas.ToSharedRef());
+		if (!EditorWorldWidget.bInitialized)
+		{
+			UBPFunctions_EditorWidget::AddToEditorViewport(EditorWorldWidget.LevelEditorViewportClient, EditorWorldWidget.ConstraintCanvas.ToSharedRef());
+			EditorWorldWidget.bInitialized = true;
+		}
 	}
 
 	for (const auto& WorldWidgetComponent : WorldWidgetComponents)
@@ -163,9 +170,13 @@ void UWorldWidgetEdManager::DeinitializeEditorWorldWidgets()
 		RemoveWorldWidgetFromScreen(WorldWidgetComponent);
 	}
 
-	for (const auto& EditorWorldWidget : EditorWorldWidgets)
+	for (auto& EditorWorldWidget : EditorWorldWidgets)
 	{
-		UBPFunctions_EditorWidget::RemoveFromEditorViewport(EditorWorldWidget.LevelEditorViewportClient, EditorWorldWidget.ConstraintCanvas.ToSharedRef());
+		if (EditorWorldWidget.bInitialized)
+		{
+			UBPFunctions_EditorWidget::RemoveFromEditorViewport(EditorWorldWidget.LevelEditorViewportClient, EditorWorldWidget.ConstraintCanvas.ToSharedRef());
+			EditorWorldWidget.bInitialized = false;
+		}
 	}
 }
 

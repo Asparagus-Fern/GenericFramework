@@ -23,6 +23,10 @@ public:
 
 public:
 	UFUNCTION(BlueprintCallable)
+	void UnRegister();
+
+public:
+	UFUNCTION(BlueprintCallable)
 	FName GetHandleName();
 
 	UFUNCTION(BlueprintCallable)
@@ -52,9 +56,6 @@ public:
 
 	UFUNCTION(BlueprintPure, BlueprintNativeEvent, meta=(CompactNodeTitle = "InValid", BlueprintAutocast))
 	bool IsHandleInValid();
-
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	void ClearHandle();
 
 protected:
 	FGuid HandleID;

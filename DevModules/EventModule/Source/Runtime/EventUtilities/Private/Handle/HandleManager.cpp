@@ -20,6 +20,11 @@ void UHandleManager::Deinitialize()
 	UnRegisterManager();
 }
 
+bool UHandleManager::DoesSupportWorldType(const EWorldType::Type WorldType) const
+{
+	return WorldType == EWorldType::Game || WorldType == EWorldType::PIE;
+}
+
 void UHandleManager::RegisterHandle(UHandleBase* InHandle)
 {
 	if (!IsValid(InHandle))
