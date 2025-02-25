@@ -26,20 +26,21 @@ public:
 	virtual void OpenMovieScene();
 	virtual void CloseMovieScene();
 
-	virtual void PlayMovieScene() { OnMovieScenePlay(); }
-	virtual void PlayMovieSceneFromStart() { OnMovieScenePlay(); }
-	virtual void PlayLoopingMovieScene(int32 NumLoops = -1) { OnMovieScenePlay(); }
-	virtual void PlayReverseMovieScene() { OnMovieScenePlayReverse(); }
-	virtual void PauseMovieScene() { OnMovieScenePause(); }
-	virtual void StopMovieScene() { OnMovieSceneStop(); }
-	virtual void SeekMovieScene(FTimecode SeekTime) { OnMovieSceneSeek(); }
+	virtual bool PlayMovieScene();
+	virtual bool PlayMovieSceneFromStart();
+	virtual bool PlayLoopingMovieScene(int32 NumLoops = -1);
+	virtual bool PlayReverseMovieScene();
+	virtual bool PauseMovieScene();
+	virtual bool StopMovieScene();
+	virtual bool SeekMovieScene(FTimecode SeekTime);
 
 	virtual void ChangeMovieSceneDirection() { return; }
 
 	virtual bool IsPlaying() { return false; }
+	virtual bool IsLooping() { return false; }
 	virtual bool IsPaused() { return false; }
 	virtual bool IsReversed() { return false; }
-
+	
 	virtual FTimecode GetCurrentTime() { return FTimecode(); }
 	virtual FTimecode GetDuration() { return FTimecode(); }
 

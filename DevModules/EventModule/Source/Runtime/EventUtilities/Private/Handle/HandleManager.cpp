@@ -17,6 +17,13 @@ void UHandleManager::Initialize(FSubsystemCollectionBase& Collection)
 void UHandleManager::Deinitialize()
 {
 	Super::Deinitialize();
+
+	TArray<UHandleBase*> TempHandles = Handles;
+	for (const auto& TempHandle : TempHandles)
+	{
+		UnRegisterHandle(TempHandle);
+	}
+
 	UnRegisterManager();
 }
 

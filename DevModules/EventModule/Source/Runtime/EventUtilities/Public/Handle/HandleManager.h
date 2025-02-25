@@ -86,6 +86,6 @@ public:
 	}
 
 protected:
-	UPROPERTY()
+	UPROPERTY(Transient)
 	TArray<UHandleBase*> Handles;
 };

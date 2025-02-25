@@ -25,7 +25,8 @@ public class MediaSystem : ModuleRules
 				"UMG",
 				"MediaAssets",
 				"ElectraPlayerPlugin",
-				
+				"MediaUtils",
+
 				"EventUtilities",
 				"MovieSceneUtilities"
 			}

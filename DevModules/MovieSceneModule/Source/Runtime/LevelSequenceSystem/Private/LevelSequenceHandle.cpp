@@ -50,6 +50,8 @@ void ULevelSequenceHandle::OnMovieSceneOpened()
 {
 	Super::OnMovieSceneOpened();
 
+	LoopCount = 0;
+
 	LevelSequencePlayer->OnPlay.AddUniqueDynamic(this, &ULevelSequenceHandle::OnPlay);
 	LevelSequencePlayer->OnPlayReverse.AddUniqueDynamic(this, &ULevelSequenceHandle::OnPlayReverse);
 	LevelSequencePlayer->OnPause.AddUniqueDynamic(this, &ULevelSequenceHandle::OnPause);
@@ -74,52 +76,54 @@ void ULevelSequenceHandle::OnMovieSceneClosed()
 
 	LevelSequenceActor->Destroy();
 
+	LoopCount = 0;
 	LevelSequencePlayer = nullptr;
 	LevelSequenceActor = nullptr;
 }
 
-void ULevelSequenceHandle::PlayMovieScene()
+bool ULevelSequenceHandle::PlayMovieScene()
 {
 	LevelSequencePlayer->Play();
-	Super::PlayMovieScene();
+	return Super::PlayMovieScene();
 }
 
-void ULevelSequenceHandle::PlayMovieSceneFromStart()
+bool ULevelSequenceHandle::PlayMovieSceneFromStart()
 {
 	LevelSequencePlayer->SetPlaybackPosition(FMovieSceneSequencePlaybackParams(0, EUpdatePositionMethod::Play));
-	Super::PlayMovieSceneFromStart();
+	return Super::PlayMovieSceneFromStart();
 }
 
-void ULevelSequenceHandle::PlayLoopingMovieScene(int32 NumLoops)
+bool ULevelSequenceHandle::PlayLoopingMovieScene(int32 NumLoops)
 {
+	LoopCount = 0;
 	LevelSequencePlayer->PlayLooping(NumLoops);
-	Super::PlayLoopingMovieScene(NumLoops);
+	return Super::PlayLoopingMovieScene(NumLoops);
 }
 
-void ULevelSequenceHandle::PlayReverseMovieScene()
+bool ULevelSequenceHandle::PlayReverseMovieScene()
 {
 	LevelSequencePlayer->PlayReverse();
-	Super::PlayReverseMovieScene();
+	return Super::PlayReverseMovieScene();
 }
 
-void ULevelSequenceHandle::PauseMovieScene()
+bool ULevelSequenceHandle::PauseMovieScene()
 {
 	LevelSequencePlayer->Pause();
-	Super::PauseMovieScene();
+	return Super::PauseMovieScene();
 }
 
-void ULevelSequenceHandle::StopMovieScene()
+bool ULevelSequenceHandle::StopMovieScene()
 {
 	LevelSequencePlayer->Stop();
-	Super::StopMovieScene();
+	return Super::StopMovieScene();
 }
 
-void ULevelSequenceHandle::SeekMovieScene(FTimecode SeekTime)
+bool ULevelSequenceHandle::SeekMovieScene(FTimecode SeekTime)
 {
 	const FMovieSceneSequencePlaybackParams SeekParams = FMovieSceneSequencePlaybackParams(FFrameTime(SeekTime.ToFrameNumber(LevelSequencePlayer->GetFrameRate())), EUpdatePositionMethod::Jump);
 	LevelSequencePlayer->SetPlaybackPosition(SeekParams);
 
-	Super::SeekMovieScene(SeekTime);
+	return Super::SeekMovieScene(SeekTime);
 }
 
 void ULevelSequenceHandle::ChangeMovieSceneDirection()
@@ -130,6 +134,11 @@ void ULevelSequenceHandle::ChangeMovieSceneDirection()
 bool ULevelSequenceHandle::IsPlaying()
 {
 	return LevelSequencePlayer->IsPlaying();
+}
+
+bool ULevelSequenceHandle::IsLooping()
+{
+	return GetPlaybackSettings().LoopCount.Value < 0 || LoopCount != 0;
 }
 
 bool ULevelSequenceHandle::IsPaused()
@@ -251,5 +260,12 @@ void ULevelSequenceHandle::OnStop()
 
 void ULevelSequenceHandle::OnFinished()
 {
+	LoopCount++;
+
+	if (LoopCount == GetPlaybackSettings().LoopCount.Value)
+	{
+		LoopCount = 0;
+	}
+
 	OnMovieScenePlayFinish();
 }

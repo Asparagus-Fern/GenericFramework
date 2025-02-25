@@ -32,36 +32,36 @@ protected:
 public:
 	/** Start playback forwards from the current time cursor position, using the current play rate. */
 	UFUNCTION(BlueprintCallable)
-	virtual void PlayMovieScene() override;
+	virtual bool PlayMovieScene() override;
 
 	UFUNCTION(BlueprintCallable)
-	virtual void PlayMovieSceneFromStart() override;
-	
+	virtual bool PlayMovieSceneFromStart() override;
+
 	/**
 	 * Start playback from the current time cursor position, looping the specified number of times.
 	 * @param NumLoops - The number of loops to play. -1 indicates infinite looping.
 	 */
 	UFUNCTION(BlueprintCallable)
-	virtual void PlayLoopingMovieScene(int32 NumLoops = -1) override;
+	virtual bool PlayLoopingMovieScene(int32 NumLoops = -1) override;
 
 	/** Reverse playback. */
 	UFUNCTION(BlueprintCallable)
-	virtual void PlayReverseMovieScene() override;
+	virtual bool PlayReverseMovieScene() override;
 
 	/** Pause playback. */
 	UFUNCTION(BlueprintCallable)
-	virtual void PauseMovieScene() override;
+	virtual bool PauseMovieScene() override;
 
 	/** Stop playback and move the cursor to the end (or start, for reversed playback) of the sequence. */
 	UFUNCTION(BlueprintCallable)
-	virtual void StopMovieScene() override;
+	virtual bool StopMovieScene() override;
 
 	/**
 	 * Set the current time of the player by evaluating from the current time to the specified time, as if the sequence is playing. 
 	 * Triggers events that lie within the evaluated range. Does not alter the persistent playback status of the player (IsPlaying).
 	 */
 	UFUNCTION(BlueprintCallable)
-	virtual void SeekMovieScene(FTimecode SeekTime) override;
+	virtual bool SeekMovieScene(FTimecode SeekTime) override;
 
 	/** Changes the direction of playback (go in reverse if it was going forward, or vice versa) */
 	UFUNCTION(BlueprintCallable)
@@ -70,6 +70,10 @@ public:
 	/** Check whether the sequence is actively playing. */
 	UFUNCTION(BlueprintPure)
 	virtual bool IsPlaying() override;
+
+	/** Check whether the sequence is Looping. */
+	UFUNCTION(BlueprintPure)
+	virtual bool IsLooping() override;
 
 	/** Check whether the sequence is paused. */
 	UFUNCTION(BlueprintPure)
@@ -168,4 +172,7 @@ public:
 
 	UPROPERTY()
 	TObjectPtr<ULevelSequencePlayer> LevelSequencePlayer = nullptr;
+
+private:
+	int32 LoopCount = 0;
 };
