@@ -17,7 +17,7 @@ UClass* FMovieSceneUMGSpawner::GetSupportedTemplateType() const
 	return UUserWidget::StaticClass();
 }
 
-UObject* FMovieSceneUMGSpawner::SpawnObject(FMovieSceneSpawnable& Spawnable, FMovieSceneSequenceIDRef TemplateID, IMovieScenePlayer& Player)
+UObject* FMovieSceneUMGSpawner::SpawnObject(FMovieSceneSpawnable& Spawnable, FMovieSceneSequenceIDRef TemplateID, TSharedRef<const UE::MovieScene::FSharedPlaybackState> SharedPlaybackState)
 {
 	UUserWidget* ObjectTemplate = Cast<UUserWidget>(Spawnable.GetObjectTemplate());
 	if (!ObjectTemplate)
@@ -25,7 +25,7 @@ UObject* FMovieSceneUMGSpawner::SpawnObject(FMovieSceneSpawnable& Spawnable, FMo
 		return nullptr;
 	}
 
-	UWorld* WorldContext = Cast<UWorld>(Player.GetPlaybackContext());
+	UWorld* WorldContext = Cast<UWorld>(SharedPlaybackState->GetPlaybackContext());
 
 	FName DesiredLevelName = Spawnable.GetLevelName();
 	if (DesiredLevelName != NAME_None)

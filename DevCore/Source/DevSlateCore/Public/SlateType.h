@@ -90,7 +90,7 @@ public:
  * 
  */
 UENUM(BlueprintType)
-enum class EBorderBrushResource
+enum class EBorderBrushResource : uint8
 {
 	SlateBrush,
 	SlateBrushAsset,

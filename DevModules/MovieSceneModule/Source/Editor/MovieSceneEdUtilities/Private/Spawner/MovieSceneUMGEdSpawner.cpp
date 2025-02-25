@@ -5,6 +5,7 @@
 #include "MovieScene.h"
 #include "Blueprint/UserWidgetBlueprint.h"
 #include "ISequencer.h"
+#include "Blueprint/UserWidget.h"
 #include "Sections/MovieSceneBoolSection.h"
 #include "Tracks/MovieSceneSpawnTrack.h"
 
@@ -12,7 +13,7 @@
 
 TSharedRef<IMovieSceneObjectSpawner> FMovieSceneUMGEdSpawner::CreateObjectSpawner()
 {
-	return MakeShareable(new FMovieSceneUMGEdSpawner);
+    return MakeShareable(new FMovieSceneUMGEdSpawner);
 }
 
 #if WITH_EDITOR

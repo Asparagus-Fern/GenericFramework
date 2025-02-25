@@ -5,8 +5,8 @@
 
 #include "InteractableWidgetBase.h"
 #include "InteractableWidgetEntityGroup.h"
+#include "WorldWidgetComponent.h"
 #include "WorldWidgetManager.h"
-#include "BPFunctions/BPFunctions_GameplayTag.h"
 
 bool UWorldWidgetGroupManager::ShouldCreateSubsystem(UObject* Outer) const
 {

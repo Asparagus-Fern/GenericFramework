@@ -131,19 +131,21 @@ void UInteractableWidgetBase::SetIsEnabled(bool bInIsEnabled)
 {
 	const bool bValueChanged = bButtonEnabled != bInIsEnabled;
 
+	bool bOldBroadcastState = bShouldBroadcastState;
+	bShouldBroadcastState = false;
+
 	if (bInIsEnabled)
 	{
-		TGuardValue<bool> StateBroadcastGuard(bShouldBroadcastState, false);
 		Super::SetIsEnabled(bInIsEnabled);
 		EnableButton();
 	}
 	else
 	{
-		// Change the underlying enabled bool but do not call the case because we don't want to propogate it to the underlying SWidget
-		TGuardValue<bool> StateBroadcastGuard(bShouldBroadcastState, false);
 		Super::SetIsEnabled(bInIsEnabled);
 		DisableButton();
 	}
+
+	bShouldBroadcastState = bOldBroadcastState;
 
 	if (bValueChanged)
 	{

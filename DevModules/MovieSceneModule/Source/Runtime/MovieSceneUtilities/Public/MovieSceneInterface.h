@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "MovieSceneType.h"
 #include "MovieSceneInterface.generated.h"
 
 class UUserWidgetBase;

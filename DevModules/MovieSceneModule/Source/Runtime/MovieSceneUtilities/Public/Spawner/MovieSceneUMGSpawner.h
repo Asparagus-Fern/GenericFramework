@@ -16,7 +16,7 @@ public:
 	static TSharedRef<IMovieSceneObjectSpawner> CreateObjectSpawner();
 
 	virtual UClass* GetSupportedTemplateType() const override;
-	virtual UObject* SpawnObject(FMovieSceneSpawnable& Spawnable, FMovieSceneSequenceIDRef TemplateID, IMovieScenePlayer& Player) override;
+	virtual UObject* SpawnObject(FMovieSceneSpawnable& Spawnable, FMovieSceneSequenceIDRef TemplateID, TSharedRef<const UE::MovieScene::FSharedPlaybackState> SharedPlaybackState) override;
 	virtual void DestroySpawnedObject(UObject& Object) override;
 
 private:
