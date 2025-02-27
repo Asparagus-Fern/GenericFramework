@@ -4,7 +4,7 @@
 #include "ProcedureFlow/Play/ProcedureFlow_PlaySmartCity.h"
 
 #include "CameraManager.h"
-#include "CameraHandle/CameraHandle.h"
+#include "CameraSwitch/CameraSwitchMethod.h"
 
 AProcedureFlow_PlaySmartCity::AProcedureFlow_PlaySmartCity()
 {
@@ -17,21 +17,21 @@ void AProcedureFlow_PlaySmartCity::OnProcedureFlowEnter_Implementation()
 
 	// if (const UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
 	// {
-		// if (ScreenWidgetManager->IsGameHUDCreated())
-		// {
-		// 	PostHUDCreated();
-		// }
-		// else
-		// {
-		// 	UScreenWidgetManager::PostHUDCreated.AddUObject(this, &AProcedureFlow_PlaySmartCity::PostHUDCreated);
-		// }
+	// if (ScreenWidgetManager->IsGameHUDCreated())
+	// {
+	// 	PostHUDCreated();
+	// }
+	// else
+	// {
+	// 	UScreenWidgetManager::PostHUDCreated.AddUObject(this, &AProcedureFlow_PlaySmartCity::PostHUDCreated);
+	// }
 	// }
 
 	if (UCameraManager* CameraManager = GetManager<UCameraManager>())
 	{
 		if (DefaultCameraTag.IsValid() && IsValid(CameraHandle))
 		{
-			if (CameraManager->CanCameraSwitch(DefaultCameraTag))
+			if (CameraManager->CanSwitchToCamera(DefaultCameraTag))
 			{
 				CameraManager->SwitchToCamera(0, DefaultCameraTag, CameraHandle);
 			}
@@ -67,10 +67,10 @@ void AProcedureFlow_PlaySmartCity::PostHUDCreated()
 	// {
 	// 	for (const auto& DefaultOpenWidgetClass : DefaultOpenWidgetClasses)
 	// 	{
-			// if (UUserWidgetBase* Widget = ScreenWidgetManager->OpenUserWidget(DefaultOpenWidgetClass))
-			// {
-			// 	DefaultOpenWidgets.Add(Widget);
-			// }
+	// if (UUserWidgetBase* Widget = ScreenWidgetManager->OpenUserWidget(DefaultOpenWidgetClass))
+	// {
+	// 	DefaultOpenWidgets.Add(Widget);
+	// }
 	// 	}
 	//
 	// 	if (IsValid(DefaultGameMenu))

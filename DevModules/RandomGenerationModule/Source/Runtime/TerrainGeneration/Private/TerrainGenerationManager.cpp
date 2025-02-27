@@ -30,19 +30,9 @@ bool UTerrainGenerationManager::DoesSupportWorldType(const EWorldType::Type Worl
 void UTerrainGenerationManager::HandleOnWorldMatchStarting(UWorld* InWorld)
 {
 	FCoreInternalManager::HandleOnWorldMatchStarting(InWorld);
-	CreateNewTerrain();
+	CreateNewLandScape();
 }
 
-void UTerrainGenerationManager::CreateNewTerrain()
+void UTerrainGenerationManager::CreateNewLandScape()
 {
-	UWorld* World = GetWorld();
-	const bool bCreateTerrain = World != nullptr && World->GetCurrentLevel()->bIsVisible;
-	if (!bCreateTerrain)
-	{
-		DLOG(DLogTerrain, Warning, TEXT("Fail To Create"))
-		return;
-	}
-
-	Terrain = World->SpawnActor<ALandscape>();
-	Terrain->StaticLightingLOD = 0;
 }

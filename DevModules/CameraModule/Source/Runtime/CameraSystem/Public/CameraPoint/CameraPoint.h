@@ -7,7 +7,7 @@
 #include "GameFramework/Actor.h"
 #include "CameraPoint.generated.h"
 
-class UCameraHandle;
+class UCameraSwitchMethod;
 class UCameraComponent;
 
 UCLASS()

@@ -16,7 +16,7 @@ ACameraPointBase* UBPFunctions_Camera::GetCameraPoint(const FGameplayTag InCamer
 	return nullptr;
 }
 
-void UBPFunctions_Camera::SwitchToCamera_Transform_HandleClass(int32 InPlayerIndex, FVector Location, FRotator Rotation, const TSubclassOf<UCameraHandle> InCameraHandleClass)
+void UBPFunctions_Camera::SwitchToCamera_Transform_HandleClass(int32 InPlayerIndex, FVector Location, FRotator Rotation, const TSubclassOf<UCameraSwitchMethod> InCameraHandleClass)
 {
 	if (UCameraManager* CameraManager = UManagerProxy::Get()->GetManager<UCameraManager>())
 	{
@@ -24,7 +24,7 @@ void UBPFunctions_Camera::SwitchToCamera_Transform_HandleClass(int32 InPlayerInd
 	}
 }
 
-void UBPFunctions_Camera::SwitchToCamera_Transform_Handle(int32 InPlayerIndex, FVector Location, FRotator Rotation, UCameraHandle* InCameraHandle)
+void UBPFunctions_Camera::SwitchToCamera_Transform_Handle(int32 InPlayerIndex, FVector Location, FRotator Rotation, UCameraSwitchMethod* InCameraHandle)
 {
 	if (UCameraManager* CameraManager = UManagerProxy::Get()->GetManager<UCameraManager>())
 	{
@@ -32,7 +32,7 @@ void UBPFunctions_Camera::SwitchToCamera_Transform_Handle(int32 InPlayerIndex, F
 	}
 }
 
-void UBPFunctions_Camera::SwitchToCamera_Actor_HandleClass(const int32 InPlayerIndex, ACameraActor* InCameraActor, const TSubclassOf<UCameraHandle> InCameraHandleClass)
+void UBPFunctions_Camera::SwitchToCamera_Actor_HandleClass(const int32 InPlayerIndex, ACameraActor* InCameraActor, const TSubclassOf<UCameraSwitchMethod> InCameraHandleClass)
 {
 	if (UCameraManager* CameraManager = UManagerProxy::Get()->GetManager<UCameraManager>())
 	{
@@ -40,7 +40,7 @@ void UBPFunctions_Camera::SwitchToCamera_Actor_HandleClass(const int32 InPlayerI
 	}
 }
 
-void UBPFunctions_Camera::SwitchToCamera_Actor_Handle(const int32 InPlayerIndex, ACameraActor* InCameraActor, UCameraHandle* InCameraHandle)
+void UBPFunctions_Camera::SwitchToCamera_Actor_Handle(const int32 InPlayerIndex, ACameraActor* InCameraActor, UCameraSwitchMethod* InCameraHandle)
 {
 	if (UCameraManager* CameraManager = UManagerProxy::Get()->GetManager<UCameraManager>())
 	{
@@ -48,7 +48,7 @@ void UBPFunctions_Camera::SwitchToCamera_Actor_Handle(const int32 InPlayerIndex,
 	}
 }
 
-void UBPFunctions_Camera::SwitchToCamera_Component_HandleClass(const int32 InPlayerIndex, UCameraComponent* InCameraComponent, const TSubclassOf<UCameraHandle> InCameraHandleClass)
+void UBPFunctions_Camera::SwitchToCamera_Component_HandleClass(const int32 InPlayerIndex, UCameraComponent* InCameraComponent, const TSubclassOf<UCameraSwitchMethod> InCameraHandleClass)
 {
 	if (UCameraManager* CameraManager = UManagerProxy::Get()->GetManager<UCameraManager>())
 	{
@@ -56,7 +56,7 @@ void UBPFunctions_Camera::SwitchToCamera_Component_HandleClass(const int32 InPla
 	}
 }
 
-void UBPFunctions_Camera::SwitchToCamera_Component_Handle(const int32 InPlayerIndex, UCameraComponent* InCameraComponent, UCameraHandle* InCameraHandle)
+void UBPFunctions_Camera::SwitchToCamera_Component_Handle(const int32 InPlayerIndex, UCameraComponent* InCameraComponent, UCameraSwitchMethod* InCameraHandle)
 {
 	if (UCameraManager* CameraManager = UManagerProxy::Get()->GetManager<UCameraManager>())
 	{
@@ -64,7 +64,7 @@ void UBPFunctions_Camera::SwitchToCamera_Component_Handle(const int32 InPlayerIn
 	}
 }
 
-void UBPFunctions_Camera::SwitchToCamera_Tag_HandleClass(const int32 InPlayerIndex, const FGameplayTag InCameraTag, const TSubclassOf<UCameraHandle> InCameraHandleClass)
+void UBPFunctions_Camera::SwitchToCamera_Tag_HandleClass(const int32 InPlayerIndex, const FGameplayTag InCameraTag, const TSubclassOf<UCameraSwitchMethod> InCameraHandleClass)
 {
 	if (UCameraManager* CameraManager = UManagerProxy::Get()->GetManager<UCameraManager>())
 	{
@@ -72,7 +72,7 @@ void UBPFunctions_Camera::SwitchToCamera_Tag_HandleClass(const int32 InPlayerInd
 	}
 }
 
-void UBPFunctions_Camera::SwitchToCamera_Tag_Handle(const int32 InPlayerIndex, const FGameplayTag InCameraTag, UCameraHandle* InCameraHandle)
+void UBPFunctions_Camera::SwitchToCamera_Tag_Handle(const int32 InPlayerIndex, const FGameplayTag InCameraTag, UCameraSwitchMethod* InCameraHandle)
 {
 	if (UCameraManager* CameraManager = UManagerProxy::Get()->GetManager<UCameraManager>())
 	{
@@ -80,7 +80,7 @@ void UBPFunctions_Camera::SwitchToCamera_Tag_Handle(const int32 InPlayerIndex, c
 	}
 }
 
-void UBPFunctions_Camera::SwitchToCamera_CameraPoint_HandleClass(const int32 InPlayerIndex, ACameraPointBase* InCameraPoint, const TSubclassOf<UCameraHandle> InCameraHandleClass)
+void UBPFunctions_Camera::SwitchToCamera_CameraPoint_HandleClass(const int32 InPlayerIndex, ACameraPointBase* InCameraPoint, const TSubclassOf<UCameraSwitchMethod> InCameraHandleClass)
 {
 	if (UCameraManager* CameraManager = UManagerProxy::Get()->GetManager<UCameraManager>())
 	{
@@ -88,7 +88,7 @@ void UBPFunctions_Camera::SwitchToCamera_CameraPoint_HandleClass(const int32 InP
 	}
 }
 
-void UBPFunctions_Camera::SwitchToCamera_CameraPoint_Handle(const int32 InPlayerIndex, ACameraPointBase* InCameraPoint, UCameraHandle* InCameraHandle)
+void UBPFunctions_Camera::SwitchToCamera_CameraPoint_Handle(const int32 InPlayerIndex, ACameraPointBase* InCameraPoint, UCameraSwitchMethod* InCameraHandle)
 {
 	if (UCameraManager* CameraManager = UManagerProxy::Get()->GetManager<UCameraManager>())
 	{
@@ -96,7 +96,7 @@ void UBPFunctions_Camera::SwitchToCamera_CameraPoint_Handle(const int32 InPlayer
 	}
 }
 
-void UBPFunctions_Camera::SwitchToCurrent_HandleClass(const int32 InPlayerIndex, const TSubclassOf<UCameraHandle> InCameraHandleClass)
+void UBPFunctions_Camera::SwitchToCurrent_HandleClass(const int32 InPlayerIndex, const TSubclassOf<UCameraSwitchMethod> InCameraHandleClass)
 {
 	if (UCameraManager* CameraManager = UManagerProxy::Get()->GetManager<UCameraManager>())
 	{
@@ -104,7 +104,7 @@ void UBPFunctions_Camera::SwitchToCurrent_HandleClass(const int32 InPlayerIndex,
 	}
 }
 
-void UBPFunctions_Camera::SwitchToCurrent_Handle(const int32 InPlayerIndex, UCameraHandle* InCameraHandle)
+void UBPFunctions_Camera::SwitchToCurrent_Handle(const int32 InPlayerIndex, UCameraSwitchMethod* InCameraHandle)
 {
 	if (UCameraManager* CameraManager = UManagerProxy::Get()->GetManager<UCameraManager>())
 	{
@@ -112,7 +112,7 @@ void UBPFunctions_Camera::SwitchToCurrent_Handle(const int32 InPlayerIndex, UCam
 	}
 }
 
-void UBPFunctions_Camera::SwitchToPrevious_HandleClass(const int32 InPlayerIndex, const TSubclassOf<UCameraHandle> InCameraHandleClass)
+void UBPFunctions_Camera::SwitchToPrevious_HandleClass(const int32 InPlayerIndex, const TSubclassOf<UCameraSwitchMethod> InCameraHandleClass)
 {
 	if (UCameraManager* CameraManager = UManagerProxy::Get()->GetManager<UCameraManager>())
 	{
@@ -120,7 +120,7 @@ void UBPFunctions_Camera::SwitchToPrevious_HandleClass(const int32 InPlayerIndex
 	}
 }
 
-void UBPFunctions_Camera::SwitchToPrevious_Handle(const int32 InPlayerIndex, UCameraHandle* InCameraHandle)
+void UBPFunctions_Camera::SwitchToPrevious_Handle(const int32 InPlayerIndex, UCameraSwitchMethod* InCameraHandle)
 {
 	if (UCameraManager* CameraManager = UManagerProxy::Get()->GetManager<UCameraManager>())
 	{

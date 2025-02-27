@@ -11,6 +11,7 @@ public class DevGameplay : ModuleRules
 			{
 				"Core",
 				"DevCore",
+				"PlayerInputUtilities",
 			}
 		);
 

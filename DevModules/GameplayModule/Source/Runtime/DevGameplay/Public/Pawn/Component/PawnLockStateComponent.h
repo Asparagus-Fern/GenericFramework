@@ -24,20 +24,18 @@ public:
 	IPawnLockStateInterface();
 
 public:
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Pawn Lock State Interface")
-	FPawnLockState GetPawnLockState();
+	virtual FPawnLockState GetPawnLockState() { return FPawnLockState(); }
+
+	virtual bool CanMove(const FVector& TargetLocation) const { return false; }
+	virtual bool CanTurn(const FRotator& TargetRotation) const { return false; }
+	virtual bool CanZoom(float TargetSpringArmLength) const { return false; }
+
+	virtual FVector GetLimitLocation(const FVector& TargetLocation) const { return FVector::ZeroVector; }
+	virtual FRotator GetLimitRotation(const FRotator& TargetRotation) const { return FRotator::ZeroRotator; }
+	virtual float GetLimitSpringArmLength(float TargetSpringArmLength) const { return 0.f; }
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Pawn Lock State Interface")
 	void SetPawnLockState(const FPawnLockState& InPawnLockState);
-
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Pawn Lock State Interface")
-	bool CanMove(const FVector& TargetLocation) const;
-
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Pawn Lock State Interface")
-	bool CanTurn(const FRotator& TargetRotation) const;
-
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Pawn Lock State Interface")
-	bool CanZoom(float TargetSpringArmLength) const;
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Pawn Lock State Interface")
 	void SetIsFullyLock(bool InFullyLock);
@@ -50,15 +48,6 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Pawn Lock State Interface")
 	void SetIsLockSpringArm(bool InLockSpringArm);
-
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Pawn Lock State Interface")
-	FVector GetLimitLocation(const FVector& TargetLocation) const;
-
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Pawn Lock State Interface")
-	FRotator GetLimitRotation(const FRotator& TargetRotation) const;
-
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Pawn Lock State Interface")
-	float GetLimitSpringArmLength(float TargetSpringArmLength) const;
 };
 
 /**
@@ -75,21 +64,32 @@ public:
 
 	/* IPawnLockStateInterface */
 public:
-	virtual FPawnLockState GetPawnLockState_Implementation() override;
+	UFUNCTION(BlueprintPure)
+	virtual FPawnLockState GetPawnLockState() override;
+
+	UFUNCTION(BlueprintPure)
+	virtual bool CanMove(const FVector& TargetLocation) const override;
+
+	UFUNCTION(BlueprintPure)
+	virtual bool CanTurn(const FRotator& TargetRotation) const override;
+
+	UFUNCTION(BlueprintPure)
+	virtual bool CanZoom(float TargetSpringArmLength) const override;
+
+	UFUNCTION(BlueprintPure)
+	virtual FVector GetLimitLocation(const FVector& TargetLocation) const override;
+
+	UFUNCTION(BlueprintPure)
+	virtual FRotator GetLimitRotation(const FRotator& TargetRotation) const override;
+
+	UFUNCTION(BlueprintPure)
+	virtual float GetLimitSpringArmLength(float TargetSpringArmLength) const override;
+
 	virtual void SetPawnLockState_Implementation(const FPawnLockState& InPawnLockState) override;
-
-	virtual bool CanMove_Implementation(const FVector& TargetLocation) const override;
-	virtual bool CanTurn_Implementation(const FRotator& TargetRotation) const override;
-	virtual bool CanZoom_Implementation(float TargetSpringArmLength) const override;
-
 	virtual void SetIsFullyLock_Implementation(bool InFullyLock) override;
 	virtual void SetIsLockLocation_Implementation(bool InLockLocation) override;
 	virtual void SetIsLockRotation_Implementation(bool InLockRotation) override;
 	virtual void SetIsLockSpringArm_Implementation(bool InLockSpringArm) override;
-
-	virtual FVector GetLimitLocation_Implementation(const FVector& TargetLocation) const override;
-	virtual FRotator GetLimitRotation_Implementation(const FRotator& TargetRotation) const override;
-	virtual float GetLimitSpringArmLength_Implementation(float TargetSpringArmLength) const override;
 
 public:
 	UPROPERTY(EditAnywhere)

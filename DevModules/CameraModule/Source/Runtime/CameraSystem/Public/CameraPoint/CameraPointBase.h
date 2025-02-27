@@ -11,7 +11,7 @@
 class USpringArmComponent;
 class USphereComponent;
 class UCameraComponent;
-class UCameraHandle;
+class UCameraSwitchMethod;
 
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Camera);
 

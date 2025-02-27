@@ -7,7 +7,7 @@
 #include "ProcedureFlow_PlaySmartCity.generated.h"
 
 class ACameraPointBase;
-class UCameraHandle;
+class UCameraSwitchMethod;
 class UUserWidgetBase;
 class UGameMenuSetting;
 
@@ -37,7 +37,7 @@ public:
 	FGameplayTag DefaultCameraTag = FGameplayTag::EmptyTag;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Instanced, Category="Camera")
-	UCameraHandle* CameraHandle = nullptr;
+	UCameraSwitchMethod* CameraHandle = nullptr;
 
 protected:
 	UPROPERTY(Transient)

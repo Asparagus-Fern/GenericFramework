@@ -9,7 +9,7 @@
 
 class ACameraPointBase;
 class UCameraComponent;
-class UCameraHandle;
+class UCameraSwitchMethod;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FCameraHandleDelegate);
 
@@ -23,46 +23,46 @@ class CAMERASYSTEM_API USwitchToCameraAsyncAction : public UBlueprintAsyncAction
 
 public:
 	UFUNCTION(BlueprintCallable, meta=(BlueprintInternalUseOnly="true"), DisplayName="AsyncSwitchToCameraByTransform(Class)")
-	static USwitchToCameraAsyncAction* SwitchToCamera_Transform_HandleClass(int32 InPlayerIndex, FVector Location, FRotator Rotation, TSubclassOf<UCameraHandle> InCameraHandleClass);
+	static USwitchToCameraAsyncAction* SwitchToCamera_Transform_HandleClass(int32 InPlayerIndex, FVector Location, FRotator Rotation, TSubclassOf<UCameraSwitchMethod> InCameraHandleClass);
 
 	UFUNCTION(BlueprintCallable, meta=(BlueprintInternalUseOnly="true"), DisplayName="AsyncSwitchToCameraByTransform")
-	static USwitchToCameraAsyncAction* SwitchToCamera_Transform_Handle(int32 InPlayerIndex, FVector Location, FRotator Rotation, UCameraHandle* InCameraHandle);
+	static USwitchToCameraAsyncAction* SwitchToCamera_Transform_Handle(int32 InPlayerIndex, FVector Location, FRotator Rotation, UCameraSwitchMethod* InCameraHandle);
 
 	UFUNCTION(BlueprintCallable, meta=(BlueprintInternalUseOnly="true"), DisplayName="AsyncSwitchToCameraByActor(Class)")
-	static USwitchToCameraAsyncAction* SwitchToCamera_Actor_HandleClass(int32 InPlayerIndex, ACameraActor* InCameraActor, TSubclassOf<UCameraHandle> InCameraHandleClass);
+	static USwitchToCameraAsyncAction* SwitchToCamera_Actor_HandleClass(int32 InPlayerIndex, ACameraActor* InCameraActor, TSubclassOf<UCameraSwitchMethod> InCameraHandleClass);
 
 	UFUNCTION(BlueprintCallable, meta=(BlueprintInternalUseOnly="true"), DisplayName="AsyncSwitchToCameraByActor")
-	static USwitchToCameraAsyncAction* SwitchToCamera_Actor_Handle(int32 InPlayerIndex, ACameraActor* InCameraActor, UCameraHandle* InCameraHandle);
+	static USwitchToCameraAsyncAction* SwitchToCamera_Actor_Handle(int32 InPlayerIndex, ACameraActor* InCameraActor, UCameraSwitchMethod* InCameraHandle);
 
 	UFUNCTION(BlueprintCallable, meta=(BlueprintInternalUseOnly="true"), DisplayName="AsyncSwitchToCameraByComponent(Class)")
-	static USwitchToCameraAsyncAction* SwitchToCamera_Component_HandleClass(int32 InPlayerIndex, UCameraComponent* InCameraComponent, TSubclassOf<UCameraHandle> InCameraHandleClass);
+	static USwitchToCameraAsyncAction* SwitchToCamera_Component_HandleClass(int32 InPlayerIndex, UCameraComponent* InCameraComponent, TSubclassOf<UCameraSwitchMethod> InCameraHandleClass);
 
 	UFUNCTION(BlueprintCallable, meta=(BlueprintInternalUseOnly="true"), DisplayName="AsyncSwitchToCameraByComponent")
-	static USwitchToCameraAsyncAction* SwitchToCamera_Component_Handle(int32 InPlayerIndex, UCameraComponent* InCameraComponent, UCameraHandle* InCameraHandle);
+	static USwitchToCameraAsyncAction* SwitchToCamera_Component_Handle(int32 InPlayerIndex, UCameraComponent* InCameraComponent, UCameraSwitchMethod* InCameraHandle);
 
 	UFUNCTION(BlueprintCallable, meta=(BlueprintInternalUseOnly="true"), meta=(WorldContext = "WorldContextObject", GameplayTagFilter="Camera"), DisplayName = "AsyncSwitchToCameraByTag(Class)")
-	static USwitchToCameraAsyncAction* SwitchToCamera_Tag_HandleClass(int32 InPlayerIndex, FGameplayTag InCameraTag, TSubclassOf<UCameraHandle> InCameraHandleClass);
+	static USwitchToCameraAsyncAction* SwitchToCamera_Tag_HandleClass(int32 InPlayerIndex, FGameplayTag InCameraTag, TSubclassOf<UCameraSwitchMethod> InCameraHandleClass);
 
 	UFUNCTION(BlueprintCallable, meta=(BlueprintInternalUseOnly="true"), meta=(WorldContext = "WorldContextObject", GameplayTagFilter="Camera"), DisplayName ="AsyncSwitchToCameraByTag")
-	static USwitchToCameraAsyncAction* SwitchToCamera_Tag_Handle(int32 InPlayerIndex, FGameplayTag InCameraTag, UCameraHandle* InCameraHandle);
+	static USwitchToCameraAsyncAction* SwitchToCamera_Tag_Handle(int32 InPlayerIndex, FGameplayTag InCameraTag, UCameraSwitchMethod* InCameraHandle);
 
 	UFUNCTION(BlueprintCallable, meta=(BlueprintInternalUseOnly="true"), DisplayName ="AsyncSwitchToCameraByCameraPoint(Class)")
-	static USwitchToCameraAsyncAction* SwitchToCamera_CameraPoint_HandleClass(int32 InPlayerIndex, ACameraPointBase* InCameraPoint, TSubclassOf<UCameraHandle> InCameraHandleClass);
+	static USwitchToCameraAsyncAction* SwitchToCamera_CameraPoint_HandleClass(int32 InPlayerIndex, ACameraPointBase* InCameraPoint, TSubclassOf<UCameraSwitchMethod> InCameraHandleClass);
 
 	UFUNCTION(BlueprintCallable, meta=(BlueprintInternalUseOnly="true"), DisplayName ="AsyncSwitchToCameraByCameraPoint")
-	static USwitchToCameraAsyncAction* SwitchToCamera_CameraPoint_Handle(int32 InPlayerIndex, ACameraPointBase* InCameraPoint, UCameraHandle* InCameraHandle);
+	static USwitchToCameraAsyncAction* SwitchToCamera_CameraPoint_Handle(int32 InPlayerIndex, ACameraPointBase* InCameraPoint, UCameraSwitchMethod* InCameraHandle);
 
 	UFUNCTION(BlueprintCallable, meta=(BlueprintInternalUseOnly="true"), DisplayName ="SwitchToCurrentCamera(Class)")
-	static USwitchToCameraAsyncAction* SwitchToCurrent_HandleClass(int32 InPlayerIndex, TSubclassOf<UCameraHandle> InCameraHandleClass);
+	static USwitchToCameraAsyncAction* SwitchToCurrent_HandleClass(int32 InPlayerIndex, TSubclassOf<UCameraSwitchMethod> InCameraHandleClass);
 
 	UFUNCTION(BlueprintCallable, meta=(BlueprintInternalUseOnly="true"), DisplayName ="SwitchToCurrentCamera")
-	static USwitchToCameraAsyncAction* SwitchToCurrent_Handle(int32 InPlayerIndex, UCameraHandle* InCameraHandle);
+	static USwitchToCameraAsyncAction* SwitchToCurrent_Handle(int32 InPlayerIndex, UCameraSwitchMethod* InCameraHandle);
 
 	UFUNCTION(BlueprintCallable, meta=(BlueprintInternalUseOnly="true"), DisplayName ="SwitchToPreviousCamera(Class)")
-	static USwitchToCameraAsyncAction* SwitchToPrevious_HandleClass(int32 InPlayerIndex, TSubclassOf<UCameraHandle> InCameraHandleClass);
+	static USwitchToCameraAsyncAction* SwitchToPrevious_HandleClass(int32 InPlayerIndex, TSubclassOf<UCameraSwitchMethod> InCameraHandleClass);
 
 	UFUNCTION(BlueprintCallable, meta=(BlueprintInternalUseOnly="true"), DisplayName ="SwitchToPreviousCamera")
-	static USwitchToCameraAsyncAction* SwitchToPrevious_Handle(int32 InPlayerIndex, UCameraHandle* InCameraHandle);
+	static USwitchToCameraAsyncAction* SwitchToPrevious_Handle(int32 InPlayerIndex, UCameraSwitchMethod* InCameraHandle);
 
 public:
 	UPROPERTY(BlueprintAssignable)

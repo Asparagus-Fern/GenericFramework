@@ -163,8 +163,8 @@ bool UMediaHandle::PlayReverseMovieScene()
 		return false;
 	}
 
-	/* todo:Unknown Crash */
-	// MediaPlayer->SetRate(MediaPlayer->GetRate() * -1);
+	/* Crash In UE5.3 While Rate < 0 */
+	MediaPlayer->SetRate(MediaPlayer->GetRate() * -1);
 
 	return Super::PlayReverseMovieScene();
 }

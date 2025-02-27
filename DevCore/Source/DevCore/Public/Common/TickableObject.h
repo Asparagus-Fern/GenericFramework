@@ -17,11 +17,6 @@ class DEVCORE_API UTickableObject : public UCommonObject, public FTickableGameOb
 public:
 	virtual UWorld* GetTickableGameObjectWorld() const override;
 	virtual ETickableTickType GetTickableTickType() const override;
-	virtual bool IsAllowedToTick() const override;
 	virtual void Tick(float DeltaTime) override;
 	virtual TStatId GetStatId() const override;
-
-public:
-	UFUNCTION(BlueprintNativeEvent)
-	void OnTick(float DeltaTime);
 };

@@ -23,9 +23,12 @@ public:
 	virtual void Deinitialize() override;
 	virtual bool DoesSupportWorldType(const EWorldType::Type WorldType) const override;
 
+	/* IWorldInterface */
 public:
 	virtual void HandleOnWorldMatchStarting(UWorld* InWorld) override;
-	void CreateNewTerrain();
+
+protected:
+	void CreateNewLandScape();
 
 private:
 	TObjectPtr<ALandscape> Terrain;

@@ -27,6 +27,7 @@ public class CameraSystem : ModuleRules
 				"DeveloperSettings",
 
 				"WidgetGeneration",
+				"PlayerInputUtilities",
 			}
 		);
 

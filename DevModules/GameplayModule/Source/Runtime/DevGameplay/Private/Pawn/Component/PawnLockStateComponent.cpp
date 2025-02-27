@@ -18,17 +18,12 @@ IPawnLockStateInterface::IPawnLockStateInterface()
 {
 }
 
-FPawnLockState UPawnLockStateComponent::GetPawnLockState_Implementation()
+FPawnLockState UPawnLockStateComponent::GetPawnLockState()
 {
 	return PawnLockState;
 }
 
-void UPawnLockStateComponent::SetPawnLockState_Implementation(const FPawnLockState& InPawnLockState)
-{
-	PawnLockState = InPawnLockState;
-}
-
-bool UPawnLockStateComponent::CanMove_Implementation(const FVector& TargetLocation) const
+bool UPawnLockStateComponent::CanMove(const FVector& TargetLocation) const
 {
 	if (PawnLockState.bFullyLock)
 	{
@@ -43,7 +38,7 @@ bool UPawnLockStateComponent::CanMove_Implementation(const FVector& TargetLocati
 	return PawnLockState.PawnLocationLimit.CanMove(TargetLocation);
 }
 
-bool UPawnLockStateComponent::CanTurn_Implementation(const FRotator& TargetRotation) const
+bool UPawnLockStateComponent::CanTurn(const FRotator& TargetRotation) const
 {
 	if (PawnLockState.bFullyLock)
 	{
@@ -58,7 +53,7 @@ bool UPawnLockStateComponent::CanTurn_Implementation(const FRotator& TargetRotat
 	return PawnLockState.PawnRotationLimit.CanTurn(TargetRotation);
 }
 
-bool UPawnLockStateComponent::CanZoom_Implementation(float TargetSpringArmLength) const
+bool UPawnLockStateComponent::CanZoom(float TargetSpringArmLength) const
 {
 	if (PawnLockState.bFullyLock)
 	{
@@ -73,27 +68,7 @@ bool UPawnLockStateComponent::CanZoom_Implementation(float TargetSpringArmLength
 	return PawnLockState.SpringArmLimit.CanZoom(TargetSpringArmLength);
 }
 
-void UPawnLockStateComponent::SetIsFullyLock_Implementation(bool InFullyLock)
-{
-	PawnLockState.bFullyLock = InFullyLock;
-}
-
-void UPawnLockStateComponent::SetIsLockLocation_Implementation(bool InLockLocation)
-{
-	PawnLockState.bLockLocation = InLockLocation;
-}
-
-void UPawnLockStateComponent::SetIsLockRotation_Implementation(bool InLockRotation)
-{
-	PawnLockState.bLockRotation = InLockRotation;
-}
-
-void UPawnLockStateComponent::SetIsLockSpringArm_Implementation(bool InLockSpringArm)
-{
-	PawnLockState.bLockSpringArm = InLockSpringArm;
-}
-
-FVector UPawnLockStateComponent::GetLimitLocation_Implementation(const FVector& TargetLocation) const
+FVector UPawnLockStateComponent::GetLimitLocation(const FVector& TargetLocation) const
 {
 	const FPawnLocationLimit PawnRotationLimit = PawnLockState.PawnLocationLimit;
 	FVector Result = TargetLocation;
@@ -116,7 +91,7 @@ FVector UPawnLockStateComponent::GetLimitLocation_Implementation(const FVector& 
 	return Result;
 }
 
-FRotator UPawnLockStateComponent::GetLimitRotation_Implementation(const FRotator& TargetRotation) const
+FRotator UPawnLockStateComponent::GetLimitRotation(const FRotator& TargetRotation) const
 {
 	const FPawnRotationLimit PawnRotationLimit = PawnLockState.PawnRotationLimit;
 	FRotator Result = TargetRotation;
@@ -139,7 +114,7 @@ FRotator UPawnLockStateComponent::GetLimitRotation_Implementation(const FRotator
 	return Result;
 }
 
-float UPawnLockStateComponent::GetLimitSpringArmLength_Implementation(float TargetSpringArmLength) const
+float UPawnLockStateComponent::GetLimitSpringArmLength(float TargetSpringArmLength) const
 {
 	const FSpringArmLimit SpringArmLimit = PawnLockState.SpringArmLimit;
 
@@ -149,4 +124,29 @@ float UPawnLockStateComponent::GetLimitSpringArmLength_Implementation(float Targ
 	}
 
 	return TargetSpringArmLength;
+}
+
+void UPawnLockStateComponent::SetPawnLockState_Implementation(const FPawnLockState& InPawnLockState)
+{
+	PawnLockState = InPawnLockState;
+}
+
+void UPawnLockStateComponent::SetIsFullyLock_Implementation(bool InFullyLock)
+{
+	PawnLockState.bFullyLock = InFullyLock;
+}
+
+void UPawnLockStateComponent::SetIsLockLocation_Implementation(bool InLockLocation)
+{
+	PawnLockState.bLockLocation = InLockLocation;
+}
+
+void UPawnLockStateComponent::SetIsLockRotation_Implementation(bool InLockRotation)
+{
+	PawnLockState.bLockRotation = InLockRotation;
+}
+
+void UPawnLockStateComponent::SetIsLockSpringArm_Implementation(bool InLockSpringArm)
+{
+	PawnLockState.bLockSpringArm = InLockSpringArm;
 }

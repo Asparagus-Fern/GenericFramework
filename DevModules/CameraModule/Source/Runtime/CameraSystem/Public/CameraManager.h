@@ -12,11 +12,14 @@ class UCameraLensMovement;
 class UInputIdle;
 class UCameraInputIdle;
 class UCameraComponent;
-class UCameraHandle;
+class UCameraSwitchMethod;
 class ACameraPointBase;
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FDelegate_CameraPointDelegate, ACameraPointBase*);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FBPDelegate_CameraPointDelegate, ACameraPointBase*, InCameraPoint);
+
+DECLARE_MULTICAST_DELEGATE_TwoParams(FDelegate_CameraPointSwitchDelegate, ACameraPointBase*, UCameraSwitchMethod*);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FBPDelegate_CameraPointSwitchDelegate, ACameraPointBase*, InCameraPoint, UCameraSwitchMethod*, InMethod);
 
 /**
  * 
@@ -33,22 +36,40 @@ public:
 	virtual bool DoesSupportWorldType(const EWorldType::Type WorldType) const override;
 
 	/* UCameraManager */
+protected:
+	virtual void AddCameraPoint(ACameraPointBase* InCameraPoint);
+	virtual void RemoveCameraPoint(ACameraPointBase* InCameraPoint);
+	virtual void HandleSwitchToCameraFinish(UCameraSwitchMethod* InCameraHandle);
+
 public:
-	/* 已注册的相机点位 */
-	UPROPERTY(BlueprintReadOnly, Transient)
-	TMap<FGameplayTag, ACameraPointBase*> CameraPoints;
+	bool CanSwitchToCamera(FGameplayTag InCameraTag) const;
 
-	/* 当前正在进行的切换相机句柄 */
-	UPROPERTY(BlueprintReadOnly, Transient)
-	TArray<UCameraHandle*> CurrentCameraHandles;
+	ACameraPointBase* GetCameraPoint(FGameplayTag InCameraTag) const;
 
-	/* 当前的相机标签 */
-	UPROPERTY(BlueprintReadOnly, Transient, meta=(Categories="Camera"))
-	TMap<int32, FGameplayTag> CurrentCameraTag;
+	virtual UCameraSwitchMethod* SwitchToCamera(const int32 InPlayerIndex, FVector Location, FRotator Rotation, TSubclassOf<UCameraSwitchMethod> InCameraMethodClass, FSimpleDelegate OnFinish = FSimpleDelegate());
+	virtual UCameraSwitchMethod* SwitchToCamera(const int32 InPlayerIndex, FVector Location, FRotator Rotation, UCameraSwitchMethod* InSwitchCameraMethod, FSimpleDelegate OnFinish = FSimpleDelegate());
 
-	/* 上一次的相机标签 */
-	UPROPERTY(BlueprintReadOnly, Transient, meta=(Categories="Camera"))
-	TMap<int32, FGameplayTag> PreviousCameraTag;
+	virtual UCameraSwitchMethod* SwitchToCamera(const int32 InPlayerIndex, ACameraActor* InCameraActor, TSubclassOf<UCameraSwitchMethod> InCameraMethodClass, FSimpleDelegate OnFinish = FSimpleDelegate());
+	virtual UCameraSwitchMethod* SwitchToCamera(const int32 InPlayerIndex, ACameraActor* InCameraActor, UCameraSwitchMethod* InSwitchCameraMethod, FSimpleDelegate OnFinish = FSimpleDelegate());
+
+	virtual UCameraSwitchMethod* SwitchToCamera(const int32 InPlayerIndex, UCameraComponent* InCameraComponent, TSubclassOf<UCameraSwitchMethod> InCameraMethodClass, FSimpleDelegate OnFinish = FSimpleDelegate());
+	virtual UCameraSwitchMethod* SwitchToCamera(const int32 InPlayerIndex, UCameraComponent* InCameraComponent, UCameraSwitchMethod* InSwitchCameraMethod, FSimpleDelegate OnFinish = FSimpleDelegate());
+
+	virtual UCameraSwitchMethod* SwitchToCamera(const int32 InPlayerIndex, FGameplayTag InCameraTag, TSubclassOf<UCameraSwitchMethod> InCameraMethodClass, FSimpleDelegate OnFinish = FSimpleDelegate());
+	virtual UCameraSwitchMethod* SwitchToCamera(const int32 InPlayerIndex, FGameplayTag InCameraTag, UCameraSwitchMethod* InSwitchCameraMethod, FSimpleDelegate OnFinish = FSimpleDelegate());
+
+	virtual UCameraSwitchMethod* SwitchToCamera(const int32 InPlayerIndex, ACameraPointBase* InCameraPoint, TSubclassOf<UCameraSwitchMethod> InCameraMethodClass, FSimpleDelegate OnFinish = FSimpleDelegate());
+	virtual UCameraSwitchMethod* SwitchToCamera(const int32 InPlayerIndex, ACameraPointBase* InCameraPoint, UCameraSwitchMethod* InSwitchCameraMethod, FSimpleDelegate OnFinish = FSimpleDelegate());
+
+	UCameraSwitchMethod* SwitchToCurrent(const int32 InPlayerIndex, TSubclassOf<UCameraSwitchMethod> InCameraMethodClass, const FSimpleDelegate& OnFinish = FSimpleDelegate());
+	UCameraSwitchMethod* SwitchToCurrent(const int32 InPlayerIndex, UCameraSwitchMethod* InSwitchCameraMethod, const FSimpleDelegate& OnFinish = FSimpleDelegate());
+	UCameraSwitchMethod* SwitchToPrevious(const int32 InPlayerIndex, TSubclassOf<UCameraSwitchMethod> InCameraMethodClass, const FSimpleDelegate& OnFinish = FSimpleDelegate());
+	UCameraSwitchMethod* SwitchToPrevious(const int32 InPlayerIndex, UCameraSwitchMethod* InSwitchCameraMethod, const FSimpleDelegate& OnFinish = FSimpleDelegate());
+
+private:
+	bool IsSwitching(const APlayerController* InPlayerController);
+	UCameraSwitchMethod* GetCameraHandle(const APlayerController* InPlayerController);
+	void UpdateCameraTag(int32 InPlayerIndex, FGameplayTag InCameraTag);
 
 public:
 	inline static FDelegate_CameraPointDelegate Delegate_OnCameraPointRegister;
@@ -59,73 +80,28 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FBPDelegate_CameraPointDelegate BPDelegate_OnCameraPointUnRegister;
 
-public:
-	virtual void AddCameraPoint(ACameraPointBase* InCameraPoint);
-	virtual void RemoveCameraPoint(ACameraPointBase* InCameraPoint);
-	ACameraPointBase* GetCameraPoint(FGameplayTag InCameraTag) const;
-	bool CanCameraSwitch(FGameplayTag InCameraTag) const;
+	inline static FDelegate_CameraPointSwitchDelegate Delegate_OnCameraSwitchBegin;
+	UPROPERTY(BlueprintAssignable)
+	FBPDelegate_CameraPointSwitchDelegate BPDelegate_OnCameraSwitchBegin;
 
-public:
-	bool CanSwitchToCamera(FGameplayTag InCameraTag) const;
-
-	virtual UCameraHandle* SwitchToCamera(const int32 InPlayerIndex, FVector Location, FRotator Rotation, TSubclassOf<UCameraHandle> InCameraHandleClass, FSimpleDelegate OnFinish = FSimpleDelegate());
-	virtual UCameraHandle* SwitchToCamera(const int32 InPlayerIndex, FVector Location, FRotator Rotation, UCameraHandle* SwitchCameraHandle, FSimpleDelegate OnFinish = FSimpleDelegate());
-
-	virtual UCameraHandle* SwitchToCamera(const int32 InPlayerIndex, ACameraActor* InCameraActor, TSubclassOf<UCameraHandle> InCameraHandleClass, FSimpleDelegate OnFinish = FSimpleDelegate());
-	virtual UCameraHandle* SwitchToCamera(const int32 InPlayerIndex, ACameraActor* InCameraActor, UCameraHandle* SwitchCameraHandle, FSimpleDelegate OnFinish = FSimpleDelegate());
-
-	virtual UCameraHandle* SwitchToCamera(const int32 InPlayerIndex, UCameraComponent* InCameraComponent, TSubclassOf<UCameraHandle> InCameraHandleClass, FSimpleDelegate OnFinish = FSimpleDelegate());
-	virtual UCameraHandle* SwitchToCamera(const int32 InPlayerIndex, UCameraComponent* InCameraComponent, UCameraHandle* SwitchCameraHandle, FSimpleDelegate OnFinish = FSimpleDelegate());
-
-	virtual UCameraHandle* SwitchToCamera(const int32 InPlayerIndex, FGameplayTag InCameraTag, TSubclassOf<UCameraHandle> InCameraHandleClass, FSimpleDelegate OnFinish = FSimpleDelegate());
-	virtual UCameraHandle* SwitchToCamera(const int32 InPlayerIndex, FGameplayTag InCameraTag, UCameraHandle* SwitchCameraHandle, FSimpleDelegate OnFinish = FSimpleDelegate());
-
-	virtual UCameraHandle* SwitchToCamera(const int32 InPlayerIndex, ACameraPointBase* InCameraPoint, TSubclassOf<UCameraHandle> InCameraHandleClass, FSimpleDelegate OnFinish = FSimpleDelegate());
-	virtual UCameraHandle* SwitchToCamera(const int32 InPlayerIndex, ACameraPointBase* InCameraPoint, UCameraHandle* SwitchCameraHandle, FSimpleDelegate OnFinish = FSimpleDelegate());
-
-	UCameraHandle* SwitchToCurrent(const int32 InPlayerIndex, TSubclassOf<UCameraHandle> InCameraHandleClass, const FSimpleDelegate& OnFinish = FSimpleDelegate());
-	UCameraHandle* SwitchToCurrent(const int32 InPlayerIndex, UCameraHandle* SwitchCameraHandle, const FSimpleDelegate& OnFinish = FSimpleDelegate());
-	UCameraHandle* SwitchToPrevious(const int32 InPlayerIndex, TSubclassOf<UCameraHandle> InCameraHandleClass, const FSimpleDelegate& OnFinish = FSimpleDelegate());
-	UCameraHandle* SwitchToPrevious(const int32 InPlayerIndex, UCameraHandle* SwitchCameraHandle, const FSimpleDelegate& OnFinish = FSimpleDelegate());
+	inline static FDelegate_CameraPointSwitchDelegate Delegate_OnCameraSwitchEnd;
+	UPROPERTY(BlueprintAssignable)
+	FBPDelegate_CameraPointSwitchDelegate BPDelegate_OnCameraSwitchEnd;
 
 protected:
-	bool CheckIsSwitching(const APlayerController* InPlayerController);
-	UCameraHandle* GetCameraHandle(const APlayerController* InPlayerController);
-	void UpdateCameraTag(int32 InPlayerIndex, FGameplayTag InCameraTag);
-	void HandleSwitchToCameraFinish(UCameraHandle* InCameraHandle);
+	/* 已注册的相机点位 */
+	UPROPERTY(BlueprintReadOnly, Transient)
+	TMap<FGameplayTag, ACameraPointBase*> CameraPoints;
 
+	/* 当前正在进行的切换相机句柄 */
+	UPROPERTY(BlueprintReadOnly, Transient)
+	TArray<UCameraSwitchMethod*> CurrentCameraMethods;
 
-	/* UCameraInputIdle */
-public:
-	DECLARE_EVENT_OneParam(UCameraManager, FCameraAutoSwitchDelegate, UCameraInputIdle*)
+	/* 当前的相机标签 */
+	UPROPERTY(BlueprintReadOnly, Transient, meta=(Categories="Camera"))
+	TMap<int32, FGameplayTag> CurrentCameraTag;
 
-	static FCameraAutoSwitchDelegate OnCameraInputIdleReset;
-	static FCameraAutoSwitchDelegate OnCameraAutoSwitchStart;
-	static FCameraAutoSwitchDelegate OnCameraAutoSwitchStop;
-	static FCameraAutoSwitchDelegate OnCameraLensMovementStart;
-	static FCameraAutoSwitchDelegate OnCameraLensMovementStop;
-
-public:
-	bool SetCameraInputIdle(UCameraInputIdle* InCameraInputIdle);
-
-protected:
-	/* 当前的相机空闲数据 */
-	UPROPERTY(Transient, BlueprintReadOnly)
-	UCameraInputIdle* CameraInputIdle = nullptr;
-
-	/* 计数当前相机自动切换的下标 */
-	int32 CameraAutoSwitchIndex = 0;
-
-	/* 执行下一次切换的延迟时间句柄 */
-	FTimerHandle AutoSwitchCameraHandle;
-
-	UPROPERTY(Transient)
-	UCameraLensMovement* CameraLensMovement = nullptr;
-
-protected:
-	virtual void OnInputIdleStart(UInputIdle* InputIdle);
-	virtual void OnInputIdleStop(UInputIdle* InputIdle);
-
-	virtual void HandleCameraAutoSwitch();
-	virtual void HandleCameraLensMovement();
+	/* 上一次的相机标签 */
+	UPROPERTY(BlueprintReadOnly, Transient, meta=(Categories="Camera"))
+	TMap<int32, FGameplayTag> PreviousCameraTag;
 };

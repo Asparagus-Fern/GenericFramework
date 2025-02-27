@@ -28,10 +28,10 @@ public:
 	virtual void SetLocation_Implementation(FVector InValue) override;
 	virtual void SetRotation_Implementation(FRotator InValue) override;
 	virtual void SetZoom_Implementation(float InValue) override;
-	virtual FVector GetLocation_Implementation() override;
-	virtual FRotator GetRotation_Implementation() override;
-	virtual float GetZoom_Implementation() override;
-	
+	virtual FVector GetLocation() override;
+	virtual FRotator GetRotation() override;
+	virtual float GetZoom() override;
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UPawnSpringArmComponent* SpringArmComponent = nullptr;

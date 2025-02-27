@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "PlayerInputConfigurationComponent.h"
 #include "Components/ActorComponent.h"
-#include "Input/InputType.h"
 #include "PawnInputMovementComponent.generated.h"
 
 UINTERFACE(MinimalAPI)
@@ -41,42 +41,30 @@ public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Pawn Input Movement Interface")
 	void SetZoom(float InValue);
 
-public:
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Pawn Input Movement Interface")
-	FVector GetLocation();
-
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Pawn Input Movement Interface")
-	FRotator GetRotation();
-
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Pawn Input Movement Interface")
-	float GetZoom();
-
-public:
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Pawn Input Movement Interface")
-	float GetMovementSpeedRate();
-
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Pawn Input Movement Interface")
-	float GetRotationSpeedRate();
-
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Pawn Input Movement Interface")
-	float GetZoomSpeedRate();
-
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Pawn Input Movement Interface")
 	bool ReassessmentTargetArmLength();
+
+public:
+	virtual FVector GetLocation() { return FVector::ZeroVector; }
+	virtual FRotator GetRotation() { return FRotator::ZeroRotator; }
+	virtual float GetZoom() { return 0.f; }
+
+public:
+	virtual float GetMovementSpeedRate() { return 0.f; }
+	virtual float GetRotationSpeedRate() { return 0.f; }
+	virtual float GetZoomSpeedRate() { return 0.f; }
 };
 
 /**
  * 对接增强输入，提供简单运动接口
  */
 UCLASS(ClassGroup=(Developer), meta=(BlueprintSpawnableComponent))
-class DEVGAMEPLAY_API UPawnInputMovementComponent : public UActorComponent, public IPawnInputMovementInterface
+class DEVGAMEPLAY_API UPawnInputMovementComponent : public UPlayerInputConfigurationComponent, public IPawnInputMovementInterface
 {
 	GENERATED_BODY()
 
 public:
 	UPawnInputMovementComponent();
-	virtual void BeginPlay() override;
-	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 	/* IPawnInputMovementInterface */
 public:
@@ -86,17 +74,26 @@ public:
 	virtual void SetLocation_Implementation(FVector InValue) override;
 	virtual void SetRotation_Implementation(FRotator InValue) override;
 	virtual void SetZoom_Implementation(float InValue) override;
-	virtual FVector GetLocation_Implementation() override;
-	virtual FRotator GetRotation_Implementation() override;
-	virtual float GetZoom_Implementation() override;
-	virtual float GetMovementSpeedRate_Implementation() override;
-	virtual float GetRotationSpeedRate_Implementation() override;
-	virtual float GetZoomSpeedRate_Implementation() override;
+
+	UFUNCTION(BlueprintPure)
+	virtual FVector GetLocation() override;
+
+	UFUNCTION(BlueprintPure)
+	virtual FRotator GetRotation() override;
+
+	UFUNCTION(BlueprintPure)
+	virtual float GetZoom() override;
+
+	UFUNCTION(BlueprintPure)
+	virtual float GetMovementSpeedRate() override;
+
+	UFUNCTION(BlueprintPure)
+	virtual float GetRotationSpeedRate() override;
+
+	UFUNCTION(BlueprintPure)
+	virtual float GetZoomSpeedRate() override;
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TArray<FEnhanceInputMappingContext> EnhanceInputMappingContexts;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(ClampMin = 0.1f, UIMin = 0.1f))
 	float MovementSpeedRate = 1.f;
 
@@ -105,11 +102,4 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(ClampMin = 0.1f, UIMin = 0.1f))
 	float ZoomSpeedRate = 1.f;
-
-public:
-	UFUNCTION(BlueprintNativeEvent)
-	void SetupPlayerInput();
-
-	UFUNCTION(BlueprintNativeEvent)
-	void RemovePlayerInput();
 };

@@ -6,7 +6,7 @@
 #include "CameraManager.h"
 #include "Manager/ManagerProxy.h"
 
-USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCamera_Transform_HandleClass(const int32 InPlayerIndex, const FVector Location, const FRotator Rotation, const TSubclassOf<UCameraHandle> InCameraHandleClass)
+USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCamera_Transform_HandleClass(const int32 InPlayerIndex, const FVector Location, const FRotator Rotation, const TSubclassOf<UCameraSwitchMethod> InCameraHandleClass)
 {
 	USwitchToCameraAsyncAction* NewAction = NewObject<USwitchToCameraAsyncAction>();
 
@@ -18,7 +18,7 @@ USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCamera_Transform
 	return NewAction;
 }
 
-USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCamera_Transform_Handle(const int32 InPlayerIndex, const FVector Location, const FRotator Rotation, UCameraHandle* InCameraHandle)
+USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCamera_Transform_Handle(const int32 InPlayerIndex, const FVector Location, const FRotator Rotation, UCameraSwitchMethod* InCameraHandle)
 {
 	USwitchToCameraAsyncAction* NewAction = NewObject<USwitchToCameraAsyncAction>();
 
@@ -30,7 +30,7 @@ USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCamera_Transform
 	return NewAction;
 }
 
-USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCamera_Actor_HandleClass(const int32 InPlayerIndex, ACameraActor* InCameraActor, const TSubclassOf<UCameraHandle> InCameraHandleClass)
+USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCamera_Actor_HandleClass(const int32 InPlayerIndex, ACameraActor* InCameraActor, const TSubclassOf<UCameraSwitchMethod> InCameraHandleClass)
 {
 	USwitchToCameraAsyncAction* NewAction = NewObject<USwitchToCameraAsyncAction>();
 
@@ -42,7 +42,7 @@ USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCamera_Actor_Han
 	return NewAction;
 }
 
-USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCamera_Actor_Handle(const int32 InPlayerIndex, ACameraActor* InCameraActor, UCameraHandle* InCameraHandle)
+USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCamera_Actor_Handle(const int32 InPlayerIndex, ACameraActor* InCameraActor, UCameraSwitchMethod* InCameraHandle)
 {
 	USwitchToCameraAsyncAction* NewAction = NewObject<USwitchToCameraAsyncAction>();
 
@@ -54,7 +54,7 @@ USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCamera_Actor_Han
 	return NewAction;
 }
 
-USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCamera_Component_HandleClass(const int32 InPlayerIndex, UCameraComponent* InCameraComponent, const TSubclassOf<UCameraHandle> InCameraHandleClass)
+USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCamera_Component_HandleClass(const int32 InPlayerIndex, UCameraComponent* InCameraComponent, const TSubclassOf<UCameraSwitchMethod> InCameraHandleClass)
 {
 	USwitchToCameraAsyncAction* NewAction = NewObject<USwitchToCameraAsyncAction>();
 
@@ -66,7 +66,7 @@ USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCamera_Component
 	return NewAction;
 }
 
-USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCamera_Component_Handle(const int32 InPlayerIndex, UCameraComponent* InCameraComponent, UCameraHandle* InCameraHandle)
+USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCamera_Component_Handle(const int32 InPlayerIndex, UCameraComponent* InCameraComponent, UCameraSwitchMethod* InCameraHandle)
 {
 	USwitchToCameraAsyncAction* NewAction = NewObject<USwitchToCameraAsyncAction>();
 
@@ -78,7 +78,7 @@ USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCamera_Component
 	return NewAction;
 }
 
-USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCamera_Tag_HandleClass(const int32 InPlayerIndex, const FGameplayTag InCameraTag, const TSubclassOf<UCameraHandle> InCameraHandleClass)
+USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCamera_Tag_HandleClass(const int32 InPlayerIndex, const FGameplayTag InCameraTag, const TSubclassOf<UCameraSwitchMethod> InCameraHandleClass)
 {
 	USwitchToCameraAsyncAction* NewAction = NewObject<USwitchToCameraAsyncAction>();
 
@@ -90,7 +90,7 @@ USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCamera_Tag_Handl
 	return NewAction;
 }
 
-USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCamera_Tag_Handle(const int32 InPlayerIndex, const FGameplayTag InCameraTag, UCameraHandle* InCameraHandle)
+USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCamera_Tag_Handle(const int32 InPlayerIndex, const FGameplayTag InCameraTag, UCameraSwitchMethod* InCameraHandle)
 {
 	USwitchToCameraAsyncAction* NewAction = NewObject<USwitchToCameraAsyncAction>();
 
@@ -102,7 +102,7 @@ USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCamera_Tag_Handl
 	return NewAction;
 }
 
-USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCamera_CameraPoint_HandleClass(const int32 InPlayerIndex, ACameraPointBase* InCameraPoint, const TSubclassOf<UCameraHandle> InCameraHandleClass)
+USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCamera_CameraPoint_HandleClass(const int32 InPlayerIndex, ACameraPointBase* InCameraPoint, const TSubclassOf<UCameraSwitchMethod> InCameraHandleClass)
 {
 	USwitchToCameraAsyncAction* NewAction = NewObject<USwitchToCameraAsyncAction>();
 
@@ -114,7 +114,7 @@ USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCamera_CameraPoi
 	return NewAction;
 }
 
-USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCamera_CameraPoint_Handle(const int32 InPlayerIndex, ACameraPointBase* InCameraPoint, UCameraHandle* InCameraHandle)
+USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCamera_CameraPoint_Handle(const int32 InPlayerIndex, ACameraPointBase* InCameraPoint, UCameraSwitchMethod* InCameraHandle)
 {
 	USwitchToCameraAsyncAction* NewAction = NewObject<USwitchToCameraAsyncAction>();
 
@@ -126,7 +126,7 @@ USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCamera_CameraPoi
 	return NewAction;
 }
 
-USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCurrent_HandleClass(int32 InPlayerIndex, TSubclassOf<UCameraHandle> InCameraHandleClass)
+USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCurrent_HandleClass(int32 InPlayerIndex, TSubclassOf<UCameraSwitchMethod> InCameraHandleClass)
 {
 	USwitchToCameraAsyncAction* NewAction = NewObject<USwitchToCameraAsyncAction>();
 
@@ -138,7 +138,7 @@ USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCurrent_HandleCl
 	return NewAction;
 }
 
-USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCurrent_Handle(int32 InPlayerIndex, UCameraHandle* InCameraHandle)
+USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCurrent_Handle(int32 InPlayerIndex, UCameraSwitchMethod* InCameraHandle)
 {
 	USwitchToCameraAsyncAction* NewAction = NewObject<USwitchToCameraAsyncAction>();
 
@@ -150,7 +150,7 @@ USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCurrent_Handle(i
 	return NewAction;
 }
 
-USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToPrevious_HandleClass(int32 InPlayerIndex, TSubclassOf<UCameraHandle> InCameraHandleClass)
+USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToPrevious_HandleClass(int32 InPlayerIndex, TSubclassOf<UCameraSwitchMethod> InCameraHandleClass)
 {
 	USwitchToCameraAsyncAction* NewAction = NewObject<USwitchToCameraAsyncAction>();
 
@@ -162,7 +162,7 @@ USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToPrevious_HandleC
 	return NewAction;
 }
 
-USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToPrevious_Handle(int32 InPlayerIndex, UCameraHandle* InCameraHandle)
+USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToPrevious_Handle(int32 InPlayerIndex, UCameraSwitchMethod* InCameraHandle)
 {
 	USwitchToCameraAsyncAction* NewAction = NewObject<USwitchToCameraAsyncAction>();
 

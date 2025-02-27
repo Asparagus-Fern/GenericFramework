@@ -26,10 +26,17 @@ public:
 
 	/* IPawnInterface */
 public:
-	virtual bool IsPlayer_Implementation() override;
-	virtual bool IsAI_Implementation() override;
-	virtual APlayerController* GetPlayerController_Implementation() override;
-	virtual AAIController* GetAIController_Implementation() override;
+	UFUNCTION(BlueprintPure, Category="Character Basic")
+	virtual bool IsPlayer() override;
+
+	UFUNCTION(BlueprintPure, Category="Character Basic")
+	virtual bool IsAI() override;
+
+	UFUNCTION(BlueprintPure, Category="Character Basic")
+	virtual APlayerController* GetPlayerController() override;
+
+	UFUNCTION(BlueprintPure, Category="Character Basic")
+	virtual AAIController* GetAIController() override;
 
 	/* IPawnInputMovementInterface */
 public:
@@ -39,29 +46,48 @@ public:
 	virtual void SetLocation_Implementation(FVector InValue) override;
 	virtual void SetRotation_Implementation(FRotator InValue) override;
 	virtual void SetZoom_Implementation(float InValue) override;
-	virtual FVector GetLocation_Implementation() override;
-	virtual FRotator GetRotation_Implementation() override;
-	virtual float GetZoom_Implementation() override;
-	virtual float GetZoomSpeedRate_Implementation() override;
+
+	UFUNCTION(BlueprintPure, Category="Character Input Movement")
+	virtual FVector GetLocation() override;
+
+	UFUNCTION(BlueprintPure, Category="Character Input Movement")
+	virtual FRotator GetRotation() override;
+
+	UFUNCTION(BlueprintPure, Category="Character Input Movement")
+	virtual float GetZoom() override;
+
+	UFUNCTION(BlueprintPure, Category="Character Input Movement")
+	virtual float GetZoomSpeedRate() override;
 
 	/* IPawnLockStateInterface */
 public:
-	virtual FPawnLockState GetPawnLockState_Implementation() override;
+	UFUNCTION(BlueprintPure, Category="Character Lock State")
+	virtual FPawnLockState GetPawnLockState() override;
+
+	UFUNCTION(BlueprintPure, Category="Character Lock State")
+	virtual bool CanMove(const FVector& TargetLocation) const override;
+
+	UFUNCTION(BlueprintPure, Category="Character Lock State")
+	virtual bool CanTurn(const FRotator& TargetRotation) const override;
+
+	UFUNCTION(BlueprintPure, Category="Character Lock State")
+	virtual bool CanZoom(float TargetSpringArmLength) const override;
+
+	UFUNCTION(BlueprintPure, Category="Character Lock State")
+	virtual FVector GetLimitLocation(const FVector& TargetLocation) const override;
+
+	UFUNCTION(BlueprintPure, Category="Character Lock State")
+	virtual FRotator GetLimitRotation(const FRotator& TargetRotation) const override;
+
+	UFUNCTION(BlueprintPure, Category="Character Lock State")
+	virtual float GetLimitSpringArmLength(float TargetSpringArmLength) const override;
+
 	virtual void SetPawnLockState_Implementation(const FPawnLockState& InPawnLockState) override;
-
-	virtual bool CanMove_Implementation(const FVector& TargetLocation) const override;
-	virtual bool CanTurn_Implementation(const FRotator& TargetRotation) const override;
-	virtual bool CanZoom_Implementation(float TargetSpringArmLength) const override;
-
 	virtual void SetIsFullyLock_Implementation(bool InFullyLock) override;
 	virtual void SetIsLockLocation_Implementation(bool InLockLocation) override;
 	virtual void SetIsLockRotation_Implementation(bool InLockRotation) override;
 	virtual void SetIsLockSpringArm_Implementation(bool InLockSpringArm) override;
 
-	virtual FVector GetLimitLocation_Implementation(const FVector& TargetLocation) const override;
-	virtual FRotator GetLimitRotation_Implementation(const FRotator& TargetRotation) const override;
-	virtual float GetLimitSpringArmLength_Implementation(float TargetSpringArmLength) const override;
-	
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FName CharacterName;

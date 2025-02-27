@@ -2,7 +2,6 @@
 
 #include "Pawn/Component/PawnInputMovementComponent.h"
 
-#include "EnhancedInputSubsystems.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Pawn/Component/PawnLockStateComponent.h"
 
@@ -15,25 +14,13 @@ UPawnInputMovementComponent::UPawnInputMovementComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 }
 
-void UPawnInputMovementComponent::BeginPlay()
-{
-	Super::BeginPlay();
-	SetupPlayerInput();
-}
-
-void UPawnInputMovementComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
-{
-	Super::EndPlay(EndPlayReason);
-	RemovePlayerInput();
-}
-
 void UPawnInputMovementComponent::AddLocation_Implementation(FVector2D InValue)
 {
 	if (APawn* Pawn = Cast<APawn>(GetOwner()))
 	{
 		if (Pawn->GetClass()->ImplementsInterface(UPawnLockStateInterface::StaticClass()))
 		{
-			if (!IPawnLockStateInterface::Execute_CanMove(GetOwner(), Pawn->GetActorLocation()))
+			if (!Cast<IPawnLockStateInterface>(GetOwner())->CanMove(GetOwner()->GetActorLocation()))
 			{
 				return;
 			}
@@ -51,7 +38,7 @@ void UPawnInputMovementComponent::AddRotation_Implementation(FVector2D InValue)
 	{
 		if (Pawn->GetClass()->ImplementsInterface(UPawnLockStateInterface::StaticClass()))
 		{
-			if (!IPawnLockStateInterface::Execute_CanTurn(GetOwner(), Pawn->GetActorRotation()))
+			if (!Cast<IPawnLockStateInterface>(GetOwner())->CanTurn(GetOwner()->GetActorRotation()))
 			{
 				return;
 			}
@@ -71,7 +58,7 @@ void UPawnInputMovementComponent::SetLocation_Implementation(FVector InValue)
 {
 	if (GetOwner()->GetClass()->ImplementsInterface(UPawnLockStateInterface::StaticClass()))
 	{
-		if (!IPawnLockStateInterface::Execute_CanMove(GetOwner(), GetOwner()->GetActorLocation()))
+		if (!Cast<IPawnLockStateInterface>(GetOwner())->CanMove(GetOwner()->GetActorLocation()))
 		{
 			return;
 		}
@@ -84,7 +71,7 @@ void UPawnInputMovementComponent::SetRotation_Implementation(FRotator InValue)
 {
 	if (GetOwner()->GetClass()->ImplementsInterface(UPawnLockStateInterface::StaticClass()))
 	{
-		if (!IPawnLockStateInterface::Execute_CanTurn(GetOwner(), GetOwner()->GetActorRotation()))
+		if (!Cast<IPawnLockStateInterface>(GetOwner())->CanTurn(GetOwner()->GetActorRotation()))
 		{
 			return;
 		}
@@ -97,68 +84,32 @@ void UPawnInputMovementComponent::SetZoom_Implementation(float InValue)
 {
 }
 
-FVector UPawnInputMovementComponent::GetLocation_Implementation()
+FVector UPawnInputMovementComponent::GetLocation()
 {
 	return GetOwner()->GetActorLocation();
 }
 
-FRotator UPawnInputMovementComponent::GetRotation_Implementation()
+FRotator UPawnInputMovementComponent::GetRotation()
 {
 	return GetOwner()->GetActorRotation();
 }
 
-float UPawnInputMovementComponent::GetZoom_Implementation()
+float UPawnInputMovementComponent::GetZoom()
 {
 	return -1.f;
 }
 
-float UPawnInputMovementComponent::GetMovementSpeedRate_Implementation()
+float UPawnInputMovementComponent::GetMovementSpeedRate()
 {
 	return MovementSpeedRate;
 }
 
-float UPawnInputMovementComponent::GetRotationSpeedRate_Implementation()
+float UPawnInputMovementComponent::GetRotationSpeedRate()
 {
 	return RotationSpeedRate;
 }
 
-float UPawnInputMovementComponent::GetZoomSpeedRate_Implementation()
+float UPawnInputMovementComponent::GetZoomSpeedRate()
 {
 	return ZoomSpeedRate;
-}
-
-void UPawnInputMovementComponent::SetupPlayerInput_Implementation()
-{
-	if (const APawn* Pawn = Cast<APawn>(GetOwner()))
-	{
-		const APlayerController* PC = Cast<APlayerController>(Pawn->Controller);
-		if (IsValid(PC))
-		{
-			if (UEnhancedInputLocalPlayerSubsystem* EnhancedInputLocalPlayerSubsystem = PC->GetLocalPlayer()->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
-			{
-				for (auto& EnhanceInputMappingContext : EnhanceInputMappingContexts)
-				{
-					EnhancedInputLocalPlayerSubsystem->AddMappingContext(EnhanceInputMappingContext.InputMappingContext, EnhanceInputMappingContext.Priority, EnhanceInputMappingContext.ModifyContextOptions);
-				}
-			}
-		}
-	}
-}
-
-void UPawnInputMovementComponent::RemovePlayerInput_Implementation()
-{
-	if (const APawn* Pawn = Cast<APawn>(GetOwner()))
-	{
-		const APlayerController* PC = Cast<APlayerController>(Pawn->Controller);
-		if (IsValid(PC))
-		{
-			if (UEnhancedInputLocalPlayerSubsystem* EnhancedInputLocalPlayerSubsystem = PC->GetLocalPlayer()->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
-			{
-				for (const auto& EnhanceInputMappingContext : EnhanceInputMappingContexts)
-				{
-					EnhancedInputLocalPlayerSubsystem->RemoveMappingContext(EnhanceInputMappingContext.InputMappingContext);
-				}
-			}
-		}
-	}
 }

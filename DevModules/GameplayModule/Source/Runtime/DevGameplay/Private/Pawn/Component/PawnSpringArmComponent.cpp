@@ -38,8 +38,8 @@ void UPawnSpringArmComponent::AddTargetArmLength(const float InValue)
 
 	if (GetOwner()->GetClass()->ImplementsInterface(UPawnInputMovementInterface::StaticClass()))
 	{
-		ZoomSpeedRate = IPawnInputMovementInterface::Execute_GetZoomSpeedRate(GetOwner());
-		Rotation = IPawnInputMovementInterface::Execute_GetRotation(GetOwner());
+		ZoomSpeedRate = Cast<IPawnInputMovementInterface>(GetOwner())->GetZoomSpeedRate();
+		Rotation = Cast<IPawnInputMovementInterface>(GetOwner())->GetRotation();
 	}
 
 	const float PitchRate = FMath::GetMappedRangeValueClamped(FVector2D(0.f, 90.f), FVector2D(0.8f, 1.2f), FMath::Abs(Rotation.Pitch));
@@ -52,7 +52,7 @@ void UPawnSpringArmComponent::AddTargetArmLength(const float InValue)
 
 	if (GetOwner()->GetClass()->ImplementsInterface(UPawnLockStateInterface::StaticClass()))
 	{
-		DesiredArmLength = IPawnLockStateInterface::Execute_GetLimitSpringArmLength(GetOwner(), DesiredArmLength);
+		DesiredArmLength = Cast<IPawnLockStateInterface>(GetOwner())->GetLimitSpringArmLength(DesiredArmLength);
 	}
 
 	if (bIsReassessmenting && !NeedReassessment())

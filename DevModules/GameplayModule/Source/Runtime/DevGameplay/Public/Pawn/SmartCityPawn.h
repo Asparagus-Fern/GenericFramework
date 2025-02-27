@@ -6,6 +6,8 @@
 #include "ThirdPersonPawn.h"
 #include "SmartCityPawn.generated.h"
 
+class UPlayerInputIdleActionComponent;
+
 UCLASS()
 class DEVGAMEPLAY_API ASmartCityPawn : public AThirdPersonPawn
 {
@@ -17,4 +19,8 @@ public:
 	/* IPawnInputMovementInterface */
 public:
 	virtual bool ReassessmentTargetArmLength_Implementation() override;
+
+public:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UPlayerInputIdleActionComponent* PlayerInputIdleActionComponent = nullptr;
 };

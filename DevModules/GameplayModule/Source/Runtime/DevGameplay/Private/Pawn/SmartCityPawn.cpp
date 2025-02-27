@@ -5,12 +5,15 @@
 
 #include "BPFunctions/BPFunctions_Gameplay.h"
 #include "Camera/CameraComponent.h"
+#include "InputIdleAction/PlayerInputIdleActionComponent.h"
 #include "Pawn/Component/PawnSpringArmComponent.h"
 
 ASmartCityPawn::ASmartCityPawn(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
 	PawnName = "SmartCityPawn";
+
+	PlayerInputIdleActionComponent = CreateDefaultSubobject<UPlayerInputIdleActionComponent>("PlayerInputIdleActionComponent");
 }
 
 bool ASmartCityPawn::ReassessmentTargetArmLength_Implementation()

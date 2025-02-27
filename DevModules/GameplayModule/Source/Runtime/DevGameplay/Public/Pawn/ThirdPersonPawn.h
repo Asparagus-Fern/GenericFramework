@@ -8,7 +8,7 @@
 
 class UCameraComponent;
 class UPawnSpringArmComponent;
-class UCameraHandle;
+class UCameraSwitchMethod;
 
 UCLASS()
 class DEVGAMEPLAY_API AThirdPersonPawn : public ADevPawn
@@ -39,14 +39,14 @@ public:
 	virtual void SetLocation_Implementation(FVector InValue) override;
 	virtual void SetRotation_Implementation(FRotator InValue) override;
 	virtual void SetZoom_Implementation(float InValue) override;
-	virtual FVector GetLocation_Implementation() override;
-	virtual FRotator GetRotation_Implementation() override;
-	virtual float GetZoom_Implementation() override;
+	virtual FVector GetLocation() override;
+	virtual FRotator GetRotation() override;
+	virtual float GetZoom() override;
 
 	/* AThirdPersonPawn */
 protected:
-	virtual void OnSwitchCameraBegin(UCameraHandle* InCameraHandle);
-	virtual void OnSwitchCameraFinish(UCameraHandle* InCameraHandle);
+	virtual void OnSwitchCameraBegin(UCameraSwitchMethod* InCameraHandle);
+	virtual void OnSwitchCameraFinish(UCameraSwitchMethod* InCameraHandle);
 
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)

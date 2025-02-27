@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "CameraHandle/CameraHandle.h"
+#include "CameraSwitch/CameraSwitchMethod.h"
 #include "CameraHandle_Transition.generated.h"
 
 /**
  * 
  */
 UCLASS(MinimalAPI)
-class UCameraHandle_Transition : public UCameraHandle
+class UCameraHandle_Transition : public UCameraSwitchMethod
 {
 	GENERATED_BODY()
 

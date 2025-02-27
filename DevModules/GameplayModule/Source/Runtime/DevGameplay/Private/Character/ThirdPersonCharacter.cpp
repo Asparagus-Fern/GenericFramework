@@ -41,8 +41,8 @@ void AThirdPersonCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
 
 void AThirdPersonCharacter::AddLocation_Implementation(FVector2D InValue)
 {
-	const FVector TargetLocation = Execute_GetLocation(this) + (UKismetMathLibrary::GetRightVector(GetActorRotation()) * InValue.X) + (UKismetMathLibrary::GetForwardVector(GetActorRotation()) * InValue.Y);
-	if (Execute_CanMove(this, TargetLocation))
+	const FVector TargetLocation = GetLocation() + (UKismetMathLibrary::GetRightVector(GetActorRotation()) * InValue.X) + (UKismetMathLibrary::GetForwardVector(GetActorRotation()) * InValue.Y);
+	if (CanMove(TargetLocation))
 	{
 	}
 
@@ -52,8 +52,8 @@ void AThirdPersonCharacter::AddLocation_Implementation(FVector2D InValue)
 
 void AThirdPersonCharacter::AddRotation_Implementation(FVector2D InValue)
 {
-	const FRotator TargetRotation = Execute_GetRotation(this) + FRotator(InValue.Y, InValue.X, 0.f);
-	if (Execute_CanTurn(this, TargetRotation))
+	const FRotator TargetRotation = GetRotation() + FRotator(InValue.Y, InValue.X, 0.f);
+	if (CanTurn(TargetRotation))
 	{
 		AddControllerYawInput(InValue.X);
 		AddControllerPitchInput(InValue.Y);
@@ -62,7 +62,7 @@ void AThirdPersonCharacter::AddRotation_Implementation(FVector2D InValue)
 
 void AThirdPersonCharacter::AddZoom_Implementation(float InValue)
 {
-	if (Execute_CanZoom(this, SpringArmComponent->TargetArmLength + InValue))
+	if (CanZoom(SpringArmComponent->TargetArmLength + InValue))
 	{
 		SpringArmComponent->AddTargetArmLength(InValue);
 	}
@@ -70,7 +70,7 @@ void AThirdPersonCharacter::AddZoom_Implementation(float InValue)
 
 void AThirdPersonCharacter::SetLocation_Implementation(FVector InValue)
 {
-	if (Execute_CanMove(this, InValue))
+	if (CanMove(InValue))
 	{
 		SetActorLocation(InValue);
 	}
@@ -78,7 +78,7 @@ void AThirdPersonCharacter::SetLocation_Implementation(FVector InValue)
 
 void AThirdPersonCharacter::SetRotation_Implementation(FRotator InValue)
 {
-	if (Execute_CanTurn(this, InValue))
+	if (CanTurn(InValue))
 	{
 		SetActorRotation(FRotator(0.f, InValue.Yaw, 0.f));
 		SpringArmComponent->SetRelativeRotation(FRotator(InValue.Pitch, 0.f, 0.f), true);
@@ -87,25 +87,23 @@ void AThirdPersonCharacter::SetRotation_Implementation(FRotator InValue)
 
 void AThirdPersonCharacter::SetZoom_Implementation(float InValue)
 {
-	if (Execute_CanZoom(this, InValue))
+	if (CanZoom(InValue))
 	{
 		SpringArmComponent->SetTargetArmLength(InValue);
 	}
 }
 
-FVector AThirdPersonCharacter::GetLocation_Implementation()
+FVector AThirdPersonCharacter::GetLocation()
 {
 	return GetActorLocation();
 }
 
-FRotator AThirdPersonCharacter::GetRotation_Implementation()
+FRotator AThirdPersonCharacter::GetRotation()
 {
 	return GetActorRotation();
-	// return FRotator(SpringArmComponent->GetRelativeRotation().Pitch, GetActorRotation().Yaw, 0.f);
 }
 
-float AThirdPersonCharacter::GetZoom_Implementation()
+float AThirdPersonCharacter::GetZoom()
 {
 	return -1;
-	// return SpringArmComponent->TargetArmLength;
 }
