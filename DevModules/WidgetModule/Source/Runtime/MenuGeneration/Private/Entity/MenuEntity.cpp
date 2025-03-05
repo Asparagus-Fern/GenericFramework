@@ -12,16 +12,6 @@ UMenuEntity::UMenuEntity(const FObjectInitializer& ObjectInitializer)
 {
 }
 
-void UMenuEntity::Initialize()
-{
-	Super::Initialize();
-}
-
-void UMenuEntity::DeInitialize()
-{
-	Super::DeInitialize();
-}
-
 void UMenuEntity::OnEntityWidgetInitialized()
 {
 	// Super::OnEntityWidgetInitialized();

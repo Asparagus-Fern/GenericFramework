@@ -12,8 +12,8 @@ class UTextBlock;
 /**
  * 
  */
-UCLASS()
-class WIDGETAPPLICATIONMODULE_API UDateTimeWidget : public UUserWidgetBase
+UCLASS(MinimalAPI)
+class UDateTimeWidget : public UUserWidgetBase
 {
 	GENERATED_BODY()
 

@@ -16,8 +16,8 @@ class UMenuEntityBase;
 /**
  * 
  */
-UCLASS()
-class MENUGENERATION_API UMenuCollection : public UCommonObject, public IStateInterface
+UCLASS(MinimalAPI)
+class UMenuCollection : public UCommonObject, public IStateInterface
 {
 	GENERATED_BODY()
 
@@ -57,17 +57,17 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced, meta = (TitleProperty = "MenuMainName"))
 	TArray<TObjectPtr<UMenuEntityBase>> MenuEntities;
-	
+
 #if WITH_EDITOR
 
 public:
-	void ReGenerateMenu();
-	void ReGenerateMenu(UDataTable* InMenuTagTable);
+	MENUGENERATION_API void ReGenerateMenu();
+	MENUGENERATION_API void ReGenerateMenu(UDataTable* InMenuTagTable);
 
-	void GenerateMenu();
-	void GenerateMenu(UDataTable* InMenuTagTable);
+	MENUGENERATION_API void GenerateMenu();
+	MENUGENERATION_API void GenerateMenu(UDataTable* InMenuTagTable);
 
-	void ClearupMenu();
+	MENUGENERATION_API void ClearupMenu();
 
 #endif
 

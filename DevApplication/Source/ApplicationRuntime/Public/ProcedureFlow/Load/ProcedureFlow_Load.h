@@ -10,8 +10,8 @@
 
 class ULoadingPanel;
 
-UCLASS(Abstract)
-class APPLICATIONRUNTIME_API AProcedureFlow_Load : public AProcedureFlowActor
+UCLASS(Abstract, MinimalAPI)
+class AProcedureFlow_Load : public AProcedureFlowActor
 {
 	GENERATED_BODY()
 

@@ -20,9 +20,9 @@ FText FUMGSection::GetSectionToolTip() const
 	return FSequencerSection::GetSectionToolTip();
 }
 
-float FUMGSection::GetSectionHeight() const
+float FUMGSection::GetSectionHeight(const UE::Sequencer::FViewDensityInfo& ViewDensity) const
 {
-	return FSequencerSection::GetSectionHeight();
+	return FSequencerSection::GetSectionHeight(ViewDensity);
 }
 
 int32 FUMGSection::OnPaintSection(FSequencerSectionPainter& InPainter) const

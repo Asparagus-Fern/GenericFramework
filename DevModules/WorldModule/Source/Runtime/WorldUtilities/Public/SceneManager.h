@@ -13,8 +13,8 @@ class ACompassActor;
 /**
  * 
  */
-UCLASS()
-class WORLDUTILITIES_API USceneManager : public UWorldSubsystem, public FCoreInternalManager
+UCLASS(MinimalAPI)
+class USceneManager : public UWorldSubsystem, public FCoreInternalManager
 {
 	GENERATED_BODY()
 
@@ -31,16 +31,16 @@ public:
 
 	/* USceneManager */
 public:
-	TArray<AActor*> FindActors(const FFindActorHandle& InFindActorHandle, bool bUpdate);
-	TArray<AActor*> FindActors(const FFindActorHandle& InFindActorHandle) const;
+	WORLDUTILITIES_API TArray<AActor*> FindActors(const FFindActorHandle& InFindActorHandle, bool bUpdate);
+	WORLDUTILITIES_API TArray<AActor*> FindActors(const FFindActorHandle& InFindActorHandle) const;
 
 	/* Compass */
 public:
-	float GetPlayerPointToNorthAngle(int32 PlayerIndex) const;
+	WORLDUTILITIES_API float GetPlayerPointToNorthAngle(int32 PlayerIndex) const;
 
 	/* MapScale */
 public:
-	float GetWorldElevationOriginHeight() const;
+	WORLDUTILITIES_API float GetWorldElevationOriginHeight() const;
 
 protected:
 	UPROPERTY(Transient)

@@ -51,8 +51,8 @@ public:
 /**
  * 
  */
-UCLASS()
-class WIDGETGENERATION_API UWidgetManager : public UWorldSubsystem, public FCoreInternalManager
+UCLASS(MinimalAPI)
+class UWidgetManager : public UWorldSubsystem, public FCoreInternalManager
 {
 	GENERATED_BODY()
 
@@ -82,16 +82,16 @@ public:
 		return nullptr;
 	}
 
-	virtual UUserWidgetBase* OpenUserWidget(TSubclassOf<UUserWidgetBase> InWidgetClass, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged());
-	virtual bool OpenUserWidget(UUserWidgetBase* InWidget, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged());
+	WIDGETGENERATION_API virtual UUserWidgetBase* OpenUserWidget(TSubclassOf<UUserWidgetBase> InWidgetClass, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged());
+	WIDGETGENERATION_API virtual bool OpenUserWidget(UUserWidgetBase* InWidget, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged());
 
-	virtual bool CloseUserWidget(FGameplayTag InSlotTag, bool MarkAsGarbage = true, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged());
-	virtual bool CloseUserWidget(UUserWidgetBase* InWidget, bool MarkAsGarbage = true, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged());
+	WIDGETGENERATION_API virtual bool CloseUserWidget(FGameplayTag InSlotTag, bool MarkAsGarbage = true, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged());
+	WIDGETGENERATION_API virtual bool CloseUserWidget(UUserWidgetBase* InWidget, bool MarkAsGarbage = true, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged());
 
-	TArray<UUserWidgetBase*> GetActivedWidgets() { return ActivedWidgets; }
-	
-	virtual void ActiveWidget(UUserWidgetBase* InWidget, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged());
-	virtual void InactiveWidget(UUserWidgetBase* InWidget, bool MarkAsGarbage = true, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged());
+	WIDGETGENERATION_API TArray<UUserWidgetBase*> GetActivedWidgets() { return ActivedWidgets; }
+
+	WIDGETGENERATION_API virtual void ActiveWidget(UUserWidgetBase* InWidget, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged());
+	WIDGETGENERATION_API virtual void InactiveWidget(UUserWidgetBase* InWidget, bool MarkAsGarbage = true, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged());
 
 public:
 	DECLARE_DELEGATE_RetVal_OneParam(UGameplayTagSlot*, FGetGameplayTagSlot, UUserWidgetBase*)

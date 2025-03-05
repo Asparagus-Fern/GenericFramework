@@ -24,8 +24,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FBPDelegate_CameraPointSwitchDelega
 /**
  * 
  */
-UCLASS()
-class CAMERASYSTEM_API UCameraManager : public UWorldSubsystem, public FCoreInternalManager
+UCLASS(MinimalAPI)
+class UCameraManager : public UWorldSubsystem, public FCoreInternalManager
 {
 	GENERATED_BODY()
 
@@ -42,29 +42,29 @@ protected:
 	virtual void HandleSwitchToCameraFinish(UCameraSwitchMethod* InCameraHandle);
 
 public:
-	bool CanSwitchToCamera(FGameplayTag InCameraTag) const;
+	CAMERASYSTEM_API bool CanSwitchToCamera(FGameplayTag InCameraTag) const;
 
-	ACameraPointBase* GetCameraPoint(FGameplayTag InCameraTag) const;
+	CAMERASYSTEM_API ACameraPointBase* GetCameraPoint(FGameplayTag InCameraTag) const;
 
-	virtual UCameraSwitchMethod* SwitchToCamera(const int32 InPlayerIndex, FVector Location, FRotator Rotation, TSubclassOf<UCameraSwitchMethod> InCameraMethodClass, FSimpleDelegate OnFinish = FSimpleDelegate());
-	virtual UCameraSwitchMethod* SwitchToCamera(const int32 InPlayerIndex, FVector Location, FRotator Rotation, UCameraSwitchMethod* InSwitchCameraMethod, FSimpleDelegate OnFinish = FSimpleDelegate());
+	CAMERASYSTEM_API virtual UCameraSwitchMethod* SwitchToCamera(const int32 InPlayerIndex, FVector Location, FRotator Rotation, TSubclassOf<UCameraSwitchMethod> InCameraMethodClass, FSimpleDelegate OnFinish = FSimpleDelegate());
+	CAMERASYSTEM_API virtual UCameraSwitchMethod* SwitchToCamera(const int32 InPlayerIndex, FVector Location, FRotator Rotation, UCameraSwitchMethod* InSwitchCameraMethod, FSimpleDelegate OnFinish = FSimpleDelegate());
 
-	virtual UCameraSwitchMethod* SwitchToCamera(const int32 InPlayerIndex, ACameraActor* InCameraActor, TSubclassOf<UCameraSwitchMethod> InCameraMethodClass, FSimpleDelegate OnFinish = FSimpleDelegate());
-	virtual UCameraSwitchMethod* SwitchToCamera(const int32 InPlayerIndex, ACameraActor* InCameraActor, UCameraSwitchMethod* InSwitchCameraMethod, FSimpleDelegate OnFinish = FSimpleDelegate());
+	CAMERASYSTEM_API virtual UCameraSwitchMethod* SwitchToCamera(const int32 InPlayerIndex, ACameraActor* InCameraActor, TSubclassOf<UCameraSwitchMethod> InCameraMethodClass, FSimpleDelegate OnFinish = FSimpleDelegate());
+	CAMERASYSTEM_API virtual UCameraSwitchMethod* SwitchToCamera(const int32 InPlayerIndex, ACameraActor* InCameraActor, UCameraSwitchMethod* InSwitchCameraMethod, FSimpleDelegate OnFinish = FSimpleDelegate());
 
-	virtual UCameraSwitchMethod* SwitchToCamera(const int32 InPlayerIndex, UCameraComponent* InCameraComponent, TSubclassOf<UCameraSwitchMethod> InCameraMethodClass, FSimpleDelegate OnFinish = FSimpleDelegate());
-	virtual UCameraSwitchMethod* SwitchToCamera(const int32 InPlayerIndex, UCameraComponent* InCameraComponent, UCameraSwitchMethod* InSwitchCameraMethod, FSimpleDelegate OnFinish = FSimpleDelegate());
+	CAMERASYSTEM_API virtual UCameraSwitchMethod* SwitchToCamera(const int32 InPlayerIndex, UCameraComponent* InCameraComponent, TSubclassOf<UCameraSwitchMethod> InCameraMethodClass, FSimpleDelegate OnFinish = FSimpleDelegate());
+	CAMERASYSTEM_API virtual UCameraSwitchMethod* SwitchToCamera(const int32 InPlayerIndex, UCameraComponent* InCameraComponent, UCameraSwitchMethod* InSwitchCameraMethod, FSimpleDelegate OnFinish = FSimpleDelegate());
 
-	virtual UCameraSwitchMethod* SwitchToCamera(const int32 InPlayerIndex, FGameplayTag InCameraTag, TSubclassOf<UCameraSwitchMethod> InCameraMethodClass, FSimpleDelegate OnFinish = FSimpleDelegate());
-	virtual UCameraSwitchMethod* SwitchToCamera(const int32 InPlayerIndex, FGameplayTag InCameraTag, UCameraSwitchMethod* InSwitchCameraMethod, FSimpleDelegate OnFinish = FSimpleDelegate());
+	CAMERASYSTEM_API virtual UCameraSwitchMethod* SwitchToCamera(const int32 InPlayerIndex, FGameplayTag InCameraTag, TSubclassOf<UCameraSwitchMethod> InCameraMethodClass, FSimpleDelegate OnFinish = FSimpleDelegate());
+	CAMERASYSTEM_API virtual UCameraSwitchMethod* SwitchToCamera(const int32 InPlayerIndex, FGameplayTag InCameraTag, UCameraSwitchMethod* InSwitchCameraMethod, FSimpleDelegate OnFinish = FSimpleDelegate());
 
-	virtual UCameraSwitchMethod* SwitchToCamera(const int32 InPlayerIndex, ACameraPointBase* InCameraPoint, TSubclassOf<UCameraSwitchMethod> InCameraMethodClass, FSimpleDelegate OnFinish = FSimpleDelegate());
-	virtual UCameraSwitchMethod* SwitchToCamera(const int32 InPlayerIndex, ACameraPointBase* InCameraPoint, UCameraSwitchMethod* InSwitchCameraMethod, FSimpleDelegate OnFinish = FSimpleDelegate());
+	CAMERASYSTEM_API virtual UCameraSwitchMethod* SwitchToCamera(const int32 InPlayerIndex, ACameraPointBase* InCameraPoint, TSubclassOf<UCameraSwitchMethod> InCameraMethodClass, FSimpleDelegate OnFinish = FSimpleDelegate());
+	CAMERASYSTEM_API virtual UCameraSwitchMethod* SwitchToCamera(const int32 InPlayerIndex, ACameraPointBase* InCameraPoint, UCameraSwitchMethod* InSwitchCameraMethod, FSimpleDelegate OnFinish = FSimpleDelegate());
 
-	UCameraSwitchMethod* SwitchToCurrent(const int32 InPlayerIndex, TSubclassOf<UCameraSwitchMethod> InCameraMethodClass, const FSimpleDelegate& OnFinish = FSimpleDelegate());
-	UCameraSwitchMethod* SwitchToCurrent(const int32 InPlayerIndex, UCameraSwitchMethod* InSwitchCameraMethod, const FSimpleDelegate& OnFinish = FSimpleDelegate());
-	UCameraSwitchMethod* SwitchToPrevious(const int32 InPlayerIndex, TSubclassOf<UCameraSwitchMethod> InCameraMethodClass, const FSimpleDelegate& OnFinish = FSimpleDelegate());
-	UCameraSwitchMethod* SwitchToPrevious(const int32 InPlayerIndex, UCameraSwitchMethod* InSwitchCameraMethod, const FSimpleDelegate& OnFinish = FSimpleDelegate());
+	CAMERASYSTEM_API UCameraSwitchMethod* SwitchToCurrent(const int32 InPlayerIndex, TSubclassOf<UCameraSwitchMethod> InCameraMethodClass, const FSimpleDelegate& OnFinish = FSimpleDelegate());
+	CAMERASYSTEM_API UCameraSwitchMethod* SwitchToCurrent(const int32 InPlayerIndex, UCameraSwitchMethod* InSwitchCameraMethod, const FSimpleDelegate& OnFinish = FSimpleDelegate());
+	CAMERASYSTEM_API UCameraSwitchMethod* SwitchToPrevious(const int32 InPlayerIndex, TSubclassOf<UCameraSwitchMethod> InCameraMethodClass, const FSimpleDelegate& OnFinish = FSimpleDelegate());
+	CAMERASYSTEM_API UCameraSwitchMethod* SwitchToPrevious(const int32 InPlayerIndex, UCameraSwitchMethod* InSwitchCameraMethod, const FSimpleDelegate& OnFinish = FSimpleDelegate());
 
 private:
 	bool IsSwitching(const APlayerController* InPlayerController);

@@ -19,8 +19,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FBPDelegate_OnEntityGroupUnRegister,
 /**
  * 管理可交互UI的分组
  */
-UCLASS()
-class INTERACTABLEWIDGETGENERATION_API UInteractableWidgetEntityGroupManager : public UWorldSubsystem, public FCoreInternalManager
+UCLASS(MinimalAPI)
+class UInteractableWidgetEntityGroupManager : public UWorldSubsystem, public FCoreInternalManager
 {
 	GENERATED_BODY()
 
@@ -31,11 +31,11 @@ public:
 	virtual bool DoesSupportWorldType(const EWorldType::Type WorldType) const override;
 
 public:
-	UInteractableWidgetEntityGroup* RegisterEntityGroup();
-	UInteractableWidgetEntityGroup* RegisterEntityGroup(TArray<UInteractableWidgetEntity*> InEntities);
+	INTERACTABLEWIDGETGENERATION_API UInteractableWidgetEntityGroup* RegisterEntityGroup();
+	INTERACTABLEWIDGETGENERATION_API UInteractableWidgetEntityGroup* RegisterEntityGroup(TArray<UInteractableWidgetEntity*> InEntities);
 
-	void UnRegisterEntityGroup(TArray<UInteractableWidgetEntityGroup*> InEntityGroups);
-	void UnRegisterEntityGroup(UInteractableWidgetEntityGroup* InEntityGroup);
+	INTERACTABLEWIDGETGENERATION_API void UnRegisterEntityGroup(TArray<UInteractableWidgetEntityGroup*> InEntityGroups);
+	INTERACTABLEWIDGETGENERATION_API void UnRegisterEntityGroup(UInteractableWidgetEntityGroup* InEntityGroup);
 
 public:
 	inline static FDelegate_OnEntityGroupRegister Delegate_OnEntityGroupRegister;

@@ -10,8 +10,8 @@
 /**
  * 
  */
-UCLASS()
-class PLAYERINPUTUTILITIES_API UPlayerInputManager : public UEnhancedInputLocalPlayerSubsystem, public FCoreInternalManager
+UCLASS(MinimalAPI)
+class UPlayerInputManager : public UEnhancedInputLocalPlayerSubsystem, public FCoreInternalManager
 {
 	GENERATED_BODY()
 

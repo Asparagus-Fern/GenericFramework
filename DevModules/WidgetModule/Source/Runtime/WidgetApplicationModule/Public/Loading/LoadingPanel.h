@@ -12,8 +12,8 @@ class ULoadingProgressBar;
 /**
  * 
  */
-UCLASS(Abstract)
-class WIDGETAPPLICATIONMODULE_API ULoadingPanel : public UUserWidgetBase, public ILoadingInterface
+UCLASS(Abstract, MinimalAPI)
+class ULoadingPanel : public UUserWidgetBase, public ILoadingInterface
 {
 	GENERATED_BODY()
 

@@ -26,8 +26,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FBPDelegate_OnProcedureFlowUnRegiste
 /**
  * 
  */
-UCLASS()
-class PROCEDUREFLOWSYSTEM_API UProcedureFlowManager : public UWorldSubsystem, public FCoreInternalManager
+UCLASS(MinimalAPI)
+class UProcedureFlowManager : public UWorldSubsystem, public FCoreInternalManager
 {
 	GENERATED_BODY()
 
@@ -47,29 +47,29 @@ protected:
 
 	/* UProcedureFlowManager */
 public:
-	void RegisterProcedureFlow(const AProcedureFlowActor* InActor);
-	void RegisterProcedureFlow(UProcedureFlowComponent* InComponent);
+	PROCEDUREFLOWSYSTEM_API void RegisterProcedureFlow(const AProcedureFlowActor* InActor);
+	PROCEDUREFLOWSYSTEM_API void RegisterProcedureFlow(UProcedureFlowComponent* InComponent);
 
-	void UnRegisterProcedureFlow(const AProcedureFlowActor* InActor);
-	void UnRegisterProcedureFlow(UProcedureFlowComponent* InComponent);
+	PROCEDUREFLOWSYSTEM_API void UnRegisterProcedureFlow(const AProcedureFlowActor* InActor);
+	PROCEDUREFLOWSYSTEM_API void UnRegisterProcedureFlow(UProcedureFlowComponent* InComponent);
 
-	void EnterProcedureFlow(const AProcedureFlowActor* InActor);
-	void EnterProcedureFlow(const UProcedureFlowComponent* InComponent);
-	void EnterProcedureFlow(FGameplayTag InProcedureFlowTag);
+	PROCEDUREFLOWSYSTEM_API void EnterProcedureFlow(const AProcedureFlowActor* InActor);
+	PROCEDUREFLOWSYSTEM_API void EnterProcedureFlow(const UProcedureFlowComponent* InComponent);
+	PROCEDUREFLOWSYSTEM_API void EnterProcedureFlow(FGameplayTag InProcedureFlowTag);
 
-	void RefreshCurrentProcedureFlow();
-	void ReEnterCurrentProcedureFlow();
+	PROCEDUREFLOWSYSTEM_API void RefreshCurrentProcedureFlow();
+	PROCEDUREFLOWSYSTEM_API void ReEnterCurrentProcedureFlow();
 
-	void ExitProcedureFlow(const AProcedureFlowActor* InActor);
-	void ExitProcedureFlow(const UProcedureFlowComponent* InComponent);
-	void ExitProcedureFlow(FGameplayTag InProcedureFlowTag);
+	PROCEDUREFLOWSYSTEM_API void ExitProcedureFlow(const AProcedureFlowActor* InActor);
+	PROCEDUREFLOWSYSTEM_API void ExitProcedureFlow(const UProcedureFlowComponent* InComponent);
+	PROCEDUREFLOWSYSTEM_API void ExitProcedureFlow(FGameplayTag InProcedureFlowTag);
 
-	bool IsProcedureFlowActived(const AProcedureFlowActor* InActor) const;
-	bool IsProcedureFlowActived(const UProcedureFlowComponent* InComponent) const;
-	bool IsProcedureFlowActived(FGameplayTag InProcedureFlowTag) const;
+	PROCEDUREFLOWSYSTEM_API bool IsProcedureFlowActived(const AProcedureFlowActor* InActor) const;
+	PROCEDUREFLOWSYSTEM_API bool IsProcedureFlowActived(const UProcedureFlowComponent* InComponent) const;
+	PROCEDUREFLOWSYSTEM_API bool IsProcedureFlowActived(FGameplayTag InProcedureFlowTag) const;
 
-	FGameplayTag GetCurrentProcedureFlowTag() const;
-	UProcedureFlowComponent* GetCurrentProcedureFlowComponent();
+	PROCEDUREFLOWSYSTEM_API FGameplayTag GetCurrentProcedureFlowTag() const;
+	PROCEDUREFLOWSYSTEM_API UProcedureFlowComponent* GetCurrentProcedureFlowComponent();
 
 	template <typename T>
 	T* GetCurrentProcedureFlowComponent()
@@ -77,8 +77,8 @@ public:
 		return Cast<T>(GetCurrentProcedureFlowComponent());
 	}
 
-	TArray<UProcedureFlowComponent*> GetProcedureFlowComponents();
-	UProcedureFlowComponent* GetProcedureFlowComponent(FGameplayTag InProcedureFlowTag);
+	PROCEDUREFLOWSYSTEM_API TArray<UProcedureFlowComponent*> GetProcedureFlowComponents();
+	PROCEDUREFLOWSYSTEM_API UProcedureFlowComponent* GetProcedureFlowComponent(FGameplayTag InProcedureFlowTag);
 
 	template <typename T>
 	T* GetProcedureFlowComponent(FGameplayTag InProcedureFlowTag)

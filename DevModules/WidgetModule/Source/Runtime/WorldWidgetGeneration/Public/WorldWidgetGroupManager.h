@@ -26,7 +26,7 @@ public:
 	virtual bool DoesSupportWorldType(const EWorldType::Type WorldType) const override;
 
 public:
-	virtual UInteractableWidgetEntityGroup* GetWorldWidgetGroup(FGameplayTag InGroupTag);
+	WORLDWIDGETGENERATION_API virtual UInteractableWidgetEntityGroup* GetWorldWidgetGroup(FGameplayTag InGroupTag);
 
 protected:
 	UPROPERTY()

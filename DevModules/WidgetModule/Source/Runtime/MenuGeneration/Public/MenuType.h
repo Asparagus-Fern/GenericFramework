@@ -5,6 +5,3 @@
 #include "CoreMinimal.h"
 #include "GameplayTagsManager.h"
 // #include "MenuType.generated.h"
-
-class UMenuStyle;
-class UMenuContainer;

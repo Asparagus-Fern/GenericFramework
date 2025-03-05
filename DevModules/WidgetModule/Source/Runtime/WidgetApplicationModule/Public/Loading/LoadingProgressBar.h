@@ -15,8 +15,8 @@ class UTextBlock;
 /**
  * 
  */
-UCLASS()
-class WIDGETAPPLICATIONMODULE_API ULoadingProgressBar : public UUserWidgetBase, public ILoadingInterface
+UCLASS(MinimalAPI)
+class ULoadingProgressBar : public UUserWidgetBase, public ILoadingInterface
 {
 	GENERATED_BODY()
 

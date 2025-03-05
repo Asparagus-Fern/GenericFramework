@@ -17,6 +17,6 @@ public:
 
 	virtual FText GetSectionTitle() const override;
 	virtual FText GetSectionToolTip() const override;
-	virtual float GetSectionHeight() const override;
+	virtual float GetSectionHeight(const UE::Sequencer::FViewDensityInfo& ViewDensity) const override;
 	virtual int32 OnPaintSection(FSequencerSectionPainter& InPainter) const override;
 };

@@ -53,8 +53,8 @@ public:
 /**
  * 提供对Pawn的移动旋转等限制锁定操作
  */
-UCLASS(ClassGroup=(Developer), meta=(BlueprintSpawnableComponent))
-class DEVGAMEPLAY_API UPawnLockStateComponent : public UActorComponent, public IPawnLockStateInterface
+UCLASS(ClassGroup=(Developer), meta=(BlueprintSpawnableComponent), MinimalAPI)
+class UPawnLockStateComponent : public UActorComponent, public IPawnLockStateInterface
 {
 	GENERATED_BODY()
 

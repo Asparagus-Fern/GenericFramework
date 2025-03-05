@@ -11,8 +11,8 @@ class USpline2D;
 /**
  * 
  */
-UCLASS()
-class MENUGENERATION_API UMenuSplineContainer : public UMenuContainer
+UCLASS(MinimalAPI)
+class UMenuSplineContainer : public UMenuContainer
 {
 	GENERATED_BODY()
 

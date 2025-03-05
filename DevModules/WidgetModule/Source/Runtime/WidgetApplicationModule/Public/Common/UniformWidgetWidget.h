@@ -41,8 +41,8 @@ public:
 /**
  * UniformGridPanel的包装，用于生成规则大小的Widget块
  */
-UCLASS(Abstract)
-class WIDGETAPPLICATIONMODULE_API UUniformWidgetWidget : public UUserWidgetBase
+UCLASS(Abstract, MinimalAPI)
+class UUniformWidgetWidget : public UUserWidgetBase
 {
 	GENERATED_BODY()
 

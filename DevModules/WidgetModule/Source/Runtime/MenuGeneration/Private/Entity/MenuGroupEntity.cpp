@@ -15,16 +15,6 @@ UMenuGroupEntity::UMenuGroupEntity(const FObjectInitializer& ObjectInitializer)
 {
 }
 
-void UMenuGroupEntity::Initialize()
-{
-	Super::Initialize();
-}
-
-void UMenuGroupEntity::DeInitialize()
-{
-	Super::DeInitialize();
-}
-
 void UMenuGroupEntity::OnActived_Implementation()
 {
 	Super::OnActived_Implementation();

@@ -56,7 +56,7 @@ public class ApplicationRuntime : ModuleRules
 				"ProcedureTaskSystem",
 
 				/* Dev Lab */
-				"PropertyDetailViewSystem",
+				
 
 				/* Marketplace */
 				"DBTween",

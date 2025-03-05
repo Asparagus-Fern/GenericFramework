@@ -33,8 +33,8 @@ public:
 /**
  * 
  */
-UCLASS()
-class MOVIESCENEEDUTILITIES_API UMovieSceneUMGEdManager : public UEditorSubsystem, public FCoreInternalManager
+UCLASS(MinimalAPI)
+class UMovieSceneUMGEdManager : public UEditorSubsystem, public FCoreInternalManager
 {
 	GENERATED_BODY()
 

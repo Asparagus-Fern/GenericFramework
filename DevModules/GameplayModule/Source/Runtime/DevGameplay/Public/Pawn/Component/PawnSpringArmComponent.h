@@ -9,8 +9,8 @@
 /**
  * 提供SpringArm的平滑过渡
  */
-UCLASS(ClassGroup=(Developer), meta=(BlueprintSpawnableComponent))
-class DEVGAMEPLAY_API UPawnSpringArmComponent : public USpringArmComponent
+UCLASS(ClassGroup=(Developer), meta=(BlueprintSpawnableComponent), MinimalAPI)
+class UPawnSpringArmComponent : public USpringArmComponent
 {
 	GENERATED_BODY()
 

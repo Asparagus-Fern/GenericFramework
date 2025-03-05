@@ -10,8 +10,8 @@
 /**
  * 
  */
-UCLASS(Abstract)
-class WIDGETGENERATION_API UGameHUD : public UUserWidgetBase
+UCLASS(Abstract, MinimalAPI)
+class UGameHUD : public UUserWidgetBase
 {
 	GENERATED_BODY()
 

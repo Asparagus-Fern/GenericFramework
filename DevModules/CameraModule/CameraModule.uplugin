@@ -21,6 +21,10 @@
     {
       "Name": "WidgetModule",
       "Enabled": true
+    },
+    {
+      "Name": "InputModule",
+      "Enabled": true
     }
   ],
   "Modules": [

@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "Common/CommonObject.h"
 
 #include "LevelStreamingType.generated.h"
 
@@ -87,8 +88,8 @@ public:
 /**
  * @brief 处理关卡流加载卸载与显示隐藏的基类
  */
-UCLASS()
-class ULevelStreamingHandleBase : public UObject
+UCLASS(MinimalAPI)
+class ULevelStreamingHandleBase : public UCommonObject
 {
 	GENERATED_BODY()
 
@@ -121,7 +122,7 @@ protected:
 /**
  * @brief 处理加载关卡流 
  */
-UCLASS()
+UCLASS(MinimalAPI)
 class ULoadLevelStreamingHandle : public ULevelStreamingHandleBase
 {
 	GENERATED_BODY()
@@ -140,7 +141,7 @@ protected:
 /**
  * @brief 处理卸载关卡流 
  */
-UCLASS()
+UCLASS(MinimalAPI)
 class UUnloadLevelStreamingHandle : public ULevelStreamingHandleBase
 {
 	GENERATED_BODY()
@@ -159,7 +160,7 @@ protected:
 /**
  * @brief 处理关卡流显隐
  */
-UCLASS()
+UCLASS(MinimalAPI)
 class ULevelStreamingVisibilityHandle : public ULevelStreamingHandleBase
 {
 	GENERATED_BODY()
@@ -174,16 +175,3 @@ protected:
 	virtual void OnOnceFinish() override;
 	virtual void OnFinish() override;
 };
-
-// struct FLevelsVisibilityHandle
-// {
-// public:
-// 	FLevelsVisibilityHandle();
-// 	FLevelsVisibilityHandle(TArray<TSoftObjectPtr<UWorld>> InLevels, bool InVisible, FOnOnceFinish InOnceFinish, FOnFinish InFinish);
-//
-// public:
-// 	TArray<TSoftObjectPtr<UWorld>> Levels;
-// 	bool bVisible;
-// 	FOnOnceFinish OnOnceFinish;
-// 	FOnFinish OnFinish;
-// };

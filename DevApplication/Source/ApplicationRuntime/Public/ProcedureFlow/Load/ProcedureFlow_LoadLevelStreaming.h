@@ -6,8 +6,8 @@
 #include "ProcedureFlow_Load.h"
 #include "ProcedureFlow_LoadLevelStreaming.generated.h"
 
-UCLASS()
-class APPLICATIONRUNTIME_API AProcedureFlow_LoadLevelStreaming : public AProcedureFlow_Load
+UCLASS(MinimalAPI)
+class AProcedureFlow_LoadLevelStreaming : public AProcedureFlow_Load
 {
 	GENERATED_BODY()
 

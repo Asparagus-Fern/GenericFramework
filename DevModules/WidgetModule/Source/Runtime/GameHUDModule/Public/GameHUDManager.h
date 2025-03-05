@@ -33,8 +33,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FBPDelegate_OnHUDActiveStateChanged
 /**
  * 
  */
-UCLASS()
-class GAMEHUDMODULE_API UGameHUDManager : public UWorldSubsystem, public FCoreInternalManager
+UCLASS(MinimalAPI)
+class UGameHUDManager : public UWorldSubsystem, public FCoreInternalManager
 {
 	GENERATED_BODY()
 
@@ -55,18 +55,18 @@ private:
 
 	/* UGameplayTagSlot */
 public:
-	void RegisterSlot(UGameplayTagSlot* InSlot);
-	void UnRegisterSlot(UGameplayTagSlot* InSlot);
+	GAMEHUDMODULE_API void RegisterSlot(UGameplayTagSlot* InSlot);
+	GAMEHUDMODULE_API void UnRegisterSlot(UGameplayTagSlot* InSlot);
 
-	UGameplayTagSlot* GetSlot(UUserWidgetBase* InWidget) const;
-	UGameplayTagSlot* GetSlot(FGameplayTag InSlotTag) const;
-	TArray<UGameplayTagSlot*> GetSlots() { return Slots; }
+	GAMEHUDMODULE_API UGameplayTagSlot* GetSlot(UUserWidgetBase* InWidget) const;
+	GAMEHUDMODULE_API UGameplayTagSlot* GetSlot(FGameplayTag InSlotTag) const;
+	GAMEHUDMODULE_API TArray<UGameplayTagSlot*> GetSlots() { return Slots; }
 
-	UUserWidgetBase* GetSlotWidget(FGameplayTag InSlotTag) const;
-	TArray<UUserWidgetBase*> GetSlotWidgets() const;
+	GAMEHUDMODULE_API UUserWidgetBase* GetSlotWidget(FGameplayTag InSlotTag) const;
+	GAMEHUDMODULE_API TArray<UUserWidgetBase*> GetSlotWidgets() const;
 
-	bool AddSlotWidget(UUserWidgetBase* InWidget);
-	bool RemoveSlotWidget(UUserWidgetBase* InWidget);
+	GAMEHUDMODULE_API bool AddSlotWidget(UUserWidgetBase* InWidget);
+	GAMEHUDMODULE_API bool RemoveSlotWidget(UUserWidgetBase* InWidget);
 
 public:
 	inline static FDelegate_OnSlotRegister Delegate_OnSlotRegister;
@@ -84,38 +84,38 @@ protected:
 
 	/* Game HUD */
 public:
-	void CreateGameHUDs(TArray<TSoftClassPtr<UGameHUD>> InGameHUDClasses, bool bAddToViewport = true);
-	void CreateGameHUDs(TArray<TSubclassOf<UGameHUD>> InGameHUDClasses, bool bAddToViewport = true);
-	void CreateGameHUDs(TArray<UGameHUD*> InGameHUDs, bool bAddToViewport = true);
-	void CreateGameHUD(UGameHUD* InGameHUD, bool bAddToViewport = true);
+	GAMEHUDMODULE_API void CreateGameHUDs(TArray<TSoftClassPtr<UGameHUD>> InGameHUDClasses, bool bAddToViewport = true);
+	GAMEHUDMODULE_API void CreateGameHUDs(TArray<TSubclassOf<UGameHUD>> InGameHUDClasses, bool bAddToViewport = true);
+	GAMEHUDMODULE_API void CreateGameHUDs(TArray<UGameHUD*> InGameHUDs, bool bAddToViewport = true);
+	GAMEHUDMODULE_API void CreateGameHUD(UGameHUD* InGameHUD, bool bAddToViewport = true);
 
-	void RemoveGameHUDs(TArray<UGameHUD*> InGameHUDs);
-	void RemoveGameHUD(UGameHUD* InGameHUD);
-	void RemoveGameHUDs(TArray<FGameplayTag> InHUDTags);
-	void RemoveGameHUD(FGameplayTag InHUDTag);
+	GAMEHUDMODULE_API void RemoveGameHUDs(TArray<UGameHUD*> InGameHUDs);
+	GAMEHUDMODULE_API void RemoveGameHUD(UGameHUD* InGameHUD);
+	GAMEHUDMODULE_API void RemoveGameHUDs(TArray<FGameplayTag> InHUDTags);
+	GAMEHUDMODULE_API void RemoveGameHUD(FGameplayTag InHUDTag);
 
-	void ClearupGameHUDs();
+	GAMEHUDMODULE_API void ClearupGameHUDs();
 
 	/* 从标签查找HUD */
-	UGameHUD* GetGameHUDByTag(FGameplayTag InHUDTag);
+	GAMEHUDMODULE_API UGameHUD* GetGameHUDByTag(FGameplayTag InHUDTag);
 
 	/* 从标签查找所有匹配的HUD */
-	TArray<UGameHUD*> GetGameHUDsByTag(FGameplayTag InHUDTag);
+	GAMEHUDMODULE_API TArray<UGameHUD*> GetGameHUDsByTag(FGameplayTag InHUDTag);
 
 	/* 设置所有HUD的显隐 */
-	void SetAllGameHUDActiveState(bool IsActived);
+	GAMEHUDMODULE_API void SetAllGameHUDActiveState(bool IsActived);
 
 	/* 设置指定HUD的显隐 */
-	void SetGameHUDActiveState(UGameHUD* InGameHUD, bool IsActived) const;
+	GAMEHUDMODULE_API void SetGameHUDActiveState(UGameHUD* InGameHUD, bool IsActived) const;
 
 	/* 从标签查找HUD并设置显隐 */
-	void SetGameHUDActiveState(FGameplayTag InTag, bool IsActived);
+	GAMEHUDMODULE_API void SetGameHUDActiveState(FGameplayTag InTag, bool IsActived);
 
 	/* 创建该Widget的临时HUD，在移除该Widget时将，如果其他Widget没有使用到该临时HUD，将被移除 */
-	void AddTemporaryGameHUD(UUserWidgetBase* InWidget);
+	GAMEHUDMODULE_API void AddTemporaryGameHUD(UUserWidgetBase* InWidget);
 
 	/* 移除该Widget的临时HUD，如果有其他Widget正在使用该临时HUD，将不被移除 */
-	void RemoveTemporaryGameHUD(UUserWidgetBase* InWidget);
+	GAMEHUDMODULE_API void RemoveTemporaryGameHUD(UUserWidgetBase* InWidget);
 
 protected:
 	TArray<TSubclassOf<UGameHUD>> GetCurrentGameHUDClasses();

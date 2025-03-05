@@ -12,8 +12,8 @@ class UWorldWidgetComponent;
 class UUserWidgetBase;
 
 
-UCLASS(HideCategories=(Object,Collision,Physics,Networking,Input,LevelInstance,Cooking,HLOD,Replication))
-class WORLDWIDGETGENERATION_API AWorldWidgetPoint : public AActor
+UCLASS(HideCategories=(Object,Collision,Physics,Networking,Input,LevelInstance,Cooking,HLOD,Replication), MinimalAPI)
+class AWorldWidgetPoint : public AActor
 {
 	GENERATED_BODY()
 
@@ -21,11 +21,6 @@ public:
 	AWorldWidgetPoint(const FObjectInitializer& ObjectInitializer);
 
 public:
-// #if WITH_EDITORONLY_DATA
-// 	UPROPERTY(VisibleAnywhere)
-// 	FString MiddleClick = "Mouse Button Middle Click UMG To Select The Actor";
-// #endif
-
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UWorldWidgetComponent* WorldWidgetComponent = nullptr;
 };

@@ -17,18 +17,11 @@ UMenuEntityBase::UMenuEntityBase(const FObjectInitializer& ObjectInitializer)
 
 void UMenuEntityBase::Initialize()
 {
-	Super::Initialize();
-
 	const FGameplayTag RootMenuTag = FGameplayTag::RequestGameplayTag("UI.Menu");
 	if (UBPFunctions_GameplayTag::GetDirectGameplayTagParent(MenuTag) == RootMenuTag)
 	{
 		bIsRoot = true;
 	}
-}
-
-void UMenuEntityBase::DeInitialize()
-{
-	Super::DeInitialize();
 }
 
 void UMenuEntityBase::OnEntitySelectionChanged_Implementation(bool Selection)

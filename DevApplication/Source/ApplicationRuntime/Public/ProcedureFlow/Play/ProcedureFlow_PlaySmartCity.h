@@ -11,8 +11,8 @@ class UCameraSwitchMethod;
 class UUserWidgetBase;
 class UGameMenuSetting;
 
-UCLASS()
-class APPLICATIONRUNTIME_API AProcedureFlow_PlaySmartCity : public AProcedureFlow_Play
+UCLASS(MinimalAPI)
+class AProcedureFlow_PlaySmartCity : public AProcedureFlow_Play
 {
 	GENERATED_BODY()
 

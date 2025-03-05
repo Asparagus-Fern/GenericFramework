@@ -9,8 +9,8 @@
 
 class UManagerWorldSetting;
 
-UCLASS(Abstract)
-class APPLICATIONRUNTIME_API AProcedureFlow_Play : public AProcedureFlowActor
+UCLASS(Abstract, MinimalAPI)
+class AProcedureFlow_Play : public AProcedureFlowActor
 {
 	GENERATED_BODY()
 

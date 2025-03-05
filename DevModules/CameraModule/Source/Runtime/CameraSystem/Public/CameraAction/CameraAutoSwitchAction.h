@@ -12,8 +12,8 @@ class UCameraSwitchMethod;
 /**
  * 
  */
-UCLASS()
-class CAMERASYSTEM_API UCameraAutoSwitchAction : public UPlayerInputIdleAction
+UCLASS(MinimalAPI)
+class UCameraAutoSwitchAction : public UPlayerInputIdleAction
 {
 	GENERATED_BODY()
 

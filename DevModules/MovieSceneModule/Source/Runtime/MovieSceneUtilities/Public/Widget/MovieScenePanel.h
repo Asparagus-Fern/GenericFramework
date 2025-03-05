@@ -9,8 +9,8 @@
 /**
  * 
  */
-UCLASS(Abstract)
-class MOVIESCENEUTILITIES_API UMovieScenePanel : public UUserWidgetBase
+UCLASS(Abstract, MinimalAPI)
+class UMovieScenePanel : public UUserWidgetBase
 {
 	GENERATED_BODY()
 };

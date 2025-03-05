@@ -15,8 +15,8 @@ class ALevelSequenceActor;
 /**
  * 
  */
-UCLASS()
-class LEVELSEQUENCESYSTEM_API ULevelSequenceHandle : public UMovieSceneHandleBase
+UCLASS(MinimalAPI)
+class ULevelSequenceHandle : public UMovieSceneHandleBase
 {
 	GENERATED_BODY()
 

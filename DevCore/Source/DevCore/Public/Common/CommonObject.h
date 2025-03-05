@@ -18,10 +18,4 @@ class DEVCORE_API UCommonObject : public UObject
 public:
 	UCommonObject(const FObjectInitializer& ObjectInitializer);
 	virtual UWorld* GetWorld() const override;
-	virtual void PostLoad() override;
-	virtual void BeginDestroy() override;
-
-protected:
-	virtual void Initialize();
-	virtual void DeInitialize();
 };

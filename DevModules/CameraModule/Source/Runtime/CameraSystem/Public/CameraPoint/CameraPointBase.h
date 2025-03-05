@@ -15,8 +15,8 @@ class UCameraSwitchMethod;
 
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Camera);
 
-UCLASS(Abstract, HideCategories=(Object,Actor,Collision,Physics,Networking,Input,LevelInstance,Cooking,HLOD,Replication))
-class CAMERASYSTEM_API ACameraPointBase : public AActor
+UCLASS(Abstract, HideCategories=(Object,Actor,Collision,Physics,Networking,Input,LevelInstance,Cooking,HLOD,Replication), MinimalAPI)
+class ACameraPointBase : public AActor
 {
 	GENERATED_BODY()
 
@@ -45,10 +45,10 @@ public:
 
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintPure)
-	UCameraComponent* GetCameraComponent();
+	CAMERASYSTEM_API UCameraComponent* GetCameraComponent();
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	void SetCameraComponent(UCameraComponent* InCameraComponent);
+	CAMERASYSTEM_API void SetCameraComponent(UCameraComponent* InCameraComponent);
 
 public:
 	DECLARE_EVENT_OneParam(ACameraPointBase, FCameraPointDelegate, ACameraPointBase*)

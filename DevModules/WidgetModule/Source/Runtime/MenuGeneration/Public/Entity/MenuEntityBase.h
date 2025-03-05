@@ -18,8 +18,8 @@ struct FMenuEntityEvent
 /**
  * 
  */
-UCLASS()
-class MENUGENERATION_API UMenuEntityBase : public UInteractableWidgetEntity
+UCLASS(MinimalAPI)
+class UMenuEntityBase : public UInteractableWidgetEntity
 {
 	GENERATED_BODY()
 
@@ -27,8 +27,7 @@ class MENUGENERATION_API UMenuEntityBase : public UInteractableWidgetEntity
 
 public:
 	UMenuEntityBase(const FObjectInitializer& ObjectInitializer);
-	virtual void Initialize() override;
-	virtual void DeInitialize() override;
+	void Initialize();
 
 	/* UInteractableWidgetEntity */
 protected:
@@ -45,7 +44,7 @@ public:
 	virtual void OnActived_Implementation() override;
 	virtual void OnInactived_Implementation() override;
 	virtual void OnDestroy_Implementation() override;
-	
+
 	/* UMenuEntity */
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Transient)

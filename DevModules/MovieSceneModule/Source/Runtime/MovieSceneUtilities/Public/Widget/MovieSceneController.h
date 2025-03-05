@@ -9,8 +9,8 @@
 /**
  * 
  */
-UCLASS(Abstract)
-class MOVIESCENEUTILITIES_API UMovieSceneController : public UUserWidgetBase
+UCLASS(Abstract, MinimalAPI)
+class UMovieSceneController : public UUserWidgetBase
 {
 	GENERATED_BODY()
 };

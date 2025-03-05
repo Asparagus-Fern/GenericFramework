@@ -9,8 +9,8 @@
 /**
  * 
  */
-UCLASS(Abstract)
-class WIDGETGENERATION_API UTemporaryHUD : public UGameHUD
+UCLASS(Abstract, MinimalAPI)
+class UTemporaryHUD : public UGameHUD
 {
 	GENERATED_BODY()
 };

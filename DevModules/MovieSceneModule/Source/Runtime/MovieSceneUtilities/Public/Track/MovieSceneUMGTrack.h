@@ -11,8 +11,8 @@ class UUserWidgetBlueprint;
 /**
  * 
  */
-UCLASS()
-class MOVIESCENEUTILITIES_API UMovieSceneUMGTrack : public UMovieSceneNameableTrack
+UCLASS(MinimalAPI)
+class UMovieSceneUMGTrack : public UMovieSceneNameableTrack
 {
 	GENERATED_BODY()
 
@@ -26,8 +26,8 @@ public:
 	virtual bool IsEmpty() const override;
 	virtual const TArray<UMovieSceneSection*>& GetAllSections() const override;
 	virtual bool SupportsMultipleRows() const override;
-	
+
 public:
 	UPROPERTY()
-	TArray<UMovieSceneSection*>  Sections;
+	TArray<UMovieSceneSection*> Sections;
 };

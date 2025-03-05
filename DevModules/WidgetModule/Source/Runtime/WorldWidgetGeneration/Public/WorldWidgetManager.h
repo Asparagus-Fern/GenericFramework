@@ -31,7 +31,7 @@ public:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void Deinitialize() override;
 	virtual bool DoesSupportWorldType(const EWorldType::Type WorldType) const override;
-	
+
 	/* UWorldWidgetManager */
 protected:
 	virtual void RegisterWorldWidgetComponent(UWorldWidgetComponent* InWorldWidgetComponent);

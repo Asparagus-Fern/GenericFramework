@@ -13,8 +13,8 @@ class ULevelSequenceHandle;
 /**
  * 
  */
-UCLASS()
-class EVENTUTILITIES_API UHandleManager : public UWorldSubsystem, public FCoreInternalManager
+UCLASS(MinimalAPI)
+class UHandleManager : public UWorldSubsystem, public FCoreInternalManager
 {
 	GENERATED_BODY()
 
@@ -26,22 +26,22 @@ public:
 
 	/* FHandleInterface */
 public:
-	virtual void RegisterHandle(UHandleBase* InHandle);
-	virtual UHandleBase* RegisterHandle(TSubclassOf<UHandleBase> InHandleClass, FName InHandleName = NAME_None);
-	virtual UHandleBase* RegisterHandle(UObject* Outer, TSubclassOf<UHandleBase> InHandleClass, FName InHandleName = NAME_None);
+	EVENTUTILITIES_API virtual void RegisterHandle(UHandleBase* InHandle);
+	EVENTUTILITIES_API virtual UHandleBase* RegisterHandle(TSubclassOf<UHandleBase> InHandleClass, FName InHandleName = NAME_None);
+	EVENTUTILITIES_API virtual UHandleBase* RegisterHandle(UObject* Outer, TSubclassOf<UHandleBase> InHandleClass, FName InHandleName = NAME_None);
 
-	virtual void UnRegisterHandle(UHandleBase* InHandle);
-	virtual void UnRegisterHandle(FGuid InHandleID);
-	virtual void UnRegisterHandle(FName InHandleName);
+	EVENTUTILITIES_API virtual void UnRegisterHandle(UHandleBase* InHandle);
+	EVENTUTILITIES_API virtual void UnRegisterHandle(FGuid InHandleID);
+	EVENTUTILITIES_API virtual void UnRegisterHandle(FName InHandleName);
 
-	virtual bool IsHandleRegister(const UHandleBase* InHandle);
-	virtual bool IsHandleRegister(FGuid InHandleID);
-	virtual bool IsHandleRegister(FName InHandleName);
+	EVENTUTILITIES_API virtual bool IsHandleRegister(const UHandleBase* InHandle);
+	EVENTUTILITIES_API virtual bool IsHandleRegister(FGuid InHandleID);
+	EVENTUTILITIES_API virtual bool IsHandleRegister(FName InHandleName);
 
-	virtual TArray<UHandleBase*> GetAllHandles() { return Handles; }
+	EVENTUTILITIES_API virtual TArray<UHandleBase*> GetAllHandles() { return Handles; }
 
-	virtual UHandleBase* GetHandle(FGuid InHandleID);
-	virtual UHandleBase* GetHandle(FName InHandleName);
+	EVENTUTILITIES_API virtual UHandleBase* GetHandle(FGuid InHandleID);
+	EVENTUTILITIES_API virtual UHandleBase* GetHandle(FName InHandleName);
 
 	/* UHandleManager */
 public:

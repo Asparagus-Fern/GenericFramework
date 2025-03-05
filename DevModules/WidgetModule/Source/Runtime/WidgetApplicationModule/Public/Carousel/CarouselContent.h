@@ -11,8 +11,8 @@ class UInteractableWidgetBase;
 /**
  * 
  */
-UCLASS()
-class WIDGETAPPLICATIONMODULE_API UCarouselContent : public UUserWidgetBase
+UCLASS(MinimalAPI)
+class UCarouselContent : public UUserWidgetBase
 {
 	GENERATED_BODY()
 

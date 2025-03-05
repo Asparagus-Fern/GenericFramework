@@ -81,7 +81,8 @@
     {
       "Name": "ApplicationDeveloper",
       "Type": "UncookedOnly",
-      "LoadingPhase": "PostDefault"
+      "LoadingPhase": "PostDefault",
+      "Enabled": false
     }
   ]
 }

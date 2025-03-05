@@ -60,7 +60,7 @@ private:
 
 	/* UWidgetAnimationManager */
 public:
-	bool PlayWidgetAnimation(UUserWidgetBase* InWidget, bool InIsActive, const FTimerDelegate& InDelegate = FTimerDelegate());
+	WIDGETGENERATION_API bool PlayWidgetAnimation(UUserWidgetBase* InWidget, bool InIsActive, const FTimerDelegate& InDelegate = FTimerDelegate());
 
 public:
 	inline static FDelegate_OnWidgetAnimationPlayFinish Delegate_OnWidgetAnimationPlayFinish;

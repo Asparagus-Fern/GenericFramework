@@ -12,8 +12,8 @@ class UMenuStyle;
 /**
  * 
  */
-UCLASS()
-class MENUGENERATION_API UMenuContainer : public UUserWidgetBase
+UCLASS(MinimalAPI)
+class UMenuContainer : public UUserWidgetBase
 {
 	GENERATED_UCLASS_BODY()
 

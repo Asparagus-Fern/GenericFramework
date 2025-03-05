@@ -15,8 +15,8 @@ class UMediaPlayer;
 /**
  * 
  */
-UCLASS()
-class MEDIASYSTEM_API UMediaHandle : public UMovieSceneHandleBase
+UCLASS(MinimalAPI)
+class UMediaHandle : public UMovieSceneHandleBase
 {
 	GENERATED_UCLASS_BODY()
 

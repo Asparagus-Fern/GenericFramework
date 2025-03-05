@@ -8,8 +8,8 @@
 class UTextRenderComponent;
 class UArrowComponent;
 
-UCLASS(NotBlueprintable, HideCategories=(Object,Collision,Physics,Networking,Input,LevelInstance,Cooking,LOD,HLOD,Replication))
-class WORLDUTILITIES_API ACompassActor : public AActor
+UCLASS(NotBlueprintable, HideCategories=(Object,Collision,Physics,Networking,Input,LevelInstance,Cooking,LOD,HLOD,Replication), MinimalAPI)
+class ACompassActor : public AActor
 {
 	GENERATED_BODY()
 
@@ -17,7 +17,6 @@ public:
 	ACompassActor();
 	virtual void BeginPlay() override;
 	virtual void OnConstruction(const FTransform& Transform) override;
-	// virtual void Tick(float DeltaTime) override;
 
 public:
 	UPROPERTY()

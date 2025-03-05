@@ -12,8 +12,8 @@ class UMenuCollection;
 /**
  * 
  */
-UCLASS()
-class MENUGENERATION_API UMenuGenerationManager : public UWorldSubsystem, public FTickableInternalManager
+UCLASS(MinimalAPI)
+class UMenuGenerationManager : public UWorldSubsystem, public FTickableInternalManager
 {
 	GENERATED_BODY()
 
@@ -24,9 +24,9 @@ public:
 	virtual bool DoesSupportWorldType(const EWorldType::Type WorldType) const override;
 
 public:
-	UMenuCollection* RegisterMenuCollection(TSubclassOf<UMenuCollection> InCollectionClass, bool InActived = true);
-	bool RegisterMenuCollection(UMenuCollection* InCollection, bool InActived = true);
-	bool UnRegisterMenuCollection(UMenuCollection* InCollection);
+	MENUGENERATION_API UMenuCollection* RegisterMenuCollection(TSubclassOf<UMenuCollection> InCollectionClass, bool InActived = true);
+	MENUGENERATION_API bool RegisterMenuCollection(UMenuCollection* InCollection, bool InActived = true);
+	MENUGENERATION_API bool UnRegisterMenuCollection(UMenuCollection* InCollection);
 
 protected:
 	UPROPERTY(BlueprintReadOnly, Transient)

@@ -167,8 +167,8 @@ public:
 /**
  * 
  */
-UCLASS(Abstract, EditInlineNew)
-class WORLDUTILITIES_API UHandleActor : public UCommonObject
+UCLASS(Abstract, EditInlineNew, MinimalAPI)
+class UHandleActor : public UCommonObject
 {
 	GENERATED_BODY()
 

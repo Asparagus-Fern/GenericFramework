@@ -13,8 +13,8 @@ class UWidgetEntity;
 /**
  * 
  */
-UCLASS()
-class WIDGETGENERATION_API UWidgetEntityManager : public UWorldSubsystem, public FCoreInternalManager
+UCLASS(MinimalAPI)
+class UWidgetEntityManager : public UWorldSubsystem, public FCoreInternalManager
 {
 	GENERATED_BODY()
 
@@ -25,12 +25,12 @@ public:
 	virtual bool DoesSupportWorldType(const EWorldType::Type WorldType) const override;
 
 public:
-	UWidgetEntity* RegisterWidgetEntity(TSubclassOf<UWidgetEntity> InWidgetEntityClass);
-	void RegisterWidgetEntity(TArray<UWidgetEntity*> InWidgetEntities);
-	void RegisterWidgetEntity(UWidgetEntity* InWidgetEntity);
+	WIDGETGENERATION_API UWidgetEntity* RegisterWidgetEntity(TSubclassOf<UWidgetEntity> InWidgetEntityClass);
+	WIDGETGENERATION_API void RegisterWidgetEntity(TArray<UWidgetEntity*> InWidgetEntities);
+	WIDGETGENERATION_API void RegisterWidgetEntity(UWidgetEntity* InWidgetEntity);
 
-	void UnRegisterWidgetEntity(TArray<UWidgetEntity*> InWidgetEntities);
-	void UnRegisterWidgetEntity(UWidgetEntity* InWidgetEntity);
+	WIDGETGENERATION_API void UnRegisterWidgetEntity(TArray<UWidgetEntity*> InWidgetEntities);
+	WIDGETGENERATION_API void UnRegisterWidgetEntity(UWidgetEntity* InWidgetEntity);
 
 public:
 	template <typename T>

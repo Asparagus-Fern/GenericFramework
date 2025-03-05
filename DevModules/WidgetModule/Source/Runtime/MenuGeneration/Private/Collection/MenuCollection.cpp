@@ -193,6 +193,7 @@ void UMenuCollection::GenerateMenu(UDataTable* InMenuTagTable)
 
 		 NewMenu->MenuTag = MenuTag;
 		 NewMenu->MenuMainName = FText::FromString(Value.DevComment);
+		 NewMenu->Initialize();
 
 		 MenuEntities.Add(NewMenu);
 	 }

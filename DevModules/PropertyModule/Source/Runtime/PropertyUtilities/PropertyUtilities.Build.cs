@@ -10,7 +10,7 @@ public class PropertyUtilities : ModuleRules
 			new string[]
 			{
 				"Core",
-				"DevCore",
+				"DevCore"
 			}
 		);
 

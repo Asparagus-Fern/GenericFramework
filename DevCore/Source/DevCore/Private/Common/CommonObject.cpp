@@ -19,25 +19,3 @@ UWorld* UCommonObject::GetWorld() const
 	}
 	return nullptr;
 }
-
-void UCommonObject::PostLoad()
-{
-	UObject::PostLoad();
-	Initialize();
-}
-
-void UCommonObject::BeginDestroy()
-{
-	DeInitialize();
-	UObject::BeginDestroy();
-}
-
-void UCommonObject::Initialize()
-{
-	DLOG(DLogObject, Log, TEXT("On Initialized : %s"), *GetName());
-}
-
-void UCommonObject::DeInitialize()
-{
-	DLOG(DLogObject, Log, TEXT("On DeInitialized : %s"), *GetName());
-}

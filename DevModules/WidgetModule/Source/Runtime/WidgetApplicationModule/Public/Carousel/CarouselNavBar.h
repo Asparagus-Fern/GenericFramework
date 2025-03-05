@@ -12,8 +12,8 @@ class UInteractableWidgetBase;
 /**
  * 
  */
-UCLASS()
-class WIDGETAPPLICATIONMODULE_API UCarouselNavBar : public UUserWidgetBase
+UCLASS(MinimalAPI)
+class UCarouselNavBar : public UUserWidgetBase
 {
 	GENERATED_BODY()
 

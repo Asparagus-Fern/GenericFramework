@@ -11,8 +11,8 @@ class UMenuEntityBase;
 /**
  * 
  */
-UCLASS(BlueprintType)
-class MENUGENERATION_API UMenuStyle : public UInteractableWidgetBase
+UCLASS(BlueprintType, MinimalAPI)
+class UMenuStyle : public UInteractableWidgetBase
 {
 	GENERATED_BODY()
 

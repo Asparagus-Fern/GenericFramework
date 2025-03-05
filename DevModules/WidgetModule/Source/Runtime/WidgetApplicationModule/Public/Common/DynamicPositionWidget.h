@@ -38,8 +38,8 @@ public:
 /**
  * CanvasPanel的包装，用于在屏幕任意处创建指定Widget
  */
-UCLASS(Abstract)
-class WIDGETAPPLICATIONMODULE_API UDynamicPositionWidget : public UUserWidgetBase
+UCLASS(Abstract, MinimalAPI)
+class UDynamicPositionWidget : public UUserWidgetBase
 {
 	GENERATED_BODY()
 
