@@ -191,27 +191,11 @@ void UBPFunctions_LevelStreaming::UnLoadCurrentWorldLevelStreaming(FHandleLevelS
 
 ULevelStreaming* UBPFunctions_LevelStreaming::GetLevelStreaming(TSoftObjectPtr<UWorld> Level)
 {
-	if (Level.IsNull())
+	if (const ULevelStreamingManager* LevelStreamingManager = UManagerProxy::Get()->GetManager<ULevelStreamingManager>())
 	{
-		DLOG(DLogWorld, Warning, TEXT("Level Is InValid"))
-		return nullptr;
+		return LevelStreamingManager->GetLevelStreaming(Level);
 	}
-
-	const FString PackageName = FPackageName::ObjectPathToPackageName(Level.ToString());
-	if (PackageName.IsEmpty())
-	{
-		DLOG(DLogWorld, Warning, TEXT("Level Package Is Not Found"))
-		return nullptr;
-	}
-
-	ULevelStreaming* LevelStreaming = UGameplayStatics::GetStreamingLevel(this, FName(*PackageName));
-	if (!IsValid(LevelStreaming))
-	{
-		DLOG(DLogWorld, Warning, TEXT("Level Streaming Is Not Found"));
-		return nullptr;
-	}
-
-	return LevelStreaming;
+	return nullptr;
 }
 
 bool UBPFunctions_LevelStreaming::IsLevelLoaded(TSoftObjectPtr<UWorld> Level)

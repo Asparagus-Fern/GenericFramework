@@ -10,6 +10,7 @@
 #include "Handle/LoadLevelStreamingHandle.h"
 #include "Handle/SetLevelStreamingVisibilityHandle.h"
 #include "Handle/UnLoadLevelStreamingHandle.h"
+#include "Kismet/GameplayStatics.h"
 #include "Manager/ManagerStatics.h"
 
 #define LOCTEXT_NAMESPACE "ULevelStreamingManager"
@@ -206,7 +207,7 @@ USetLevelStreamingVisibilityHandle* ULevelStreamingManager::SetLevelsVisibilityB
 		OnFinish.ExecuteIfBound();
 		return nullptr;
 	}
-	
+
 	TArray<FSetLevelStreamingVisibilitySetting> ValidSettings;
 
 	/* Loop To Get Valid Settings */
@@ -223,7 +224,7 @@ USetLevelStreamingVisibilityHandle* ULevelStreamingManager::SetLevelsVisibilityB
 			DLOG(DLogWorld, Warning, TEXT("Current World Is Not Contain The Level : %s"), *Setting.Level->GetName())
 			continue;
 		}
-		
+
 		ValidSettings.Add(Setting);
 	}
 
@@ -310,6 +311,31 @@ UUnLoadLevelStreamingHandle* ULevelStreamingManager::UnLoadCurrentWorldLevelStre
 	}
 
 	return UnloadLevels(WorldToUnLoad, false, OnOnceFinish, OnFinish);
+}
+
+ULevelStreaming* ULevelStreamingManager::GetLevelStreaming(TSoftObjectPtr<UWorld> Level) const
+{
+	if (Level.IsNull())
+	{
+		DLOG(DLogWorld, Warning, TEXT("Level Is InValid"))
+		return nullptr;
+	}
+
+	const FString PackageName = FPackageName::ObjectPathToPackageName(Level.ToString());
+	if (PackageName.IsEmpty())
+	{
+		DLOG(DLogWorld, Warning, TEXT("Level Package Is Not Found"))
+		return nullptr;
+	}
+
+	ULevelStreaming* LevelStreaming = UGameplayStatics::GetStreamingLevel(this, FName(*PackageName));
+	if (!IsValid(LevelStreaming))
+	{
+		DLOG(DLogWorld, Warning, TEXT("Level Streaming Is Not Found"));
+		return nullptr;
+	}
+
+	return LevelStreaming;
 }
 
 bool ULevelStreamingManager::IsCurrentWorldContainLevel(const TSoftObjectPtr<UWorld>& Level) const

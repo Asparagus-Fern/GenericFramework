@@ -40,9 +40,6 @@ public:
 
 	UFUNCTION()
 	virtual void ExecuteHandle(int32 Index) PURE_VIRTUAL(,)
-
-	UFUNCTION()
-	virtual void ExecuteHandle(int32 Index) PURE_VIRTUAL(,)
 	
 protected:
 	UFUNCTION()

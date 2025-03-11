@@ -43,10 +43,8 @@ public:
 	LEVELSTREAMING_API ULoadLevelStreamingHandle* LoadCurrentWorldLevelStreaming(const FOnHandleLevelStreamingOnceFinish& OnOnceFinish = FOnHandleLevelStreamingOnceFinish(), const FOnHandleLevelStreamingFinish& OnFinish = FOnHandleLevelStreamingFinish());
 	LEVELSTREAMING_API UUnLoadLevelStreamingHandle* UnLoadCurrentWorldLevelStreaming(const FOnHandleLevelStreamingOnceFinish& OnOnceFinish = FOnHandleLevelStreamingOnceFinish(), const FOnHandleLevelStreamingFinish& OnFinish = FOnHandleLevelStreamingFinish());
 
+	LEVELSTREAMING_API ULevelStreaming* GetLevelStreaming(TSoftObjectPtr<UWorld> Level) const;
 	LEVELSTREAMING_API bool IsCurrentWorldContainLevel(const TSoftObjectPtr<UWorld>& Level) const;
-
-private:
-	void LoadLevelBeforeSetLevelVisibility(TArray<FSetLevelStreamingVisibilitySetting> InSettings, FOnHandleLevelStreamingOnceFinish OnOnceFinish, FOnHandleLevelStreamingFinish OnFinish);
 
 protected:
 	void CheckConflictLevelStreamHandle(TArray<FLoadLevelStreamingSetting>& InSettings) const;
