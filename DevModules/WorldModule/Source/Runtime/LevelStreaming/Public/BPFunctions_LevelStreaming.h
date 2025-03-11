@@ -53,5 +53,11 @@ public:
 
 public:
 	UFUNCTION(BlueprintPure)
+	static ULevelStreaming* GetLevelStreaming(TSoftObjectPtr<UWorld> Level) ;
+
+	UFUNCTION(BlueprintPure)
+	static bool IsLevelLoaded(TSoftObjectPtr<UWorld> Level) ;
+	
+	UFUNCTION(BlueprintPure)
 	static bool IsCurrentWorldContainLevel(TSoftObjectPtr<UWorld> Level, bool& Contain);
 };

@@ -3,9 +3,14 @@
 
 #include "LevelStreamingManager.h"
 
+#include "BPFunctions_LevelStreaming.h"
 #include "Debug/DebugType.h"
 #include "Engine/LevelStreamingAlwaysLoaded.h"
-#include "Kismet/GameplayStatics.h"
+#include "Handle/HandleManager.h"
+#include "Handle/LoadLevelStreamingHandle.h"
+#include "Handle/SetLevelStreamingVisibilityHandle.h"
+#include "Handle/UnLoadLevelStreamingHandle.h"
+#include "Manager/ManagerStatics.h"
 
 #define LOCTEXT_NAMESPACE "ULevelStreamingManager"
 
@@ -31,310 +36,223 @@ bool ULevelStreamingManager::DoesSupportWorldType(const EWorldType::Type WorldTy
 	return WorldType == EWorldType::Game || WorldType == EWorldType::PIE;
 }
 
-void ULevelStreamingManager::LoadLevel(const TSoftObjectPtr<UWorld>& Level, const bool bMakeVisibleAfterLoad, const bool bShouldBlockOnLoad, const FOnHandleLevelStreamingFinish& OnFinish)
+ULoadLevelStreamingHandle* ULevelStreamingManager::LoadLevel(const TSoftObjectPtr<UWorld>& Level, const bool bMakeVisibleAfterLoad, const bool bShouldBlockOnLoad, const FOnHandleLevelStreamingFinish& OnFinish)
 {
-	/* Check */
-	if (!CheckLevel(Level))
-	{
-		DLOG(DLogWorld, Warning, TEXT("InValid Level"))
-		return;
-	}
-
-	const ULevelStreaming* LevelStreaming = GetLevelStreaming(Level);
-	
-	if (!IsValid(LevelStreaming))
-	{
-		DLOG(DLogWorld, Warning, TEXT("Level Streaming Is Not Found"));
-		return;
-	}
-
-	if (LevelStreaming->IsLevelLoaded())
-	{
-		OnFinish.ExecuteIfBound();
-		DLOG(DLogWorld, Warning, TEXT("Level Is Already Load"));
-		return;
-	}
-
-	ULoadLevelStreamingHandle* LoadLevelStreamingHandle = NewObject<ULoadLevelStreamingHandle>(this);
-	const FLoadLevelStreamingSetting LoadLevelStreamingSetting(Level, bMakeVisibleAfterLoad, bShouldBlockOnLoad);
-	LoadLevelStreamingHandle->HandleLoadLevel(LoadLevelStreamingSetting, OnFinish);
+	const FLoadLevelStreamingSetting Setting = FLoadLevelStreamingSetting(Level, bMakeVisibleAfterLoad, bShouldBlockOnLoad);
+	return LoadLevelsBySetting(TArray<FLoadLevelStreamingSetting>{Setting}, nullptr, OnFinish);
 }
 
-void ULevelStreamingManager::LoadLevels(TArray<TSoftObjectPtr<UWorld>> Levels, const bool bMakeVisibleAfterLoad, const bool bShouldBlockOnLoad, const FOnHandleLevelStreamingOnceFinish& OnOnceFinish, const FOnHandleLevelStreamingFinish& OnFinish)
+ULoadLevelStreamingHandle* ULevelStreamingManager::LoadLevels(TArray<TSoftObjectPtr<UWorld>> Levels, const bool bMakeVisibleAfterLoad, const bool bShouldBlockOnLoad, const FOnHandleLevelStreamingOnceFinish& OnOnceFinish, const FOnHandleLevelStreamingFinish& OnFinish)
 {
-	/* Make Sure Levels Is Not Empty */
-	if (Levels.IsEmpty())
+	TArray<FLoadLevelStreamingSetting> Settings;
+
+	for (auto& Level : Levels)
 	{
-		DLOG(DLogWorld, Warning, TEXT("Levels Is Empty"))
-		OnFinish.ExecuteIfBound();
-		return;
+		Settings.Add(FLoadLevelStreamingSetting(Level, bMakeVisibleAfterLoad, bShouldBlockOnLoad));
 	}
 
-	/* Make FLoadLevelStreamingSetting */
-	TArray<FLoadLevelStreamingSetting> LoadLevelStreamingSettings;
-	for (auto Level : Levels)
-	{
-		/* Check */
-		if (!CheckLevel(Level))
-		{
-			DLOG(DLogWorld, Warning, TEXT("InValid Level"))
-			continue;
-		}
-
-		const ULevelStreaming* LevelStreaming = GetLevelStreaming(Level);
-		if (!IsValid(LevelStreaming))
-		{
-			DLOG(DLogWorld, Warning, TEXT("Level Streaming Is Not Found"));
-			continue;
-		}
-
-		/* 已经加载且可视性已经是指定可视性 */
-		if (LevelStreaming->IsLevelLoaded() && LevelStreaming->ShouldBeVisible() == bMakeVisibleAfterLoad)
-		{
-			DLOG(DLogWorld, Warning, TEXT("Level Is Already Load"));
-			continue;
-		}
-
-		if (Level.IsPending())
-		{
-			Level.LoadSynchronous();
-		}
-		LoadLevelStreamingSettings.Add(FLoadLevelStreamingSetting(Level, bMakeVisibleAfterLoad, bShouldBlockOnLoad));
-	}
-
-	if (LoadLevelStreamingSettings.IsEmpty())
-	{
-		OnFinish.ExecuteIfBound();
-		return;
-	}
-
-	/* Handle Valid Level */
-	ULoadLevelStreamingHandle* LoadLevelStreamingHandle = NewObject<ULoadLevelStreamingHandle>(this);
-	LoadLevelStreamingHandle->HandleLoadLevels(LoadLevelStreamingSettings, OnOnceFinish, OnFinish);
+	return LoadLevelsBySetting(Settings, OnOnceFinish, OnFinish);
 }
 
-void ULevelStreamingManager::LoadLevelsBySetting(TArray<FLoadLevelStreamingSetting> LoadLevelStreamingSettings, const FOnHandleLevelStreamingOnceFinish& OnOnceFinish, const FOnHandleLevelStreamingFinish& OnFinish)
+ULoadLevelStreamingHandle* ULevelStreamingManager::LoadLevelsBySetting(TArray<FLoadLevelStreamingSetting> InSettings, const FOnHandleLevelStreamingOnceFinish& OnOnceFinish, const FOnHandleLevelStreamingFinish& OnFinish)
 {
 	/* Make Sure Settings Is Not Empty */
-	if (LoadLevelStreamingSettings.IsEmpty())
+	if (InSettings.IsEmpty())
 	{
 		DLOG(DLogWorld, Warning, TEXT("Settings Is Empty"))
 		OnFinish.ExecuteIfBound();
-		return;
+		return nullptr;
 	}
 
-	/* Make FLoadLevelStreamingSetting */
-	TArray<FLoadLevelStreamingSetting> CheckLoadLevelStreamingSettings;
-	for (auto LoadLevelStreamingSetting : LoadLevelStreamingSettings)
+	TArray<FLoadLevelStreamingSetting> ValidSettings;
+
+	/* Loop To Get Valid Settings */
+	for (auto Setting : InSettings)
 	{
-		if (LoadLevelStreamingSetting.Level.IsNull())
+		if (!Setting.IsValid())
 		{
-			DLOG(DLogWorld, Warning, TEXT("InValid Level"))
-		}
-		else
-		{
-			CheckLoadLevelStreamingSettings.Add(LoadLevelStreamingSetting);
-		}
-	}
-
-	if (CheckLoadLevelStreamingSettings.IsEmpty())
-	{
-		OnFinish.ExecuteIfBound();
-		return;
-	}
-
-	/* Handle Valid Level */
-	ULoadLevelStreamingHandle* LoadLevelStreamingHandle = NewObject<ULoadLevelStreamingHandle>(this);
-	LoadLevelStreamingHandle->HandleLoadLevels(CheckLoadLevelStreamingSettings, OnOnceFinish, OnFinish);
-}
-
-void ULevelStreamingManager::UnloadLevel(const TSoftObjectPtr<UWorld>& Level, const bool bShouldBlockOnUnload, const FOnHandleLevelStreamingFinish& OnFinish)
-{
-	/* Check */
-	if (!CheckLevel(Level))
-	{
-		DLOG(DLogWorld, Warning, TEXT("InValid Level"))
-		return;
-	}
-
-	const ULevelStreaming* LevelStreaming = GetLevelStreaming(Level);
-	if (!IsValid(LevelStreaming))
-	{
-		DLOG(DLogWorld, Warning, TEXT("Level Streaming Is Not Found"));
-		return;
-	}
-
-	if (!LevelStreaming->IsLevelLoaded())
-	{
-		OnFinish.ExecuteIfBound();
-		DLOG(DLogWorld, Warning, TEXT("Level Is Already Load"));
-		return;
-	}
-
-	UUnloadLevelStreamingHandle* UnloadLevelStreamingHandle = NewObject<UUnloadLevelStreamingHandle>(this);
-	const FUnloadLevelStreamingSetting UnloadLevelStreamingSetting(Level, bShouldBlockOnUnload);
-	UnloadLevelStreamingHandle->HandleUnloadLevel(UnloadLevelStreamingSetting, OnFinish);
-}
-
-void ULevelStreamingManager::UnloadLevels(TArray<TSoftObjectPtr<UWorld>> Levels, const bool bShouldBlockOnUnload, const FOnHandleLevelStreamingOnceFinish& OnOnceFinish, const FOnHandleLevelStreamingFinish& OnFinish)
-{
-	/* Make Sure Levels Is Not Empty */
-	if (Levels.IsEmpty())
-	{
-		DLOG(DLogWorld, Warning, TEXT("Levels Is Empty"))
-		OnFinish.ExecuteIfBound();
-		return;
-	}
-
-	/* Make FUnloadLevelStreamingSetting */
-	TArray<FUnloadLevelStreamingSetting> UnloadLevelStreamingSettings;
-	for (auto Level : Levels)
-	{
-		/* Check */
-		if (!CheckLevel(Level))
-		{
-			DLOG(DLogWorld, Warning, TEXT("InValid Level"))
+			DLOG(DLogWorld, Warning, TEXT("Setting Is InValid"))
 			continue;
 		}
 
-		const ULevelStreaming* LevelStreaming = GetLevelStreaming(Level);
-		if (!IsValid(LevelStreaming))
+		if (!IsCurrentWorldContainLevel(Setting.Level))
 		{
-			DLOG(DLogWorld, Warning, TEXT("Level Streaming Is Not Found"));
+			DLOG(DLogWorld, Warning, TEXT("Current World Is Not Contain The Level : %s"), *Setting.Level->GetName())
 			continue;
 		}
 
-		if (!LevelStreaming->IsLevelLoaded())
-		{
-			DLOG(DLogWorld, Warning, TEXT("Level Is Already Load"));
-			continue;
-		}
-
-		UnloadLevelStreamingSettings.Add(FUnloadLevelStreamingSetting(Level, bShouldBlockOnUnload));
+		ValidSettings.Add(Setting);
 	}
 
-	if (UnloadLevelStreamingSettings.IsEmpty())
+	CheckConflictLevelStreamHandle(ValidSettings);
+
+	if (ValidSettings.IsEmpty())
 	{
 		OnFinish.ExecuteIfBound();
-		return;
+		return nullptr;
 	}
 
 	/* Handle Valid Level */
-	UUnloadLevelStreamingHandle* UnloadLevelStreamingHandle = NewObject<UUnloadLevelStreamingHandle>(this);
-	UnloadLevelStreamingHandle->HandleUnloadLevels(UnloadLevelStreamingSettings, OnOnceFinish, OnFinish);
+	if (UHandleManager* HandleManager = GetManager<UHandleManager>())
+	{
+		ULoadLevelStreamingHandle* LoadLevelStreamingHandle = HandleManager->RegisterHandle<ULoadLevelStreamingHandle>(this);
+		LoadLevelStreamingHandle->GetHandleOnceFinishEvent().AddUObject(this, &ULevelStreamingManager::OnHandleLevelOnceFinish);
+		LoadLevelStreamingHandle->GetHandleFinishEvent().AddUObject(this, &ULevelStreamingManager::OnHandleLevelFinish);
+		LoadLevelStreamingHandle->Initialize(ValidSettings);
+
+		LevelStreamingHandles.Add(LoadLevelStreamingHandle);
+
+		LoadLevelStreamingHandle->Startup();
+		return LoadLevelStreamingHandle;
+	}
+
+	return nullptr;
 }
 
-void ULevelStreamingManager::UnloadLevelsBySetting(TArray<FUnloadLevelStreamingSetting> UnloadLevelStreamingSettings, const FOnHandleLevelStreamingOnceFinish& OnOnceFinish, const FOnHandleLevelStreamingFinish& OnFinish)
+UUnLoadLevelStreamingHandle* ULevelStreamingManager::UnloadLevel(const TSoftObjectPtr<UWorld>& Level, const bool bShouldBlockOnUnload, const FOnHandleLevelStreamingFinish& OnFinish)
 {
-	/* Make Sure Levels Is Not Empty */
-	if (UnloadLevelStreamingSettings.IsEmpty())
-	{
-		OnFinish.ExecuteIfBound();
-		return;
-	}
-
-	/* Make FUnloadLevelStreamingSetting */
-	TArray<FUnloadLevelStreamingSetting> CheckUnloadLevelStreamingSettings;
-	for (auto UnloadLevelStreamingSetting : UnloadLevelStreamingSettings)
-	{
-		if (UnloadLevelStreamingSetting.Level.IsNull()) { DLOG(DLogWorld, Warning, TEXT("InValid Level")) }
-		else { CheckUnloadLevelStreamingSettings.Add(UnloadLevelStreamingSetting); }
-	}
-
-	if (CheckUnloadLevelStreamingSettings.IsEmpty())
-	{
-		OnFinish.ExecuteIfBound();
-		return;
-	}
-
-	/* Handle Valid Level */
-	UUnloadLevelStreamingHandle* UnloadLevelStreamingHandle = NewObject<UUnloadLevelStreamingHandle>(this);
-	UnloadLevelStreamingHandle->HandleUnloadLevels(CheckUnloadLevelStreamingSettings, OnOnceFinish, OnFinish);
+	const FUnloadLevelStreamingSetting Setting = FUnloadLevelStreamingSetting(Level, bShouldBlockOnUnload);
+	return UnloadLevelsBySetting(TArray<FUnloadLevelStreamingSetting>{Setting}, nullptr, OnFinish);
 }
 
-void ULevelStreamingManager::SetLevelVisibility(const TSoftObjectPtr<UWorld>& Level, const bool bVisible, const FOnHandleLevelStreamingFinish& OnFinish)
+UUnLoadLevelStreamingHandle* ULevelStreamingManager::UnloadLevels(TArray<TSoftObjectPtr<UWorld>> Levels, const bool bShouldBlockOnUnload, const FOnHandleLevelStreamingOnceFinish& OnOnceFinish, const FOnHandleLevelStreamingFinish& OnFinish)
 {
-	ULevelStreaming* LevelStreaming = GetLevelStreaming(Level);
+	TArray<FUnloadLevelStreamingSetting> Settings;
 
-	if (IsValid(LevelStreaming))
-	{
-		LevelStreaming->OnLevelShown.RemoveAll(this);
-		LevelStreaming->OnLevelHidden.RemoveAll(this);
-
-		/* 如果未加载 */
-		if (!LevelStreaming->IsLevelLoaded())
-		{
-			LoadLevel(Level, bVisible, false, OnFinish);
-			return;
-		}
-
-		/* 已经是指定的可视性 */
-		if (bVisible == LevelStreaming->IsLevelVisible())
-		{
-			DLOG(DLogWorld, Warning, TEXT("Level Streaming Is Not Found"));
-			OnFinish.ExecuteIfBound();
-			return;
-		}
-
-		ULevelStreamingVisibilityHandle* UnloadLevelStreamingHandle = NewObject<ULevelStreamingVisibilityHandle>(this);
-		const FLevelStreamingVisibilitySetting UnloadLevelStreamingSetting(LevelStreaming, bVisible);
-		UnloadLevelStreamingHandle->HandleSetLevelVisibility(UnloadLevelStreamingSetting, OnFinish);
-	}
-}
-
-void ULevelStreamingManager::SetLevelsVisibility(TArray<TSoftObjectPtr<UWorld>> Levels, const bool bVisible, const FOnHandleLevelStreamingOnceFinish& OnOnceFinish, const FOnHandleLevelStreamingFinish& OnFinish)
-{
-	if (Levels.IsEmpty())
-	{
-		DLOG(DLogWorld, Warning, TEXT("Levels Is Empty"))
-		OnFinish.ExecuteIfBound();
-		return;
-	}
-
-	/* 筛选有效的关卡 */
-	TArray<TSoftObjectPtr<UWorld>> ValidLevels;
 	for (auto& Level : Levels)
 	{
-		/* Check */
-		if (!CheckLevel(Level))
-		{
-			DLOG(DLogWorld, Warning, TEXT("InValid Level"))
-			continue;
-		}
-
-		const ULevelStreaming* LevelStreaming = GetLevelStreaming(Level);
-		if (!IsValid(LevelStreaming))
-		{
-			DLOG(DLogWorld, Warning, TEXT("Level Streaming Is Not Found"));
-			continue;
-		}
-
-		/* 当前可视性为指定可视性时，跳过 */
-		if (LevelStreaming->IsLevelVisible() == bVisible)
-		{
-			continue;
-		}
-
-		/* 设置可视性为隐藏，但关卡并未加载时，跳过*/
-		if (!LevelStreaming->IsLevelLoaded() && !bVisible)
-		{
-			continue;
-		}
-
-		ValidLevels.Add(Level);
+		Settings.Add(FUnloadLevelStreamingSetting(Level, bShouldBlockOnUnload));
 	}
 
-	TArray<FLevelStreamingVisibilitySetting> LevelStreamingVisibilitySettings;
-	for (const auto& Level : Levels)
-	{
-		LevelStreamingVisibilitySettings.Add(FLevelStreamingVisibilitySetting(GetLevelStreaming(Level), bVisible));
-	}
-
-	ULevelStreamingVisibilityHandle* LevelStreamingVisibilityHandle = NewObject<ULevelStreamingVisibilityHandle>(this);
-	LevelStreamingVisibilityHandle->HandleSetLevelsVisibility(LevelStreamingVisibilitySettings, OnOnceFinish, OnFinish);
+	return UnloadLevelsBySetting(Settings, OnOnceFinish, OnFinish);
 }
 
-void ULevelStreamingManager::LoadCurrentWorldLevelStreaming(const FOnHandleLevelStreamingOnceFinish& OnOnceFinish, const FOnHandleLevelStreamingFinish& OnFinish)
+UUnLoadLevelStreamingHandle* ULevelStreamingManager::UnloadLevelsBySetting(TArray<FUnloadLevelStreamingSetting> InSettings, const FOnHandleLevelStreamingOnceFinish& OnOnceFinish, const FOnHandleLevelStreamingFinish& OnFinish)
+{
+	/* Make Sure Levels Is Not Empty */
+	if (InSettings.IsEmpty())
+	{
+		OnFinish.ExecuteIfBound();
+		return nullptr;
+	}
+
+	/* Loop To Get Valid Settings */
+	TArray<FUnloadLevelStreamingSetting> ValidSettings;
+	for (auto Setting : InSettings)
+	{
+		if (!Setting.IsValid())
+		{
+			DLOG(DLogWorld, Warning, TEXT("Setting Is InValid"))
+			continue;
+		}
+
+		if (!IsCurrentWorldContainLevel(Setting.Level))
+		{
+			DLOG(DLogWorld, Warning, TEXT("Current World Is Not Contain The Level : %s"), *Setting.Level->GetName())
+			continue;
+		}
+
+		ValidSettings.Add(Setting);
+	}
+
+	CheckConflictLevelStreamHandle(ValidSettings);
+
+	if (ValidSettings.IsEmpty())
+	{
+		OnFinish.ExecuteIfBound();
+		return nullptr;
+	}
+
+	/* Handle Valid Level */
+	if (UHandleManager* HandleManager = GetManager<UHandleManager>())
+	{
+		UUnLoadLevelStreamingHandle* UnLoadLevelStreamingHandle = HandleManager->RegisterHandle<UUnLoadLevelStreamingHandle>(this);
+		UnLoadLevelStreamingHandle->GetHandleOnceFinishEvent().AddUObject(this, &ULevelStreamingManager::OnHandleLevelOnceFinish);
+		UnLoadLevelStreamingHandle->GetHandleFinishEvent().AddUObject(this, &ULevelStreamingManager::OnHandleLevelFinish);
+		UnLoadLevelStreamingHandle->Initialize(ValidSettings);
+
+		LevelStreamingHandles.Add(UnLoadLevelStreamingHandle);
+
+		UnLoadLevelStreamingHandle->Startup();
+		return UnLoadLevelStreamingHandle;
+	}
+
+	return nullptr;
+}
+
+USetLevelStreamingVisibilityHandle* ULevelStreamingManager::SetLevelVisibility(const TSoftObjectPtr<UWorld>& Level, const bool bVisible, const FOnHandleLevelStreamingFinish& OnFinish)
+{
+	const FSetLevelStreamingVisibilitySetting Setting = FSetLevelStreamingVisibilitySetting(Level, bVisible);
+	return SetLevelsVisibilityBySetting(TArray<FSetLevelStreamingVisibilitySetting>{Setting}, nullptr, OnFinish);
+}
+
+USetLevelStreamingVisibilityHandle* ULevelStreamingManager::SetLevelsVisibility(TArray<TSoftObjectPtr<UWorld>> Levels, const bool bVisible, const FOnHandleLevelStreamingOnceFinish& OnOnceFinish, const FOnHandleLevelStreamingFinish& OnFinish)
+{
+	TArray<FSetLevelStreamingVisibilitySetting> Settings;
+
+	for (auto& Level : Levels)
+	{
+		Settings.Add(FSetLevelStreamingVisibilitySetting(Level, bVisible));
+	}
+
+	return SetLevelsVisibilityBySetting(Settings, OnOnceFinish, OnFinish);
+}
+
+USetLevelStreamingVisibilityHandle* ULevelStreamingManager::SetLevelsVisibilityBySetting(TArray<FSetLevelStreamingVisibilitySetting> InSettings, FOnHandleLevelStreamingOnceFinish OnOnceFinish, FOnHandleLevelStreamingFinish OnFinish)
+{
+	/* Make Sure Levels Is Not Empty */
+	if (InSettings.IsEmpty())
+	{
+		OnFinish.ExecuteIfBound();
+		return nullptr;
+	}
+	
+	TArray<FSetLevelStreamingVisibilitySetting> ValidSettings;
+
+	/* Loop To Get Valid Settings */
+	for (auto Setting : InSettings)
+	{
+		if (!Setting.IsValid())
+		{
+			DLOG(DLogWorld, Warning, TEXT("Setting Is InValid"))
+			continue;
+		}
+
+		if (!IsCurrentWorldContainLevel(Setting.Level))
+		{
+			DLOG(DLogWorld, Warning, TEXT("Current World Is Not Contain The Level : %s"), *Setting.Level->GetName())
+			continue;
+		}
+		
+		ValidSettings.Add(Setting);
+	}
+
+	CheckConflictLevelStreamHandle(ValidSettings);
+
+	if (ValidSettings.IsEmpty())
+	{
+		OnFinish.ExecuteIfBound();
+		return nullptr;
+	}
+
+	/* Handle Valid Level */
+	if (UHandleManager* HandleManager = GetManager<UHandleManager>())
+	{
+		USetLevelStreamingVisibilityHandle* SetLevelStreamingVisibilityHandle = HandleManager->RegisterHandle<USetLevelStreamingVisibilityHandle>(this);
+		SetLevelStreamingVisibilityHandle->GetHandleOnceFinishEvent().AddUObject(this, &ULevelStreamingManager::OnHandleLevelOnceFinish);
+		SetLevelStreamingVisibilityHandle->GetHandleFinishEvent().AddUObject(this, &ULevelStreamingManager::OnHandleLevelFinish);
+		SetLevelStreamingVisibilityHandle->Initialize(ValidSettings);
+
+		LevelStreamingHandles.Add(SetLevelStreamingVisibilityHandle);
+
+		SetLevelStreamingVisibilityHandle->Startup();
+		return SetLevelStreamingVisibilityHandle;
+	}
+
+	return nullptr;
+}
+
+ULoadLevelStreamingHandle* ULevelStreamingManager::LoadCurrentWorldLevelStreaming(const FOnHandleLevelStreamingOnceFinish& OnOnceFinish, const FOnHandleLevelStreamingFinish& OnFinish)
 {
 	/* 获取需要加载的关卡 */
 	TArray<TSoftObjectPtr<UWorld>> WorldToLoad;
@@ -355,17 +273,16 @@ void ULevelStreamingManager::LoadCurrentWorldLevelStreaming(const FOnHandleLevel
 		WorldToLoad.Add(StreamingLevel->GetWorldAsset());
 	}
 
-	if (!WorldToLoad.IsEmpty())
-	{
-		LoadLevels(WorldToLoad, false, false, OnOnceFinish, OnFinish);
-	}
-	else
+	if (WorldToLoad.IsEmpty())
 	{
 		OnFinish.ExecuteIfBound();
+		return nullptr;
 	}
+
+	return LoadLevels(WorldToLoad, false, false, OnOnceFinish, OnFinish);
 }
 
-void ULevelStreamingManager::UnLoadCurrentWorldLevelStreaming(const FOnHandleLevelStreamingOnceFinish& OnOnceFinish, const FOnHandleLevelStreamingFinish& OnFinish)
+UUnLoadLevelStreamingHandle* ULevelStreamingManager::UnLoadCurrentWorldLevelStreaming(const FOnHandleLevelStreamingOnceFinish& OnOnceFinish, const FOnHandleLevelStreamingFinish& OnFinish)
 {
 	/* 获取需要卸载的流关卡 */
 	TArray<TSoftObjectPtr<UWorld>> WorldToUnLoad;
@@ -386,7 +303,13 @@ void ULevelStreamingManager::UnLoadCurrentWorldLevelStreaming(const FOnHandleLev
 		WorldToUnLoad.Add(StreamingLevel->GetWorldAsset());
 	}
 
-	UnloadLevels(WorldToUnLoad, false, OnOnceFinish, OnFinish);
+	if (WorldToUnLoad.IsEmpty())
+	{
+		OnFinish.ExecuteIfBound();
+		return nullptr;
+	}
+
+	return UnloadLevels(WorldToUnLoad, false, OnOnceFinish, OnFinish);
 }
 
 bool ULevelStreamingManager::IsCurrentWorldContainLevel(const TSoftObjectPtr<UWorld>& Level) const
@@ -405,45 +328,125 @@ bool ULevelStreamingManager::IsCurrentWorldContainLevel(const TSoftObjectPtr<UWo
 	return false;
 }
 
-bool ULevelStreamingManager::CheckLevel(const TSoftObjectPtr<UWorld>& Level) const
+void ULevelStreamingManager::CheckConflictLevelStreamHandle(TArray<FLoadLevelStreamingSetting>& InSettings) const
 {
-	if (Level.IsNull())
+	TSet<TSoftObjectPtr<UWorld>> SettingLevels;
+	for (auto& InSetting : InSettings)
 	{
-		DLOG(DLogWorld, Warning, TEXT("InValid Level"))
-		return false;
+		SettingLevels.Add(InSetting.Level);
 	}
 
-	if (!IsCurrentWorldContainLevel(Level))
+	TArray<TObjectPtr<ULevelStreamingHandle>> Handles = LevelStreamingHandles;
+	for (auto& Handle : Handles)
 	{
-		DLOG(DLogWorld, Warning, TEXT("Current World Not Contain Level : %s"), *Level.ToString());
-		return false;
-	}
+		if (UUnLoadLevelStreamingHandle* UnLoadLevelStreamingHandle = Cast<UUnLoadLevelStreamingHandle>(Handle))
+		{
+			TSet<TSoftObjectPtr<UWorld>> HandleLevels = TSet(UnLoadLevelStreamingHandle->GetLevels());
 
-	return true;
+			for (const auto& ConflictLevel : SettingLevels.Intersect(HandleLevels).Array())
+			{
+				Handle->RemoveLevel(ConflictLevel);
+			}
+		}
+	}
 }
 
-ULevelStreaming* ULevelStreamingManager::GetLevelStreaming(const TSoftObjectPtr<UWorld>& Level) const
+void ULevelStreamingManager::CheckConflictLevelStreamHandle(TArray<FUnloadLevelStreamingSetting>& InSettings) const
 {
-	if (!CheckLevel(Level))
+	TSet<TSoftObjectPtr<UWorld>> SettingLevels;
+	for (auto& InSetting : InSettings)
 	{
-		return nullptr;
+		SettingLevels.Add(InSetting.Level);
 	}
 
-	const FString PackageName = FPackageName::ObjectPathToPackageName(Level.ToString());
-	if (PackageName.IsEmpty())
+	TArray<TObjectPtr<ULevelStreamingHandle>> Handles = LevelStreamingHandles;
+	for (auto& Handle : Handles)
 	{
-		DLOG(DLogWorld, Warning, TEXT("Level Is Not Found"))
-		return nullptr;
+		if (ULoadLevelStreamingHandle* LoadLevelStreamingHandle = Cast<ULoadLevelStreamingHandle>(Handle))
+		{
+			TSet<TSoftObjectPtr<UWorld>> HandleLevels = TSet(LoadLevelStreamingHandle->GetLevels());
+
+			for (const auto& ConflictLevel : SettingLevels.Intersect(HandleLevels).Array())
+			{
+				Handle->RemoveLevel(ConflictLevel);
+			}
+		}
+	}
+}
+
+void ULevelStreamingManager::CheckConflictLevelStreamHandle(TArray<FSetLevelStreamingVisibilitySetting>& InSettings) const
+{
+	TSet<TSoftObjectPtr<UWorld>> Visible;
+	TSet<TSoftObjectPtr<UWorld>> Hidden;
+
+	for (auto& InSetting : InSettings)
+	{
+		if (InSetting.bVisible)
+		{
+			Visible.Add(InSetting.Level);
+		}
+		else
+		{
+			Hidden.Add(InSetting.Level);
+		}
 	}
 
-	ULevelStreaming* LevelStreaming = UGameplayStatics::GetStreamingLevel(this, FName(*PackageName));
-	if (!IsValid(LevelStreaming))
+	TArray<TObjectPtr<ULevelStreamingHandle>> Handles = LevelStreamingHandles;
+	for (auto& Handle : Handles)
 	{
-		DLOG(DLogWorld, Warning, TEXT("Level Streaming Is Not Found"));
-		return nullptr;
-	}
+		if (ULoadLevelStreamingHandle* LoadLevelStreamingHandle = Cast<ULoadLevelStreamingHandle>(Handle))
+		{
+			TSet<TSoftObjectPtr<UWorld>> HandleLevels = TSet(LoadLevelStreamingHandle->GetLevels());
 
-	return LevelStreaming;
+			for (const auto& ConflictLevel : Hidden.Intersect(HandleLevels).Array())
+			{
+				FLoadLevelStreamingSetting* LoadLevelStreamingSettingSetting = LoadLevelStreamingHandle->GetLoadLevelStreamingSettings().FindByKey(ConflictLevel);
+				FSetLevelStreamingVisibilitySetting* SetLevelStreamingVisibilitySetting = InSettings.FindByKey(ConflictLevel);
+
+				if (LoadLevelStreamingSettingSetting && SetLevelStreamingVisibilitySetting && LoadLevelStreamingSettingSetting->bMakeVisibleAfterLoad != SetLevelStreamingVisibilitySetting->bVisible)
+				{
+					Handle->RemoveLevel(ConflictLevel);
+				}
+			}
+		}
+		else if (UUnLoadLevelStreamingHandle* UnLoadLevelStreamingHandle = Cast<UUnLoadLevelStreamingHandle>(Handle))
+		{
+			TSet<TSoftObjectPtr<UWorld>> HandleLevels = TSet(UnLoadLevelStreamingHandle->GetLevels());
+
+			for (const auto& ConflictLevel : Visible.Intersect(HandleLevels).Array())
+			{
+				Handle->RemoveLevel(ConflictLevel);
+			}
+		}
+		else if (USetLevelStreamingVisibilityHandle* SetLevelStreamingVisibilityHandle = Cast<USetLevelStreamingVisibilityHandle>(Handle))
+		{
+			TSet<TSoftObjectPtr<UWorld>> HandleLevels = TSet(SetLevelStreamingVisibilityHandle->GetLevels());
+
+			for (const auto& ConflictLevel : Visible.Intersect(HandleLevels).Array())
+			{
+				FSetLevelStreamingVisibilitySetting* HandleSetLevelStreamingVisibilitySetting = SetLevelStreamingVisibilityHandle->GetSetLevelStreamingVisibilitySettings().FindByKey(ConflictLevel);
+				FSetLevelStreamingVisibilitySetting* SetLevelStreamingVisibilitySetting = InSettings.FindByKey(ConflictLevel);
+
+				if (HandleSetLevelStreamingVisibilitySetting && SetLevelStreamingVisibilitySetting && HandleSetLevelStreamingVisibilitySetting->bVisible != SetLevelStreamingVisibilitySetting->bVisible)
+				{
+					Handle->RemoveLevel(ConflictLevel);
+				}
+			}
+		}
+	}
+}
+
+void ULevelStreamingManager::OnHandleLevelOnceFinish(ULevelStreamingHandle* InHandle, TSoftObjectPtr<UWorld> InLevel)
+{
+}
+
+void ULevelStreamingManager::OnHandleLevelFinish(ULevelStreamingHandle* InHandle)
+{
+	InHandle->GetHandleOnceFinishEvent().RemoveAll(this);
+	InHandle->GetHandleFinishEvent().RemoveAll(this);
+
+	GetManager<UHandleManager>()->UnRegisterHandle(InHandle);
+	LevelStreamingHandles.Remove(InHandle);
 }
 
 #undef LOCTEXT

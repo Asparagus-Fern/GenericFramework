@@ -2,7 +2,7 @@
   "FileVersion": 3,
   "Version": 1,
   "VersionName": "1.0",
-  "FriendlyName": "ProcedureModule",
+  "FriendlyName": "GuideModule",
   "Description": "",
   "Category": "Other",
   "CreatedBy": "Chen",
@@ -17,15 +17,11 @@
     {
       "Name": "DevCore",
       "Enabled": true
-    },
-    {
-      "Name": "ModularGameplay",
-      "Enabled": true
     }
   ],
   "Modules": [
     {
-      "Name": "ProcedureFlowSystem",
+      "Name": "GuideUtilities",
       "Type": "Runtime",
       "LoadingPhase": "Default"
     }

@@ -53,10 +53,9 @@ public class ApplicationRuntime : ModuleRules
 				"PropertyUtilities",
 
 				"ProcedureFlowSystem",
-				"ProcedureTaskSystem",
 
 				/* Dev Lab */
-				
+
 
 				/* Marketplace */
 				"DBTween",

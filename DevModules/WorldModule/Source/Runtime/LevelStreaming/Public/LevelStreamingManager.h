@@ -7,6 +7,11 @@
 #include "Manager/CoreInternalManager.h"
 #include "LevelStreamingManager.generated.h"
 
+class USetLevelStreamingVisibilityHandle;
+class UUnLoadLevelStreamingHandle;
+class ULoadLevelStreamingHandle;
+class ULevelStreamingHandle;
+
 /**
  * 
  */
@@ -23,24 +28,34 @@ public:
 
 	/* ULevelStreamingManager */
 public:
-	LEVELSTREAMING_API void LoadLevel(const TSoftObjectPtr<UWorld>& Level, bool bMakeVisibleAfterLoad, bool bShouldBlockOnLoad, const FOnHandleLevelStreamingFinish& OnFinish = FOnHandleLevelStreamingFinish());
-	LEVELSTREAMING_API void LoadLevels(TArray<TSoftObjectPtr<UWorld>> Levels, bool bMakeVisibleAfterLoad, bool bShouldBlockOnLoad, const FOnHandleLevelStreamingOnceFinish& OnOnceFinish = FOnHandleLevelStreamingOnceFinish(), const FOnHandleLevelStreamingFinish& OnFinish = FOnHandleLevelStreamingFinish());
-	LEVELSTREAMING_API void LoadLevelsBySetting(TArray<FLoadLevelStreamingSetting> LoadLevelStreamingSettings, const FOnHandleLevelStreamingOnceFinish& OnOnceFinish = FOnHandleLevelStreamingOnceFinish(), const FOnHandleLevelStreamingFinish& OnFinish = FOnHandleLevelStreamingFinish());
+	LEVELSTREAMING_API ULoadLevelStreamingHandle* LoadLevel(const TSoftObjectPtr<UWorld>& Level, bool bMakeVisibleAfterLoad, bool bShouldBlockOnLoad, const FOnHandleLevelStreamingFinish& OnFinish = FOnHandleLevelStreamingFinish());
+	LEVELSTREAMING_API ULoadLevelStreamingHandle* LoadLevels(TArray<TSoftObjectPtr<UWorld>> Levels, bool bMakeVisibleAfterLoad, bool bShouldBlockOnLoad, const FOnHandleLevelStreamingOnceFinish& OnOnceFinish = FOnHandleLevelStreamingOnceFinish(), const FOnHandleLevelStreamingFinish& OnFinish = FOnHandleLevelStreamingFinish());
+	LEVELSTREAMING_API ULoadLevelStreamingHandle* LoadLevelsBySetting(TArray<FLoadLevelStreamingSetting> InSettings, const FOnHandleLevelStreamingOnceFinish& OnOnceFinish = FOnHandleLevelStreamingOnceFinish(), const FOnHandleLevelStreamingFinish& OnFinish = FOnHandleLevelStreamingFinish());
 
-	LEVELSTREAMING_API void UnloadLevel(const TSoftObjectPtr<UWorld>& Level, bool bShouldBlockOnUnload, const FOnHandleLevelStreamingFinish& OnFinish = FOnHandleLevelStreamingFinish());
-	LEVELSTREAMING_API void UnloadLevels(TArray<TSoftObjectPtr<UWorld>> Levels, bool bShouldBlockOnUnload, const FOnHandleLevelStreamingOnceFinish& OnOnceFinish = FOnHandleLevelStreamingOnceFinish(), const FOnHandleLevelStreamingFinish& OnFinish = FOnHandleLevelStreamingFinish());
-	LEVELSTREAMING_API void UnloadLevelsBySetting(TArray<FUnloadLevelStreamingSetting> UnloadLevelStreamingSettings, const FOnHandleLevelStreamingOnceFinish& OnOnceFinish = FOnHandleLevelStreamingOnceFinish(), const FOnHandleLevelStreamingFinish& OnFinish = FOnHandleLevelStreamingFinish());
+	LEVELSTREAMING_API UUnLoadLevelStreamingHandle* UnloadLevel(const TSoftObjectPtr<UWorld>& Level, bool bShouldBlockOnUnload, const FOnHandleLevelStreamingFinish& OnFinish = FOnHandleLevelStreamingFinish());
+	LEVELSTREAMING_API UUnLoadLevelStreamingHandle* UnloadLevels(TArray<TSoftObjectPtr<UWorld>> Levels, bool bShouldBlockOnUnload, const FOnHandleLevelStreamingOnceFinish& OnOnceFinish = FOnHandleLevelStreamingOnceFinish(), const FOnHandleLevelStreamingFinish& OnFinish = FOnHandleLevelStreamingFinish());
+	LEVELSTREAMING_API UUnLoadLevelStreamingHandle* UnloadLevelsBySetting(TArray<FUnloadLevelStreamingSetting> InSettings, const FOnHandleLevelStreamingOnceFinish& OnOnceFinish = FOnHandleLevelStreamingOnceFinish(), const FOnHandleLevelStreamingFinish& OnFinish = FOnHandleLevelStreamingFinish());
 
-	LEVELSTREAMING_API void SetLevelVisibility(const TSoftObjectPtr<UWorld>& Level, bool bVisible, const FOnHandleLevelStreamingFinish& OnFinish = FOnHandleLevelStreamingFinish());
-	LEVELSTREAMING_API void SetLevelsVisibility(TArray<TSoftObjectPtr<UWorld>> Levels, bool bVisible, const FOnHandleLevelStreamingOnceFinish& OnOnceFinish = FOnHandleLevelStreamingOnceFinish(), const FOnHandleLevelStreamingFinish& OnFinish = FOnHandleLevelStreamingFinish());
+	LEVELSTREAMING_API USetLevelStreamingVisibilityHandle* SetLevelVisibility(const TSoftObjectPtr<UWorld>& Level, bool bVisible, const FOnHandleLevelStreamingFinish& OnFinish = FOnHandleLevelStreamingFinish());
+	LEVELSTREAMING_API USetLevelStreamingVisibilityHandle* SetLevelsVisibility(TArray<TSoftObjectPtr<UWorld>> Levels, bool bVisible, const FOnHandleLevelStreamingOnceFinish& OnOnceFinish = FOnHandleLevelStreamingOnceFinish(), const FOnHandleLevelStreamingFinish& OnFinish = FOnHandleLevelStreamingFinish());
+	LEVELSTREAMING_API USetLevelStreamingVisibilityHandle* SetLevelsVisibilityBySetting(TArray<FSetLevelStreamingVisibilitySetting> InSettings, FOnHandleLevelStreamingOnceFinish OnOnceFinish = FOnHandleLevelStreamingOnceFinish(), FOnHandleLevelStreamingFinish OnFinish = FOnHandleLevelStreamingFinish());
 
-public:
-	LEVELSTREAMING_API void LoadCurrentWorldLevelStreaming(const FOnHandleLevelStreamingOnceFinish& OnOnceFinish = FOnHandleLevelStreamingOnceFinish(), const FOnHandleLevelStreamingFinish& OnFinish = FOnHandleLevelStreamingFinish());
-	LEVELSTREAMING_API void UnLoadCurrentWorldLevelStreaming(const FOnHandleLevelStreamingOnceFinish& OnOnceFinish = FOnHandleLevelStreamingOnceFinish(), const FOnHandleLevelStreamingFinish& OnFinish = FOnHandleLevelStreamingFinish());
+	LEVELSTREAMING_API ULoadLevelStreamingHandle* LoadCurrentWorldLevelStreaming(const FOnHandleLevelStreamingOnceFinish& OnOnceFinish = FOnHandleLevelStreamingOnceFinish(), const FOnHandleLevelStreamingFinish& OnFinish = FOnHandleLevelStreamingFinish());
+	LEVELSTREAMING_API UUnLoadLevelStreamingHandle* UnLoadCurrentWorldLevelStreaming(const FOnHandleLevelStreamingOnceFinish& OnOnceFinish = FOnHandleLevelStreamingOnceFinish(), const FOnHandleLevelStreamingFinish& OnFinish = FOnHandleLevelStreamingFinish());
 
 	LEVELSTREAMING_API bool IsCurrentWorldContainLevel(const TSoftObjectPtr<UWorld>& Level) const;
 
+private:
+	void LoadLevelBeforeSetLevelVisibility(TArray<FSetLevelStreamingVisibilitySetting> InSettings, FOnHandleLevelStreamingOnceFinish OnOnceFinish, FOnHandleLevelStreamingFinish OnFinish);
+
 protected:
-	bool CheckLevel(const TSoftObjectPtr<UWorld>& Level) const;
-	ULevelStreaming* GetLevelStreaming(const TSoftObjectPtr<UWorld>& Level) const;
+	void CheckConflictLevelStreamHandle(TArray<FLoadLevelStreamingSetting>& InSettings) const;
+	void CheckConflictLevelStreamHandle(TArray<FUnloadLevelStreamingSetting>& InSettings) const;
+	void CheckConflictLevelStreamHandle(TArray<FSetLevelStreamingVisibilitySetting>& InSettings) const;
+
+	void OnHandleLevelOnceFinish(ULevelStreamingHandle* InHandle, TSoftObjectPtr<UWorld> InLevel);
+	void OnHandleLevelFinish(ULevelStreamingHandle* InHandle);
+
+private:
+	TArray<TObjectPtr<ULevelStreamingHandle>> LevelStreamingHandles;
 };

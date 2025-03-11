@@ -17,8 +17,6 @@ void UPropertyDiscreteValue_Rotator::SetDefaultRotatorValue(const FRotator& InVa
 
 FRotator UPropertyDiscreteValue_Rotator::GetRotatorValue() const
 {
-		StaticStruct<>()->
-	
 	FRotator ValueRotator;
 	ValueRotator.InitFromString(GetValue());
 	return ValueRotator;

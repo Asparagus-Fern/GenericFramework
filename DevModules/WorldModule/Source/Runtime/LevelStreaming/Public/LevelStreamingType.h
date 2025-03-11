@@ -1,5 +1,4 @@
 ﻿#pragma once
-#include "Common/CommonObject.h"
 
 #include "LevelStreamingType.generated.h"
 
@@ -7,7 +6,7 @@ DECLARE_DELEGATE(FOnHandleLevelStreamingOnceFinish);
 
 DECLARE_DELEGATE(FOnHandleLevelStreamingFinish);
 
-DECLARE_DELEGATE(FOnVisibilityChangedFinish);
+DECLARE_DELEGATE(FOnLevelVisibilityChanged);
 
 /**
  * 
@@ -19,7 +18,7 @@ struct FLoadLevelStreamingSetting
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TSoftObjectPtr<UWorld> Level;
+	TSoftObjectPtr<UWorld> Level = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bMakeVisibleAfterLoad = false;
@@ -31,9 +30,16 @@ public:
 	FLoadLevelStreamingSetting() { return; }
 
 	FLoadLevelStreamingSetting(const TSoftObjectPtr<UWorld>& InLevel, const bool MakeVisibleAfterLoad, const bool ShouldBlockOnLoad)
-		: Level(InLevel)
-		  , bMakeVisibleAfterLoad(MakeVisibleAfterLoad)
-		  , bShouldBlockOnLoad(ShouldBlockOnLoad) { return; }
+		: Level(InLevel),
+		  bMakeVisibleAfterLoad(MakeVisibleAfterLoad),
+		  bShouldBlockOnLoad(ShouldBlockOnLoad) { return; }
+
+	bool IsValid() const { return !Level.IsNull(); }
+
+	bool operator==(const FLoadLevelStreamingSetting& Other) const { return Level == Other.Level; }
+	bool operator==(const TSoftObjectPtr<UWorld>& Other) const { return Level == Other; }
+	bool operator!=(const FLoadLevelStreamingSetting& Other) const { return !(*this == Other); }
+	bool operator!=(const TSoftObjectPtr<UWorld>& Other) const { return !(*this == Other); }
 };
 
 
@@ -47,7 +53,7 @@ struct FUnloadLevelStreamingSetting
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TSoftObjectPtr<UWorld> Level;
+	TSoftObjectPtr<UWorld> Level = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bShouldBlockOnUnload = false;
@@ -56,8 +62,15 @@ public:
 	FUnloadLevelStreamingSetting() { return; }
 
 	FUnloadLevelStreamingSetting(const TSoftObjectPtr<UWorld>& InLevel, const bool ShouldBlockOnUnload)
-		: Level(InLevel)
-		  , bShouldBlockOnUnload(ShouldBlockOnUnload) { return; }
+		: Level(InLevel),
+		  bShouldBlockOnUnload(ShouldBlockOnUnload) { return; }
+
+	bool IsValid() const { return !Level.IsNull(); }
+
+	bool operator==(const FUnloadLevelStreamingSetting& Other) const { return Level == Other.Level; }
+	bool operator==(const TSoftObjectPtr<UWorld>& Other) const { return Level == Other; }
+	bool operator!=(const FUnloadLevelStreamingSetting& Other) const { return !(*this == Other); }
+	bool operator!=(const TSoftObjectPtr<UWorld>& Other) const { return !(*this == Other); }
 };
 
 
@@ -65,113 +78,28 @@ public:
  * 
  */
 USTRUCT(BlueprintType)
-struct FLevelStreamingVisibilitySetting
+struct FSetLevelStreamingVisibilitySetting
 {
 	GENERATED_BODY()
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	ULevelStreaming* LevelStreaming = nullptr;
+	TSoftObjectPtr<UWorld> Level = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bVisible = false;
 
 public:
-	FLevelStreamingVisibilitySetting() { return; }
+	FSetLevelStreamingVisibilitySetting() { return; }
 
-	FLevelStreamingVisibilitySetting(ULevelStreaming* InLevelStreaming, const bool Visible)
-		: LevelStreaming(InLevelStreaming)
-		  , bVisible(Visible) { return; }
-};
+	FSetLevelStreamingVisibilitySetting(const TSoftObjectPtr<UWorld>& InLevel, const bool Visible)
+		: Level(InLevel),
+		  bVisible(Visible) { return; }
 
+	bool IsValid() const { return !Level.IsNull(); }
 
-/**
- * @brief 处理关卡流加载卸载与显示隐藏的基类
- */
-UCLASS(MinimalAPI)
-class ULevelStreamingHandleBase : public UCommonObject
-{
-	GENERATED_BODY()
-
-public:
-	virtual void HandleLoadLevel(const FLoadLevelStreamingSetting& LoadLevelStreamingSetting, FOnHandleLevelStreamingFinish InOnFinishDelegate = FOnHandleLevelStreamingFinish());
-	virtual void HandleLoadLevels(TArray<FLoadLevelStreamingSetting> LoadLevelStreamingSettings, FOnHandleLevelStreamingOnceFinish InOnOnceFinishDelegate = FOnHandleLevelStreamingOnceFinish(), FOnHandleLevelStreamingFinish InOnFinishDelegate = FOnHandleLevelStreamingFinish());
-	virtual void HandleUnloadLevel(const FUnloadLevelStreamingSetting& UnloadLevelStreamingSetting, FOnHandleLevelStreamingFinish InOnFinishDelegate = FOnHandleLevelStreamingFinish());
-	virtual void HandleUnloadLevels(TArray<FUnloadLevelStreamingSetting> InUnloadLevelStreamingSettings, FOnHandleLevelStreamingOnceFinish InOnOnceFinishDelegate = FOnHandleLevelStreamingOnceFinish(), FOnHandleLevelStreamingFinish InOnFinishDelegate = FOnHandleLevelStreamingFinish());
-	virtual void HandleSetLevelVisibility(FLevelStreamingVisibilitySetting InLevelStreamingVisibilitySetting, FOnHandleLevelStreamingFinish InOnFinishDelegate = FOnHandleLevelStreamingFinish());
-	virtual void HandleSetLevelsVisibility(TArray<FLevelStreamingVisibilitySetting> InLevelStreamingVisibilitySettings, FOnHandleLevelStreamingOnceFinish InOnOnceFinishDelegate = FOnHandleLevelStreamingOnceFinish(), FOnHandleLevelStreamingFinish InOnFinishDelegate = FOnHandleLevelStreamingFinish());
-
-protected:
-	int32 Index = 0;
-	FOnHandleLevelStreamingOnceFinish OnOnceFinishDelegate;
-	FOnHandleLevelStreamingFinish OnFinishDelegate;
-
-	virtual void Load(const TSoftObjectPtr<UWorld>& Level, bool bMakeVisibleAfterLoad, bool bShouldBlockOnLoad, const FString& CallbackName, UObject* CallbackObject) const;
-	virtual void Unload(const TSoftObjectPtr<UWorld>& Level, bool bShouldBlockOnUnload, const FString& CallbackName, UObject* CallbackObject) const;
-	virtual void SetLevelVisibility(ULevelStreaming* LevelStreaming, bool bVisible);
-
-protected:
-	UFUNCTION()
-	virtual void OnOnceFinish() { OnOnceFinishDelegate.ExecuteIfBound(); }
-
-	UFUNCTION()
-	virtual void OnFinish() { OnFinishDelegate.ExecuteIfBound(); }
-};
-
-
-/**
- * @brief 处理加载关卡流 
- */
-UCLASS(MinimalAPI)
-class ULoadLevelStreamingHandle : public ULevelStreamingHandleBase
-{
-	GENERATED_BODY()
-
-public:
-	virtual void HandleLoadLevel(const FLoadLevelStreamingSetting& LoadLevelStreamingSetting, FOnHandleLevelStreamingFinish InOnFinishDelegate = FOnHandleLevelStreamingFinish()) override;
-	virtual void HandleLoadLevels(TArray<FLoadLevelStreamingSetting> InLoadLevelStreamingSettings, FOnHandleLevelStreamingOnceFinish InOnOnceFinishDelegate = FOnHandleLevelStreamingOnceFinish(), FOnHandleLevelStreamingFinish InOnFinishDelegate = FOnHandleLevelStreamingFinish()) override;
-
-protected:
-	TArray<FLoadLevelStreamingSetting> LoadLevelStreamingSettings;
-
-	virtual void OnOnceFinish() override;
-};
-
-
-/**
- * @brief 处理卸载关卡流 
- */
-UCLASS(MinimalAPI)
-class UUnloadLevelStreamingHandle : public ULevelStreamingHandleBase
-{
-	GENERATED_BODY()
-
-public:
-	virtual void HandleUnloadLevel(const FUnloadLevelStreamingSetting& UnloadLevelStreamingSetting, FOnHandleLevelStreamingFinish InOnFinishDelegate = FOnHandleLevelStreamingFinish()) override;
-	virtual void HandleUnloadLevels(TArray<FUnloadLevelStreamingSetting> InUnloadLevelStreamingSettings, FOnHandleLevelStreamingOnceFinish InOnOnceFinishDelegate = FOnHandleLevelStreamingOnceFinish(), FOnHandleLevelStreamingFinish InOnFinishDelegate = FOnHandleLevelStreamingFinish()) override;
-
-protected:
-	TArray<FUnloadLevelStreamingSetting> UnloadLevelStreamingSettings;
-
-	virtual void OnOnceFinish() override;
-};
-
-
-/**
- * @brief 处理关卡流显隐
- */
-UCLASS(MinimalAPI)
-class ULevelStreamingVisibilityHandle : public ULevelStreamingHandleBase
-{
-	GENERATED_BODY()
-
-public:
-	virtual void HandleSetLevelVisibility(FLevelStreamingVisibilitySetting InLevelStreamingVisibilitySetting, FOnHandleLevelStreamingFinish InOnFinishDelegate) override;
-	virtual void HandleSetLevelsVisibility(TArray<FLevelStreamingVisibilitySetting> InLevelStreamingVisibilitySettings, FOnHandleLevelStreamingOnceFinish InOnOnceFinishDelegate, FOnHandleLevelStreamingFinish InOnFinishDelegate) override;
-
-protected:
-	TArray<FLevelStreamingVisibilitySetting> LevelStreamingVisibilitySettings;
-
-	virtual void OnOnceFinish() override;
-	virtual void OnFinish() override;
+	bool operator==(const FSetLevelStreamingVisibilitySetting& Other) const { return Level == Other.Level; }
+	bool operator==(const TSoftObjectPtr<UWorld>& Other) const { return Level == Other; }
+	bool operator!=(const FSetLevelStreamingVisibilitySetting& Other) const { return !(*this == Other); }
+	bool operator!=(const TSoftObjectPtr<UWorld>& Other) const { return !(*this == Other); }
 };

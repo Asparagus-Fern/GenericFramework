@@ -4,6 +4,7 @@
 #include "BPFunctions_LevelStreaming.h"
 
 #include "LevelStreamingManager.h"
+#include "Kismet/GameplayStatics.h"
 #include "Manager/ManagerProxy.h"
 
 void UBPFunctions_LevelStreaming::LoadLevel(const TSoftObjectPtr<UWorld> Level, const bool bMakeVisibleAfterLoad, const bool bShouldBlockOnLoad, FHandleLevelStreamingFinish OnFinish)
@@ -186,6 +187,40 @@ void UBPFunctions_LevelStreaming::UnLoadCurrentWorldLevelStreaming(FHandleLevelS
 
 		LevelStreamingManager->UnLoadCurrentWorldLevelStreaming(HandleOnceFinish, HandleFinish);
 	}
+}
+
+ULevelStreaming* UBPFunctions_LevelStreaming::GetLevelStreaming(TSoftObjectPtr<UWorld> Level)
+{
+	if (Level.IsNull())
+	{
+		DLOG(DLogWorld, Warning, TEXT("Level Is InValid"))
+		return nullptr;
+	}
+
+	const FString PackageName = FPackageName::ObjectPathToPackageName(Level.ToString());
+	if (PackageName.IsEmpty())
+	{
+		DLOG(DLogWorld, Warning, TEXT("Level Package Is Not Found"))
+		return nullptr;
+	}
+
+	ULevelStreaming* LevelStreaming = UGameplayStatics::GetStreamingLevel(this, FName(*PackageName));
+	if (!IsValid(LevelStreaming))
+	{
+		DLOG(DLogWorld, Warning, TEXT("Level Streaming Is Not Found"));
+		return nullptr;
+	}
+
+	return LevelStreaming;
+}
+
+bool UBPFunctions_LevelStreaming::IsLevelLoaded(TSoftObjectPtr<UWorld> Level)
+{
+	if (const ULevelStreaming* LevelStreaming = GetLevelStreaming(Level))
+	{
+		return LevelStreaming->IsLevelLoaded();
+	}
+	return false;
 }
 
 bool UBPFunctions_LevelStreaming::IsCurrentWorldContainLevel(TSoftObjectPtr<UWorld> Level, bool& Contain)

@@ -1,8 +1,8 @@
 ﻿using UnrealBuildTool;
 
-public class ProcedureTaskSystem : ModuleRules
+public class GuideUtilities : ModuleRules
 {
-	public ProcedureTaskSystem(ReadOnlyTargetRules Target) : base(Target)
+	public GuideUtilities(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 
@@ -10,6 +10,7 @@ public class ProcedureTaskSystem : ModuleRules
 			new string[]
 			{
 				"Core",
+
 				"DevCore"
 			}
 		);
@@ -20,7 +21,9 @@ public class ProcedureTaskSystem : ModuleRules
 				"CoreUObject",
 				"Engine",
 				"Slate",
-				"SlateCore"
+				"SlateCore",
+
+				"EventUtilities"
 			}
 		);
 	}
