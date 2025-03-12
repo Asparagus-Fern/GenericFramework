@@ -3,8 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "NativeGameplayTags.h"
-#include "Components/RadialBoxSettings.h"
+#include "Styling/SlateBrush.h"
+#include "Slate/SlateBrushAsset.h"
+#include "Slate/SlateTextureAtlasInterface.h"
+#include "Materials/MaterialInterface.h"
+#include "Engine/Texture2D.h"
+#include "Engine/Texture2DDynamic.h"
 #include "SlateType.generated.h"
 
 
@@ -49,40 +53,40 @@ public:
 	FImageBrush(UObject* InResourceObject);
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Image Brush")
 	EImageBrushResource ImageBrushResource = EImageBrushResource::SlateBrush;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditConditionHides, EditCondition = "ImageBrushResource == EImageBrushResource::SlateBrush"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditConditionHides, EditCondition = "ImageBrushResource == EImageBrushResource::SlateBrush"), Category="Image Brush")
 	FSlateBrush SlateBrush;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditConditionHides, EditCondition = "ImageBrushResource == EImageBrushResource::SlateBrushAsset"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditConditionHides, EditCondition = "ImageBrushResource == EImageBrushResource::SlateBrushAsset"), Category="Image Brush")
 	USlateBrushAsset* SlateBrushAsset = nullptr;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditConditionHides, EditCondition = "ImageBrushResource == EImageBrushResource::SlateTextureAtlasInterface"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditConditionHides, EditCondition = "ImageBrushResource == EImageBrushResource::SlateTextureAtlasInterface"), Category="Image Brush")
 	TScriptInterface<ISlateTextureAtlasInterface> SlateTextureAtlasInterface = nullptr;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditConditionHides, EditCondition = "ImageBrushResource == EImageBrushResource::MaterialInterface"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditConditionHides, EditCondition = "ImageBrushResource == EImageBrushResource::MaterialInterface"), Category="Image Brush")
 	UMaterialInterface* MaterialInterface = nullptr;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditConditionHides, EditCondition = "ImageBrushResource == EImageBrushResource::SoftMaterialInterface"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditConditionHides, EditCondition = "ImageBrushResource == EImageBrushResource::SoftMaterialInterface"), Category="Image Brush")
 	TSoftObjectPtr<UMaterialInterface> SoftMaterialInterface = nullptr;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditConditionHides, EditCondition = "ImageBrushResource == EImageBrushResource::Texture2D"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditConditionHides, EditCondition = "ImageBrushResource == EImageBrushResource::Texture2D"), Category="Image Brush")
 	UTexture2D* Texture2D = nullptr;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditConditionHides, EditCondition = "ImageBrushResource == EImageBrushResource::SoftTexture2D"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditConditionHides, EditCondition = "ImageBrushResource == EImageBrushResource::SoftTexture2D"), Category="Image Brush")
 	TSoftObjectPtr<UTexture2D> SoftTexture2D = nullptr;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditConditionHides, EditCondition = "ImageBrushResource == EImageBrushResource::Texture2DDynamic"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditConditionHides, EditCondition = "ImageBrushResource == EImageBrushResource::Texture2DDynamic"), Category="Image Brush")
 	UTexture2DDynamic* Texture2DDynamic = nullptr;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditConditionHides, EditCondition = "ImageBrushResource == EImageBrushResource::ResourceObject"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditConditionHides, EditCondition = "ImageBrushResource == EImageBrushResource::ResourceObject"), Category="Image Brush")
 	UObject* ResourceObject = nullptr;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditConditionHides, EditCondition = "ImageBrushResource == EImageBrushResource::SlateTextureAtlasInterface || ImageBrushResource == EImageBrushResource::Texture2D || ImageBrushResource == EImageBrushResource::SoftTexture2D|| ImageBrushResource == EImageBrushResource::Texture2DDynamic"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditConditionHides, EditCondition = "ImageBrushResource == EImageBrushResource::SlateTextureAtlasInterface || ImageBrushResource == EImageBrushResource::Texture2D || ImageBrushResource == EImageBrushResource::SoftTexture2D|| ImageBrushResource == EImageBrushResource::Texture2DDynamic"), Category="Image Brush")
 	bool MatchSize = false;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Image Brush")
 	FVector2D Size = FVector2D(32.f);
 };
 
@@ -114,18 +118,18 @@ public:
 	FBorderBrush(UTexture2D* InTexture2D);
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Border Brush")
 	EBorderBrushResource BoderBrushResource = EBorderBrushResource::SlateBrush;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditConditionHides, EditCondition = "BoderBrushResource == EBorderBrushResource::SlateBrush"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditConditionHides, EditCondition = "BoderBrushResource == EBorderBrushResource::SlateBrush"), Category="Border Brush")
 	FSlateBrush SlateBrush;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditConditionHides, EditCondition = "BoderBrushResource == EBorderBrushResource::SlateBrushAsset"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditConditionHides, EditCondition = "BoderBrushResource == EBorderBrushResource::SlateBrushAsset"), Category="Border Brush")
 	USlateBrushAsset* SlateBrushAsset = nullptr;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditConditionHides, EditCondition = "BoderBrushResource == EBorderBrushResource::MaterialInterface"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditConditionHides, EditCondition = "BoderBrushResource == EBorderBrushResource::MaterialInterface"), Category="Border Brush")
 	UMaterialInterface* MaterialInterface = nullptr;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditConditionHides, EditCondition = "BoderBrushResource == EBorderBrushResource::Texture2D"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditConditionHides, EditCondition = "BoderBrushResource == EBorderBrushResource::Texture2D"), Category="Border Brush")
 	UTexture2D* Texture2D = nullptr;
 };

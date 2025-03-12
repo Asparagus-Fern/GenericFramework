@@ -25,11 +25,11 @@ public:
 	/* IManagerInterface */
 public:
 	virtual FGuid GetManagerID() const override { return ManagerInterface->GetManagerID(); }
-	
-	UFUNCTION(BlueprintPure)
+
+	UFUNCTION(BlueprintPure, Category="Manager Info")
 	virtual UObject* GetManagerOwner() const override { return ManagerInterface->GetManagerOwner(); }
 
-	UFUNCTION(BlueprintPure)
+	UFUNCTION(BlueprintPure, Category="Manager Info")
 	virtual int32 GetManagerOrder() override { return ManagerInterface->GetManagerOrder(); }
 
 	virtual UManagerInfo* GetManagerInfo() override { return this; }

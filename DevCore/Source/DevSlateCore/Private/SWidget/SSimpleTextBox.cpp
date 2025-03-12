@@ -1,11 +1,14 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "SWidget/SSimpleTextBox.h"
 
-#include "CommonHardwareVisibilityBorder.h"
 #include "SlateOptMacros.h"
-#include "Widgets/Text/SRichTextBlock.h"
+#include "Layout/Visibility.h"
+#include "Widgets/Text/STextBlock.h"
+#include "Widgets/Layout/SSpacer.h"
+#include "Widgets/Images/SImage.h"
+#include "Widgets/SBoxPanel.h"
+#include "Fonts/SlateFontInfo.h"
 
 BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION
 

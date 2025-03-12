@@ -3,6 +3,12 @@
 
 #include "SlateType.h"
 
+#include "Styling/SlateBrush.h"
+#include "Slate/SlateBrushAsset.h"
+#include "Slate/SlateTextureAtlasInterface.h"
+#include "Materials/MaterialInterface.h"
+#include "Engine/Texture2D.h"
+
 /* ==================== FImageBrush ==================== */
 
 FImageBrush::FImageBrush()

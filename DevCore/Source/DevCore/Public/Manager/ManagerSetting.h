@@ -20,9 +20,9 @@ public:
 	virtual FName GetSectionName() const override;
 
 public:
-	UPROPERTY(Config, EditDefaultsOnly)
+	UPROPERTY(Config, EditDefaultsOnly, Category="Manager Setting")
 	int32 ManagerOrder = 0;
 
-	UPROPERTY(Config, EditDefaultsOnly)
+	UPROPERTY(Config, EditDefaultsOnly, Category="Manager Setting")
 	FName ManagerName = NAME_None;
 };

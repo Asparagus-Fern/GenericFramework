@@ -23,14 +23,14 @@ protected:
 	virtual void ReleaseSlateResources(bool bReleaseChildren) override;
 
 public:
-	UPROPERTY(EditAnywhere, Getter, Setter, BlueprintGetter="GetContentAnchor", BlueprintSetter="SetContentAnchor")
+	UPROPERTY(EditAnywhere, Getter, Setter, BlueprintGetter="GetContentAnchor", BlueprintSetter="SetContentAnchor", Category="Visual Attachment")
 	FVector2D ContentAnchor;
 
 public:
-	UFUNCTION(BlueprintPure)
+	UFUNCTION(BlueprintPure, Category="Visual Attachment")
 	FVector2D GetContentAnchor() const;
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category="Visual Attachment")
 	void SetContentAnchor(FVector2D InAnchor);
 
 private:

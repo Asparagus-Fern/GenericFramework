@@ -3,6 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Widgets/Input/SButton.h"
+#include "Framework/SlateDelegates.h"
+#include "Types/SlateEnums.h"
 #include "Widgets/SCompoundWidget.h"
 
 /**

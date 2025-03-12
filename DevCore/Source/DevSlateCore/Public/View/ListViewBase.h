@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 
+#include "Widgets/SWidget.h"
+
 /**
  * 列表样式
  */

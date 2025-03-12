@@ -16,16 +16,16 @@ struct FCommonRadialBoxSettings
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (ClampMin = 0, ClampMax = 360))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (ClampMin = 0, ClampMax = 360), Category="RadialBox Settings")
 	float StartingAngle;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="RadialBox Settings")
 	bool bDistributeItemsEvenly;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (EditCondition = "!bDistributeItemsEvenly", ClampMin = 0, ClampMax = 360))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (EditCondition = "!bDistributeItemsEvenly", ClampMin = 0, ClampMax = 360), Category="RadialBox Settings")
 	float AngleBetweenItems;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (EditCondition = "bDistributeItemsEvenly", ClampMin = 0, ClampMax = 360))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (EditCondition = "bDistributeItemsEvenly", ClampMin = 0, ClampMax = 360), Category="RadialBox Settings")
 	float SectorCentralAngle;
 
 	FCommonRadialBoxSettings()
@@ -81,12 +81,12 @@ protected:
 #endif
 
 public:
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category="Dynamic Entry Box")
 	void AddEntry(UUserWidget* InUserWidget);
 
-	UFUNCTION(BlueprintPure, DisplayName= "GetRadialBoxSettings")
+	UFUNCTION(BlueprintPure, DisplayName= "GetRadialBoxSettings", Category="Dynamic Entry Box")
 	FCommonRadialBoxSettings BP_GetRadialBoxSettings() const;
 
-	UFUNCTION(BlueprintCallable, DisplayName= "SetRadialBoxSettings")
+	UFUNCTION(BlueprintCallable, DisplayName= "SetRadialBoxSettings", Category="Dynamic Entry Box")
 	void BP_SetRadialBoxSettings(FCommonRadialBoxSettings InCommonRadialBoxSettings);
 };

@@ -6,6 +6,8 @@
 #include "Spline/Spline2DBuilder.h"
 #include "Spline/Spline2DRenderBatch.h"
 
+#include "Widgets/SWidget.h"
+
 /* ==================== FUMGSplineSlot ==================== */
 
 void SSpline2D::FSpline2DSlot::Construct(const FChildren& SlotOwner, FSlotArguments&& InArgs)

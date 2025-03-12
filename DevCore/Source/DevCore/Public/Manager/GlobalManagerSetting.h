@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Engine/DeveloperSettings.h"
 #include "GlobalManagerSetting.generated.h"
 
 /**
@@ -20,6 +21,6 @@ public:
 	virtual FName GetSectionName() const override { return "Global"; }
 
 public:
-	UPROPERTY(Config, EditAnywhere)
+	UPROPERTY(Config, EditAnywhere, Category="Global Manager Setting")
 	bool bEnableAllManager = true;
 };

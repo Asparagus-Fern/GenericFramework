@@ -10,8 +10,6 @@
   "DocsURL": "",
   "MarketplaceURL": "",
   "CanContainContent": true,
-  "IsBetaVersion": false,
-  "IsExperimentalVersion": false,
   "Installed": false,
   "Plugins": [
     {
@@ -27,17 +25,26 @@
     {
       "Name": "DevSlateCore",
       "Type": "Runtime",
-      "LoadingPhase": "PreDefault"
+      "LoadingPhase": "PreDefault",
+      "WhitelistPlatforms": [
+        "Win64"
+      ]
     },
     {
       "Name": "DevCore",
       "Type": "Runtime",
-      "LoadingPhase": "PreDefault"
+      "LoadingPhase": "PreDefault",
+      "WhitelistPlatforms": [
+        "Win64"
+      ]
     },
     {
       "Name": "DevEdCore",
       "Type": "Editor",
-      "LoadingPhase": "PreDefault"
+      "LoadingPhase": "PreDefault",
+      "WhitelistPlatforms": [
+        "Win64"
+      ]
     }
   ]
 }

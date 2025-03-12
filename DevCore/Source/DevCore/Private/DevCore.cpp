@@ -3,6 +3,7 @@
 #include "DevCore.h"
 
 #include "Manager/ManagerProxy.h"
+#include "Modules/ModuleManager.h"
 
 #define LOCTEXT_NAMESPACE "FDevCoreModule"
 
@@ -18,4 +19,4 @@ void FDevCoreModule::ShutdownModule()
 
 #undef LOCTEXT_NAMESPACE
 
-IMPLEMENT_MODULE(FDevCoreModule, DevCore)
+IMPLEMENT_MODULE(FDevCoreModule, DevCore);

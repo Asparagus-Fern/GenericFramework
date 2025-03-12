@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "CommonObject.h"
+#include "Tickable.h"
 #include "TickableObject.generated.h"
 
 /**

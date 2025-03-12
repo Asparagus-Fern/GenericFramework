@@ -5,6 +5,8 @@ public class DevSlateCore : ModuleRules
 	public DevSlateCore(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
+		PrecompileForTargets = PrecompileTargetsType.Any;
+		bUsePrecompiled = false;
 
 		PublicDependencyModuleNames.AddRange(
 			new string[]

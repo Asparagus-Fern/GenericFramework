@@ -35,13 +35,13 @@ protected:
 	virtual void OnSlotRemoved(UPanelSlot* InSlot) override;
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Spline2D")
 	FSpline2DInfo SplineInfo = FSpline2DInfo(true);
 
 public:
 	FSpline2DInfo GetSplineInfo() const { return SplineInfo; }
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category="Spline2D")
 	USpline2DSlot* AddChildToSpline2D(UWidget* Content);
 
 	/* ==================== Common ==================== */

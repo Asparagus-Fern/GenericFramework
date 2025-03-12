@@ -22,10 +22,10 @@ public:
 	virtual int32 GetManagerOrder() override;
 
 public:
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category="Manager")
 	void SetManagerOrder(int32 InManagerOrder);
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Manager")
 	int32 ManagerOrder = 0;
 };

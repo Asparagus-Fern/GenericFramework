@@ -4,9 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Spline2DType.h"
+#include "Framework/SlateDelegates.h"
+#include "Layout/ChildrenBase.h"
+#include "Widgets/SPanel.h"
 #include "Widgets/SLeafWidget.h"
 
 class FSpline2DInterface;
+
 /**
  *
  */
@@ -63,14 +67,14 @@ public:
 
 public:
 	using FScopedWidgetSlotArguments = TPanelChildren<FSpline2DSlot>::FScopedWidgetSlotArguments;
-	
+
 	FScopedWidgetSlotArguments AddSlot();
 	FScopedWidgetSlotArguments InsertSlot(int32 Index = INDEX_NONE);
 	void RemoveSlot(int32 Index);
 	bool RemoveSlot(TSharedRef<SWidget> Widget);
 	void ClearChildren();
 	int32 GetNumWidgets() const;
-	
+
 	static FSpline2DSlot::FSlotArguments Slot();
 
 public:

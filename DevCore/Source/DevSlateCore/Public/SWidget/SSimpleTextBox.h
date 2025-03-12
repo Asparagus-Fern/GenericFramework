@@ -4,6 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "SlateType.h"
+#include "Framework/Text/TextLayout.h"
+#include "Styling/CoreStyle.h"
+#include "Layout/Visibility.h"
+#include "Widgets/Text/STextBlock.h"
+#include "Widgets/Layout/SSpacer.h"
+#include "Widgets/Images/SImage.h"
 #include "Widgets/SCompoundWidget.h"
 
 /**

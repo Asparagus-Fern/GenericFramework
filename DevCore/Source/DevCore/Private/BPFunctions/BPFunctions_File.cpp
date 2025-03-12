@@ -3,8 +3,13 @@
 
 #include "BPFunctions/BPFunctions_File.h"
 
+#include "HAL/PlatformFileManager.h"
+#include "HAL/FileManager.h"
 #include "DesktopPlatformModule.h"
 #include "IDesktopPlatform.h"
+#include "Interfaces/IPluginManager.h"
+#include "Framework/Application/SlateApplication.h"
+#include "Misc/Paths.h"
 
 #if WITH_EDITOR
 #include "EditorDirectories.h"
@@ -59,6 +64,76 @@ bool UBPFunctions_File::OpenDirectoryDialog(FString& DirectoryPath)
 		}
 	}
 
+	return false;
+}
+
+bool UBPFunctions_File::GetPluginBaseDir(const FString& InPluginName, FString& Directory)
+{
+	if (const TSharedPtr<IPlugin> Plugin = IPluginManager::Get().FindPlugin(InPluginName))
+	{
+		Directory = Plugin->GetBaseDir();
+		return true;
+	}
+	return false;
+}
+
+bool UBPFunctions_File::GetPluginBinariesDir(const FString& InPluginName, FString& Directory)
+{
+	if (const TSharedPtr<IPlugin> Plugin = IPluginManager::Get().FindPlugin(InPluginName))
+	{
+		Directory = Plugin->GetBaseDir() + "/Binaries";
+		return true;
+	}
+	return false;
+}
+
+bool UBPFunctions_File::GetPluginContentDir(const FString& InPluginName, FString& Directory)
+{
+	if (const TSharedPtr<IPlugin> Plugin = IPluginManager::Get().FindPlugin(InPluginName))
+	{
+		Directory = Plugin->GetContentDir();
+		return true;
+	}
+	return false;
+}
+
+bool UBPFunctions_File::GetPluginIntermediateDir(const FString& InPluginName, FString& Directory)
+{
+	if (const TSharedPtr<IPlugin> Plugin = IPluginManager::Get().FindPlugin(InPluginName))
+	{
+		Directory = Plugin->GetBaseDir() + "/Intermediate";
+		return true;
+	}
+	return false;
+}
+
+bool UBPFunctions_File::GetPluginResourcesDir(const FString& InPluginName, FString& Directory)
+{
+	if (const TSharedPtr<IPlugin> Plugin = IPluginManager::Get().FindPlugin(InPluginName))
+	{
+		Directory = Plugin->GetBaseDir() + "/Resources";
+		return true;
+	}
+	return false;
+}
+
+bool UBPFunctions_File::GetPluginSourceDir(const FString& InPluginName, FString& Directory)
+{
+	if (const TSharedPtr<IPlugin> Plugin = IPluginManager::Get().FindPlugin(InPluginName))
+	{
+		Directory = Plugin->GetBaseDir() + "/Source";
+		return true;
+	}
+	return false;
+}
+
+bool UBPFunctions_File::GetPluginExtraDir(const FString& InPluginName, FString& Directory)
+{
+	if (const TSharedPtr<IPlugin> Plugin = IPluginManager::Get().FindPlugin(InPluginName))
+	{
+		Directory = Plugin->GetBaseDir() + "/Extra";
+		return true;
+	}
 	return false;
 }
 

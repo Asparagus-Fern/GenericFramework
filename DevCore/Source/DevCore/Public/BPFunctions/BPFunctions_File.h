@@ -16,16 +16,16 @@ class DEVCORE_API UBPFunctions_File : public UBlueprintFunctionLibrary
 
 	/* Directory */
 public:
-	UFUNCTION(BlueprintPure)
+	UFUNCTION(BlueprintPure, Category="Function Library | Directory")
 	static bool ExistDirectory(const FString& Directory);
 
-	UFUNCTION(BlueprintPure)
+	UFUNCTION(BlueprintPure, Category="Function Library | Directory")
 	static bool CreateDirectory(const FString& Directory);
 
-	UFUNCTION(BlueprintPure)
+	UFUNCTION(BlueprintPure, Category="Function Library | Directory")
 	static bool DeleteDirectory(const FString& Directory);
 
-	UFUNCTION(BlueprintPure)
+	UFUNCTION(BlueprintPure, Category="Function Library | Directory")
 	static bool DeleteDirectoryRecursively(const FString& Directory);
 
 	/**
@@ -33,27 +33,49 @@ public:
 	 * @param DirectoryPath 文件夹绝对路径
 	 * @return 
 	 */
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category="Function Library | Directory")
 	static bool OpenDirectoryDialog(FString& DirectoryPath);
+
+public:
+	UFUNCTION(BlueprintPure, Category="Function Library | Directory")
+	static bool GetPluginBaseDir(const FString& InPluginName, FString& Directory);
+
+	UFUNCTION(BlueprintPure, Category="Function Library | Directory")
+	static bool GetPluginBinariesDir(const FString& InPluginName, FString& Directory);
+
+	UFUNCTION(BlueprintPure, Category="Function Library | Directory")
+	static bool GetPluginContentDir(const FString& InPluginName, FString& Directory);
+
+	UFUNCTION(BlueprintPure, Category="Function Library | Directory")
+	static bool GetPluginIntermediateDir(const FString& InPluginName, FString& Directory);
+
+	UFUNCTION(BlueprintPure, Category="Function Library | Directory")
+	static bool GetPluginResourcesDir(const FString& InPluginName, FString& Directory);
+
+	UFUNCTION(BlueprintPure, Category="Function Library | Directory")
+	static bool GetPluginSourceDir(const FString& InPluginName, FString& Directory);
+
+	UFUNCTION(BlueprintPure, Category="Function Library | Directory")
+	static bool GetPluginExtraDir(const FString& InPluginName, FString& Directory);
 
 	/* File */
 public:
-	UFUNCTION(BlueprintPure)
+	UFUNCTION(BlueprintPure, Category="Function Library | File")
 	static TArray<FString> FindFiles(const FString& Path, const FString& Extension);
 
-	UFUNCTION(BlueprintPure)
+	UFUNCTION(BlueprintPure, Category="Function Library | File")
 	static TArray<FString> FindFilesRecursive(const FString& Path, const FString& Extension, bool Files, bool Directories, bool bClearFileNames = true);
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category="Function Library | File")
 	static bool CopyFile(FString FileSource, FString FileDest, bool Replace = true, bool EvenIfReadOnly = false);
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category="Function Library | File")
 	static bool MoveFile(FString FileSource, FString FileDest, bool Replace = true, bool EvenIfReadOnly = false);
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category="Function Library | File")
 	static bool DeleteFile(FString FileName, bool RequireExists = false, bool EvenReadOnly = false);
 
-	UFUNCTION(BlueprintPure)
+	UFUNCTION(BlueprintPure, Category="Function Library | File")
 	static bool IsFileReadOoly(const FString& FileName);
 
 	/**
@@ -62,7 +84,7 @@ public:
 	 * @param FilePaths 文件绝对路径
 	 * @return 
 	 */
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category="Function Library | File")
 	static bool OpenFileDialog(FString FileType, TArray<FString>& FilePaths);
 
 	/**
@@ -72,6 +94,6 @@ public:
 	 * @param FilePaths 文件保存绝对路径
 	 * @return 
 	 */
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category="Function Library | File")
 	static bool SaveFileDialog(FString FileName, FString FileType, TArray<FString>& FilePaths);
 };

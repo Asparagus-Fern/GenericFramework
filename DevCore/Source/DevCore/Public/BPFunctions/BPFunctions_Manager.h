@@ -18,12 +18,12 @@ class DEVCORE_API UBPFunctions_Manager : public UBlueprintFunctionLibrary
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintPure)
+	UFUNCTION(BlueprintPure, Category="Function Library | Manager")
 	static UManagerProxy* GetManagerProxy();
 
-	UFUNCTION(BlueprintPure)
+	UFUNCTION(BlueprintPure, Category="Function Library | Manager")
 	static UManagerInfo* GetManagerInfo(FName InManagerName);
-	
-	UFUNCTION(BlueprintPure)
+
+	UFUNCTION(BlueprintPure, Category="Function Library | Manager")
 	static TArray<UManagerInfo*> GetManagerInfos();
 };

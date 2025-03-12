@@ -5,6 +5,8 @@ public class CameraSystem : ModuleRules
 	public CameraSystem(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
+		PrecompileForTargets = PrecompileTargetsType.Any;
+		bUsePrecompiled = false;
 
 		PublicDependencyModuleNames.AddRange(
 			new string[]

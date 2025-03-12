@@ -5,6 +5,8 @@
 
 #include "Engine/Font.h"
 #include "SWidget/SSimpleTextBox.h"
+#include "UObject/ConstructorHelpers.h"
+#include "Fonts/SlateFontInfo.h"
 
 USimpleTextBox::USimpleTextBox(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)

@@ -1,13 +1,18 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "BPFunctions/BPFunctions_Gameplay.h"
 
+#include "Engine/EngineTypes.h"
 #include "AIController.h"
 #include "EngineUtils.h"
+#include "Engine/Engine.h"
+#include "Engine/World.h"
+#include "Engine/GameInstance.h"
 #include "GameFramework/GameModeBase.h"
-#include "GameFramework/GameStateBase.h"
+#include "GameFramework/GameState.h"
 #include "GameFramework/HUD.h"
+#include "GameFramework/Pawn.h"
+#include "GameFramework/PlayerController.h"
 #include "GameFramework/PlayerState.h"
 #include "Kismet/GameplayStatics.h"
 

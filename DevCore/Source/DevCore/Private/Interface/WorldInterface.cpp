@@ -1,7 +1,8 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "Interface/WorldInterface.h"
+
+#include "Engine/World.h"
 
 void IWorldInterface::InitializeWorldInterface()
 {

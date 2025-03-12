@@ -2,6 +2,8 @@
 
 #include "CoreMinimal.h"
 
+#include "Styling/SlateStyle.h"
+
 class DEVSLATECORE_API FDevCoreStyle
 {
 public:

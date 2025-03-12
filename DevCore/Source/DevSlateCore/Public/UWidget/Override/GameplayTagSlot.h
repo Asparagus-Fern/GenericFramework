@@ -30,11 +30,11 @@ protected:
 
 public:
 	/* 是否手动的注册插槽 */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="GameplayTag Slot")
 	bool bManualRegistration = false;
 
 	/* 插槽标签 */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="UI.HUD"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="UI.HUD"), Category="GameplayTag Slot")
 	FGameplayTag SlotTag;
 
 public:

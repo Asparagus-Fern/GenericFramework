@@ -7,6 +7,8 @@ public class DevCore : ModuleRules
 	public DevCore(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
+		PrecompileForTargets = PrecompileTargetsType.Any;
+		bUsePrecompiled = false;
 
 		PublicIncludePaths.AddRange(
 			new string[]

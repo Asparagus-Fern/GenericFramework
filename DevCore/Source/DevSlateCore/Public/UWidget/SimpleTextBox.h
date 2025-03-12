@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "SlateType.h"
 #include "Components/Widget.h"
+#include "Framework/Text/TextLayout.h"
 #include "SimpleTextBox.generated.h"
 
 class SSimpleTextBox;
@@ -137,177 +137,177 @@ public:
 
 	/* Text */
 public:
-	UFUNCTION(BlueprintPure)
+	UFUNCTION(BlueprintPure, Category="SimpleTextBox|Text")
 	FText GetText() const;
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category="SimpleTextBox|Text")
 	void SetText(FText InText);
 
-	UFUNCTION(BlueprintPure)
+	UFUNCTION(BlueprintPure, Category="SimpleTextBox|Text")
 	FSlateColor GetTextColor() const;
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category="SimpleTextBox|Text")
 	void SetTextColor(FSlateColor InTextColor);
 
-	UFUNCTION(BlueprintPure)
+	UFUNCTION(BlueprintPure, Category="SimpleTextBox|Text")
 	FSlateFontInfo GetTextFont() const;
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category="SimpleTextBox|Text")
 	void SetTextFont(FSlateFontInfo InTextFont);
 
-	UFUNCTION(BlueprintPure)
+	UFUNCTION(BlueprintPure, Category="SimpleTextBox|Text")
 	FSlateBrush GetTextStrikeBrush() const;
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category="SimpleTextBox|Text")
 	void SetTextStrikeBrush(const FSlateBrush& InTextStrikeBrush);
 
-	UFUNCTION(BlueprintPure)
+	UFUNCTION(BlueprintPure, Category="SimpleTextBox|Text")
 	FVector2D GetTextShadowOffset() const;
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category="SimpleTextBox|Text")
 	void SetTextShadowOffset(FVector2D InTextShadowOffset);
 
-	UFUNCTION(BlueprintPure)
+	UFUNCTION(BlueprintPure, Category="SimpleTextBox|Text")
 	FLinearColor GetTextShadowColor() const;
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category="SimpleTextBox|Text")
 	void SetTextShadowColor(FLinearColor InTextShadowColor);
 
-	UFUNCTION(BlueprintPure)
+	UFUNCTION(BlueprintPure, Category="SimpleTextBox|Text")
 	FText GetHighlightText() const;
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category="SimpleTextBox|Text")
 	void SetHighlightText(FText InHighlightText);
 
-	UFUNCTION(BlueprintPure)
+	UFUNCTION(BlueprintPure, Category="SimpleTextBox|Text")
 	FSlateBrush GetTextHighlightShape() const;
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category="SimpleTextBox|Text")
 	void SetTextHighlightShape(const FSlateBrush& InTextHighlightShape);
 
-	UFUNCTION(BlueprintPure)
+	UFUNCTION(BlueprintPure, Category="SimpleTextBox|Text")
 	bool GetAutoWrapText() const;
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category="SimpleTextBox|Text")
 	void SetAutoWrapText(bool InAutoWrapText);
 
-	UFUNCTION(BlueprintPure)
+	UFUNCTION(BlueprintPure, Category="SimpleTextBox|Text")
 	float GetWrapTextAt() const;
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category="SimpleTextBox|Text")
 	void SetWrapTextAt(float InWrapTextAt);
 
-	UFUNCTION(BlueprintPure)
+	UFUNCTION(BlueprintPure, Category="SimpleTextBox|Text")
 	ETextWrappingPolicy GetWrappingPolicy() const;
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category="SimpleTextBox|Text")
 	void SetWrappingPolicy(ETextWrappingPolicy InWrappingPolicy);
 
-	UFUNCTION(BlueprintPure)
+	UFUNCTION(BlueprintPure, Category="SimpleTextBox|Text")
 	ETextTransformPolicy GetTransformPolicy() const;
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category="SimpleTextBox|Text")
 	void SetTransformPolicy(ETextTransformPolicy InTransformPolicy);
 
-	UFUNCTION(BlueprintPure)
+	UFUNCTION(BlueprintPure, Category="SimpleTextBox|Text")
 	ETextJustify::Type GetJustification() const;
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category="SimpleTextBox|Text")
 	void SetJustification(ETextJustify::Type InJustification);
 
-	UFUNCTION(BlueprintPure)
+	UFUNCTION(BlueprintPure, Category="SimpleTextBox|Text")
 	float GetMinDesiredWidth() const;
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category="SimpleTextBox|Text")
 	void SetMinDesiredWidth(float InMinDesiredWidth);
 
-	UFUNCTION(BlueprintPure)
+	UFUNCTION(BlueprintPure, Category="SimpleTextBox|Text")
 	float GetLineHeightPercentage() const;
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category="SimpleTextBox|Text")
 	void SetLineHeightPercentage(float InLineHeightPercentage);
 
-	UFUNCTION(BlueprintPure)
+	UFUNCTION(BlueprintPure, Category="SimpleTextBox|Text")
 	FMargin GetTextMargin() const;
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category="SimpleTextBox|Text")
 	void SetTextMargin(const FMargin& InTextMargin);
 
-	UFUNCTION(BlueprintPure)
+	UFUNCTION(BlueprintPure, Category="SimpleTextBox|Text")
 	ETextOverflowPolicy GetOverflowPolicy() const;
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category="SimpleTextBox|Text")
 	void SetOverflowPolicy(ETextOverflowPolicy InOverflowPolicy);
 
 	/* Spacer */
 public:
-	UFUNCTION(BlueprintPure)
+	UFUNCTION(BlueprintPure, Category="SimpleTextBox|Space")
 	float GetSpace() const;
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category="SimpleTextBox|Space")
 	void SetSpace(float InSpace);
-	
+
 	/* Image */
 public:
-	UFUNCTION(BlueprintPure)
+	UFUNCTION(BlueprintPure, Category="SimpleTextBox|Image")
 	FSlateBrush GetImage() const;
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category="SimpleTextBox|Image")
 	void SetImage(const FSlateBrush& InImage);
 
-	UFUNCTION(BlueprintPure)
+	UFUNCTION(BlueprintPure, Category="SimpleTextBox|Image")
 	FSlateColor GetImageColor() const;
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category="SimpleTextBox|Image")
 	void SetImageColor(const FSlateColor& InImageColor);
 
-	UFUNCTION(BlueprintPure)
+	UFUNCTION(BlueprintPure, Category="SimpleTextBox|Image")
 	FMargin GetImageMargin() const;
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category="SimpleTextBox|Image")
 	void SetImageMargin(const FMargin& InImageMargin);
 
-	UFUNCTION(BlueprintPure)
+	UFUNCTION(BlueprintPure, Category="SimpleTextBox|Image")
 	ESlateVisibility GetImageVisibility() const;
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category="SimpleTextBox|Image")
 	void SetImageVisibility(ESlateVisibility InImageVisibility);
 
 	/* Layout */
-	UFUNCTION(BlueprintPure)
+	UFUNCTION(BlueprintPure, Category="SimpleTextBox|Layout")
 	ESimpleTextBoxType GetSimpleTextBoxType() const;
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category="SimpleTextBox|Layout")
 	void SetSimpleTextBoxType(ESimpleTextBoxType InSimpleTextBoxType);
 
-	UFUNCTION(BlueprintPure)
+	UFUNCTION(BlueprintPure, Category="SimpleTextBox|Layout")
 	FMargin GetPadding() const;
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category="SimpleTextBox|Layout")
 	void SetPadding(const FMargin& InPadding);
 
-	UFUNCTION(BlueprintPure)
+	UFUNCTION(BlueprintPure, Category="SimpleTextBox|Layout")
 	EHorizontalAlignment GetTextHorizontalAlignment() const;
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category="SimpleTextBox|Layout")
 	void SetTextHorizontalAlignment(EHorizontalAlignment InTextHorizontalAlignment);
 
-	UFUNCTION(BlueprintPure)
+	UFUNCTION(BlueprintPure, Category="SimpleTextBox|Layout")
 	EVerticalAlignment GetTextVerticalAlignment() const;
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category="SimpleTextBox|Layout")
 	void SetTextVerticalAlignment(EVerticalAlignment InTextVerticalAlignment);
 
-	UFUNCTION(BlueprintPure)
+	UFUNCTION(BlueprintPure, Category="SimpleTextBox|Layout")
 	EHorizontalAlignment GetImageHorizontalAlignment() const;
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category="SimpleTextBox|Layout")
 	void SetImageHorizontalAlignment(EHorizontalAlignment InImageHorizontalAlignment);
 
-	UFUNCTION(BlueprintPure)
+	UFUNCTION(BlueprintPure, Category="SimpleTextBox|Layout")
 	EVerticalAlignment GetImageVerticalAlignment() const;
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category="SimpleTextBox|Layout")
 	void SetImageVerticalAlignment(EVerticalAlignment InImageVerticalAlignment);
 
 protected:

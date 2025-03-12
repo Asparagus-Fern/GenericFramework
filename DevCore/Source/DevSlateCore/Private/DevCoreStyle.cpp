@@ -3,6 +3,9 @@
 #include "Interfaces/IPluginManager.h"
 #include "Styling/SlateStyleMacros.h"
 #include "Styling/SlateStyleRegistry.h"
+#include "Styling/SlateStyle.h"
+#include "Styling/CoreStyle.h"
+#include "Framework/Application/SlateApplication.h"
 
 using namespace CoreStyleConstants;
 

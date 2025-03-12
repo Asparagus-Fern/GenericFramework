@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/Button.h"
+#include "Widgets/Layout/SBox.h"
 #include "GenericButton.generated.h"
 
 class SGenericButton;
@@ -28,19 +29,19 @@ protected:
 
 public:
 	/** If true, this button is enabled. */
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Generic Button")
 	bool bButtonEnabled;
 
 	/** If true, this button can be interacted with it normally. Otherwise, it will not react to being hovered or clicked. */
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Generic Button")
 	bool bInteractionEnabled = true;
 
 	/** The minimum width of the button */
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Generic Button")
 	int32 MinWidth;
 
 	/** The minimum height of the button */
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Generic Button")
 	int32 MinHeight;
 
 public:
@@ -57,19 +58,19 @@ public:
 	FOnButtonLostFocusDelegate OnLostFocus;
 
 public:
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category="Generic Button")
 	void SetButtonEnabled(bool bInIsButtonEnabled);
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category="Generic Button")
 	void SetInteractionEnabled(bool bInIsInteractionEnabled);
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category="Generic Button")
 	void SetButtonFocusable(bool bInIsButtonFocusable);
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category="Generic Button")
 	void SetMinDesiredHeight(int32 InMinHeight);
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category="Generic Button")
 	void SetMinDesiredWidth(int32 InMinWidth);
 
 	virtual bool IsHovered() const override;

@@ -2,6 +2,10 @@
 
 #include "UWidget/Override/GameplayTagSlot.h"
 
+#include "Widgets/Layout/SBox.h"
+#include "Widgets/Text/STextBlock.h"
+#include "Widgets/DeclarativeSyntaxSupport.h"
+
 UE_DEFINE_GAMEPLAY_TAG(TAG_HUD, "UI.HUD");
 
 UGameplayTagSlot::FGameplayTagSlotDelegate UGameplayTagSlot::OnBuildGameplayTagSlot;
