@@ -7,6 +7,7 @@
 #include "Base/UserWidgetBase.h"
 #include "BPFunctions/BPFunctions_Gameplay.h"
 #include "Components/WidgetComponent.h"
+#include "Debug/DebugType.h"
 #include "Kismet/KismetMathLibrary.h"
 
 #if WITH_EDITOR

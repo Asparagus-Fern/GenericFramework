@@ -9,31 +9,34 @@
 
 bool FDisplayWidget::HasValidWidget() const
 {
-	return IsValid(WidgetInternal) || (bUseClass && IsValid(WidgetClass)) || (!bUseClass && IsValid(WidgetRef));
+	return (bUseClass && IsValid(WidgetClass)) || (!bUseClass && IsValid(WidgetRef));
 }
 
-UUserWidgetBase* FDisplayWidget::GetWidget()
+UUserWidgetBase* FDisplayWidget::GetWidget() const
 {
-	return GetWidget<UUserWidgetBase>();
-}
-
-void FDisplayWidget::SetWidget(UUserWidgetBase* InWidget)
-{
-	if (!IsValid(InWidget))
+	if (!HasValidWidget())
 	{
-		DLOG(DLogUI, Warning, TEXT("InWidget Is InValid"))
-		return;
+		DLOG(DLogUI, Warning, TEXT("Entity Has No Widget"))
+		return nullptr;
 	}
 
-	if (InWidget != WidgetInternal)
+	UUserWidgetBase* Result = nullptr;
+	if (bUseClass)
 	{
-		WidgetInternal = InWidget;
+		Result = CreateWidget<UUserWidgetBase>(GetManager<UWidgetManager>()->GetWorld(), WidgetClass);
 	}
+	else
+	{
+		Result = WidgetRef;
+	}
+
+	return Result;
 }
 
 void UWidgetEntity::NativeOnCreate()
 {
 	IStateInterface::NativeOnCreate();
+	WidgetInternal = DisplayWidget.GetWidget();
 }
 
 void UWidgetEntity::NativeOnDestroy()
@@ -74,18 +77,18 @@ void UWidgetEntity::OnEntityWidgetDeinitialized()
 	}
 }
 
-UUserWidgetBase* UWidgetEntity::GetWidgetByClass(TSubclassOf<UUserWidgetBase> InClass)
+UUserWidgetBase* UWidgetEntity::GetWidgetByClass(const TSubclassOf<UUserWidgetBase>& InClass)
 {
 	ensure(InClass);
-	return DisplayWidget.GetWidget<UUserWidgetBase>();
+	return GetWidget<UUserWidgetBase>();
 }
 
-UUserWidgetBase* UWidgetEntity::GetWidget()
+UUserWidgetBase* UWidgetEntity::GetWidget() const
 {
-	return DisplayWidget.GetWidget<UUserWidgetBase>();
+	return WidgetInternal.Get();
 }
 
 void UWidgetEntity::SetWidget(UUserWidgetBase* InWidget)
 {
-	DisplayWidget.SetWidget(InWidget);
+	WidgetInternal = InWidget;
 }

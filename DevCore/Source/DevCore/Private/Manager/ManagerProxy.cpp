@@ -24,11 +24,6 @@ UManagerProxy* UManagerProxy::InitializeManagerProxy()
 
 void UManagerProxy::DeInitializeManagerProxy()
 {
-	if (Instance)
-	{
-		Instance->RemoveFromRoot();
-		Instance->MarkAsGarbage();
-	}
 }
 
 UManagerProxy* UManagerProxy::Get()

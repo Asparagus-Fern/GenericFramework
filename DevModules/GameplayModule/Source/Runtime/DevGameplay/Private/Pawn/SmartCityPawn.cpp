@@ -16,9 +16,9 @@ ASmartCityPawn::ASmartCityPawn(const FObjectInitializer& ObjectInitializer)
 	PlayerInputIdleActionComponent = CreateDefaultSubobject<UPlayerInputIdleActionComponent>("PlayerInputIdleActionComponent");
 }
 
-bool ASmartCityPawn::ReassessmentTargetArmLength_Implementation()
+bool ASmartCityPawn::ReassessmentFocus_Implementation()
 {
-	Super::ReassessmentTargetArmLength_Implementation();
+	Super::ReassessmentFocus_Implementation();
 
 	const bool Collision = SpringArmComponent->bDoCollisionTest;
 	SpringArmComponent->bDoCollisionTest = false;

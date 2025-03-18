@@ -48,6 +48,8 @@ ACameraPointBase::ACameraPointBase(const FObjectInitializer& ObjectInitializer)
 void ACameraPointBase::BeginPlay()
 {
 	Super::BeginPlay();
+
+	RefreshFocus();
 	OnCameraPointRegister.Broadcast(this);
 }
 
@@ -90,6 +92,17 @@ void ACameraPointBase::SetCameraComponent_Implementation(UCameraComponent* InCam
 {
 }
 
+void ACameraPointBase::RefreshFocus()
+{
+	FHitResult HitResult;
+	UBPFunctions_Gameplay::GetActorForwardHitResult(this, HitResult);
+	if (HitResult.bBlockingHit)
+	{
+		SetActorLocation(HitResult.Location);
+		SpringArmComponent->TargetArmLength = HitResult.Distance;
+	}
+}
+
 #if WITH_EDITOR
 
 void ACameraPointBase::CopyFromViewportCamera()
@@ -105,19 +118,6 @@ void ACameraPointBase::CopyFromViewportCamera()
 	SetActorRotation(Rotation);
 
 	RefreshFocus();
-}
-
-void ACameraPointBase::RefreshFocus()
-{
-	FHitResult HitResult;
-	UBPFunctions_Gameplay::GetActorForwardHitResult(this, HitResult);
-	if (HitResult.bBlockingHit)
-	{
-		SetActorLocation(HitResult.Location);
-		SpringArmComponent->TargetArmLength = HitResult.Distance;
-	}
-
-	UBPFunctions_EditorScene::RefreshSelection();
 }
 
 void ACameraPointBase::ToggleLock()

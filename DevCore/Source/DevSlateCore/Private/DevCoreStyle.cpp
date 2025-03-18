@@ -56,8 +56,11 @@ void FDevCoreStyle::FStyle::Initialize()
 
 	SetParentStyleName("CoreStyle");
 
-	Set("Developer.ToolbarButton", new IMAGE_BRUSH_SVG("Icons/Manager", Icon20x20));
-	Set("Developer.ToolbarButton.Small", new IMAGE_BRUSH_SVG("Icons/Manager", Icon16x16));
+	Set("Developer.DeveloperSetting", new IMAGE_BRUSH_SVG("Icons/DeveloperSetting", Icon20x20));
+	Set("Developer.DeveloperSetting.Small", new IMAGE_BRUSH_SVG("Icons/DeveloperSetting", Icon16x16));
+
+	Set("Developer.FastSwitchLanguage", new IMAGE_BRUSH_SVG("Icons/FastSwitchLanguage", Icon20x20));
+	Set("Developer.FastSwitchLanguage.Small", new IMAGE_BRUSH_SVG("Icons/FastSwitchLanguage", Icon16x16));
 }
 
 

@@ -23,46 +23,11 @@ public:
 	TSubclassOf<UUserWidgetBase> WidgetClass = nullptr;
 
 	UPROPERTY(EditAnywhere, Instanced, meta=(EditConditionHides, EditCondition = "!bUseClass"))
-	UUserWidgetBase* WidgetRef = nullptr;
+	TObjectPtr<UUserWidgetBase> WidgetRef = nullptr;
 
 public:
 	bool HasValidWidget() const;
-	UUserWidgetBase* GetWidget();
-	void SetWidget(UUserWidgetBase* InWidget);
-
-public:
-	template <typename T>
-	T* GetWidget()
-	{
-		if (IsValid(WidgetInternal))
-		{
-			return Cast<T>(WidgetInternal);
-		}
-
-		if (!HasValidWidget())
-		{
-			DLOG(DLogUI, Warning, TEXT("Entity Has No Widget"))
-			return nullptr;
-		}
-
-		T* Result = nullptr;
-		if (bUseClass)
-		{
-			WidgetInternal = CreateWidget<UUserWidgetBase>(GetManager<UWidgetManager>()->GetWorld(), WidgetClass);
-			Result = Cast<T>(WidgetInternal);
-		}
-		else
-		{
-			WidgetInternal = WidgetRef;
-			Result = Cast<T>(WidgetInternal);
-		}
-
-		return Result;
-	}
-
-protected:
-	UPROPERTY()
-	TObjectPtr<UUserWidgetBase> WidgetInternal = nullptr;
+	UUserWidgetBase* GetWidget() const;
 };
 
 /**
@@ -74,7 +39,7 @@ class WIDGETGENERATION_API UWidgetEntity : public UCommonObject, public IStateIn
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditDefaultsOnly)
 	FDisplayWidget DisplayWidget;
 
 	/* IStateInterface */
@@ -94,11 +59,26 @@ protected:
 	/* UWidgetEntity */
 public:
 	UFUNCTION(BlueprintPure, meta = (DeterminesOutputType = "InClass"))
-	UUserWidgetBase* GetWidgetByClass(TSubclassOf<UUserWidgetBase> InClass);
+	UUserWidgetBase* GetWidgetByClass(const TSubclassOf<UUserWidgetBase>& InClass);
 
 	UFUNCTION(BlueprintPure)
-	UUserWidgetBase* GetWidget();
+	UUserWidgetBase* GetWidget() const;
 
 	UFUNCTION(BlueprintCallable)
 	void SetWidget(UUserWidgetBase* InWidget);
+
+public:
+	template <typename T>
+	T* GetWidget()
+	{
+		if (WidgetInternal.IsValid())
+		{
+			return Cast<T>(WidgetInternal.Get());
+		}
+		return nullptr;
+	}
+
+protected:
+	UPROPERTY()
+	TWeakObjectPtr<UUserWidgetBase> WidgetInternal;
 };

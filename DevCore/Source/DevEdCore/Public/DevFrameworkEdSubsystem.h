@@ -10,8 +10,21 @@ class IManagerEdInterface;
 class ILevelEditor;
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnCommandListInitialize, TSharedPtr<FUICommandList>&)
-DECLARE_MULTICAST_DELEGATE_OneParam(FToolMenuDelegate, UToolMenu*)
+DECLARE_MULTICAST_DELEGATE_OneParam(FToolMenuDelegate, UToolMenu*&)
 DECLARE_MULTICAST_DELEGATE_OneParam(FFToolMenuSectionDelegate, FToolMenuSection&)
+
+struct FDevFrameworkDelegate
+{
+public:
+	DEVEDCORE_API static FOnCommandListInitialize OnCommandListInitialize;
+
+	DEVEDCORE_API static FToolMenuDelegate OnMenuBarExtend;
+	DEVEDCORE_API static FToolMenuDelegate OnMenuExtend;
+
+	DEVEDCORE_API static FToolMenuDelegate OnToolBarExtend;
+	DEVEDCORE_API static FFToolMenuSectionDelegate OnToolBarSectionExtend;
+	DEVEDCORE_API static FToolMenuDelegate OnToolBarOptionExtend;
+};
 
 /**
  * 
@@ -39,19 +52,4 @@ protected:
 	static FName MenuBarSectionName;
 	static FName ToolBarSectionName;
 	TSharedPtr<FUICommandList> CommandList = nullptr;
-
-public:
-	inline static FOnCommandListInitialize OnCommandListInitialize;
-
-	inline static FToolMenuDelegate OnMenuBarExtend;
-	inline static FToolMenuDelegate OnMenuExtend;
-
-	inline static FToolMenuDelegate OnToolBarExtend;
-	inline static FFToolMenuSectionDelegate OnToolBarSectionExtend;
-	inline static FToolMenuDelegate OnToolBarOptionExtend;
-
-private:
-	virtual void RegisterToolBarDeveloperSettingCommand(TSharedPtr<FUICommandList>& InCommandList);
-	virtual void RegisterToolBarDeveloperSetting(FToolMenuSection& ToolMenuSection);
-	virtual void OpenToolBarManagerSetting();
 };

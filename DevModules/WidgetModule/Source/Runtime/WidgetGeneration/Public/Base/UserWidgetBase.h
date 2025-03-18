@@ -4,11 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "CommonUserWidget.h"
-#include "Debug/DebugType.h"
 #include "GameplayTagContainer.h"
 #include "Animation/WidgetAnimationInterface.h"
 #include "Blueprint/UserWidget.h"
-#include "Input/UIActionBindingHandle.h"
 #include "Interface/StateInterface.h"
 #include "UserWidgetBase.generated.h"
 

@@ -50,6 +50,10 @@ public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	CAMERASYSTEM_API void SetCameraComponent(UCameraComponent* InCameraComponent);
 
+	/* Refresh The Camera Focus Point */
+	UFUNCTION(BlueprintCallable)
+	CAMERASYSTEM_API void RefreshFocus();
+
 public:
 	DECLARE_EVENT_OneParam(ACameraPointBase, FCameraPointDelegate, ACameraPointBase*)
 
@@ -69,10 +73,6 @@ public:
 	/* Copy Current Level Viewport Location And Rotation To Self */
 	UFUNCTION(CallInEditor, Category="Camera Point (Editor)")
 	void CopyFromViewportCamera();
-
-	/* Refresh The Camera Focus Point */
-	UFUNCTION(CallInEditor, Category="Camera Point (Editor)")
-	void RefreshFocus();
 
 	/* Toggle To Lock Camera Movement */
 	UFUNCTION(CallInEditor, Category="Camera Point (Editor)")

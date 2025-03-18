@@ -45,19 +45,22 @@ void UPawnSpringArmComponent::AddTargetArmLength(const float InValue)
 	const float PitchRate = FMath::GetMappedRangeValueClamped(FVector2D(0.f, 90.f), FVector2D(0.8f, 1.2f), FMath::Abs(Rotation.Pitch));
 	DesiredArmLength += (FMath::Abs(FMath::Sin(UE_DOUBLE_PI / (180.0) * Rotation.Pitch)) * PitchRate * (TargetArmLength * 0.2f) * ZoomSpeedRate * InValue);
 
-	if (!bIsReassessmenting && NeedReassessment())
+	/* Gather New Spring Arm Length When Current Spring Arm Length Is Smaller Than ReassessmentFocus */
+	if (NeedReassessment() && !bLastReassessmentResult)
 	{
-		bIsReassessmenting = IPawnInputMovementInterface::Execute_ReassessmentTargetArmLength(GetOwner());
+		bLastReassessmentResult = IPawnInputMovementInterface::Execute_ReassessmentFocus(GetOwner());
 	}
 
+	/* Check If We Can Reassessment */
+	if (DesiredArmLength > ReassessmentFocus + ReassessmentFocusRange)
+	{
+		bLastReassessmentResult = false;
+	}
+
+	/* Limit Spring Arm Length */
 	if (GetOwner()->GetClass()->ImplementsInterface(UPawnLockStateInterface::StaticClass()))
 	{
 		DesiredArmLength = Cast<IPawnLockStateInterface>(GetOwner())->GetLimitSpringArmLength(DesiredArmLength);
-	}
-
-	if (bIsReassessmenting && !NeedReassessment())
-	{
-		bIsReassessmenting = false;
 	}
 }
 
@@ -69,7 +72,7 @@ void UPawnSpringArmComponent::SetTargetArmLength(const float InValue)
 
 bool UPawnSpringArmComponent::NeedReassessment() const
 {
-	return DesiredArmLength < ReassessmentSpringArmLength && bEnableReassessmentSpringArmLength;
+	return DesiredArmLength < ReassessmentFocus && bEnableReassessmentFocus;
 }
 
 void UPawnSpringArmComponent::UpdateTargetArmLength(float DeltaTime)

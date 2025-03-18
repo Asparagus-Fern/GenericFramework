@@ -42,7 +42,7 @@ public:
 	void SetZoom(float InValue);
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Pawn Input Movement Interface")
-	bool ReassessmentTargetArmLength();
+	bool ReassessmentFocus();
 
 public:
 	virtual FVector GetLocation() { return FVector::ZeroVector; }

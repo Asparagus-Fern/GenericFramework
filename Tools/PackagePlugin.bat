@@ -1,1 +1,0 @@
-"C:\Program Files\Epic Games\UE_5.5\Engine\Build\BatchFiles\RunUAT.bat" BuildPlugin -Plugin="C:\UEProject\DevProject-5.5\Plugins\DevPlugin\DevModules\CameraModule\CameraModule.uplugin" -package="C:\Package\DevPlugin\DevModules" -Rocket -VS2022

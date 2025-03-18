@@ -3,12 +3,16 @@
 
 #include "DevFrameworkEdSubsystem.h"
 
-#include "DevCoreStyle.h"
-#include "ISettingsModule.h"
 #include "LevelEditor.h"
-#include "Manager/ManagerSetting/DeveloperSettingCommands.h"
 
 #define LOCTEXT_NAMESPACE "UManagerEdSubsystem"
+
+FOnCommandListInitialize FDevFrameworkDelegate::OnCommandListInitialize;
+FToolMenuDelegate FDevFrameworkDelegate::OnMenuBarExtend;
+FToolMenuDelegate FDevFrameworkDelegate::OnMenuExtend;
+FToolMenuDelegate FDevFrameworkDelegate::OnToolBarExtend;
+FFToolMenuSectionDelegate FDevFrameworkDelegate::OnToolBarSectionExtend;
+FToolMenuDelegate FDevFrameworkDelegate::OnToolBarOptionExtend;
 
 FName UDevFrameworkEdSubsystem::MenuBarSectionName = "DevEdMenuBar";
 FName UDevFrameworkEdSubsystem::ToolBarSectionName = "DevEdTooBar";
@@ -24,9 +28,6 @@ void UDevFrameworkEdSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 
 	FLevelEditorModule& LevelEditorModule = FModuleManager::Get().GetModuleChecked<FLevelEditorModule>("LevelEditor");
 	LevelEditorModule.OnLevelEditorCreated().AddUObject(this, &UDevFrameworkEdSubsystem::OnLevelEditorCreated);
-
-	OnCommandListInitialize.AddUObject(this, &UDevFrameworkEdSubsystem::RegisterToolBarDeveloperSettingCommand);
-	OnToolBarSectionExtend.AddUObject(this, &UDevFrameworkEdSubsystem::RegisterToolBarDeveloperSetting);
 }
 
 void UDevFrameworkEdSubsystem::Deinitialize()
@@ -35,15 +36,12 @@ void UDevFrameworkEdSubsystem::Deinitialize()
 
 	FLevelEditorModule& LevelEditorModule = FModuleManager::Get().GetModuleChecked<FLevelEditorModule>("LevelEditor");
 	LevelEditorModule.OnLevelEditorCreated().RemoveAll(this);
-
-	OnCommandListInitialize.RemoveAll(this);
-	OnToolBarSectionExtend.RemoveAll(this);
 }
 
 void UDevFrameworkEdSubsystem::OnLevelEditorCreated(TSharedPtr<ILevelEditor> LevelEditor)
 {
 	CommandList = MakeShareable(new FUICommandList);
-	OnCommandListInitialize.Broadcast(CommandList);
+	FDevFrameworkDelegate::OnCommandListInitialize.Broadcast(CommandList);
 
 	RegisterMenuBar();
 
@@ -65,21 +63,21 @@ void UDevFrameworkEdSubsystem::RegisterMenuBar()
 		FNewToolMenuDelegate::CreateUObject(this, &UDevFrameworkEdSubsystem::RegisterMenu)
 	);
 
-	OnMenuBarExtend.Broadcast(MenuBar);
+	FDevFrameworkDelegate::OnMenuBarExtend.Broadcast(MenuBar);
 }
 
 void UDevFrameworkEdSubsystem::RegisterMenu(UToolMenu* InToolMenu)
 {
-	OnMenuExtend.Broadcast(InToolMenu);
+	FDevFrameworkDelegate::OnMenuExtend.Broadcast(InToolMenu);
 }
 
 void UDevFrameworkEdSubsystem::RegisterToolBar()
 {
 	UToolMenu* ToolBar = UToolMenus::Get()->ExtendMenu("LevelEditor.LevelEditorToolBar.User");
-	OnToolBarExtend.Broadcast(ToolBar);
+	FDevFrameworkDelegate::OnToolBarExtend.Broadcast(ToolBar);
 
 	FToolMenuSection& ToolBarSection = ToolBar->FindOrAddSection(ToolBarSectionName);
-	OnToolBarSectionExtend.Broadcast(ToolBarSection);
+	FDevFrameworkDelegate::OnToolBarSectionExtend.Broadcast(ToolBarSection);
 
 	for (auto& Block : ToolBarSection.Blocks)
 	{
@@ -116,33 +114,12 @@ void UDevFrameworkEdSubsystem::RegisterToolBarOption()
 
 void UDevFrameworkEdSubsystem::RegisterToolBarOptionMenu(UToolMenu* InToolMenu)
 {
-	OnToolBarOptionExtend.Broadcast(InToolMenu);
-}
+	if (!InToolMenu->FindSection("Tools"))
+	{
+		InToolMenu->AddSection(FName("Tools"),LOCTEXT("ToolsSectionLabel", "Tools"));
+	}
 
-void UDevFrameworkEdSubsystem::RegisterToolBarDeveloperSettingCommand(TSharedPtr<FUICommandList>& InCommandList)
-{
-	const FDeveloperSettingCommands& Commands = FDeveloperSettingCommands::Get();
-	InCommandList->MapAction(Commands.OpenDeveloperSetting, FExecuteAction::CreateUObject(this, &UDevFrameworkEdSubsystem::OpenToolBarManagerSetting));
-}
-
-void UDevFrameworkEdSubsystem::RegisterToolBarDeveloperSetting(FToolMenuSection& ToolMenuSection)
-{
-	ToolMenuSection.AddEntry
-	(
-		FToolMenuEntry::InitToolBarButton
-		(
-			FDeveloperSettingCommands::Get().OpenDeveloperSetting,
-			FText::GetEmpty(),
-			TAttribute<FText>(),
-			FSlateIcon(FDevCoreStyle::GetStyleSetName(), "Developer.ToolbarButton", "Developer.ToolbarButton.Small")
-		)
-	);
-}
-
-void UDevFrameworkEdSubsystem::OpenToolBarManagerSetting()
-{
-	ISettingsModule& SettingsModule = FModuleManager::LoadModuleChecked<ISettingsModule>("Settings");
-	SettingsModule.ShowViewer("Developer", "Global", "Global");
+	FDevFrameworkDelegate::OnToolBarOptionExtend.Broadcast(InToolMenu);
 }
 
 #undef LOCTEXT_NAMESPACE

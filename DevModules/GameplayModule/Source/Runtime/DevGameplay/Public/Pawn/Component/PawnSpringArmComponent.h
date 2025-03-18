@@ -24,10 +24,15 @@ public:
 	float SpringArmLag = 5.f;
 
 	UPROPERTY()
-	bool bEnableReassessmentSpringArmLength = true;
+	bool bEnableReassessmentFocus = true;
 
+	/* When Spring Arm Length Smaller Than ReassessmentFocus, Will Gather New Spring Arm Length. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditCondition = bEnableReassessmentSpringArmLength))
-	float ReassessmentSpringArmLength = 100.f;
+	float ReassessmentFocus = 10000.f;
+
+	/* When Spring Arm Length Bigger Than ReassessmentFocus + ReassessmentFocusRange, Will Enable Next Reassessment. */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditCondition = bEnableReassessmentSpringArmLength))
+	float ReassessmentFocusRange = 2000.f;
 
 public:
 	UFUNCTION(BlueprintCallable)
@@ -37,7 +42,7 @@ public:
 	void SetTargetArmLength(float InValue);
 
 protected:
-	bool bIsReassessmenting = false;
+	bool bLastReassessmentResult = false;
 	float DesiredArmLength = 0.f;
 	bool NeedReassessment() const;
 	void UpdateTargetArmLength(float DeltaTime);

@@ -10,6 +10,10 @@ public class ApplicationEditor : ModuleRules
 			new string[]
 			{
 				"Core",
+
+				"DevSlateCore",
+				"DevEdCore",
+				"DevCore"
 			}
 		);
 
@@ -20,6 +24,13 @@ public class ApplicationEditor : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
+
+				"UnrealEd",
+				"EditorSubsystem",
+				"ToolMenus",
+				"Settings",
+				"SettingsEditor",
+				"InternationalizationSettings"
 			}
 		);
 	}

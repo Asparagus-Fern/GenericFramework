@@ -56,22 +56,18 @@ void AThirdPersonPawn::AddLocation_Implementation(FVector2D InValue)
 	const FVector TargetLocation = GetLocation() + (UKismetMathLibrary::GetRightVector(GetActorRotation()) * InValue.X) + (UKismetMathLibrary::GetForwardVector(GetActorRotation()) * InValue.Y);
 	if (CanMove(TargetLocation))
 	{
-		const float PitchRate = FMath::Pow(2, FMath::Sin(UE_DOUBLE_PI / (180.0) * FMath::Abs(GetRotation().Pitch)));
-		const float MovementRate = FMath::Pow(2, GetMovementSpeedRate());
+		const float Pitch = UKismetMathLibrary::DegSin(FMath::Abs(GetRotation().Pitch));
+		const float Height = Pitch * SpringArmComponent->TargetArmLength;
 
-		FloatingPawnMovement->MaxSpeed = PitchRate * MovementRate * UE_PI;
-		FloatingPawnMovement->Acceleration = PitchRate * MovementRate * UE_HALF_PI;
-		FloatingPawnMovement->Deceleration = PitchRate * MovementRate * UE_HALF_PI;
+		const float SpringArmLengthAlpha = FMath::GetMappedRangeValueClamped(LockStateComponent->PawnLockState.SpringArmLimit.SpringArmLengthRange, FVector2D(0, 1), SpringArmComponent->TargetArmLength);
+		const float AccelerationRate = FMath::Pow(2, FMath::Sin(SpringArmLengthAlpha));
 
-		const float Height = FMath::Sin(UE_DOUBLE_PI / (180.0) * FMath::Abs(GetRotation().Pitch)) * SpringArmComponent->TargetArmLength;
-		if (Height > 0)
-		{
-			FloatingPawnMovement->MaxSpeed *= Height;
-			FloatingPawnMovement->Acceleration *= Height;
-			FloatingPawnMovement->Deceleration *= Height;
-		}
+		FloatingPawnMovement->Acceleration = Height * AccelerationRate * 2;
+		FloatingPawnMovement->Deceleration = FloatingPawnMovement->Acceleration / 2;
+		FloatingPawnMovement->MaxSpeed = FloatingPawnMovement->Acceleration / 3;
 
-		const FVector2D Movement = InValue * MovementRate;
+		const FVector2D Movement = InValue * GetMovementSpeedRate() * FMath::Pow(2, Pitch);
+
 		AddMovementInput(UKismetMathLibrary::GetRightVector(GetActorRotation()), Movement.X);
 		AddMovementInput(UKismetMathLibrary::GetForwardVector(GetActorRotation()), Movement.Y);
 	}

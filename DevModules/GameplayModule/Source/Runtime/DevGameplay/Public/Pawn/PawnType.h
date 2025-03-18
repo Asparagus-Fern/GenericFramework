@@ -81,7 +81,7 @@ public:
 	bool bLimitSpringArmLength = true;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditCondition = "bLimitSpringArmLength", ClampMin = "0", UIMin = "0"))
-	FVector2D SpringArmLengthRange = FVector2D(0.f, 1000000000.f);
+	FVector2D SpringArmLengthRange = FVector2D(0.f, 100000000.f);
 
 public:
 	bool CanZoom(float TargetSpringArmLength) const;

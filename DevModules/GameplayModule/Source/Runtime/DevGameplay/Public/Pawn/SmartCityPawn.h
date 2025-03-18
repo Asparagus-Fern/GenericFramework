@@ -18,7 +18,7 @@ public:
 
 	/* IPawnInputMovementInterface */
 public:
-	virtual bool ReassessmentTargetArmLength_Implementation() override;
+	virtual bool ReassessmentFocus_Implementation() override;
 
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)

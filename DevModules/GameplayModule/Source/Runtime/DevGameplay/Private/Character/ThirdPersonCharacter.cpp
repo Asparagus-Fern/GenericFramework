@@ -23,7 +23,7 @@ AThirdPersonCharacter::AThirdPersonCharacter()
 	SpringArmComponent->bDoCollisionTest = true;
 	SpringArmComponent->TargetArmLength = 300.f;
 	SpringArmComponent->bUsePawnControlRotation = true;
-	SpringArmComponent->bEnableReassessmentSpringArmLength = false;
+	SpringArmComponent->bEnableReassessmentFocus = false;
 	SpringArmComponent->SetRelativeLocation(FVector(0.f, 0.f, GetCapsuleComponent()->GetScaledCapsuleHalfHeight() - 10.f));
 
 	CameraComponent->FieldOfView = 85.f;

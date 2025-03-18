@@ -30,7 +30,6 @@ public class DevEdCore : ModuleRules
 				"UnrealEd",
 				"ToolMenus",
 				"Blutility",
-				"UnrealEd",
 				"LevelEditor",
 				"AssetTools",
 				"ClassViewer",

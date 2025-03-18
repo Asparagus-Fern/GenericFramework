@@ -19,29 +19,29 @@ void UInteractableWidgetEntity::CloseEntityWidget_Implementation()
 
 void UInteractableWidgetEntity::BindWidgetEvent()
 {
-	if (UInteractableWidgetBase* Widget = Cast<UInteractableWidgetBase>(GetWidget()))
+	if (UInteractableWidgetBase* InteractableWidget = Cast<UInteractableWidgetBase>(GetWidget()))
 	{
-		Widget->OnButtonPressed.AddUniqueDynamic(this, &UInteractableWidgetEntity::HandleOnEntityPressed);
-		Widget->OnButtonReleased.AddUniqueDynamic(this, &UInteractableWidgetEntity::HandleOnEntityReleased);
-		Widget->OnButtonHovered.AddUniqueDynamic(this, &UInteractableWidgetEntity::HandleOnEntityHovered);
-		Widget->OnButtonUnhovered.AddUniqueDynamic(this, &UInteractableWidgetEntity::HandleOnEntityUnhovered);
-		Widget->OnButtonClicked.AddUniqueDynamic(this, &UInteractableWidgetEntity::HandleOnEntityClicked);
-		Widget->OnButtonDoubleClicked.AddUniqueDynamic(this, &UInteractableWidgetEntity::HandleOnEntityDoubleClicked);
-		Widget->OnButtonSelectionChanged.AddUniqueDynamic(this, &UInteractableWidgetEntity::HandleOnEntitySelectionChanged);
+		InteractableWidget->OnButtonPressed.AddUniqueDynamic(this, &UInteractableWidgetEntity::HandleOnEntityPressed);
+		InteractableWidget->OnButtonReleased.AddUniqueDynamic(this, &UInteractableWidgetEntity::HandleOnEntityReleased);
+		InteractableWidget->OnButtonHovered.AddUniqueDynamic(this, &UInteractableWidgetEntity::HandleOnEntityHovered);
+		InteractableWidget->OnButtonUnhovered.AddUniqueDynamic(this, &UInteractableWidgetEntity::HandleOnEntityUnhovered);
+		InteractableWidget->OnButtonClicked.AddUniqueDynamic(this, &UInteractableWidgetEntity::HandleOnEntityClicked);
+		InteractableWidget->OnButtonDoubleClicked.AddUniqueDynamic(this, &UInteractableWidgetEntity::HandleOnEntityDoubleClicked);
+		InteractableWidget->OnButtonSelectionChanged.AddUniqueDynamic(this, &UInteractableWidgetEntity::HandleOnEntitySelectionChanged);
 	}
 }
 
 void UInteractableWidgetEntity::UnBindWidgetEvent()
 {
-	if (UInteractableWidgetBase* Widget = Cast<UInteractableWidgetBase>(GetWidget()))
+	if (UInteractableWidgetBase* InteractableWidget = Cast<UInteractableWidgetBase>(GetWidget()))
 	{
-		Widget->OnButtonPressed.RemoveAll(this);
-		Widget->OnButtonReleased.RemoveAll(this);
-		Widget->OnButtonHovered.RemoveAll(this);
-		Widget->OnButtonUnhovered.RemoveAll(this);
-		Widget->OnButtonClicked.RemoveAll(this);
-		Widget->OnButtonDoubleClicked.RemoveAll(this);
-		Widget->OnButtonSelectionChanged.RemoveAll(this);
+		InteractableWidget->OnButtonPressed.RemoveAll(this);
+		InteractableWidget->OnButtonReleased.RemoveAll(this);
+		InteractableWidget->OnButtonHovered.RemoveAll(this);
+		InteractableWidget->OnButtonUnhovered.RemoveAll(this);
+		InteractableWidget->OnButtonClicked.RemoveAll(this);
+		InteractableWidget->OnButtonDoubleClicked.RemoveAll(this);
+		InteractableWidget->OnButtonSelectionChanged.RemoveAll(this);
 	}
 }
 
