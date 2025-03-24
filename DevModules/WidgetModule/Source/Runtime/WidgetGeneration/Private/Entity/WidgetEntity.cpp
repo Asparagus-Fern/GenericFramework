@@ -1,11 +1,10 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright ChenTaiye 2025. All Rights Reserved.
 
 
 #include "Entity/WidgetEntity.h"
 
 #include "WidgetManager.h"
 #include "Manager/ManagerStatics.h"
-
 
 bool FDisplayWidget::HasValidWidget() const
 {
@@ -36,12 +35,17 @@ UUserWidgetBase* FDisplayWidget::GetWidget() const
 void UWidgetEntity::NativeOnCreate()
 {
 	IStateInterface::NativeOnCreate();
-	WidgetInternal = DisplayWidget.GetWidget();
+
+	if (!WidgetInternal.IsValid())
+	{
+		WidgetInternal = DisplayWidget.GetWidget();
+	}
 }
 
 void UWidgetEntity::NativeOnDestroy()
 {
 	IStateInterface::NativeOnDestroy();
+	WidgetInternal = nullptr;
 }
 
 void UWidgetEntity::OpenEntityWidget_Implementation()

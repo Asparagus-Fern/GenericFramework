@@ -1,4 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Copyright ChenTaiye 2025. All Rights Reserved.
 
 #pragma once
 
@@ -70,7 +70,6 @@ protected:
 private:
 	TWeakObjectPtr<class UScaleBox> ScaleBox;
 
-
 	/* ==================== WidgetEntity ==================== */
 public:
 	UFUNCTION(BlueprintPure)
@@ -89,10 +88,9 @@ public:
 		return Cast<T>(WidgetEntity);
 	}
 
-private:
-	/* It Can be NULL, Unless This Widget Is Opened By Entity */
-	UPROPERTY()
-	TWeakObjectPtr<UWidgetEntity> WidgetEntity = nullptr;
+public:
+	UPROPERTY(EditAnywhere, Instanced)
+	TObjectPtr<UWidgetEntity> WidgetEntity = nullptr;
 
 	/* ==================== IStateInterface ==================== */
 public:

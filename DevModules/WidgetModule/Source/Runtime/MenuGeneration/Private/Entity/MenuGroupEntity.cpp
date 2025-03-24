@@ -1,10 +1,11 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright ChenTaiye 2025. All Rights Reserved.
 
 
 #include "Entity/MenuGroupEntity.h"
 
 #include "InteractableWidgetEntityGroup.h"
 #include "WidgetEntityManager.h"
+#include "WidgetManager.h"
 #include "Collection/MenuCollection.h"
 #include "Manager/ManagerStatics.h"
 #include "Menu/MenuContainer.h"

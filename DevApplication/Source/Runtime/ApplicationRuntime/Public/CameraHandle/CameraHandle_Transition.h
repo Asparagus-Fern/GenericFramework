@@ -1,0 +1,29 @@
+﻿// Copyright ChenTaiye 2025. All Rights Reserved.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "CameraSwitch/CameraSwitchMethod.h"
+#include "CameraHandle_Transition.generated.h"
+
+/**
+ * 
+ */
+UCLASS(MinimalAPI)
+class UCameraHandle_Transition : public UCameraSwitchMethod
+{
+	GENERATED_BODY()
+
+public:
+	UCameraHandle_Transition();
+	virtual bool HandleSwitchToCameraPoint_Implementation(APlayerController* InPlayerController, ACameraPointBase* InCameraPoint) override;
+	virtual void OnSwitchToCameraPointFinish_Implementation() override;
+	virtual float GetSwitchDuration_Implementation() override;
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FViewTargetTransitionParams ViewTargetTransitionParams;
+
+protected:
+	FTimerHandle TimerHandle;
+};

@@ -79,10 +79,9 @@
       "LoadingPhase": "PostEngineInit"
     },
     {
-      "Name": "ApplicationDeveloper",
-      "Type": "UncookedOnly",
-      "LoadingPhase": "PostDefault",
-      "Enabled": false
+      "Name": "DocumentReader",
+      "Type": "Editor",
+      "LoadingPhase": "PostEngineInit"
     }
   ]
 }

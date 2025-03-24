@@ -1,13 +1,11 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright ChenTaiye 2025. All Rights Reserved.
 
 #pragma once
 
 #include "CoreMinimal.h"
 #include "Common/CommonObject.h"
 #include "WidgetEntityInterface.h"
-#include "WidgetManager.h"
 #include "Base/UserWidgetBase.h"
-#include "Manager/ManagerStatics.h"
 #include "WidgetEntity.generated.h"
 
 USTRUCT(BlueprintType)

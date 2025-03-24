@@ -1,4 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Copyright ChenTaiye 2025. All Rights Reserved.
 
 
 #include "Base/UserWidgetBase.h"
@@ -84,11 +84,21 @@ void UUserWidgetBase::NativeConstruct()
 
 	/* 传递当前UI，计算Slate所需大小 */
 	TakeWidget()->SlatePrepass();
+
+	if (IsValid(WidgetEntity))
+	{
+		WidgetEntity->NativeOnCreate();
+	}
 }
 
 void UUserWidgetBase::NativeDestruct()
 {
 	Super::NativeDestruct();
+
+	if (IsValid(WidgetEntity))
+	{
+		WidgetEntity->NativeOnDestroy();
+	}
 }
 
 /* ==================== WidgetEntity ==================== */
@@ -109,9 +119,22 @@ void UUserWidgetBase::SetWidgetEntity(UWidgetEntity* InWidgetEntity)
 	if (!IsValid(InWidgetEntity))
 	{
 		DLOG(DLogUI, Error, TEXT("InWidgetEntity Is InValid"))
+		return;
+	}
+
+	if (WidgetEntity == InWidgetEntity)
+	{
+		DLOG(DLogUI, Warning, TEXT("InWidgetEntity Is Already Binding"))
+		return;
+	}
+
+	if (IsValid(WidgetEntity))
+	{
+		WidgetEntity->NativeOnDestroy();
 	}
 
 	WidgetEntity = InWidgetEntity;
+	WidgetEntity->NativeOnCreate();
 }
 
 /* ==================== IStateInterface ==================== */

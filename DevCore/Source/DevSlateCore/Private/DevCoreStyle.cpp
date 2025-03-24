@@ -61,6 +61,9 @@ void FDevCoreStyle::FStyle::Initialize()
 
 	Set("Developer.FastSwitchLanguage", new IMAGE_BRUSH_SVG("Icons/FastSwitchLanguage", Icon20x20));
 	Set("Developer.FastSwitchLanguage.Small", new IMAGE_BRUSH_SVG("Icons/FastSwitchLanguage", Icon16x16));
+
+	Set("Developer.ReadMe", new IMAGE_BRUSH_SVG("Icons/ReadMe", Icon20x20));
+	Set("Developer.ReadMe.Small", new IMAGE_BRUSH_SVG("Icons/ReadMe", Icon16x16));
 }
 
 

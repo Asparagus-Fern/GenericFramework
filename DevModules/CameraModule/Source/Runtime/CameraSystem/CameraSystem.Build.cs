@@ -27,8 +27,7 @@ public class CameraSystem : ModuleRules
 				"GameplayTags",
 				"CinematicCamera",
 				"DeveloperSettings",
-
-				"WidgetGeneration",
+				
 				"PlayerInputUtilities",
 			}
 		);
