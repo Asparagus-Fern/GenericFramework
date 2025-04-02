@@ -36,7 +36,11 @@ void UWidgetEntity::NativeOnCreate()
 {
 	IStateInterface::NativeOnCreate();
 
-	if (!WidgetInternal.IsValid())
+	if (WidgetInternal.IsValid())
+	{
+		OnEntityWidgetInitialized();
+	}
+	else
 	{
 		WidgetInternal = DisplayWidget.GetWidget();
 	}
@@ -87,9 +91,9 @@ UUserWidgetBase* UWidgetEntity::GetWidgetByClass(const TSubclassOf<UUserWidgetBa
 	return GetWidget<UUserWidgetBase>();
 }
 
-UUserWidgetBase* UWidgetEntity::GetWidget() const
+UUserWidgetBase* UWidgetEntity::GetWidget() 
 {
-	return WidgetInternal.Get();
+	return GetWidget<UUserWidgetBase>();
 }
 
 void UWidgetEntity::SetWidget(UUserWidgetBase* InWidget)

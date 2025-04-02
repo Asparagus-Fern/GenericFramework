@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Interface/FloorBodyInteractionInterface.h"
-#include "Interface/ProcedureInterface.h"
+#include "Interface/StateInterface.h"
 #include "FloorActor.generated.h"
 
 class ABuildingActor;
@@ -14,7 +14,7 @@ class UFloorBodyComponent;
  * 
  */
 UCLASS()
-class BUILDINGSINTERACTIONSYSTEM_API AFloorActor : public AActor, public IProcedureInterface, public IFloorBodyInteractionInterface
+class BUILDINGSINTERACTIONSYSTEM_API AFloorActor : public AActor, public IStateInterface, public IFloorBodyInteractionInterface
 {
 	GENERATED_BODY()
 

@@ -12,6 +12,8 @@
 #include "Components/ButtonSlot.h"
 #include "Input/CommonUIInputTypes.h"
 #include "UWidget/GenericButton.h"
+#include "CommonButtonBase.h"
+#include "CommonTextBlock.h"
 
 #if WITH_EDITOR
 #include "CommonUIEditorSettings.h"
@@ -544,7 +546,7 @@ void UInteractableWidgetBase::RefreshDimensions() const
 {
 	if (RootButton.IsValid())
 	{
-		const UCommonButtonStyle* const StyleCDO = GetStyleCDO();
+		const UCommonButtonStyle* StyleCDO = GetStyleCDO();
 		RootButton->SetMinDesiredWidth(FMath::Max(MinWidth, StyleCDO ? StyleCDO->MinWidth : 0));
 		RootButton->SetMinDesiredHeight(FMath::Max(MinHeight, StyleCDO ? StyleCDO->MinHeight : 0));
 	}

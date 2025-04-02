@@ -2,7 +2,7 @@
 
 #include "DevCoreStyle.h"
 
-#define LOCTEXT_NAMESPACE "DevCommonEdModeCommands"
+#define LOCTEXT_NAMESPACE "FDevEdModeCommands"
 
 FDevEdModeCommands::FDevEdModeCommands()
 	: TCommands<FDevEdModeCommands>(

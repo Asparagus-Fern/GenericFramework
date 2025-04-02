@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Common/CommonObject.h"
+#include "Generic/GenericObject.h"
 #include "ManagerWorldSetting.generated.h"
 
 /**
  * 
  */
 UCLASS(EditInlineNew)
-class DEVCORE_API UManagerWorldSetting : public UCommonObject
+class DEVCORE_API UManagerWorldSetting : public UGenericObject
 {
 	GENERATED_BODY()
 };

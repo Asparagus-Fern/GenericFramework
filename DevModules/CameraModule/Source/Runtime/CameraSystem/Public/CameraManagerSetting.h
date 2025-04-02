@@ -3,19 +3,20 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Manager/ManagerSetting.h"
+#include "Generic/GenericSetting.h"
 #include "CameraManagerSetting.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class CAMERASYSTEM_API UCameraManagerSetting : public UManagerSetting
+class CAMERASYSTEM_API UCameraManagerSetting : public UGenericSetting
 {
 	GENERATED_BODY()
 
 public:
 	static ThisClass* Get() { return GetMutableDefault<ThisClass>(); }
+	virtual FText GetSectionText() const override { return FText::FromString(TEXT("Camera")); }
 
 public:
 	UPROPERTY(Config, EditAnywhere)

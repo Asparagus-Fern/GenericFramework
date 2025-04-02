@@ -4,14 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Interface/ProcedureInterface.h"
+#include "Interface/StateInterface.h"
 #include "BuildingActor.generated.h"
 
 class UFloorBodyComponent;
 class AFloorActor;
 
 UCLASS()
-class BUILDINGSINTERACTIONSYSTEM_API ABuildingActor : public AActor, public IProcedureInterface
+class BUILDINGSINTERACTIONSYSTEM_API ABuildingActor : public AActor, public IStateInterface
 {
 	GENERATED_BODY()
 

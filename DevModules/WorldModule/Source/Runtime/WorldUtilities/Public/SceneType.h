@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Common/CommonObject.h"
+#include "Generic/GenericObject.h"
 #include "SceneType.generated.h"
 
 /**
@@ -168,7 +168,7 @@ public:
  * 
  */
 UCLASS(Abstract, EditInlineNew, MinimalAPI)
-class UHandleActor : public UCommonObject
+class UHandleActor : public UGenericObject
 {
 	GENERATED_BODY()
 

@@ -6,7 +6,7 @@
 #include "WidgetAnimationManager.h"
 #include "Base/UserWidgetBase.h"
 #include "Blueprint/UserWidget.h"
-#include "UWidget/Override/GameplayTagSlot.h"
+#include "UWidget/GameplayTagSlot.h"
 
 /* ==================== FReplaceWidgetHandle ==================== */
 

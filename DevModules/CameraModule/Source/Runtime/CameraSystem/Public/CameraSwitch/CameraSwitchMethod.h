@@ -3,8 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Common/CommonObject.h"
-#include "Debug/DebugType.h"
+#include "Generic/GenericObject.h"
 #include "CameraSwitchMethod.generated.h"
 
 class UCameraComponent;
@@ -16,7 +15,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSwitchCameraFinish);
  * 
  */
 UCLASS(Abstract, EditInlineNew)
-class CAMERASYSTEM_API UCameraSwitchMethod : public UCommonObject
+class CAMERASYSTEM_API UCameraSwitchMethod : public UGenericObject
 {
 	GENERATED_BODY()
 

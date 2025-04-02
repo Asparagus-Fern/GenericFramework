@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "WorldWidgetManager.h"
-#include "Common/CommonObject.h"
 #include "Widgets/Layout/SConstraintCanvas.h"
 #include "WorldWidgetEdManager.generated.h"
 

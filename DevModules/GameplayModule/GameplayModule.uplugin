@@ -15,21 +15,34 @@
   "Installed": false,
   "Plugins": [
     {
+      "Name": "ModelViewViewModel",
+      "Enabled": true
+    },
+    {
       "Name": "DevCore",
       "Enabled": true
     },
     {
-      "Name": "CameraModule",
+      "Name": "InputModule",
       "Enabled": true
     },
     {
-      "Name": "InputModule",
+      "Name": "PropertyModule",
+      "Enabled": true
+    },
+    {
+      "Name": "CameraModule",
       "Enabled": true
     }
   ],
   "Modules": [
     {
       "Name": "DevGameplay",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
+    },
+    {
+      "Name": "GameSettingSystem",
       "Type": "Runtime",
       "LoadingPhase": "Default"
     }

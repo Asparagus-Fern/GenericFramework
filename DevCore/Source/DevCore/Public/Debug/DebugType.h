@@ -25,6 +25,8 @@ DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(DLogMovieScene, Log, All);
 
 DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(DLogTerrain, Log, All);
 
+DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(DLogNetwork, Log, All);
+
 extern DEVCORE_API FColor DErrorColor;
 extern DEVCORE_API FColor DWarningColor;
 extern DEVCORE_API FColor DMessageColor;

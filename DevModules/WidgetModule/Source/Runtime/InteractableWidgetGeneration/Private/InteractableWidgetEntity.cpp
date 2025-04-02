@@ -5,15 +5,25 @@
 
 #include "InteractableWidgetBase.h"
 
-void UInteractableWidgetEntity::OpenEntityWidget_Implementation()
+void UInteractableWidgetEntity::NativeOnCreate()
 {
-	Super::OpenEntityWidget_Implementation();
+	Super::NativeOnCreate();
+}
+
+void UInteractableWidgetEntity::NativeOnDestroy()
+{
+	Super::NativeOnDestroy();
+}
+
+void UInteractableWidgetEntity::OnEntityWidgetInitialized()
+{
+	Super::OnEntityWidgetInitialized();
 	BindWidgetEvent();
 }
 
-void UInteractableWidgetEntity::CloseEntityWidget_Implementation()
+void UInteractableWidgetEntity::OnEntityWidgetDeinitialized()
 {
-	Super::CloseEntityWidget_Implementation();
+	Super::OnEntityWidgetDeinitialized();
 	UnBindWidgetEvent();
 }
 

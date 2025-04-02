@@ -17,6 +17,10 @@
     {
       "Name": "DevCore",
       "Enabled": true
+    },
+    {
+      "Name": "EventModule",
+      "Enabled": true
     }
   ],
   "Modules": [

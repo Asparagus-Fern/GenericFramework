@@ -17,6 +17,8 @@ public class GameHUDModule : ModuleRules
 
 				"DevCore",
 				"DevSlateCore",
+
+				"WidgetGeneration"
 			}
 		);
 
@@ -27,8 +29,6 @@ public class GameHUDModule : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
-
-				"WidgetGeneration"
 			}
 		);
 	}

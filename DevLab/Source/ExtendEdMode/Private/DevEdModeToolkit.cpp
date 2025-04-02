@@ -6,7 +6,7 @@
 #include "SPrimaryButton.h"
 #include "Tools/UEdMode.h"
 
-#define LOCTEXT_NAMESPACE "DevEdModeToolkit"
+#define LOCTEXT_NAMESPACE "FDevEdModeToolkit"
 
 void FDevEdModeToolkit::Init(const TSharedPtr<IToolkitHost>& InitToolkitHost)
 {

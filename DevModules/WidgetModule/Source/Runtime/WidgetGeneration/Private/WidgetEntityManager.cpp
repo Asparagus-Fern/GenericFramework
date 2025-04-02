@@ -17,6 +17,10 @@ void UWidgetEntityManager::Initialize(FSubsystemCollectionBase& Collection)
 void UWidgetEntityManager::Deinitialize()
 {
 	Super::Deinitialize();
+
+	const TArray<TObjectPtr<UWidgetEntity>> DestoryEntities = WidgetEntities;
+	UnRegisterWidgetEntity(DestoryEntities);
+
 	UnRegisterManager();
 }
 

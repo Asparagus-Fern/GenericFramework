@@ -15,7 +15,7 @@
 #include "EditorDirectories.h"
 #endif
 
-#define LOCTEXT_NAMESPACE "DFileOperations"
+#define LOCTEXT_NAMESPACE "UBPFunctions_File"
 
 bool UBPFunctions_File::ExistDirectory(const FString& Directory)
 {

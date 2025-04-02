@@ -22,10 +22,15 @@ class INTERACTABLEWIDGETGENERATION_API UInteractableWidgetEntity : public UWidge
 
 	friend class UInteractableWidgetEntityGroup;
 
-	/* IWidgetEntityInterface */
+	/* IStateInterface */
 public:
-	virtual void OpenEntityWidget_Implementation() override;
-	virtual void CloseEntityWidget_Implementation() override;
+	virtual void NativeOnCreate() override;
+	virtual void NativeOnDestroy() override;
+	
+	/* IWidgetEntityInterface */
+protected:
+	virtual void OnEntityWidgetInitialized();
+	virtual void OnEntityWidgetDeinitialized();
 
 protected:
 	virtual void BindWidgetEvent();

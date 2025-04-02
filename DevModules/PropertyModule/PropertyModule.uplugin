@@ -1,45 +1,42 @@
 ﻿{
-	"FileVersion": 3,
-	"Version": 1,
-	"VersionName": "1.0",
-	"FriendlyName": "PropertyModule",
-	"Description": "",
-	"Category": "Other",
-	"CreatedBy": "Chen",
-	"CreatedByURL": "",
-	"DocsURL": "",
-	"MarketplaceURL": "",
-	"CanContainContent": true,
-	"IsBetaVersion": false,
-	"IsExperimentalVersion": false,
-	"Installed": false,
-	"Plugins": [
-		{
-			"Name": "DevCore",
-			"Enabled": true
-		}
-	],
-	"Modules": [
-		{
-			"Name": "PropertyUtilities",
-			"Type": "Runtime",
-			"LoadingPhase": "Default"
-		},
-		{
-			"Name": "PropertyEntitySystem",
-			"Type": "Runtime",
-			"LoadingPhase": "Default"
-		},
-		{
-			"Name": "PropertyNode",
-			"Type": "UncookedOnly",
-			"LoadingPhase": "Default",
-			"Enabled": false
-		},
-		{
-			"Name": "PropertyWidgetSystem",
-			"Type": "Runtime",
-			"LoadingPhase": "Default"
-		}
-	]
+  "FileVersion": 3,
+  "Version": 1,
+  "VersionName": "1.0",
+  "FriendlyName": "PropertyModule",
+  "Description": "",
+  "Category": "Other",
+  "CreatedBy": "Chen",
+  "CreatedByURL": "",
+  "DocsURL": "",
+  "MarketplaceURL": "",
+  "CanContainContent": true,
+  "IsBetaVersion": false,
+  "IsExperimentalVersion": false,
+  "Installed": false,
+  "Plugins": [
+    {
+      "Name": "DevCore",
+      "Enabled": true
+    },
+    {
+      "Name": "ModelViewViewModel",
+      "Enabled": true
+    },
+    {
+      "Name": "WidgetModule",
+      "Enabled": true
+    }
+  ],
+  "Modules": [
+    {
+      "Name": "PropertyUtilities",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
+    },
+    {
+      "Name": "PropertyViewModelSystem",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
+    }
+  ]
 }

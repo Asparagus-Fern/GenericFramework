@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "InteractableWidgetEntity.h"
-#include "Common/CommonObject.h"
 #include "Interface/StateInterface.h"
 #include "InteractableWidgetEntityGroup.generated.h"
 
@@ -18,7 +17,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGroupEntitySelectionChanged, UInte
  * 
  */
 UCLASS()
-class INTERACTABLEWIDGETGENERATION_API UInteractableWidgetEntityGroup : public UCommonObject, public IStateInterface
+class INTERACTABLEWIDGETGENERATION_API UInteractableWidgetEntityGroup : public UGenericObject, public IStateInterface
 {
 	GENERATED_BODY()
 

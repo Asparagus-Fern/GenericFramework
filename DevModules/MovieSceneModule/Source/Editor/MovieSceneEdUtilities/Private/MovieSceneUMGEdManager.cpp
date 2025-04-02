@@ -15,6 +15,22 @@
 
 class ILevelSequenceModule;
 
+void UMovieSceneUMGPanel::NativeOnCreate()
+{
+	IStateInterface::NativeOnCreate();
+
+	ConstraintCanvas = SNew(SConstraintCanvas);
+	HandleAddToViewport();
+}
+
+void UMovieSceneUMGPanel::NativeOnDestroy()
+{
+	IStateInterface::NativeOnDestroy();
+
+	ConstraintCanvas->ClearChildren();
+	HandleRemoveFromViewport();
+}
+
 void UMovieSceneUMGPanel::HandleAddToViewport()
 {
 	if (LevelEditorViewportClient)

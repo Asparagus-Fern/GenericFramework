@@ -5,7 +5,7 @@
 #include "InteractiveToolManager.h"
 #include "Tool/DrawZoneShapeTool.h"
 
-#define LOCTEXT_NAMESPACE "DevEdMode"
+#define LOCTEXT_NAMESPACE "UDevEdMode"
 
 FEditorModeID UDevEdMode::DevCommonEdModeId = "DevEdMode";
 

@@ -18,8 +18,8 @@ public class MenuGeneration : ModuleRules
 				"EnhancedInput",
 				"InputCore",
 
-				"DevCore",
 				"DevSlateCore",
+				"DevCore",
 				"WidgetGeneration",
 				"GameHUDModule",
 				"InteractableWidgetGeneration",

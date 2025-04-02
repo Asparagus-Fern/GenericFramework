@@ -117,4 +117,10 @@ public:
 
 		return false;
 	}
+
+public:
+	UFUNCTION(BlueprintCallable, CustomThunk, DisplayName="Set Property Value", meta=(DefaultToSelf="TargetObject", CustomStructureParam = "Value", BlueprintInternalUseOnly))
+	static void SetPropertyValue(const UObject* TargetObject, FName PropertyName, const int32& Value);
+	static void Generic_SetPropertyValue(UObject* TargetObject, const FProperty* TargetProperty, void* SourceValuePtr);
+	DECLARE_FUNCTION(execSetPropertyValue);
 };

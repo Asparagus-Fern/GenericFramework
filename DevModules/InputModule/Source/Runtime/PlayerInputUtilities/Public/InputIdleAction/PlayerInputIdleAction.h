@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Common/TickableObject.h"
+#include "Generic/TickableObject.h"
 #include "PlayerInputIdleAction.generated.h"
 
 /**

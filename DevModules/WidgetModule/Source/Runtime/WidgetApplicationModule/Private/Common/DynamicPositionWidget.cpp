@@ -3,7 +3,6 @@
 #include "Common/DynamicPositionWidget.h"
 
 #include "Components/CanvasPanel.h"
-#include "Manager/ManagerProxy.h"
 
 void UDynamicPositionWidget::NativePreConstruct()
 {

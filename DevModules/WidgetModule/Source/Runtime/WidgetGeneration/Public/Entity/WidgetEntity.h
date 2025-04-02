@@ -3,9 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Common/CommonObject.h"
 #include "WidgetEntityInterface.h"
 #include "Base/UserWidgetBase.h"
+#include "Generic/GenericObject.h"
 #include "WidgetEntity.generated.h"
 
 USTRUCT(BlueprintType)
@@ -31,8 +31,8 @@ public:
 /**
  * 
  */
-UCLASS(Abstract)
-class WIDGETGENERATION_API UWidgetEntity : public UCommonObject, public IStateInterface, public IWidgetEntityInterface
+UCLASS(Abstract, EditInlineNew)
+class WIDGETGENERATION_API UWidgetEntity : public UGenericObject, public IStateInterface, public IWidgetEntityInterface
 {
 	GENERATED_BODY()
 
@@ -60,7 +60,7 @@ public:
 	UUserWidgetBase* GetWidgetByClass(const TSubclassOf<UUserWidgetBase>& InClass);
 
 	UFUNCTION(BlueprintPure)
-	UUserWidgetBase* GetWidget() const;
+	UUserWidgetBase* GetWidget();
 
 	UFUNCTION(BlueprintCallable)
 	void SetWidget(UUserWidgetBase* InWidget);
@@ -73,7 +73,7 @@ public:
 		{
 			return Cast<T>(WidgetInternal.Get());
 		}
-		return nullptr;
+		return Cast<T>(DisplayWidget.GetWidget());
 	}
 
 protected:

@@ -4,11 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "EditorSubsystem.h"
+#include "Generic/GenericObject.h"
+#include "Interface/StateInterface.h"
 #include "Manager/CoreInternalManager.h"
-#include "Common/ViewportPanel.h"
 #include "TrackEditor/MovieSceneUMGTrackEditor.h"
 #include "MovieSceneUMGEdManager.generated.h"
 
+class SConstraintCanvas;
 class ILevelEditor;
 class ISequencer;
 
@@ -16,18 +18,26 @@ class ISequencer;
  * 
  */
 UCLASS(MinimalAPI)
-class UMovieSceneUMGPanel : public UViewportPanel
+class UMovieSceneUMGPanel : public UGenericObject, public IStateInterface
 {
 	GENERATED_BODY()
 
+	/* IProcedureBaseInterface */
+public:
+	virtual void NativeOnCreate() override;
+	virtual void NativeOnDestroy() override;
+
 	/* UGamePanel */
 protected:
-	virtual void HandleAddToViewport() override;
-	virtual void HandleRemoveFromViewport() override;
+	virtual void HandleAddToViewport();
+	virtual void HandleRemoveFromViewport();
 
 public:
 	FLevelEditorViewportClient* LevelEditorViewportClient = nullptr;
 	virtual void RefreshMovieSceneUMG(TArray<UUserWidget*> InUserWidgets);
+
+protected:
+	TSharedPtr<SConstraintCanvas> ConstraintCanvas = nullptr;
 };
 
 /**

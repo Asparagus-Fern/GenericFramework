@@ -11,6 +11,7 @@ DEFINE_LOG_CATEGORY(DLogProperty);
 DEFINE_LOG_CATEGORY(DLogEvent);
 DEFINE_LOG_CATEGORY(DLogMovieScene);
 DEFINE_LOG_CATEGORY(DLogTerrain);
+DEFINE_LOG_CATEGORY(DLogNetwork);
 
 extern FColor DErrorColor = FColor::Red;
 extern FColor DWarningColor = FColor::Yellow;

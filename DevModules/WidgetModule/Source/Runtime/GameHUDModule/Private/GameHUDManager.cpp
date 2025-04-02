@@ -3,13 +3,12 @@
 
 #include "GameHUDManager.h"
 
-#include "GameHUDSetting.h"
-#include "WidgetDelegate.h"
+#include "WidgetGenerationSetting.h"
 #include "WidgetManager.h"
 #include "Base/UserWidgetBase.h"
 #include "HUD/GameHUD.h"
 #include "BPFunctions/BPFunctions_Object.h"
-#include "UWidget/Override/GameplayTagSlot.h"
+#include "UWidget/GameplayTagSlot.h"
 
 bool UGameHUDManager::ShouldCreateSubsystem(UObject* Outer) const
 {
@@ -60,10 +59,10 @@ void UGameHUDManager::HandleOnWorldMatchStarting(UWorld* InWorld)
 {
 	FCoreInternalManager::HandleOnWorldMatchStarting(InWorld);
 
-	if (UGameHUDSetting::Get()->AutoCreateGameHUD)
+	if (UWidgetGenerationSetting::Get()->AutoCreateGameHUD)
 	{
 		BROADCAST_UNIFIED_DELEGATE(Delegate_PreHUDCreated, BPDelegate_PreHUDCreated);
-		CreateGameHUDs(UGameHUDSetting::Get()->GameHUDClasses, true);
+		CreateGameHUDs(UWidgetGenerationSetting::Get()->GameHUDClasses, true);
 		BROADCAST_UNIFIED_DELEGATE(Delegate_PostHUDCreated, BPDelegate_PostHUDCreated);
 	}
 }

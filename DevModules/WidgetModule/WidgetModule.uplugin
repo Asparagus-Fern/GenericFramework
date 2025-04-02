@@ -17,10 +17,6 @@
     {
       "Name": "DevCore",
       "Enabled": true
-    },
-    {
-      "Name": "StructUtils",
-      "Enabled": true
     }
   ],
   "Modules": [
@@ -28,11 +24,6 @@
       "Name": "WidgetGeneration",
       "Type": "Runtime",
       "LoadingPhase": "Default"
-    },
-    {
-      "Name": "WidgetEdGeneration",
-      "Type": "Editor",
-      "LoadingPhase": "PostEngineInit"
     },
     {
       "Name": "GameHUDModule",
@@ -52,7 +43,7 @@
     {
       "Name": "WorldWidgetEdGeneration",
       "Type": "Editor",
-      "LoadingPhase": "PostDefault"
+      "LoadingPhase": "PostEngineInit"
     },
     {
       "Name": "MenuGeneration",

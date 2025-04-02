@@ -6,7 +6,7 @@
 #include "WidgetDelegate.h"
 #include "Manager/CoreInternalManager.h"
 #include "Subsystems/WorldSubsystem.h"
-#include "UWidget/Override/GameplayTagSlot.h"
+#include "UWidget/GameplayTagSlot.h"
 #include "WidgetManager.generated.h"
 
 class UUserWidgetBase;

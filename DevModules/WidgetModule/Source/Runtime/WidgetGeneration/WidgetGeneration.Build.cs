@@ -17,6 +17,7 @@ public class WidgetGeneration : ModuleRules
 				"GameplayTags",
 				"CommonUI",
 				"InputCore",
+				"DeveloperSettings"
 			}
 		);
 
@@ -26,8 +27,14 @@ public class WidgetGeneration : ModuleRules
 				"CoreUObject",
 				"Engine",
 				"Slate",
-				"SlateCore"
+				"SlateCore",
 			}
 		);
+
+		if (Target.bBuildEditor)
+		{
+			PrivateDependencyModuleNames.Add("UnrealEd");
+			PrivateDependencyModuleNames.Add("UMGEditor");
+		}
 	}
 }

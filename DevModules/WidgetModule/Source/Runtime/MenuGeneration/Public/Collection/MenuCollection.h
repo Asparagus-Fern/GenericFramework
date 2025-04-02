@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
-#include "Common/CommonObject.h"
 #include "Entity/WidgetEntity.h"
 #include "Interface/StateInterface.h"
 #include "MenuCollection.generated.h"
@@ -17,7 +16,7 @@ class UMenuEntityBase;
  * 
  */
 UCLASS(MinimalAPI)
-class UMenuCollection : public UCommonObject, public IStateInterface
+class UMenuCollection : public UGenericObject, public IStateInterface
 {
 	GENERATED_BODY()
 

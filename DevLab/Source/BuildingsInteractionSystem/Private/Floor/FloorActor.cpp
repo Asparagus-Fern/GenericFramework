@@ -43,13 +43,13 @@ void AFloorActor::SetOwnerBuilding(ABuildingActor* InBuildingActor)
 
 void AFloorActor::OnActived_Implementation()
 {
-	IProcedureInterface::OnActived_Implementation();
+	IStateInterface::OnActived_Implementation();
 	FloorBodyComponent->AddBodyMouseDelegate();
 }
 
 void AFloorActor::OnInactived_Implementation()
 {
-	IProcedureInterface::OnInactived_Implementation();
+	IStateInterface::OnInactived_Implementation();
 	FloorBodyComponent->RemoveBodyMouseDelegate();
 }
 

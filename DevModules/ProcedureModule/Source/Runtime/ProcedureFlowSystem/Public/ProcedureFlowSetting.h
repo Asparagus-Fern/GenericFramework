@@ -4,19 +4,20 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
-#include "Manager/ManagerSetting.h"
+#include "Generic/GenericSetting.h"
 #include "ProcedureFlowSetting.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROCEDUREFLOWSYSTEM_API UProcedureFlowSetting : public UManagerSetting
+class PROCEDUREFLOWSYSTEM_API UProcedureFlowSetting : public UGenericSetting
 {
 	GENERATED_UCLASS_BODY()
 
 public:
 	static ThisClass* Get() { return GetMutableDefault<ThisClass>(); }
+	virtual FText GetSectionText() const override { return FText::FromString(TEXT("Procedure Flow")); }
 
 public:
 	/* If True, Enter Default Procedure Flow After BeginPlay */

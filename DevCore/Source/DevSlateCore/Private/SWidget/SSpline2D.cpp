@@ -3,8 +3,8 @@
 #include "SWidget/SSpline2D.h"
 
 #include "Spline2DType.h"
-#include "Spline/Spline2DBuilder.h"
-#include "Spline/Spline2DRenderBatch.h"
+#include "SWidget/Spline2D/Spline2DBuilder.h"
+#include "SWidget/Spline2D/Spline2DRenderBatch.h"
 
 #include "Widgets/SWidget.h"
 

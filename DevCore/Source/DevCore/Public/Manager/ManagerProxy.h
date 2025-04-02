@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "CoreInternalManager.h"
 #include "ManagerInfo.h"
-#include "Common/CommonObject.h"
+#include "Generic/GenericObject.h"
 #include "Interface/WorldInterface.h"
 #include "ManagerProxy.generated.h"
 
@@ -19,7 +19,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnManagerUnRegister, UManagerInfo*,
  * 
  */
 UCLASS()
-class DEVCORE_API UManagerProxy : public UCommonObject, public IWorldInterface
+class DEVCORE_API UManagerProxy : public UGenericObject, public IWorldInterface
 {
 	GENERATED_BODY()
 

@@ -3,11 +3,13 @@
 
 #include "Base/UserWidgetBase.h"
 
+#include "WidgetEntityManager.h"
 #include "Animation/WidgetAnimation.h"
 #include "Blueprint/WidgetTree.h"
 #include "Components/ScaleBox.h"
 #include "Components/ScaleBoxSlot.h"
 #include "Entity/WidgetEntity.h"
+#include "Manager/ManagerStatics.h"
 
 UUserWidgetBase::UUserWidgetBase(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer),
@@ -87,18 +89,17 @@ void UUserWidgetBase::NativeConstruct()
 
 	if (IsValid(WidgetEntity))
 	{
-		WidgetEntity->NativeOnCreate();
+		if (UWidgetEntityManager* WidgetEntityManager = GetManager<UWidgetEntityManager>())
+		{
+			WidgetEntity->SetWidget(this);
+			WidgetEntityManager->RegisterWidgetEntity(WidgetEntity);
+		}
 	}
 }
 
 void UUserWidgetBase::NativeDestruct()
 {
 	Super::NativeDestruct();
-
-	if (IsValid(WidgetEntity))
-	{
-		WidgetEntity->NativeOnDestroy();
-	}
 }
 
 /* ==================== WidgetEntity ==================== */
@@ -124,7 +125,6 @@ void UUserWidgetBase::SetWidgetEntity(UWidgetEntity* InWidgetEntity)
 
 	if (WidgetEntity == InWidgetEntity)
 	{
-		DLOG(DLogUI, Warning, TEXT("InWidgetEntity Is Already Binding"))
 		return;
 	}
 

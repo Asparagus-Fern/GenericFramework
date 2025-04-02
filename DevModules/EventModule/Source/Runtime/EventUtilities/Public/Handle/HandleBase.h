@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Common/CommonObject.h"
+#include "Generic/GenericObject.h"
 #include "HandleBase.generated.h"
 
 /**
  * 
  */
 UCLASS(Abstract)
-class EVENTUTILITIES_API UHandleBase : public UCommonObject
+class EVENTUTILITIES_API UHandleBase : public UGenericObject
 {
 	GENERATED_BODY()
 

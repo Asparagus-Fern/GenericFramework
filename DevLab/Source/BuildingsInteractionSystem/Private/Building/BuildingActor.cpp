@@ -41,7 +41,7 @@ void ABuildingActor::OnConstruction(const FTransform& Transform)
 
 void ABuildingActor::NativeOnActived()
 {
-	IProcedureInterface::NativeOnActived();
+	IStateInterface::NativeOnActived();
 
 	UFloorBodyComponent::OnBodyClicked.AddUObject(this, &ABuildingActor::HandleBodyClicked);
 
@@ -53,7 +53,7 @@ void ABuildingActor::NativeOnActived()
 
 void ABuildingActor::NativeOnInactived()
 {
-	IProcedureInterface::NativeOnInactived();
+	IStateInterface::NativeOnInactived();
 
 	for (const auto& ChildActorComponent : FloorComponents)
 	{
@@ -65,7 +65,7 @@ void ABuildingActor::NativeOnInactived()
 
 void ABuildingActor::OnRefresh_Implementation()
 {
-	IProcedureInterface::OnRefresh_Implementation();
+	IStateInterface::OnRefresh_Implementation();
 
 	/* 移除所有楼层 */
 	{
@@ -109,12 +109,12 @@ void ABuildingActor::OnRefresh_Implementation()
 
 void ABuildingActor::OnActived_Implementation()
 {
-	IProcedureInterface::OnActived_Implementation();
+	IStateInterface::OnActived_Implementation();
 }
 
 void ABuildingActor::OnInactived_Implementation()
 {
-	IProcedureInterface::OnInactived_Implementation();
+	IStateInterface::OnInactived_Implementation();
 }
 
 #if WITH_EDITOR

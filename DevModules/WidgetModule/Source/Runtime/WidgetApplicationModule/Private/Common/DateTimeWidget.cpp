@@ -4,7 +4,7 @@
 
 #include "Components/TextBlock.h"
 
-#define LOCTEXT_NAMESPACE "DateTimeWidget"
+#define LOCTEXT_NAMESPACE "UDateTimeWidget"
 
 void UDateTimeWidget::NativePreConstruct()
 {

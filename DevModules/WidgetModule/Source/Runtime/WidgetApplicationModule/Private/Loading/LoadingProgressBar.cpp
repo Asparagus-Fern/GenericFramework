@@ -9,7 +9,7 @@
 #include "Components/SpinBox.h"
 #include "Components/TextBlock.h"
 
-#define LOCTEXT_NAMESPACE "LoadingProgressBar"
+#define LOCTEXT_NAMESPACE "ULoadingProgressBar"
 
 void ULoadingProgressBar::NativePreConstruct()
 {
