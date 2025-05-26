@@ -2,7 +2,7 @@
   "FileVersion": 3,
   "Version": 1,
   "VersionName": "1.0",
-  "FriendlyName": "MiscModule",
+  "FriendlyName": "ExternalData",
   "Description": "",
   "Category": "Other",
   "CreatedBy": "Chen",
@@ -17,16 +17,27 @@
     {
       "Name": "DevCore",
       "Enabled": true
+    },
+    {
+      "Name": "StructUtils",
+      "Enabled": true
     }
   ],
   "Modules": [
     {
-      "Name": "ExtraProc",
+      "Name": "ExternalData",
       "Type": "Runtime",
-      "LoadingPhase": "Default",
-      "PlatformAllowList": [
-        "Win64"
-      ]
+      "LoadingPhase": "Default"
+    },
+    {
+      "Name": "ExternalDataNode",
+      "Type": "UncookedOnly",
+      "LoadingPhase": "Default"
+    },
+    {
+      "Name": "ExternalDataEditor",
+      "Type": "Editor",
+      "LoadingPhase": "Default"
     }
   ]
 }

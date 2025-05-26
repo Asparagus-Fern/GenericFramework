@@ -47,7 +47,11 @@
       "Enabled": true
     },
     {
-      "Name": "MiscModule",
+      "Name": "ExternalData",
+      "Enabled": true
+    },
+    {
+      "Name": "ExtraProc",
       "Enabled": true
     },
     {
