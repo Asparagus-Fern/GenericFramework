@@ -39,6 +39,18 @@
       "Enabled": true
     },
     {
+      "Name": "GuideModule",
+      "Enabled": true
+    },
+    {
+      "Name": "InputModule",
+      "Enabled": true
+    },
+    {
+      "Name": "MiscModule",
+      "Enabled": true
+    },
+    {
       "Name": "MovieSceneModule",
       "Enabled": true
     },
@@ -51,6 +63,10 @@
       "Enabled": true
     },
     {
+      "Name": "RandomGenerationModule",
+      "Enabled": true
+    },
+    {
       "Name": "WidgetModule",
       "Enabled": true
     },
@@ -59,11 +75,23 @@
       "Enabled": true
     },
     {
-      "Name": "DBTween",
+      "Name": "AutoSizeComments",
       "Enabled": true
     },
     {
       "Name": "UltraDynamicSky",
+      "Enabled": true
+    },
+    {
+      "Name": "DBTween",
+      "Enabled": true
+    },
+    {
+      "Name": "Mannequins",
+      "Enabled": true
+    },
+    {
+      "Name": "UnrealFastNoise2",
       "Enabled": true
     }
   ],

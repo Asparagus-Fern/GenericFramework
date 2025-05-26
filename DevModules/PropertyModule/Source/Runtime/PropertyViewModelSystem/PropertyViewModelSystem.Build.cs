@@ -10,6 +10,8 @@ public class PropertyViewModelSystem : ModuleRules
 			new string[]
 			{
 				"Core",
+
+				"DevCore",
 			}
 		);
 
@@ -21,7 +23,13 @@ public class PropertyViewModelSystem : ModuleRules
 				"Slate",
 				"SlateCore",
 
+				"UMG",
+				"CommonUI",
+				"FieldNotification",
 				"ModelViewViewModel",
+
+				"PropertyUtilities",
+				"WidgetGeneration"
 			}
 		);
 	}

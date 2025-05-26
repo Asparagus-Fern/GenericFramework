@@ -1,4 +1,4 @@
-﻿// Copyright Epic Games, Inc. All Rights Reserved.
+﻿// Copyright ChenTaiye 2025. All Rights Reserved.
 
 using UnrealBuildTool;
 
@@ -51,7 +51,8 @@ public class DevCore : ModuleRules
 				"EnhancedInput",
 				"AIModule",
 				"InputCore",
-				"DesktopPlatform"
+				"DesktopPlatform",
+				"DeveloperSettings",
 				// ... add private dependencies that you statically link with here ...	
 			}
 		);

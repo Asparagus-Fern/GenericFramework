@@ -7,8 +7,6 @@
 #include "ProcedureFlowActor.h"
 #include "ProcedureFlow_Play.generated.h"
 
-class UManagerWorldSetting;
-
 UCLASS(Abstract, MinimalAPI)
 class AProcedureFlow_Play : public AProcedureFlowActor
 {
@@ -20,8 +18,4 @@ public:
 protected:
 	virtual void OnProcedureFlowEnter_Implementation() override;
 	virtual void OnProcedureFlowExit_Implementation() override;
-
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Instanced, Category="WorldSetting")
-	TSet<UManagerWorldSetting*> ManagerWorldSettings;
 };

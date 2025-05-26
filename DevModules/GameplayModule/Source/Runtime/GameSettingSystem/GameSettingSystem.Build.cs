@@ -11,7 +11,7 @@ public class GameSettingSystem : ModuleRules
 			{
 				"Core",
 
-				"DevCore"
+				"DevCore",
 			}
 		);
 
@@ -24,7 +24,9 @@ public class GameSettingSystem : ModuleRules
 				"SlateCore",
 
 				"ModelViewViewModel",
-				"PropertyViewModelSystem"
+
+				"PropertyViewModelSystem",
+				"PropertyPathSystem"
 			}
 		);
 	}

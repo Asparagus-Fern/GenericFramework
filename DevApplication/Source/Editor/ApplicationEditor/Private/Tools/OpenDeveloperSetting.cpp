@@ -33,8 +33,8 @@ void UOpenDeveloperSetting::Initialize(FSubsystemCollectionBase& Collection)
 			SettingsModule->RegisterSettings
 			(
 				"Developer", "Global", "Global",
-				LOCTEXT("ManagerGlobalSettingsSettingsName", "Manager Global Settings"),
-				LOCTEXT("ManagerGlobalSettingsDescription", "Manager Global Settings"),
+				LOCTEXT("ManagerGlobalSettingsSettingsName", "Manager"),
+				LOCTEXT("ManagerGlobalSettingsDescription", "Manager Settings"),
 				GetMutableDefault<UGlobalManagerSetting>()
 			);
 

@@ -17,7 +17,10 @@ class PROCEDUREFLOWSYSTEM_API UProcedureFlowSetting : public UGenericSetting
 
 public:
 	static ThisClass* Get() { return GetMutableDefault<ThisClass>(); }
+
+#if WITH_EDITOR
 	virtual FText GetSectionText() const override { return FText::FromString(TEXT("Procedure Flow")); }
+#endif
 
 public:
 	/* If True, Enter Default Procedure Flow After BeginPlay */

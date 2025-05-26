@@ -18,7 +18,10 @@ class WIDGETGENERATION_API UWidgetGenerationSetting : public UGenericSetting
 
 public:
 	static ThisClass* Get() { return GetMutableDefault<ThisClass>(); }
+
+#if WITH_EDITOR
 	virtual FText GetSectionText() const override { return FText::FromString(TEXT("Widget")); }
+#endif
 
 	/* HUD */
 public:

@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Engine/DeveloperSettings.h"
+#include "Generic/GenericSetting.h"
 #include "GlobalManagerSetting.generated.h"
 
 /**
  * 
  */
-UCLASS(config=ManagerSettings, DefaultConfig)
-class DEVCORE_API UGlobalManagerSetting : public UDeveloperSettings
+UCLASS()
+class DEVCORE_API UGlobalManagerSetting : public UGenericSetting
 {
 	GENERATED_BODY()
 
@@ -19,6 +19,10 @@ public:
 	virtual FName GetContainerName() const override { return "Manager"; }
 	virtual FName GetCategoryName() const override { return "Global"; }
 	virtual FName GetSectionName() const override { return "Global"; }
+
+#if WITH_EDITOR
+	virtual FText GetSectionText() const override { return FText::FromString(TEXT("Manager")); }
+#endif
 
 public:
 	UPROPERTY(Config, EditAnywhere, Category="Global Manager Setting")

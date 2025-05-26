@@ -16,7 +16,10 @@ class CAMERASYSTEM_API UCameraManagerSetting : public UGenericSetting
 
 public:
 	static ThisClass* Get() { return GetMutableDefault<ThisClass>(); }
+
+#if WITH_EDITOR
 	virtual FText GetSectionText() const override { return FText::FromString(TEXT("Camera")); }
+#endif
 
 public:
 	UPROPERTY(Config, EditAnywhere)

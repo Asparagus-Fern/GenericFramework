@@ -10,7 +10,8 @@ public class PropertyUtilities : ModuleRules
 			new string[]
 			{
 				"Core",
-				"DevCore"
+
+				"DevCore",
 			}
 		);
 
@@ -20,7 +21,11 @@ public class PropertyUtilities : ModuleRules
 				"CoreUObject",
 				"Engine",
 				"Slate",
-				"SlateCore"
+				"SlateCore",
+
+				"UMG",
+				"CommonUI",
+				"WidgetGeneration"
 			}
 		);
 	}
