@@ -84,7 +84,7 @@ public:
 		const FProperty* NamedProperty = PropertyAccessUtil::FindPropertyByName(PropertyName, Target->GetClass());
 		if (nullptr == NamedProperty)
 		{
-			DLOG(DLogProperty, Error, TEXT("Find Null Property Named: %s"), *(PropertyName.ToString()));
+			GenericLOG(PropertyLog, Error, TEXT("Find Null Property Named: %s"), *(PropertyName.ToString()));
 			return false;
 		}
 
@@ -104,7 +104,7 @@ public:
 		const FProperty* NamedProperty = PropertyAccessUtil::FindPropertyByName(PropertyName, Target->GetClass());
 		if (nullptr == NamedProperty)
 		{
-			DLOG(DLogProperty, Error, TEXT("Find Null Property Named: %s"), *(PropertyName.ToString()));
+			GenericLOG(PropertyLog, Error, TEXT("Find Null Property Named: %s"), *(PropertyName.ToString()));
 			return false;
 		}
 

@@ -109,19 +109,19 @@ void UMenuCollection::GenerateMenu(UDataTable* InMenuTagTable)
 {
 	if (!IsValid(MenuTagTable))
 	{
-		DNOTIFY(TEXT("MenuTagTable is NULL"))
+		GenericNOTIFY(TEXT("MenuTagTable is NULL"))
 		return;
 	}
 
 	if (!MenuTagTable->RowStruct->IsChildOf(FGameplayTagTableRow::StaticStruct()))
 	{
-		DNOTIFY(TEXT("MenuTagTable is not a GameplayTag Table"))
+		GenericNOTIFY(TEXT("MenuTagTable is not a GameplayTag Table"))
 		return;
 	}
 
 	if (!MenuClass || !MenuGroupClass)
 	{
-		DNOTIFY(TEXT("MenuClass/MenuGroupClass is NULL"))
+		GenericNOTIFY(TEXT("MenuClass/MenuGroupClass is NULL"))
 		return;
 	}
 
@@ -146,7 +146,7 @@ void UMenuCollection::GenerateMenu(UDataTable* InMenuTagTable)
 
 	if (!OwnerTag.IsValid())
 	{
-		DNOTIFY(TEXT("GameplayTag Table Must Have a TagRow That its Parent GameplayTag Equal With %s"), *RootMenuTag.ToString())
+		GenericNOTIFY(TEXT("GameplayTag Table Must Have a TagRow That its Parent GameplayTag Equal With %s"), *RootMenuTag.ToString())
 		return;
 	}
 
@@ -159,21 +159,21 @@ void UMenuCollection::GenerateMenu(UDataTable* InMenuTagTable)
 		 /* Skip The Tag Not Under The RootMenuTag */
 		 if (!MenuTag.GetGameplayTagParents().HasTag(RootMenuTag))
 		 {
-			 DLOG(DLogUI, Error, TEXT("%s Is Not Under %s"), *MenuTag.ToString(), *RootMenuTag.ToString())
+			 GenericLOG(UILog, Error, TEXT("%s Is Not Under %s"), *MenuTag.ToString(), *RootMenuTag.ToString())
 			 return;
 		 }
 
 		 /* Skip The RootMenuTag */
 		 if (MenuTag == RootMenuTag)
 		 {
-			 DLOG(DLogUI, Warning, TEXT("%s Is Disable To Generated"), *RootMenuTag.ToString())
+			 GenericLOG(UILog, Warning, TEXT("%s Is Disable To Generated"), *RootMenuTag.ToString())
 			 return;
 		 }
 
 		 /* Skip The Tag Already In GameplayTagContainer */
 		 if (IsContainMenuTag(MenuTag))
 		 {
-			 DLOG(DLogUI, Warning, TEXT("MenuTag : %s Is Already Generated"), *MenuTag.ToString())
+			 GenericLOG(UILog, Warning, TEXT("MenuTag : %s Is Already Generated"), *MenuTag.ToString())
 			 return;
 		 }
 
@@ -199,7 +199,7 @@ void UMenuCollection::GenerateMenu(UDataTable* InMenuTagTable)
 	 }
 	);
 
-	DNOTIFY(TEXT("Generate Menu Finish"))
+	GenericNOTIFY(TEXT("Generate Menu Finish"))
 }
 
 void UMenuCollection::ClearupMenu()
@@ -215,7 +215,7 @@ bool UMenuCollection::IsContainMenuTag(const FGameplayTag InMenuTag)
 {
 	if (!InMenuTag.IsValid())
 	{
-		DLOG(DLogUI, Error, TEXT("InMenuTag Is NULL"))
+		GenericLOG(UILog, Error, TEXT("InMenuTag Is NULL"))
 		return false;
 	}
 
@@ -233,7 +233,7 @@ bool UMenuCollection::IsContainMenu(const UMenuEntityBase* InMenuEntity)
 {
 	if (!IsValid(InMenuEntity))
 	{
-		DLOG(DLogUI, Error, TEXT("InMenuEntity Is NULL"))
+		GenericLOG(UILog, Error, TEXT("InMenuEntity Is NULL"))
 		return false;
 	}
 
@@ -256,7 +256,7 @@ UMenuEntityBase* UMenuCollection::GetMenuEntity(FGameplayTag InMenuTag)
 {
 	if (!InMenuTag.IsValid())
 	{
-		DLOG(DLogUI, Error, TEXT("InMenuTag Is NULL"))
+		GenericLOG(UILog, Error, TEXT("InMenuTag Is NULL"))
 		return nullptr;
 	}
 

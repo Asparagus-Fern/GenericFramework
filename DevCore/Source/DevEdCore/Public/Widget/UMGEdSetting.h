@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Generaic/GenericEdSetting.h"
+#include "Generaic/GenericEdSettings.h"
 #include "UMGEdSetting.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class DEVEDCORE_API UUMGEdSetting : public UGenericEdSetting
+class DEVEDCORE_API UUMGEdSetting : public UGenericEdSettings
 {
 	GENERATED_BODY()
 

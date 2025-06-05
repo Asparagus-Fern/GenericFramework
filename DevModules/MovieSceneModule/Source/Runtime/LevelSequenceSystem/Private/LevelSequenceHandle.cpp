@@ -13,13 +13,13 @@ ULevelSequenceHandle* ULevelSequenceHandle::RegisterLevelSequenceHandle(FName Ha
 
 	if (HandleName == NAME_None)
 	{
-		DLOG(DLogMovieScene, Error, TEXT("HandleName Is InValid"))
+		GenericLOG(MovieSceneLog, Error, TEXT("HandleName Is InValid"))
 		return NewHandle;
 	}
 
 	if (!IsValid(InLevelSequence))
 	{
-		DLOG(DLogMovieScene, Error, TEXT("InLevelSequence Is InValid"))
+		GenericLOG(MovieSceneLog, Error, TEXT("InLevelSequence Is InValid"))
 		return NewHandle;
 	}
 

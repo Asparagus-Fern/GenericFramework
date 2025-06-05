@@ -27,8 +27,6 @@ public:
 
 #if WITH_EDITOR
 	virtual void PostSaveRoot(FObjectPostSaveRootContext ObjectSaveContext) override;
-	// virtual void PostRename(UObject* OldOuter, const FName OldName) override;
-	// virtual void BeginDestroy() override;
 #endif
 	// 	// End UObject Interface.
 

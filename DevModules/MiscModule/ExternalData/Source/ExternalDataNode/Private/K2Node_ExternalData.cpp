@@ -11,7 +11,7 @@ void UK2Node_ExternalData::GetMenuActions(FBlueprintActionDatabaseRegistrar& Act
 	Super::GetMenuActions(ActionRegistrar);
 
 	const UClass* Action = GetClass();
-	if(ActionRegistrar.IsOpenForRegistration(Action))
+	if (ActionRegistrar.IsOpenForRegistration(Action))
 	{
 		auto CustomizeLambda = [](UEdGraphNode* NewNode, bool bIsTemplateNode, const FName FunctionName)
 		{
@@ -20,7 +20,7 @@ void UK2Node_ExternalData::GetMenuActions(FBlueprintActionDatabaseRegistrar& Act
 			check(Function);
 			Node->SetFromFunction(Function);
 		};
-		
+
 		UBlueprintNodeSpawner* GetDataNodeSpawner = UBlueprintNodeSpawner::Create(GetClass());
 		check(GetDataNodeSpawner != nullptr);
 		GetDataNodeSpawner->CustomizeNodeDelegate = UBlueprintNodeSpawner::FCustomizeNodeDelegate::CreateStatic(CustomizeLambda, GET_FUNCTION_NAME_CHECKED(UBPFunctions_ExternalData, GetData));
@@ -28,14 +28,13 @@ void UK2Node_ExternalData::GetMenuActions(FBlueprintActionDatabaseRegistrar& Act
 	}
 }
 
-bool UK2Node_ExternalData::IsConnectionDisallowed(const UEdGraphPin* MyPin, const UEdGraphPin* OtherPin,
-	FString& OutReason) const
+bool UK2Node_ExternalData::IsConnectionDisallowed(const UEdGraphPin* MyPin, const UEdGraphPin* OtherPin, FString& OutReason) const
 {
 	const UEdGraphPin* ValuePin = FindPinChecked(FName("Value"));
 
-	if(MyPin == ValuePin && MyPin->PinType.PinCategory == UEdGraphSchema_K2::PC_Wildcard)
+	if (MyPin == ValuePin && MyPin->PinType.PinCategory == UEdGraphSchema_K2::PC_Wildcard)
 	{
-		if(OtherPin->PinType.PinCategory != UEdGraphSchema_K2::PC_Struct)
+		if (OtherPin->PinType.PinCategory != UEdGraphSchema_K2::PC_Struct)
 		{
 			OutReason = TEXT("Value must be a struct.");
 			return true;

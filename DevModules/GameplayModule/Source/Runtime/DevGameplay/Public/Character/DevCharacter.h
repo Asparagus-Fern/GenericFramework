@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Pawn/DevPawn.h"
-#include "Pawn/Component/PawnInputMovementComponent.h"
+#include "Component/PawnInputMovementComponent.h"
 #include "DevCharacter.generated.h"
 
 UCLASS()
@@ -23,41 +23,6 @@ public:
 	DECLARE_MULTICAST_DELEGATE_OneParam(FCharacterDelegate, ADevCharacter*)
 	static FCharacterDelegate OnCharacterRegister;
 	static FCharacterDelegate OnCharacterUnRegister;
-
-	/* IPawnInterface */
-public:
-	UFUNCTION(BlueprintPure, Category="Character Basic")
-	virtual bool IsPlayer() override;
-
-	UFUNCTION(BlueprintPure, Category="Character Basic")
-	virtual bool IsAI() override;
-
-	UFUNCTION(BlueprintPure, Category="Character Basic")
-	virtual APlayerController* GetPlayerController() override;
-
-	UFUNCTION(BlueprintPure, Category="Character Basic")
-	virtual AAIController* GetAIController() override;
-
-	/* IPawnInputMovementInterface */
-public:
-	virtual void AddLocation_Implementation(FVector2D InValue) override;
-	virtual void AddRotation_Implementation(FVector2D InValue) override;
-	virtual void AddZoom_Implementation(float InValue) override;
-	virtual void SetLocation_Implementation(FVector InValue) override;
-	virtual void SetRotation_Implementation(FRotator InValue) override;
-	virtual void SetZoom_Implementation(float InValue) override;
-
-	UFUNCTION(BlueprintPure, Category="Character Input Movement")
-	virtual FVector GetLocation() override;
-
-	UFUNCTION(BlueprintPure, Category="Character Input Movement")
-	virtual FRotator GetRotation() override;
-
-	UFUNCTION(BlueprintPure, Category="Character Input Movement")
-	virtual float GetZoom() override;
-
-	UFUNCTION(BlueprintPure, Category="Character Input Movement")
-	virtual float GetZoomSpeedRate() override;
 
 	/* IPawnLockStateInterface */
 public:

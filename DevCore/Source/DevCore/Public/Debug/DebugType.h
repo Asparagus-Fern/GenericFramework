@@ -3,29 +3,31 @@
 #include "Widgets/Notifications/SNotificationList.h"
 #include "Framework/Notifications/NotificationManager.h"
 
-DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(DLogDefault, Log, All);
+DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(DefaultLog, Log, All);
 
-DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(DLogObject, Log, All);
+DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(ObjectLog, Log, All);
 
-DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(DLogManager, Log, All);
+DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(ManagerLog, Log, All);
 
-DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(DLogProcedure, Log, All);
+DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(ProcedureLog, Log, All);
 
-DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(DLogUI, Log, All);
+DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(UILog, Log, All);
 
-DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(DLogCamera, Log, All);
+DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(CameraLog, Log, All);
 
-DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(DLogWorld, Log, All);
+DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(WorldLog, Log, All);
 
-DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(DLogProperty, Log, All);
+DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(PropertyLog, Log, All);
 
-DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(DLogEvent, Log, All);
+DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(EventLog, Log, All);
 
-DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(DLogMovieScene, Log, All);
+DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(MovieSceneLog, Log, All);
 
-DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(DLogTerrain, Log, All);
+DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(TerrainLog, Log, All);
 
-DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(DLogNetwork, Log, All);
+DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(NetworkLog, Log, All);
+
+DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(JsonLog, Log, All);
 
 extern DEVCORE_API FColor DErrorColor;
 extern DEVCORE_API FColor DWarningColor;
@@ -35,10 +37,10 @@ extern DEVCORE_API float DNotifyFadeInDuration;
 extern DEVCORE_API float DNotifyFadeOutDuration;
 extern DEVCORE_API float DNotifyDuration;
 
-#define DLOG(CategoryName, Verbosity, Format, ...) \
+#define GenericLOG(CategoryName, Verbosity, Format, ...) \
 UE_LOG(CategoryName, Verbosity, TEXT("(%s) %s"), ANSI_TO_TCHAR(__FUNCTION__), *FString::Printf(Format, ##__VA_ARGS__))
 
-#define DPRINT(Verbosity, Format, ...) \
+#define GenericPRINT(Verbosity, Format, ...) \
 if(IsValid(GEngine)){ \
 	if (::ELogVerbosity::Verbosity == ::ELogVerbosity::Error) \
 		GEngine->AddOnScreenDebugMessage(-1, DPrintDuration, DErrorColor, FString::Printf(Format,##__VA_ARGS__)); \
@@ -48,7 +50,7 @@ if(IsValid(GEngine)){ \
 		GEngine->AddOnScreenDebugMessage(-1, DPrintDuration, DMessageColor, FString::Printf(Format,##__VA_ARGS__)); \
 }
 
-#define DNOTIFY(Format, ...) \
+#define GenericNOTIFY(Format, ...) \
 { \
 	FNotificationInfo NotificationInfo(FText::FromString(FString::Printf(TEXT("%s"),ANSI_TO_TCHAR(__FUNCTION__)))); \
 	NotificationInfo.SubText = FText::FromString(FString::Printf(Format,##__VA_ARGS__)); \
@@ -58,15 +60,15 @@ if(IsValid(GEngine)){ \
 	FSlateNotificationManager::Get().AddNotification(NotificationInfo); \
 }
 
-#define DEnsureLOG(CategoryName, InExpression, ...) \
+#define GenericEnsureLOG(CategoryName, InExpression, ...) \
 if (!ensure(InExpression)){ \
-DLOG(CategoryName, Warning, TEXT("Expression : (%s) Result Is Fail"), #InExpression, ##__VA_ARGS__) \
+GenericLOG(CategoryName, Warning, TEXT("Expression : (%s) Result Is Fail"), #InExpression, ##__VA_ARGS__) \
 return; \
 }
 
-#define DEnsureAlwaysLOG(CategoryName, InExpression, ...) \
+#define GenericEnsureAlwaysLOG(CategoryName, InExpression, ...) \
 if (!ensureAlways(InExpression)){ \
-DLOG(CategoryName, Warning, TEXT("Expression : (%s) Result Is Fail, %s"), ##InExpression, ##__VA_ARGS__) \
+GenericLOG(CategoryName, Warning, TEXT("Expression : (%s) Result Is Fail, %s"), ##InExpression, ##__VA_ARGS__) \
 return; \
 }
 

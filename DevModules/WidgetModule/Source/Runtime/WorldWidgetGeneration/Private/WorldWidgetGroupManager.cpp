@@ -47,7 +47,7 @@ void UWorldWidgetGroupManager::OnWorldWidgetComponentActiveStateChanged(UWorldWi
 {
 	if (!IsValid(InWorldWidgetComponent))
 	{
-		DLOG(DLogUI, Error, TEXT("InWorldWidgetComponent Is NULL"))
+		GenericLOG(UILog, Error, TEXT("InWorldWidgetComponent Is NULL"))
 		return;
 	}
 

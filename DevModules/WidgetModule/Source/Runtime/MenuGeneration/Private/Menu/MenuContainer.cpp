@@ -55,7 +55,7 @@ void UMenuContainer::NativeConstructMenuContainer(UMenuStyle* MenuStyle, int32 I
 {
 	if (!IsValid(MenuStyle) || MenuStyles.Contains(MenuStyle))
 	{
-		DLOG(DLogUI, Error, TEXT("Fail To Construct Menu Container"))
+		GenericLOG(UILog, Error, TEXT("Fail To Construct Menu Container"))
 		return;
 	}
 

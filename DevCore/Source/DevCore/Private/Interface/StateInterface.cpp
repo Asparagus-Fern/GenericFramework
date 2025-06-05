@@ -10,7 +10,7 @@ void IStateInterface::NativeOnCreate()
 	if (UObject* Object = Cast<UObject>(this))
 	{
 		IStateInterface::Execute_OnCreate(Object);
-		DLOG(DLogProcedure, Log, TEXT("On Created : %s"), *Object->GetName());
+		GenericLOG(ProcedureLog, Log, TEXT("On Created : %s"), *Object->GetName());
 	}
 }
 
@@ -21,7 +21,7 @@ void IStateInterface::NativeOnActived()
 	if (UObject* Object = Cast<UObject>(this))
 	{
 		IStateInterface::Execute_OnActived(Object);
-		DLOG(DLogProcedure, Log, TEXT("On Actived : %s"), *Object->GetName());
+		GenericLOG(ProcedureLog, Log, TEXT("On Actived : %s"), *Object->GetName());
 	}
 }
 
@@ -31,7 +31,7 @@ void IStateInterface::NativeOnActivedFinish()
 	{
 		OnActivedFinishDelegate.Broadcast(Object);
 		IStateInterface::Execute_OnActivedFinish(Object);
-		DLOG(DLogProcedure, Log, TEXT("On Actived Finish : %s"), *Object->GetName());
+		GenericLOG(ProcedureLog, Log, TEXT("On Actived Finish : %s"), *Object->GetName());
 	}
 }
 
@@ -51,7 +51,7 @@ void IStateInterface::NativeOnInactived()
 	{
 		OnInactivedFinishDelegate.Broadcast(Object);
 		IStateInterface::Execute_OnInactived(Object);
-		DLOG(DLogProcedure, Log, TEXT("On Inactived : %s"), *Object->GetName());
+		GenericLOG(ProcedureLog, Log, TEXT("On Inactived : %s"), *Object->GetName());
 	}
 }
 
@@ -60,7 +60,7 @@ void IStateInterface::NativeOnInactivedFinish()
 	if (UObject* Object = Cast<UObject>(this))
 	{
 		IStateInterface::Execute_OnInactivedFinish(Object);
-		DLOG(DLogProcedure, Log, TEXT("On Inactived Finish : %s"), *Object->GetName());
+		GenericLOG(ProcedureLog, Log, TEXT("On Inactived Finish : %s"), *Object->GetName());
 	}
 }
 
@@ -69,7 +69,7 @@ void IStateInterface::NativeOnDestroy()
 	if (UObject* Object = Cast<UObject>(this))
 	{
 		IStateInterface::Execute_OnDestroy(Object);
-		DLOG(DLogProcedure, Log, TEXT("On Destroy : %s"), *Object->GetName());
+		GenericLOG(ProcedureLog, Log, TEXT("On Destroy : %s"), *Object->GetName());
 
 		if (bGarbageAtDestroy)
 		{

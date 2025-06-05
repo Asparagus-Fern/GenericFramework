@@ -5,7 +5,7 @@
 
 #include "Debug/DebugType.h"
 #include "Manager/CoreInternalManager.h"
-#include "Manager/GlobalManagerSetting.h"
+#include "Manager/GlobalManagerSettings.h"
 
 UManagerProxy* UManagerProxy::Instance = nullptr;
 
@@ -39,21 +39,21 @@ UManagerProxy* UManagerProxy::Get()
 
 void UManagerProxy::RegisterManager(IManagerInterface* InManager)
 {
-	if (!UGlobalManagerSetting::Get()->bEnableAllManager)
+	if (!UGlobalManagerSettings::Get()->bEnableAllManager)
 	{
-		DLOG(DLogManager, Log, TEXT("Disable Manager Register"))
+		GenericLOG(ManagerLog, Log, TEXT("Disable Manager Register"))
 		return;
 	}
 
 	if (!InManager)
 	{
-		DLOG(DLogManager, Error, TEXT("InManager Is NULL"))
+		GenericLOG(ManagerLog, Error, TEXT("InManager Is NULL"))
 		return;
 	}
 
 	if (IsManagerExist(InManager))
 	{
-		DLOG(DLogManager, Warning, TEXT("InManager Is Already Registed"))
+		GenericLOG(ManagerLog, Warning, TEXT("InManager Is Already Registed"))
 		return;
 	}
 
@@ -66,20 +66,20 @@ void UManagerProxy::RegisterManager(IManagerInterface* InManager)
 	OnManagerRegister.Broadcast(NewManagerInfo);
 
 	SortManagers();
-	DLOG(DLogManager, Log, TEXT("%s"), *InManager->GetManagerOwner()->GetName());
+	GenericLOG(ManagerLog, Log, TEXT("%s"), *InManager->GetManagerOwner()->GetName());
 }
 
 void UManagerProxy::UnRegisterManager(const IManagerInterface* InManager)
 {
 	if (!InManager)
 	{
-		DLOG(DLogManager, Error, TEXT("InManager Is NULL"))
+		GenericLOG(ManagerLog, Error, TEXT("InManager Is NULL"))
 		return;
 	}
 
 	if (!IsManagerExist(InManager))
 	{
-		DLOG(DLogManager, Warning, TEXT("InManager Is Already UnRegisted"))
+		GenericLOG(ManagerLog, Warning, TEXT("InManager Is Already UnRegisted"))
 		return;
 	}
 
@@ -93,7 +93,7 @@ void UManagerProxy::UnRegisterManager(const IManagerInterface* InManager)
 		RemoveManagerInfo->MarkAsGarbage();
 
 		SortManagers();
-		DLOG(DLogManager, Log, TEXT("%s"), *InManager->GetManagerOwner()->GetName());
+		GenericLOG(ManagerLog, Log, TEXT("%s"), *InManager->GetManagerOwner()->GetName());
 	}
 }
 

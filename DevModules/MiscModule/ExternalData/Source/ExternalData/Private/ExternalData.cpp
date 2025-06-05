@@ -2,11 +2,12 @@
 
 #include "ExternalData.h"
 
+#include "JsonConvert.h"
+#include "JsonConvert.h"
 #include "Dom/JsonObject.h"
 #include "JsonObjectConverter.h"
 #include "Serialization/JsonReader.h"
 #include "Serialization/JsonWriter.h"
-
 #include "Misc/DataValidation.h"
 #include "Misc/Paths.h"
 #include "UObject/ObjectSaveContext.h"
@@ -60,15 +61,21 @@ EDataValidationResult UExternalData::IsDataValid(FDataValidationContext& Context
 
 FString UExternalData::GetJsonFilePath(const FString& InName)
 {
-	
-	#if PLATFORM_WINDOWS
 	static FString ExternalData(TEXT("ExternalData"));
 	static FString Extension(TEXT(".json"));
 
+#if PLATFORM_WINDOWS
+
 	return FPaths::Combine(FPaths::ProjectConfigDir(), ExternalData, InName + Extension);
-	// #elif PLATFORM_ANDROID
-	// return FPaths::Combine(FPaths::ProjectConfigDir(), ExternalData, InName + Extension);
-	#endif
+
+#elif PLATFORM_ANDROID
+	
+	static FString AndroidBasePath(TEXT("/sdcard"));
+	static FString AndroidConfigPath(TEXT("/Config"));
+	
+	return FPaths::Combine(AndroidBasePath, TEXT("/"), FApp::GetProjectName(), AndroidConfigPath, ExternalData, InName + Extension);
+	
+#endif
 }
 
 bool UExternalData::LoadData()
@@ -78,28 +85,7 @@ bool UExternalData::LoadData()
 		return false;
 	}
 
-	FString JsonString;
-	if (!FFileHelper::LoadFileToString(JsonString, *GetJsonFilePath(GetName())) || JsonString.IsEmpty())
-	{
-		UE_LOG(LogExternalData, Warning, TEXT("Json data load fail, invalid jons file : %s"), *GetName())
-		return false;
-	}
-
-	TSharedPtr<FJsonObject> JsonObject;
-	const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(JsonString);
-	if (!FJsonSerializer::Deserialize(JsonReader, JsonObject) || !JsonObject.IsValid())
-	{
-		UE_LOG(LogExternalData, Warning, TEXT("Json data serializer fail, invalid jons file : %s"), *GetName())
-		return false;
-	}
-
-	if (!FJsonObjectConverter::JsonObjectToUStruct(JsonObject.ToSharedRef(), RowStruct.GetScriptStruct(), RowStruct.GetMutableMemory()))
-	{
-		UE_LOG(LogExternalData, Warning, TEXT("Json data converter fail, invalid jons file : %s"), *GetName())
-		return false;
-	}
-
-	return true;
+	return FJsonConvert::JsonFileToStruct(GetJsonFilePath(GetName()),RowStruct.GetScriptStruct(), RowStruct.GetMutableMemory());
 }
 
 bool UExternalData::SaveData() const
@@ -109,9 +95,7 @@ bool UExternalData::SaveData() const
 		return false;
 	}
 
-	FString JsonString;
-	ensure(FJsonObjectConverter::UStructToJsonObjectString(RowStruct.GetScriptStruct(), RowStruct.GetMemory(), JsonString) || JsonString.IsEmpty());
-	return FFileHelper::SaveStringToFile(JsonString, *GetJsonFilePath(GetName()));
+	return FJsonConvert::StructToJsonFile(GetJsonFilePath(GetName()), RowStruct.GetScriptStruct(), RowStruct.GetMemory());
 }
 
 #undef LOCTEXT_NAMESPACE

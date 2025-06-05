@@ -2,7 +2,7 @@
 
 #include "Pawn/Component/PawnSpringArmComponent.h"
 
-#include "Pawn/Component/PawnInputMovementComponent.h"
+#include "Component/PawnInputMovementComponent.h"
 #include "Pawn/Component/PawnLockStateComponent.h"
 
 

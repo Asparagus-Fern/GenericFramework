@@ -15,10 +15,6 @@
   "Installed": false,
   "Plugins": [
     {
-      "Name": "ModelViewViewModel",
-      "Enabled": true
-    },
-    {
       "Name": "DevCore",
       "Enabled": true
     },
@@ -32,6 +28,14 @@
     },
     {
       "Name": "CameraModule",
+      "Enabled": true
+    },
+    {
+      "Name": "ModelViewViewModel",
+      "Enabled": true
+    },
+    {
+      "Name": "GameplayCameras",
       "Enabled": true
     }
   ],

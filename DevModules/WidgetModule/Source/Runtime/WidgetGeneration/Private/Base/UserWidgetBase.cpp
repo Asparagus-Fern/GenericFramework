@@ -119,7 +119,7 @@ void UUserWidgetBase::SetWidgetEntity(UWidgetEntity* InWidgetEntity)
 {
 	if (!IsValid(InWidgetEntity))
 	{
-		DLOG(DLogUI, Error, TEXT("InWidgetEntity Is InValid"))
+		GenericLOG(UILog, Error, TEXT("InWidgetEntity Is InValid"))
 		return;
 	}
 

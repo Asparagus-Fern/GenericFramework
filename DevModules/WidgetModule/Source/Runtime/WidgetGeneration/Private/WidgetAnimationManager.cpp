@@ -64,7 +64,7 @@ void UWidgetAnimationManager::OnWidgetOpened(UUserWidgetBase* InWidget)
 {
 	if (!IsValid(InWidget))
 	{
-		DLOG(DLogUI, Error, TEXT("InWidget Is InValid"))
+		GenericLOG(UILog, Error, TEXT("InWidget Is InValid"))
 		return;
 	}
 
@@ -83,7 +83,7 @@ void UWidgetAnimationManager::OnWidgetClosed(UUserWidgetBase* InWidget)
 {
 	if (!IsValid(InWidget))
 	{
-		DLOG(DLogUI, Error, TEXT("InWidget Is InValid"))
+		GenericLOG(UILog, Error, TEXT("InWidget Is InValid"))
 		return;
 	}
 
@@ -102,7 +102,7 @@ bool UWidgetAnimationManager::PlayWidgetAnimation(UUserWidgetBase* InWidget, boo
 {
 	if (!IsValid(InWidget))
 	{
-		DLOG(DLogUI, Error, TEXT("InWidget Is InValid"))
+		GenericLOG(UILog, Error, TEXT("InWidget Is InValid"))
 		return false;
 	}
 
@@ -112,7 +112,7 @@ bool UWidgetAnimationManager::PlayWidgetAnimation(UUserWidgetBase* InWidget, boo
 		/* Animation Is Already Playing */
 		if (InWidget->IsPlayingWidgetAnimation(InIsActive))
 		{
-			DLOG(DLogUI, Warning, TEXT("WidgetAnimation Is Playing"))
+			GenericLOG(UILog, Warning, TEXT("WidgetAnimation Is Playing"))
 			return true;
 		}
 
@@ -144,7 +144,7 @@ void UWidgetAnimationManager::OnActiveAnimationPlayFinish(UUserWidgetBase* InWid
 {
 	if (!IsValid(InWidget))
 	{
-		DLOG(DLogUI, Error, TEXT("InWidget Is InValid"))
+		GenericLOG(UILog, Error, TEXT("InWidget Is InValid"))
 		return;
 	}
 
@@ -163,7 +163,7 @@ void UWidgetAnimationManager::OnInactiveAnimationPlayFinish(UUserWidgetBase* InW
 {
 	if (!IsValid(InWidget))
 	{
-		DLOG(DLogUI, Error, TEXT("InWidget Is InValid"))
+		GenericLOG(UILog, Error, TEXT("InWidget Is InValid"))
 		return;
 	}
 

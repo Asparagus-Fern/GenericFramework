@@ -30,7 +30,7 @@ FGuid FCoreInternalManager::RegisterManager(UObject* InOwner)
 	}
 	else
 	{
-		DLOG(DLogManager, Error, TEXT("Regist Manager Fail, Must Provide Owner For Internal Manager"));
+		GenericLOG(ManagerLog, Error, TEXT("Regist Manager Fail, Must Provide Owner For Internal Manager"));
 	}
 
 	return ManagerID;

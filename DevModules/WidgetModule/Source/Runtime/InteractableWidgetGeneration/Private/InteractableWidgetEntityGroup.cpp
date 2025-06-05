@@ -29,13 +29,13 @@ void UInteractableWidgetEntityGroup::AddEntity(UInteractableWidgetEntity* InEnti
 {
 	if (!IsValid(InEntity))
 	{
-		DLOG(DLogUI, Error, TEXT("InEntity Is InValid"))
+		GenericLOG(UILog, Error, TEXT("InEntity Is InValid"))
 		return;
 	}
 
 	if (HasEntity(InEntity))
 	{
-		DLOG(DLogUI, Warning, TEXT("InEntity Is Already In The Group"))
+		GenericLOG(UILog, Warning, TEXT("InEntity Is Already In The Group"))
 		return;
 	}
 
@@ -67,7 +67,7 @@ void UInteractableWidgetEntityGroup::AddWidget(UInteractableWidgetBase* InWidget
 {
 	if (!IsValid(InWidget))
 	{
-		DLOG(DLogUI, Error, TEXT("InWidget Is InValid"))
+		GenericLOG(UILog, Error, TEXT("InWidget Is InValid"))
 		return;
 	}
 
@@ -91,13 +91,13 @@ void UInteractableWidgetEntityGroup::RemoveEntity(UInteractableWidgetEntity* InE
 {
 	if (!IsValid(InEntity))
 	{
-		DLOG(DLogUI, Error, TEXT("InEntity Is InValid"))
+		GenericLOG(UILog, Error, TEXT("InEntity Is InValid"))
 		return;
 	}
 
 	if (!HasEntity(InEntity))
 	{
-		DLOG(DLogUI, Warning, TEXT("InEntity Is Not In The Group"))
+		GenericLOG(UILog, Warning, TEXT("InEntity Is Not In The Group"))
 		return;
 	}
 
@@ -125,7 +125,7 @@ void UInteractableWidgetEntityGroup::RemoveEntityByIndex(int32 Index)
 	}
 	else
 	{
-		DLOG(DLogUI, Warning, TEXT("Index Is InValid"))
+		GenericLOG(UILog, Warning, TEXT("Index Is InValid"))
 	}
 }
 
@@ -141,7 +141,7 @@ void UInteractableWidgetEntityGroup::RemoveWidget(UInteractableWidgetBase* InWid
 {
 	if (!IsValid(InWidget))
 	{
-		DLOG(DLogUI, Error, TEXT("InWidget Is InValid"))
+		GenericLOG(UILog, Error, TEXT("InWidget Is InValid"))
 		return;
 	}
 
@@ -178,19 +178,19 @@ void UInteractableWidgetEntityGroup::SetSelectedEntity(UInteractableWidgetEntity
 {
 	if (!IsValid(InEntity))
 	{
-		DLOG(DLogUI, Error, TEXT("InEntity Is InValid"))
+		GenericLOG(UILog, Error, TEXT("InEntity Is InValid"))
 		return;
 	}
 
 	if (!InEntity->bIsEnable)
 	{
-		DLOG(DLogUI, Warning, TEXT("InEntity Is Disable To Interact"))
+		GenericLOG(UILog, Warning, TEXT("InEntity Is Disable To Interact"))
 		return;
 	}
 
 	if (!InEntity->bSelectable)
 	{
-		DLOG(DLogUI, Warning, TEXT("InEntity Is Disable To Selected"))
+		GenericLOG(UILog, Warning, TEXT("InEntity Is Disable To Selected"))
 		return;
 	}
 
@@ -205,7 +205,7 @@ void UInteractableWidgetEntityGroup::SetSelectedEntityByIndex(int32 Index)
 	}
 	else
 	{
-		DLOG(DLogUI, Warning, TEXT("Index Is InValid"))
+		GenericLOG(UILog, Warning, TEXT("Index Is InValid"))
 	}
 }
 

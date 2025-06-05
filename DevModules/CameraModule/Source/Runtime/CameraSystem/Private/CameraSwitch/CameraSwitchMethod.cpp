@@ -3,7 +3,7 @@
 #include "CameraSwitch/CameraSwitchMethod.h"
 
 #include "CameraManager.h"
-#include "CameraManagerSetting.h"
+#include "CameraManagerSettings.h"
 #include "CameraPoint/CameraPointBase.h"
 #include "CameraSwitch/CameraSwitchInterface.h"
 #include "Kismet/GameplayStatics.h"
@@ -91,7 +91,7 @@ void UCameraSwitchMethod::NativeOnSwitchToCameraPointFinish()
 		ICameraSwitchInterface::Execute_HandleSwitchToCameraFinish(Actor, this);
 	}
 
-	if (IsValid(TargetCameraPoint) && !TargetCameraPoint->CameraTag.IsValid() && UCameraManagerSetting::Get()->bDestroyEmptyCameraPointAfterSwitchFinish)
+	if (IsValid(TargetCameraPoint) && !TargetCameraPoint->CameraTag.IsValid() && UCameraManagerSettings::Get()->bDestroyEmptyCameraPointAfterSwitchFinish)
 	{
 		TargetCameraPoint->Destroy();
 	}

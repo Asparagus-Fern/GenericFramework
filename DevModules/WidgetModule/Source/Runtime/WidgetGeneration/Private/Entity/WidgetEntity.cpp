@@ -15,7 +15,7 @@ UUserWidgetBase* FDisplayWidget::GetWidget() const
 {
 	if (!HasValidWidget())
 	{
-		DLOG(DLogUI, Warning, TEXT("Entity Has No Widget"))
+		GenericLOG(UILog, Warning, TEXT("Entity Has No Widget"))
 		return nullptr;
 	}
 

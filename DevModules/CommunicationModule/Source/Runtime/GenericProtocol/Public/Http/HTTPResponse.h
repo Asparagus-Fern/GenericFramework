@@ -1,0 +1,68 @@
+﻿// Copyright ChenTaiye 2025. All Rights Reserved.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "Generic/GenericObject.h"
+#include "HTTPResponse.generated.h"
+
+class IHttpResponse;
+
+/**
+ * 
+ */
+UCLASS()
+class GENERICPROTOCOL_API UHTTPResponse : public UGenericObject
+{
+	GENERATED_BODY()
+
+private:
+	friend class UHTTPRequest;
+
+	void InitInternal(TSharedPtr<IHttpResponse, ESPMode::ThreadSafe> InResponse, const float& InRequestDuration);
+
+public:
+	/* 获取全部的Headers */
+	UFUNCTION(BlueprintPure, Category = "HTTP")
+	TMap<FString, FString> GetHeaders() const;
+
+	/* 获取 request的 binary data */
+	UFUNCTION(BlueprintCallable, Category = "HTTP")
+	void GetContent(TArray<uint8>& OutContent) const;
+
+	/* 获取 request的 string data */
+	UFUNCTION(BlueprintCallable, Category = "HTTP")
+	FString GetContentAsString() const;
+
+	/* 返回标头中的内容长度（如果可用或为零） */
+	UFUNCTION(BlueprintPure, Category = "HTTP")
+	int32 GetContentLength() const;
+
+	/* 若可用返回content type */
+	UFUNCTION(BlueprintPure, Category = "HTTP")
+	FString GetContentType() const;
+
+	/* 返回 header的key */
+	UFUNCTION(BlueprintPure, Category = "HTTP")
+	FString GetHeader(const FString& Key) const;
+
+	/* 返回状态 */
+	UFUNCTION(BlueprintPure, Category = "HTTP")
+	int32 GetResponseCode() const;
+
+	/* 获取URL. */
+	UFUNCTION(BlueprintPure, Category = "HTTP")
+	FString GetURL() const;
+
+	/* 获取URL参数. */
+	UFUNCTION(BlueprintPure, Category = "HTTP")
+	FString GetURLParameter(const FString& ParameterName) const;
+
+	/* 返回服务器完全响应请求所花费的时间. */
+	UFUNCTION(BlueprintPure, Category = "HTTP")
+	float GetElapsedTime() const;
+
+private:
+	TSharedPtr<IHttpResponse, ESPMode::ThreadSafe> Response;
+	float RequestDuration;
+};

@@ -13,19 +13,19 @@ URegisterMediaHandleAction* URegisterMediaHandleAction::RegisterMediaHandleByMed
 {
 	if (HandleName == NAME_None)
 	{
-		DLOG(DLogMovieScene, Error, TEXT("HandleName Is InValid"))
+		GenericLOG(MovieSceneLog, Error, TEXT("HandleName Is InValid"))
 		return nullptr;
 	}
 
 	if (!IsValid(InMediaPlayer))
 	{
-		DLOG(DLogMovieScene, Error, TEXT("InMediaPlayer Is InValid"))
+		GenericLOG(MovieSceneLog, Error, TEXT("InMediaPlayer Is InValid"))
 		return nullptr;
 	}
 
 	if (!IsValid(InMediaSource))
 	{
-		DLOG(DLogMovieScene, Error, TEXT("InMediaSource Is InValid"))
+		GenericLOG(MovieSceneLog, Error, TEXT("InMediaSource Is InValid"))
 		return nullptr;
 	}
 
@@ -61,19 +61,19 @@ URegisterMediaHandleAction* URegisterMediaHandleAction::RegisterMediaHandleByMed
 {
 	if (HandleName == NAME_None)
 	{
-		DLOG(DLogMovieScene, Error, TEXT("HandleName Is InValid"))
+		GenericLOG(MovieSceneLog, Error, TEXT("HandleName Is InValid"))
 		return nullptr;
 	}
 
 	if (!IsValid(InMediaPlayer))
 	{
-		DLOG(DLogMovieScene, Error, TEXT("InMediaPlayer Is InValid"))
+		GenericLOG(MovieSceneLog, Error, TEXT("InMediaPlayer Is InValid"))
 		return nullptr;
 	}
 
 	if (!IsValid(InMediaPlaylist))
 	{
-		DLOG(DLogMovieScene, Error, TEXT("InMediaSource Is InValid"))
+		GenericLOG(MovieSceneLog, Error, TEXT("InMediaSource Is InValid"))
 		return nullptr;
 	}
 

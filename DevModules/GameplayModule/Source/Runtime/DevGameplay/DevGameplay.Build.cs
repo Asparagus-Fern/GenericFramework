@@ -27,6 +27,7 @@ public class DevGameplay : ModuleRules
 				"InputCore",
 				"EnhancedInput",
 				"AIModule",
+				"GameplayCameras",
 
 				"CameraSystem"
 			}

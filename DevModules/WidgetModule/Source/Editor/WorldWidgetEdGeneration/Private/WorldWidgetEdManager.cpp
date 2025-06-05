@@ -196,7 +196,7 @@ void UWorldWidgetEdManager::AddWorldWidgetToScreen(UWorldWidgetComponent* InWorl
 {
 	if (!IsValid(InWorldWidgetComponent))
 	{
-		DLOG(DLogUI, Error, TEXT("WorldWidgetComponent Is NULL"))
+		GenericLOG(UILog, Error, TEXT("WorldWidgetComponent Is NULL"))
 		return;
 	}
 
@@ -237,7 +237,7 @@ void UWorldWidgetEdManager::RemoveWorldWidgetFromScreen(UWorldWidgetComponent* I
 {
 	if (!IsValid(InWorldWidgetComponent))
 	{
-		DLOG(DLogUI, Error, TEXT("WorldWidgetComponent Is NULL"))
+		GenericLOG(UILog, Error, TEXT("WorldWidgetComponent Is NULL"))
 		return;
 	}
 

@@ -33,7 +33,7 @@ UWidgetEntity* UWidgetEntityManager::RegisterWidgetEntity(TSubclassOf<UWidgetEnt
 {
 	if (!InWidgetEntityClass)
 	{
-		DLOG(DLogUI, Error, TEXT("InWidgetEntityClass Is InValid"))
+		GenericLOG(UILog, Error, TEXT("InWidgetEntityClass Is InValid"))
 		return nullptr;
 	}
 
@@ -55,13 +55,13 @@ void UWidgetEntityManager::RegisterWidgetEntity(UWidgetEntity* InWidgetEntity)
 {
 	if (!IsValid(InWidgetEntity))
 	{
-		DLOG(DLogUI, Error, TEXT("InWidgetEntity Is InValid"))
+		GenericLOG(UILog, Error, TEXT("InWidgetEntity Is InValid"))
 		return;
 	}
 
 	if (WidgetEntities.Contains(InWidgetEntity))
 	{
-		DLOG(DLogUI, Warning, TEXT("InWidgetEntity Is Already Register"))
+		GenericLOG(UILog, Warning, TEXT("InWidgetEntity Is Already Register"))
 		return;
 	}
 
@@ -81,13 +81,13 @@ void UWidgetEntityManager::UnRegisterWidgetEntity(UWidgetEntity* InWidgetEntity)
 {
 	if (!IsValid(InWidgetEntity))
 	{
-		DLOG(DLogUI, Error, TEXT("InWidgetEntity Is InValid"))
+		GenericLOG(UILog, Error, TEXT("InWidgetEntity Is InValid"))
 		return;
 	}
 
 	if (!WidgetEntities.Contains(InWidgetEntity))
 	{
-		DLOG(DLogUI, Warning, TEXT("InWidgetEntity Is Already UnRegister"))
+		GenericLOG(UILog, Warning, TEXT("InWidgetEntity Is Already UnRegister"))
 		return;
 	}
 

@@ -9,12 +9,12 @@
 void UPropertyEntity::Initialize(UObject* InContext)
 {
 	/* 避免重复初始化 */
-	DEnsureLOG(DLogProperty, !bInitialize)
+	GenericEnsureLOG(PropertyLog, !bInitialize)
 	Context = InContext;
 	bInitialize = true;
 
 #if !UE_BUILD_SHIPPING
-	DEnsureAlwaysLOG(DLogProperty, PropertyName != NAME_None, TEXT("You Must Provide a PropertyName."))
+	GenericEnsureAlwaysLOG(PropertyLog, PropertyName != NAME_None, TEXT("You Must Provide a PropertyName."))
 #endif
 
 	/* 当DisplayName为空时，以PropertyName作为PropertyName */

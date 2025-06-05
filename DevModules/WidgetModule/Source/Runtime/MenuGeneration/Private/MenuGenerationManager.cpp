@@ -38,13 +38,13 @@ bool UMenuGenerationManager::RegisterMenuCollection(UMenuCollection* InCollectio
 {
 	if (!IsValid(InCollection))
 	{
-		DLOG(DLogUI, Error, TEXT("InCollection Is InValid"))
+		GenericLOG(UILog, Error, TEXT("InCollection Is InValid"))
 		return false;
 	}
 
 	if (MenuCollections.Contains(InCollection))
 	{
-		DLOG(DLogUI, Warning, TEXT("InCollection Is Already Register"))
+		GenericLOG(UILog, Warning, TEXT("InCollection Is Already Register"))
 		return false;
 	}
 
@@ -63,13 +63,13 @@ bool UMenuGenerationManager::UnRegisterMenuCollection(UMenuCollection* InCollect
 {
 	if (!IsValid(InCollection))
 	{
-		DLOG(DLogUI, Error, TEXT("InCollection Is InValid"))
+		GenericLOG(UILog, Error, TEXT("InCollection Is InValid"))
 		return false;
 	}
 
 	if (!MenuCollections.Contains(InCollection))
 	{
-		DLOG(DLogUI, Warning, TEXT("InCollection Is Already UnRegister"))
+		GenericLOG(UILog, Warning, TEXT("InCollection Is Already UnRegister"))
 		return false;
 	}
 

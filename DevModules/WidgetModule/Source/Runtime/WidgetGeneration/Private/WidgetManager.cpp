@@ -124,13 +124,13 @@ bool UWidgetManager::OpenUserWidget(UUserWidgetBase* InWidget, FOnWidgetActiveSt
 {
 	if (!IsValid(InWidget))
 	{
-		DLOG(DLogUI, Error, TEXT("InWidget Is InValid"))
+		GenericLOG(UILog, Error, TEXT("InWidget Is InValid"))
 		return false;
 	}
 
 	if (!InWidget->SlotTag.IsValid())
 	{
-		DLOG(DLogUI, Error, TEXT("SlotTag Is InValid"))
+		GenericLOG(UILog, Error, TEXT("SlotTag Is InValid"))
 		return false;
 	}
 
@@ -165,7 +165,7 @@ bool UWidgetManager::OpenUserWidget(UUserWidgetBase* InWidget, FOnWidgetActiveSt
 		return true;
 	}
 
-	DLOG(DLogUI, Error, TEXT("GameplayTagSlot Is InValid"))
+	GenericLOG(UILog, Error, TEXT("GameplayTagSlot Is InValid"))
 	return false;
 }
 
@@ -173,7 +173,7 @@ bool UWidgetManager::CloseUserWidget(FGameplayTag InSlotTag, bool MarkAsGarbage,
 {
 	if (!InSlotTag.IsValid())
 	{
-		DLOG(DLogUI, Error, TEXT("SlotTag Is InValid"))
+		GenericLOG(UILog, Error, TEXT("SlotTag Is InValid"))
 		return false;
 	}
 
@@ -185,7 +185,7 @@ bool UWidgetManager::CloseUserWidget(FGameplayTag InSlotTag, bool MarkAsGarbage,
 		}
 	}
 
-	DLOG(DLogUI, Error, TEXT("GameplayTagSlot Is InValid"))
+	GenericLOG(UILog, Error, TEXT("GameplayTagSlot Is InValid"))
 	OnFinish.ExecuteIfBound(nullptr);
 	return false;
 }
@@ -194,7 +194,7 @@ bool UWidgetManager::CloseUserWidget(UUserWidgetBase* InWidget, bool MarkAsGarba
 {
 	if (!IsValid(InWidget))
 	{
-		DLOG(DLogUI, Error, TEXT("InWidget Is InValid"))
+		GenericLOG(UILog, Error, TEXT("InWidget Is InValid"))
 		OnFinish.ExecuteIfBound(InWidget);
 		return false;
 	}
@@ -207,14 +207,14 @@ void UWidgetManager::ActiveWidget(UUserWidgetBase* InWidget, FOnWidgetActiveStat
 {
 	if (!IsValid(InWidget))
 	{
-		DLOG(DLogUI, Error, TEXT("InWidget Is InValid"))
+		GenericLOG(UILog, Error, TEXT("InWidget Is InValid"))
 		OnFinish.ExecuteIfBound(InWidget);
 		return;
 	}
 
 	if (ActivedWidgets.Contains(InWidget))
 	{
-		DLOG(DLogUI, Warning, TEXT("InWidget Is Already Actived"))
+		GenericLOG(UILog, Warning, TEXT("InWidget Is Already Actived"))
 		OnFinish.ExecuteIfBound(InWidget);
 		return;
 	}
@@ -236,7 +236,7 @@ void UWidgetManager::InactiveWidget(UUserWidgetBase* InWidget, bool MarkAsGarbag
 {
 	if (!IsValid(InWidget))
 	{
-		DLOG(DLogUI, Error, TEXT("InWidget Is InValid"))
+		GenericLOG(UILog, Error, TEXT("InWidget Is InValid"))
 		OnFinish.ExecuteIfBound(InWidget);
 		return;
 	}

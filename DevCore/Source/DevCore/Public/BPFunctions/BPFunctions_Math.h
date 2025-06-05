@@ -46,4 +46,6 @@ public:
 
 	UFUNCTION(BlueprintPure, meta=(DisplayName = "Map Range Unclamped (Vector2D)"), Category = "Math|Vector2D")
 	static FVector2D Vector2D_MapRangeUnclamped(const FVector2D& InValue, const FVector2D& InRangeA, const FVector2D& InRangeB, const FVector2D& OutRangeA, const FVector2D& OutRangeB);
+
+
 };
