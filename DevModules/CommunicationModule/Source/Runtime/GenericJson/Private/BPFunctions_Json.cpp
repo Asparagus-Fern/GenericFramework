@@ -3,6 +3,7 @@
 
 #include "BPFunctions_Json.h"
 
+#include "JsonConvert.h"
 #include "JsonObject.h"
 #include "JsonObjectConverter.h"
 #include "Blueprint/BlueprintExceptionInfo.h"
@@ -68,17 +69,19 @@ DEFINE_FUNCTION(UBPFunctions_Json::execGetJsonField)
 	*static_cast<bool*>(RESULT_PARAM) = bResult;
 }
 
-void UBPFunctions_Json::SetJsonField(EGenericResult& Result, UJsonObject* JsonObject, const FString& FieldName, const int32& Value)
+bool UBPFunctions_Json::SetJsonField(UJsonObject* JsonObject, const FString& FieldName, const int32& Value)
 {
 	if (!IsValid(JsonObject))
 	{
-		return;
+		return false;
 	}
 
 	if (FieldName.IsEmpty())
 	{
-		return;
+		return false;
 	}
+
+	return true;
 }
 
 DEFINE_FUNCTION(UBPFunctions_Json::execSetJsonField)
@@ -93,8 +96,6 @@ DEFINE_FUNCTION(UBPFunctions_Json::execSetJsonField)
 
 	P_FINISH;
 
-	Result = EGenericResult::InValid;
-	
 	if (!SourceProperty || !SourceValuePtr)
 	{
 		const FBlueprintExceptionInfo ExceptionInfo(

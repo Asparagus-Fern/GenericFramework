@@ -30,7 +30,6 @@ void UK2Node_TryGetJsonField::AllocateDefaultPins()
 
 		FPinStatics(const TArray<UEdGraphPin*>& InPins)
 		{
-			// Pins as per UJsonBlueprintFunctionLibrary::GetField(...)
 			InputJsonObjectPinIndex = FindPinByName(InPins, TEXT("self")); // default name, won't change
 			InputFieldNamePinIndex = FindPinByName(InPins, TEXT("FieldName"));
 
