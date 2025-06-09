@@ -8,16 +8,16 @@
 
 class FSpline2DRenderBatch;
 
-/** Notification for FUMGSplineInfo value change */
-DECLARE_DELEGATE_ThreeParams(FOnUMGSplineBuildSegmentAdded, int32/*Index*/, const FVector2D&/*Position*/, float/*Length*/)
+/* Notification for FUMGSplineInfo value change */
+DECLARE_DELEGATE_ThreeParams(FOnUMGSplineBuildSegmentAdded, int32/**Index*/, const FVector2D&/**Position*/, float/**Length*/)
 
-/*
+/**
 * Below Code mainly copy from SlateCore / ElementBatcher.cpp FLineBuilder, I made a few changes to support:
 * 1. Add uv information for spline geometry
 * 2. Made continuous spline geometry
 */
 
-/** Utility class for building a strip of lines. */
+/* Utility class for building a strip of lines. */
 struct DEVSLATECORE_API FSpline2DBuilder
 {
 	FSpline2DBuilder(FSpline2DRenderBatch& InRenderBatch, const FVector2D StartPoint, float HalfThickness, float InThickness, float InFilterScale, float InCustomVertsVCoordScale, const FSlateRenderTransform& InRenderTransform, const FColor& InColor);
@@ -79,7 +79,7 @@ private:
 	*/
 	static void deCasteljauSplit(const FVector2D& P0, const FVector2D& P1, const FVector2D& P2, const FVector2D& P3, FVector2D OutCurveParams[7]);
 
-	/** More general form of the deCasteljauSplit splits the curve into two parts at a point between 0 and 1 along the curve's length. */
+	/* More general form of the deCasteljauSplit splits the curve into two parts at a point between 0 and 1 along the curve's length. */
 	static void deCasteljauSplit_WithColorGradient(const FVector2D& P0, const FVector2D& P1, const FVector2D& P2, const FVector2D& P3, FVector2D OutCurveParams[7], float SplitPoint = 0.5f);
 
 	static void Subdivide(const FVector2D& P0, const FVector2D& P1, const FVector2D& P2, const FVector2D& P3, FSpline2DBuilder& LineBuilder, float MaxBiasTimesTwo = 2.0f);

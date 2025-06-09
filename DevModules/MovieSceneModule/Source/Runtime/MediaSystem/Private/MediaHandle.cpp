@@ -118,7 +118,7 @@ bool UMediaHandle::PlayMovieScene()
 {
 	if (!bIsMediaInitialize)
 	{
-		GenericLOG(MovieSceneLog, Error, TEXT("Media File To Initialize"))
+		GenericLOG(GenericLogMovieScene, Error, TEXT("Media File To Initialize"))
 		return false;
 	}
 
@@ -130,7 +130,7 @@ bool UMediaHandle::PlayMovieSceneFromStart()
 {
 	if (!bIsMediaInitialize)
 	{
-		GenericLOG(MovieSceneLog, Error, TEXT("Media File To Initialize"))
+		GenericLOG(GenericLogMovieScene, Error, TEXT("Media File To Initialize"))
 		return false;
 	}
 
@@ -142,7 +142,7 @@ bool UMediaHandle::PlayLoopingMovieScene(int32 NumLoops)
 {
 	if (!bIsMediaInitialize)
 	{
-		GenericLOG(MovieSceneLog, Error, TEXT("Media File To Initialize"))
+		GenericLOG(GenericLogMovieScene, Error, TEXT("Media File To Initialize"))
 		return false;
 	}
 
@@ -159,7 +159,7 @@ bool UMediaHandle::PlayReverseMovieScene()
 {
 	if (!bIsMediaInitialize)
 	{
-		GenericLOG(MovieSceneLog, Error, TEXT("Media File To Initialize"))
+		GenericLOG(GenericLogMovieScene, Error, TEXT("Media File To Initialize"))
 		return false;
 	}
 
@@ -498,7 +498,7 @@ void UMediaHandle::OnMediaOpened(FString OpenedUrl)
 
 void UMediaHandle::OnMediaOpenFailed(FString FailedUrl)
 {
-	GenericLOG(MovieSceneLog, Error, TEXT("Media Open Fail : %s"), *FailedUrl)
+	GenericLOG(GenericLogMovieScene, Error, TEXT("Media Open Fail : %s"), *FailedUrl)
 }
 
 void UMediaHandle::OnMediaClosed()

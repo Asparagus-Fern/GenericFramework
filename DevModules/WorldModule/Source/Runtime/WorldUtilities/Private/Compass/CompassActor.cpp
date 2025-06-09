@@ -30,7 +30,7 @@ void ACompassActor::OnConstruction(const FTransform& Transform)
 	Super::OnConstruction(Transform);
 	SceneComponent->SetRelativeRotation(FRotator(0.f, Angle, 0.f));
 
-	GenericLOG(WorldLog, Log, TEXT("Direction : %s"), *GetDirectionNorth().ToString())
+	GenericLOG(GenericLogWorld, Log, TEXT("Direction : %s"), *GetDirectionNorth().ToString())
 }
 
 void ACompassActor::SetupComponent(UArrowComponent*& InArrow, FName InArrowName, UTextRenderComponent*& InTextRender, FName InTextRenderName, float InArrowYaw, FColor InArrowColor, FString InText)

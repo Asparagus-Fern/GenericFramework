@@ -119,7 +119,7 @@ void UUserWidgetBase::SetWidgetEntity(UWidgetEntity* InWidgetEntity)
 {
 	if (!IsValid(InWidgetEntity))
 	{
-		GenericLOG(UILog, Error, TEXT("InWidgetEntity Is InValid"))
+		GenericLOG(GenericLogUI, Error, TEXT("InWidgetEntity Is InValid"))
 		return;
 	}
 
@@ -180,7 +180,7 @@ void UUserWidgetBase::OnActiveStateChanged()
 			return;
 		}
 
-		/*	Check Has Widget Animation */
+		/**	Check Has Widget Animation */
 		if (!HasWidgetAnimation(GetIsActived()))
 		{
 			if (GetIsActived())

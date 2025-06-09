@@ -261,18 +261,3 @@ static int32 ConvertToResponseCode(EHttpResponseCode ResponseCode)
 
 	return FCString::Atoi(*CodeString);
 }
-
-USTRUCT(BlueprintType)
-struct FHttpHeaders
-{
-	GENERATED_BODY()
-
-public:
-	FHttpHeaders() { return; };
-	FHttpHeaders(const TMap<FString, FString>& InHeaders) : Headers(InHeaders) { return; };
-	FHttpHeaders(TMap<FString, FString>&& InHeaders) : Headers(MoveTemp(InHeaders)) { return; };
-
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TMap<FString, FString> Headers;
-};

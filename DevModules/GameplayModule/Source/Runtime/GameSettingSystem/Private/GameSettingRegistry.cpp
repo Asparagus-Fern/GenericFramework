@@ -6,7 +6,7 @@
 
 void UGameSettingRegistry::Initialize()
 {
-	/*
+	/**
 	if (IsValid(Collection))
 	{
 		return;

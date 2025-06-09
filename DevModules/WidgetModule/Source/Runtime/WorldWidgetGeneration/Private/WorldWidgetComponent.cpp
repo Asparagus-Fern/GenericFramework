@@ -105,7 +105,7 @@ void UWorldWidgetComponent::ChangeWidgetActiveState(bool IsActive)
 {
 	if (!IsValid(WorldWidget))
 	{
-		GenericLOG(UILog, Warning, TEXT("WorldWidget Is NULL"))
+		GenericLOG(GenericLogUI, Warning, TEXT("WorldWidget Is NULL"))
 		SetDrawSize(FIntPoint::ZeroValue);
 		return;
 	}

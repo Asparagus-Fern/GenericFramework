@@ -15,7 +15,7 @@ UDBTweenFloat* UDBTweenFloat::DOFloat(FString TweenName,float DurTime, float Sta
 	return result;
 }
 
-UDBTweenFloat* UDBTweenFloat::DOFloatByCurve(FString TweenName,float DurTime /*= 1*/, float Start /*= 0*/, float End /*= 1*/, UCurveFloat* Curve, bool IsLoop /*= false*/)
+UDBTweenFloat* UDBTweenFloat::DOFloatByCurve(FString TweenName,float DurTime /**= 1*/, float Start /**= 0*/, float End /**= 1*/, UCurveFloat* Curve, bool IsLoop /**= false*/)
 {
 	UDBTweenFloat* result = NewObject<UDBTweenFloat>();
 	result->AllocaKey(TweenName);

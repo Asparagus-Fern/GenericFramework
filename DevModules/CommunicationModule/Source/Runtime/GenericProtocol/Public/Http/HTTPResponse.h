@@ -6,6 +6,7 @@
 #include "Generic/GenericObject.h"
 #include "HTTPResponse.generated.h"
 
+class UGenericJsonObject;
 class IHttpResponse;
 
 /**
@@ -19,7 +20,7 @@ class GENERICPROTOCOL_API UHTTPResponse : public UGenericObject
 private:
 	friend class UHTTPRequest;
 
-	void InitInternal(TSharedPtr<IHttpResponse, ESPMode::ThreadSafe> InResponse, const float& InRequestDuration);
+	void InitInternal(TWeakObjectPtr<UHTTPRequest> InRequest, TSharedPtr<IHttpResponse, ESPMode::ThreadSafe> InResponse);
 
 public:
 	/* 获取全部的Headers */
@@ -27,12 +28,15 @@ public:
 	TMap<FString, FString> GetHeaders() const;
 
 	/* 获取 request的 binary data */
-	UFUNCTION(BlueprintCallable, Category = "HTTP")
+	UFUNCTION(BlueprintPure, Category = "HTTP")
 	void GetContent(TArray<uint8>& OutContent) const;
 
 	/* 获取 request的 string data */
-	UFUNCTION(BlueprintCallable, Category = "HTTP")
+	UFUNCTION(BlueprintPure, Category = "HTTP")
 	FString GetContentAsString() const;
+
+	UFUNCTION(BlueprintPure, Category = "HTTP")
+	UGenericJsonObject* GetContentAsJson() ;
 
 	/* 返回标头中的内容长度（如果可用或为零） */
 	UFUNCTION(BlueprintPure, Category = "HTTP")
@@ -62,7 +66,14 @@ public:
 	UFUNCTION(BlueprintPure, Category = "HTTP")
 	float GetElapsedTime() const;
 
+public:
+	UFUNCTION(BlueprintPure, Category = "HTTP")
+	UHTTPRequest* GetRequest() const;
+
 private:
-	TSharedPtr<IHttpResponse, ESPMode::ThreadSafe> Response;
-	float RequestDuration;
+	TWeakObjectPtr<UHTTPRequest> Request = nullptr;
+	TSharedPtr<IHttpResponse, ESPMode::ThreadSafe> Response = nullptr;
+
+	UPROPERTY()
+	TObjectPtr<UGenericJsonObject> JsonObject = nullptr;
 };

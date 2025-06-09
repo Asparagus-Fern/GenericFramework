@@ -148,7 +148,7 @@ void UNativeAPISubsystem::HandleOnStartGameInstance(UGameInstance* InGameInstanc
 void UNativeAPISubsystem::HandleOnEnginePreExit() { EndAllFeatureSession(); }
 #endif
 
-/*void UNativeAPISubsystem::HandleOnNativeAPISessionFeatureRegistered(const FName& FeatureName, IModularFeature* Feature)
+/**void UNativeAPISubsystem::HandleOnNativeAPISessionFeatureRegistered(const FName& FeatureName, IModularFeature* Feature)
 {
 	if(FeatureName == INativeAPISessionFeature::GetFeatureName())
 	{

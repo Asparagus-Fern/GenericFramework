@@ -455,7 +455,7 @@ TSharedPtr<FJsonValue> FNativeAPIUtilities::WriteMap(const FMapProperty* MapProp
 TSharedPtr<FJsonValue> FNativeAPIUtilities::WriteValue(const FProperty* Property, const void* DataPtr, const void* DefaultPtr)
 {
 	TSharedPtr<FJsonValue> ResultValue;
-	/*if (DefaultPtr != nullptr && Property->Identical(DataPtr, DefaultPtr))
+	/**if (DefaultPtr != nullptr && Property->Identical(DataPtr, DefaultPtr))
 	{
 		return ResultValue;
 	}*/
@@ -644,7 +644,7 @@ TSharedPtr<FJsonObject> FNativeAPIUtilities::WriteStruct(const UStruct* Struct, 
 	return JsonObject;
 }
 
-/** 
+/* 
  * This exists because of sparse class data that can exist for UObjects only, which is handled in ContainerPtrToValuePtr.
  */
 TSharedPtr<FJsonObject> FNativeAPIUtilities::WriteUObject(const UClass* Class, const UObject* Instance) 

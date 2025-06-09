@@ -177,7 +177,7 @@ DEFINE_FUNCTION(UBPFunctions_Property::execSetPropertyValue)
 			LOCTEXT("InValidPropertyType", "TargetProperty Is Not Same As SourceProperty.")
 		);
 
-		GenericLOG(PropertyLog, Error, TEXT("TargetProperty Is Not Same As SourceProperty."))
+		GenericLOG(GenericLogProperty, Error, TEXT("TargetProperty Is Not Same As SourceProperty."))
 		FBlueprintCoreDelegates::ThrowScriptException(P_THIS, Stack, ExceptionInfo);
 		return;
 	}
@@ -189,7 +189,7 @@ DEFINE_FUNCTION(UBPFunctions_Property::execSetPropertyValue)
 			LOCTEXT("InValidProperty", "Failed to Resolve the Property For SetPropertyValue.")
 		);
 
-		GenericLOG(PropertyLog, Error, TEXT("Failed to Resolve the Property For SetPropertyValue."))
+		GenericLOG(GenericLogProperty, Error, TEXT("Failed to Resolve the Property For SetPropertyValue."))
 		FBlueprintCoreDelegates::ThrowScriptException(P_THIS, Stack, ExceptionInfo);
 		return;
 	}

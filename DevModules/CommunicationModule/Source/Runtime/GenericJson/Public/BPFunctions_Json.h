@@ -7,7 +7,7 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "BPFunctions_Json.generated.h"
 
-class UJsonObject;
+class UGenericJsonObject;
 
 /**
  * 
@@ -20,12 +20,12 @@ class GENERICJSON_API UBPFunctions_Json : public UBlueprintFunctionLibrary
 public:
 	/* Gets the value of the specified field. */
 	UFUNCTION(BlueprintCallable, CustomThunk, BlueprintInternalUseOnly, Category="Json", meta = (CustomStructureParam = "OutValue", AutoCreateRefTerm = "OutValue"))
-	static bool GetJsonField(UJsonObject* JsonObject, const FString& FieldName, int32& OutValue);
+	static bool GetJsonField(UGenericJsonObject* JsonObject, const FString& FieldName, int32& OutValue);
 	DECLARE_FUNCTION(execGetJsonField);
 
 	/* Adds (new) or sets (existing) the value of the specified field. */
 	UFUNCTION(BlueprintCallable, CustomThunk, BlueprintInternalUseOnly, Category="Json", meta = (CustomStructureParam = "Value", AutoCreateRefTerm = "Value"))
-	static bool SetJsonField(UJsonObject* JsonObject, const FString& FieldName, const int32& Value);
+	static bool SetJsonField(UGenericJsonObject* JsonObject, const FString& FieldName, const int32& Value);
 	DECLARE_FUNCTION(execSetJsonField);
 
 public:
@@ -40,6 +40,6 @@ public:
 	DECLARE_FUNCTION(execLoadJsonFileToStruct);
 
 private:
-	static bool JsonFieldToProperty(const FString& FieldName, UJsonObject* SourceObject, FProperty* TargetProperty, void* TargetValuePtr);
-	static bool PropertyToJsonField(const FString& FieldName, FProperty* SourceProperty, const void* SourceValuePtr, UJsonObject*& TargetObject);
+	static bool JsonFieldToProperty(const FString& FieldName, UGenericJsonObject* SourceObject, FProperty* TargetProperty, void* TargetValuePtr);
+	static bool PropertyToJsonField(const FString& FieldName, FProperty* SourceProperty, const void* SourceValuePtr, UGenericJsonObject*& TargetObject);
 };

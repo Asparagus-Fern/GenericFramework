@@ -4,7 +4,7 @@
 #include "BPFunctions_Json.h"
 
 #include "JsonConvert.h"
-#include "JsonObject.h"
+#include "GenericJsonObject.h"
 #include "JsonObjectConverter.h"
 #include "Blueprint/BlueprintExceptionInfo.h"
 
@@ -12,7 +12,7 @@
 
 FJsonObjectConverter::CustomExportCallback EnumOverrideExportCallback;
 
-bool UBPFunctions_Json::GetJsonField(UJsonObject* JsonObject, const FString& FieldName, int32& OutValue)
+bool UBPFunctions_Json::GetJsonField(UGenericJsonObject* JsonObject, const FString& FieldName, int32& OutValue)
 {
 	if (!IsValid(JsonObject))
 	{
@@ -29,7 +29,7 @@ bool UBPFunctions_Json::GetJsonField(UJsonObject* JsonObject, const FString& Fie
 
 DEFINE_FUNCTION(UBPFunctions_Json::execGetJsonField)
 {
-	P_GET_OBJECT_REF(UJsonObject, JsonObject);
+	P_GET_OBJECT_REF(UGenericJsonObject, JsonObject);
 	P_GET_PROPERTY(FStrProperty, FieldName);
 
 	Stack.StepCompiledIn<FProperty>(nullptr);
@@ -69,7 +69,7 @@ DEFINE_FUNCTION(UBPFunctions_Json::execGetJsonField)
 	*static_cast<bool*>(RESULT_PARAM) = bResult;
 }
 
-bool UBPFunctions_Json::SetJsonField(UJsonObject* JsonObject, const FString& FieldName, const int32& Value)
+bool UBPFunctions_Json::SetJsonField(UGenericJsonObject* JsonObject, const FString& FieldName, const int32& Value)
 {
 	if (!IsValid(JsonObject))
 	{
@@ -87,7 +87,7 @@ bool UBPFunctions_Json::SetJsonField(UJsonObject* JsonObject, const FString& Fie
 DEFINE_FUNCTION(UBPFunctions_Json::execSetJsonField)
 {
 	P_GET_ENUM_REF(EGenericResult, Result);
-	P_GET_OBJECT_REF(UJsonObject, JsonObject);
+	P_GET_OBJECT_REF(UGenericJsonObject, JsonObject);
 	P_GET_PROPERTY(FStrProperty, FieldName);
 
 	Stack.StepCompiledIn<FProperty>(nullptr);
@@ -172,7 +172,7 @@ DEFINE_FUNCTION(UBPFunctions_Json::execSaveStructToJsonFile)
 	const FStructProperty* StructProperty = CastField<FStructProperty>(Property);
 	if (!StructProperty)
 	{
-		GenericLOG(JsonLog, Error, TEXT("Invalid Struct Property"));
+		GenericLOG(GenericLogJson, Error, TEXT("Invalid Struct Property"));
 		return;
 	}
 
@@ -217,7 +217,7 @@ DEFINE_FUNCTION(UBPFunctions_Json::execLoadJsonFileToStruct)
 	const FStructProperty* StructProperty = CastField<FStructProperty>(Property);
 	if (!StructProperty)
 	{
-		GenericLOG(JsonLog, Error, TEXT("Invalid Struct Property"));
+		GenericLOG(GenericLogJson, Error, TEXT("Invalid Struct Property"));
 		return;
 	}
 
@@ -233,7 +233,7 @@ DEFINE_FUNCTION(UBPFunctions_Json::execLoadJsonFileToStruct)
 	P_NATIVE_END;
 }
 
-bool UBPFunctions_Json::JsonFieldToProperty(const FString& FieldName, UJsonObject* SourceObject, FProperty* TargetProperty, void* TargetValuePtr)
+bool UBPFunctions_Json::JsonFieldToProperty(const FString& FieldName, UGenericJsonObject* SourceObject, FProperty* TargetProperty, void* TargetValuePtr)
 {
 	check(SourceObject->GetJsonObject().IsValid());
 	check(TargetProperty && TargetValuePtr);
@@ -249,7 +249,7 @@ bool UBPFunctions_Json::JsonFieldToProperty(const FString& FieldName, UJsonObjec
 	return FJsonObjectConverter::JsonValueToUProperty(JsonValue, TargetProperty, TargetValuePtr);
 }
 
-bool UBPFunctions_Json::PropertyToJsonField(const FString& FieldName, FProperty* SourceProperty, const void* SourceValuePtr, UJsonObject*& TargetObject)
+bool UBPFunctions_Json::PropertyToJsonField(const FString& FieldName, FProperty* SourceProperty, const void* SourceValuePtr, UGenericJsonObject*& TargetObject)
 {
 	check(SourceProperty && SourceValuePtr);
 

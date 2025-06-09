@@ -35,7 +35,7 @@ namespace
 				int64 IntValue = Enum->GetValueByName(FName(*StrValue));
 				if (IntValue == INDEX_NONE)
 				{
-					GenericLOG(JsonLog, Error, TEXT("BPEnumWA-JsonValueToUProperty - Unable import enum %s from string value %s for property %s"), *Enum->CppType, *StrValue, *Property->GetNameCPP());
+					GenericLOG(GenericLogJson, Error, TEXT("BPEnumWA-JsonValueToUProperty - Unable import enum %s from string value %s for property %s"), *Enum->CppType, *StrValue, *Property->GetNameCPP());
 					return false;
 				}
 
@@ -73,7 +73,7 @@ namespace
 
 					if (IntValue == INDEX_NONE)
 					{
-						GenericLOG(JsonLog, Error, TEXT("BPEnumWA-JsonValueToUProperty - Unable import enum %s from string value %s for property %s"), *Enum->CppType, *StrValue, *Property->GetNameCPP());
+						GenericLOG(GenericLogJson, Error, TEXT("BPEnumWA-JsonValueToUProperty - Unable import enum %s from string value %s for property %s"), *Enum->CppType, *StrValue, *Property->GetNameCPP());
 						return false;
 					}
 				}
@@ -99,7 +99,7 @@ namespace
 			}
 			else
 			{
-				GenericLOG(JsonLog, Error, TEXT("BPEnumWA-JsonValueToUProperty - Unable to set numeric property type %s for property %s"), *Property->GetClass()->GetName(), *Property->GetNameCPP());
+				GenericLOG(GenericLogJson, Error, TEXT("BPEnumWA-JsonValueToUProperty - Unable to set numeric property type %s for property %s"), *Property->GetClass()->GetName(), *Property->GetNameCPP());
 				return false;
 			}
 		}
@@ -132,7 +132,7 @@ namespace
 					{
 						if (!JsonValueToFPropertyWithContainer(ArrayValueItem, ArrayProperty->Inner, Helper.GetRawPtr(i), ContainerStruct, Container, CheckFlags & (~CPF_ParmFlags), SkipFlags))
 						{
-							GenericLOG(JsonLog, Error, TEXT("BPEnumWA-JsonValueToUProperty - Unable to deserialize array element [%d] for property %s"), i, *Property->GetNameCPP());
+							GenericLOG(GenericLogJson, Error, TEXT("BPEnumWA-JsonValueToUProperty - Unable to deserialize array element [%d] for property %s"), i, *Property->GetNameCPP());
 							return false;
 						}
 					}
@@ -140,7 +140,7 @@ namespace
 			}
 			else
 			{
-				GenericLOG(JsonLog, Error, TEXT("BPEnumWA-JsonValueToUProperty - Attempted to import TArray from non-array JSON key for property %s"), *Property->GetNameCPP());
+				GenericLOG(GenericLogJson, Error, TEXT("BPEnumWA-JsonValueToUProperty - Attempted to import TArray from non-array JSON key for property %s"), *Property->GetNameCPP());
 				return false;
 			}
 		}
@@ -168,7 +168,7 @@ namespace
 
 						if (!(bKeySuccess && bValueSuccess))
 						{
-							GenericLOG(JsonLog, Error, TEXT("BPEnumWA-JsonValueToUProperty - Unable to deserialize map element [key: %s] for property %s"), *Entry.Key, *Property->GetNameCPP());
+							GenericLOG(GenericLogJson, Error, TEXT("BPEnumWA-JsonValueToUProperty - Unable to deserialize map element [key: %s] for property %s"), *Entry.Key, *Property->GetNameCPP());
 							return false;
 						}
 					}
@@ -178,7 +178,7 @@ namespace
 			}
 			else
 			{
-				GenericLOG(JsonLog, Error, TEXT("BPEnumWA-JsonValueToUProperty - Attempted to import TSet from non-array JSON key for property %s"), *Property->GetNameCPP());
+				GenericLOG(GenericLogJson, Error, TEXT("BPEnumWA-JsonValueToUProperty - Attempted to import TSet from non-array JSON key for property %s"), *Property->GetNameCPP());
 				return false;
 			}
 		}
@@ -197,14 +197,14 @@ namespace
 				FText Text;
 				if (!FJsonObjectConverter::GetTextFromObject(Obj.ToSharedRef(), Text))
 				{
-					GenericLOG(JsonLog, Error, TEXT("BPEnumWA-JsonValueToUProperty - Attempted to import FText from JSON object with invalid keys for property %s"), *Property->GetNameCPP());
+					GenericLOG(GenericLogJson, Error, TEXT("BPEnumWA-JsonValueToUProperty - Attempted to import FText from JSON object with invalid keys for property %s"), *Property->GetNameCPP());
 					return false;
 				}
 				TextProperty->SetPropertyValue(OutValue, Text);
 			}
 			else
 			{
-				GenericLOG(JsonLog, Error, TEXT("BPEnumWA-JsonValueToUProperty - Attempted to import FText from JSON that was neither string nor object for property %s"), *Property->GetNameCPP());
+				GenericLOG(GenericLogJson, Error, TEXT("BPEnumWA-JsonValueToUProperty - Attempted to import FText from JSON that was neither string nor object for property %s"), *Property->GetNameCPP());
 				return false;
 			}
 		}
@@ -219,7 +219,7 @@ namespace
 				check(Obj.IsValid());
 				if (!JsonAttributesToUStructWithContainer(Obj->Values, StructProperty->Struct, OutValue, ContainerStruct, Container, CheckFlags & (~CPF_ParmFlags), SkipFlags))
 				{
-					GenericLOG(JsonLog, Error, TEXT("BPEnumWA-JsonValueToUProperty - FJsonObjectConverter::JsonObjectToUStruct failed for property %s"), *Property->GetNameCPP());
+					GenericLOG(GenericLogJson, Error, TEXT("BPEnumWA-JsonValueToUProperty - FJsonObjectConverter::JsonObjectToUStruct failed for property %s"), *Property->GetNameCPP());
 					return false;
 				}
 			}
@@ -269,7 +269,7 @@ namespace
 				}
 				else
 				{
-					GenericLOG(JsonLog, Error, TEXT("BPEnumWA-JsonValueToUProperty - Unable to import FDateTime for property %s"), *Property->GetNameCPP());
+					GenericLOG(GenericLogJson, Error, TEXT("BPEnumWA-JsonValueToUProperty - Unable to import FDateTime for property %s"), *Property->GetNameCPP());
 					return false;
 				}
 			}
@@ -294,7 +294,7 @@ namespace
 			}
 			else
 			{
-				GenericLOG(JsonLog, Error, TEXT("BPEnumWA-JsonValueToUProperty - Attempted to import UStruct from non-object JSON key for property %s"), *Property->GetNameCPP());
+				GenericLOG(GenericLogJson, Error, TEXT("BPEnumWA-JsonValueToUProperty - Attempted to import UStruct from non-object JSON key for property %s"), *Property->GetNameCPP());
 				return false;
 			}
 		}
@@ -318,7 +318,7 @@ namespace
 				check(Obj.IsValid()); // should not fail if Type == EJson::Object
 				if (!JsonAttributesToUStructWithContainer(Obj->Values, ObjectProperty->PropertyClass, CreatedObj, ObjectProperty->PropertyClass, CreatedObj, CheckFlags & (~CPF_ParmFlags), SkipFlags))
 				{
-					GenericLOG(JsonLog, Error, TEXT("BPEnumWA-JsonValueToUProperty - FJsonObjectConverter::JsonObjectToUStruct failed for property %s"), *Property->GetNameCPP());
+					GenericLOG(GenericLogJson, Error, TEXT("BPEnumWA-JsonValueToUProperty - FJsonObjectConverter::JsonObjectToUStruct failed for property %s"), *Property->GetNameCPP());
 					return false;
 				}
 				else if (JsonValue->Type == EJson::String)
@@ -326,7 +326,7 @@ namespace
 					// Default to expect a string for everything else
 					if (Property->ImportText_Direct(*JsonValue->AsString(), OutValue, nullptr, PPF_None) == nullptr)
 					{
-						GenericLOG(JsonLog, Error, TEXT("BPEnumWA-JsonValueToUProperty - Unable import property type %s from string value for property %s"), *Property->GetClass()->GetName(), *Property->GetNameCPP());
+						GenericLOG(GenericLogJson, Error, TEXT("BPEnumWA-JsonValueToUProperty - Unable import property type %s from string value for property %s"), *Property->GetClass()->GetName(), *Property->GetNameCPP());
 						return false;
 					}
 				}
@@ -337,7 +337,7 @@ namespace
 			// 默认为其他所有内容都期望一个字符串
 			if (Property->ImportText_Direct(*JsonValue->AsString(), OutValue, nullptr, PPF_None) == nullptr)
 			{
-				GenericLOG(JsonLog, Error, TEXT("BPEnumWA-JsonValueToUProperty - Unable import property type %s from string value for property %s"), *Property->GetClass()->GetName(), *Property->GetNameCPP());
+				GenericLOG(GenericLogJson, Error, TEXT("BPEnumWA-JsonValueToUProperty - Unable import property type %s from string value for property %s"), *Property->GetClass()->GetName(), *Property->GetNameCPP());
 				return false;
 			}
 		}
@@ -349,7 +349,7 @@ namespace
 	{
 		if (!JsonValue.IsValid())
 		{
-			GenericLOG(JsonLog, Error, TEXT("BPEnumWA-JsonValueToUProperty - Invalid value JSON key"));
+			GenericLOG(GenericLogJson, Error, TEXT("BPEnumWA-JsonValueToUProperty - Invalid value JSON key"));
 			return false;
 		}
 
@@ -375,13 +375,13 @@ namespace
 						const bool bDidDecodeCorrectly = FBase64::Decode(JsonValue->AsString(), ByteArray);
 						if (!bDidDecodeCorrectly)
 						{
-							GenericLOG(JsonLog, Warning, TEXT("FBase64::Decode failed on %s"), *Property->GetName());
+							GenericLOG(GenericLogJson, Warning, TEXT("FBase64::Decode failed on %s"), *Property->GetName());
 							return false;
 						}
 					}
 					else
 					{
-						GenericLOG(JsonLog, Error, TEXT("BPEnumWA-JsonValueToUProperty - Attempted to import TArray from unsupported non-array JSON key: %s"), *Property->GetName());
+						GenericLOG(GenericLogJson, Error, TEXT("BPEnumWA-JsonValueToUProperty - Attempted to import TArray from unsupported non-array JSON key: %s"), *Property->GetName());
 						return false;
 					}
 
@@ -393,13 +393,13 @@ namespace
 				}
 
 				//End custom workaround 
-				GenericLOG(JsonLog, Error, TEXT("BPEnumWA-JsonValueToUProperty - Attempted to import TArray from non-array JSON key"));
+				GenericLOG(GenericLogJson, Error, TEXT("BPEnumWA-JsonValueToUProperty - Attempted to import TArray from non-array JSON key"));
 				return false;
 			}
 
 			if (Property->ArrayDim != 1)
 			{
-				GenericLOG(JsonLog, Warning, TEXT("Ignoring excess properties when deserializing %s"), *Property->GetName());
+				GenericLOG(GenericLogJson, Warning, TEXT("Ignoring excess properties when deserializing %s"), *Property->GetName());
 			}
 			return ConvertScalarJsonValueToFPropertyWithContainer(JsonValue, Property, OutValue, ContainerStruct, Container, CheckFlags, SkipFlags);
 		}
@@ -415,7 +415,7 @@ namespace
 		const auto& ArrayValue = JsonValue->AsArray();
 		if (Property->ArrayDim < ArrayValue.Num())
 		{
-			GenericLOG(JsonLog, Warning, TEXT("BPEnumWA-Ignoring excess properties when deserializing %s"), *Property->GetName());
+			GenericLOG(GenericLogJson, Warning, TEXT("BPEnumWA-Ignoring excess properties when deserializing %s"), *Property->GetName());
 		}
 
 		//读入本机数组
@@ -477,7 +477,7 @@ namespace
 				void* Value = Property->ContainerPtrToValuePtr<uint8>(OutStruct);
 				if (!JsonValueToFPropertyWithContainer(*JsonValue, Property, Value, ContainerStruct, Container, CheckFlags, SkipFlags))
 				{
-					GenericLOG(JsonLog, Error, TEXT("BPEnumWA-JsonObjectToUStruct - Unable to parse %s.%s from JSON"), *StructDefinition->GetName(), *Property->GetName());
+					GenericLOG(GenericLogJson, Error, TEXT("BPEnumWA-JsonObjectToUStruct - Unable to parse %s.%s from JSON"), *StructDefinition->GetName(), *Property->GetName());
 					return false;
 				}
 			}
@@ -587,7 +587,7 @@ bool FJsonConvert::JsonFileToStruct(const FString& FilePath, const UStruct* Stru
 	FString JsonString;
 	if (!FFileHelper::LoadFileToString(JsonString, *FilePath) || JsonString.IsEmpty())
 	{
-		GenericLOG(JsonLog, Warning, TEXT("Json data load fail, invalid jons file : %s"), *FilePath)
+		GenericLOG(GenericLogJson, Warning, TEXT("Json data load fail, invalid jons file : %s"), *FilePath)
 		return false;
 	}
 
@@ -595,13 +595,13 @@ bool FJsonConvert::JsonFileToStruct(const FString& FilePath, const UStruct* Stru
 	const TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(JsonString);
 	if (!FJsonSerializer::Deserialize(JsonReader, JsonObject) || !JsonObject.IsValid())
 	{
-		GenericLOG(JsonLog, Warning, TEXT("Json data serializer fail, invalid jons file : %s"), *FilePath)
+		GenericLOG(GenericLogJson, Warning, TEXT("Json data serializer fail, invalid jons file : %s"), *FilePath)
 		return false;
 	}
 
 	if (!FJsonObjectConverter::JsonObjectToUStruct(JsonObject.ToSharedRef(), Struct, StructPtr))
 	{
-		GenericLOG(JsonLog, Warning, TEXT("Json converter fail, invalid jons file : %s"), *FilePath)
+		GenericLOG(GenericLogJson, Warning, TEXT("Json converter fail, invalid jons file : %s"), *FilePath)
 		return false;
 	}
 
@@ -801,7 +801,7 @@ void FJsonConvert::SetTrimmedKeyMapForStruct(const TSharedPtr<FIVTrimmedKeyMap>&
 		}
 
 		//Debug types
-		/*
+		/**
 		UProperty* ObjectProp = Cast<UProperty>(FieldPtr);
 		if (ObjectProp)
 		{

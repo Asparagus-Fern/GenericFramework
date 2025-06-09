@@ -2,12 +2,14 @@
 
 #include "Http/HTTPResponse.h"
 
+#include "Http/HTTPRequest.h"
 #include "Interfaces/IHttpResponse.h"
+#include "Runtime/GenericJson/Public/GenericJsonObject.h"
 
-void UHTTPResponse::InitInternal(TSharedPtr<IHttpResponse, ESPMode::ThreadSafe> InResponse, const float& InRequestDuration)
+void UHTTPResponse::InitInternal(TWeakObjectPtr<UHTTPRequest> InRequest, TSharedPtr<IHttpResponse, ESPMode::ThreadSafe> InResponse)
 {
+	Request = InRequest;
 	Response = InResponse;
-	RequestDuration = InRequestDuration;
 }
 
 TMap<FString, FString> UHTTPResponse::GetHeaders() const
@@ -54,6 +56,17 @@ FString UHTTPResponse::GetContentAsString() const
 	return TEXT("");
 }
 
+UGenericJsonObject* UHTTPResponse::GetContentAsJson()
+{
+	if (!JsonObject)
+	{
+		JsonObject = NewObject<UGenericJsonObject>();
+	}
+
+	JsonObject->DecodeJson(Response->GetContentAsString());
+	return JsonObject;
+}
+
 int32 UHTTPResponse::GetContentLength() const
 {
 	return Response ? Response->GetContentLength() : 0;
@@ -86,5 +99,10 @@ FString UHTTPResponse::GetURLParameter(const FString& ParameterName) const
 
 float UHTTPResponse::GetElapsedTime() const
 {
-	return RequestDuration;
+	return Request.IsValid() ? Request.Get()->GetElapsedTime() : 0.f;
+}
+
+UHTTPRequest* UHTTPResponse::GetRequest() const
+{
+	return Request.IsValid() ? Request.Get() : nullptr;
 }

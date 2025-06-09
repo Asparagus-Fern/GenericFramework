@@ -276,7 +276,7 @@ void FSpline2DBuilder::deCasteljauSplit(const FVector2D& P0, const FVector2D& P1
 	OutCurveParams[6] = P3;
 }
 
-/** More general form of the deCasteljauSplit splits the curve into two parts at a point between 0 and 1 along the curve's length. */
+/* More general form of the deCasteljauSplit splits the curve into two parts at a point between 0 and 1 along the curve's length. */
 void FSpline2DBuilder::deCasteljauSplit_WithColorGradient(const FVector2D& P0, const FVector2D& P1, const FVector2D& P2, const FVector2D& P3, FVector2D OutCurveParams[7], float SplitPoint)
 {
 	FVector2D L1 = FMath::Lerp(P0, P1, SplitPoint);

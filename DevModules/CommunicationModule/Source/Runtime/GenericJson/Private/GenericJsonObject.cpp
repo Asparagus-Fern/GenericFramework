@@ -1,22 +1,22 @@
 ﻿// Copyright ChenTaiye 2025. All Rights Reserved.
 
-#include "JsonObject.h"
+#include "GenericJsonObject.h"
 
 typedef TJsonWriterFactory<TCHAR, TPrettyJsonPrintPolicy<TCHAR>> FJsonWriterFactory;
 typedef TJsonWriter<TCHAR, TPrettyJsonPrintPolicy<TCHAR>> FJsonWriter;
 
-UJsonObject::UJsonObject(const FObjectInitializer& ObjectInitializer)
+UGenericJsonObject::UGenericJsonObject(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
 	Reset();
 }
 
-UJsonObject* UJsonObject::ConstructJsonObject(UObject* WorldContextObject)
+UGenericJsonObject* UGenericJsonObject::ConstructJsonObject(UObject* WorldContextObject)
 {
-	return NewObject<UJsonObject>(WorldContextObject);
+	return NewObject<UGenericJsonObject>(WorldContextObject);
 }
 
-void UJsonObject::Reset()
+void UGenericJsonObject::Reset()
 {
 	if (JsonObject.IsValid())
 	{
@@ -26,13 +26,13 @@ void UJsonObject::Reset()
 	JsonObject = MakeShareable(new FJsonObject());
 }
 
-bool UJsonObject::EncodeJson(FString& OutJsonString)
+bool UGenericJsonObject::EncodeJson(FString& OutJsonString)
 {
 	if (!JsonObject.IsValid())
 	{
 		Reset();
 
-		GenericLOG(JsonLog, Error, TEXT("Invalid Json Object"));
+		GenericLOG(GenericLogJson, Error, TEXT("Invalid Json Object"));
 		return false;
 	}
 
@@ -45,13 +45,13 @@ bool UJsonObject::EncodeJson(FString& OutJsonString)
 	return false;
 }
 
-bool UJsonObject::DecodeJson(const FString& InJsonString)
+bool UGenericJsonObject::DecodeJson(const FString& InJsonString)
 {
 	if (!JsonObject.IsValid())
 	{
 		Reset();
 
-		GenericLOG(JsonLog, Error, TEXT("Invalid Json Object"));
+		GenericLOG(GenericLogJson, Error, TEXT("Invalid Json Object"));
 		return false;
 	}
 
@@ -61,26 +61,26 @@ bool UJsonObject::DecodeJson(const FString& InJsonString)
 		return true;
 	}
 
-	GenericLOG(JsonLog, Error, TEXT("Json decoding failed for: %s"), *InJsonString);
+	GenericLOG(GenericLogJson, Error, TEXT("Json decoding failed for: %s"), *InJsonString);
 	return false;
 }
 
-TSharedPtr<FJsonObject>& UJsonObject::GetJsonObject()
+TSharedPtr<FJsonObject>& UGenericJsonObject::GetJsonObject()
 {
 	return JsonObject;
 }
 
-void UJsonObject::SetJsonObject(const TSharedPtr<FJsonObject>& InJsonObject)
+void UGenericJsonObject::SetJsonObject(const TSharedPtr<FJsonObject>& InJsonObject)
 {
 	JsonObject = InJsonObject;
 }
 
-FString UJsonObject::GetJsonString()
+FString UGenericJsonObject::GetJsonString()
 {
 	return JsonString;
 }
 
-void UJsonObject::SetJsonString(FString InJsonString)
+void UGenericJsonObject::SetJsonString(FString InJsonString)
 {
 	JsonString = InJsonString;
 }

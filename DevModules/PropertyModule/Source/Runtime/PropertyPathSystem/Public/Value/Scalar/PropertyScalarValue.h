@@ -49,7 +49,7 @@ public:
 	virtual void ResetToInitial() override;
 	virtual void ResetToDefault() override;
 
-	/** FPropertyScalarValueInterface */
+	/* FPropertyScalarValueInterface */
 public:
 	virtual double GetValue() const override;
 	virtual void SetValue(double InValue, EPropertyChangeReason Reason = EPropertyChangeReason::Change) override;

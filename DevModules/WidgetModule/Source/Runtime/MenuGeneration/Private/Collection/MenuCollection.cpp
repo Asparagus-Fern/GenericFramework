@@ -159,21 +159,21 @@ void UMenuCollection::GenerateMenu(UDataTable* InMenuTagTable)
 		 /* Skip The Tag Not Under The RootMenuTag */
 		 if (!MenuTag.GetGameplayTagParents().HasTag(RootMenuTag))
 		 {
-			 GenericLOG(UILog, Error, TEXT("%s Is Not Under %s"), *MenuTag.ToString(), *RootMenuTag.ToString())
+			 GenericLOG(GenericLogUI, Error, TEXT("%s Is Not Under %s"), *MenuTag.ToString(), *RootMenuTag.ToString())
 			 return;
 		 }
 
 		 /* Skip The RootMenuTag */
 		 if (MenuTag == RootMenuTag)
 		 {
-			 GenericLOG(UILog, Warning, TEXT("%s Is Disable To Generated"), *RootMenuTag.ToString())
+			 GenericLOG(GenericLogUI, Warning, TEXT("%s Is Disable To Generated"), *RootMenuTag.ToString())
 			 return;
 		 }
 
 		 /* Skip The Tag Already In GameplayTagContainer */
 		 if (IsContainMenuTag(MenuTag))
 		 {
-			 GenericLOG(UILog, Warning, TEXT("MenuTag : %s Is Already Generated"), *MenuTag.ToString())
+			 GenericLOG(GenericLogUI, Warning, TEXT("MenuTag : %s Is Already Generated"), *MenuTag.ToString())
 			 return;
 		 }
 
@@ -215,7 +215,7 @@ bool UMenuCollection::IsContainMenuTag(const FGameplayTag InMenuTag)
 {
 	if (!InMenuTag.IsValid())
 	{
-		GenericLOG(UILog, Error, TEXT("InMenuTag Is NULL"))
+		GenericLOG(GenericLogUI, Error, TEXT("InMenuTag Is NULL"))
 		return false;
 	}
 
@@ -233,7 +233,7 @@ bool UMenuCollection::IsContainMenu(const UMenuEntityBase* InMenuEntity)
 {
 	if (!IsValid(InMenuEntity))
 	{
-		GenericLOG(UILog, Error, TEXT("InMenuEntity Is NULL"))
+		GenericLOG(GenericLogUI, Error, TEXT("InMenuEntity Is NULL"))
 		return false;
 	}
 
@@ -256,7 +256,7 @@ UMenuEntityBase* UMenuCollection::GetMenuEntity(FGameplayTag InMenuTag)
 {
 	if (!InMenuTag.IsValid())
 	{
-		GenericLOG(UILog, Error, TEXT("InMenuTag Is NULL"))
+		GenericLOG(GenericLogUI, Error, TEXT("InMenuTag Is NULL"))
 		return nullptr;
 	}
 

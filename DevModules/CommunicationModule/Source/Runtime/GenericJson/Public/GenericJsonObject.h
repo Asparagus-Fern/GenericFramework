@@ -4,20 +4,20 @@
 
 #include "CoreMinimal.h"
 #include "Generic/GenericObject.h"
-#include "JsonObject.generated.h"
+#include "GenericJsonObject.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class GENERICJSON_API UJsonObject : public UGenericObject
+class GENERICJSON_API UGenericJsonObject : public UGenericObject
 {
 	GENERATED_UCLASS_BODY()
 
 public:
 	/* 创建新的 Json object*/
 	UFUNCTION(BlueprintCallable, meta = (HidePin = "WorldContextObject", DefaultToSelf = "WorldContextObject"), Category = "Json")
-	static UJsonObject* ConstructJsonObject(UObject* WorldContextObject);
+	static UGenericJsonObject* ConstructJsonObject(UObject* WorldContextObject);
 
 	/* 重置所有数据 */
 	UFUNCTION(BlueprintCallable, Category = "Json")

@@ -66,7 +66,7 @@ void UExtraProcManager::LanchAllProc()
 
 		if (!LaunchExtraProc(ProcInfo.ExtraStartProcInfo, ProcHandle))
 		{
-			GenericLOG(NetworkLog, Warning, TEXT("Auto launch extra start proc fail. Execute path : %s"), *ProcInfo.ExtraStartProcInfo.ProcFile.FilePath)
+			GenericLOG(GenericLogNetwork, Warning, TEXT("Auto launch extra start proc fail. Execute path : %s"), *ProcInfo.ExtraStartProcInfo.ProcFile.FilePath)
 		}
 	}
 }
@@ -163,7 +163,7 @@ bool UExtraProcManager::LaunchExtraProc(const FProcStartUpInfo& Info, uint16& Pr
 {
 	if (Info.ProcFile.FilePath.IsEmpty())
 	{
-		GenericLOG(NetworkLog, Error, TEXT("Launch Proc Fial! Invalid File Name"))
+		GenericLOG(GenericLogNetwork, Error, TEXT("Launch Proc Fial! Invalid File Name"))
 		return false;
 	}
 	
@@ -171,13 +171,13 @@ bool UExtraProcManager::LaunchExtraProc(const FProcStartUpInfo& Info, uint16& Pr
 	
 	if (!ensureAlways(FPaths::IsUnderDirectory(Url, FPaths::Combine(FPaths::ProjectDir(), TEXT("Extras")))))
 	{
-		GenericLOG(NetworkLog, Warning, TEXT("Proc Is Not Under The Path : /Project/Extras"))
+		GenericLOG(GenericLogNetwork, Warning, TEXT("Proc Is Not Under The Path : /Project/Extras"))
 		return false;
 	}
 	
 	if (!ensure(FPaths::FileExists(Url)))
 	{
-		GenericLOG(NetworkLog, Warning, TEXT("Invalid File : %s"), *Url)
+		GenericLOG(GenericLogNetwork, Warning, TEXT("Invalid File : %s"), *Url)
 		return false;
 	}
 	
@@ -231,13 +231,13 @@ bool UExtraProcManager::LaunchExtraProc(const FString& Urls, const FString& Para
 
 		if (!FWindowsExtraProcHelper::SetProcEndWithCurrentProcTermination(Proc))
 		{
-			GenericLOG(NetworkLog, Warning, TEXT("Prco Add Job Fail."))
+			GenericLOG(GenericLogNetwork, Warning, TEXT("Prco Add Job Fail."))
 		}
 #endif
 	}
 
 	const uint16 ProcId = ExtraStartProcRunnable->GetProcId();
-	GenericLOG(NetworkLog, Log, TEXT("Lauch extra start proc Success, [Proc Id %d] , %s"), ProcId, *ExtraStartProcRunnable->GetCommandline())
+	GenericLOG(GenericLogNetwork, Log, TEXT("Lauch extra start proc Success, [Proc Id %d] , %s"), ProcId, *ExtraStartProcRunnable->GetCommandline())
 
 	ExtraProcHandle.Emplace(ProcId, ExtraStartProcRunnable);
 	OutProcId = ProcId;

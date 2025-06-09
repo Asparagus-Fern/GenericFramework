@@ -949,7 +949,7 @@ void UInteractableWidgetBase::ClearSelection()
 	SetSelectedInternal(false, false);
 }
 
-void UInteractableWidgetBase::SetSelectedInternal(bool bInSelected, bool bGiveClickFeedback /*= true*/, bool bBroadcast /*= true*/)
+void UInteractableWidgetBase::SetSelectedInternal(bool bInSelected, bool bGiveClickFeedback /**= true*/, bool bBroadcast /**= true*/)
 {
 	const bool bValueChanged = bInSelected != bSelected;
 

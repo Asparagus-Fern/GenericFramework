@@ -70,16 +70,16 @@ public:
 private:
 	FOnClicked OnDoubleClicked;
 
-	/** Delegate fired whenever focus is received */
+	/* Delegate fired whenever focus is received */
 	FSimpleDelegate OnReceivedFocus;
 
-	/** Delegate fired whenever focus is lost */
+	/* Delegate fired whenever focus is lost */
 	FSimpleDelegate OnLostFocus;
 
-	/** True if the button is enabled */
+	/* True if the button is enabled */
 	bool bIsButtonEnabled = true;
 
-	/** True If Button Event Enable */
+	/* True If Button Event Enable */
 	bool bIsInteractionEnabled = true;
 
 	bool bHovered = false;

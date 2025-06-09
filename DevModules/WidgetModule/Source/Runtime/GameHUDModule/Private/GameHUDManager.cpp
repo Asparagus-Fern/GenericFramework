@@ -108,19 +108,19 @@ void UGameHUDManager::RegisterSlot(UGameplayTagSlot* InSlot)
 {
 	if (!IsValid(InSlot))
 	{
-		GenericLOG(UILog, Error, TEXT("GameplayTagSlot Is InValid"))
+		GenericLOG(GenericLogUI, Error, TEXT("GameplayTagSlot Is InValid"))
 		return;
 	}
 
 	if (!InSlot->SlotTag.IsValid())
 	{
-		GenericLOG(UILog, Error, TEXT("SlotTag Is InValid"))
+		GenericLOG(GenericLogUI, Error, TEXT("SlotTag Is InValid"))
 		return;
 	}
 
 	if (Slots.Contains(InSlot))
 	{
-		GenericLOG(UILog, Warning, TEXT("GameplayTag : %s Is Already Register"), *InSlot->SlotTag.ToString())
+		GenericLOG(GenericLogUI, Warning, TEXT("GameplayTag : %s Is Already Register"), *InSlot->SlotTag.ToString())
 		return;
 	}
 
@@ -134,19 +134,19 @@ void UGameHUDManager::UnRegisterSlot(UGameplayTagSlot* InSlot)
 {
 	if (!IsValid(InSlot))
 	{
-		GenericLOG(UILog, Error, TEXT("GameplayTagSlot Is InValid"))
+		GenericLOG(GenericLogUI, Error, TEXT("GameplayTagSlot Is InValid"))
 		return;
 	}
 
 	if (!InSlot->SlotTag.IsValid())
 	{
-		GenericLOG(UILog, Error, TEXT("SlotTag Is InValid"))
+		GenericLOG(GenericLogUI, Error, TEXT("SlotTag Is InValid"))
 		return;
 	}
 
 	if (!Slots.Contains(InSlot))
 	{
-		GenericLOG(UILog, Warning, TEXT("GameplayTag : %s Is Already UnRegister"), *InSlot->SlotTag.ToString())
+		GenericLOG(GenericLogUI, Warning, TEXT("GameplayTag : %s Is Already UnRegister"), *InSlot->SlotTag.ToString())
 		return;
 	}
 
@@ -158,7 +158,7 @@ UGameplayTagSlot* UGameHUDManager::GetSlot(UUserWidgetBase* InWidget) const
 {
 	if (!IsValid(InWidget))
 	{
-		GenericLOG(UILog, Error, TEXT("InWidget Is InValid"))
+		GenericLOG(GenericLogUI, Error, TEXT("InWidget Is InValid"))
 		return nullptr;
 	}
 
@@ -169,7 +169,7 @@ UGameplayTagSlot* UGameHUDManager::GetSlot(const FGameplayTag InSlotTag) const
 {
 	if (!InSlotTag.IsValid())
 	{
-		GenericLOG(UILog, Error, TEXT("SlotTag Is InValid"))
+		GenericLOG(GenericLogUI, Error, TEXT("SlotTag Is InValid"))
 		return nullptr;
 	}
 
@@ -188,7 +188,7 @@ UUserWidgetBase* UGameHUDManager::GetSlotWidget(FGameplayTag InSlotTag) const
 {
 	if (!InSlotTag.IsValid())
 	{
-		GenericLOG(UILog, Error, TEXT("SlotTag Is InValid"))
+		GenericLOG(GenericLogUI, Error, TEXT("SlotTag Is InValid"))
 		return nullptr;
 	}
 
@@ -275,14 +275,14 @@ void UGameHUDManager::CreateGameHUDs(TArray<TSubclassOf<UGameHUD>> InGameHUDClas
 	{
 		if (!IsValid(GameHUDClass))
 		{
-			GenericLOG(UILog, Error, TEXT("GameHUDClass Is Invalid"))
+			GenericLOG(GenericLogUI, Error, TEXT("GameHUDClass Is Invalid"))
 			continue;
 		}
 
 		/* 以创建的HUD不再创建 */
 		if (CurrentGameHUDClasses.Contains(GameHUDClass))
 		{
-			GenericLOG(UILog, Error, TEXT("GameHUDClass Is Already Created"))
+			GenericLOG(GenericLogUI, Error, TEXT("GameHUDClass Is Already Created"))
 			continue;
 		}
 
@@ -304,7 +304,7 @@ void UGameHUDManager::CreateGameHUD(UGameHUD* InGameHUD, bool bAddToViewport)
 {
 	if (!IsValid(InGameHUD))
 	{
-		GenericLOG(UILog, Error, TEXT("InGameHUD Is Invalid"))
+		GenericLOG(GenericLogUI, Error, TEXT("InGameHUD Is Invalid"))
 		return;;
 	}
 
@@ -406,7 +406,7 @@ void UGameHUDManager::SetGameHUDActiveState(UGameHUD* InGameHUD, const bool IsAc
 {
 	if (!IsValid(InGameHUD))
 	{
-		GenericLOG(UILog, Error, TEXT("InGameHUD Is Invalid"))
+		GenericLOG(GenericLogUI, Error, TEXT("InGameHUD Is Invalid"))
 		return;
 	}
 
@@ -418,7 +418,7 @@ void UGameHUDManager::SetGameHUDActiveState(FGameplayTag InTag, bool IsActived)
 {
 	if (!InTag.IsValid())
 	{
-		GenericLOG(UILog, Error, TEXT("InTag Is Invalid"))
+		GenericLOG(GenericLogUI, Error, TEXT("InTag Is Invalid"))
 		return;
 	}
 

@@ -92,23 +92,23 @@ class EXTENDEDMODE_API UDrawZoneShapeToolProperties : public UInteractiveToolPro
 	GENERATED_UCLASS_BODY()
 
 public:
-	/** Common lane template for whole shape */
+	/* Common lane template for whole shape */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FZoneLaneProfileRef LaneProfile;
 
-	/** True if lane profile should be reversed */
+	/* True if lane profile should be reversed */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bReverseLaneProfile = false;
 
-	/** Shape type, spline or polygon */
+	/* Shape type, spline or polygon */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FZoneShapeType ShapeType;
 
-	/** Polygon shape routing type */
+	/* Polygon shape routing type */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "ShapeType == FZoneShapeType::Polygon", EditConditionHides))
 	EZoneShapePolygonRoutingType PolygonRoutingType = EZoneShapePolygonRoutingType::Bezier;
 
-	/** Zone tags, the lanes inherit zone tags. */
+	/* Zone tags, the lanes inherit zone tags. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FZoneGraphTagMask Tags;
 

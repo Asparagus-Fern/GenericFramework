@@ -41,13 +41,13 @@ void UWorldWidgetManager::RegisterWorldWidgetComponent(UWorldWidgetComponent* In
 {
 	if (!IsValid(InWorldWidgetComponent))
 	{
-		GenericLOG(UILog, Error, TEXT("WorldWidgetPoint Is NULL"))
+		GenericLOG(GenericLogUI, Error, TEXT("WorldWidgetPoint Is NULL"))
 		return;
 	}
 
 	if (WorldWidgetComponents.Contains(InWorldWidgetComponent))
 	{
-		GenericLOG(UILog, Warning, TEXT("WorldWidgetPoint Is Already Register"))
+		GenericLOG(GenericLogUI, Warning, TEXT("WorldWidgetPoint Is Already Register"))
 		return;
 	}
 
@@ -59,13 +59,13 @@ void UWorldWidgetManager::UnRegisterWorldWidgetComponent(UWorldWidgetComponent* 
 {
 	if (!IsValid(InWorldWidgetComponent))
 	{
-		GenericLOG(UILog, Error, TEXT("WorldWidgetPoint Is NULL"))
+		GenericLOG(GenericLogUI, Error, TEXT("WorldWidgetPoint Is NULL"))
 		return;
 	}
 
 	if (WorldWidgetComponents.Contains(InWorldWidgetComponent))
 	{
-		GenericLOG(UILog, Warning, TEXT("WorldWidgetPoint Is Already UnRegister"))
+		GenericLOG(GenericLogUI, Warning, TEXT("WorldWidgetPoint Is Already UnRegister"))
 		return;
 	}
 

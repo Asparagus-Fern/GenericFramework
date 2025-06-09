@@ -111,7 +111,7 @@ bool UHandleManager::IsHandleRegister(FGuid InHandleID)
 {
 	if (!InHandleID.IsValid())
 	{
-		GenericLOG(EventLog, Error, TEXT("InHandleID Is Not Valid"))
+		GenericLOG(GenericLogEvent, Error, TEXT("InHandleID Is Not Valid"))
 		return false;
 	}
 
@@ -130,7 +130,7 @@ bool UHandleManager::IsHandleRegister(FName InHandleName)
 {
 	if (InHandleName == NAME_None)
 	{
-		GenericLOG(EventLog, Error, TEXT("SequenceID Is NULL"))
+		GenericLOG(GenericLogEvent, Error, TEXT("SequenceID Is NULL"))
 		return false;
 	}
 
@@ -149,7 +149,7 @@ UHandleBase* UHandleManager::GetHandle(FGuid InHandleID)
 {
 	if (!InHandleID.IsValid())
 	{
-		GenericLOG(EventLog, Error, TEXT("InHandleID Is Not Valid"))
+		GenericLOG(GenericLogEvent, Error, TEXT("InHandleID Is Not Valid"))
 		return nullptr;
 	}
 
@@ -168,7 +168,7 @@ UHandleBase* UHandleManager::GetHandle(FName InHandleName)
 {
 	if (InHandleName == NAME_None)
 	{
-		GenericLOG(EventLog, Error, TEXT("InHandleName Is NULL"))
+		GenericLOG(GenericLogEvent, Error, TEXT("InHandleName Is NULL"))
 		return nullptr;
 	}
 

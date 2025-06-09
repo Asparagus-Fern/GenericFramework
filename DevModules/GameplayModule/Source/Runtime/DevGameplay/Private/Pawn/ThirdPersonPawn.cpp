@@ -144,7 +144,7 @@ void AThirdPersonPawn::OnSwitchCameraFinish(UCameraSwitchMethod* InCameraHandle)
 {
 	if (!IsValid(InCameraHandle) || !IsValid(InCameraHandle->TargetCameraPoint) || !IsValid(InCameraHandle->TargetCameraPoint->GetCameraComponent()))
 	{
-		GenericLOG(CameraLog, Error, TEXT("InCameraPoint/InCameraPoint CameraComponent Is NULL"))
+		GenericLOG(GenericLogCamera, Error, TEXT("InCameraPoint/InCameraPoint CameraComponent Is NULL"))
 		return;
 	}
 

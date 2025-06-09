@@ -28,32 +28,32 @@ protected:
 	virtual void ReleaseSlateResources(bool bReleaseChildren) override;
 
 public:
-	/** If true, this button is enabled. */
+	/* If true, this button is enabled. */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Generic Button")
 	bool bButtonEnabled;
 
-	/** If true, this button can be interacted with it normally. Otherwise, it will not react to being hovered or clicked. */
+	/* If true, this button can be interacted with it normally. Otherwise, it will not react to being hovered or clicked. */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Generic Button")
 	bool bInteractionEnabled = true;
 
-	/** The minimum width of the button */
+	/* The minimum width of the button */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Generic Button")
 	int32 MinWidth;
 
-	/** The minimum height of the button */
+	/* The minimum height of the button */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Generic Button")
 	int32 MinHeight;
 
 public:
-	/** Called when the button is clicked */
+	/* Called when the button is clicked */
 	UPROPERTY(BlueprintAssignable, Category="Button|Event")
 	FOnButtonDoubleClickedDelegate OnDoubleClicked;
 
-	/** Called when the button receives focus */
+	/* Called when the button receives focus */
 	UPROPERTY(BlueprintAssignable, Category="Button|Event")
 	FOnButtonReceivedFocusDelegate OnReceivedFocus;
 
-	/** Called when the button loses focus */
+	/* Called when the button loses focus */
 	UPROPERTY(BlueprintAssignable, Category="Button|Event")
 	FOnButtonLostFocusDelegate OnLostFocus;
 
@@ -85,9 +85,9 @@ protected:
 	virtual void SlateHandleOnLostFocus();
 
 protected:
-	/** Cached pointer to the underlying slate button owned by this UWidget */
+	/* Cached pointer to the underlying slate button owned by this UWidget */
 	TSharedPtr<SBox> MyBox;
 
-	/** Cached pointer to the underlying slate button owned by this UWidget */
+	/* Cached pointer to the underlying slate button owned by this UWidget */
 	TSharedPtr<SGenericButton> MyGenericButton;
 };

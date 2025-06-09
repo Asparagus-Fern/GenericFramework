@@ -111,7 +111,7 @@ public:
 	float CustomVertsVCoordScale = 1.0;
 };
 
-/** Notification for FUMGSplineInfo value change */
+/* Notification for FUMGSplineInfo value change */
 DECLARE_DELEGATE_OneParam(FOnSpline2DInfoChanged, const FSpline2DInfo&)
 
 /**
@@ -123,11 +123,11 @@ struct DEVSLATECORE_API FSplineCurves2D
 	GENERATED_BODY()
 
 public:
-	/** Spline built from Vector2D data. */
+	/* Spline built from Vector2D data. */
 	UPROPERTY()
 	FInterpCurveVector2D Position;
 
-	/** Input: distance along curve, output: parameter that puts you there. */
+	/* Input: distance along curve, output: parameter that puts you there. */
 	UPROPERTY()
 	FInterpCurveFloat ReparamTable;
 
@@ -146,9 +146,9 @@ public:
 	 */
 	void UpdateSpline(const FSpline2DInfo& SplineInfo, bool bStationaryEndpoints = false, int32 ReparamStepsPerSegment = 10, bool bLoopPositionOverride = false, float LoopPosition = 0.0f, const FVector2D& Scale2D = FVector2D(1.0f));
 
-	/** Returns the length of the specified spline segment up to the parametric value given */
+	/* Returns the length of the specified spline segment up to the parametric value given */
 	float GetSegmentLength(const int32 Index, const float Param, bool bClosedLoop = false, const FVector2D& Scale2D = FVector2D(1.0f)) const;
 
-	/** Returns total length along this spline */
+	/* Returns total length along this spline */
 	float GetSplineLength() const;
 };

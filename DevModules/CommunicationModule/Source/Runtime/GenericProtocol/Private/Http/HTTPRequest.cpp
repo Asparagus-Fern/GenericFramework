@@ -228,6 +228,6 @@ void UHTTPRequest::OnRequestWillRetryInternal(TSharedPtr<IHttpRequest, ESPMode::
 UHTTPResponse* UHTTPRequest::CreateResponse(TSharedPtr<IHttpRequest, ESPMode::ThreadSafe>& RawRequest, TSharedPtr<IHttpResponse, ESPMode::ThreadSafe>& RawResponse)
 {
 	UHTTPResponse* WrappedResponse = NewObject<UHTTPResponse>();
-	WrappedResponse->InitInternal(RawResponse, RawRequest->GetElapsedTime());
+	WrappedResponse->InitInternal(this, RawResponse);
 	return WrappedResponse;
 }

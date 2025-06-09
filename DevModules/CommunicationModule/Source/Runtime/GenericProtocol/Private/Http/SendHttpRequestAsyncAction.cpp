@@ -3,16 +3,36 @@
 #include "Http/SendHttpRequestAsyncAction.h"
 
 #include "Http/HTTPRequest.h"
+#include "Http/HTTPResponse.h"
 
-USendHttpRequestAsyncAction::USendHttpRequestAsyncAction(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+/* ==================== USendHttpRequestAsyncActionBase ==================== */
+
+void USendHttpRequestAsyncActionBase::CreateRequest(UHTTPRequest* InRequest)
 {
-	Request = NewObject<UHTTPRequest>();
-	Request->OnRequestProgress.AddDynamic(this, &USendHttpRequestAsyncAction::OnRequestProgress);
-	Request->OnRequestComplete.AddDynamic(this, &USendHttpRequestAsyncAction::OnRequestComplete);
+	if (IsValid(InRequest))
+	{
+		Request = InRequest;
+		Request->OnRequestProgress.RemoveAll(this);
+		Request->OnRequestComplete.RemoveAll(this);
+	}
+	else
+	{
+		Request = NewObject<UHTTPRequest>();
+	}
+
+	Request->OnRequestProgress.AddDynamic(this, &USendHttpRequestAsyncActionBase::OnRequestProgress);
+	Request->OnRequestComplete.AddDynamic(this, &USendHttpRequestAsyncActionBase::OnRequestComplete);
 }
 
-void USendHttpRequestAsyncAction::OnRequestProgress(UHTTPRequest* InRequest, const int32 InBytesSent, const int32 InBytesReceived)
+void USendHttpRequestAsyncActionBase::SendRequest()
+{
+	if (!Request->ProcessRequest())
+	{
+		OnErrorInternal(nullptr);
+	}
+}
+
+void USendHttpRequestAsyncActionBase::OnRequestProgress(UHTTPRequest* InRequest, const int32 InBytesSent, const int32 InBytesReceived)
 {
 	BytesSent = InBytesSent;
 	BytesReceived = InBytesReceived;
@@ -20,7 +40,7 @@ void USendHttpRequestAsyncAction::OnRequestProgress(UHTTPRequest* InRequest, con
 	OnTickInternal();
 }
 
-void USendHttpRequestAsyncAction::OnRequestComplete(UHTTPRequest* InRequest, UHTTPResponse* InResponse, const bool bConnectedSuccessfully)
+void USendHttpRequestAsyncActionBase::OnRequestComplete(UHTTPRequest* InRequest, UHTTPResponse* InResponse, const bool bConnectedSuccessfully)
 {
 	if (bConnectedSuccessfully)
 	{
@@ -34,20 +54,43 @@ void USendHttpRequestAsyncAction::OnRequestComplete(UHTTPRequest* InRequest, UHT
 	SetReadyToDestroy();
 }
 
-void USendHttpRequestAsyncAction::SendRequest()
+/* ==================== USendHttpRequestAsyncAction ==================== */
+
+USendHttpRequestAsyncAction* USendHttpRequestAsyncAction::SendHttpRequest(UHTTPRequest* InRequest)
 {
-	if (!Request->ProcessRequest())
-	{
-		OnErrorInternal(nullptr);
-	}
+	USendHttpRequestAsyncAction* Action = NewObject<USendHttpRequestAsyncAction>();
+	Action->CreateRequest(InRequest);
+	Action->SendRequest();
+
+	return Action;
 }
 
-USendHttpStringRequestAsyncAction* USendHttpStringRequestAsyncAction::SendHttpRequest(const FString& ServerUrl, const TMap<FString, FString>& UrlParameters, const EHttpVerb Verb, const EHttpMimeType MimeType, const FString& Content, const TMap<FString, FString>& Headers)
+void USendHttpRequestAsyncAction::OnTickInternal()
+{
+	Super::OnTickInternal();
+	OnTick.Broadcast(GetRequest()->GetStatus(), GetRequest());
+}
+
+void USendHttpRequestAsyncAction::OnSuccessInternal(UHTTPResponse* Response)
+{
+	Super::OnSuccessInternal(Response);
+	OnSuccess.Broadcast(GetRequest()->GetStatus(), GetRequest(), Response, ConvertToResponseCodeEnum(Response->GetResponseCode()));
+}
+
+void USendHttpRequestAsyncAction::OnErrorInternal(UHTTPResponse* Response)
+{
+	Super::OnErrorInternal(Response);
+	OnError.Broadcast(GetRequest()->GetStatus(), GetRequest(), Response, ConvertToResponseCodeEnum(Response->GetResponseCode()));
+}
+
+/* ==================== USendHttpStringRequestAsyncAction ==================== */
+
+USendHttpStringRequestAsyncAction* USendHttpStringRequestAsyncAction::SendHttpStringRequest(const FString& ServerUrl, const TMap<FString, FString>& UrlParameters, const EHttpVerb Verb, const EHttpMimeType MimeType, const FString& Content, const TMap<FString, FString>& Headers)
 {
 	USendHttpStringRequestAsyncAction* Action = NewObject<USendHttpStringRequestAsyncAction>();
+	Action->CreateRequest();
 
 	UHTTPRequest* Request = Action->GetRequest();
-
 	Request->SetURLWithParameter(ServerUrl, UrlParameters);
 	Request->SetMimeType(MimeType);
 	Request->SetVerbAsEnum(Verb);
@@ -62,14 +105,54 @@ USendHttpStringRequestAsyncAction* USendHttpStringRequestAsyncAction::SendHttpRe
 void USendHttpStringRequestAsyncAction::OnTickInternal()
 {
 	Super::OnTickInternal();
-}
-
-void USendHttpStringRequestAsyncAction::OnErrorInternal(UHTTPResponse* Response)
-{
-	Super::OnErrorInternal(Response);
+	OnTick.Broadcast(GetRequest()->GetStatus(), GetRequest());
 }
 
 void USendHttpStringRequestAsyncAction::OnSuccessInternal(UHTTPResponse* Response)
 {
 	Super::OnSuccessInternal(Response);
+	OnSuccess.Broadcast(GetRequest()->GetStatus(), GetRequest(), Response, ConvertToResponseCodeEnum(Response->GetResponseCode()));
+}
+
+void USendHttpStringRequestAsyncAction::OnErrorInternal(UHTTPResponse* Response)
+{
+	Super::OnErrorInternal(Response);
+	OnError.Broadcast(GetRequest()->GetStatus(), GetRequest(), Response, ConvertToResponseCodeEnum(Response->GetResponseCode()));
+}
+
+/* ==================== USendHttpBinaryRequestAsyncAction ==================== */
+
+USendHttpBinaryRequestAsyncAction* USendHttpBinaryRequestAsyncAction::SendHttpBinaryRequest(const FString& ServerUrl, const TMap<FString, FString>& UrlParameters, const EHttpVerb Verb, const EHttpMimeType MimeType, const TArray<uint8>& Content, const TMap<FString, FString>& Headers)
+{
+	USendHttpBinaryRequestAsyncAction* Action = NewObject<USendHttpBinaryRequestAsyncAction>();
+	Action->CreateRequest();
+
+	UHTTPRequest* Request = Action->GetRequest();
+	Request->SetURLWithParameter(ServerUrl, UrlParameters);
+	Request->SetMimeType(MimeType);
+	Request->SetVerbAsEnum(Verb);
+	Request->SetContent(Content);
+	Request->SetHeaders(Headers);
+
+	Action->SendRequest();
+
+	return Action;
+}
+
+void USendHttpBinaryRequestAsyncAction::OnTickInternal()
+{
+	Super::OnTickInternal();
+	OnTick.Broadcast(GetRequest()->GetStatus(), GetRequest());
+}
+
+void USendHttpBinaryRequestAsyncAction::OnSuccessInternal(UHTTPResponse* Response)
+{
+	Super::OnSuccessInternal(Response);
+	OnSuccess.Broadcast(GetRequest()->GetStatus(), GetRequest(), Response, ConvertToResponseCodeEnum(Response->GetResponseCode()));
+}
+
+void USendHttpBinaryRequestAsyncAction::OnErrorInternal(UHTTPResponse* Response)
+{
+	Super::OnErrorInternal(Response);
+	OnError.Broadcast(GetRequest()->GetStatus(), GetRequest(), Response, ConvertToResponseCodeEnum(Response->GetResponseCode()));
 }

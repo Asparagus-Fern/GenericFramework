@@ -29,13 +29,13 @@ public:
 	//hackery: we use this as an indicator we have a binary (strings don't normally do this)
 	virtual bool TryGetBool(bool& OutBool) const override { return false; }
 
-	/** 返回二进制数据. */
+	/* 返回二进制数据. */
 	TArray<uint8> AsBinary() { return Value; }
 
-	/** 判断FJsonValue是否为Binary. */
+	/* 判断FJsonValue是否为Binary. */
 	static bool IsBinary(const TSharedPtr<FJsonValue>& InJsonValue);
 
-	/** 获取Brinary数组若要使用此方法,最好用IsBinary做判断. */
+	/* 获取Brinary数组若要使用此方法,最好用IsBinary做判断. */
 	static TArray<uint8> AsBinary(const TSharedPtr<FJsonValue>& InJsonValue);
 
 protected:

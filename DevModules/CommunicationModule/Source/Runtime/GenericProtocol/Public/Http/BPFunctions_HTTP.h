@@ -92,7 +92,7 @@ public:
 	static void SetHttpDelayTime(const float Delay);
 
 public:
-	/*转义参数并将其添加到URL的末尾*/
+	/**转义参数并将其添加到URL的末尾*/
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "HTTP")
 	static FString AddParametersToUrl(FString InUrl, const TMap<FString, FString>& Parameters);
 };

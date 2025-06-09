@@ -34,7 +34,7 @@ protected:
 	virtual void OnMovieSceneClosed() override;
 
 public:
-	/** Starts media playback. */
+	/* Starts media playback. */
 	UFUNCTION(BlueprintCallable)
 	virtual bool PlayMovieScene() override;
 
@@ -49,15 +49,15 @@ public:
 	UFUNCTION(BlueprintCallable)
 	virtual bool PlayLoopingMovieScene(int32 NumLoops = -1) override;
 
-	/** Reverse playback. */
+	/* Reverse playback. */
 	UFUNCTION(BlueprintCallable)
 	virtual bool PlayReverseMovieScene() override;
 
-	/** Pause playback. */
+	/* Pause playback. */
 	UFUNCTION(BlueprintCallable)
 	virtual bool PauseMovieScene() override;
 
-	/** Stop playback and move the cursor to the end of the media. */
+	/* Stop playback and move the cursor to the end of the media. */
 	UFUNCTION(BlueprintCallable)
 	virtual bool StopMovieScene() override;
 
@@ -65,23 +65,23 @@ public:
 	UFUNCTION(BlueprintCallable)
 	virtual bool SeekMovieScene(FTimecode SeekTime) override;
 
-	/** Changes the direction of playback (go in reverse if it was going forward, or vice versa) */
+	/* Changes the direction of playback (go in reverse if it was going forward, or vice versa) */
 	UFUNCTION(BlueprintCallable)
 	virtual void ChangeMovieSceneDirection() override;
 
-	/** Check whether playback has started. */
+	/* Check whether playback has started. */
 	UFUNCTION(BlueprintPure)
 	virtual bool IsPlaying() override;
 
-	/** Check whether playback is Looping. */
+	/* Check whether playback is Looping. */
 	UFUNCTION(BlueprintPure)
 	virtual bool IsLooping() override;
 
-	/** Check whether playback is currently paused. */
+	/* Check whether playback is currently paused. */
 	UFUNCTION(BlueprintPure)
 	virtual bool IsPaused() override;
 
-	/** Check whether playback is reversed. */
+	/* Check whether playback is reversed. */
 	UFUNCTION(BlueprintPure)
 	virtual bool IsReversed() override;
 
@@ -89,7 +89,7 @@ public:
 	UFUNCTION(BlueprintPure)
 	virtual FTimecode GetCurrentTime() override;
 
-	/** Get the media's duration. */
+	/* Get the media's duration. */
 	UFUNCTION(BlueprintPure)
 	virtual FTimecode GetDuration() override;
 
@@ -101,7 +101,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	virtual void SetFrameRate(FFrameRate FrameRate) override;
 
-	/** Get the media's current playback rate. */
+	/* Get the media's current playback rate. */
 	UFUNCTION(BlueprintPure)
 	virtual float GetPlayRate() override;
 

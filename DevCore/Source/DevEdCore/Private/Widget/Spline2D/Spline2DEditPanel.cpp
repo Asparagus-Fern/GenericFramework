@@ -889,7 +889,7 @@ void SSpline2DEditPanel::ProcessClick(const FGeometry& InMyGeometry, const FPoin
 			SelectedPointIndex = HitPointIndex;
 			bShowAddNewSplinePoint = false;
 		}
-		/*else if (HitTangent.IsValid())
+		/**else if (HitTangent.IsValid())
 		{
 			SelectedTangent = HitTangent;
 			SelectedPointIndex = HitTangent.PointIndex;

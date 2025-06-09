@@ -41,19 +41,19 @@ void UManagerProxy::RegisterManager(IManagerInterface* InManager)
 {
 	if (!UGlobalManagerSettings::Get()->bEnableAllManager)
 	{
-		GenericLOG(ManagerLog, Log, TEXT("Disable Manager Register"))
+		GenericLOG(GenericLogManager, Log, TEXT("Disable Manager Register"))
 		return;
 	}
 
 	if (!InManager)
 	{
-		GenericLOG(ManagerLog, Error, TEXT("InManager Is NULL"))
+		GenericLOG(GenericLogManager, Error, TEXT("InManager Is NULL"))
 		return;
 	}
 
 	if (IsManagerExist(InManager))
 	{
-		GenericLOG(ManagerLog, Warning, TEXT("InManager Is Already Registed"))
+		GenericLOG(GenericLogManager, Warning, TEXT("InManager Is Already Registed"))
 		return;
 	}
 
@@ -66,20 +66,20 @@ void UManagerProxy::RegisterManager(IManagerInterface* InManager)
 	OnManagerRegister.Broadcast(NewManagerInfo);
 
 	SortManagers();
-	GenericLOG(ManagerLog, Log, TEXT("%s"), *InManager->GetManagerOwner()->GetName());
+	GenericLOG(GenericLogManager, Log, TEXT("%s"), *InManager->GetManagerOwner()->GetName());
 }
 
 void UManagerProxy::UnRegisterManager(const IManagerInterface* InManager)
 {
 	if (!InManager)
 	{
-		GenericLOG(ManagerLog, Error, TEXT("InManager Is NULL"))
+		GenericLOG(GenericLogManager, Error, TEXT("InManager Is NULL"))
 		return;
 	}
 
 	if (!IsManagerExist(InManager))
 	{
-		GenericLOG(ManagerLog, Warning, TEXT("InManager Is Already UnRegisted"))
+		GenericLOG(GenericLogManager, Warning, TEXT("InManager Is Already UnRegisted"))
 		return;
 	}
 
@@ -93,7 +93,7 @@ void UManagerProxy::UnRegisterManager(const IManagerInterface* InManager)
 		RemoveManagerInfo->MarkAsGarbage();
 
 		SortManagers();
-		GenericLOG(ManagerLog, Log, TEXT("%s"), *InManager->GetManagerOwner()->GetName());
+		GenericLOG(GenericLogManager, Log, TEXT("%s"), *InManager->GetManagerOwner()->GetName());
 	}
 }
 

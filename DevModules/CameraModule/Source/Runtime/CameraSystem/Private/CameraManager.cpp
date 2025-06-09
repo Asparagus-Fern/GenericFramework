@@ -97,7 +97,7 @@ UCameraSwitchMethod* UCameraManager::SwitchToCamera(const int32 InPlayerIndex, c
 {
 	if (!InCameraMethodClass)
 	{
-		GenericLOG(CameraLog, Error, TEXT("SwitchToCamera Fail"))
+		GenericLOG(GenericLogCamera, Error, TEXT("SwitchToCamera Fail"))
 		OnFinish.ExecuteIfBound();
 		return nullptr;
 	}
@@ -109,7 +109,7 @@ UCameraSwitchMethod* UCameraManager::SwitchToCamera(const int32 InPlayerIndex, c
 {
 	if (!IsValid(InSwitchCameraMethod))
 	{
-		GenericLOG(CameraLog, Error, TEXT("SwitchToCamera Fail"))
+		GenericLOG(GenericLogCamera, Error, TEXT("SwitchToCamera Fail"))
 		OnFinish.ExecuteIfBound();
 		return nullptr;
 	}
@@ -122,7 +122,7 @@ UCameraSwitchMethod* UCameraManager::SwitchToCamera(const int32 InPlayerIndex, A
 {
 	if (!InCameraActor || !InCameraMethodClass)
 	{
-		GenericLOG(CameraLog, Error, TEXT("SwitchToCamera Fail"))
+		GenericLOG(GenericLogCamera, Error, TEXT("SwitchToCamera Fail"))
 		OnFinish.ExecuteIfBound();
 		return nullptr;
 	}
@@ -134,7 +134,7 @@ UCameraSwitchMethod* UCameraManager::SwitchToCamera(const int32 InPlayerIndex, A
 {
 	if (!InCameraActor || !IsValid(InSwitchCameraMethod))
 	{
-		GenericLOG(CameraLog, Error, TEXT("SwitchToCamera Fail"))
+		GenericLOG(GenericLogCamera, Error, TEXT("SwitchToCamera Fail"))
 		OnFinish.ExecuteIfBound();
 		return nullptr;
 	}
@@ -146,7 +146,7 @@ UCameraSwitchMethod* UCameraManager::SwitchToCamera(const int32 InPlayerIndex, U
 {
 	if (!IsValid(InCameraComponent) || !InCameraMethodClass)
 	{
-		GenericLOG(CameraLog, Error, TEXT("SwitchToCamera Fail"))
+		GenericLOG(GenericLogCamera, Error, TEXT("SwitchToCamera Fail"))
 		OnFinish.ExecuteIfBound();
 		return nullptr;
 	}
@@ -158,7 +158,7 @@ UCameraSwitchMethod* UCameraManager::SwitchToCamera(const int32 InPlayerIndex, U
 {
 	if (!IsValid(InCameraComponent) || !IsValid(InSwitchCameraMethod))
 	{
-		GenericLOG(CameraLog, Error, TEXT("SwitchToCamera Fail"))
+		GenericLOG(GenericLogCamera, Error, TEXT("SwitchToCamera Fail"))
 		OnFinish.ExecuteIfBound();
 		return nullptr;
 	}
@@ -181,7 +181,7 @@ UCameraSwitchMethod* UCameraManager::SwitchToCamera(const int32 InPlayerIndex, c
 {
 	if (!InCameraTag.IsValid() || !InCameraMethodClass)
 	{
-		GenericLOG(CameraLog, Error, TEXT("SwitchToCamera Fail"))
+		GenericLOG(GenericLogCamera, Error, TEXT("SwitchToCamera Fail"))
 		OnFinish.ExecuteIfBound();
 		return nullptr;
 	}
@@ -194,7 +194,7 @@ UCameraSwitchMethod* UCameraManager::SwitchToCamera(const int32 InPlayerIndex, c
 {
 	if (!InCameraTag.IsValid() || !IsValid(InSwitchCameraMethod) || !IsValid(GetCameraPoint(InCameraTag)))
 	{
-		GenericLOG(CameraLog, Error, TEXT("SwitchToCamera Fail"))
+		GenericLOG(GenericLogCamera, Error, TEXT("SwitchToCamera Fail"))
 		OnFinish.ExecuteIfBound();
 		return nullptr;
 	}
@@ -206,7 +206,7 @@ UCameraSwitchMethod* UCameraManager::SwitchToCamera(const int32 InPlayerIndex, A
 {
 	if (!IsValid(InCameraPoint) || !InCameraMethodClass)
 	{
-		GenericLOG(CameraLog, Error, TEXT("SwitchToCamera Fail"))
+		GenericLOG(GenericLogCamera, Error, TEXT("SwitchToCamera Fail"))
 		OnFinish.ExecuteIfBound();
 		return nullptr;
 	}
@@ -218,7 +218,7 @@ UCameraSwitchMethod* UCameraManager::SwitchToCamera(const int32 InPlayerIndex, A
 {
 	if (!IsValid(InCameraPoint) || !IsValid(InSwitchCameraMethod))
 	{
-		GenericLOG(CameraLog, Error, TEXT("SwitchToCamera Fail"))
+		GenericLOG(GenericLogCamera, Error, TEXT("SwitchToCamera Fail"))
 		OnFinish.ExecuteIfBound();
 		return nullptr;
 	}

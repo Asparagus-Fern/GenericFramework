@@ -10,21 +10,21 @@
 UENUM(BlueprintType)
 enum class ESceneWorldType : uint8
 {
-	/** An untyped world, in most cases this will be the vestigial worlds of streamed in sub-levels */
+	/* An untyped world, in most cases this will be the vestigial worlds of streamed in sub-levels */
 	None,
-	/** The game world */
+	/* The game world */
 	Game,
-	/** A world being edited in the editor */
+	/* A world being edited in the editor */
 	Editor,
-	/** A Play In Editor world */
+	/* A Play In Editor world */
 	PIE,
-	/** A preview world for an editor tool */
+	/* A preview world for an editor tool */
 	EditorPreview,
-	/** A preview world for a game */
+	/* A preview world for a game */
 	GamePreview,
-	/** A minimal RPC world for a game */
+	/* A minimal RPC world for a game */
 	GameRPC,
-	/** An editor world that was loaded but not currently being edited in the level editor */
+	/* An editor world that was loaded but not currently being edited in the level editor */
 	Inactive
 };
 

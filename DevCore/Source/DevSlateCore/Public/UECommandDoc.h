@@ -17,7 +17,7 @@ public:
 	virtual void RegisterCommands() override
 	{
 #pragma region Source/Runtime
-		/*
+		/**
 		FGenericCommands：
 		UI_COMMAND(Cut, "Cut", "Cut selection", EUserInterfaceActionType::Button, FInputChord(EModifierKey::Control, EKeys::X))
 		UI_COMMAND(Copy, "Copy", "Copy selection", EUserInterfaceActionType::Button, FInputChord(EModifierKey::Control, EKeys::C))
@@ -36,13 +36,13 @@ public:
 		UI_COMMAND(SelectAll, "Select All", "Select everything in the current scope", EUserInterfaceActionType::Button, FInputChord(EModifierKey::Control, EKeys::A))
 		*/
 
-		/*
+		/**
 		FTabCommands：
 		UI_COMMAND(CloseMajorTab, "Close Major Tab", "Closes the focused major tab", EUserInterfaceActionType::Button, FInputChord(EModifierKey::Control, EKeys::W))
 		UI_COMMAND(CloseMinorTab, "Close Minor Tab", "Closes the current window's active minor tab", EUserInterfaceActionType::Button, FInputChord())
 		*/
 
-		/*
+		/**
 		FMacMenuCommands：
 		UI_COMMAND( Preferences, "Preferences...", "Preferences", EUserInterfaceActionType::None, FInputChord( EModifierKey::Control, EKeys::Comma ) )
 		UI_COMMAND( Help, "Help", "Help", EUserInterfaceActionType::None, FInputChord( EModifierKey::None, EKeys::F1 ) )
@@ -58,7 +58,7 @@ public:
 		UI_COMMAND( BringAllToFront, "Bring All to Front", "Bring All to Front", EUserInterfaceActionType::None, FInputChord() )
 		*/
 
-		/*
+		/**
 		FMultiBoxTestCommandList：
 		UI_COMMAND( FirstCommandInfo, "First Test", "This is the first test menu item", EUserInterfaceActionType::ToggleButton, FInputChord() );
 		UI_COMMAND( SecondCommandInfo, "Second Test", "This is the second test menu item. Shows a keybinding", EUserInterfaceActionType::ToggleButton, FInputChord( EModifierKey::Shift, EKeys::A ) );
@@ -72,14 +72,14 @@ public:
 #pragma endregion
 
 #pragma region Source/Editor
-		/*
+		/**
 		FAdvancedPreviewSceneCommands：
 		UI_COMMAND(ToggleEnvironment, "Toggle Environment", "Toggles Environment visibility", EUserInterfaceActionType::ToggleButton, FInputChord(EKeys::I));
 		UI_COMMAND(ToggleFloor, "Toggle Floor", "Toggles floor visibility", EUserInterfaceActionType::ToggleButton, FInputChord(EKeys::O));
 		UI_COMMAND(TogglePostProcessing, "Toggle Post Processing", "Toggles whether Post Processing is enabled", EUserInterfaceActionType::ToggleButton, FInputChord(EKeys::P));
 		*/
 
-		/*
+		/**
 		FAnimGraphCommands：
 		UI_COMMAND(TogglePoseWatch, "Toggle Pose Watch", "Toggle pose watching on this node", EUserInterfaceActionType::Button, FInputChord());
 		UI_COMMAND(HideUnboundPropertyPins, "Hide Unbound/Unset Property Pins", "Unexpose all unbound/unset property pins from this node", EUserInterfaceActionType::Button, FInputChord());
@@ -105,7 +105,7 @@ public:
 		UI_COMMAND( OpenRelatedAsset, "Open Asset", "Opens the asset related to this node", EUserInterfaceActionType::Button, FInputChord() )
 		*/
 
-		/*
+		/**
 		FAnimationEditorCommands：
 		UI_COMMAND(ImportAnimation, "Import Animation", "Import new animation for the skeleton.", EUserInterfaceActionType::Button, FInputChord());
 		UI_COMMAND(ReimportAnimation, "Reimport Animation", "Reimport current animation.", EUserInterfaceActionType::Button, FInputChord());
@@ -117,13 +117,13 @@ public:
 		UI_COMMAND(RemoveBoneTracks, "Remove All Bone Tracks", "Remove all bone tracks. This doesn't remove notifies or curves.", EUserInterfaceActionType::Button, FInputChord());
 		*/
 
-		/*
+		/**
 		FSoundClassEditorCommands：
 		UI_COMMAND(ToggleSolo, "Solo", "Toggles Soloing this sound class", EUserInterfaceActionType::ToggleButton, FInputChord(EKeys::S));
 		UI_COMMAND(ToggleMute, "Mute", "Toggles Muting this sound class", EUserInterfaceActionType::ToggleButton, FInputChord(EKeys::M));	
 		*/
 
-		/*
+		/**
 		FSoundCueGraphEditorCommands：
 		UI_COMMAND(PlayCue, "Play Cue", "Plays the SoundCue", EUserInterfaceActionType::Button, FInputChord());
 		UI_COMMAND(PlayNode, "Play Node", "Plays the currently selected node", EUserInterfaceActionType::Button, FInputChord());
@@ -138,13 +138,13 @@ public:
 		UI_COMMAND(ToggleMute, "Mute", "Toggles Muting this cue", EUserInterfaceActionType::ToggleButton, FInputChord(EKeys::M));
 		*/
 
-		/*
+		/**
 		FBTCommonCommands：
 		UI_COMMAND(SearchBT, "Search", "Search this Behavior Tree.", EUserInterfaceActionType::Button, FInputChord(EModifierKey::Control, EKeys::F));
 		UI_COMMAND(NewBlackboard, "New Blackboard", "Create a new Blackboard Data Asset", EUserInterfaceActionType::Button, FInputChord());
 		*/
 
-		/*
+		/**
 		FBTDebuggerCommands：
 		UI_COMMAND(BackInto, "Back: Into", "Show state from previous step, can go into subtrees", EUserInterfaceActionType::Button, FInputChord());
 		UI_COMMAND(BackOver, "Back: Over", "Show state from previous step, don't go into subtrees", EUserInterfaceActionType::Button, FInputChord());
@@ -160,13 +160,13 @@ public:
 		UI_COMMAND(SavedValues, "Saved", "View saved values", EUserInterfaceActionType::RadioButton, FInputChord());
 		*/
 
-		/*
+		/**
 		FDiffListCommands：
 		UI_COMMAND(Previous, "Prev", "Go to previous difference", EUserInterfaceActionType::Button, FInputChord(EKeys::F7, EModifierKey::Control));
 		UI_COMMAND(Next, "Next", "Go to next difference", EUserInterfaceActionType::Button, FInputChord(EKeys::F7));
 		*/
 
-		/*
+		/**
 		FCascadeCommands：
 		UI_COMMAND(RestartSimulation, "Restart Sim", "Restart Simulation", EUserInterfaceActionType::Button, FInputChord());
 		UI_COMMAND(RestartInLevel, "Restart Level", "Restart in Level", EUserInterfaceActionType::Button, FInputChord(EKeys::SpaceBar));
@@ -246,23 +246,23 @@ public:
 		UI_COMMAND(RemoveDuplicateModules, "Remove Duplicate Modules", "Remove Duplicate Modules", EUserInterfaceActionType::Button, FInputChord());
 		*/
 
-		/*
+		/**
 		FClothPaintToolCommands_Gradient：
 		UI_COMMAND(ApplyGradient, "Apply gradient", "Apply the gradient when the clothing paint gradient tool is active.", EUserInterfaceActionType::Button, FInputChord(EKeys::Enter));
 		*/
 
-		/*
+		/**
 		FClothPainterCommands：
 		UI_COMMAND(TogglePaintMode, "Enable Cloth Paint", "Toggles between selection and clothing paint modes.", EUserInterfaceActionType::ToggleButton, FInputChord());
 		*/
 
-		/*
+		/**
 		FClothingAssetListCommands：
 		UI_COMMAND(DeleteAsset, "Delete Asset", "Deletes a clothing asset from the mesh.", EUserInterfaceActionType::Button, FInputChord());
 		UI_COMMAND(RebuildAssetParams, "Rebuild Asset Parameter Masks", "Takes the parameter masks in LOD0 and creates masks in all lower LODs to match, casting those parameter masks to the new mesh.", EUserInterfaceActionType::Button, FInputChord());
 		*/
 
-		/*
+		/**
 		FSplineComponentVisualizerCommands：
 		UI_COMMAND(DeleteKey, "Delete Spline Point", "Delete the currently selected spline point.", EUserInterfaceActionType::Button, FInputChord(EKeys::Delete));
 		UI_COMMAND(DuplicateKey, "Duplicate Spline Point", "Duplicate the currently selected spline point.", EUserInterfaceActionType::Button, FInputChord());
@@ -299,7 +299,7 @@ public:
 		UI_COMMAND(ResetToDefault, "Reset to Default", "Reset this spline to its archetype default.", EUserInterfaceActionType::Button, FInputChord());
 		*/
 
-		/*
+		/**
 		FContentBrowserCommands：
 		UI_COMMAND(OpenAssetsOrFolders, "Open Assets or Folders", "Opens the selected assets or folders, depending on the selection", EUserInterfaceActionType::Button, FInputChord(EKeys::Enter));
 		UI_COMMAND(PreviewAssets, "Preview Assets", "Loads the selected assets and previews them if possible", EUserInterfaceActionType::Button, FInputChord(EKeys::SpaceBar));
@@ -309,7 +309,7 @@ public:
 		UI_COMMAND(ResaveAllCurrentFolder, "Resave All", "Resave all assets contained in the current folder", EUserInterfaceActionType::Button, FInputChord());
 		*/
 
-		/*
+		/**
 		FCurveEditorCommands：
 		UI_COMMAND(ZoomToFitHorizontal, "Fit Horizontal", "Zoom to Fit - Horizontal", EUserInterfaceActionType::Button, FInputChord());
 		UI_COMMAND(ZoomToFitVertical, "Fit Vertical", "Zoom to Fit - Vertical", EUserInterfaceActionType::Button, FInputChord());
@@ -420,7 +420,7 @@ public:
 		UI_COMMAND(ClearSelectionRange, "Clear Selection Range", "Clear the selection range", EUserInterfaceActionType::Button, FInputChord(EModifierKey::Control|EModifierKey::Shift, EKeys::X) );
 		*/
 
-		/*
+		/**
 		FCurveTableEditorCommands：
 		UI_COMMAND(CurveViewToggle, "Curve View", "Changes the view of the curve table from grid to curve view.", EUserInterfaceActionType::ToggleButton, FInputChord());
 		UI_COMMAND(AppendKeyColumn, "Append Key Column", "Append a new column to the curve table.\nEvery Curve or Table Row will have a new key appended.", EUserInterfaceActionType::Button, FInputChord());
@@ -428,14 +428,14 @@ public:
 		UI_COMMAND(RenameSelectedCurve, "Rename Curve", "Rename the selected curve row.", EUserInterfaceActionType::None, FInputChord());
 		*/
 
-		/*
+		/**
 		FDerivedDataStatusBarMenuCommands：
 		UI_COMMAND(ChangeSettings, "Change Cache Settings", "Opens a dialog to change Cache settings.", EUserInterfaceActionType::Button, FInputChord());
 		UI_COMMAND(ViewCacheStatistics, "View Cache Statistics", "Opens the Cache Statistics panel.", EUserInterfaceActionType::Button, FInputChord());
 		UI_COMMAND(ViewResourceUsage, "View Resource Usage", "Opens the Resource Usage panel.", EUserInterfaceActionType::Button, FInputChord());
 		*/
 
-		/*
+		/**
 		FDistCurveEditorCommands：
 		UI_COMMAND(RemoveCurve, "Remove Curve", "Remove Curve", EUserInterfaceActionType::Button, FInputChord());
 		UI_COMMAND(RemoveAllCurves, "Remove All Curves", "Remove All Curves", EUserInterfaceActionType::Button, FInputChord());
@@ -466,7 +466,7 @@ public:
 		UI_COMMAND(DeleteTab, "Delete", "Delete Tab", EUserInterfaceActionType::Button, FInputChord());
 		*/
 
-		/*
+		/**
 		FFoliageEditCommands：
 		UI_COMMAND( DecreaseBrushSize, "Decrease Brush Size", "Decreases the size of the foliage brush", EUserInterfaceActionType::Button, FInputChord(EKeys::LeftBracket) );
 		UI_COMMAND( IncreaseBrushSize, "Increase Brush Size", "Increases the size of the foliage brush", EUserInterfaceActionType::Button, FInputChord(EKeys::RightBracket) );
@@ -488,7 +488,7 @@ public:
 		UI_COMMAND( SetClusterSettings, "Show Instance settings", "Show settings for placed instances.", EUserInterfaceActionType::ToggleButton, FInputChord() );
 		*/
 
-		/*
+		/**
 		FFoliagePaletteCommands：
 		UI_COMMAND(ActivateFoliageType, "Activate", "Sets the selected foliage types in the palette as active (i.e. included in brush actions).", EUserInterfaceActionType::Button, FInputChord());
 		UI_COMMAND(DeactivateFoliageType, "Deactivate", "Sets the selected foliage types in the palette as inactive (i.e. excluded in brush actions).", EUserInterfaceActionType::Button, FInputChord());
@@ -500,7 +500,7 @@ public:
 		UI_COMMAND(SelectInvalidInstances, "Select Invalid Instances", "Select all instances of this foliage type that are off ground (must be in a selection mode).", EUserInterfaceActionType::Button, FInputChord());
 		*/
 
-		/*
+		/**
 		FFontEditorCommands：
 		UI_COMMAND(Update, "Update", "Imports a texture to replace the currently selected page.", EUserInterfaceActionType::Button, FInputChord());
 		UI_COMMAND(UpdateAll, "Update All", "Imports a set of textures to replace all pages.", EUserInterfaceActionType::Button, FInputChord());
@@ -511,7 +511,7 @@ public:
 		UI_COMMAND(FontForegroundColor, "Foreground", "Changes the foreground color of the previewer.", EUserInterfaceActionType::Button, FInputChord());
 		*/
 
-		/*
+		/**
 		FGraphEditorCommandsImpl：
 		UI_COMMAND( ReconstructNodes, "Refresh Nodes", "Refreshes nodes", EUserInterfaceActionType::Button, FInputChord() )
 		UI_COMMAND( BreakNodeLinks, "Break Node Link(s)", "Breaks the selected node from all connected pins", EUserInterfaceActionType::Button, FInputChord() )
@@ -602,13 +602,13 @@ public:
 		UI_COMMAND( SummonCreateNodeMenu, "Open Create Node Menu", "Opens the create node menu at the last known mouse position.", EUserInterfaceActionType::Button, FInputChord(EKeys::Tab) );
 		*/
 
-		/*
+		/**
 		FBlueprintDebuggerCommands：
 		UI_COMMAND(ShowCallStackViewer, "Call Stack", "Toggles visibility of the Call Stack window", EUserInterfaceActionType::Check, FInputChord());
 		UI_COMMAND(ShowExecutionTrace, "Data Flow", "Toggles visibility of the Data Flow window", EUserInterfaceActionType::Check, FInputChord());
 		*/
 
-		/*
+		/**
 		FBlueprintEditorCommands：
 		UI_COMMAND( FindInBlueprint, "Find", "Finds references to functions, events, variables, and pins in the current Blueprint (use Ctrl+Shift+F to search in all Blueprints)", EUserInterfaceActionType::Button, FInputChord(EModifierKey::Control, EKeys::F) );
 		UI_COMMAND( FindInBlueprints, "Find in Blueprints", "Find references to functions, events and variables in ALL Blueprints", EUserInterfaceActionType::Button, FInputChord(EModifierKey::Control | EModifierKey::Shift, EKeys::F) );
@@ -664,7 +664,7 @@ public:
 		UI_COMMAND( ToggleHideUnrelatedNodes, "Hide Unrelated", "Toggles automatically hiding nodes which are unrelated to the selected nodes.", EUserInterfaceActionType::ToggleButton, FInputChord() );
 		*/
 
-		/*
+		/**
 		FFullBlueprintEditorCommands：
 		UI_COMMAND(Compile, "Compile", "Compile the blueprint", EUserInterfaceActionType::Button, FInputChord());
 
@@ -682,14 +682,14 @@ public:
 		UI_COMMAND(JumpToErrorNode, "Jump to Error Node", "When enabled, then the Blueprint will snap focus to nodes producing an error during compilation", EUserInterfaceActionType::ToggleButton, FInputChord());
 		*/
 
-		/*
+		/**
 		FBlueprintFavoritesPaletteCommands：
 		UI_COMMAND(RemoveSingleFavorite, "Remove from Favorites",          "Removes this item from your favorites list.",                 EUserInterfaceActionType::Button, FInputChord());
 		UI_COMMAND(RemoveSubFavorites,   "Remove Category from Favorites", "Removes all the nodes in this category from your favorites.", EUserInterfaceActionType::Button, FInputChord());
 		UI_COMMAND(ClearFavorites,       "Clear All Favorites",			   "Clears out all of your favorited nodes.",                     EUserInterfaceActionType::Button, FInputChord());
 		*/
 
-		/*
+		/**
 		FBlueprintLibraryPaletteCommands：
 		UI_COMMAND(AddSingleFavorite,    "Add to Favorites",               "Adds this item to your favorites list.",                      EUserInterfaceActionType::Button, FInputChord());
 		UI_COMMAND(AddSubFavorites,      "Add Category to Favorites",      "Adds all the nodes in this category to your favorites.",      EUserInterfaceActionType::Button, FInputChord());
@@ -697,12 +697,12 @@ public:
 		UI_COMMAND(RemoveSubFavorites,   "Remove Category from Favorites", "Removes all the nodes in this category from your favorites.", EUserInterfaceActionType::Button, FInputChord());
 		*/
 
-		/*
+		/**
 		FBlueprintPaletteCommands：
 		UI_COMMAND(RefreshPalette, "Refresh List", "Refreshes the list of nodes.", EUserInterfaceActionType::Button, FInputChord());
 		*/
 
-		/*
+		/**
 		FMyBlueprintCommands：
 		UI_COMMAND( OpenGraph, "Open Graph", "Opens up this function, macro, or event graph's graph panel up.", EUserInterfaceActionType::Button, FInputChord() );
 		UI_COMMAND( OpenGraphInNewTab, "Open in New Tab", "Opens up this function, macro, or event graph's graph panel up in a new tab. Hold down Ctrl and double click for shortcut.", EUserInterfaceActionType::Button, FInputChord() );
@@ -720,7 +720,7 @@ public:
 		UI_COMMAND( MoveFunctionToParent, "Move to Parent Class", "Moves the function to its parent class", EUserInterfaceActionType::Button, FInputChord() );
 		*/
 
-		/*
+		/**
 		FLandscapeEditorCommands：
 		UI_COMMAND(ManageMode, "Mode - Manage", "", EUserInterfaceActionType::RadioButton, FInputChord());
 		UI_COMMAND(SculptMode, "Mode - Sculpt", "", EUserInterfaceActionType::RadioButton, FInputChord());
@@ -782,7 +782,7 @@ public:
 		UI_COMMAND(DragBrushStrength, "Change Brush Strength", "Hold this key and then drag to increase or decrease brush strength.", EUserInterfaceActionType::RadioButton, FInputChord());
 		*/
 
-		/*
+		/**
 		FLayersViewCommands：
 		UI_COMMAND( CreateEmptyLayer, "Create Empty Layer", "Creates a new empty Layer", EUserInterfaceActionType::Button, FInputChord() );
 		UI_COMMAND( AddSelectedActorsToNewLayer, "Add Selected Actors to New Layer", "Adds the actors currently selected in the active viewport to a new layer", EUserInterfaceActionType::Button, FInputChord() );
@@ -799,7 +799,7 @@ public:
 		UI_COMMAND( RequestRenameLayer, "Rename", "Rename the selected layer.", EUserInterfaceActionType::Button, FInputChord( EKeys::F2 ) );	
 		*/
 
-		/*
+		/**
 		FLevelEditorCommands：
 		Level Editor页面：UI_COMMAND( BrowseDocumentation, "Level Editor Documentation", "Details on how to use the Level Editor", EUserInterfaceActionType::Button, FInputChord( EKeys::F1 ) );
       	Viewport Controls页面：UI_COMMAND( BrowseViewportControls, "Viewport Controls", "Ways to move around in the 3D viewport", EUserInterfaceActionType::Button, FInputChord() );
@@ -1064,7 +1064,7 @@ public:
 		UI_COMMAND(ToggleFeatureLevelPreview, "Preview Mode Toggle", "Toggles the Preview Mode on or off for the currently selected Preview target", EUserInterfaceActionType::ToggleButton, FInputChord());
 		*/
 
-		/*
+		/**
 		FLevelViewportCommands：
 		UI_COMMAND( ToggleMaximize, "Maximize Viewport", "Toggles the Maximize state of the current viewport", EUserInterfaceActionType::ToggleButton, FInputChord() );
 		UI_COMMAND( ToggleGameView, "Game View", "Toggles game view.  Game view shows the scene as it appears in game", EUserInterfaceActionType::ToggleButton, FInputChord( EKeys::G ) );
@@ -1119,18 +1119,18 @@ public:
 		UI_COMMAND( CyclePreviewMesh, "Cycles Preview Mesh", "Cycles available preview meshes", EUserInterfaceActionType::Button, FInputChord( EModifierKey::Shift, EKeys::Backslash ) );
 		*/
 
-		/*
+		/**
 		FLightEditingCommands：
 		UI_COMMAND(SwapLightType, "Add Key Frame", "Inserts a new key frame at the current time", EUserInterfaceActionType::Button, FInputChord(EKeys::P, EModifierKey::Shift));
 		*/
 
-		/*
+		/**
 		FLevelInstanceEditorModeCommands：
 		UI_COMMAND(ExitMode, "Exit Mode", "Exits mode asking to save pending changes", EUserInterfaceActionType::Button, FInputChord(EKeys::Escape));
 		UI_COMMAND(ToggleContextRestriction, "Toggle Context Restriction", "Toggles edit restrictions like selection to current level edit", EUserInterfaceActionType::ToggleButton, FInputChord(EKeys::L, EModifierKey::Shift));
 		*/
 
-		/*
+		/**
 		FLocalizationTargetEditorCommands：
 		UI_COMMAND(GatherText, "Gather Text", "Gather text for all cultures of this target.", EUserInterfaceActionType::Button, FInputChord());
 		UI_COMMAND(ImportTextAllCultures, "Import Text", "Import translations for all cultures of this target.", EUserInterfaceActionType::Button, FInputChord());
@@ -1142,7 +1142,7 @@ public:
 		UI_COMMAND(CompileTextAllCultures, "Compile Text", "Compile translations for all cultures of this target.", EUserInterfaceActionType::Button, FInputChord());
 		*/
 
-		/*
+		/**
 		FLocalizationDashboardCommands：
 		UI_COMMAND(GatherTextAllTargets, "Gather Text", "Gather text for all targets in the project.", EUserInterfaceActionType::Button, FInputChord());
 		UI_COMMAND(ImportTextAllTargets, "Import Text", "Import translations for all cultures of all targets in the project.", EUserInterfaceActionType::Button, FInputChord());
@@ -1154,7 +1154,7 @@ public:
 		UI_COMMAND(CompileTextAllTargets, "Compile Text", "Compile translations for all targets in the project.", EUserInterfaceActionType::Button, FInputChord());
 		*/
 
-		/*
+		/**
 		FMainFrameCommands：
 		UI_COMMAND( SaveAll, "Save All", "Saves all unsaved levels and assets to disk", EUserInterfaceActionType::Button, FInputChord( EModifierKey::Control | EModifierKey::Shift, EKeys::S ) );
 		UI_COMMAND( ChooseFilesToSave, "Choose Files to Save...", "Opens a dialog with save options for content and levels", EUserInterfaceActionType::Button, FInputChord( EModifierKey::Control | EModifierKey::Alt | EModifierKey::Shift, EKeys::S ) );
@@ -1195,7 +1195,7 @@ public:
 		UI_COMMAND(OpenWidgetReflector, "Open Widget Reflector", "Opens the Widget Reflector", EUserInterfaceActionType::Button, FInputChord(EModifierKey::Shift | EModifierKey::Control , EKeys::W));
 		*/
 
-		/*
+		/**
 		FMaterialEditorCommands：
 		UI_COMMAND( Apply, "Apply", "Apply changes to original material and its use in the world.", EUserInterfaceActionType::Button, FInputChord());
 		UI_COMMAND( Flatten, "Flatten", "Flatten the material to a texture for mobile devices.", EUserInterfaceActionType::Button, FInputChord() );
@@ -1265,7 +1265,7 @@ public:
 		UI_COMMAND(FeatureLevel_SM6, "SM6", "Sets node preview to show the SM6 feature level.", EUserInterfaceActionType::RadioButton, FInputChord());
 		*/
 
-		/*
+		/**
 		FMeshPainterCommands：
 		UI_COMMAND(IncreaseBrushRadius, "Increase Brush Radius", "Press this key to increase brush radius by a percentage of its current size.", EUserInterfaceActionType::Button, FInputChord(EKeys::RightBracket));
 		UI_COMMAND(DecreaseBrushRadius, "Decrease Brush Size", "Press this key to decrease brush radius by a percentage of its current size.", EUserInterfaceActionType::Button, FInputChord(EKeys::LeftBracket));
@@ -1275,12 +1275,12 @@ public:
 		UI_COMMAND(DecreaseBrushFalloff, "Decrease Brush Falloff", "Press this key to decrease brush falloff by a fixed increment.", EUserInterfaceActionType::Button, FInputChord(FInputChord(EModifierKey::Control | EModifierKey::Shift, EKeys::LeftBracket)));
 		*/
 
-		/*
+		/**
 		FCameraCutTrackCommands：
 		UI_COMMAND( ToggleLockCamera, "Toggle Lock Camera", "Toggle locking the viewport to the camera cut track.", EUserInterfaceActionType::Button, FInputChord(EModifierKey::Shift, EKeys::C) );
 		*/
 
-		/*
+		/**
 		FPListEditorCommands：
 		UI_COMMAND( NewCommand, "New", "Creates a new plist file", EUserInterfaceActionType::Button, FInputChord(EModifierKey::Control, EKeys::N) );
 		UI_COMMAND( OpenCommand, "Open", "Opens an existing plist file", EUserInterfaceActionType::Button, FInputChord(EModifierKey::Control, EKeys::O) );
@@ -1295,12 +1295,12 @@ public:
 		UI_COMMAND( AddBooleanCommand, "Add Boolean", "Adds a new boolean to the selected file, array, or dictionary", EUserInterfaceActionType::Button, FInputChord());
 		*/
 
-		/*
+		/**
 		FAnimSequenceCurveEditorCommands：
 		UI_COMMAND(EditSelectedCurves, "Edit Selected Curves", "Edit the selected curves in the curve editor tab", EUserInterfaceActionType::Button, FInputChord());
 		*/
 
-		/*
+		/**
 		FAnimSequenceTimelineCommands：
 		UI_COMMAND(PasteDataIntoCurve, "Paste Clipboard Data Into Curve", "Paste curve data from the clipboard into the selected curve", EUserInterfaceActionType::Button, FInputChord(EModifierKey::Control | EModifierKey::Shift, EKeys::V));
 		UI_COMMAND(EditSelectedCurves, "Edit Selected Curves", "Edit the selected curves in the curve editor tab", EUserInterfaceActionType::Button, FInputChord());
@@ -1326,14 +1326,14 @@ public:
 		UI_COMMAND(SnapToCompositeSegments, "Composite Segments", "Snap to composite segments", EUserInterfaceActionType::ToggleButton, FInputChord());
 		*/
 
-		/*
+		/**
 		FAnimViewportLODCommands：
 		UI_COMMAND( LODDebug, "LOD Debug", "Sync the LOD with the currently debugged instance", EUserInterfaceActionType::RadioButton, FInputChord());
 		UI_COMMAND( LODAuto, "LOD Auto", "Automatically select LOD", EUserInterfaceActionType::RadioButton, FInputChord() );
 		UI_COMMAND( LOD0, "LOD 0", "Force select LOD 0", EUserInterfaceActionType::RadioButton, FInputChord() );
 		*/
 
-		/*
+		/**
 		FAnimViewportMenuCommands：
 		UI_COMMAND( PreviewSceneSettings, "Preview Scene Settings...", "The Advanced Preview Settings tab will let you alter the preview scene's settings.", EUserInterfaceActionType::Button, FInputChord());
 
@@ -1356,7 +1356,7 @@ public:
 		UI_COMMAND(JumpToDefaultCamera, "Jump To Default Camera", "Jump to the default camera (if set).", EUserInterfaceActionType::Button, FInputChord(EModifierKey::Shift, EKeys::F));
 		*/
 
-		/*
+		/**
 		FAnimViewportPlaybackCommands：
 		UI_COMMAND( PlaybackSpeedCommands[EAnimationPlaybackSpeeds::OneTenth],	"x0.1", "Set the animation playback speed to a tenth of normal", EUserInterfaceActionType::RadioButton, FInputChord() );
 		UI_COMMAND( PlaybackSpeedCommands[EAnimationPlaybackSpeeds::Quarter],		"x0.25", "Set the animation playback speed to a quarter of normal", EUserInterfaceActionType::RadioButton, FInputChord() );
@@ -1383,7 +1383,7 @@ public:
 		UI_COMMAND(PersonaTurnTableStop, "Stop", "Stop and Reset orientation", EUserInterfaceActionType::RadioButton, FInputChord());
 		*/
 
-		/*
+		/**
 		FAnimViewportShowCommands：
 		UI_COMMAND( AutoAlignFloorToMesh, "Auto Align Floor to Mesh", "Auto align floor to mesh bounds", EUserInterfaceActionType::ToggleButton, FInputChord() );
 		UI_COMMAND( MuteAudio, "Mute Audio", "Mute audio from the preview", EUserInterfaceActionType::ToggleButton, FInputChord() );
@@ -1447,12 +1447,12 @@ public:
 		UI_COMMAND(HideOnlyClothSections, "Hide Only Cloth Sections", "Display all except cloth mapped sections", EUserInterfaceActionType::RadioButton, FInputChord());
 		*/
 
-		/*
+		/**
 		FCurveViewerCommands：
 		UI_COMMAND( AddCurve, "Add Curve", "Add a curve to the Skeleton", EUserInterfaceActionType::Button, FInputChord());
 		*/
 
-		/*
+		/**
 		FPoseEditorCommands：
 		UI_COMMAND(PasteAllNames, "Paste All Pose Names", "Paste all pose names from clipboard", EUserInterfaceActionType::Button, FInputChord());
 		UI_COMMAND(UpdatePoseToCurrent, "Update Pose to Current", "Updates the selected pose to match the pose currently shown in the viewport", EUserInterfaceActionType::Button, FInputChord());
@@ -1460,24 +1460,24 @@ public:
 		UI_COMMAND(AddPoseFromReference, "Add Pose from Reference", "Adds a new pose matching the Skeleton its reference pose", EUserInterfaceActionType::Button, FInputChord());
 		*/
 
-		/*
+		/**
 		FAnimNotifyPanelCommands：
 		UI_COMMAND(DeleteNotify, "Delete", "Deletes the selected notifies.", EUserInterfaceActionType::Button, FInputChord(EKeys::Platform_Delete));
 		UI_COMMAND(CopyNotifies, "Copy", "Copy animation notify events.", EUserInterfaceActionType::Button, FInputChord(EModifierKey::Control, EKeys::C));
 		UI_COMMAND(PasteNotifies, "Paste", "Paste animation notify event here.", EUserInterfaceActionType::Button, FInputChord(EModifierKey::Control, EKeys::V));
 		*/
 
-		/*
+		/**
 		FAnimSegmentsPanelCommands：
 		UI_COMMAND(DeleteSegment, "Delete", "Deletes the selected segment", EUserInterfaceActionType::Button, FInputChord(EKeys::Platform_Delete));
 		*/
 
-		/*
+		/**
 		FPersonaCommonCommands：
 		UI_COMMAND(TogglePlay, "Play/Pause", "Play or pause the current animation", EUserInterfaceActionType::ToggleButton, FInputChord(EKeys::SpaceBar));
 		*/
 
-		/*
+		/**
 		FPhysicsAssetEditorCommands：
 		UI_COMMAND(RegenerateBodies, "Regenerate Bodies", "Regenerates the selected bodies using the current generation settings (see the Tools tab)", EUserInterfaceActionType::Button, FInputChord());
 		UI_COMMAND(AddBodies, "Add/Replace Bodies", "Adds or replaces bodies for the selected bones using the current generation settings (see the Tools tab)", EUserInterfaceActionType::Button, FInputChord());
@@ -1613,12 +1613,12 @@ public:
 		UI_COMMAND(FocusOnSelection, "Focus the viewport on the current selection", "", EUserInterfaceActionType::Button, FInputChord(EKeys::F));
 		*/
 
-		/*
+		/**
 		FContextMenuCommands：
 		UI_COMMAND(Command_FindInContentBrowser,"Browse to Asset", "Browses to the associated asset and selects it in the most recently used Content Browser (summoning one if necessary)", EUserInterfaceActionType::Button, FInputChord(EModifierKey::Control, EKeys::B));
 		*/
 
-		/*
+		/**
 		FSequenceRecorderCommands：
 		UI_COMMAND(RecordAll, "Record", "Record all recordings", EUserInterfaceActionType::Button, FInputChord(EModifierKey::Control | EModifierKey::Shift, EKeys::R));
 		UI_COMMAND(StopAll, "StopAll", "Stop all recordings", EUserInterfaceActionType::Button, FInputChord(EModifierKey::Control | EModifierKey::Shift, EKeys::S));
@@ -1631,7 +1631,7 @@ public:
 		UI_COMMAND(DuplicateRecordingGroup, "Duplicate Group", "Duplicates the current recording group", EUserInterfaceActionType::Button, FInputChord());
 		*/
 
-		/*
+		/**
 		FSequencerCommands：
 		UI_COMMAND( TogglePlay, "Toggle Play", "Toggle the timeline playing", EUserInterfaceActionType::Button, FInputChord(EKeys::SpaceBar) );
 		UI_COMMAND( TogglePlayViewport, "Toggle Play (Viewport)", "Toggle the timeline playing in all viewports and sequencer", EUserInterfaceActionType::Button, FInputChord(EModifierKey::Shift, EKeys::SpaceBar));
@@ -1816,12 +1816,12 @@ public:
 		UI_COMMAND(RefreshUI, "Refresh UI", "Forcibly refresh the UI from source data.", EUserInterfaceActionType::Button, FInputChord(EKeys::F5));
 		*/
 
-		/*
+		/**
 		FSequencerTrackFilter_AnimatedCommands：
 		UI_COMMAND(ToggleAnimatedTracks, "Animated Tracks", "Toggle the filter for Animated Tracks.", EUserInterfaceActionType::ToggleButton, FInputChord(EKeys::U));
 		*/
 
-		/*
+		/**
 		FSkeletalMeshEditorCommands：
 		UI_COMMAND(ReimportMesh, "Reimport Base Mesh", "Reimport the base mesh.", EUserInterfaceActionType::Button, FInputChord());
 		UI_COMMAND(ReimportMeshWithNewFile, "Reimport Base Mesh With New File", "Reimport the base mesh using a new source file.", EUserInterfaceActionType::Button, FInputChord());
@@ -1831,7 +1831,7 @@ public:
 		UI_COMMAND(BakeMaterials, "Bake Out Materials", "Bake out Materials for given LOD(s).", EUserInterfaceActionType::Button, FInputChord());
 		*/
 
-		/*
+		/**
 		FSkeletonEditorCommands：
 		UI_COMMAND(ChangeSkeletonPreviewMesh, "Set Preview Mesh as Default", "Changes the skeletons default preview mesh to the current open preview mesh. The skeleton will require saving after this action.", EUserInterfaceActionType::Button, FInputChord());
 		UI_COMMAND(RemoveUnusedBones, "Remove Unused Bones from Skeleton", "Removes any bones from the skeleton that are not used by any of its meshes. The skeleton and associated animations will require saving after this action.", EUserInterfaceActionType::Button, FInputChord());
@@ -1843,7 +1843,7 @@ public:
 		UI_COMMAND(UpdateSkeletonRefPose, "Update Skeleton RefPose", "Update Skeleton ref pose based on current preview mesh", EUserInterfaceActionType::Button, FInputChord());
 		*/
 
-		/*
+		/**
 		FSkeletonTreeCommands：
 		UI_COMMAND( ShowAllBones, "Show All Bones", "Show every bone in the skeleton", EUserInterfaceActionType::RadioButton, FInputChord() );
 		UI_COMMAND( ShowMeshBones, "Show Mesh Bones", "Show bones that are used in the mesh", EUserInterfaceActionType::RadioButton, FInputChord() );
@@ -1882,7 +1882,7 @@ public:
 		UI_COMMAND( DeleteCurrentBlendProfile, "Delete the Current Blend Profile", "Delete the active blend profile for this skeleton", EUserInterfaceActionType::Button, FInputChord() );
 		*/
 
-		/*
+		/**
 		FStaticMeshEditorCommands：
 		UI_COMMAND(SetShowNaniteFallback, "Nanite Fallback", "Toggles the display of the Nanite fallback mesh. The fallback mesh is used when Nanite is not available such as platforms that do not support it.", EUserInterfaceActionType::ToggleButton, FInputChord(EModifierKey::Control, EKeys::N));
 		UI_COMMAND(SetShowWireframe, "Wireframe", "Toggles the viewmode of the Preview Pane between a lit view and a wireframe view.", EUserInterfaceActionType::ToggleButton, FInputChord());
@@ -1944,13 +1944,13 @@ public:
 		UI_COMMAND(BakeMaterials, "Bake Out Materials", "Bake out Materials for given LOD(s).", EUserInterfaceActionType::Button, FInputChord());
 		*/
 
-		/*
+		/**
 		FStaticMeshViewportLODCommands：
 		UI_COMMAND( LODAuto, "LOD Auto", "Automatically select LOD", EUserInterfaceActionType::RadioButton, FInputChord() );
 		UI_COMMAND( LOD0, "LOD 0", "Force select LOD 0", EUserInterfaceActionType::RadioButton, FInputChord() );
 		*/
 
-		/*
+		/**
 		FSourceControlCommands：
 		UI_COMMAND(ConnectToSourceControl, "Connect to Revision Control...", "Connect to a revision control system for tracking changes to your content and levels.", EUserInterfaceActionType::Button, FInputChord());
 		UI_COMMAND(ChangeSourceControlSettings, "Change Revision Control Settings...", "Opens a dialog to change revision control settings.", EUserInterfaceActionType::Button, FInputChord());
@@ -1960,7 +1960,7 @@ public:
 		UI_COMMAND(RevertAll, "Revert All Files", "Opens a dialog to revert any assets which have been modified.", EUserInterfaceActionType::Button, FInputChord());
 		*/
 
-		/*
+		/**
 		FTextureEditorCommands：
 		UI_COMMAND(RedChannel, "Red", "Toggles the red channel", EUserInterfaceActionType::ToggleButton, FInputChord());
 		UI_COMMAND(GreenChannel, "Green", "Toggles the green channel", EUserInterfaceActionType::ToggleButton, FInputChord());
@@ -1983,7 +1983,7 @@ public:
 		UI_COMMAND(Settings, "Advanced Settings...", "Opens the advanced settings for the texture editor", EUserInterfaceActionType::Button, FInputChord());
 		*/
 
-		/*
+		/**
 		FTranslationEditorCommands：
 		UI_COMMAND( ChangeSourceFont, "Change Source Font", "Change the Font for the Source Lanugage", EUserInterfaceActionType::Button, FInputChord() );
 		UI_COMMAND( ChangeTranslationTargetFont, "Change Translation Font", "Change the Translation Target Language Font", EUserInterfaceActionType::Button, FInputChord() );
@@ -1996,12 +1996,12 @@ public:
 		UI_COMMAND( OpenTranslationPicker, "Translation Picker", "Open the Translation Picker to Modify Editor Translations", EUserInterfaceActionType::Button, FInputChord() )
 		*/
 
-		/*
+		/**
 		FTurnkeySupportCommands：
 		UI_COMMAND(PackagingSettings, "Packaging Settings...", "Opens the settings for project packaging", EUserInterfaceActionType::Button, FInputChord());
 		*/
 
-		/*
+		/**
 		FDesignerCommands：
 		UI_COMMAND( LayoutTransform, "Layout Transform Mode", "Adjust widget layout transform", EUserInterfaceActionType::ToggleButton, FInputChord(EKeys::W) );
 		UI_COMMAND( RenderTransform, "Render Transform Mode", "Adjust widget render transform", EUserInterfaceActionType::ToggleButton, FInputChord(EKeys::E) );
@@ -2014,7 +2014,7 @@ public:
 		UI_COMMAND( ToggleLocalizationPreview, "Toggle Localization Preview", "Enables or disables the localization preview for the current preview language (see Editor Settings -> Region & Language).", EUserInterfaceActionType::ToggleButton, FInputChord() );
 		*/
 
-		/*
+		/**
 		FUMGEditorCommands：
 		UI_COMMAND(CreateNativeBaseClass, "Create Native Base Class", "Create a native base class for this widget, using the current parent as the parent of the native class.", EUserInterfaceActionType::Button, FInputChord() );
 		UI_COMMAND(ExportAsPNG, "Export as Image", "Export the current widget blueprint as .png format.", EUserInterfaceActionType::Button, FInputChord());
@@ -2034,7 +2034,7 @@ public:
 		UI_COMMAND(OpenAnimDrawer, "Open Animation Browser Drawer", "Opens the animation drawer from the status bar", EUserInterfaceActionType::Button, FInputChord(EModifierKey::Control | EModifierKey::Shift, EKeys::SpaceBar));
 		*/
 
-		/*
+		/**
 		FPlayWorldCommands：
 		// SIE
 		UI_COMMAND(Simulate, "Simulate", "Start simulating the game", EUserInterfaceActionType::Check, FInputChord(EKeys::S, EModifierKey::Alt));
@@ -2069,7 +2069,7 @@ public:
 		UI_COMMAND(StepOut, "Step Out", "Step Out to the next node to be executed in the parent graph", EUserInterfaceActionType::Button, FInputChord(EModifierKey::Alt | EModifierKey::Shift, EKeys::F11));
 		*/
 
-		/*
+		/**
 		FAssetEditorCommonCommands：
 		UI_COMMAND( SaveAsset, "Save", "Saves this asset", EUserInterfaceActionType::Button, FInputChord(EModifierKey::Control, EKeys::S) );
 		UI_COMMAND( SaveAssetAs, "Save As...", "Saves this asset under a different name", EUserInterfaceActionType::Button, FInputChord(EModifierKey::Control | EModifierKey::Alt, EKeys::S) );
@@ -2078,7 +2078,7 @@ public:
 		UI_COMMAND( SwitchToWorldCentricEditor, "Switch to World-Centric Editor", "Closes the standalone asset editor and reopens it in 'world-centric' mode, docked within the level editor that it was originally opened in.", EUserInterfaceActionType::Button, FInputChord() );
 		*/
 
-		/*
+		/**
 		FGlobalEditorCommonCommands：
 		UI_COMMAND(SummonControlTabNavigation, "Tab Navigation", "Summons a list of open assets and tabs, and navigates forwards in it.", EUserInterfaceActionType::Button, FInputChord(EModifierKey::Control, EKeys::Tab));
 		UI_COMMAND(SummonControlTabNavigationAlternate, "Tab Navigation", "Summons a list of open assets and tabs, and navigates forward in its.", EUserInterfaceActionType::Button, FInputChord(EModifierKey::Command, EKeys::Tab));
@@ -2105,14 +2105,14 @@ public:
 		#endif
 		*/
 
-		/*
+		/**
 		FStandardToolModeCommands：
 		UI_COMMAND(IncreaseBrushSize, "Increase Brush Size", "Increases the size of the brush", EUserInterfaceActionType::Button, FInputChord(EKeys::RightBracket));
 		UI_COMMAND(DecreaseBrushSize, "Decrease Brush Size", "Decreases the size of the brush", EUserInterfaceActionType::Button, FInputChord(EKeys::LeftBracket));
 		UI_COMMAND(ToggleWireframe, "Toggle Wireframe", "Toggle Wireframe overlay on/off", EUserInterfaceActionType::Button, FInputChord(EModifierKey::Alt, EKeys::W));
 		*/
 
-		/*
+		/**
 		FViewportNavigationCommands：
 		UI_COMMAND(Forward, "Forward", "Moves the camera Forward", EUserInterfaceActionType::Button, FInputChord(EKeys::W));
 		UI_COMMAND(Backward, "Backward", "Moves the camera Backward", EUserInterfaceActionType::Button, FInputChord(EKeys::S));
@@ -2126,7 +2126,7 @@ public:
 		UI_COMMAND(FovZoomOut, "FOV Zoom Out", "Widens the camera FOV", EUserInterfaceActionType::Button, FInputChord(EKeys::Z));
 		*/
 
-		/*
+		/**
 		FEditorViewportCommands：
 		UI_COMMAND( Perspective, "Perspective", "Switches the viewport to perspective view", EUserInterfaceActionType::RadioButton, FInputChord( EModifierKey::Alt, EKeys::G ) );
 		UI_COMMAND( Front, "Front", "Switches the viewport to front view", EUserInterfaceActionType::RadioButton, FInputChord( EModifierKey::Alt, EKeys::H ) );
@@ -2244,7 +2244,7 @@ public:
 		UI_COMMAND(ToggleInViewportContextMenu, "In-Viewport Context Menu", "Shows a contextual menu of key properties and actions for the selected items in the viewport.", EUserInterfaceActionType::ToggleButton, FInputChord(EKeys::Tab));
 		*/
 
-		/*
+		/**
 		FLevelCollectionCommands：
 		UI_COMMAND( RefreshBrowser,	"Refresh",	"Refreshes opened world", EUserInterfaceActionType::Button, FInputChord(EKeys::F5) );
 
@@ -2348,7 +2348,7 @@ public:
 		UI_COMMAND( LockTilesLocation, "Lock tiles location", "When enabled all tiles location will be locked, content inside tiles can still be edited", EUserInterfaceActionType::ToggleButton, FInputChord());
 		*/
 
-		/*
+		/**
 		SWorldPartitionEditorGrid2D::FEditorCommands：
 		UI_COMMAND(CreateRegionFromSelection, "Load Region From Selection", "Load region from selection.", EUserInterfaceActionType::Button, FInputChord());
 		UI_COMMAND(LoadSelectedRegions, "Load Selected Regions", "Load the selected regions.", EUserInterfaceActionType::Button, FInputChord());
@@ -2362,7 +2362,7 @@ public:
 #pragma endregion
 
 #pragma region Source/Developer
-		/*
+		/**
 		FAutomationWindowCommands：
 		UI_COMMAND( RefreshTests, "Refresh Tests", "Refresh Tests", EUserInterfaceActionType::Button, FInputChord() );
 		UI_COMMAND( FindWorkers, "Find Workers", "Find Workers", EUserInterfaceActionType::Button, FInputChord() );
@@ -2378,7 +2378,7 @@ public:
 		UI_COMMAND(RenameCurrentPreset, "Rename", "Rename Current Preset", EUserInterfaceActionType::Button, FInputChord());
 		*/
 
-		/*
+		/**
 		FDeviceDetailsCommands：
 		UI_COMMAND(Claim, "Claim", "Claim the device", EUserInterfaceActionType::Button, FInputChord());
 		UI_COMMAND(Release, "Release", "Release the device", EUserInterfaceActionType::Button, FInputChord());
@@ -2394,7 +2394,7 @@ public:
 		UI_COMMAND(Reboot, "Reboot", "Reboot the device", EUserInterfaceActionType::Button, FInputChord());
 		*/
 
-		/*
+		/**
 		FVisualLoggerCommands：
 		UI_COMMAND(StartRecording, "Start", "Start the debugger", EUserInterfaceActionType::Button, FInputChord());
 		UI_COMMAND(StopRecording, "Stop", "Step over the current message", EUserInterfaceActionType::Button, FInputChord());
@@ -2410,7 +2410,7 @@ public:
 		UI_COMMAND(HideEmpty, "HideEmpty", "Hide logs without text information", EUserInterfaceActionType::ToggleButton, FInputChord());
 		*/
 
-		/*
+		/**
 		FProfilerCommands：
 		UI_COMMAND( ToggleDataPreview, 	"Data Preview", "Toggles the data preview", EUserInterfaceActionType::ToggleButton, FInputChord( EModifierKey::Control, EKeys::R ) );
 		UI_COMMAND( ToggleDataCapture, "Data Capture", "Toggles the data capture", EUserInterfaceActionType::ToggleButton, FInputChord( EModifierKey::Control, EKeys::C ) );
@@ -2441,7 +2441,7 @@ public:
 		UI_COMMAND( EventGraph_SelectAllFrames, "Select all frames", "Selects all frames in the data graph and displays them in the event graph", EUserInterfaceActionType::Button, FInputChord() );
 		*/
 
-		/*
+		/**
 		FProjectLauncherCommands：
 		UI_COMMAND(QuickLaunch, "Quick Launch", "Builds, cooks, and launches a build.", EUserInterfaceActionType::ToggleButton, FInputChord(EModifierKey::Control, EKeys::L));
 		UI_COMMAND(CreateBuild, "Build", "Creates a build.", EUserInterfaceActionType::ToggleButton, FInputChord(EModifierKey::Control, EKeys::B));
@@ -2453,14 +2453,14 @@ public:
 		UI_COMMAND(DeleteProfile, "Delete", "Delete the launch profile.", EUserInterfaceActionType::Button, FInputChord());//, FInputChord(EModifierKey::Control, EKeys::Delete));
 		*/
 
-		/*
+		/**
 		FSessionConsoleCommands：
 		UI_COMMAND(Clear, "Clear Log", "Clear the log window", EUserInterfaceActionType::Button, FInputChord());
 		UI_COMMAND(SessionCopy, "Copy", "Copy the selected log messages to the clipboard", EUserInterfaceActionType::Button, FInputChord());
 		UI_COMMAND(SessionSave, "Save Log...", "Save the entire log to a file", EUserInterfaceActionType::ToggleButton, FInputChord());
 		*/
 
-		/*
+		/**
 		FContextSwitchesStateCommands：
 		
 		UI_COMMAND(Command_ShowCoreTracks,
@@ -2512,7 +2512,7 @@ public:
 		FInputChord());
 		*/
 
-		/*
+		/**
 		FLoadingProfilerCommands：
 		UI_COMMAND(ToggleTimingViewVisibility,
 		"Timing",
@@ -2551,7 +2551,7 @@ public:
 		FInputChord());
 		*/
 
-		/*
+		/**
 		FMemoryTimingViewCommands：
 		UI_COMMAND(ShowHideAllMemoryTracks,
 		"Memory Tracks",
@@ -2560,7 +2560,7 @@ public:
 		FInputChord(EModifierKey::Control, EKeys::M));
 		*/
 
-		/*
+		/**
 		FMemoryProfilerCommands：
 		UI_COMMAND(ToggleTimingViewVisibility,
 		"Timing",
@@ -2587,7 +2587,7 @@ public:
 		FInputChord());
 		*/
 
-		/*
+		/**
 		FNetworkingProfilerCommands：
 		UI_COMMAND(TogglePacketViewVisibility,
 		"Packets",
@@ -2614,7 +2614,7 @@ public:
 		FInputChord());
 		*/
 
-		/*
+		/**
 		FTableTreeViewCommands：
 		UI_COMMAND(Command_CopyToClipboard,
 		"Copy",
@@ -2671,7 +2671,7 @@ public:
 		FInputChord(EModifierKey::Alt, EKeys::E));
 		*/
 
-		/*
+		/**
 		FTaskTimingStateCommands：
 		UI_COMMAND(Command_ShowTaskTransitions,
 				   "Show Task Transitions",
@@ -2727,13 +2727,13 @@ public:
 				   FInputChord());
 		*/
 
-		/*
+		/**
 		FTaskTableTreeViewCommands：
 		UI_COMMAND(Command_GoToTask, "Go To Task", "Pan and zoom to the task in Timing View.", EUserInterfaceActionType::Button, FInputChord());
 		UI_COMMAND(Command_OpenInIDE, "Open in IDE", "Open the source location where the selected task was launched in IDE.", EUserInterfaceActionType::Button, FInputChord());
 		*/
 
-		/*
+		/**
 		FFileActivityTimingViewCommands：
 		UI_COMMAND(ShowHideAllIoTracks,
 		"File Activity Tracks",
@@ -2766,7 +2766,7 @@ public:
 		FInputChord(EKeys::O));
 		*/
 
-		/*
+		/**
 		FFrameTimingViewCommands：
 		UI_COMMAND(ShowHideAllFrameTracks,
 		"Frame Tracks",
@@ -2775,7 +2775,7 @@ public:
 		FInputChord(EKeys::R));
 		*/
 
-		/*
+		/**
 		FLoadingTimingViewCommands：
 		UI_COMMAND(ShowHideAllLoadingTracks,
 		"Asset Loading Tracks",
@@ -2784,7 +2784,7 @@ public:
 		FInputChord(EKeys::L));
 		*/
 
-		/*
+		/**
 		FTimingRegionsViewCommands：
 		UI_COMMAND(ShowHideRegionTrack,
 		"Timing Regions Track",
@@ -2793,7 +2793,7 @@ public:
 		FInputChord(EKeys::R));
 		*/
 
-		/*
+		/**
 		FThreadTimingViewCommands：
 		UI_COMMAND(ShowHideAllGpuTracks,
 		"GPU Track(s)",
@@ -2808,7 +2808,7 @@ public:
 		FInputChord(EKeys::U));
 		*/
 
-		/*
+		/**
 		FLogViewCommands：
 				UI_COMMAND(Command_HideSelectedCategory,
 			"Hide Category",
@@ -2867,7 +2867,7 @@ public:
 			EUserInterfaceActionType::Button, FInputChord());
 		*/
 
-		/*
+		/**
 		FStatsViewCommands：
 		UI_COMMAND(Command_CopyToClipboard,
 			"Copy To Clipboard",
@@ -2900,7 +2900,7 @@ public:
 			FInputChord());
 		*/
 
-		/*
+		/**
 		FTimerTreeViewCommands：
 		UI_COMMAND(Command_CopyToClipboard,
 			"Copy To Clipboard",
@@ -2909,7 +2909,7 @@ public:
 			FInputChord(EModifierKey::Control, EKeys::C));
 		*/
 
-		/*
+		/**
 		FTimersViewCommands：
 		UI_COMMAND(Command_CopyToClipboard,
 			"Copy To Clipboard",
@@ -2954,7 +2954,7 @@ public:
 			FInputChord());
 		*/
 
-		/*
+		/**
 		FInsightsCommands：
 		UI_COMMAND(InsightsManager_Load,
 		"Load...",
@@ -2975,7 +2975,7 @@ public:
 		FInputChord(EModifierKey::Control, EKeys::O));
 		*/
 
-		/*
+		/**
 		FTimingProfilerCommands：
 		UI_COMMAND(ToggleFramesTrackVisibility, "Frames", "Toggles the visibility of the Frames track.", EUserInterfaceActionType::ToggleButton, FInputChord());
 		UI_COMMAND(ToggleTimingViewVisibility, "Timing", "Toggles the visibility of the main Timing view.", EUserInterfaceActionType::ToggleButton, FInputChord());
@@ -2986,7 +2986,7 @@ public:
 		UI_COMMAND(ToggleLogViewVisibility, "Log", "Toggles the visibility of the Log view.", EUserInterfaceActionType::ToggleButton,FInputChord());
 		*/
 
-		/*
+		/**
 		FTimingViewCommands：
 		UI_COMMAND(AutoHideEmptyTracks,
 		"Auto Hide Empty Tracks",

@@ -30,7 +30,7 @@ protected:
 	virtual void OnMovieSceneClosed() override;
 
 public:
-	/** Start playback forwards from the current time cursor position, using the current play rate. */
+	/* Start playback forwards from the current time cursor position, using the current play rate. */
 	UFUNCTION(BlueprintCallable)
 	virtual bool PlayMovieScene() override;
 
@@ -44,15 +44,15 @@ public:
 	UFUNCTION(BlueprintCallable)
 	virtual bool PlayLoopingMovieScene(int32 NumLoops = -1) override;
 
-	/** Reverse playback. */
+	/* Reverse playback. */
 	UFUNCTION(BlueprintCallable)
 	virtual bool PlayReverseMovieScene() override;
 
-	/** Pause playback. */
+	/* Pause playback. */
 	UFUNCTION(BlueprintCallable)
 	virtual bool PauseMovieScene() override;
 
-	/** Stop playback and move the cursor to the end (or start, for reversed playback) of the sequence. */
+	/* Stop playback and move the cursor to the end (or start, for reversed playback) of the sequence. */
 	UFUNCTION(BlueprintCallable)
 	virtual bool StopMovieScene() override;
 
@@ -63,23 +63,23 @@ public:
 	UFUNCTION(BlueprintCallable)
 	virtual bool SeekMovieScene(FTimecode SeekTime) override;
 
-	/** Changes the direction of playback (go in reverse if it was going forward, or vice versa) */
+	/* Changes the direction of playback (go in reverse if it was going forward, or vice versa) */
 	UFUNCTION(BlueprintCallable)
 	virtual void ChangeMovieSceneDirection() override;
 
-	/** Check whether the sequence is actively playing. */
+	/* Check whether the sequence is actively playing. */
 	UFUNCTION(BlueprintPure)
 	virtual bool IsPlaying() override;
 
-	/** Check whether the sequence is Looping. */
+	/* Check whether the sequence is Looping. */
 	UFUNCTION(BlueprintPure)
 	virtual bool IsLooping() override;
 
-	/** Check whether the sequence is paused. */
+	/* Check whether the sequence is paused. */
 	UFUNCTION(BlueprintPure)
 	virtual bool IsPaused() override;
 
-	/** Check whether playback is reversed. */
+	/* Check whether playback is reversed. */
 	UFUNCTION(BlueprintPure)
 	virtual bool IsReversed() override;
 
@@ -87,7 +87,7 @@ public:
 	UFUNCTION(BlueprintPure)
 	virtual FTimecode GetCurrentTime() override;
 
-	/** Get the total duration of the sequence */
+	/* Get the total duration of the sequence */
 	UFUNCTION(BlueprintPure)
 	virtual FTimecode GetDuration() override;
 
@@ -99,7 +99,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	virtual void SetFrameRate(FFrameRate FrameRate) override;
 
-	/** Get the playback rate of this player. */
+	/* Get the playback rate of this player. */
 	UFUNCTION(BlueprintPure)
 	virtual float GetPlayRate() override;
 
@@ -120,7 +120,7 @@ public:
 	UFUNCTION(BlueprintPure)
 	bool GetDisableCameraCuts() const;
 
-	/** Set whether to disable camera cuts */
+	/* Set whether to disable camera cuts */
 	UFUNCTION(BlueprintCallable)
 	void SetDisableCameraCuts(bool bInDisableCameraCuts);
 
@@ -146,7 +146,7 @@ public:
 	UFUNCTION(BlueprintPure)
 	FMovieSceneSequencePlaybackSettings GetPlaybackSettings() const;
 
-	/** Assign this player's playback settings */
+	/* Assign this player's playback settings */
 	UFUNCTION(BlueprintCallable)
 	void SetPlaybackSettings(const FMovieSceneSequencePlaybackSettings& InSettings);
 

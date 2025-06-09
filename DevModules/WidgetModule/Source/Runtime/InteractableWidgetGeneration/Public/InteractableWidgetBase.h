@@ -70,27 +70,27 @@ private:
 
 	/* ==================== Event ==================== */
 protected:
-	/** Helper function registered to the underlying button when pressed */
+	/* Helper function registered to the underlying button when pressed */
 	UFUNCTION()
 	void HandleButtonPressed();
 
-	/** Helper function registered to the underlying button when released */
+	/* Helper function registered to the underlying button when released */
 	UFUNCTION()
 	void HandleButtonReleased();
 
-	/** Handler function registered to the underlying button's click. */
+	/* Handler function registered to the underlying button's click. */
 	UFUNCTION()
 	void HandleButtonClicked();
 
-	/** Handler function registered to the underlying button's double click. */
+	/* Handler function registered to the underlying button's double click. */
 	UFUNCTION()
 	void HandleButtonDoubleClicked();
 
-	/** Helper function registered to the underlying button receiving focus */
+	/* Helper function registered to the underlying button receiving focus */
 	UFUNCTION()
 	virtual void HandleFocusReceived();
 
-	/** Helper function registered to the underlying button losing focus */
+	/* Helper function registered to the underlying button losing focus */
 	UFUNCTION()
 	virtual void HandleFocusLost();
 
@@ -220,16 +220,16 @@ public:
 
 	/* ==================== Layout ==================== */
 public:
-	/** The minimum width of the button (only used if greater than the style's minimum) */
+	/* The minimum width of the button (only used if greater than the style's minimum) */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Layout", meta = (ClampMin = "0"))
 	int32 MinWidth;
 
-	/** The minimum height of the button (only used if greater than the style's minimum) */
+	/* The minimum height of the button (only used if greater than the style's minimum) */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Layout", meta = (ClampMin = "0"))
 	int32 MinHeight;
 
 public:
-	/** Sets the minimum dimensions of this button */
+	/* Sets the minimum dimensions of this button */
 	UFUNCTION(BlueprintCallable)
 	void SetMinDimensions(int32 InMinWidth, int32 InMinHeight);
 
@@ -238,47 +238,47 @@ protected:
 
 	/* ==================== Style ==================== */
 public:
-	/** References the button style asset that defines a style in multiple sizes */
+	/* References the button style asset that defines a style in multiple sizes */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Style")
 	TSubclassOf<UCommonButtonStyle> StyleClass;
 
-	/** Whether to hide the input action widget at all times (useful for textless small buttons) */
+	/* Whether to hide the input action widget at all times (useful for textless small buttons) */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Style")
 	bool bHideInputAction;
 
-	/** The type of mouse action required by the user to trigger the button's 'Click' */
+	/* The type of mouse action required by the user to trigger the button's 'Click' */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Style")
 	uint8 bApplyAlphaOnDisable : 1;
 
 public:
-	/** Current button style*/
+	/* Current button style*/
 	UFUNCTION(BlueprintPure)
 	UCommonButtonStyle* GetStyle() const;
 
-	/** Sets the style of this button, rebuilds the internal styling */
+	/* Sets the style of this button, rebuilds the internal styling */
 	UFUNCTION(BlueprintCallable)
 	void SetStyle(TSubclassOf<UCommonButtonStyle> InStyle = nullptr);
 
 	UFUNCTION(BlueprintCallable)
 	void SetHideInputAction(bool bInHideInputAction);
 
-	/** The current button padding that corresponds to the current size and selection state */
+	/* The current button padding that corresponds to the current size and selection state */
 	UFUNCTION(BlueprintCallable)
 	void GetCurrentButtonPadding(FMargin& OutButtonPadding) const;
 
-	/** The custom padding that corresponds to the current size and selection state */
+	/* The custom padding that corresponds to the current size and selection state */
 	UFUNCTION(BlueprintCallable)
 	void GetCurrentCustomPadding(FMargin& OutCustomPadding) const;
 
-	/** The class of the text style that corresponds to the current size and selection state */
+	/* The class of the text style that corresponds to the current size and selection state */
 	UFUNCTION(BlueprintCallable)
 	TSubclassOf<UCommonTextStyle> GetCurrentTextStyleClass() const;
 
-	/** The text style that corresponds to the current size and selection state */
+	/* The text style that corresponds to the current size and selection state */
 	UFUNCTION(BlueprintCallable)
 	UCommonTextStyle* GetCurrentTextStyle() const;
 
-	/** Returns the dynamic instance of the material being used for this button, if it is using a single material style. */
+	/* Returns the dynamic instance of the material being used for this button, if it is using a single material style. */
 	UFUNCTION(BlueprintPure)
 	UMaterialInstanceDynamic* GetSingleMaterialStyleMID() const;
 
@@ -286,28 +286,28 @@ public:
 	const UCommonButtonStyle* GetStyleCDO() const;
 
 protected:
-	/** Internally managed and applied style to use when not selected */
+	/* Internally managed and applied style to use when not selected */
 	UPROPERTY()
 	FButtonStyle NormalStyle;
 
-	/** Internally managed and applied style to use when selected */
+	/* Internally managed and applied style to use when selected */
 	UPROPERTY()
 	FButtonStyle SelectedStyle;
 
-	/** Internally managed and applied style to use when disabled */
+	/* Internally managed and applied style to use when disabled */
 	UPROPERTY()
 	FButtonStyle DisabledStyle;
 
-	/** Internally managed and applied style to use when locked */
+	/* Internally managed and applied style to use when locked */
 	UPROPERTY()
 	FButtonStyle LockedStyle;
 
-	/** The dynamic material instance of the material set by the single material style, if specified. */
+	/* The dynamic material instance of the material set by the single material style, if specified. */
 	UPROPERTY(Transient)
 	TObjectPtr<UMaterialInstanceDynamic> SingleMaterialStyleMID;
 
 #if WITH_EDITORONLY_DATA
-	/** Used to track widgets that were created before changing the default style pointer to null */
+	/* Used to track widgets that were created before changing the default style pointer to null */
 	UPROPERTY()
 	bool bStyleNoLongerNeedsConversion;
 #endif
@@ -332,19 +332,19 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Sound", meta = (DisplayName = "Hovered Sound Override"))
 	FSlateSound HoveredSlateSoundOverride;
 
-	/** Optional override for the sound to play when this button is pressed while Selected */
+	/* Optional override for the sound to play when this button is pressed while Selected */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Sound", meta = (DisplayName = "Selected Pressed Sound Override"))
 	FSlateSound SelectedPressedSlateSoundOverride;
 
-	/** Optional override for the sound to play when this button is hovered while Selected */
+	/* Optional override for the sound to play when this button is hovered while Selected */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Sound", meta = (DisplayName = "Selected Hovered Sound Override"))
 	FSlateSound SelectedHoveredSlateSoundOverride;
 
-	/** Optional override for the sound to play when this button is pressed while Locked */
+	/* Optional override for the sound to play when this button is pressed while Locked */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Sound", meta = (DisplayName = "Locked Pressed Sound Override"))
 	FSlateSound LockedPressedSlateSoundOverride;
 
-	/** Optional override for the sound to play when this button is hovered while Locked */
+	/* Optional override for the sound to play when this button is hovered while Locked */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Sound", meta = (DisplayName = "Locked Hovered Sound Override"))
 	FSlateSound LockedHoveredSlateSoundOverride;
 
@@ -378,29 +378,29 @@ public:
 	uint8 bLocked : 1;
 
 public:
-	/** True if the button is currently locked, False otherwise */
+	/* True if the button is currently locked, False otherwise */
 	UFUNCTION(BlueprintPure)
 	bool GetIsLocked() const;
 
-	/** Change whether this widget is locked. If locked, the button can be focusable and responsive to mouse input but will not broadcast OnClicked events. */
+	/* Change whether this widget is locked. If locked, the button can be focusable and responsive to mouse input but will not broadcast OnClicked events. */
 	UFUNCTION(BlueprintCallable)
 	void SetIsLocked(bool bInIsLocked);
 
 	/* ==================== Selection ==================== */
 public:
-	/** True if the button supports being in a "selected" state, which will update the style accordingly */
+	/* True if the button supports being in a "selected" state, which will update the style accordingly */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Selection")
 	uint8 bSelectable : 1;
 
-	/** True if the button can be deselected by clicking it when selected */
+	/* True if the button can be deselected by clicking it when selected */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Selection", meta = ( EditCondition = "bSelectable"))
 	uint8 bToggleable : 1;
 
-	/** If true, the button will be selected when it receives focus. */
+	/* If true, the button will be selected when it receives focus. */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Selection", meta = ( EditCondition = "bSelectable"))
 	uint8 bShouldSelectUponReceivingFocus : 1;
 
-	/** If true, the button may be clicked while selected. Otherwise, interaction is disabled in the selected state. */
+	/* If true, the button may be clicked while selected. Otherwise, interaction is disabled in the selected state. */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Selection", meta = ( EditCondition = "bSelectable"))
 	uint8 bInteractableWhenSelected : 1;
 
@@ -408,28 +408,28 @@ public:
 	uint8 bTriggerClickedAfterSelection : 1;
 
 public:
-	/** Change whether this widget is selectable at all. If false and currently selected, will deselect. */
+	/* Change whether this widget is selectable at all. If false and currently selected, will deselect. */
 	UFUNCTION(BlueprintCallable)
 	void SetIsSelectable(bool bInIsSelectable);
 
-	/** Change whether this widget is toggleable. If toggleable, clicking when selected will deselect. */
+	/* Change whether this widget is toggleable. If toggleable, clicking when selected will deselect. */
 	UFUNCTION(BlueprintCallable)
 	void SetIsToggleable(bool bInIsToggleable);
 
-	/** Set whether the button should become selected upon receiving focus or not; Only settable for buttons that are selectable */
+	/* Set whether the button should become selected upon receiving focus or not; Only settable for buttons that are selectable */
 	UFUNCTION(BlueprintCallable)
 	void SetShouldSelectUponReceivingFocus(bool bInShouldSelectUponReceivingFocus);
 
-	/** Change whether this widget is selectable at all. If false and currently selected, will deselect. */
+	/* Change whether this widget is selectable at all. If false and currently selected, will deselect. */
 	UFUNCTION(BlueprintCallable)
 	void SetIsInteractableWhenSelected(bool bInInteractableWhenSelected);
 
 public:
-	/** True if the button is currently in a selected state, False otherwise */
+	/* True if the button is currently in a selected state, False otherwise */
 	UFUNCTION(BlueprintPure)
 	bool GetIsSelected() const;
 
-	/** Change the selected state manually. */
+	/* Change the selected state manually. */
 	UFUNCTION(BlueprintCallable)
 	void SetIsSelected(bool InSelected, bool bGiveClickFeedback = true);
 
@@ -440,47 +440,47 @@ protected:
 	void SetSelectedInternal(bool bInSelected, bool bGiveClickFeedback = true, bool bBroadcast = true);
 
 private:
-	/** True if this button is currently selected */
+	/* True if this button is currently selected */
 	uint8 bSelected : 1;
 
 	/* ==================== Hold ==================== */
 public:
-	/** True if this button should have a press and hold behavior, triggering the click when the specified hold time is met */
+	/* True if this button should have a press and hold behavior, triggering the click when the specified hold time is met */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Hold")
 	uint8 bRequiresHold : 1;
 
-	/** Press and Hold values used for Keyboard and Mouse, Gamepad and Touch, depending on the current input type */
+	/* Press and Hold values used for Keyboard and Mouse, Gamepad and Touch, depending on the current input type */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Hold", meta = (EditCondition="bRequiresHold"))
 	TSubclassOf<UCommonUIHoldData> HoldData;
 
 protected:
 	virtual void HoldReset();
 
-	/** If HoldData is valid, assigns its values to Keyboard and Mouse, Gamepad and Touch, based off the Current Input Type. */
+	/* If HoldData is valid, assigns its values to Keyboard and Mouse, Gamepad and Touch, based off the Current Input Type. */
 	virtual void UpdateHoldData(ECommonInputType CurrentInputType);
 
-	/** Bound to the hold progress not related to the bound key */
+	/* Bound to the hold progress not related to the bound key */
 	virtual bool NativeOnHoldProgress(float DeltaTime);
 
-	/** Bound to the hold progress rollback not related to the bound key */
+	/* Bound to the hold progress rollback not related to the bound key */
 	virtual bool NativeOnHoldProgressRollback(float DeltaTime);
 
-	/** Bound to the hold progress of the bound key from the input action */
+	/* Bound to the hold progress of the bound key from the input action */
 	virtual void NativeOnHoldActionProgressed(float HoldPercent);
 
 	virtual void NativeOnHoldActionCompleted();
 
 protected:
-	/** Callback fired continously during hold interactions */
+	/* Callback fired continously during hold interactions */
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnHoldActionProgress(float HeldPercent);
 
-	/** Callback fired when hold events complete */
+	/* Callback fired when hold events complete */
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnHoldActionCompleted();
 
 protected:
-	/** Press and hold time in seconds */
+	/* Press and hold time in seconds */
 	float HoldTime;
 
 	/**
@@ -490,20 +490,20 @@ protected:
 	*/
 	float HoldRollbackTime;
 
-	/** Current hold time for this button */
+	/* Current hold time for this button */
 	float CurrentHoldTime;
 
-	/** Handle for ticker spawned for press and hold */
+	/* Handle for ticker spawned for press and hold */
 	FTSTicker::FDelegateHandle HoldTickerHandle;
 
-	/** Handle for ticker spawned for button hold rollback */
+	/* Handle for ticker spawned for button hold rollback */
 	FTSTicker::FDelegateHandle HoldRollbackTickerHandle;
 
 	FUIActionBindingHandle TriggeringBindingHandle;
 
 	/* ==================== Input ==================== */
 public:
-	/** The type of mouse action required by the user to trigger the button's 'Click' */
+	/* The type of mouse action required by the user to trigger the button's 'Click' */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	TEnumAsByte<EButtonClickMethod::Type> ClickMethod;
 
@@ -513,26 +513,26 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	TEnumAsByte<EButtonPressMethod::Type> PressMethod;
 
-	/** True if the input action should be displayed when the button is not interactable */
+	/* True if the input action should be displayed when the button is not interactable */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	uint8 bDisplayInputActionWhenNotInteractable : 1;
 
-	/** True if the input action should be hidden while the user is using a keyboard */
+	/* True if the input action should be hidden while the user is using a keyboard */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	uint8 bHideInputActionWithKeyboard : 1;
 
-	/** True if this button should use the default fallback input action (bool is useful for buttons that shouldn't because they are never directly hit via controller) */
+	/* True if this button should use the default fallback input action (bool is useful for buttons that shouldn't because they are never directly hit via controller) */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	uint8 bShouldUseFallbackDefaultInputAction : 1;
 
-	/** 
+	/* 
 	 *	The input action that is bound to this button. The common input manager will trigger this button to 
 	 *	click if the action was pressed 
 	 */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input", meta = (RowType = "/Script/CommonUI.CommonInputActionDataBase"))
 	FDataTableRowHandle TriggeringInputAction;
 
-	/** 
+	/* 
 	 *	The enhanced input action that is bound to this button. The common input manager will trigger this button to 
 	 *	click if the action was pressed 
 	 */
@@ -550,7 +550,7 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "Input", meta = (BindWidgetOptional, AllowPrivateAccess = true))
 	TObjectPtr<UCommonActionWidget> InputActionWidget;
 
-	/** True if this button should play the hover effect when pressed by a touch input */
+	/* True if this button should play the hover effect when pressed by a touch input */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input", AdvancedDisplay)
 	bool bSimulateHoverOnTouchInput = true;
 
@@ -568,39 +568,39 @@ public:
 	ECommonInputMode InputModeOverride = ECommonInputMode::Menu;
 
 public:
-	/** Set the click method for mouse interaction */
+	/* Set the click method for mouse interaction */
 	UFUNCTION(BlueprintCallable)
 	void SetClickMethod(EButtonClickMethod::Type InClickMethod);
 
-	/** Set the click method for touch interaction */
+	/* Set the click method for touch interaction */
 	UFUNCTION(BlueprintCallable)
 	void SetTouchMethod(EButtonTouchMethod::Type InTouchMethod);
 
-	/** Set the click method for keyboard/gamepad button press interaction */
+	/* Set the click method for keyboard/gamepad button press interaction */
 	UFUNCTION(BlueprintCallable)
 	void SetPressMethod(EButtonPressMethod::Type InPressMethod);
 
-	/** Change whether this widget should use the fallback default input action. */
+	/* Change whether this widget should use the fallback default input action. */
 	UFUNCTION(BlueprintCallable)
 	void SetShouldUseFallbackDefaultInputAction(bool bInShouldUseFallbackDefaultInputAction);
 
-	/** Gets the appropriate input action that is set */
+	/* Gets the appropriate input action that is set */
 	UFUNCTION(BlueprintCallable)
 	bool GetInputAction(FDataTableRowHandle& InputActionRow) const;
 
-	/** Updates the current triggering action */
+	/* Updates the current triggering action */
 	UFUNCTION(BlueprintCallable)
 	void SetTriggeringInputAction(const FDataTableRowHandle& InputActionRow);
 
-	/** Updates the current triggered action */
+	/* Updates the current triggered action */
 	UFUNCTION(BlueprintCallable)
 	void SetTriggeredInputAction(const FDataTableRowHandle& InputActionRow);
 
-	/** Gets the appropriate enhanced input action that is set */
+	/* Gets the appropriate enhanced input action that is set */
 	UFUNCTION(BlueprintPure)
 	UInputAction* GetTriggeringEnhancedInputAction() const;
 
-	/** Updates the current triggering enhanced input action, requires enhanced input enabled in CommonUI settings */
+	/* Updates the current triggering enhanced input action, requires enhanced input enabled in CommonUI settings */
 	UFUNCTION(BlueprintCallable)
 	void SetTriggeringEnhancedInputAction(UInputAction* InInputAction);
 
@@ -613,16 +613,16 @@ protected:
 	 */
 	FDataTableRowHandle TriggeredInputAction;
 
-	/** Helper function to bind to input method change events */
+	/* Helper function to bind to input method change events */
 	virtual void BindInputMethodChangedDelegate();
 
-	/** Helper function to unbind from input method change events */
+	/* Helper function to unbind from input method change events */
 	virtual void UnbindInputMethodChangedDelegate();
 
-	/** Associates this button at its priority with the given key */
+	/* Associates this button at its priority with the given key */
 	virtual void BindTriggeringInputActionToClick();
 
-	/** Associates this button at its priority with the given key */
+	/* Associates this button at its priority with the given key */
 	virtual void UnbindTriggeringInputActionToClick();
 
 	virtual void HandleTriggeringActionCommited();
@@ -631,64 +631,64 @@ protected:
 
 	ECommonInputMode GetInputModeOverride() const { return InputModeOverride; }
 
-	/** Helper function to update the associated input action widget, if any, based upon the state of the button */
+	/* Helper function to update the associated input action widget, if any, based upon the state of the button */
 	virtual void UpdateInputActionWidget();
 
 	void UpdateInputActionWidgetVisibility() const;
 
 protected:
-	/** Callback fired when triggered input action datatable row changes */
+	/* Callback fired when triggered input action datatable row changes */
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnTriggeringInputActionChanged(const FDataTableRowHandle& NewTriggeredAction);
 
-	/** Callback fired when input action datatable row changes */
+	/* Callback fired when input action datatable row changes */
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnTriggeredInputActionChanged(const FDataTableRowHandle& NewTriggeredAction);
 
-	/** Callback fired when enhanced input action changes */
+	/* Callback fired when enhanced input action changes */
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnTriggeringEnhancedInputActionChanged(const UInputAction* InInputAction);
 
 	/* ==================== Interaction ==================== */
 public:
-	/** Disables this button with a reason (use instead of SetIsEnabled) */
+	/* Disables this button with a reason (use instead of SetIsEnabled) */
 	UFUNCTION(BlueprintCallable)
 	void DisableButtonWithReason(const FText& DisabledReason);
 
-	/** Is this button currently interactable? (use instead of GetIsEnabled) */
+	/* Is this button currently interactable? (use instead of GetIsEnabled) */
 	UFUNCTION(BlueprintCallable)
 	bool IsInteractionEnabled() const;
 
-	/** Change whether this widget is selectable at all. If false and currently selected, will deselect. */
+	/* Change whether this widget is selectable at all. If false and currently selected, will deselect. */
 	UFUNCTION(BlueprintCallable)
 	void SetIsInteractionEnabled(bool bInIsInteractionEnabled);
 
 private:
-	/** True if this button is currently enabled */
+	/* True if this button is currently enabled */
 	uint8 bButtonEnabled : 1;
 
-	/** True if interaction with this button is currently enabled */
+	/* True if interaction with this button is currently enabled */
 	uint8 bInteractionEnabled : 1;
 
 	FText DisabledTooltipText;
 
-	/** Enables this button (called in SetIsEnabled override) */
+	/* Enables this button (called in SetIsEnabled override) */
 	void EnableButton();
 
-	/** Disables this button (called in SetIsEnabled override) */
+	/* Disables this button (called in SetIsEnabled override) */
 	void DisableButton();
 
 	/* ==================== UInteractableWidgetBase ==================== */
 public:
-	/** Gets the bIsFocusable flag */
+	/* Gets the bIsFocusable flag */
 	UFUNCTION(BlueprintPure)
 	bool GetIsFocusable() const;
 
-	/** Updates the bIsFocusable flag */
+	/* Updates the bIsFocusable flag */
 	UFUNCTION(BlueprintCallable)
 	void SetIsFocusable(bool bInIsFocusable);
 
-	/** Is this button currently pressed? */
+	/* Is this button currently pressed? */
 	UFUNCTION(BlueprintPure)
 	bool IsPressed() const;
 };

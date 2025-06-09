@@ -1,18 +1,18 @@
 #include "Debug/DebugType.h"
 
-DEFINE_LOG_CATEGORY(DefaultLog);
-DEFINE_LOG_CATEGORY(ObjectLog);
-DEFINE_LOG_CATEGORY(ManagerLog);
-DEFINE_LOG_CATEGORY(ProcedureLog);
-DEFINE_LOG_CATEGORY(UILog);
-DEFINE_LOG_CATEGORY(CameraLog);
-DEFINE_LOG_CATEGORY(WorldLog);
-DEFINE_LOG_CATEGORY(PropertyLog);
-DEFINE_LOG_CATEGORY(EventLog);
-DEFINE_LOG_CATEGORY(MovieSceneLog);
-DEFINE_LOG_CATEGORY(TerrainLog);
-DEFINE_LOG_CATEGORY(NetworkLog);
-DEFINE_LOG_CATEGORY(JsonLog);
+DEFINE_LOG_CATEGORY(GenericLogDefault);
+DEFINE_LOG_CATEGORY(GenericLogObject);
+DEFINE_LOG_CATEGORY(GenericLogManager);
+DEFINE_LOG_CATEGORY(GenericLogProcedure);
+DEFINE_LOG_CATEGORY(GenericLogUI);
+DEFINE_LOG_CATEGORY(GenericLogCamera);
+DEFINE_LOG_CATEGORY(GenericLogWorld);
+DEFINE_LOG_CATEGORY(GenericLogProperty);
+DEFINE_LOG_CATEGORY(GenericLogEvent);
+DEFINE_LOG_CATEGORY(GenericLogMovieScene);
+DEFINE_LOG_CATEGORY(GenericLogTerrain);
+DEFINE_LOG_CATEGORY(GenericLogNetwork);
+DEFINE_LOG_CATEGORY(GenericLogJson);
 
 extern FColor DErrorColor = FColor::Red;
 extern FColor DWarningColor = FColor::Yellow;

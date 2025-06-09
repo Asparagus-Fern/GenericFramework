@@ -19,13 +19,13 @@ void UCameraAutoSwitchAction::HandleStartAction()
 
 	if (!IsValid(CameraHandle))
 	{
-		GenericLOG(CameraLog, Error, TEXT("CameraHandle Is InValid"))
+		GenericLOG(GenericLogCamera, Error, TEXT("CameraHandle Is InValid"))
 		return;
 	}
 
 	if (AutoSwitchTags.IsEmpty())
 	{
-		GenericLOG(CameraLog, Warning, TEXT("AutoSwitchTags Is Empty"))
+		GenericLOG(GenericLogCamera, Warning, TEXT("AutoSwitchTags Is Empty"))
 		return;
 	}
 

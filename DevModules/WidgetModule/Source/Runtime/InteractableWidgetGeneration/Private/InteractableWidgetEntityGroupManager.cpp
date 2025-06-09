@@ -70,13 +70,13 @@ void UInteractableWidgetEntityGroupManager::UnRegisterEntityGroup(UInteractableW
 {
 	if (!IsValid(InEntityGroup))
 	{
-		GenericLOG(UILog, Error, TEXT("InEntityGroup Is InValid"))
+		GenericLOG(GenericLogUI, Error, TEXT("InEntityGroup Is InValid"))
 		return;
 	}
 
 	if (!InteractableWidgetEntityGroups.Contains(InEntityGroup))
 	{
-		GenericLOG(UILog, Warning, TEXT("InEntityGroup Is Already UnRegister"))
+		GenericLOG(GenericLogUI, Warning, TEXT("InEntityGroup Is Already UnRegister"))
 		return;
 	}
 

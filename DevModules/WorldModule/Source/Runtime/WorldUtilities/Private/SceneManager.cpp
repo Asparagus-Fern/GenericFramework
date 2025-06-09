@@ -94,7 +94,7 @@ float USceneManager::GetPlayerPointToNorthAngle(int32 PlayerIndex) const
 {
 	if (!IsValid(CompassActor))
 	{
-		GenericLOG(WorldLog, Log, TEXT("CompassActor Is NULL"))
+		GenericLOG(GenericLogWorld, Log, TEXT("CompassActor Is NULL"))
 		return 0.f;
 	}
 
@@ -123,7 +123,7 @@ float USceneManager::GetWorldElevationOriginHeight() const
 {
 	if (!IsValid(CompassActor))
 	{
-		GenericLOG(WorldLog, Log, TEXT("CompassActor Is NULL"))
+		GenericLOG(GenericLogWorld, Log, TEXT("CompassActor Is NULL"))
 		return 0.f;
 	}
 

@@ -41,7 +41,7 @@ void UPropertyPanel::ValidateCompiledDefaults(IWidgetCompilerLog& CompileLog) co
 
 void UPropertyPanel::SetupProperty()
 {
-	GenericEnsureLOG(PropertyLog, PropertyRegistry)
+	GenericEnsureLOG(GenericLogProperty, PropertyRegistry)
 
 	Registry = NewObject<UPropertyRegistry>(this, PropertyRegistry);
 	Registry->Initialize();

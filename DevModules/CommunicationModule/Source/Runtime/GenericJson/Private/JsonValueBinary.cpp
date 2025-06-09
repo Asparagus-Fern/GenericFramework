@@ -30,7 +30,7 @@ TArray<uint8> FJsonValueBinary::AsBinary(const TSharedPtr<FJsonValue>& InJsonVal
 		const bool bDidDecodeCorrectly = FBase64::Decode(InJsonValue->AsString(), DecodedArray);
 		if (!bDidDecodeCorrectly)
 		{
-			GenericLOG(JsonLog, Warning, TEXT("FJsonValueBinary::AsBinary couldn't decode %s as a binary."), *InJsonValue->AsString());
+			GenericLOG(GenericLogJson, Warning, TEXT("FJsonValueBinary::AsBinary couldn't decode %s as a binary."), *InJsonValue->AsString());
 		}
 		return DecodedArray;
 	}

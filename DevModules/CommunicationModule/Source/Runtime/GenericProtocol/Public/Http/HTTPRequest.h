@@ -50,7 +50,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "HTTP")
 	void SetContentAsString(const FString& InContent);
 
-	/*
+	/**
 	* 将请求的content设置为从文件流式传输。
 	* @param FileName 用于流式传输正文的文件名。
 	* @return True，如果文件有效并且将用于流式传输请求。否则为假。
