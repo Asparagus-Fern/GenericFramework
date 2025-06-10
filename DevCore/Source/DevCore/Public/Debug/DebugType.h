@@ -3,9 +3,9 @@
 #include "Widgets/Notifications/SNotificationList.h"
 #include "Framework/Notifications/NotificationManager.h"
 
-DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(GenericLogDefault, Log, All);
+/* ==================== Gameplay ==================== */
 
-DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(GenericLogObject, Log, All);
+DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(GenericLogDefault, Log, All);
 
 DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(GenericLogManager, Log, All);
 
@@ -23,11 +23,17 @@ DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(GenericLogEvent, Log, All);
 
 DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(GenericLogMovieScene, Log, All);
 
-DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(GenericLogTerrain, Log, All);
+/* ==================== Misc ==================== */
 
-DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(GenericLogNetwork, Log, All);
+DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(GenericLogExtraProc, Log, All);
+
+/* ==================== Communication ==================== */
 
 DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(GenericLogJson, Log, All);
+
+DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(GenericLogHttp, Log, All);
+
+DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(GenericLogWebSocket, Log, All);
 
 extern DEVCORE_API FColor DErrorColor;
 extern DEVCORE_API FColor DWarningColor;

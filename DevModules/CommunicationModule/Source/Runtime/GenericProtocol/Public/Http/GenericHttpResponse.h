@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Generic/GenericObject.h"
-#include "HTTPResponse.generated.h"
+#include "GenericHttpResponse.generated.h"
 
 class UGenericJsonObject;
 class IHttpResponse;
@@ -13,14 +13,14 @@ class IHttpResponse;
  * 
  */
 UCLASS()
-class GENERICPROTOCOL_API UHTTPResponse : public UGenericObject
+class GENERICPROTOCOL_API UGenericHttpResponse : public UGenericObject
 {
 	GENERATED_BODY()
 
 private:
-	friend class UHTTPRequest;
+	friend class UGenericHttpRequest;
 
-	void InitInternal(TWeakObjectPtr<UHTTPRequest> InRequest, TSharedPtr<IHttpResponse, ESPMode::ThreadSafe> InResponse);
+	void InitInternal(TWeakObjectPtr<UGenericHttpRequest> InRequest, TSharedPtr<IHttpResponse, ESPMode::ThreadSafe> InResponse);
 
 public:
 	/* 获取全部的Headers */
@@ -36,7 +36,7 @@ public:
 	FString GetContentAsString() const;
 
 	UFUNCTION(BlueprintPure, Category = "HTTP")
-	UGenericJsonObject* GetContentAsJson() ;
+	UGenericJsonObject* GetContentAsJson();
 
 	/* 返回标头中的内容长度（如果可用或为零） */
 	UFUNCTION(BlueprintPure, Category = "HTTP")
@@ -68,10 +68,10 @@ public:
 
 public:
 	UFUNCTION(BlueprintPure, Category = "HTTP")
-	UHTTPRequest* GetRequest() const;
+	UGenericHttpRequest* GetRequest() const;
 
 private:
-	TWeakObjectPtr<UHTTPRequest> Request = nullptr;
+	TWeakObjectPtr<UGenericHttpRequest> Request = nullptr;
 	TSharedPtr<IHttpResponse, ESPMode::ThreadSafe> Response = nullptr;
 
 	UPROPERTY()

@@ -1,7 +1,7 @@
 #include "Debug/DebugType.h"
 
+/* ==================== Gameplay ==================== */
 DEFINE_LOG_CATEGORY(GenericLogDefault);
-DEFINE_LOG_CATEGORY(GenericLogObject);
 DEFINE_LOG_CATEGORY(GenericLogManager);
 DEFINE_LOG_CATEGORY(GenericLogProcedure);
 DEFINE_LOG_CATEGORY(GenericLogUI);
@@ -10,9 +10,14 @@ DEFINE_LOG_CATEGORY(GenericLogWorld);
 DEFINE_LOG_CATEGORY(GenericLogProperty);
 DEFINE_LOG_CATEGORY(GenericLogEvent);
 DEFINE_LOG_CATEGORY(GenericLogMovieScene);
-DEFINE_LOG_CATEGORY(GenericLogTerrain);
-DEFINE_LOG_CATEGORY(GenericLogNetwork);
+
+/* ==================== Misc ==================== */
+DEFINE_LOG_CATEGORY(GenericLogExtraProc);
+
+/* ==================== Communication ==================== */
 DEFINE_LOG_CATEGORY(GenericLogJson);
+DEFINE_LOG_CATEGORY(GenericLogHttp);
+DEFINE_LOG_CATEGORY(GenericLogWebSocket);
 
 extern FColor DErrorColor = FColor::Red;
 extern FColor DWarningColor = FColor::Yellow;

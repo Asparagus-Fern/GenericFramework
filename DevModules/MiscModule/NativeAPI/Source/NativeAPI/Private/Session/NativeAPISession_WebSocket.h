@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "NativeAPITypes.h"
 #include "INativeAPISessionFeature.h"
+#include "WebSocket/WebSocketType.h"
 
 #if WITH_WEBSOCKETS
 class IWebSocket;
@@ -19,10 +20,10 @@ public:
 	FNativeAPISession_WebSocket();
 	virtual bool StartSession() override;
 	virtual void EndSession() override;
-	
+
 	virtual FName GetSessionName() override
 	{
-		static FName SessionName (TEXT("WebSocket"));
+		static FName SessionName(TEXT("WebSocket"));
 		return SessionName;
 	}
 
@@ -35,5 +36,5 @@ private:
 	TSharedPtr<IWebSocket> WebSocket;
 #endif
 
-	FWebSocketConnect Connect;
+	FWebSocketConnection Connection;
 };

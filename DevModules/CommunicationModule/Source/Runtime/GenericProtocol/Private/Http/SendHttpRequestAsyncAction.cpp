@@ -2,12 +2,12 @@
 
 #include "Http/SendHttpRequestAsyncAction.h"
 
-#include "Http/HTTPRequest.h"
-#include "Http/HTTPResponse.h"
+#include "Http/GenericHttpRequest.h"
+#include "Http/GenericHttpResponse.h"
 
 /* ==================== USendHttpRequestAsyncActionBase ==================== */
 
-void USendHttpRequestAsyncActionBase::CreateRequest(UHTTPRequest* InRequest)
+void USendHttpRequestAsyncActionBase::CreateRequest(UGenericHttpRequest* InRequest)
 {
 	if (IsValid(InRequest))
 	{
@@ -17,7 +17,7 @@ void USendHttpRequestAsyncActionBase::CreateRequest(UHTTPRequest* InRequest)
 	}
 	else
 	{
-		Request = NewObject<UHTTPRequest>();
+		Request = NewObject<UGenericHttpRequest>();
 	}
 
 	Request->OnRequestProgress.AddDynamic(this, &USendHttpRequestAsyncActionBase::OnRequestProgress);
@@ -32,7 +32,7 @@ void USendHttpRequestAsyncActionBase::SendRequest()
 	}
 }
 
-void USendHttpRequestAsyncActionBase::OnRequestProgress(UHTTPRequest* InRequest, const int32 InBytesSent, const int32 InBytesReceived)
+void USendHttpRequestAsyncActionBase::OnRequestProgress(UGenericHttpRequest* InRequest, const int32 InBytesSent, const int32 InBytesReceived)
 {
 	BytesSent = InBytesSent;
 	BytesReceived = InBytesReceived;
@@ -40,7 +40,7 @@ void USendHttpRequestAsyncActionBase::OnRequestProgress(UHTTPRequest* InRequest,
 	OnTickInternal();
 }
 
-void USendHttpRequestAsyncActionBase::OnRequestComplete(UHTTPRequest* InRequest, UHTTPResponse* InResponse, const bool bConnectedSuccessfully)
+void USendHttpRequestAsyncActionBase::OnRequestComplete(UGenericHttpRequest* InRequest, UGenericHttpResponse* InResponse, const bool bConnectedSuccessfully)
 {
 	if (bConnectedSuccessfully)
 	{
@@ -56,7 +56,7 @@ void USendHttpRequestAsyncActionBase::OnRequestComplete(UHTTPRequest* InRequest,
 
 /* ==================== USendHttpRequestAsyncAction ==================== */
 
-USendHttpRequestAsyncAction* USendHttpRequestAsyncAction::SendHttpRequest(UHTTPRequest* InRequest)
+USendHttpRequestAsyncAction* USendHttpRequestAsyncAction::SendHttpRequest(UGenericHttpRequest* InRequest)
 {
 	USendHttpRequestAsyncAction* Action = NewObject<USendHttpRequestAsyncAction>();
 	Action->CreateRequest(InRequest);
@@ -71,13 +71,13 @@ void USendHttpRequestAsyncAction::OnTickInternal()
 	OnTick.Broadcast(GetRequest()->GetStatus(), GetRequest());
 }
 
-void USendHttpRequestAsyncAction::OnSuccessInternal(UHTTPResponse* Response)
+void USendHttpRequestAsyncAction::OnSuccessInternal(UGenericHttpResponse* Response)
 {
 	Super::OnSuccessInternal(Response);
 	OnSuccess.Broadcast(GetRequest()->GetStatus(), GetRequest(), Response, ConvertToResponseCodeEnum(Response->GetResponseCode()));
 }
 
-void USendHttpRequestAsyncAction::OnErrorInternal(UHTTPResponse* Response)
+void USendHttpRequestAsyncAction::OnErrorInternal(UGenericHttpResponse* Response)
 {
 	Super::OnErrorInternal(Response);
 	OnError.Broadcast(GetRequest()->GetStatus(), GetRequest(), Response, ConvertToResponseCodeEnum(Response->GetResponseCode()));
@@ -90,7 +90,7 @@ USendHttpStringRequestAsyncAction* USendHttpStringRequestAsyncAction::SendHttpSt
 	USendHttpStringRequestAsyncAction* Action = NewObject<USendHttpStringRequestAsyncAction>();
 	Action->CreateRequest();
 
-	UHTTPRequest* Request = Action->GetRequest();
+	UGenericHttpRequest* Request = Action->GetRequest();
 	Request->SetURLWithParameter(ServerUrl, UrlParameters);
 	Request->SetMimeType(MimeType);
 	Request->SetVerbAsEnum(Verb);
@@ -108,13 +108,13 @@ void USendHttpStringRequestAsyncAction::OnTickInternal()
 	OnTick.Broadcast(GetRequest()->GetStatus(), GetRequest());
 }
 
-void USendHttpStringRequestAsyncAction::OnSuccessInternal(UHTTPResponse* Response)
+void USendHttpStringRequestAsyncAction::OnSuccessInternal(UGenericHttpResponse* Response)
 {
 	Super::OnSuccessInternal(Response);
 	OnSuccess.Broadcast(GetRequest()->GetStatus(), GetRequest(), Response, ConvertToResponseCodeEnum(Response->GetResponseCode()));
 }
 
-void USendHttpStringRequestAsyncAction::OnErrorInternal(UHTTPResponse* Response)
+void USendHttpStringRequestAsyncAction::OnErrorInternal(UGenericHttpResponse* Response)
 {
 	Super::OnErrorInternal(Response);
 	OnError.Broadcast(GetRequest()->GetStatus(), GetRequest(), Response, ConvertToResponseCodeEnum(Response->GetResponseCode()));
@@ -127,7 +127,7 @@ USendHttpBinaryRequestAsyncAction* USendHttpBinaryRequestAsyncAction::SendHttpBi
 	USendHttpBinaryRequestAsyncAction* Action = NewObject<USendHttpBinaryRequestAsyncAction>();
 	Action->CreateRequest();
 
-	UHTTPRequest* Request = Action->GetRequest();
+	UGenericHttpRequest* Request = Action->GetRequest();
 	Request->SetURLWithParameter(ServerUrl, UrlParameters);
 	Request->SetMimeType(MimeType);
 	Request->SetVerbAsEnum(Verb);
@@ -145,13 +145,13 @@ void USendHttpBinaryRequestAsyncAction::OnTickInternal()
 	OnTick.Broadcast(GetRequest()->GetStatus(), GetRequest());
 }
 
-void USendHttpBinaryRequestAsyncAction::OnSuccessInternal(UHTTPResponse* Response)
+void USendHttpBinaryRequestAsyncAction::OnSuccessInternal(UGenericHttpResponse* Response)
 {
 	Super::OnSuccessInternal(Response);
 	OnSuccess.Broadcast(GetRequest()->GetStatus(), GetRequest(), Response, ConvertToResponseCodeEnum(Response->GetResponseCode()));
 }
 
-void USendHttpBinaryRequestAsyncAction::OnErrorInternal(UHTTPResponse* Response)
+void USendHttpBinaryRequestAsyncAction::OnErrorInternal(UGenericHttpResponse* Response)
 {
 	Super::OnErrorInternal(Response);
 	OnError.Broadcast(GetRequest()->GetStatus(), GetRequest(), Response, ConvertToResponseCodeEnum(Response->GetResponseCode()));

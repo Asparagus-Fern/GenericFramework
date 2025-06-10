@@ -6,32 +6,32 @@
 #include "HTTPType.h"
 #include "Generic/GenericObject.h"
 #include "Interfaces/IHttpRequest.h"
-#include "HTTPRequest.generated.h"
+#include "GenericHttpRequest.generated.h"
 
-class UHTTPResponse;
+class UGenericHttpResponse;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnRequestComplete, UHTTPRequest*, Request, UHTTPResponse*, Response, bool, bConnectedSuccessfully);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnRequestComplete, UGenericHttpRequest*, Request, UGenericHttpResponse*, Response, bool, bConnectedSuccessfully);
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnRequestProgress, UHTTPRequest*, Request, int32, BytesSent, int32, BytesReceived);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnRequestProgress, UGenericHttpRequest*, Request, int32, BytesSent, int32, BytesReceived);
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnRequestHeaderReceived, UHTTPRequest*, Request, FString, HeaderName, FString, NewHeaderValue);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnRequestHeaderReceived, UGenericHttpRequest*, Request, FString, HeaderName, FString, NewHeaderValue);
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnRequestWillRetry, UHTTPRequest*, Request, UHTTPResponse*, Response, float, SecondsToRetry);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnRequestWillRetry, UGenericHttpRequest*, Request, UGenericHttpResponse*, Response, float, SecondsToRetry);
 
 /**
  * 
  */
 UCLASS()
-class GENERICPROTOCOL_API UHTTPRequest : public UGenericObject
+class GENERICPROTOCOL_API UGenericHttpRequest : public UGenericObject
 {
 	GENERATED_BODY()
 
 public:
-	UHTTPRequest(const FObjectInitializer& ObjectInitializer);
+	UGenericHttpRequest(const FObjectInitializer& ObjectInitializer);
 
 	/* 创建 HTTP Request */
 	UFUNCTION(BlueprintPure, Category = "HTTP")
-	static UHTTPRequest* CreateHTTPRequest();
+	static UGenericHttpRequest* CreateHTTPRequest();
 
 public:
 	/* 获取二进制 content */
@@ -50,11 +50,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "HTTP")
 	void SetContentAsString(const FString& InContent);
 
-	/**
-	* 将请求的content设置为从文件流式传输。
-	* @param FileName 用于流式传输正文的文件名。
-	* @return True，如果文件有效并且将用于流式传输请求。否则为假。
-	*/
+	/* 将请求的content设置为从文件流式传输 */
 	UFUNCTION(BlueprintCallable, Category = "HTTP")
 	void SetContentAsStreamedFile(const FString& InFileName, bool& bFileValid);
 
@@ -179,7 +175,7 @@ protected:
 	virtual void OnRequestCompleteInternal(TSharedPtr<IHttpRequest, ESPMode::ThreadSafe> RawRequest, TSharedPtr<IHttpResponse, ESPMode::ThreadSafe> RawResponse, bool bConnectedSuccessfully);
 	virtual void OnRequestWillRetryInternal(TSharedPtr<IHttpRequest, ESPMode::ThreadSafe> RawRequest, TSharedPtr<IHttpResponse, ESPMode::ThreadSafe> RawResponse, float SecondsToRetry);
 
-	virtual UHTTPResponse* CreateResponse(TSharedPtr<IHttpRequest, ESPMode::ThreadSafe>& RawRequest, TSharedPtr<IHttpResponse, ESPMode::ThreadSafe>& RawResponse);
+	virtual UGenericHttpResponse* CreateResponse(TSharedPtr<IHttpRequest, ESPMode::ThreadSafe>& RawRequest, TSharedPtr<IHttpResponse, ESPMode::ThreadSafe>& RawResponse);
 
 private:
 	TSharedPtr<IHttpRequest, ESPMode::ThreadSafe> Request;

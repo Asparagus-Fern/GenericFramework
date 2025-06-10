@@ -66,7 +66,7 @@ enum class EHttpVerb : uint8
 	MAX_COUNT UMETA(Hidden)
 };
 
-inline EHttpVerb ConvertStringVerbToEnum(const FString& InVerb)
+inline EHttpVerb ConvertToHttpVerbEnum(const FString& InVerb)
 {
 	EHttpVerb HttpVerb;
 	if (UBPFunctions_Class::GetEnumByNameString(InVerb, HttpVerb))
@@ -77,7 +77,7 @@ inline EHttpVerb ConvertStringVerbToEnum(const FString& InVerb)
 	return EHttpVerb::MAX_COUNT;
 }
 
-inline FString ConvertEnumVerbToString(const EHttpVerb InVerb)
+inline FString ConvertToHttpVerbString(const EHttpVerb InVerb)
 {
 	return UBPFunctions_Class::GetEnumNameString(InVerb);
 }
@@ -143,12 +143,12 @@ enum class EHttpMimeType : uint8
 	MAX_COUNT UMETA(Hidden)
 };
 
-static FString ConvertEnumMimeTypeToString(EHttpMimeType Type)
+inline FString ConvertToMimeTypeString(EHttpMimeType Type)
 {
 	return UBPFunctions_Class::GetEnumNameString(Type);
 }
 
-static EHttpMimeType ConvertStringMimeTypeToEnum(FString Type)
+inline EHttpMimeType ConvertToMimeTypeEnum(FString Type)
 {
 	EHttpMimeType MimeType;
 	if (UBPFunctions_Class::GetEnumByNameString(Type, MimeType))
@@ -159,7 +159,7 @@ static EHttpMimeType ConvertStringMimeTypeToEnum(FString Type)
 	return EHttpMimeType::MAX_COUNT;
 }
 
-static FString CreateHttpMimeType(EHttpMimeType Type)
+inline FString CreateHttpMimeType(EHttpMimeType Type)
 {
 	return UBPFunctions_Class::GetEnumTooltipText(Type).ToString();
 }
@@ -238,12 +238,12 @@ enum class EHttpResponseCode : uint8
 	Code510 UMETA(DisplayName="510 Not Extended", ToolTip="Further extensions to the request are required for the server to fulfil it."),
 	Code511 UMETA(DisplayName="511 Network Authentication Required", ToolTip="The client needs to authenticate to gain network access."),
 
-	CodeUknown UMETA(DisplayName="Unofficial Response Code")
+	CodeUnKnown UMETA(DisplayName="UnKnown Error")
 };
 
-static EHttpResponseCode ConvertToResponseCodeEnum(const int32 ResponseCode)
+inline EHttpResponseCode ConvertToResponseCodeEnum(const int32 InCode)
 {
-	const FString CodeString = TEXT("Code") + FString::FromInt(ResponseCode);
+	const FString CodeString = TEXT("Code") + FString::FromInt(InCode);
 
 	EHttpResponseCode Code;
 	if (UBPFunctions_Class::GetEnumByNameString(CodeString, Code))
@@ -251,12 +251,17 @@ static EHttpResponseCode ConvertToResponseCodeEnum(const int32 ResponseCode)
 		return Code;
 	}
 
-	return EHttpResponseCode::CodeUknown;
+	return EHttpResponseCode::CodeUnKnown;
 }
 
-static int32 ConvertToResponseCode(EHttpResponseCode ResponseCode)
+inline int32 ConvertToResponseCodeInt(const EHttpResponseCode InCode)
 {
-	FString CodeString = UBPFunctions_Class::GetEnumNameString(ResponseCode);
+	if (InCode == EHttpResponseCode::CodeUnKnown)
+	{
+		return -1;
+	}
+
+	FString CodeString = UBPFunctions_Class::GetEnumNameString(InCode);
 	CodeString.Split(TEXT("Code"), nullptr, &CodeString, ESearchCase::CaseSensitive);
 
 	return FCString::Atoi(*CodeString);

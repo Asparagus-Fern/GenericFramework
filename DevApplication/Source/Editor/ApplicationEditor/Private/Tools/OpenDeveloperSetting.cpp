@@ -11,7 +11,6 @@
 #include "ISettingsEditorModule.h"
 #include "ISettingsModule.h"
 #include "Manager/GlobalManagerSettings.h"
-#include "Commands/DeveloperSettingCommands.h"
 
 #define LOCTEXT_NAMESPACE "UOpenDeveloperSetting"
 
@@ -19,10 +18,7 @@ void UOpenDeveloperSetting::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
 
-	FDevFrameworkDelegate::OnCommandListInitialize.AddUObject(this, &UOpenDeveloperSetting::RegisterToolBarDeveloperSettingCommand);
 	FDevFrameworkDelegate::OnToolBarSectionExtend.AddUObject(this, &UOpenDeveloperSetting::RegisterToolBarDeveloperSetting);
-
-	FDeveloperSettingCommands::Register();
 
 	/* Create Developer Settings */
 	{
@@ -52,10 +48,7 @@ void UOpenDeveloperSetting::Deinitialize()
 {
 	Super::Deinitialize();
 
-	FDevFrameworkDelegate::OnCommandListInitialize.RemoveAll(this);
 	FDevFrameworkDelegate::OnToolBarSectionExtend.RemoveAll(this);
-
-	FDeveloperSettingCommands::Unregister();
 
 	ISettingsModule* SettingsModule = FModuleManager::GetModulePtr<ISettingsModule>("Settings");
 
@@ -108,21 +101,16 @@ TSharedRef<SDockTab> UOpenDeveloperSetting::HandleSpawnSettingsTab(const FSpawnT
 		];
 }
 
-void UOpenDeveloperSetting::RegisterToolBarDeveloperSettingCommand(TSharedPtr<FUICommandList>& InCommandList)
-{
-	const FDeveloperSettingCommands& Commands = FDeveloperSettingCommands::Get();
-	InCommandList->MapAction(Commands.OpenDeveloperSetting, FExecuteAction::CreateUObject(this, &UOpenDeveloperSetting::OpenToolBarManagerSetting));
-}
-
 void UOpenDeveloperSetting::RegisterToolBarDeveloperSetting(FToolMenuSection& ToolMenuSection)
 {
 	ToolMenuSection.AddEntry
 	(
 		FToolMenuEntry::InitToolBarButton
 		(
-			FDeveloperSettingCommands::Get().OpenDeveloperSetting,
+			"OpenDeveloperSetting",
+			FUIAction(FExecuteAction::CreateUObject(this, &UOpenDeveloperSetting::OpenToolBarManagerSetting)),
 			TAttribute<FText>(),
-			TAttribute<FText>(),
+			LOCTEXT("OpenDeveloperSetting_ToolTip", "Click To Open Developer Settings"),
 			FSlateIcon(FDevCoreStyle::GetStyleSetName(), "Developer.DeveloperSetting", "Developer.DeveloperSetting.Small")
 		)
 	);

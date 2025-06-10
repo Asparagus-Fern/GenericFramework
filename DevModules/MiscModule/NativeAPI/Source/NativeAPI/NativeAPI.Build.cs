@@ -49,7 +49,8 @@ public class NativeAPI : ModuleRules
 				"SlateCore",
 				"DeveloperSettings",
 				"WebSockets",
-				"HTTPServer"
+				"HTTPServer",
+				"GenericProtocol"
 			}
 		);
 

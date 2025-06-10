@@ -33,8 +33,6 @@ protected:
 	TSharedRef<SDockTab> HandleSpawnSettingsTab(const FSpawnTabArgs& SpawnTabArgs);
 	
 private:
-	virtual void RegisterToolBarDeveloperSettingCommand(TSharedPtr<FUICommandList>& InCommandList);
 	virtual void RegisterToolBarDeveloperSetting(FToolMenuSection& ToolMenuSection);
-
 	virtual void OpenToolBarManagerSetting();
 };

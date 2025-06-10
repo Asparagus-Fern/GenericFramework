@@ -1,18 +1,18 @@
 ﻿// Copyright ChenTaiye 2025. All Rights Reserved.
 
-#include "Http/HTTPResponse.h"
+#include "Http/GenericHttpResponse.h"
 
-#include "Http/HTTPRequest.h"
+#include "Http/GenericHttpRequest.h"
 #include "Interfaces/IHttpResponse.h"
 #include "Runtime/GenericJson/Public/GenericJsonObject.h"
 
-void UHTTPResponse::InitInternal(TWeakObjectPtr<UHTTPRequest> InRequest, TSharedPtr<IHttpResponse, ESPMode::ThreadSafe> InResponse)
+void UGenericHttpResponse::InitInternal(TWeakObjectPtr<UGenericHttpRequest> InRequest, TSharedPtr<IHttpResponse, ESPMode::ThreadSafe> InResponse)
 {
 	Request = InRequest;
 	Response = InResponse;
 }
 
-TMap<FString, FString> UHTTPResponse::GetHeaders() const
+TMap<FString, FString> UGenericHttpResponse::GetHeaders() const
 {
 	if (!Response)
 	{
@@ -39,7 +39,7 @@ TMap<FString, FString> UHTTPResponse::GetHeaders() const
 	return OutHeaders;
 }
 
-void UHTTPResponse::GetContent(TArray<uint8>& OutContent) const
+void UGenericHttpResponse::GetContent(TArray<uint8>& OutContent) const
 {
 	if (Response)
 	{
@@ -47,7 +47,7 @@ void UHTTPResponse::GetContent(TArray<uint8>& OutContent) const
 	}
 }
 
-FString UHTTPResponse::GetContentAsString() const
+FString UGenericHttpResponse::GetContentAsString() const
 {
 	if (Response)
 	{
@@ -56,7 +56,7 @@ FString UHTTPResponse::GetContentAsString() const
 	return TEXT("");
 }
 
-UGenericJsonObject* UHTTPResponse::GetContentAsJson()
+UGenericJsonObject* UGenericHttpResponse::GetContentAsJson()
 {
 	if (!JsonObject)
 	{
@@ -67,42 +67,42 @@ UGenericJsonObject* UHTTPResponse::GetContentAsJson()
 	return JsonObject;
 }
 
-int32 UHTTPResponse::GetContentLength() const
+int32 UGenericHttpResponse::GetContentLength() const
 {
 	return Response ? Response->GetContentLength() : 0;
 }
 
-FString UHTTPResponse::GetContentType() const
+FString UGenericHttpResponse::GetContentType() const
 {
 	return Response ? Response->GetContentType() : TEXT("");
 }
 
-FString UHTTPResponse::GetHeader(const FString& Key) const
+FString UGenericHttpResponse::GetHeader(const FString& Key) const
 {
 	return Response ? Response->GetHeader(Key) : TEXT("");
 }
 
-int32 UHTTPResponse::GetResponseCode() const
+int32 UGenericHttpResponse::GetResponseCode() const
 {
 	return Response ? Response->GetResponseCode() : -1;
 }
 
-FString UHTTPResponse::GetURL() const
+FString UGenericHttpResponse::GetURL() const
 {
 	return Response ? Response->GetURL() : TEXT("");
 }
 
-FString UHTTPResponse::GetURLParameter(const FString& ParameterName) const
+FString UGenericHttpResponse::GetURLParameter(const FString& ParameterName) const
 {
 	return Response ? Response->GetURLParameter(ParameterName) : TEXT("");
 }
 
-float UHTTPResponse::GetElapsedTime() const
+float UGenericHttpResponse::GetElapsedTime() const
 {
 	return Request.IsValid() ? Request.Get()->GetElapsedTime() : 0.f;
 }
 
-UHTTPRequest* UHTTPResponse::GetRequest() const
+UGenericHttpRequest* UGenericHttpResponse::GetRequest() const
 {
 	return Request.IsValid() ? Request.Get() : nullptr;
 }

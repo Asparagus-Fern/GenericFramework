@@ -8,6 +8,7 @@
 #include "Debug/DebugType.h"
 #include "Serialization/JsonReader.h"
 #include "Serialization/JsonSerializer.h"
+#include "WebSocket/BPFunctions_WebSocket.h"
 
 #if WITH_WEBSOCKETS
 #include "IWebSocket.h"
@@ -27,12 +28,12 @@ bool FNativeAPISession_WebSocket::StartSession()
 		return false;
 	}
 
-	Connect = Settings->Connect;
+	Connection = Settings->Connect;
 
-	if (Connect.IsValid())
+	if (Connection.IsValid())
 	{
 #if WITH_WEBSOCKETS
-		WebSocket = FWebSocketsModule::Get().CreateWebSocket(Connect.GetUrl(), EnumToString(Connect.Protocol), Connect.Headers);
+		WebSocket = FWebSocketsModule::Get().CreateWebSocket(Connection.GetUrl(), ConvertToWebSocketProtocolString(Connection.Protocol), Connection.Headers);
 
 		if (WebSocket.IsValid())
 		{
@@ -62,12 +63,12 @@ void FNativeAPISession_WebSocket::EndSession()
 
 void FNativeAPISession_WebSocket::HandleOnWebSocketConnection()
 {
-	GenericLOG(LogTemp, Warning, TEXT("Native API WebSocket Session Connect, [URL] %s"), *Connect.GetUrl())
+	GenericLOG(LogTemp, Warning, TEXT("Native API WebSocket Session Connect, [URL] %s"), *Connection.GetUrl())
 }
 
 void FNativeAPISession_WebSocket::HandleOnWebSocketConnectionError(const FString& Error)
 {
-	GenericLOG(LogTemp, Warning, TEXT("Native API WebSocket Session Connect Error, [URL] %s, [Error] %s"), *Connect.GetUrl(), *Error);
+	GenericLOG(LogTemp, Warning, TEXT("Native API WebSocket Session Connect Error, [URL] %s, [Error] %s"), *Connection.GetUrl(), *Error);
 	WebSocket.Reset();
 }
 

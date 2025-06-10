@@ -7,12 +7,12 @@
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "SendHttpRequestAsyncAction.generated.h"
 
-class UHTTPResponse;
-class UHTTPRequest;
+class UGenericHttpResponse;
+class UGenericHttpRequest;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnRequestEvent, EHttpRequestStatusBP, ConnectionStatus, UHTTPRequest*, Request);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnRequestEvent, EHttpRequestStatusBP, ConnectionStatus, UGenericHttpRequest*, Request);
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FOnResponseEvent, EHttpRequestStatusBP, ConnectionStatus, UHTTPRequest*, Request, UHTTPResponse*, Response, EHttpResponseCode, ResponseCode);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FOnResponseEvent, EHttpRequestStatusBP, ConnectionStatus, UGenericHttpRequest*, Request, UGenericHttpResponse*, Response, EHttpResponseCode, ResponseCode);
 
 /**
  * 
@@ -23,27 +23,27 @@ class GENERICPROTOCOL_API USendHttpRequestAsyncActionBase : public UBlueprintAsy
 	GENERATED_BODY()
 
 protected:
-	virtual void OnSuccessInternal(UHTTPResponse* Response) { return; }
-	virtual void OnErrorInternal(UHTTPResponse* Response) { return; }
+	virtual void OnSuccessInternal(UGenericHttpResponse* Response) { return; }
+	virtual void OnErrorInternal(UGenericHttpResponse* Response) { return; }
 	virtual void OnTickInternal() { return; }
 
-	void CreateRequest(UHTTPRequest* InRequest = nullptr);
+	void CreateRequest(UGenericHttpRequest* InRequest = nullptr);
 	void SendRequest();
 
 	int32 GetBytesSent() const { return BytesSent; }
 	int32 GetBytesReceived() const { return BytesReceived; }
-	UHTTPRequest* GetRequest() { return Request; }
+	UGenericHttpRequest* GetRequest() { return Request; }
 
 private:
 	UFUNCTION()
-	void OnRequestProgress(UHTTPRequest* InRequest, const int32 InBytesSent, const int32 InBytesReceived);
+	void OnRequestProgress(UGenericHttpRequest* InRequest, const int32 InBytesSent, const int32 InBytesReceived);
 
 	UFUNCTION()
-	void OnRequestComplete(UHTTPRequest* InRequest, UHTTPResponse* InResponse, const bool bConnectedSuccessfully);
+	void OnRequestComplete(UGenericHttpRequest* InRequest, UGenericHttpResponse* InResponse, const bool bConnectedSuccessfully);
 
 private:
 	UPROPERTY()
-	UHTTPRequest* Request = nullptr;
+	UGenericHttpRequest* Request = nullptr;
 
 	int32 BytesSent = 0;
 	int32 BytesReceived = 0;
@@ -68,8 +68,8 @@ public:
 	* @param Content 此请求的内容。
 	* @param Headers 此请求的标头。
 	**/
-	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true", AutoCreateRefTerm = "Headers, UrlParameters"), DisplayName="Send HTTP Request", Category =IVHTTP)
-	static USendHttpRequestAsyncAction* SendHttpRequest(UHTTPRequest* InRequest);
+	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category ="HTTP")
+	static USendHttpRequestAsyncAction* SendHttpRequest(UGenericHttpRequest* InRequest);
 
 public:
 	/* 当此请求勾选并已下载或上载部分数据时调用 */
@@ -86,8 +86,8 @@ public:
 
 protected:
 	virtual void OnTickInternal() override;
-	virtual void OnSuccessInternal(UHTTPResponse* Response) override;
-	virtual void OnErrorInternal(UHTTPResponse* Response) override;
+	virtual void OnSuccessInternal(UGenericHttpResponse* Response) override;
+	virtual void OnErrorInternal(UGenericHttpResponse* Response) override;
 };
 
 
@@ -109,7 +109,7 @@ public:
 	* @param Content 此请求的内容。
 	* @param Headers 此请求的标头。
 	**/
-	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true", AutoCreateRefTerm = "Headers, UrlParameters"), DisplayName="Send HTTP Request", Category =IVHTTP)
+	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true", AutoCreateRefTerm = "Headers, UrlParameters"), Category ="HTTP")
 	static USendHttpStringRequestAsyncAction* SendHttpStringRequest(const FString& ServerUrl, const TMap<FString, FString>& UrlParameters, const EHttpVerb Verb, const EHttpMimeType MimeType, const FString& Content, const TMap<FString, FString>& Headers);
 
 public:
@@ -127,8 +127,8 @@ public:
 
 protected:
 	virtual void OnTickInternal() override;
-	virtual void OnSuccessInternal(UHTTPResponse* Response) override;
-	virtual void OnErrorInternal(UHTTPResponse* Response) override;
+	virtual void OnSuccessInternal(UGenericHttpResponse* Response) override;
+	virtual void OnErrorInternal(UGenericHttpResponse* Response) override;
 };
 
 
@@ -150,7 +150,7 @@ public:
 	* @param Content 此请求的内容。
 	* @param Headers 此请求的标头。
 	**/
-	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true", AutoCreateRefTerm = "Headers, UrlParameters"), DisplayName="Send HTTP Request", Category =IVHTTP)
+	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true", AutoCreateRefTerm = "Headers, UrlParameters"), Category ="HTTP")
 	static USendHttpBinaryRequestAsyncAction* SendHttpBinaryRequest(const FString& ServerUrl, const TMap<FString, FString>& UrlParameters, const EHttpVerb Verb, const EHttpMimeType MimeType, const TArray<uint8>& Content, const TMap<FString, FString>& Headers);
 
 public:
@@ -168,6 +168,6 @@ public:
 
 protected:
 	virtual void OnTickInternal() override;
-	virtual void OnSuccessInternal(UHTTPResponse* Response) override;
-	virtual void OnErrorInternal(UHTTPResponse* Response) override;
+	virtual void OnSuccessInternal(UGenericHttpResponse* Response) override;
+	virtual void OnErrorInternal(UGenericHttpResponse* Response) override;
 };

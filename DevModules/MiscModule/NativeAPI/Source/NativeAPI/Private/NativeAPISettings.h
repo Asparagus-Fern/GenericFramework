@@ -6,6 +6,7 @@
 #include "NativeAPITypes.h"
 #include "Engine/DeveloperSettings.h"
 #include "Generic/GenericSettings.h"
+#include "WebSocket/WebSocketType.h"
 #include "NativeAPISettings.generated.h"
 
 /**
@@ -28,7 +29,7 @@ public:
 	bool bSupportWebSocket = false;
 
 	UPROPERTY(Config, EditAnywhere, meta = (EditCondition = "bSupportWebSocket"), Category = "WebSocket")
-	FWebSocketConnect Connect;
+	FWebSocketConnection Connect;
 
 public:
 	UPROPERTY(Config, EditAnywhere, Category = "HTTP")

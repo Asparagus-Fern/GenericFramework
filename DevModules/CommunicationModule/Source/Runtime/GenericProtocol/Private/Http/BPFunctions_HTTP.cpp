@@ -5,24 +5,24 @@
 #include "HttpModule.h"
 #include "Windows/WindowsPlatformHttp.h"
 
-EHttpVerb UBPFunctions_HTTP::BP_ConvertStringVerbToEnum(FString InVerb)
+EHttpVerb UBPFunctions_HTTP::BP_ConvertToHttpVerbEnum(FString InVerb)
 {
-	return ConvertStringVerbToEnum(InVerb);
+	return ConvertToHttpVerbEnum(InVerb);
 }
 
-FString UBPFunctions_HTTP::BP_ConvertEnumVerbToString(EHttpVerb InVerb)
+FString UBPFunctions_HTTP::BP_ConvertToHttpVerbString(EHttpVerb InVerb)
 {
-	return ConvertEnumVerbToString(InVerb);
+	return ConvertToHttpVerbString(InVerb);
 }
 
-EHttpMimeType UBPFunctions_HTTP::BP_ConvertStringMimeTypeToEnum(FString InMimeType)
+EHttpMimeType UBPFunctions_HTTP::BP_ConvertToMimeTypeEnum(FString InMimeType)
 {
-	return ConvertStringMimeTypeToEnum(InMimeType);
+	return ConvertToMimeTypeEnum(InMimeType);
 }
 
-FString UBPFunctions_HTTP::BP_ConvertEnumMimeTypeToString(EHttpMimeType InMimeType)
+FString UBPFunctions_HTTP::BP_ConvertToMimeTypeString(EHttpMimeType InMimeType)
 {
-	return ConvertEnumMimeTypeToString(InMimeType);
+	return ConvertToMimeTypeString(InMimeType);
 }
 
 EHttpResponseCode UBPFunctions_HTTP::BP_ConvertToResponseCodeEnum(int32 InCode)
@@ -30,9 +30,9 @@ EHttpResponseCode UBPFunctions_HTTP::BP_ConvertToResponseCodeEnum(int32 InCode)
 	return ConvertToResponseCodeEnum(InCode);
 }
 
-int32 UBPFunctions_HTTP::BP_ConvertToResponseCode(EHttpResponseCode InCode)
+int32 UBPFunctions_HTTP::BP_ConvertToResponseCodeInt(EHttpResponseCode InCode)
 {
-	return ConvertToResponseCode(InCode);
+	return ConvertToResponseCodeInt(InCode);
 }
 
 int32 UBPFunctions_HTTP::GetHttpMaxConnectionsPerServer()
@@ -111,5 +111,5 @@ FString UBPFunctions_HTTP::AddParametersToUrl(FString InUrl, const TMap<FString,
 		}
 	}
 
-	return InUrl; 
+	return InUrl;
 }
