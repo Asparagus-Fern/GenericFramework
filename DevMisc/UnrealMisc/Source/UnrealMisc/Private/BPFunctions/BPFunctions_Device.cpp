@@ -14,8 +14,6 @@
 #include "iptypes.h"
 #include "iphlpapi.h"
 #include "Windows/HideWindowsPlatformTypes.h"
-#elif PLATFORM_ANDROID
-
 #endif
 
 FString UBPFunctions_Device::GetDeviceName()
@@ -89,9 +87,6 @@ void UBPFunctions_Device::GetNetworkAdapterInfo(TArray<FNetworkAdapterInfo>& Inf
 		}
 	}
 	delete[] pAdapterInfo;
-
-#elif PLATFORM_ANDROID
-	//todo:...
 #endif
 }
 
