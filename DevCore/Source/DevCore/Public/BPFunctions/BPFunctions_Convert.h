@@ -11,6 +11,8 @@ class DEVCORE_API FConvertLibrary
 	/* To Bool */
 public:
 	static bool ToBool(unsigned int Var);
+
+	void TEst();
 	
 	/* To Int32 */
 public:

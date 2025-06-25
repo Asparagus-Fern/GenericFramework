@@ -14,7 +14,7 @@ UCLASS()
 class DEVCORE_API UBPFunctions_Device : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
-
+	
 public:
 	UFUNCTION(BlueprintPure, Category="Hardware | Network")
 	static FString GetDeviceName();
