@@ -5,6 +5,7 @@
 
 #include "CameraManager.h"
 #include "BPFunctions/BPFunctions_Gameplay.h"
+#include "BPFunctions/BPFunctions_Gameplay.h"
 #include "Camera/CameraActor.h"
 #include "Camera/CameraComponent.h"
 #include "Components/SphereComponent.h"

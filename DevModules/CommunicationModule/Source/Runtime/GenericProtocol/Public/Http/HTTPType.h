@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BPFunctions/BPFunctions_Class.h"
 #include "Interfaces/IHttpBase.h"
+#include "StaticFunctions/StaticFunctions_Enum.h"
 #include "HTTPType.generated.h"
 
 UENUM(BlueprintType, DisplayName = "HTTP Request Status")
@@ -69,7 +69,7 @@ enum class EHttpVerb : uint8
 inline EHttpVerb ConvertToHttpVerbEnum(const FString& InVerb)
 {
 	EHttpVerb HttpVerb;
-	if (UBPFunctions_Class::GetEnumByNameString(InVerb, HttpVerb))
+	if (FStaticFunctions_Enum::GetEnumByNameString(InVerb, HttpVerb))
 	{
 		return HttpVerb;
 	}
@@ -79,7 +79,7 @@ inline EHttpVerb ConvertToHttpVerbEnum(const FString& InVerb)
 
 inline FString ConvertToHttpVerbString(const EHttpVerb InVerb)
 {
-	return UBPFunctions_Class::GetEnumNameString(InVerb);
+	return FStaticFunctions_Enum::GetEnumNameString(InVerb);
 }
 
 /**
@@ -145,13 +145,13 @@ enum class EHttpMimeType : uint8
 
 inline FString ConvertToMimeTypeString(EHttpMimeType Type)
 {
-	return UBPFunctions_Class::GetEnumNameString(Type);
+	return FStaticFunctions_Enum::GetEnumNameString(Type);
 }
 
 inline EHttpMimeType ConvertToMimeTypeEnum(FString Type)
 {
 	EHttpMimeType MimeType;
-	if (UBPFunctions_Class::GetEnumByNameString(Type, MimeType))
+	if (FStaticFunctions_Enum::GetEnumByNameString(Type, MimeType))
 	{
 		return MimeType;
 	}
@@ -161,7 +161,7 @@ inline EHttpMimeType ConvertToMimeTypeEnum(FString Type)
 
 inline FString CreateHttpMimeType(EHttpMimeType Type)
 {
-	return UBPFunctions_Class::GetEnumTooltipText(Type).ToString();
+	return FStaticFunctions_Enum::GetEnumTooltipText(Type).ToString();
 }
 
 /**
@@ -246,7 +246,7 @@ inline EHttpResponseCode ConvertToResponseCodeEnum(const int32 InCode)
 	const FString CodeString = TEXT("Code") + FString::FromInt(InCode);
 
 	EHttpResponseCode Code;
-	if (UBPFunctions_Class::GetEnumByNameString(CodeString, Code))
+	if (FStaticFunctions_Enum::GetEnumByNameString(CodeString, Code))
 	{
 		return Code;
 	}
@@ -261,7 +261,7 @@ inline int32 ConvertToResponseCodeInt(const EHttpResponseCode InCode)
 		return -1;
 	}
 
-	FString CodeString = UBPFunctions_Class::GetEnumNameString(InCode);
+	FString CodeString = FStaticFunctions_Enum::GetEnumNameString(InCode);
 	CodeString.Split(TEXT("Code"), nullptr, &CodeString, ESearchCase::CaseSensitive);
 
 	return FCString::Atoi(*CodeString);

@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BPFunctions/BPFunctions_Class.h"
 #include "Debug/DebugType.h"
+#include "StaticFunctions/StaticFunctions_Enum.h"
 #include "WebSocketType.generated.h"
 
 /**
@@ -20,7 +20,7 @@ enum class EWebSocketProtocol : uint8
 inline EWebSocketProtocol ConvertToWebSocketProtocolEnum(const FString& InProtocol)
 {
 	EWebSocketProtocol HttpVerb;
-	if (UBPFunctions_Class::GetEnumByNameString(InProtocol, HttpVerb))
+	if (FStaticFunctions_Enum::GetEnumByNameString(InProtocol, HttpVerb))
 	{
 		return HttpVerb;
 	}
@@ -30,7 +30,7 @@ inline EWebSocketProtocol ConvertToWebSocketProtocolEnum(const FString& InProtoc
 
 inline FString ConvertToWebSocketProtocolString(EWebSocketProtocol InProtocol)
 {
-	return UBPFunctions_Class::GetEnumNameString(InProtocol);
+	return FStaticFunctions_Enum::GetEnumNameString(InProtocol);
 }
 
 /**
@@ -49,7 +49,7 @@ public:
 	// Host port i.e. : 0 ~ 65535
 	UPROPERTY(Config, EditAnywhere, BlueprintReadWrite, meta=(ClampMin = 0, ClampMax = 65535, UIMin = 0, UIMax = 65535))
 	int32 Port = INDEX_NONE;
-	
+
 	// Protocol, i.e. "ws" or "wss"
 	UPROPERTY(Config, EditAnywhere, BlueprintReadWrite)
 	EWebSocketProtocol Protocol = EWebSocketProtocol::ws;
@@ -104,7 +104,7 @@ inline EWebSocketCode ConvertToWebSocketCodeEnum(const int32 InCode)
 	const FString CodeString = TEXT("Code") + FString::FromInt(InCode);
 
 	EWebSocketCode Code;
-	if (UBPFunctions_Class::GetEnumByNameString(CodeString, Code))
+	if (FStaticFunctions_Enum::GetEnumByNameString(CodeString, Code))
 	{
 		return Code;
 	}
@@ -119,7 +119,7 @@ inline int32 ConvertToWebSocketCodeInt(const EWebSocketCode InCode)
 		return -1;
 	}
 
-	FString CodeString = UBPFunctions_Class::GetEnumNameString(InCode);
+	FString CodeString = FStaticFunctions_Enum::GetEnumNameString(InCode);
 	CodeString.Split(TEXT("Code"), nullptr, &CodeString, ESearchCase::CaseSensitive);
 
 	return FCString::Atoi(*CodeString);

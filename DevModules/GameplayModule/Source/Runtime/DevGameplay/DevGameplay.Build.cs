@@ -29,7 +29,8 @@ public class DevGameplay : ModuleRules
 				"AIModule",
 				"GameplayCameras",
 
-				"CameraSystem"
+				"CameraSystem",
+				"UnrealMisc"
 			}
 		);
 	}

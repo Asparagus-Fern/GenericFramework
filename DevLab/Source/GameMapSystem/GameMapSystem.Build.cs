@@ -28,6 +28,7 @@ public class GameMapSystem : ModuleRules
 				"DeveloperSettings",
 
 				"WidgetGeneration",
+				"UnrealMisc"
 			}
 		);
 	}

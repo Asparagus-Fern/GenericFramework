@@ -11,6 +11,7 @@ public class WorldWidgetGeneration : ModuleRules
 			{
 				"Core",
 				"DevCore",
+				 
 			}
 		);
 
@@ -31,6 +32,7 @@ public class WorldWidgetGeneration : ModuleRules
 				"WidgetGeneration",
 				"GameHUDModule",
 				"InteractableWidgetGeneration",
+				"UnrealMisc"
 			}
 		);
 

@@ -7,7 +7,7 @@
 #include "WidgetManager.h"
 #include "Base/UserWidgetBase.h"
 #include "HUD/GameHUD.h"
-#include "BPFunctions/BPFunctions_Object.h"
+#include "StaticFunctions/StaticFunctions_Object.h"
 #include "UWidget/GameplayTagSlot.h"
 
 bool UGameHUDManager::ShouldCreateSubsystem(UObject* Outer) const
@@ -252,7 +252,7 @@ bool UGameHUDManager::RemoveSlotWidget(UUserWidgetBase* InWidget)
 
 void UGameHUDManager::CreateGameHUDs(TArray<TSoftClassPtr<UGameHUD>> InGameHUDClasses, const bool bAddToViewport)
 {
-	TArray<TSubclassOf<UGameHUD>> GameHUDClasses = UBPFunctions_Object::LoadClass<UGameHUD>(InGameHUDClasses);
+	TArray<TSubclassOf<UGameHUD>> GameHUDClasses = FStaticFunctions_Object::LoadClass<UGameHUD>(InGameHUDClasses);
 	TArray<TSubclassOf<UGameHUD>> CurrentGameHUDClasses = GetCurrentGameHUDClasses();
 
 	for (const auto& CurrentGameHUDClass : CurrentGameHUDClasses)

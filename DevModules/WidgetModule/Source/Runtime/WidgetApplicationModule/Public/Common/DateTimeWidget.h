@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Base/UserWidgetBase.h"
-#include "BPFunctions/BPFunctions_DateTimeUtilities.h"
+#include "Type/DateTimeType.h"
 #include "DateTimeWidget.generated.h"
 
 class UTextBlock;

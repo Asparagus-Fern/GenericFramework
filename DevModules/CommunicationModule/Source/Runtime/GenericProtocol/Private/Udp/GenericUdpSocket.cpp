@@ -5,8 +5,8 @@
 
 #include "Sockets.h"
 #include "SocketSubsystem.h"
-#include "BPFunctions/BPFunctions_Convert.h"
 #include "Common/UdpSocketReceiver.h"
+#include "StaticFunctions/StaticFunctions_Convert.h"
 #include "Udp/GenericUdpSocketBuilder.h"
 
 UGenericUdpSocket* UGenericUdpSocket::CreateUdpSocket(UGenericUdpSocketBuilder* InBuilder)
@@ -94,7 +94,7 @@ bool UGenericUdpSocket::SendMessage(FString InMessage)
 	}
 
 	int32 BytesSent = 0;
-	TArray<uint8> ByteArray = FConvertLibrary::ToByteArray(InMessage);
+	TArray<uint8> ByteArray = FStaticFunctions_Convert::ToByteArray(InMessage);
 	
 	if (SenderSocket->Send(ByteArray.GetData(), ByteArray.Num(), BytesSent))
 	{
@@ -182,7 +182,7 @@ void UGenericUdpSocket::HandleOnDataReceived(const FArrayReaderPtr& DataPtr, con
 
 	AsyncTask(ENamedThreads::GameThread, [this, Data]()
 	          {
-		          OnMessageEvent.Broadcast(FConvertLibrary::ToString(Data));
+		          OnMessageEvent.Broadcast(FStaticFunctions_Convert::ToString(Data));
 	          }
 	);
 }

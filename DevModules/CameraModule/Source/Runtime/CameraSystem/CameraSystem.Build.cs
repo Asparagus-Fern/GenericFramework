@@ -13,6 +13,7 @@ public class CameraSystem : ModuleRules
 			{
 				"Core",
 				"DevCore",
+				 
 			}
 		);
 
@@ -27,8 +28,9 @@ public class CameraSystem : ModuleRules
 				"GameplayTags",
 				"CinematicCamera",
 				"DeveloperSettings",
-				
+
 				"PlayerInputUtilities",
+				"UnrealMisc"
 			}
 		);
 

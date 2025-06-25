@@ -28,11 +28,12 @@ public class WidgetApplicationModule : ModuleRules
 				"InputCore",
 				"CommonUI",
 
+				"UnrealMisc",
 				"GameHUDModule",
 				"WidgetGeneration",
 				"InteractableWidgetGeneration",
 				"WorldWidgetGeneration",
-				"MenuGeneration"
+				"MenuGeneration",
 			}
 		);
 	}

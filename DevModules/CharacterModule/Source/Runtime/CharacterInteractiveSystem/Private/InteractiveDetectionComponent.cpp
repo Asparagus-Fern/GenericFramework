@@ -3,8 +3,6 @@
 
 #include "InteractiveDetectionComponent.h"
 
-#include "BPFunctions/BPFunctions_Gameplay.h"
-
 UInteractiveDetectionComponent::UInteractiveDetectionComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;

@@ -166,21 +166,21 @@ bool UExtraProcManager::LaunchExtraProc(const FProcStartUpInfo& Info, uint16& Pr
 		GenericLOG(GenericLogExtraProc, Error, TEXT("Launch Proc Fial! Invalid File Name"))
 		return false;
 	}
-	
+
 	const FString Url = FPaths::Combine(FPaths::ProjectDir(), Info.ProcFile.FilePath);
-	
+
 	if (!ensureAlways(FPaths::IsUnderDirectory(Url, FPaths::Combine(FPaths::ProjectDir(), TEXT("Extras")))))
 	{
 		GenericLOG(GenericLogExtraProc, Warning, TEXT("Proc Is Not Under The Path : /Project/Extras"))
 		return false;
 	}
-	
+
 	if (!ensure(FPaths::FileExists(Url)))
 	{
 		GenericLOG(GenericLogExtraProc, Warning, TEXT("Invalid File : %s"), *Url)
 		return false;
 	}
-	
+
 	FString CommandLine;
 	auto AddParams = [&CommandLine](const FString& Key, const FString& Value)
 	{
@@ -189,7 +189,7 @@ bool UExtraProcManager::LaunchExtraProc(const FProcStartUpInfo& Info, uint16& Pr
 		{
 			return;
 		}
-	
+
 		if (Value.IsEmpty())
 		{
 			CommandLine += FString::Printf(TEXT("-%s=%s"), *Key, *Value);
@@ -199,7 +199,7 @@ bool UExtraProcManager::LaunchExtraProc(const FProcStartUpInfo& Info, uint16& Pr
 			CommandLine += FString::Printf(TEXT(" -%s"), *Key);
 		}
 	};
-	
+
 	if (!Info.StartParams.IsEmpty())
 	{
 		for (const auto& Param : Info.StartParams)
@@ -207,7 +207,7 @@ bool UExtraProcManager::LaunchExtraProc(const FProcStartUpInfo& Info, uint16& Pr
 			AddParams(Param.Key, Param.Value);
 		}
 	}
-	
+
 	return LaunchExtraProc(Url, CommandLine, Info.bRunInBackground, Info.bCreatePipe, true, ProcId);
 }
 
@@ -237,7 +237,7 @@ bool UExtraProcManager::LaunchExtraProc(const FString& Urls, const FString& Para
 	}
 
 	const uint16 ProcId = ExtraStartProcRunnable->GetProcId();
-	GenericLOG(GenericLogExtraProc, Log, TEXT("Lauch extra start proc Success, [Proc Id %d] , %s"), ProcId, *ExtraStartProcRunnable->GetCommandline())
+	GenericLOG(GenericLogExtraProc, Log, TEXT("Launch extra start proc Success, [Proc Id %d] , %s"), ProcId, *ExtraStartProcRunnable->GetCommandline())
 
 	ExtraProcHandle.Emplace(ProcId, ExtraStartProcRunnable);
 	OutProcId = ProcId;
@@ -246,7 +246,7 @@ bool UExtraProcManager::LaunchExtraProc(const FString& Urls, const FString& Para
 
 void UExtraProcManager::TerminationExtraProc(FExtraProcHandle& ProcHandle, bool bKillTree)
 {
-	if (!IsProcValid(ProcHandle)) 
+	if (!IsProcValid(ProcHandle))
 	{
 		return;
 	}
@@ -279,5 +279,3 @@ void UExtraProcManager::OnExtraProcCompleted(int32 ReturnCode, uint16 ProcId)
 
 	AsyncTask(ENamedThreads::GameThread, Execute);
 }
-
-

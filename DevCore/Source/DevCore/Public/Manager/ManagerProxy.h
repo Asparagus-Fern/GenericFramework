@@ -24,6 +24,10 @@ class DEVCORE_API UManagerProxy : public UGenericObject, public IWorldInterface
 	GENERATED_BODY()
 
 public:
+	UFUNCTION(BlueprintPure, Category="Manager")
+	static UManagerProxy* GetManagerProxy();
+
+public:
 	static UManagerProxy* InitializeManagerProxy();
 	static void DeInitializeManagerProxy();
 	static UManagerProxy* Get();
@@ -117,9 +121,11 @@ public:
 	UManagerInfo* GetManagerInfo(FGuid ManagerID) const;
 
 	/* Get Specific ManagerInfo By ManagerName */
+	UFUNCTION(BlueprintPure, Category="Manager")
 	UManagerInfo* GetManagerInfo(FName ManagerName) const;
 
 	/* Get All ManagerInfos */
+	UFUNCTION(BlueprintPure, Category="Manager")
 	TArray<UManagerInfo*> GetManagerInfos();
 
 public:

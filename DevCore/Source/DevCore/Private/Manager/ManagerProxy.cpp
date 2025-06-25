@@ -9,6 +9,11 @@
 
 UManagerProxy* UManagerProxy::Instance = nullptr;
 
+UManagerProxy* UManagerProxy::GetManagerProxy()
+{
+	return UManagerProxy::Get();
+}
+
 UManagerProxy* UManagerProxy::InitializeManagerProxy()
 {
 	if (!Instance)

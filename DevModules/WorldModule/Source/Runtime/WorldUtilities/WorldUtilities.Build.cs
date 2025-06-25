@@ -11,6 +11,7 @@ public class WorldUtilities : ModuleRules
 			{
 				"Core",
 				"DevCore",
+				 
 			}
 		);
 
@@ -26,6 +27,7 @@ public class WorldUtilities : ModuleRules
 				"DeveloperSettings",
 				
 				"WidgetGeneration",
+				"UnrealMisc"
 			}
 		);
 	}

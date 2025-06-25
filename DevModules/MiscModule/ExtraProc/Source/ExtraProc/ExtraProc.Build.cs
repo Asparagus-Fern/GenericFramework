@@ -10,7 +10,7 @@ public class ExtraProc : ModuleRules
 			new string[]
 			{
 				"Core",
-				"DevCore"
+				"DevCore",
 			}
 		);
 
@@ -21,7 +21,8 @@ public class ExtraProc : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
-				"DeveloperSettings"
+				"DeveloperSettings",
+				"UnrealMisc"
 			}
 		);
 

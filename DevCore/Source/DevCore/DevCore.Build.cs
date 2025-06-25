@@ -30,7 +30,7 @@ public class DevCore : ModuleRules
 			new string[]
 			{
 				"Core",
-				"DeveloperSettings",
+				"UnrealMisc"
 				// ... add other public dependencies that you statically link with here ...
 			}
 		);
@@ -44,18 +44,12 @@ public class DevCore : ModuleRules
 				"Slate",
 				"SlateCore",
 
-				"Projects",
 				"UMG",
 				"GameplayTags",
 				"AssetRegistry",
 				"EnhancedInput",
-				"AIModule",
 				"InputCore",
-				"DesktopPlatform",
 				"DeveloperSettings",
-				"Sockets",
-				"RHI",
-				"TinyXML2"
 			}
 		);
 
@@ -69,13 +63,6 @@ public class DevCore : ModuleRules
 
 		if (Target.bBuildEditor)
 		{
-			PublicDependencyModuleNames.AddRange(
-				new string[]
-				{
-				}
-			);
-
-
 			PrivateDependencyModuleNames.AddRange(
 				new string[]
 				{

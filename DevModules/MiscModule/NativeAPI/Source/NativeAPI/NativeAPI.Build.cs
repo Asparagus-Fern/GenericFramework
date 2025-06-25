@@ -50,7 +50,7 @@ public class NativeAPI : ModuleRules
 				"DeveloperSettings",
 				"WebSockets",
 				"HTTPServer",
-				"GenericProtocol"
+				"GenericProtocol",
 			}
 		);
 

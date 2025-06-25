@@ -10,16 +10,10 @@ public class MenuGeneration : ModuleRules
 			new string[]
 			{
 				"Core",
-
-				"GameplayTags",
-				"UMG",
-				"CommonUI",
-				"CommonInput",
-				"EnhancedInput",
-				"InputCore",
-
+				
 				"DevSlateCore",
 				"DevCore",
+				 
 				"WidgetGeneration",
 				"GameHUDModule",
 				"InteractableWidgetGeneration",
@@ -33,6 +27,15 @@ public class MenuGeneration : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
+				
+				"GameplayTags",
+				"UMG",
+				"CommonUI",
+				"CommonInput",
+				"EnhancedInput",
+				"InputCore",
+				
+				"UnrealMisc"
 			}
 		);
 	}
