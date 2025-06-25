@@ -3,9 +3,10 @@
 
 #include "WebSocket/AsyncAction/ReStartWebSocketAsyncAction.h"
 
-UReStartWebSocketAsyncAction* UReStartWebSocketAsyncAction::ReStart()
+UReStartWebSocketAsyncAction* UReStartWebSocketAsyncAction::ReStartWebSocket(UGenericWebSocket* WebSocket)
 {
 	UReStartWebSocketAsyncAction* Action = NewObject<UReStartWebSocketAsyncAction>();
+	Action->InitWebSocket(WebSocket);
 	Action->GetWebSocket()->ReStart();
 	return Action;
 }

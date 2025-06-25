@@ -49,7 +49,7 @@ public:
 	// Host port i.e. : 0 ~ 65535
 	UPROPERTY(Config, EditAnywhere, BlueprintReadWrite, meta=(ClampMin = 0, ClampMax = 65535, UIMin = 0, UIMax = 65535))
 	int32 Port = INDEX_NONE;
-
+	
 	// Protocol, i.e. "ws" or "wss"
 	UPROPERTY(Config, EditAnywhere, BlueprintReadWrite)
 	EWebSocketProtocol Protocol = EWebSocketProtocol::ws;

@@ -3,7 +3,6 @@
 
 #include "WebSocket/GenericWebSocket.h"
 
-#include "BPFunctions_Protocol.h"
 #include "GenericJsonObject.h"
 #include "IWebSocket.h"
 #include "WebSocketsModule.h"
@@ -44,7 +43,7 @@ void UGenericWebSocket::ConnectWithURL(const FString Host, const int32 Port, con
 
 	if (IsConnected())
 	{
-		WebSocketCache = FWebSocketsModule::Get().CreateWebSocket(UBPFunctions_Protocol::GetAddress(Host, Port), ConvertToWebSocketProtocolString(Protocol), Headers);
+		WebSocketCache = FWebSocketsModule::Get().CreateWebSocket(UBPFunctions_WebSocket::GetWebSocketUrl(Host, Port, Protocol), ConvertToWebSocketProtocolString(Protocol), Headers);
 		Close();
 	}
 	else
@@ -106,7 +105,7 @@ void UGenericWebSocket::SendJsonMessage(UGenericJsonObject* JsonObject)
 {
 	if (IsValid(JsonObject))
 	{
-		GenericLOG(GenericLogWebSocket, Warning, TEXT("InValid JsonObject"));
+		GenericLOG(GenericLogWebSocket, Warning, TEXT("JsonObject Is InValid"));
 		return;
 	}
 
@@ -222,7 +221,7 @@ void UGenericWebSocket::SetHeaders(TMap<FString, FString> Headers)
 
 void UGenericWebSocket::OnConnected()
 {
-	OnConnectedEvent.Broadcast();
+	OnConnectedEvent.Broadcast(this);
 
 	if (bBroadcastReStart)
 	{

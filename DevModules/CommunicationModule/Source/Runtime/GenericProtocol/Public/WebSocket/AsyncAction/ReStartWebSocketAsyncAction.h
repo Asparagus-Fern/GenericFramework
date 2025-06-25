@@ -23,7 +23,7 @@ public:
 
 public:
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category ="WebSocket")
-	static UReStartWebSocketAsyncAction* ReStart();
+	static UReStartWebSocketAsyncAction* ReStartWebSocket(UGenericWebSocket* WebSocket);
 
 protected:
 	virtual void OnReStartedInternal() override;

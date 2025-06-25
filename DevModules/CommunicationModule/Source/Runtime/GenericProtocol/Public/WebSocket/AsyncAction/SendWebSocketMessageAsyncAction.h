@@ -20,13 +20,13 @@ public:
 
 public:
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category ="WebSocket")
-	static USendWebSocketMessageAsyncAction* SendMessage(const FString& Message);
+	static USendWebSocketMessageAsyncAction* SendWebSocketMessage(UGenericWebSocket* WebSocket, const FString& Message);
 
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category ="WebSocket")
-	static USendWebSocketMessageAsyncAction* SendJsonMessage(UGenericJsonObject* JsonObject);
+	static USendWebSocketMessageAsyncAction* SendWebSocketJsonMessage(UGenericWebSocket* WebSocket, UGenericJsonObject* JsonObject);
 
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category ="WebSocket")
-	static USendWebSocketMessageAsyncAction* SendBinaryMessage(const TArray<uint8>& Message, const bool bIsBinary = false);
+	static USendWebSocketMessageAsyncAction* SendWebSocketBinaryMessage(UGenericWebSocket* WebSocket, const TArray<uint8>& Message, const bool bIsBinary = false);
 
 protected:
 	virtual void OnMessageSentInternal(const FString& Message) override;

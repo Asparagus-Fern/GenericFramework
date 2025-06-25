@@ -10,7 +10,7 @@
 class UGenericJsonObject;
 class IWebSocket;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FWebSocketConnectedEvent);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FWebSocketConnectedEvent, UGenericWebSocket*, WebSocket);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FWebSocketConnectionErrorEvent, const FString&, Error);
 

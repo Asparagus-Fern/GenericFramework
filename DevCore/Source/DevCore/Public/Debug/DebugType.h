@@ -23,6 +23,8 @@ DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(GenericLogEvent, Log, All);
 
 DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(GenericLogMovieScene, Log, All);
 
+DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(GenericLogNetwork, Log, All);
+
 /* ==================== Misc ==================== */
 
 DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(GenericLogExtraProc, Log, All);
@@ -35,6 +37,8 @@ DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(GenericLogHttp, Log, All);
 
 DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(GenericLogWebSocket, Log, All);
 
+DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(GenericLogUdp, Log, All);
+
 extern DEVCORE_API FColor DErrorColor;
 extern DEVCORE_API FColor DWarningColor;
 extern DEVCORE_API FColor DMessageColor;
@@ -44,7 +48,7 @@ extern DEVCORE_API float DNotifyFadeOutDuration;
 extern DEVCORE_API float DNotifyDuration;
 
 #define GenericLOG(CategoryName, Verbosity, Format, ...) \
-UE_LOG(CategoryName, Verbosity, TEXT("(%s) %s"), ANSI_TO_TCHAR(__FUNCTION__), *FString::Printf(Format, ##__VA_ARGS__))
+UE_LOG(CategoryName, Type::Verbosity, TEXT("(%s) %s"), ANSI_TO_TCHAR(__FUNCTION__), *FString::Printf(Format, ##__VA_ARGS__))
 
 #define GenericPRINT(Verbosity, Format, ...) \
 if(IsValid(GEngine)){ \

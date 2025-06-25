@@ -19,16 +19,19 @@ class GENERICPROTOCOL_API UWebSocketAsyncActionBase : public UBlueprintAsyncActi
 	GENERATED_BODY()
 
 public:
-	UWebSocketAsyncActionBase(const FObjectInitializer& ObjectInitializer);
 	virtual void SetReadyToDestroy() override;
 
+protected:
+	void InitWebSocket(UGenericWebSocket* InWebSocket);
+	UGenericWebSocket* GetWebSocket();
+	
 private:
 	void BindWebSocketDelegate();
 	void UnBindWebSocketDelegate() const;
 
 private:
 	UFUNCTION()
-	void HandleOnConnected();
+	void HandleOnConnected(UGenericWebSocket* WebSocket);
 
 	UFUNCTION()
 	void HandleOnConnectionError(const FString& Error);
@@ -55,7 +58,7 @@ private:
 	void HandleOnReStartError(const FString& Error);
 
 protected:
-	virtual void OnConnectedInternal() { return; }
+	virtual void OnConnectedInternal(UGenericWebSocket* WebSocket) { return; }
 	virtual void OnConnectionErrorInternal(const FString& Error) { return; }
 	virtual void OnRawMessageInternal(const TArray<uint8>& Data, int32 BytesRemaining) { return; }
 	virtual void OnBinaryMessageInternal(const TArray<uint8>& Data, bool bIsLastFragment) { return; }
@@ -65,10 +68,7 @@ protected:
 	virtual void OnReStartedInternal() { return; }
 	virtual void OnReStartErrorInternal(const FString& Error) { return; }
 
-	UGenericWebSocket* GetWebSocket();
-	void SetWebSocket(UGenericWebSocket* InWebSocket);
-
 private:
 	UPROPERTY()
-	UGenericWebSocket* WebSocket = nullptr;
+	UGenericWebSocket* WebSocketInternal = nullptr;
 };

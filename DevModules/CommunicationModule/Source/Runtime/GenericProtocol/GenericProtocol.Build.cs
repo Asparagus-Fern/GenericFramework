@@ -10,7 +10,7 @@ public class GenericProtocol : ModuleRules
 			new string[]
 			{
 				"Core",
-				"DevCore",
+				"DevCore", 
 			}
 		);
 
@@ -25,7 +25,9 @@ public class GenericProtocol : ModuleRules
 				"DeveloperSettings",
 				"HTTP",
 				"HTTPServer",
+				"Sockets",
 				"WebSockets",
+				"Networking",
 
 				"GenericJson"
 			}

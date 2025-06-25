@@ -23,15 +23,15 @@ public:
 
 public:
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category ="WebSocket")
-	static UConnectWebSocketAsyncAction* ConnectWithConnection(FWebSocketConnection InWebSocketConnect);
+	static UConnectWebSocketAsyncAction* ConnectWebSocketWithConnection(UGenericWebSocket* InWebSocket, FWebSocketConnection InWebSocketConnect);
 
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true", AutoCreateRefTerm = "Headers"), Category ="WebSocket")
-	static UConnectWebSocketAsyncAction* ConnectWithURL(FString Host, int32 Port, EWebSocketProtocol Protocol, TMap<FString, FString> Headers);
+	static UConnectWebSocketAsyncAction* ConnectWebSocketWithURL(UGenericWebSocket* InWebSocket, FString Host, int32 Port, EWebSocketProtocol Protocol, TMap<FString, FString> Headers);
 
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category ="WebSocket")
-	static UConnectWebSocketAsyncAction* Connect(UGenericWebSocket* InWebSocket);
+	static UConnectWebSocketAsyncAction* ConnectWebSocket(UGenericWebSocket* InWebSocket);
 
 protected:
-	virtual void OnConnectedInternal() override;
+	virtual void OnConnectedInternal(UGenericWebSocket* WebSocket) override;
 	virtual void OnConnectionErrorInternal(const FString& Error) override;
 };

@@ -4,32 +4,34 @@
 
 #include "WebSocket/GenericWebSocket.h"
 
-UConnectWebSocketAsyncAction* UConnectWebSocketAsyncAction::ConnectWithConnection(FWebSocketConnection InWebSocketConnect)
+UConnectWebSocketAsyncAction* UConnectWebSocketAsyncAction::ConnectWebSocketWithConnection(UGenericWebSocket* InWebSocket, FWebSocketConnection InWebSocketConnect)
 {
 	UConnectWebSocketAsyncAction* Action = NewObject<UConnectWebSocketAsyncAction>();
+	Action->InitWebSocket(InWebSocket);
 	Action->GetWebSocket()->ConnectWithConnection(InWebSocketConnect);
 	return Action;
 }
 
-UConnectWebSocketAsyncAction* UConnectWebSocketAsyncAction::ConnectWithURL(FString Host, int32 Port, EWebSocketProtocol Protocol, TMap<FString, FString> Headers)
+UConnectWebSocketAsyncAction* UConnectWebSocketAsyncAction::ConnectWebSocketWithURL(UGenericWebSocket* InWebSocket, FString Host, int32 Port, EWebSocketProtocol Protocol, TMap<FString, FString> Headers)
 {
 	UConnectWebSocketAsyncAction* Action = NewObject<UConnectWebSocketAsyncAction>();
+	Action->InitWebSocket(InWebSocket);
 	Action->GetWebSocket()->ConnectWithURL(Host, Port, Protocol, Headers);
 	return Action;
 }
 
-UConnectWebSocketAsyncAction* UConnectWebSocketAsyncAction::Connect(UGenericWebSocket* InWebSocket)
+UConnectWebSocketAsyncAction* UConnectWebSocketAsyncAction::ConnectWebSocket(UGenericWebSocket* InWebSocket)
 {
 	UConnectWebSocketAsyncAction* Action = NewObject<UConnectWebSocketAsyncAction>();
-	Action->SetWebSocket(InWebSocket);
+	Action->InitWebSocket(InWebSocket);
 	Action->GetWebSocket()->Connect();
 	return Action;
 }
 
-void UConnectWebSocketAsyncAction::OnConnectedInternal()
+void UConnectWebSocketAsyncAction::OnConnectedInternal(UGenericWebSocket* WebSocket)
 {
-	Super::OnConnectedInternal();
-	OnConnected.Broadcast();
+	Super::OnConnectedInternal(WebSocket);
+	OnConnected.Broadcast(WebSocket);
 }
 
 void UConnectWebSocketAsyncAction::OnConnectionErrorInternal(const FString& Error)

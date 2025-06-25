@@ -20,7 +20,7 @@ public:
 
 public:
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category ="WebSocket")
-	UCloseWebSocketAsyncAction* Close(int32 Code = 1000, FString Reason = "Close Normal");
+	UCloseWebSocketAsyncAction* CloseWebSocket(UGenericWebSocket* WebSocket, int32 Code = 1000, FString Reason = "Close Normal");
 
 protected:
 	virtual void OnClosedInternal(int32 Status, const FString& Reason, bool bWasClean) override;

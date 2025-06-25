@@ -53,7 +53,9 @@ public class DevCore : ModuleRules
 				"InputCore",
 				"DesktopPlatform",
 				"DeveloperSettings",
-				// ... add private dependencies that you statically link with here ...	
+				"Sockets",
+				"RHI",
+				"TinyXML2"
 			}
 		);
 
@@ -80,6 +82,12 @@ public class DevCore : ModuleRules
 					"UnrealEd"
 				}
 			);
+		}
+
+		if (Target.Platform == UnrealTargetPlatform.Win64)
+		{
+			PublicAdditionalLibraries.Add("pdh.lib");
+			PublicAdditionalLibraries.Add("kernel32.lib");
 		}
 	}
 }

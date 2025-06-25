@@ -5,54 +5,64 @@
 
 #include "WebSocket/GenericWebSocket.h"
 
-UWebSocketAsyncActionBase::UWebSocketAsyncActionBase(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
-{
-	WebSocket = UGenericWebSocket::CreateWebSocket();
-	BindWebSocketDelegate();
-}
-
 void UWebSocketAsyncActionBase::SetReadyToDestroy()
 {
 	UnBindWebSocketDelegate();
 	Super::SetReadyToDestroy();
 }
 
+void UWebSocketAsyncActionBase::InitWebSocket(UGenericWebSocket* InWebSocket)
+{
+	if (!IsValid(InWebSocket))
+	{
+		GenericLOG(GenericLogWebSocket, Error, TEXT("Invalid WebSocket"));
+		return;
+	}
+	
+	WebSocketInternal = InWebSocket;
+	BindWebSocketDelegate();
+}
+
+UGenericWebSocket* UWebSocketAsyncActionBase::GetWebSocket()
+{
+	return WebSocketInternal;
+}
+
 void UWebSocketAsyncActionBase::BindWebSocketDelegate()
 {
-	if (IsValid(WebSocket))
+	if (IsValid(WebSocketInternal))
 	{
-		WebSocket->OnConnectedEvent.AddDynamic(this, &UWebSocketAsyncActionBase::HandleOnConnected);
-		WebSocket->OnConnectionErrorEvent.AddDynamic(this, &UWebSocketAsyncActionBase::HandleOnConnectionError);
-		WebSocket->OnRawMessageEvent.AddDynamic(this, &UWebSocketAsyncActionBase::HandleOnRawMessage);
-		WebSocket->OnBinaryMessageEvent.AddDynamic(this, &UWebSocketAsyncActionBase::HandleOnBinaryMessage);
-		WebSocket->OnMessageEvent.AddDynamic(this, &UWebSocketAsyncActionBase::HandleOnMessage);
-		WebSocket->OnMessageSentEvent.AddDynamic(this, &UWebSocketAsyncActionBase::HandleOnMessageSent);
-		WebSocket->OnCloseEvent.AddDynamic(this, &UWebSocketAsyncActionBase::HandleOnClosed);
-		WebSocket->OnReStartedEvent.AddDynamic(this, &UWebSocketAsyncActionBase::HandleOnReStarted);
-		WebSocket->OnReStartErrorEvent.AddDynamic(this, &UWebSocketAsyncActionBase::HandleOnReStartError);
+		WebSocketInternal->OnConnectedEvent.AddDynamic(this, &UWebSocketAsyncActionBase::HandleOnConnected);
+		WebSocketInternal->OnConnectionErrorEvent.AddDynamic(this, &UWebSocketAsyncActionBase::HandleOnConnectionError);
+		WebSocketInternal->OnRawMessageEvent.AddDynamic(this, &UWebSocketAsyncActionBase::HandleOnRawMessage);
+		WebSocketInternal->OnBinaryMessageEvent.AddDynamic(this, &UWebSocketAsyncActionBase::HandleOnBinaryMessage);
+		WebSocketInternal->OnMessageEvent.AddDynamic(this, &UWebSocketAsyncActionBase::HandleOnMessage);
+		WebSocketInternal->OnMessageSentEvent.AddDynamic(this, &UWebSocketAsyncActionBase::HandleOnMessageSent);
+		WebSocketInternal->OnCloseEvent.AddDynamic(this, &UWebSocketAsyncActionBase::HandleOnClosed);
+		WebSocketInternal->OnReStartedEvent.AddDynamic(this, &UWebSocketAsyncActionBase::HandleOnReStarted);
+		WebSocketInternal->OnReStartErrorEvent.AddDynamic(this, &UWebSocketAsyncActionBase::HandleOnReStartError);
 	}
 }
 
 void UWebSocketAsyncActionBase::UnBindWebSocketDelegate() const
 {
-	if (IsValid(WebSocket))
+	if (IsValid(WebSocketInternal))
 	{
-		WebSocket->OnConnectedEvent.RemoveAll(this);
-		WebSocket->OnConnectionErrorEvent.RemoveAll(this);
-		WebSocket->OnRawMessageEvent.RemoveAll(this);
-		WebSocket->OnBinaryMessageEvent.RemoveAll(this);
-		WebSocket->OnMessageEvent.RemoveAll(this);
-		WebSocket->OnMessageSentEvent.RemoveAll(this);
-		WebSocket->OnCloseEvent.RemoveAll(this);
-		WebSocket->OnReStartedEvent.RemoveAll(this);
-		WebSocket->OnReStartErrorEvent.RemoveAll(this);
+		WebSocketInternal->OnConnectedEvent.RemoveAll(this);
+		WebSocketInternal->OnConnectionErrorEvent.RemoveAll(this);
+		WebSocketInternal->OnRawMessageEvent.RemoveAll(this);
+		WebSocketInternal->OnBinaryMessageEvent.RemoveAll(this);
+		WebSocketInternal->OnMessageEvent.RemoveAll(this);
+		WebSocketInternal->OnMessageSentEvent.RemoveAll(this);
+		WebSocketInternal->OnCloseEvent.RemoveAll(this);
+		WebSocketInternal->OnReStartedEvent.RemoveAll(this);
+		WebSocketInternal->OnReStartErrorEvent.RemoveAll(this);
 	}
 }
 
-void UWebSocketAsyncActionBase::HandleOnConnected()
+void UWebSocketAsyncActionBase::HandleOnConnected(UGenericWebSocket* WebSocket)
 {
-	OnConnectedInternal();
+	OnConnectedInternal(WebSocket);
 }
 
 void UWebSocketAsyncActionBase::HandleOnConnectionError(const FString& Error)
@@ -93,27 +103,4 @@ void UWebSocketAsyncActionBase::HandleOnReStarted()
 void UWebSocketAsyncActionBase::HandleOnReStartError(const FString& Error)
 {
 	OnReStartErrorInternal(Error);
-}
-
-UGenericWebSocket* UWebSocketAsyncActionBase::GetWebSocket()
-{
-	return WebSocket;
-}
-
-void UWebSocketAsyncActionBase::SetWebSocket(UGenericWebSocket* InWebSocket)
-{
-	if (WebSocket == InWebSocket)
-	{
-		return;
-	}
-
-	if (!IsValid(InWebSocket))
-	{
-		GenericLOG(GenericLogWebSocket, Error, TEXT("Invalid WebSocket"));
-		return;
-	}
-
-	UnBindWebSocketDelegate();
-	WebSocket = InWebSocket;
-	BindWebSocketDelegate();
 }

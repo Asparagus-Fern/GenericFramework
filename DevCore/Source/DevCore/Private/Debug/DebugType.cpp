@@ -10,6 +10,7 @@ DEFINE_LOG_CATEGORY(GenericLogWorld);
 DEFINE_LOG_CATEGORY(GenericLogProperty);
 DEFINE_LOG_CATEGORY(GenericLogEvent);
 DEFINE_LOG_CATEGORY(GenericLogMovieScene);
+DEFINE_LOG_CATEGORY(GenericLogNetwork);
 
 /* ==================== Misc ==================== */
 DEFINE_LOG_CATEGORY(GenericLogExtraProc);
@@ -18,6 +19,8 @@ DEFINE_LOG_CATEGORY(GenericLogExtraProc);
 DEFINE_LOG_CATEGORY(GenericLogJson);
 DEFINE_LOG_CATEGORY(GenericLogHttp);
 DEFINE_LOG_CATEGORY(GenericLogWebSocket);
+DEFINE_LOG_CATEGORY(GenericLogUdp);
+
 
 extern FColor DErrorColor = FColor::Red;
 extern FColor DWarningColor = FColor::Yellow;

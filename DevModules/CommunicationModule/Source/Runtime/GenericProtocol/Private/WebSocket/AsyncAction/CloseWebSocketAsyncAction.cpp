@@ -5,9 +5,10 @@
 
 #include "WebSocket/GenericWebSocket.h"
 
-UCloseWebSocketAsyncAction* UCloseWebSocketAsyncAction::Close(int32 Code, FString Reason)
+UCloseWebSocketAsyncAction* UCloseWebSocketAsyncAction::CloseWebSocket(UGenericWebSocket* WebSocket, int32 Code, FString Reason)
 {
 	UCloseWebSocketAsyncAction* Action = NewObject<UCloseWebSocketAsyncAction>();
+	Action->InitWebSocket(WebSocket);
 	Action->GetWebSocket()->Close(Code, Reason);
 	return Action;
 }

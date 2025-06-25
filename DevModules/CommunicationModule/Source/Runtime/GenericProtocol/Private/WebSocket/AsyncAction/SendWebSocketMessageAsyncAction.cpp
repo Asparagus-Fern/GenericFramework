@@ -3,23 +3,26 @@
 
 #include "WebSocket/AsyncAction/SendWebSocketMessageAsyncAction.h"
 
-USendWebSocketMessageAsyncAction* USendWebSocketMessageAsyncAction::SendMessage(const FString& Message)
+USendWebSocketMessageAsyncAction* USendWebSocketMessageAsyncAction::SendWebSocketMessage(UGenericWebSocket* WebSocket, const FString& Message)
 {
 	USendWebSocketMessageAsyncAction* Action = NewObject<USendWebSocketMessageAsyncAction>();
+	Action->InitWebSocket(WebSocket);
 	Action->GetWebSocket()->SendMessage(Message);
 	return Action;
 }
 
-USendWebSocketMessageAsyncAction* USendWebSocketMessageAsyncAction::SendJsonMessage(UGenericJsonObject* JsonObject)
+USendWebSocketMessageAsyncAction* USendWebSocketMessageAsyncAction::SendWebSocketJsonMessage(UGenericWebSocket* WebSocket, UGenericJsonObject* JsonObject)
 {
 	USendWebSocketMessageAsyncAction* Action = NewObject<USendWebSocketMessageAsyncAction>();
+	Action->InitWebSocket(WebSocket);
 	Action->GetWebSocket()->SendJsonMessage(JsonObject);
 	return Action;
 }
 
-USendWebSocketMessageAsyncAction* USendWebSocketMessageAsyncAction::SendBinaryMessage(const TArray<uint8>& Message, const bool bIsBinary)
+USendWebSocketMessageAsyncAction* USendWebSocketMessageAsyncAction::SendWebSocketBinaryMessage(UGenericWebSocket* WebSocket, const TArray<uint8>& Message, const bool bIsBinary)
 {
 	USendWebSocketMessageAsyncAction* Action = NewObject<USendWebSocketMessageAsyncAction>();
+	Action->InitWebSocket(WebSocket);
 	Action->GetWebSocket()->SendBinaryMessage(Message, bIsBinary);
 	return Action;
 }
