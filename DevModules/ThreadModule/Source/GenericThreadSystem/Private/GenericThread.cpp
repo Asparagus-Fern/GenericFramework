@@ -1,50 +1,25 @@
 ﻿// Copyright ChenTaiye 2025. All Rights Reserved.
 
 
-#include "Thread/GenericThread.h"
+#include "GenericThread.h"
 
-FGenericThread::FGenericThread(bool InCreatePipe)
-	: Thread(nullptr),
-	  bCreatePipe(InCreatePipe),
+FGenericThread::FGenericThread(const FString& InThreadName, const uint32 InThreadSize, const EThreadPriority InThreadPriority)
+	: ThreadName(InThreadName),
+	  ThreadSize(InThreadSize),
+	  ThreadPriority(InThreadPriority),
+	  Thread(nullptr),
+	  bCreatePipe(false),
 	  ReadPipe(nullptr),
 	  WritePipe(nullptr),
 	  bIsRunning(false),
-	  SleepInterval(0.01f),
-	  bStoping(false)
+	  bIsStoping(false),
+	  SleepInterval(0.01f)
 {
+	ThreadGuid = FGuid::NewGuid();
 }
 
 FGenericThread::~FGenericThread()
 {
-	Kill();
-}
-
-bool FGenericThread::Init()
-{
-	return FRunnable::Init();
-}
-
-uint32 FGenericThread::Run()
-{
-	StartTime = FDateTime::UtcNow();
-
-	while (IsRunning())
-	{
-		FPlatformProcess::Sleep(SleepInterval);
-		RunInternal();
-	}
-
-	return 0;
-}
-
-void FGenericThread::Exit()
-{
-	FRunnable::Exit();
-}
-
-void FGenericThread::Stop()
-{
-	StopInternal();
 }
 
 bool FGenericThread::Launch()
@@ -56,12 +31,17 @@ bool FGenericThread::Launch()
 
 	check(Thread == nullptr);
 
+	OnBeginLaunch();
+
+	static std::atomic<uint32> ThreadNameIndex{0};
+	Thread = FRunnableThread::Create(this, *FString::Printf(TEXT("%s_%d"), *ThreadName, ThreadNameIndex.fetch_add(1)), ThreadSize, ThreadPriority);
+
 	if (bCreatePipe && !FPlatformProcess::CreatePipe(ReadPipe, WritePipe))
 	{
 		return false;
 	}
 
-	const bool Result = OnLanch(Thread);
+	const bool Result = OnThreadCreated(Thread);
 
 	if (Result)
 	{
@@ -76,33 +56,29 @@ bool FGenericThread::Launch()
 	return Result;
 }
 
-bool FGenericThread::Update()
+void FGenericThread::Update()
 {
-	const bool Running = IsRunning();
-
 	if (!FPlatformProcess::SupportsMultithreading())
 	{
 		FPlatformProcess::Sleep(SleepInterval);
 
-		if (Running)
+		if (bIsRunning)
 		{
 			RunInternal();
 		}
 	}
-
-	return Running;
 }
 
-void FGenericThread::Cancle()
+void FGenericThread::Cancel()
 {
 	StopInternal();
 }
 
-void FGenericThread::Kill()
+void FGenericThread::Terminate()
 {
-	if (IsRunning())
+	if (bIsRunning)
 	{
-		Cancle();
+		Cancel();
 	}
 
 	if (Thread != nullptr)
@@ -112,70 +88,68 @@ void FGenericThread::Kill()
 	}
 }
 
-FTimespan FGenericThread::GetDuration() const
+bool FGenericThread::Init()
 {
-	if (IsRunning())
+	return FRunnable::Init();
+}
+
+uint32 FGenericThread::Run()
+{
+	StartTime = FDateTime::UtcNow();
+
+	while (bIsRunning)
 	{
-		return FDateTime::UtcNow() - StartTime;
+		FPlatformProcess::Sleep(SleepInterval);
+		RunInternal();
 	}
 
-	return EndTime - StartTime;
+	return 0;
 }
 
-FDateTime FGenericThread::GetStartTime() const
+void FGenericThread::Stop()
 {
-	return StartTime;
+	FRunnable::Stop();
+	StopInternal();
 }
 
-bool FGenericThread::IsRunning() const
+void FGenericThread::Exit()
 {
-	return bIsRunning;
-}
-
-float FGenericThread::GetSleepInterval() const
-{
-	return SleepInterval;
-}
-
-void FGenericThread::SetSleepInterval(float InSleepInterval)
-{
-	SleepInterval = InSleepInterval;
+	FRunnable::Exit();
 }
 
 void FGenericThread::RunInternal()
 {
 	ProcessOutput(FPlatformProcess::ReadPipe(ReadPipe));
 
-	if (bStoping)
+	if (bIsStoping)
 	{
-		OnStop();
-		TerminateDelegate.ExecuteIfBound();
+		OnTerminated();
+		OnTerminatedEvent.Broadcast(ThreadGuid);
 		bIsRunning = false;
+	}
+	else
+	{
+		if (!IsThreadRunning())
+		{
+			CompleteInternal();
+		}
 	}
 }
 
 void FGenericThread::StopInternal()
 {
-	bStoping = true;
+	bIsStoping = true;
 }
 
-bool FGenericThread::OnLanch(FRunnableThread*& NewThread)
-{
-	return false;
-}
-
-void FGenericThread::OnStop()
-{
-}
-
-void FGenericThread::OnCompleted()
+void FGenericThread::CompleteInternal()
 {
 	EndTime = FDateTime::UtcNow();
 
 	FPlatformProcess::ClosePipe(ReadPipe, WritePipe);
 	ReadPipe = WritePipe = nullptr;
 
-	CompletedDelegate.ExecuteIfBound();
+	OnCompleted();
+	OnCompletedEvent.Broadcast(ThreadGuid);
 	bIsRunning = false;
 }
 
@@ -184,7 +158,7 @@ void FGenericThread::ProcessOutput(const FString& Output)
 	OutputBuffer += Output;
 
 	// if the delegate is not bound, then just keep buffering the output to OutputBuffer for later return from GetFullOutputWithoutDelegate()
-	if (OutputDelegate.IsBound())
+	if (OnOutputEvent.IsBound())
 	{
 		// Output all the complete lines
 		int32 LineStartIdx = 0;
@@ -192,7 +166,7 @@ void FGenericThread::ProcessOutput(const FString& Output)
 		{
 			if (OutputBuffer[Idx] == '\r' || OutputBuffer[Idx] == '\n')
 			{
-				OutputDelegate.ExecuteIfBound(OutputBuffer.Mid(LineStartIdx, Idx - LineStartIdx));
+				OnOutputEvent.Broadcast(OutputBuffer.Mid(LineStartIdx, Idx - LineStartIdx));
 
 				if (OutputBuffer[Idx] == '\r' && Idx + 1 < OutputBuffer.Len() && OutputBuffer[Idx + 1] == '\n')
 				{
@@ -206,4 +180,14 @@ void FGenericThread::ProcessOutput(const FString& Output)
 		// Remove all the complete lines from the buffer
 		OutputBuffer.MidInline(LineStartIdx, MAX_int32, EAllowShrinking::No);
 	}
+}
+
+FTimespan FGenericThread::GetDuration() const
+{
+	if (bIsRunning)
+	{
+		return FDateTime::UtcNow() - StartTime;
+	}
+
+	return EndTime - StartTime;
 }

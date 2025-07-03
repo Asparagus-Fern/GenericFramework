@@ -2,7 +2,7 @@
   "FileVersion": 3,
   "Version": 1,
   "VersionName": "1.0",
-  "FriendlyName": "ExtraProc",
+  "FriendlyName": "ThreadModule",
   "Description": "",
   "Category": "Other",
   "CreatedBy": "Chen",
@@ -20,6 +20,11 @@
     }
   ],
   "Modules": [
+    {
+      "Name": "GenericThreadSystem",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
+    },
     {
       "Name": "ExtraProc",
       "Type": "Runtime",

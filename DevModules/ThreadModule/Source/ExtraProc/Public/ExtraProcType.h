@@ -45,33 +45,6 @@ public:
  * 
  */
 USTRUCT(BlueprintType)
-struct EXTRAPROC_API FExtraProcHandle
-{
-	GENERATED_BODY()
-
-public:
-	FExtraProcHandle()
-	{
-	}
-
-	FExtraProcHandle(uint16 InProcID)
-		: ProcID(InProcID)
-	{
-	}
-
-	bool operator==(const FExtraProcHandle& Other) const { return Other.ProcID == ProcID; }
-	bool operator!=(const FExtraProcHandle& Other) const { return !operator==(Other); }
-	uint16 GetProcId() const { return ProcID; }
-	bool IsValid() const { return ProcID != MIN_uint16; }
-
-private:
-	uint16 ProcID = MIN_uint16;
-};
-
-/**
- * 
- */
-USTRUCT(BlueprintType)
 struct EXTRAPROC_API FProcAutoStartUpInfo
 {
 	GENERATED_BODY()

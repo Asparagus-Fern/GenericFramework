@@ -1,8 +1,8 @@
 ﻿using UnrealBuildTool;
 
-public class ExtraProc : ModuleRules
+public class GenericThreadSystem : ModuleRules
 {
-	public ExtraProc(ReadOnlyTargetRules Target) : base(Target)
+	public GenericThreadSystem(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 
@@ -21,8 +21,6 @@ public class ExtraProc : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
-				"DeveloperSettings",
-				"UnrealMisc"
 			}
 		);
 
@@ -30,7 +28,5 @@ public class ExtraProc : ModuleRules
 		{
 			PrivateDependencyModuleNames.Add("UnrealEd");
 		}
-
-		RuntimeDependencies.Add("$(ProjectDir)/Extras/...", StagedFileType.NonUFS);
 	}
 }
