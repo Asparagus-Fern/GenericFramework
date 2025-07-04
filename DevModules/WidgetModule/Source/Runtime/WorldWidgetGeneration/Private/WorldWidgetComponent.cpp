@@ -88,12 +88,47 @@ void UWorldWidgetComponent::TickComponent(float DeltaTime, ELevelTick TickType, 
 	UpdateWorldWidgetLookAtRotation();
 }
 
-bool UWorldWidgetComponent::GetWidgetVisibility() const
+void UWorldWidgetComponent::SetWorldWidgetPaintMethod(EWorldWidgetPaintMethod InMethod)
 {
-	return WidgetVisibility;
+	WorldWidgetPaintMethod = InMethod;
+	UpdateWorldWidget();
 }
 
-void UWorldWidgetComponent::SetWidgetVisibility(bool InWidgetVisibility)
+void UWorldWidgetComponent::SetAlwaysInFront(const bool AlwaysInFront)
+{
+	bAlwaysInFront = AlwaysInFront;
+}
+
+void UWorldWidgetComponent::SetWorldWidgetLookAtSetting(const FWorldWidgetLookAtSetting& InSetting)
+{
+	WorldWidgetLookAtSetting = InSetting;
+}
+
+auto UWorldWidgetComponent::SetWorldWidgetByClass(TSubclassOf<UUserWidgetBase> InWorldWidgetClass) -> void
+{
+	if (!InWorldWidgetClass)
+	{
+		GenericLOG(GenericLogUI, Error, TEXT("InWorldWidgetClass Is InValid"))
+		return;
+	}
+
+	WorldWidget = CreateWidget<UUserWidgetBase>(UBPFunctions_Gameplay::GetPlayerControllerByClass(this, APlayerController::StaticClass(), 0), InWorldWidgetClass);
+	UpdateWorldWidget();
+}
+
+void UWorldWidgetComponent::SetWorldWidget(UUserWidgetBase* InWorldWidget)
+{
+	if (!IsValid(InWorldWidget))
+	{
+		GenericLOG(GenericLogUI, Error, TEXT("InWorldWidget Is InValid"))
+		return;
+	}
+
+	WorldWidget = InWorldWidget;
+	UpdateWorldWidget();
+}
+
+void UWorldWidgetComponent::SetWidgetVisibility(const bool InWidgetVisibility)
 {
 	if (WidgetVisibility != InWidgetVisibility)
 	{

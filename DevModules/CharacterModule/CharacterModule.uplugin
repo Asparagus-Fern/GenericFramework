@@ -17,6 +17,14 @@
     {
       "Name": "DevCore",
       "Enabled": true
+    },
+    {
+      "Name": "WidgetModule",
+      "Enabled": true
+    },
+    {
+      "Name": "ModelViewViewModel",
+      "Enabled": true
     }
   ],
   "Modules": [

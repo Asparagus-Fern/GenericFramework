@@ -64,7 +64,7 @@ public:
 	EThreadPriority GetThreadPriority() const { return ThreadPriority; }
 	void SetThreadPriority(const EThreadPriority InThreadPriority) { ThreadPriority = InThreadPriority; }
 	bool GetIsCreatePipe() const { return bCreatePipe; }
-	void SetIsCreatePipe(bool CreatePipe) { bCreatePipe = CreatePipe; }
+	void SetIsCreatePipe(const bool CreatePipe) { bCreatePipe = CreatePipe; }
 	FDateTime GetStartTime() const { return StartTime; }
 	FDateTime GetEndTime() const { return EndTime; }
 	FTimespan GetDuration() const;

@@ -3,19 +3,18 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "BackpackInterface.h"
 #include "Components/ActorComponent.h"
-#include "PickableItemComponent.generated.h"
+#include "BackpackComponent.generated.h"
 
-/**
- * 
- */
-UCLASS(ClassGroup=(Developer), meta=(BlueprintSpawnableComponent))
-class BACKPACKSYSTEM_API UPickableItemComponent : public UActorComponent
+
+UCLASS(ClassGroup=(Developer), meta=(BlueprintSpawnableComponent), MinimalAPI)
+class UBackpackComponent : public UActorComponent, public IBackpackInterface
 {
 	GENERATED_BODY()
 
 public:
-	UPickableItemComponent();
+	UBackpackComponent();
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 

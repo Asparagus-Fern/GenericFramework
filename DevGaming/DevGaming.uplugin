@@ -2,7 +2,7 @@
   "FileVersion": 3,
   "Version": 1,
   "VersionName": "1.0",
-  "FriendlyName": "DevApplication",
+  "FriendlyName": "DevGaming",
   "Description": "",
   "Category": "Other",
   "CreatedBy": "Chen",
@@ -81,43 +81,13 @@
     {
       "Name": "WorldModule",
       "Enabled": true
-    },
-    {
-      "Name": "AutoSizeComments",
-      "Enabled": true
-    },
-    {
-      "Name": "UltraDynamicSky",
-      "Enabled": true
-    },
-    {
-      "Name": "DBTween",
-      "Enabled": true
-    },
-    {
-      "Name": "Mannequins",
-      "Enabled": true
-    },
-    {
-      "Name": "UnrealFastNoise2",
-      "Enabled": true
     }
   ],
   "Modules": [
     {
-      "Name": "ApplicationRuntime",
+      "Name": "ObjectSnatchingGame",
       "Type": "Runtime",
-      "LoadingPhase": "PostDefault"
-    },
-    {
-      "Name": "ApplicationEditor",
-      "Type": "Editor",
-      "LoadingPhase": "PostEngineInit"
-    },
-    {
-      "Name": "DocumentReader",
-      "Type": "Editor",
-      "LoadingPhase": "PostEngineInit"
+      "LoadingPhase": "Default"
     }
   ]
 }

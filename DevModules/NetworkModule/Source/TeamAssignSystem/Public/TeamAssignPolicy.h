@@ -61,11 +61,11 @@ protected:
 	ETeamAssignMethod TeamAssignMethod = ETeamAssignMethod::Dynamic;
 
 	/* 队伍数量，仅在 TeamAssignMethod = ETeamAssignMethod::Static 时启用 */
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(UIMin = 1, ClampMin = 1, EditConditionHides, EditCondition = "TeamAssignMethod = ETeamAssignMethod::Static"))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(UIMin = 1, ClampMin = 1, EditConditionHides, EditCondition = "TeamAssignMethod == ETeamAssignMethod::Static"))
 	int32 TeamCount = 2;
 
 	/* 队伍的最大数量，仅在 TeamAssignMethod = ETeamAssignMethod::Dynamic 时启用 */
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(UIMin = 1, ClampMin = 1, EditConditionHides, EditCondition = "TeamAssignMethod = ETeamAssignMethod::Dynamic"))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(UIMin = 1, ClampMin = 1, EditConditionHides, EditCondition = "TeamAssignMethod == ETeamAssignMethod::Dynamic"))
 	int32 MaxTeamCount = 2;
 
 	/* 每个队伍的最大玩家数量 */

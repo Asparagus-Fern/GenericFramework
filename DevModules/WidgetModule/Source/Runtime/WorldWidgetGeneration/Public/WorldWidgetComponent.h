@@ -109,14 +109,26 @@ public:
 
 	/* UI */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced)
-	TObjectPtr<UUserWidgetBase> WorldWidget = nullptr;
+	UUserWidgetBase* WorldWidget = nullptr;
 
-public:
-	UPROPERTY(Interp, Category="Rendering", Getter, Setter, BlueprintGetter="GetWidgetVisibility", BlueprintSetter="SetWidgetVisibility")
+	UPROPERTY(BlueprintReadOnly)
 	bool WidgetVisibility;
 
-	UFUNCTION(BlueprintPure)
-	bool GetWidgetVisibility() const;
+public:
+	UFUNCTION(BlueprintCallable)
+	void SetWorldWidgetPaintMethod(EWorldWidgetPaintMethod InMethod);
+
+	UFUNCTION(BlueprintCallable)
+	void SetAlwaysInFront(bool AlwaysInFront);
+
+	UFUNCTION(BlueprintCallable)
+	void SetWorldWidgetLookAtSetting(const FWorldWidgetLookAtSetting& InSetting);
+
+	UFUNCTION(BlueprintCallable)
+	void SetWorldWidgetByClass(TSubclassOf<UUserWidgetBase> InWorldWidgetClass);
+
+	UFUNCTION(BlueprintCallable)
+	void SetWorldWidget(UUserWidgetBase* InWorldWidget);
 
 	UFUNCTION(BlueprintCallable)
 	void SetWidgetVisibility(bool InWidgetVisibility);

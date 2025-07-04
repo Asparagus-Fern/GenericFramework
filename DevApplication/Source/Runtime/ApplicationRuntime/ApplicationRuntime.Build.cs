@@ -22,6 +22,7 @@ public class ApplicationRuntime : ModuleRules
 				"Slate",
 				"SlateCore",
 
+				/* Unreal Engine */
 				"ModularGameplay",
 				"GameplayTags",
 				"UMG",
@@ -29,33 +30,35 @@ public class ApplicationRuntime : ModuleRules
 				"MovieScene",
 				"MediaAssets",
 
+				/* Dev Misc */
+				"UnrealMisc",
+
 				/* Dev Module */
+				"CameraSystem",
+				"GenericJson",
+				"GenericProtocol",
 				"EventUtilities",
 				"DevGameplay",
-
+				"PlayerInputUtilities",
+				"ExternalData",
+				"NativeAPI",
+				"MovieSceneUtilities",
+				"LevelSequenceSystem",
+				"MediaSystem",
+				"TeamAssignSystem",
+				"ProcedureFlowSystem",
+				"PropertyUtilities",
+				"GenericThreadSystem",
+				"ExtraProc",
 				"WidgetGeneration",
 				"InteractableWidgetGeneration",
 				"GameHUDModule",
 				"WorldWidgetGeneration",
 				"MenuGeneration",
 				"WidgetApplicationModule",
-
-				"CameraSystem",
-
 				"WorldUtilities",
 				"LevelStreaming",
 				"WorldPartition",
-
-				"MovieSceneUtilities",
-				"LevelSequenceSystem",
-				"MediaSystem",
-
-				"PropertyUtilities",
-
-				"ProcedureFlowSystem",
-
-				/* Dev Lab */
-
 
 				/* Marketplace */
 				"DBTween",

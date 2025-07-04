@@ -10,7 +10,7 @@ public class BackpackSystem : ModuleRules
 			new string[]
 			{
 				"Core",
-				"DevCore",
+				"DevCore", 
 			}
 		);
 
@@ -20,7 +20,10 @@ public class BackpackSystem : ModuleRules
 				"CoreUObject",
 				"Engine",
 				"Slate",
-				"SlateCore"
+				"SlateCore",
+				
+				"ModelViewViewModel",
+				"WidgetGeneration"
 			}
 		);
 	}
