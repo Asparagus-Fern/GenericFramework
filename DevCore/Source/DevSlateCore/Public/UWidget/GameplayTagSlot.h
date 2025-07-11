@@ -11,6 +11,9 @@
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_HUD);
 class UGameplayTagSlot;
 
+DECLARE_MULTICAST_DELEGATE_OneParam(FGameplayTagSlotDelegate, UGameplayTagSlot*)
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSlotContentChanged, UWidget*, Widget);
+
 /**
  * 带GameplayTag的插槽
  */
@@ -38,11 +41,8 @@ public:
 	FGameplayTag SlotTag;
 
 public:
-	DECLARE_MULTICAST_DELEGATE_OneParam(FGameplayTagSlotDelegate, UGameplayTagSlot*)
 	static FGameplayTagSlotDelegate OnBuildGameplayTagSlot;
 	static FGameplayTagSlotDelegate OnRemoveGameplayTagSlot;
-
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSlotContentChanged, UWidget*, Widget);
 
 	UPROPERTY(BlueprintAssignable)
 	FOnSlotContentChanged OnSlotContentAdded;

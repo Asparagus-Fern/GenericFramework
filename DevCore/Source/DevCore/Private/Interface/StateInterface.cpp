@@ -70,11 +70,6 @@ void IStateInterface::NativeOnDestroy()
 	{
 		IStateInterface::Execute_OnDestroy(Object);
 		GenericLOG(GenericLogProcedure, Log, TEXT("On Destroy : %s"), *Object->GetName());
-
-		if (bGarbageAtDestroy)
-		{
-			Object->MarkAsGarbage();
-		}
 	}
 }
 
@@ -85,6 +80,9 @@ bool IStateInterface::GetIsActived() const
 
 void IStateInterface::SetIsActived(const bool InActived)
 {
-	bIsActived = InActived;
-	OnActiveStateChanged();
+	if (bIsActived != InActived)
+	{
+		bIsActived = InActived;
+		OnActiveStateChanged();
+	}
 }

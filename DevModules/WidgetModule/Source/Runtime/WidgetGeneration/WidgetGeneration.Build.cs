@@ -12,12 +12,12 @@ public class WidgetGeneration : ModuleRules
 				"Core",
 				"DevCore",
 				"DevSlateCore",
-
+				
 				"UMG",
 				"GameplayTags",
 				"CommonUI",
+				"CommonInput",
 				"InputCore",
-				"DeveloperSettings"
 			}
 		);
 
@@ -28,6 +28,9 @@ public class WidgetGeneration : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
+
+				"ModelViewViewModel",
+				"DeveloperSettings"
 			}
 		);
 

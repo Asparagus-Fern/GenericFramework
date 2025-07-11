@@ -9,7 +9,7 @@
 #include "WorldWidgetPoint.generated.h"
 
 class UWorldWidgetComponent;
-class UUserWidgetBase;
+class UGenericWidget;
 
 
 UCLASS(HideCategories=(Object,Collision,Physics,Networking,Input,LevelInstance,Cooking,HLOD,Replication), MinimalAPI)

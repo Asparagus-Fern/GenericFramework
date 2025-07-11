@@ -19,11 +19,3 @@ void UBackpackManager::Deinitialize()
 	Super::Deinitialize();
 	UnRegisterManager();
 }
-
-void UBackpackManager::RegisterBackpackItem(IBackpackItemInterface* InBackpackItemInterface)
-{
-}
-
-void UBackpackManager::UnRegisterBackpackItem(IBackpackItemInterface* InBackpackItemInterface)
-{
-}

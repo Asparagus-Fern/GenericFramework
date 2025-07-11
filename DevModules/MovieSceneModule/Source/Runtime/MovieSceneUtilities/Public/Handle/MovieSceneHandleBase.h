@@ -8,7 +8,7 @@
 
 #include "MovieSceneHandleBase.generated.h"
 
-class UUserWidgetBase;
+class UGenericWidget;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FMovieSceneEvent);
 

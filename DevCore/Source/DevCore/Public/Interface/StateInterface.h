@@ -56,15 +56,11 @@ public:
 	virtual bool GetIsActived() const;
 	virtual void SetIsActived(const bool InActived);
 
-	bool GetGarbageAtDestroy() const { return bGarbageAtDestroy; }
-	void SetGarbageAtDestroy(const bool InGarbageAtDestroy) { bGarbageAtDestroy = InGarbageAtDestroy; }
-
 	FOnActivedFinish GetOnActivedFinishDelegate() { return OnActivedFinishDelegate; }
 	FOnInactivedFinish GetOnInactivedFinishDelegate() { return OnInactivedFinishDelegate; }
 
 protected:
 	bool bIsActived = false;
-	bool bGarbageAtDestroy = false;
 	FOnActivedFinish OnActivedFinishDelegate;
 	FOnInactivedFinish OnInactivedFinishDelegate;
 

@@ -7,7 +7,7 @@
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "CloseUserWidgetAsyncAction.generated.h"
 
-class UUserWidgetBase;
+class UGenericWidget;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FCloseUserWidgetDelegate);
 
@@ -23,7 +23,7 @@ class WIDGETGENERATION_API UCloseUserWidgetAsyncAction : public UBlueprintAsyncA
 
 public:
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true", AdvancedDisplay = 1))
-	static UCloseUserWidgetAsyncAction* AsyncCloseUserWidget(UUserWidgetBase* InWidget, bool MarkAsGarbage = true);
+	static UCloseUserWidgetAsyncAction* AsyncCloseUserWidget(UGenericWidget* InWidget, bool MarkAsGarbage = true);
 
 	UFUNCTION(BlueprintCallable, meta = (GameplayTagFilter="UI.HUD", BlueprintInternalUseOnly = "true", AdvancedDisplay = 1))
 	static UCloseUserWidgetAsyncAction* AsyncCloseUserWidgetByTag(FGameplayTag InSlotTag, bool MarkAsGarbage = true);
@@ -36,6 +36,6 @@ public:
 	FCloseUserWidgetDelegate OnFinish;
 
 private:
-	virtual void OnWidgetInactived(UUserWidgetBase* InWidget);
-	virtual void OnWidgetInactivedAnimationFinish(UUserWidgetBase* InWidget, bool InIsActived);
+	virtual void OnWidgetInactived(UGenericWidget* InWidget);
+	virtual void OnWidgetInactivedAnimationFinish(UGenericWidget* InWidget);
 };

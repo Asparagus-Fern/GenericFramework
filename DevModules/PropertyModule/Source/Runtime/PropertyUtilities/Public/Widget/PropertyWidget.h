@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Base/UserWidgetBase.h"
+#include "Base/GenericWidget.h"
 #include "PropertyWidget.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROPERTYUTILITIES_API UPropertyWidget : public UUserWidgetBase
+class PROPERTYUTILITIES_API UPropertyWidget : public UGenericWidget
 {
 	GENERATED_BODY()
 	

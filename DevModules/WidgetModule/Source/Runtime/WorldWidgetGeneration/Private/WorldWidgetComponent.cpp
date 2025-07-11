@@ -4,8 +4,7 @@
 #include "WorldWidgetComponent.h"
 
 #include "Animation/WidgetAnimation.h"
-#include "Base/UserWidgetBase.h"
-#include "BPFunctions/BPFunctions_Gameplay.h"
+#include "Base/GenericWidget.h"
 #include "BPFunctions/BPFunctions_Gameplay.h"
 #include "Components/WidgetComponent.h"
 #include "Debug/DebugType.h"
@@ -104,7 +103,7 @@ void UWorldWidgetComponent::SetWorldWidgetLookAtSetting(const FWorldWidgetLookAt
 	WorldWidgetLookAtSetting = InSetting;
 }
 
-auto UWorldWidgetComponent::SetWorldWidgetByClass(TSubclassOf<UUserWidgetBase> InWorldWidgetClass) -> void
+auto UWorldWidgetComponent::SetWorldWidgetByClass(TSubclassOf<UGenericWidget> InWorldWidgetClass) -> void
 {
 	if (!InWorldWidgetClass)
 	{
@@ -112,11 +111,11 @@ auto UWorldWidgetComponent::SetWorldWidgetByClass(TSubclassOf<UUserWidgetBase> I
 		return;
 	}
 
-	WorldWidget = CreateWidget<UUserWidgetBase>(UBPFunctions_Gameplay::GetPlayerControllerByClass(this, APlayerController::StaticClass(), 0), InWorldWidgetClass);
+	WorldWidget = CreateWidget<UGenericWidget>(UBPFunctions_Gameplay::GetPlayerControllerByClass(this, APlayerController::StaticClass(), 0), InWorldWidgetClass);
 	UpdateWorldWidget();
 }
 
-void UWorldWidgetComponent::SetWorldWidget(UUserWidgetBase* InWorldWidget)
+void UWorldWidgetComponent::SetWorldWidget(UGenericWidget* InWorldWidget)
 {
 	if (!IsValid(InWorldWidget))
 	{

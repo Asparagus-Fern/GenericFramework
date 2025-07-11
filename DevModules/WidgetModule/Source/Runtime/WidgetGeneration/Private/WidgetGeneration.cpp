@@ -1,6 +1,6 @@
 ﻿#include "WidgetGeneration.h"
 
-#include "Base/UserWidgetBase.h"
+#include "Base/GenericWidget.h"
 
 #if WITH_EDITOR
 #include "UMGEditorProjectSettings.h"
@@ -14,9 +14,9 @@ void FWidgetGenerationModule::StartupModule()
 	UUMGEditorProjectSettings* UMGEditorProjectSettings = GetMutableDefault<UUMGEditorProjectSettings>();
 	if (IsValid(UMGEditorProjectSettings))
 	{
-		if (!UMGEditorProjectSettings->FavoriteWidgetParentClasses.Contains(UUserWidgetBase::StaticClass()))
+		if (!UMGEditorProjectSettings->FavoriteWidgetParentClasses.Contains(UGenericWidget::StaticClass()))
 		{
-			UMGEditorProjectSettings->FavoriteWidgetParentClasses.Add(UUserWidgetBase::StaticClass());
+			UMGEditorProjectSettings->FavoriteWidgetParentClasses.Add(UGenericWidget::StaticClass());
 			UMGEditorProjectSettings->SaveConfig();
 		}
 	}

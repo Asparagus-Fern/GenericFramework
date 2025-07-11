@@ -25,7 +25,7 @@ public:
 	}
 
 	template <typename T>
-	static TArray<TSubclassOf<T>> LoadClass(TArray<TSoftClassPtr<T>> InSoftClasses)
+	static TArray<TSubclassOf<T>> LoadClass(const TArray<TSoftClassPtr<T>>& InSoftClasses)
 	{
 		TArray<TSubclassOf<T>> Result;
 		for (auto& InSoftClass : InSoftClasses)

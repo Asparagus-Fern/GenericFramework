@@ -7,8 +7,6 @@
 #include "Subsystems/LocalPlayerSubsystem.h"
 #include "BackpackManager.generated.h"
 
-class IBackpackItemInterface;
-
 /**
  * 
  */
@@ -21,11 +19,4 @@ public:
 	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void Deinitialize() override;
-
-public:
-	void RegisterBackpackItem(IBackpackItemInterface* InBackpackItemInterface);
-	void UnRegisterBackpackItem(IBackpackItemInterface* InBackpackItemInterface);
-
-protected:
-	TArray<IBackpackItemInterface*> BackpackItemInterfaces;
 };

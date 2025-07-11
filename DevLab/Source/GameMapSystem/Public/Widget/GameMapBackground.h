@@ -4,14 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "SlateType.h"
-#include "Base/UserWidgetBase.h"
+#include "Base/GenericWidget.h"
 #include "GameMapBackground.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class GAMEMAPSYSTEM_API UGameMapBackground : public UUserWidgetBase
+class GAMEMAPSYSTEM_API UGameMapBackground : public UGenericWidget
 {
 	GENERATED_BODY()
 

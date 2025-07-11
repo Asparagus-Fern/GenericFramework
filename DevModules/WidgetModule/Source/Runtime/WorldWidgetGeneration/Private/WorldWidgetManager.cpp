@@ -3,9 +3,9 @@
 
 #include "WorldWidgetManager.h"
 
-#include "GameHUDManager.h"
+#include "GenericHUDManager.h"
 #include "WorldWidgetComponent.h"
-#include "Base/UserWidgetBase.h"
+#include "Base/GenericWidget.h"
 
 #define LOCTEXT_NAMESPACE "UWorldWidgetManager"
 

@@ -6,7 +6,7 @@
 #include "LevelEditorViewport.h"
 #include "SEditorWorldWidget.h"
 #include "WorldWidgetComponent.h"
-#include "Base/UserWidgetBase.h"
+#include "Base/GenericWidget.h"
 #include "BPFunctions/BPFunctions_EditorWidget.h"
 #include "Widgets/Layout/SConstraintCanvas.h"
 
@@ -209,7 +209,7 @@ void UWorldWidgetEdManager::AddWorldWidgetToScreen(UWorldWidgetComponent* InWorl
 				continue;
 			}
 
-			UUserWidgetBase* DuplicateWorldWidget = DuplicateObject(InWorldWidgetComponent->WorldWidget, InWorldWidgetComponent);
+			UGenericWidget* DuplicateWorldWidget = DuplicateObject(InWorldWidgetComponent->WorldWidget, InWorldWidgetComponent);
 			TSharedPtr<SEditorWorldWidget> NewEditorWorldWidget = SNew(SEditorWorldWidget)
 			[
 				DuplicateWorldWidget->TakeWidget()

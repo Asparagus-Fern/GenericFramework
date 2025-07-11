@@ -8,7 +8,7 @@
 
 class ACameraPointBase;
 class UCameraSwitchMethod;
-class UUserWidgetBase;
+class UGenericWidget;
 class UGameMenuSetting;
 
 UCLASS(MinimalAPI)
@@ -29,7 +29,7 @@ public:
 	// UGameMenuSetting* DefaultGameMenu = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="UI")
-	TArray<TSubclassOf<UUserWidgetBase>> DefaultOpenWidgetClasses;
+	TArray<TSubclassOf<UGenericWidget>> DefaultOpenWidgetClasses;
 
 	/* Camera */
 public:
@@ -41,7 +41,7 @@ public:
 
 protected:
 	UPROPERTY(Transient)
-	TArray<UUserWidgetBase*> DefaultOpenWidgets;
+	TArray<UGenericWidget*> DefaultOpenWidgets;
 
 protected:
 	virtual void PostHUDCreated();

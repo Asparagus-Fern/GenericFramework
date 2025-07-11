@@ -19,7 +19,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnManagerUnRegister, UManagerInfo*,
  * 
  */
 UCLASS()
-class DEVCORE_API UManagerProxy : public UGenericObject, public IWorldInterface
+class DEVCORE_API UManagerProxy final : public UGenericObject, public IWorldInterface
 {
 	GENERATED_BODY()
 

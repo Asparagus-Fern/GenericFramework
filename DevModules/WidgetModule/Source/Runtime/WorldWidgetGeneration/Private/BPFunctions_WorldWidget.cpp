@@ -57,7 +57,7 @@ TArray<UWorldWidgetComponent*> UBPFunctions_WorldWidget::FindWorldWidgetComponen
 	return TArray<UWorldWidgetComponent*>{};
 }
 
-UInteractableWidgetEntityGroup* UBPFunctions_WorldWidget::GetWorldWidgetGroup(FGameplayTag InGroupTag)
+UGenericButtonGroup* UBPFunctions_WorldWidget::GetWorldWidgetGroup(FGameplayTag InGroupTag)
 {
 	if (UWorldWidgetGroupManager* WorldWidgetGroupManager = GetManager<UWorldWidgetGroupManager>())
 	{

@@ -4,18 +4,9 @@
 #include "ProcedureFlowSettings.h"
 
 #include "GameplayTagsSettings.h"
+#include "StaticFunctions/StaticFunctions_Object.h"
 
 UProcedureFlowSettings::UProcedureFlowSettings(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
-	if (UGameplayTagsSettings* GameplayTagsSettings = GetMutableDefault<UGameplayTagsSettings>())
-	{
-		if (const UDataTable* ProcedureFlowTagTable = LoadObject<UDataTable>(nullptr,TEXT("/Script/Engine.DataTable'/ProcedureModule/DataTable/DT_ProcedureFlow_Main.DT_ProcedureFlow_Main'")))
-		{
-			if (!GameplayTagsSettings->GameplayTagTableList.Contains(ProcedureFlowTagTable->GetPathName()))
-			{
-				GameplayTagsSettings->GameplayTagTableList.Add(FSoftObjectPath(ProcedureFlowTagTable));
-			}
-		}
-	}
 }

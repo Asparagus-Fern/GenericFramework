@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Base/UserWidgetBase.h"
+#include "Base/GenericWidget.h"
 #include "MovieSceneController.generated.h"
 
 /**
  * 
  */
 UCLASS(Abstract, MinimalAPI)
-class UMovieSceneController : public UUserWidgetBase
+class UMovieSceneController : public UGenericWidget
 {
 	GENERATED_BODY()
 };

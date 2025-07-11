@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "MovieSceneInterface.generated.h"
 
-class UUserWidgetBase;
+class UGenericWidget;
 class UMovieScenePanel;
 
 UINTERFACE(MinimalAPI)

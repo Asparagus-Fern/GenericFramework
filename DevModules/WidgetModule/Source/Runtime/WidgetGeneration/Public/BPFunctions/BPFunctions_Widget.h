@@ -4,11 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
-#include "WidgetManager.h"
+#include "GenericWidgetManager.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "BPFunctions_Widget.generated.h"
 
-class UUserWidgetBase;
+class UGenericWidget;
 
 /**
  * 
@@ -20,17 +20,17 @@ class WIDGETGENERATION_API UBPFunctions_Widget : public UBlueprintFunctionLibrar
 
 public:
 	UFUNCTION(BlueprintCallable, meta = (DeterminesOutputType = "InWidgetClass"))
-	static UUserWidgetBase* OpenUserWidgetByClass(TSubclassOf<UUserWidgetBase> InWidgetClass);
+	static UGenericWidget* OpenUserWidgetByClass(TSubclassOf<UGenericWidget> InWidgetClass);
 
 	UFUNCTION(BlueprintCallable)
-	static bool OpenUserWidget(UUserWidgetBase* InWidget);
+	static bool OpenUserWidget(UGenericWidget* InWidget);
 
 	UFUNCTION(BlueprintCallable, meta=(GameplayTagFilter="UI.HUD"))
 	static bool CloseUserWidgetByTag(FGameplayTag InSlotTag, bool MarkAsGarbage = true);
 
 	UFUNCTION(BlueprintCallable)
-	static bool CloseUserWidget(UUserWidgetBase* InWidget, bool MarkAsGarbage = true);
+	static bool CloseUserWidget(UGenericWidget* InWidget, bool MarkAsGarbage = true);
 
 	UFUNCTION(BlueprintPure)
-	static TArray<UUserWidgetBase*> GetActivedWidgets();
+	static TArray<UGenericWidget*> GetActivedWidgets();
 };

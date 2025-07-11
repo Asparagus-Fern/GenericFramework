@@ -3,18 +3,20 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BackpackInterface.h"
 #include "MVVMViewModelBase.h"
-#include "Generic/GenericObject.h"
 #include "BackpackData.generated.h"
+
+class UBackpackItemData;
 
 /**
  * 
  */
 UCLASS()
-class BACKPACKSYSTEM_API UBackpackData : public UMVVMViewModelBase, public IBackpackInterface
+class BACKPACKSYSTEM_API UBackpackData : public UMVVMViewModelBase
 {
 	GENERATED_BODY()
 
 public:
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, category="Backpack")
+	TArray<TObjectPtr<UBackpackItemData>> ItemList;
 };

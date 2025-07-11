@@ -3,17 +3,16 @@
 
 #include "AsyncAction/CloseUserWidgetAsyncAction.h"
 
-#include "WidgetAnimationManager.h"
-#include "WidgetManager.h"
+#include "GenericWidgetManager.h"
 #include "Manager/ManagerStatics.h"
 
-UCloseUserWidgetAsyncAction* UCloseUserWidgetAsyncAction::AsyncCloseUserWidget(UUserWidgetBase* InWidget, const bool MarkAsGarbage)
+UCloseUserWidgetAsyncAction* UCloseUserWidgetAsyncAction::AsyncCloseUserWidget(UGenericWidget* InWidget, const bool MarkAsGarbage)
 {
 	UCloseUserWidgetAsyncAction* NewAction = NewObject<UCloseUserWidgetAsyncAction>();
 
-	if (UWidgetManager* WidgetManager = GetManager<UWidgetManager>())
+	if (UGenericWidgetManager* WidgetManager = GetManager<UGenericWidgetManager>())
 	{
-		UWidgetAnimationManager::Delegate_OnWidgetAnimationPlayFinish.AddUObject(NewAction, &UCloseUserWidgetAsyncAction::OnWidgetInactivedAnimationFinish);
+		UGenericWidgetManager::Delegate_PostWidgetClosed.AddUObject(NewAction, &UCloseUserWidgetAsyncAction::OnWidgetInactivedAnimationFinish);
 		WidgetManager->CloseUserWidget(InWidget, MarkAsGarbage, FOnWidgetActiveStateChanged::CreateUObject(NewAction, &UCloseUserWidgetAsyncAction::OnWidgetInactived));
 	}
 
@@ -24,22 +23,22 @@ UCloseUserWidgetAsyncAction* UCloseUserWidgetAsyncAction::AsyncCloseUserWidgetBy
 {
 	UCloseUserWidgetAsyncAction* NewAction = NewObject<UCloseUserWidgetAsyncAction>();
 
-	if (UWidgetManager* WidgetManager = GetManager<UWidgetManager>())
+	if (UGenericWidgetManager* WidgetManager = GetManager<UGenericWidgetManager>())
 	{
-		UWidgetAnimationManager::Delegate_OnWidgetAnimationPlayFinish.AddUObject(NewAction, &UCloseUserWidgetAsyncAction::OnWidgetInactivedAnimationFinish);
+		UGenericWidgetManager::Delegate_PostWidgetClosed.AddUObject(NewAction, &UCloseUserWidgetAsyncAction::OnWidgetInactivedAnimationFinish);
 		WidgetManager->CloseUserWidget(InSlotTag, MarkAsGarbage, FOnWidgetActiveStateChanged::CreateUObject(NewAction, &UCloseUserWidgetAsyncAction::OnWidgetInactived));
 	}
 
 	return NewAction;
 }
 
-void UCloseUserWidgetAsyncAction::OnWidgetInactived(UUserWidgetBase* InWidget)
+void UCloseUserWidgetAsyncAction::OnWidgetInactived(UGenericWidget* InWidget)
 {
 	OnFinish.Broadcast();
 }
 
-void UCloseUserWidgetAsyncAction::OnWidgetInactivedAnimationFinish(UUserWidgetBase* InWidget, bool InIsActived)
+void UCloseUserWidgetAsyncAction::OnWidgetInactivedAnimationFinish(UGenericWidget* InWidget)
 {
-	UWidgetAnimationManager::Delegate_OnWidgetAnimationPlayFinish.RemoveAll(this);
+	UGenericWidgetManager::Delegate_PostWidgetClosed.RemoveAll(this);
 	OnAnimationFinish.Broadcast();
 }

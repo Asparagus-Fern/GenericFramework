@@ -1,0 +1,36 @@
+﻿// Copyright ChenTaiye 2025. All Rights Reserved.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "Manager/CoreInternalManager.h"
+#include "Subsystems/WorldSubsystem.h"
+#include "GenericButtonManager.generated.h"
+
+class UGenericButtonCollection;
+
+/**
+ * 
+ */
+UCLASS(MinimalAPI)
+class UGenericButtonManager : public UWorldSubsystem, public FCoreInternalManager
+{
+	GENERATED_BODY()
+
+public:
+	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
+	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+	virtual void Deinitialize() override;
+	virtual bool DoesSupportWorldType(const EWorldType::Type WorldType) const override;
+
+public:
+	WIDGETGROUPGENERATION_API UGenericButtonCollection* RegisterButtonCollection(TSubclassOf<UGenericButtonCollection> InCollectionClass, bool InActived = true);
+	WIDGETGROUPGENERATION_API bool RegisterButtonCollection(UGenericButtonCollection* InCollection, bool InActived = true);
+	WIDGETGROUPGENERATION_API bool UnRegisterButtonCollection(UGenericButtonCollection* InCollection);
+
+public:
+	WIDGETGROUPGENERATION_API TArray<TObjectPtr<UGenericButtonCollection>> GetAllCollection() { return Collections; }
+
+private:
+	TArray<TObjectPtr<UGenericButtonCollection>> Collections;
+};

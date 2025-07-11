@@ -9,7 +9,7 @@
 
 class SEditorWorldWidget;
 class UWidgetComponent;
-class UUserWidgetBase;
+class UGenericWidget;
 
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_WorldWidget);
 
@@ -109,7 +109,7 @@ public:
 
 	/* UI */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced)
-	UUserWidgetBase* WorldWidget = nullptr;
+	UGenericWidget* WorldWidget = nullptr;
 
 	UPROPERTY(BlueprintReadOnly)
 	bool WidgetVisibility;
@@ -125,10 +125,10 @@ public:
 	void SetWorldWidgetLookAtSetting(const FWorldWidgetLookAtSetting& InSetting);
 
 	UFUNCTION(BlueprintCallable)
-	void SetWorldWidgetByClass(TSubclassOf<UUserWidgetBase> InWorldWidgetClass);
+	void SetWorldWidgetByClass(TSubclassOf<UGenericWidget> InWorldWidgetClass);
 
 	UFUNCTION(BlueprintCallable)
-	void SetWorldWidget(UUserWidgetBase* InWorldWidget);
+	void SetWorldWidget(UGenericWidget* InWorldWidget);
 
 	UFUNCTION(BlueprintCallable)
 	void SetWidgetVisibility(bool InWidgetVisibility);

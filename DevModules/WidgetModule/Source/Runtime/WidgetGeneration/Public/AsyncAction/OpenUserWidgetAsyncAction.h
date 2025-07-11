@@ -6,9 +6,9 @@
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "OpenUserWidgetAsyncAction.generated.h"
 
-class UUserWidgetBase;
+class UGenericWidget;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOpenUserWidgetDelegate, UUserWidgetBase*, Widget);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOpenUserWidgetDelegate, UGenericWidget*, Widget);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnUserWidgetActivedAnimationDelegate);
 
@@ -22,10 +22,10 @@ class WIDGETGENERATION_API UOpenUserWidgetAsyncAction : public UBlueprintAsyncAc
 
 public:
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"))
-	static UOpenUserWidgetAsyncAction* AsyncOpenUserWidget(UUserWidgetBase* InWidget);
+	static UOpenUserWidgetAsyncAction* AsyncOpenUserWidget(UGenericWidget* InWidget);
 
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"))
-	static UOpenUserWidgetAsyncAction* AsyncOpenUserWidgetByClass(TSubclassOf<UUserWidgetBase> InWidgetClass);
+	static UOpenUserWidgetAsyncAction* AsyncOpenUserWidgetByClass(TSubclassOf<UGenericWidget> InWidgetClass);
 
 public:
 	UPROPERTY(BlueprintAssignable)
@@ -35,6 +35,6 @@ public:
 	FOnUserWidgetActivedAnimationDelegate OnAnimationFinish;
 
 private:
-	virtual void OnWidgetActived(UUserWidgetBase* InWidget);
-	virtual void OnWidgetActivedAnimationFinish(UUserWidgetBase* InWidget, bool InIsActived);
+	virtual void OnWidgetActived(UGenericWidget* InWidget);
+	virtual void OnWidgetActivedAnimationFinish(UGenericWidget* InWidget);
 };

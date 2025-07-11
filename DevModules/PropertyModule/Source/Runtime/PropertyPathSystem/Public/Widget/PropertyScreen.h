@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Base/UserWidgetBase.h"
+#include "Base/GenericWidget.h"
 #include "PropertyScreen.generated.h"
 
 class UPropertyPanel;
@@ -12,7 +12,7 @@ class UPropertyPanel;
  * 
  */
 UCLASS()
-class PROPERTYPATHSYSTEM_API UPropertyScreen : public UUserWidgetBase
+class PROPERTYPATHSYSTEM_API UPropertyScreen : public UGenericWidget
 {
 	GENERATED_BODY()
 

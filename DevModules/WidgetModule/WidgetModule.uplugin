@@ -17,6 +17,10 @@
     {
       "Name": "DevCore",
       "Enabled": true
+    },
+    {
+      "Name": "ModelViewViewModel",
+      "Enabled": true
     }
   ],
   "Modules": [
@@ -26,13 +30,13 @@
       "LoadingPhase": "Default"
     },
     {
-      "Name": "GameHUDModule",
+      "Name": "WidgetGroupGeneration",
       "Type": "Runtime",
       "LoadingPhase": "Default"
     },
     {
-      "Name": "InteractableWidgetGeneration",
-      "Type": "Runtime",
+      "Name": "WidgetGroupEdGeneration",
+      "Type": "Editor",
       "LoadingPhase": "Default"
     },
     {
@@ -46,17 +50,7 @@
       "LoadingPhase": "PostEngineInit"
     },
     {
-      "Name": "MenuGeneration",
-      "Type": "Runtime",
-      "LoadingPhase": "Default"
-    },
-    {
-      "Name": "MenuGenerationEditor",
-      "Type": "Editor",
-      "LoadingPhase": "PostEngineInit"
-    },
-    {
-      "Name": "WidgetApplicationModule",
+      "Name": "WidgetApplication",
       "Type": "Runtime",
       "LoadingPhase": "Default"
     }

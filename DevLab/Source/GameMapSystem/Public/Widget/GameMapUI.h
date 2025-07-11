@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameMapType.h"
 #include "SlateType.h"
-#include "Base/UserWidgetBase.h"
+#include "Base/GenericWidget.h"
 #include "GameMapUI.generated.h"
 
 class UGameMapPlayer;
@@ -15,7 +15,7 @@ class UGameMapBackground;
  * 
  */
 UCLASS()
-class GAMEMAPSYSTEM_API UGameMapUI : public UUserWidgetBase
+class GAMEMAPSYSTEM_API UGameMapUI : public UGenericWidget
 {
 	GENERATED_BODY()
 

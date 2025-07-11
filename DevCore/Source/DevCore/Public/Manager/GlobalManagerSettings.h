@@ -20,11 +20,20 @@ public:
 	virtual FName GetCategoryName() const override { return "Global"; }
 	virtual FName GetSectionName() const override { return "Global"; }
 
+public:
+	virtual void PostInitProperties() override;
 #if WITH_EDITOR
 	virtual FText GetSectionText() const override { return FText::FromString(TEXT("Manager")); }
+	virtual void PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent) override;
+
+private:
+	void UpdateGameplayTagSettings();
 #endif
 
 public:
-	UPROPERTY(Config, EditAnywhere, Category="Global Manager Setting")
+	UPROPERTY(Config, EditAnywhere)
 	bool bEnableAllManager = true;
+
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly)
+	TArray<TSoftObjectPtr<UDataTable>> GameplayTagTables;
 };

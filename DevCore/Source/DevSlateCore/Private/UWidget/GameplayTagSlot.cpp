@@ -8,8 +8,8 @@
 
 UE_DEFINE_GAMEPLAY_TAG(TAG_HUD, "UI.HUD");
 
-UGameplayTagSlot::FGameplayTagSlotDelegate UGameplayTagSlot::OnBuildGameplayTagSlot;
-UGameplayTagSlot::FGameplayTagSlotDelegate UGameplayTagSlot::OnRemoveGameplayTagSlot;
+FGameplayTagSlotDelegate UGameplayTagSlot::OnBuildGameplayTagSlot;
+FGameplayTagSlotDelegate UGameplayTagSlot::OnRemoveGameplayTagSlot;
 
 TSharedRef<SWidget> UGameplayTagSlot::RebuildWidget()
 {
@@ -55,6 +55,6 @@ void UGameplayTagSlot::OnSlotAdded(UPanelSlot* InSlot)
 
 void UGameplayTagSlot::OnSlotRemoved(UPanelSlot* InSlot)
 {
-	OnSlotContentAdded.Broadcast(GetChildAt(0));
+	OnSlotContentRemoved.Broadcast(GetChildAt(0));
 	Super::OnSlotRemoved(InSlot);
 }

@@ -3,8 +3,8 @@
 
 #include "WorldWidgetGroupManager.h"
 
-#include "InteractableWidgetBase.h"
-#include "InteractableWidgetEntityGroup.h"
+#include "GenericButtonWidget.h"
+#include "GenericButtonGroup.h"
 #include "WorldWidgetComponent.h"
 #include "WorldWidgetManager.h"
 
@@ -34,7 +34,7 @@ bool UWorldWidgetGroupManager::DoesSupportWorldType(const EWorldType::Type World
 	return WorldType == EWorldType::Game || WorldType == EWorldType::PIE;
 }
 
-UInteractableWidgetEntityGroup* UWorldWidgetGroupManager::GetWorldWidgetGroup(FGameplayTag InGroupTag)
+UGenericButtonGroup* UWorldWidgetGroupManager::GetWorldWidgetGroup(FGameplayTag InGroupTag)
 {
 	if (WorldWidgetGroupMapping.Contains(InGroupTag))
 	{
@@ -63,7 +63,7 @@ void UWorldWidgetGroupManager::OnWorldWidgetComponentActiveStateChanged(UWorldWi
 		return;
 	}
 
-	UInteractableWidgetBase* InteractableWidget = Cast<UInteractableWidgetBase>(InWorldWidgetComponent->WorldWidget);
+	UGenericButtonWidget* InteractableWidget = Cast<UGenericButtonWidget>(InWorldWidgetComponent->WorldWidget);
 	if (!IsValid(InteractableWidget))
 	{
 		/* Only Make Group While WorldWidget Is Base Of UInteractableWidgetBase */
@@ -75,19 +75,19 @@ void UWorldWidgetGroupManager::OnWorldWidgetComponentActiveStateChanged(UWorldWi
 		/* Find Is ParentTag Registered */
 		if (!WorldWidgetGroupMapping.Contains(InWorldWidgetComponent->GroupTag))
 		{
-			UInteractableWidgetEntityGroup* NewGroup = NewObject<UInteractableWidgetEntityGroup>(this);
+			UGenericButtonGroup* NewGroup = NewObject<UGenericButtonGroup>(this);
 			WorldWidgetGroupMapping.FindOrAdd(InWorldWidgetComponent->GroupTag, NewGroup);
 		}
 
-		UInteractableWidgetEntityGroup* Group = WorldWidgetGroupMapping.FindRef(InWorldWidgetComponent->GroupTag);
-		Group->AddWidget(InteractableWidget);
+		UGenericButtonGroup* Group = WorldWidgetGroupMapping.FindRef(InWorldWidgetComponent->GroupTag);
+		Group->AddButton(InteractableWidget);
 	}
 	else
 	{
-		UInteractableWidgetEntityGroup* Group = WorldWidgetGroupMapping.FindRef(InWorldWidgetComponent->GroupTag);
-		Group->RemoveWidget(InteractableWidget);
+		UGenericButtonGroup* Group = WorldWidgetGroupMapping.FindRef(InWorldWidgetComponent->GroupTag);
+		Group->RemoveButton(InteractableWidget);
 
-		if (Group->GetEntityCount() == 0)
+		if (Group->GetButtonCount() == 0)
 		{
 			WorldWidgetGroupMapping.Remove(InWorldWidgetComponent->GroupTag);
 			Group->MarkAsGarbage();

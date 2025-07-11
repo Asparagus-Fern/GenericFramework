@@ -3,43 +3,42 @@
 
 #include "AsyncAction/OpenUserWidgetAsyncAction.h"
 
-#include "WidgetAnimationManager.h"
-#include "WidgetManager.h"
+#include "GenericWidgetManager.h"
 #include "Manager/ManagerStatics.h"
 
-UOpenUserWidgetAsyncAction* UOpenUserWidgetAsyncAction::AsyncOpenUserWidget(UUserWidgetBase* InWidget)
+UOpenUserWidgetAsyncAction* UOpenUserWidgetAsyncAction::AsyncOpenUserWidget(UGenericWidget* InWidget)
 {
 	UOpenUserWidgetAsyncAction* NewAction = NewObject<UOpenUserWidgetAsyncAction>();
 
-	if (UWidgetManager* WidgetManager = GetManager<UWidgetManager>())
+	if (UGenericWidgetManager* WidgetManager = GetManager<UGenericWidgetManager>())
 	{
-		UWidgetAnimationManager::Delegate_OnWidgetAnimationPlayFinish.AddUObject(NewAction, &UOpenUserWidgetAsyncAction::OnWidgetActivedAnimationFinish);
+		UGenericWidgetManager::Delegate_PostWidgetOpened.AddUObject(NewAction, &UOpenUserWidgetAsyncAction::OnWidgetActivedAnimationFinish);
 		WidgetManager->OpenUserWidget(InWidget, FOnWidgetActiveStateChanged::CreateUObject(NewAction, &UOpenUserWidgetAsyncAction::OnWidgetActived));
 	}
 
 	return NewAction;
 }
 
-UOpenUserWidgetAsyncAction* UOpenUserWidgetAsyncAction::AsyncOpenUserWidgetByClass(TSubclassOf<UUserWidgetBase> InWidgetClass)
+UOpenUserWidgetAsyncAction* UOpenUserWidgetAsyncAction::AsyncOpenUserWidgetByClass(TSubclassOf<UGenericWidget> InWidgetClass)
 {
 	UOpenUserWidgetAsyncAction* NewAction = NewObject<UOpenUserWidgetAsyncAction>();
 
-	if (UWidgetManager* WidgetManager = GetManager<UWidgetManager>())
+	if (UGenericWidgetManager* WidgetManager = GetManager<UGenericWidgetManager>())
 	{
-		UWidgetAnimationManager::Delegate_OnWidgetAnimationPlayFinish.AddUObject(NewAction, &UOpenUserWidgetAsyncAction::OnWidgetActivedAnimationFinish);
+		UGenericWidgetManager::Delegate_PostWidgetOpened.AddUObject(NewAction, &UOpenUserWidgetAsyncAction::OnWidgetActivedAnimationFinish);
 		WidgetManager->OpenUserWidget(InWidgetClass, FOnWidgetActiveStateChanged::CreateUObject(NewAction, &UOpenUserWidgetAsyncAction::OnWidgetActived));
 	}
 
 	return NewAction;
 }
 
-void UOpenUserWidgetAsyncAction::OnWidgetActived(UUserWidgetBase* InWidget)
+void UOpenUserWidgetAsyncAction::OnWidgetActived(UGenericWidget* InWidget)
 {
 	OnFinish.Broadcast(InWidget);
 }
 
-void UOpenUserWidgetAsyncAction::OnWidgetActivedAnimationFinish(UUserWidgetBase* InWidget, bool InIsActived)
+void UOpenUserWidgetAsyncAction::OnWidgetActivedAnimationFinish(UGenericWidget* InWidget)
 {
-	UWidgetAnimationManager::Delegate_OnWidgetAnimationPlayFinish.RemoveAll(this);
+	UGenericWidgetManager::Delegate_PostWidgetOpened.RemoveAll(this);
 	OnAnimationFinish.Broadcast();
 }

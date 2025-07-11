@@ -18,6 +18,7 @@ class PROCEDUREFLOWSYSTEM_API UProcedureFlowSettings : public UGenericSettings
 public:
 	static ThisClass* Get() { return GetMutableDefault<ThisClass>(); }
 
+public:
 #if WITH_EDITOR
 	virtual FText GetSectionText() const override { return FText::FromString(TEXT("Procedure Flow")); }
 #endif

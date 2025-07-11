@@ -9,7 +9,7 @@
 #include "WorldWidgetGroupManager.generated.h"
 
 class UWorldWidgetComponent;
-class UInteractableWidgetEntityGroup;
+class UGenericButtonGroup;
 
 /**
  * 
@@ -26,11 +26,11 @@ public:
 	virtual bool DoesSupportWorldType(const EWorldType::Type WorldType) const override;
 
 public:
-	WORLDWIDGETGENERATION_API virtual UInteractableWidgetEntityGroup* GetWorldWidgetGroup(FGameplayTag InGroupTag);
+	WORLDWIDGETGENERATION_API virtual UGenericButtonGroup* GetWorldWidgetGroup(FGameplayTag InGroupTag);
 
 protected:
 	UPROPERTY()
-	TMap<FGameplayTag, TObjectPtr<UInteractableWidgetEntityGroup>> WorldWidgetGroupMapping;
+	TMap<FGameplayTag, TObjectPtr<UGenericButtonGroup>> WorldWidgetGroupMapping;
 
 	void OnWorldWidgetComponentActiveStateChanged(UWorldWidgetComponent* InWorldWidgetComponent, bool IsActive);
 };

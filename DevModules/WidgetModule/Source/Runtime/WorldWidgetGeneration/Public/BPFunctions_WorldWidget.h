@@ -10,7 +10,7 @@
 
 class AWorldWidgetPoint;
 class UWorldWidgetComponent;
-class UInteractableWidgetEntityGroup;
+class UGenericButtonGroup;
 
 /**
  * 
@@ -38,5 +38,5 @@ public:
 	
 public:
 	UFUNCTION(BlueprintPure, meta=(GameplayTagFilter="UI.WorldWidget"))
-	static UInteractableWidgetEntityGroup* GetWorldWidgetGroup(FGameplayTag InGroupTag);
+	static UGenericButtonGroup* GetWorldWidgetGroup(FGameplayTag InGroupTag);
 };

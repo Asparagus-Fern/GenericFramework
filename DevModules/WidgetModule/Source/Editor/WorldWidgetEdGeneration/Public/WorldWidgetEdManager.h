@@ -9,7 +9,7 @@
 
 class SEditorWorldWidget;
 class ILevelEditor;
-class UUserWidgetBase;
+class UGenericWidget;
 class SConstraintCanvas;
 
 struct FEditorWorldWidget

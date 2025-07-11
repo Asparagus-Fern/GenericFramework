@@ -3,22 +3,22 @@
 
 #include "BPFunctions/BPFunctions_Widget.h"
 
-#include "Base/UserWidgetBase.h"
+#include "Base/GenericWidget.h"
 #include "Manager/ManagerStatics.h"
 
-UUserWidgetBase* UBPFunctions_Widget::OpenUserWidgetByClass(TSubclassOf<UUserWidgetBase> InWidgetClass)
+UGenericWidget* UBPFunctions_Widget::OpenUserWidgetByClass(TSubclassOf<UGenericWidget> InWidgetClass)
 {
-	if (UWidgetManager* WidgetManager = GetManager<UWidgetManager>())
+	if (UGenericWidgetManager* WidgetManager = GetManager<UGenericWidgetManager>())
 	{
 		ensure(InWidgetClass);
-		return Cast<UUserWidgetBase>(WidgetManager->OpenUserWidget(InWidgetClass));
+		return Cast<UGenericWidget>(WidgetManager->OpenUserWidget(InWidgetClass));
 	}
 	return nullptr;
 }
 
-bool UBPFunctions_Widget::OpenUserWidget(UUserWidgetBase* InWidget)
+bool UBPFunctions_Widget::OpenUserWidget(UGenericWidget* InWidget)
 {
-	if (UWidgetManager* WidgetManager = GetManager<UWidgetManager>())
+	if (UGenericWidgetManager* WidgetManager = GetManager<UGenericWidgetManager>())
 	{
 		return WidgetManager->OpenUserWidget(InWidget);
 	}
@@ -27,27 +27,27 @@ bool UBPFunctions_Widget::OpenUserWidget(UUserWidgetBase* InWidget)
 
 bool UBPFunctions_Widget::CloseUserWidgetByTag(FGameplayTag InSlotTag, bool MarkAsGarbage)
 {
-	if (UWidgetManager* WidgetManager = GetManager<UWidgetManager>())
+	if (UGenericWidgetManager* WidgetManager = GetManager<UGenericWidgetManager>())
 	{
 		return WidgetManager->CloseUserWidget(InSlotTag, MarkAsGarbage);
 	}
 	return false;
 }
 
-bool UBPFunctions_Widget::CloseUserWidget(UUserWidgetBase* InWidget, bool MarkAsGarbage)
+bool UBPFunctions_Widget::CloseUserWidget(UGenericWidget* InWidget, bool MarkAsGarbage)
 {
-	if (UWidgetManager* WidgetManager = GetManager<UWidgetManager>())
+	if (UGenericWidgetManager* WidgetManager = GetManager<UGenericWidgetManager>())
 	{
 		return WidgetManager->CloseUserWidget(InWidget, MarkAsGarbage);
 	}
 	return false;
 }
 
-TArray<UUserWidgetBase*> UBPFunctions_Widget::GetActivedWidgets()
+TArray<UGenericWidget*> UBPFunctions_Widget::GetActivedWidgets()
 {
-	if (UWidgetManager* WidgetManager = GetManager<UWidgetManager>())
+	if (UGenericWidgetManager* WidgetManager = GetManager<UGenericWidgetManager>())
 	{
 		return WidgetManager->GetActivedWidgets();
 	}
-	return TArray<UUserWidgetBase*>{};
+	return TArray<UGenericWidget*>{};
 }
