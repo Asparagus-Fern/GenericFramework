@@ -12,8 +12,6 @@ public class WidgetGroupGeneration : ModuleRules
 				"Core",
 				"DevCore",
 				"DevSlateCore",
-				
-				
 			}
 		);
 
@@ -31,7 +29,7 @@ public class WidgetGroupGeneration : ModuleRules
 				"CommonInput",
 				"InputCore",
 				"EnhancedInput",
-				
+
 				"UnrealMisc",
 				"WidgetGeneration",
 			}

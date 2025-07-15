@@ -190,7 +190,7 @@ UGameplayTagSlot* UGenericHUDManager::GetSlot(const FGameplayTag InSlotTag) cons
 {
 	if (!InSlotTag.IsValid())
 	{
-		GenericLOG(GenericLogUI, Error, TEXT("SlotTag Is InValid"))
+		// GenericLOG(GenericLogUI, Warning, TEXT("SlotTag Is InValid"))
 		return nullptr;
 	}
 
@@ -254,6 +254,14 @@ bool UGenericHUDManager::AddSlotWidget(UGenericWidget* InWidget) const
 	if (UGameplayTagSlot* Slot = GetSlot(InWidget->SlotTag))
 	{
 		return IsValid(Slot->AddChild(InWidget));
+	}
+	else if (UWidgetTree* WidgetTree = Cast<UWidgetTree>(InWidget->GetOuter()))
+	{
+		if (UGenericWidget* Widget = Cast<UGenericWidget>(WidgetTree->GetOuter()))
+		{
+			Widget->AddChild(InWidget);
+			return true;
+		}
 	}
 
 	return false;

@@ -6,10 +6,9 @@
 #include "CommonUserWidget.h"
 #include "GameplayTagContainer.h"
 #include "WidgetType.h"
-#include "Runtime/WidgetGeneration/Public/Interface/WidgetAnimationInterface.h"
-#include "Blueprint/UserWidget.h"
 #include "Interface/StateInterface.h"
 #include "Interface/WidgetChildrenInterface.h"
+#include "Interface/WidgetAnimationInterface.h"
 #include "GenericWidget.generated.h"
 
 class UCommonUISubsystemBase;
@@ -22,7 +21,10 @@ class UWidgetAnimationEvent;
  * 
  */
 UCLASS(Abstract)
-class WIDGETGENERATION_API UGenericWidget : public UCommonUserWidget, public IWidgetAnimationInterface, public IStateInterface, public IWidgetChildrenInterface
+class WIDGETGENERATION_API UGenericWidget : public UCommonUserWidget,
+                                            public IStateInterface,
+                                            public IWidgetChildrenInterface,
+                                            public IWidgetAnimationInterface
 {
 	GENERATED_BODY()
 
@@ -68,22 +70,22 @@ private:
 	/* ==================== IStateInterface ==================== */
 public:
 	/* Widget Is Created, But Not At Screen */
-	virtual void NativeOnCreate() override { IStateInterface::NativeOnCreate(); }
+	virtual void NativeOnCreate() override;
 
 	/* Widget Is Adding To Screen */
-	virtual void NativeOnActived() override { IStateInterface::NativeOnActived(); }
+	virtual void NativeOnActived() override;
 
 	/* Widget Is Already Added */
-	virtual void NativeOnActivedFinish() override { IStateInterface::NativeOnActivedFinish(); }
+	virtual void NativeOnActivedFinish() override;
 
 	/* Widget Is Pre Remove From Screen */
-	virtual void NativeOnInactived() override { IStateInterface::NativeOnInactived(); }
+	virtual void NativeOnInactived() override;
 
 	/* Widget Is Removed From Screen */
-	virtual void NativeOnInactivedFinish() override { IStateInterface::NativeOnInactivedFinish(); }
+	virtual void NativeOnInactivedFinish() override;
 
 	/* Widget Is Pre Mark As Garbage */
-	virtual void NativeOnDestroy() override { IStateInterface::NativeOnDestroy(); }
+	virtual void NativeOnDestroy() override;
 
 	UFUNCTION(BlueprintPure)
 	virtual bool GetIsActived() const override;

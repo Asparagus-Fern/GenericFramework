@@ -30,14 +30,14 @@ FGameplayTagContainer UBPFunctions_GameplayTag::GetDirectGameplayTagChildren(FGa
 
 	if (bIsContainOriginal)
 	{
-		GameplayTagContainer.AddTagFast(InTag);
+		GameplayTagContainer.AddTag(InTag);
 	}
 
 	for (const auto& Tag : Children.GetGameplayTagArray())
 	{
 		if (Tag.RequestDirectParent() == InTag)
 		{
-			GameplayTagContainer.AddTagFast(Tag);
+			GameplayTagContainer.AddTag(Tag);
 		}
 	}
 

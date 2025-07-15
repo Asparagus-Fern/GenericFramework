@@ -21,10 +21,7 @@ public:
 private:
 	UGenericButtonCollection* GetButtonCollection() const;
 	TArray<TWeakObjectPtr<UObject>> ObjectsBeingCustomized;
-
-	FReply GenerateButtons() const;
-	FReply ClearButtons() const;
-
+	
 	FReply GenerateOnPressedEvent();
 	FReply GenerateOnReleasedEvent();
 	FReply GenerateOnHoveredEvent();

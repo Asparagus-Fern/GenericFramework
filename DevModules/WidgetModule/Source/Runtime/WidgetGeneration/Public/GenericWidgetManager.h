@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "WidgetType.h"
 #include "Manager/CoreInternalManager.h"
+#include "Manager/ManagerStatics.h"
 #include "Subsystems/WorldSubsystem.h"
 #include "UWidget/GameplayTagSlot.h"
 #include "GenericWidgetManager.generated.h"
@@ -66,14 +67,14 @@ public:
 
 	WIDGETGENERATION_API virtual UGenericWidget* OpenUserWidget(TSubclassOf<UGenericWidget> InWidgetClass, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged());
 	WIDGETGENERATION_API virtual bool OpenUserWidget(UGenericWidget* InWidget, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged());
-	WIDGETGENERATION_API virtual bool OpenUserWidget(FOpenWidgetParameter& Parameter);
-
+	WIDGETGENERATION_API virtual bool OpenUserWidget(FOpenWidgetParameter& OpenWidgetParameter);
+	
 	WIDGETGENERATION_API virtual bool CloseUserWidget(FGameplayTag InSlotTag, bool MarkAsGarbage = true, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged());
 	WIDGETGENERATION_API virtual bool CloseUserWidget(UGenericWidget* InWidget, bool MarkAsGarbage = true, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged());
-	WIDGETGENERATION_API virtual bool CloseUserWidget(FCloseWidgetParameter& Parameter);
+	WIDGETGENERATION_API virtual bool CloseUserWidget(FCloseWidgetParameter& CloseWidgetParameter);
 
-	virtual void ActiveWidget(FOpenWidgetParameter& Parameter);
-	virtual void InactiveWidget(FCloseWidgetParameter& Parameter);
+	virtual void ActiveWidget(FOpenWidgetParameter& OpenWidgetParameter);
+	virtual void InactiveWidget(FCloseWidgetParameter& CloseWidgetParameter);
 
 private:
 	void OnActiveAnimationPlayFinish(UGenericWidget* InWidget);

@@ -90,7 +90,49 @@ void UGenericWidget::NativeDestruct()
 	Super::NativeDestruct();
 }
 
+/* ==================== UGenericWidget ==================== */
+
+// void UGenericWidget::NativeConstructWidget(const FWidgetParameter& Parameter)
+// {
+// 	SetToolTipText(Parameter.DescriptionParameter.TooltipText);
+//
+// 	SetVisibility(Parameter.RenderParameter.Visibility);
+// 	SetRenderTransformPivot(Parameter.RenderParameter.RenderTransformPivot);
+//
+// 	ConstructWidget(Parameter);
+// }
+
 /* ==================== IStateInterface ==================== */
+
+void UGenericWidget::NativeOnCreate()
+{
+	IStateInterface::NativeOnCreate();
+}
+
+void UGenericWidget::NativeOnActived()
+{
+	IStateInterface::NativeOnActived();
+}
+
+void UGenericWidget::NativeOnActivedFinish()
+{
+	IStateInterface::NativeOnActivedFinish();
+}
+
+void UGenericWidget::NativeOnInactived()
+{
+	IStateInterface::NativeOnInactived();
+}
+
+void UGenericWidget::NativeOnInactivedFinish()
+{
+	IStateInterface::NativeOnInactivedFinish();
+}
+
+void UGenericWidget::NativeOnDestroy()
+{
+	IStateInterface::NativeOnDestroy();
+}
 
 bool UGenericWidget::GetIsActived() const
 {

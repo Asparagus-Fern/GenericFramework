@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ButtonType.h"
 #include "CommonInputModeTypes.h"
 #include "CommonUITypes.h"
 #include "Base/GenericWidget.h"
@@ -62,6 +63,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetButtonFocusable(bool bInIsFocusable);
 
+	void NativeConstructButtonParameters(const FButtonParameter& ButtonParameter);
+	UFUNCTION(BlueprintImplementableEvent)
+	void ConstructButtonParameters(const FButtonParameter& ButtonParameter);
+	
 protected:
 	virtual void OnWidgetRebuilt() override;
 	virtual void PostLoad() override;
@@ -366,20 +371,38 @@ public:
 	void SetPressedSoundOverride(USoundBase* Sound);
 
 	UFUNCTION(BlueprintCallable)
+	void SetPressedSlateSoundOverride(const FSlateSound& Sound);
+	
+	UFUNCTION(BlueprintCallable)
 	void SetHoveredSoundOverride(USoundBase* Sound);
 
+	UFUNCTION(BlueprintCallable)
+	void SetHoveredSlateSoundOverride(const FSlateSound& Sound);
+	
 	UFUNCTION(BlueprintCallable)
 	void SetSelectedPressedSoundOverride(USoundBase* Sound);
 
 	UFUNCTION(BlueprintCallable)
+	void SetSelectedPressedSlateSoundOverride(const FSlateSound& Sound);
+	
+	UFUNCTION(BlueprintCallable)
 	void SetSelectedHoveredSoundOverride(USoundBase* Sound);
 
+	UFUNCTION(BlueprintCallable)
+	void SetSelectedHoveredSlateSoundOverride(const FSlateSound& Sound);
+	
 	UFUNCTION(BlueprintCallable)
 	void SetLockedPressedSoundOverride(USoundBase* Sound);
 
 	UFUNCTION(BlueprintCallable)
+	void SetLockedPressedSlateSoundOverride(const FSlateSound& Sound);
+	
+	UFUNCTION(BlueprintCallable)
 	void SetLockedHoveredSoundOverride(USoundBase* Sound);
 
+	UFUNCTION(BlueprintCallable)
+	void SetLockedHoveredSlateSoundOverride(const FSlateSound& Sound);
+	
 	/* ==================== Locked ==================== */
 public:
 	/**
@@ -433,6 +456,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetIsToggleable(bool bInIsToggleable);
 
+	UFUNCTION(BlueprintCallable)
+	void SetIsDefaultSelected(bool bInDefaultSelected);
+	
 	/* Set whether the button should become selected upon receiving focus or not; Only settable for buttons that are selectable */
 	UFUNCTION(BlueprintCallable)
 	void SetShouldSelectUponReceivingFocus(bool bInShouldSelectUponReceivingFocus);
@@ -441,6 +467,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetIsInteractableWhenSelected(bool bInInteractableWhenSelected);
 
+	UFUNCTION(BlueprintCallable)
+	void SetIsTriggerClickedAfterSelection(bool bInTriggerClickedAfterSelection);
+	
 public:
 	/* True if the button is currently in a selected state, False otherwise */
 	UFUNCTION(BlueprintPure)

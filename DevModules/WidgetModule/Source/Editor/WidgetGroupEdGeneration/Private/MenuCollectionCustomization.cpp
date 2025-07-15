@@ -26,43 +26,6 @@ void FGenericButtonCollectionCustomization::CustomizeDetails(IDetailLayoutBuilde
 	DetailBuilder.GetObjectsBeingCustomized(ObjectsBeingCustomized);
 
 	IDetailCategoryBuilder& CollectionCategory = DetailBuilder.EditCategory("Collection");
-	IDetailCategoryBuilder& ButtonCategory = DetailBuilder.EditCategory("Collection | Button");
-	IDetailCategoryBuilder& EventCategory = DetailBuilder.EditCategory("Collection | Event");
-
-	CollectionCategory
-		.AddCustomRow(FText::GetEmpty())
-		.WholeRowContent()
-		[
-			SNew(SHorizontalBox)
-			+ SHorizontalBox::Slot()
-			.AutoWidth()
-			[
-				SNew(SBox)
-				.MinDesiredWidth(160.f)
-				.MinDesiredHeight(32.f)
-				[
-					SNew(SButton)
-					.HAlign(HAlign_Center)
-					.VAlign(VAlign_Center)
-					.Text(FText::FromString("Generate Buttons"))
-					.OnClicked(this, &FGenericButtonCollectionCustomization::GenerateButtons)
-				]
-			]
-			+ SHorizontalBox::Slot()
-			.AutoWidth()
-			[
-				SNew(SBox)
-				.MinDesiredWidth(160.f)
-				.MinDesiredHeight(32.f)
-				[
-					SNew(SButton)
-					.HAlign(HAlign_Center)
-					.VAlign(VAlign_Center)
-					.Text(FText::FromString("Clear Buttons"))
-					.OnClicked(this, &FGenericButtonCollectionCustomization::ClearButtons)
-				]
-			]
-		];
 
 	CollectionCategory
 		.AddCustomRow(FText::GetEmpty())
@@ -204,26 +167,6 @@ UGenericButtonCollection* FGenericButtonCollectionCustomization::GetButtonCollec
 	}
 
 	return nullptr;
-}
-
-FReply FGenericButtonCollectionCustomization::GenerateButtons() const
-{
-	if (UGenericButtonCollection* Collection = GetButtonCollection())
-	{
-		Collection->GenerateButtons();
-	}
-
-	return FReply::Handled();
-}
-
-FReply FGenericButtonCollectionCustomization::ClearButtons() const
-{
-	if (UGenericButtonCollection* Collection = GetButtonCollection())
-	{
-		Collection->ClearButtons();
-	}
-
-	return FReply::Handled();
 }
 
 FReply FGenericButtonCollectionCustomization::GenerateOnPressedEvent()
