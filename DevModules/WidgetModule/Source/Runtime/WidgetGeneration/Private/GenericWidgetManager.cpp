@@ -3,7 +3,7 @@
 
 #include "GenericWidgetManager.h"
 
-#include "GenericHUDManager.h"
+#include "GenericGameHUDManager.h"
 #include "Base/GenericWidget.h"
 #include "Blueprint/UserWidget.h"
 #include "Manager/ManagerStatics.h"

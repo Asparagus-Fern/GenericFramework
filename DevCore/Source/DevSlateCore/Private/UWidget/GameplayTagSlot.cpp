@@ -6,10 +6,26 @@
 #include "Widgets/Text/STextBlock.h"
 #include "Widgets/DeclarativeSyntaxSupport.h"
 
+#if WITH_EDITOR
+#include "Editor/WidgetCompilerLog.h"
+#endif
+
 UE_DEFINE_GAMEPLAY_TAG(TAG_HUD, "UI.HUD");
 
 FGameplayTagSlotDelegate UGameplayTagSlot::OnBuildGameplayTagSlot;
 FGameplayTagSlotDelegate UGameplayTagSlot::OnRemoveGameplayTagSlot;
+
+#if WITH_EDITOR
+void UGameplayTagSlot::ValidateCompiledDefaults(IWidgetCompilerLog& CompileLog) const
+{
+	Super::ValidateCompiledDefaults(CompileLog);
+
+	if (!SlotTag.IsValid())
+	{
+		CompileLog.Error(FText::FromString(TEXT("Slot Tag Is InValid")));
+	}
+}
+#endif
 
 TSharedRef<SWidget> UGameplayTagSlot::RebuildWidget()
 {

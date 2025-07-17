@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "PlayerState/DevPlayerState.h"
+#include "PlayerState/GenericPlayerState.h"
 #include "TeamPlayerState.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class TEAMASSIGNSYSTEM_API ATeamPlayerState : public ADevPlayerState
+class TEAMASSIGNSYSTEM_API ATeamPlayerState : public AGenericPlayerState
 {
 	GENERATED_BODY()
 

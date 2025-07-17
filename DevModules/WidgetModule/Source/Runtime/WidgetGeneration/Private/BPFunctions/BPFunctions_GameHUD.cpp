@@ -1,45 +1,63 @@
-// Copyright ChenTaiye 2025. All Rights Reserved.
+﻿// Copyright ChenTaiye 2025. All Rights Reserved.
+
 
 #include "BPFunctions/BPFunctions_GameHUD.h"
 
-#include "GenericHUDManager.h"
+#include "GenericGameHUDManager.h"
 #include "Manager/ManagerStatics.h"
 
-/* ==================== UGameplayTagSlot ==================== */
-
-void UBPFunctions_GameHUD::RegisterSlot(UGameplayTagSlot* InSlot)
+void UBPFunctions_GameHUD::CreateGameHUDListBySoftClass(const TArray<TSoftClassPtr<UGenericGameHUD>>& InGameHUDClasses)
 {
-	if (UGenericHUDManager* GameHUDManager = GetManager<UGenericHUDManager>())
+	if (UGenericGameHUDManager* GameHUDManager = GetManager<UGenericGameHUDManager>())
 	{
-		GameHUDManager->RegisterSlot(InSlot);
+		GameHUDManager->CreateGameHUDs(InGameHUDClasses);
 	}
 }
 
-void UBPFunctions_GameHUD::UnRegisterSlot(UGameplayTagSlot* InSlot)
+void UBPFunctions_GameHUD::CreateGameHUDListByClass(TArray<TSubclassOf<UGenericGameHUD>> InGameHUDClasses)
 {
-	if (UGenericHUDManager* GameHUDManager = GetManager<UGenericHUDManager>())
+	if (UGenericGameHUDManager* GameHUDManager = GetManager<UGenericGameHUDManager>())
 	{
-		GameHUDManager->UnRegisterSlot(InSlot);
+		GameHUDManager->CreateGameHUDs(InGameHUDClasses);
 	}
 }
 
-bool UBPFunctions_GameHUD::GetSlots(TArray<UGameplayTagSlot*>& Slots)
+void UBPFunctions_GameHUD::CreateGameHUDList(TArray<UGenericGameHUD*> InGameHUDs)
 {
-	if (UGenericHUDManager* GameHUDManager = GetManager<UGenericHUDManager>())
+	if (UGenericGameHUDManager* GameHUDManager = GetManager<UGenericGameHUDManager>())
 	{
-		Slots = GameHUDManager->GetSlots();
-		return true;
+		GameHUDManager->CreateGameHUDs(InGameHUDs);
 	}
-
-	return false;
 }
 
-UGameplayTagSlot* UBPFunctions_GameHUD::GetSlot(FGameplayTag InSlotTag)
+void UBPFunctions_GameHUD::CreateGameHUD(UGenericGameHUD* InGameHUD)
 {
-	if (const UGenericHUDManager* GameHUDManager = GetManager<UGenericHUDManager>())
+	if (UGenericGameHUDManager* GameHUDManager = GetManager<UGenericGameHUDManager>())
 	{
-		return GameHUDManager->GetSlot(InSlotTag);
+		GameHUDManager->CreateGameHUD(InGameHUD);
 	}
+}
 
-	return nullptr;
+void UBPFunctions_GameHUD::RemoveGameHUDList(TArray<UGenericGameHUD*> InGameHUDs)
+{
+	if (UGenericGameHUDManager* GameHUDManager = GetManager<UGenericGameHUDManager>())
+	{
+		GameHUDManager->RemoveGameHUDs(InGameHUDs);
+	}
+}
+
+void UBPFunctions_GameHUD::RemoveGameHUD(UGenericGameHUD* InGameHUD)
+{
+	if (UGenericGameHUDManager* GameHUDManager = GetManager<UGenericGameHUDManager>())
+	{
+		GameHUDManager->RemoveGameHUD(InGameHUD);
+	}
+}
+
+void UBPFunctions_GameHUD::ClearAllGameHUD()
+{
+	if (UGenericGameHUDManager* GameHUDManager = GetManager<UGenericGameHUDManager>())
+	{
+		GameHUDManager->ClearGameHUDs();
+	}
 }

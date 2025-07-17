@@ -1,14 +1,12 @@
-// Copyright ChenTaiye 2025. All Rights Reserved.
+﻿// Copyright ChenTaiye 2025. All Rights Reserved.
 
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameplayTagContainer.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "BPFunctions_GameHUD.generated.h"
 
-class UGameplayTagSlot;
-
+class UGenericGameHUD;
 /**
  * 
  */
@@ -17,17 +15,25 @@ class WIDGETGENERATION_API UBPFunctions_GameHUD : public UBlueprintFunctionLibra
 {
 	GENERATED_BODY()
 
-	/* UGameplayTagSlot */
 public:
-	UFUNCTION(BlueprintCallable)
-	static void RegisterSlot(UGameplayTagSlot* InSlot);
+	UFUNCTION(BlueprintCallable, category="GameHUD")
+	static void CreateGameHUDListBySoftClass(const TArray<TSoftClassPtr<UGenericGameHUD>>& InGameHUDClasses);
 
-	UFUNCTION(BlueprintCallable)
-	static void UnRegisterSlot(UGameplayTagSlot* InSlot);
+	UFUNCTION(BlueprintCallable, category="GameHUD")
+	static void CreateGameHUDListByClass(TArray<TSubclassOf<UGenericGameHUD>> InGameHUDClasses);
 
-	UFUNCTION(BlueprintPure)
-	static bool GetSlots(TArray<UGameplayTagSlot*>& Slots);
+	UFUNCTION(BlueprintCallable, category="GameHUD")
+	static void CreateGameHUDList(TArray<UGenericGameHUD*> InGameHUDs);
 
-	UFUNCTION(BlueprintPure, meta=(GameplayTagFilter="UI.HUD"))
-	static UGameplayTagSlot* GetSlot(FGameplayTag InSlotTag);
+	UFUNCTION(BlueprintCallable, category="GameHUD")
+	static void CreateGameHUD(UGenericGameHUD* InGameHUD);
+
+	UFUNCTION(BlueprintCallable, category="GameHUD")
+	static void RemoveGameHUDList(TArray<UGenericGameHUD*> InGameHUDs);
+
+	UFUNCTION(BlueprintCallable, category="GameHUD")
+	static void RemoveGameHUD(UGenericGameHUD* InGameHUD);
+
+	UFUNCTION(BlueprintCallable, category="GameHUD")
+	static void ClearAllGameHUD();
 };

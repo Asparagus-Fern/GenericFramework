@@ -6,7 +6,7 @@
 #include "Manager/CoreInternalManager.h"
 #include "PawnManager.generated.h"
 
-class ADevPawn;
+class AGenericPawn;
 
 /**
  * 
@@ -24,9 +24,9 @@ public:
 
 protected:
 	UPROPERTY(Transient)
-	TArray<ADevPawn*> Pawns;
+	TArray<AGenericPawn*> Pawns;
 
 protected:
-	void RegisterPawn(ADevPawn* Pawn);
-	void UnRegisterPawn(ADevPawn* Pawn);
+	void RegisterPawn(AGenericPawn* Pawn);
+	void UnRegisterPawn(AGenericPawn* Pawn);
 };

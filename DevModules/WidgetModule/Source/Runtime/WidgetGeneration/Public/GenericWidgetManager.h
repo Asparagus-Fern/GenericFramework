@@ -11,7 +11,7 @@
 #include "UWidget/GameplayTagSlot.h"
 #include "GenericWidgetManager.generated.h"
 
-class UGenericHUD;
+class UGenericGameHUD;
 class UGenericWidget;
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FDelegate_PreWidgetOpened, FOpenWidgetParameter&);

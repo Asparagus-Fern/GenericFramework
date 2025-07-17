@@ -13,7 +13,7 @@
 
 class UCommonUISubsystemBase;
 class UCommonInputSubsystem;
-class UGenericHUD;
+class UGenericGameHUD;
 class UCommonButton;
 class UWidgetAnimationEvent;
 

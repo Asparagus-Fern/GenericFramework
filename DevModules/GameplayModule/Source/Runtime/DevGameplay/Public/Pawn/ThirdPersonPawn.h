@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Pawn/DevPawn.h"
+#include "Pawn/GenericPawn.h"
 #include "ThirdPersonPawn.generated.h"
 
 class UCameraComponent;
@@ -11,7 +11,7 @@ class UPawnSpringArmComponent;
 class UCameraSwitchMethod;
 
 UCLASS()
-class DEVGAMEPLAY_API AThirdPersonPawn : public ADevPawn
+class DEVGAMEPLAY_API AThirdPersonPawn : public AGenericPawn
 {
 	GENERATED_BODY()
 

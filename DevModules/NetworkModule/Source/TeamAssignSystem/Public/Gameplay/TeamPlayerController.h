@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "PlayerController/DevPlayerController.h"
+#include "PlayerController/GenericPlayerController.h"
 #include "TeamPlayerController.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class TEAMASSIGNSYSTEM_API ATeamPlayerController : public ADevPlayerController
+class TEAMASSIGNSYSTEM_API ATeamPlayerController : public AGenericPlayerController
 {
 	GENERATED_BODY()
 };

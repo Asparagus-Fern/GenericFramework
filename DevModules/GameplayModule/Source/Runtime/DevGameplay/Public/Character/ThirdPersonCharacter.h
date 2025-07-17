@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Character/DevCharacter.h"
+#include "Character/GenericCharacter.h"
 #include "ThirdPersonCharacter.generated.h"
 
 class USpringArmComponent;
@@ -11,7 +11,7 @@ class UPawnSpringArmComponent;
 class UCameraComponent;
 
 UCLASS()
-class DEVGAMEPLAY_API AThirdPersonCharacter : public ADevCharacter
+class DEVGAMEPLAY_API AThirdPersonCharacter : public AGenericCharacter
 {
 	GENERATED_BODY()
 

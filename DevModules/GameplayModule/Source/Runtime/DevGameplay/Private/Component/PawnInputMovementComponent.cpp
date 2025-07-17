@@ -2,8 +2,8 @@
 
 #include "Component/PawnInputMovementComponent.h"
 
+#include "Component/PawnLockStateComponent.h"
 #include "Kismet/KismetMathLibrary.h"
-#include "Pawn/Component/PawnLockStateComponent.h"
 
 IPawnInputMovementInterface::IPawnInputMovementInterface()
 {

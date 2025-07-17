@@ -3,7 +3,7 @@
 
 #include "Character/CharacterManager.h"
 
-#include "Character/DevCharacter.h"
+#include "Character/GenericCharacter.h"
 
 bool UCharacterManager::ShouldCreateSubsystem(UObject* Outer) const
 {
@@ -15,8 +15,8 @@ void UCharacterManager::Initialize(FSubsystemCollectionBase& Collection)
 	Super::Initialize(Collection);
 	RegisterManager(this);
 
-	ADevCharacter::OnCharacterRegister.AddUObject(this, &UCharacterManager::RegisterCharacter);
-	ADevCharacter::OnCharacterUnRegister.AddUObject(this, &UCharacterManager::UnRegisterCharacter);
+	AGenericCharacter::OnCharacterRegister.AddUObject(this, &UCharacterManager::RegisterCharacter);
+	AGenericCharacter::OnCharacterUnRegister.AddUObject(this, &UCharacterManager::UnRegisterCharacter);
 }
 
 void UCharacterManager::Deinitialize()
@@ -24,8 +24,8 @@ void UCharacterManager::Deinitialize()
 	Super::Deinitialize();
 	UnRegisterManager();
 
-	ADevCharacter::OnCharacterRegister.RemoveAll(this);
-	ADevCharacter::OnCharacterUnRegister.RemoveAll(this);
+	AGenericCharacter::OnCharacterRegister.RemoveAll(this);
+	AGenericCharacter::OnCharacterUnRegister.RemoveAll(this);
 }
 
 bool UCharacterManager::DoesSupportWorldType(const EWorldType::Type WorldType) const
@@ -33,7 +33,7 @@ bool UCharacterManager::DoesSupportWorldType(const EWorldType::Type WorldType) c
 	return Super::DoesSupportWorldType(WorldType);
 }
 
-void UCharacterManager::RegisterCharacter(ADevCharacter* Character)
+void UCharacterManager::RegisterCharacter(AGenericCharacter* Character)
 {
 	if (IsValid(Character) && !Characters.Contains(Character))
 	{
@@ -41,7 +41,7 @@ void UCharacterManager::RegisterCharacter(ADevCharacter* Character)
 	}
 }
 
-void UCharacterManager::UnRegisterCharacter(ADevCharacter* Character)
+void UCharacterManager::UnRegisterCharacter(AGenericCharacter* Character)
 {
 	if (IsValid(Character) && Characters.Contains(Character))
 	{

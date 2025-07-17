@@ -6,7 +6,7 @@
 #include "Manager/CoreInternalManager.h"
 #include "CharacterManager.generated.h"
 
-class ADevCharacter;
+class AGenericCharacter;
 /**
  * 
  */
@@ -24,9 +24,9 @@ public:
 	/* UCharacterManager */
 protected:
 	UPROPERTY(Transient)
-	TArray<ADevCharacter*> Characters;
+	TArray<AGenericCharacter*> Characters;
 
 protected:
-	void RegisterCharacter(ADevCharacter* Character);
-	void UnRegisterCharacter(ADevCharacter* Character);
+	void RegisterCharacter(AGenericCharacter* Character);
+	void UnRegisterCharacter(AGenericCharacter* Character);
 };

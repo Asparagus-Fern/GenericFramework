@@ -28,5 +28,10 @@ public class DevSlateCore : ModuleRules
 				"GameplayTags",
 			}
 		);
+
+		if (Target.bBuildEditor)
+		{
+			PrivateDependencyModuleNames.Add("UnrealEd");
+		}
 	}
 }

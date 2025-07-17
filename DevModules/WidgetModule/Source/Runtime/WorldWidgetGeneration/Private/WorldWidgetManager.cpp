@@ -3,7 +3,6 @@
 
 #include "WorldWidgetManager.h"
 
-#include "GenericHUDManager.h"
 #include "WorldWidgetComponent.h"
 #include "Base/GenericWidget.h"
 

@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameMode/DevGameMode.h"
+#include "GameMode/GenericGameMode.h"
 #include "TeamGameMode.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class TEAMASSIGNSYSTEM_API ATeamGameMode : public ADevGameMode
+class TEAMASSIGNSYSTEM_API ATeamGameMode : public AGenericGameMode
 {
 	GENERATED_UCLASS_BODY()
 

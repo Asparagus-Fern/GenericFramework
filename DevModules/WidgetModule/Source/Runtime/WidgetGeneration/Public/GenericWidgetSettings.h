@@ -6,7 +6,7 @@
 #include "Generic/GenericSettings.h"
 #include "GenericWidgetSettings.generated.h"
 
-class UGenericHUD;
+class UGenericGameHUD;
 
 /**
  * 
@@ -31,5 +31,5 @@ public:
 	bool AutoCreateGameHUD = true;
 
 	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, DisplayName="Game HUD Classes", Category="HUD")
-	TArray<TSoftClassPtr<UGenericHUD>> GenericHUDClasses;
+	TArray<TSoftClassPtr<UGenericGameHUD>> GenericHUDClasses;
 };

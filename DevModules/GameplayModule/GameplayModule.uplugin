@@ -49,6 +49,11 @@
       "Name": "GameSettingSystem",
       "Type": "Runtime",
       "LoadingPhase": "Default"
+    },
+    {
+      "Name": "BackpackSystem",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
     }
   ]
 }

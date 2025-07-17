@@ -6,7 +6,7 @@
 #include "TeamAssignPolicy.h"
 #include "TeamState.h"
 #include "TeamType.h"
-#include "GameState/DevGameState.h"
+#include "GameState/GenericGameState.h"
 #include "TeamGameState.generated.h"
 
 class UTeamAssignPolicy;
@@ -17,7 +17,7 @@ class ATeamState;
  * 
  */
 UCLASS()
-class TEAMASSIGNSYSTEM_API ATeamGameState : public ADevGameState
+class TEAMASSIGNSYSTEM_API ATeamGameState : public AGenericGameState
 {
 	GENERATED_BODY()
 

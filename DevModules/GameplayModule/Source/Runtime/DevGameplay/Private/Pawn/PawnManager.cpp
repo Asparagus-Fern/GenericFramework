@@ -3,7 +3,7 @@
 
 #include "Pawn/PawnManager.h"
 
-#include "Pawn/DevPawn.h"
+#include "Pawn/GenericPawn.h"
 
 #define LOCTEXT_NAMESPACE "UPawnManager"
 
@@ -17,8 +17,8 @@ void UPawnManager::Initialize(FSubsystemCollectionBase& Collection)
 	Super::Initialize(Collection);
 	RegisterManager(this);
 
-	ADevPawn::OnPawnRegister.AddUObject(this, &UPawnManager::RegisterPawn);
-	ADevPawn::OnPawnUnRegister.AddUObject(this, &UPawnManager::UnRegisterPawn);
+	AGenericPawn::OnPawnRegister.AddUObject(this, &UPawnManager::RegisterPawn);
+	AGenericPawn::OnPawnUnRegister.AddUObject(this, &UPawnManager::UnRegisterPawn);
 }
 
 void UPawnManager::Deinitialize()
@@ -26,8 +26,8 @@ void UPawnManager::Deinitialize()
 	Super::Deinitialize();
 	UnRegisterManager();
 
-	ADevPawn::OnPawnRegister.RemoveAll(this);
-	ADevPawn::OnPawnUnRegister.RemoveAll(this);
+	AGenericPawn::OnPawnRegister.RemoveAll(this);
+	AGenericPawn::OnPawnUnRegister.RemoveAll(this);
 }
 
 bool UPawnManager::DoesSupportWorldType(const EWorldType::Type WorldType) const
@@ -35,7 +35,7 @@ bool UPawnManager::DoesSupportWorldType(const EWorldType::Type WorldType) const
 	return WorldType == EWorldType::Game || WorldType == EWorldType::PIE;
 }
 
-void UPawnManager::RegisterPawn(ADevPawn* Pawn)
+void UPawnManager::RegisterPawn(AGenericPawn* Pawn)
 {
 	if (IsValid(Pawn) && !Pawns.Contains(Pawn))
 	{
@@ -43,7 +43,7 @@ void UPawnManager::RegisterPawn(ADevPawn* Pawn)
 	}
 }
 
-void UPawnManager::UnRegisterPawn(ADevPawn* Pawn)
+void UPawnManager::UnRegisterPawn(AGenericPawn* Pawn)
 {
 	if (IsValid(Pawn) && Pawns.Contains(Pawn))
 	{

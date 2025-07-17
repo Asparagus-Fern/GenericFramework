@@ -5,8 +5,8 @@
 
 #include "BPFunctions/BPFunctions_Gameplay.h"
 #include "Camera/CameraComponent.h"
+#include "Component/PawnSpringArmComponent.h"
 #include "InputIdleAction/PlayerInputIdleActionComponent.h"
-#include "Pawn/Component/PawnSpringArmComponent.h"
 
 ASmartCityPawn::ASmartCityPawn(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)

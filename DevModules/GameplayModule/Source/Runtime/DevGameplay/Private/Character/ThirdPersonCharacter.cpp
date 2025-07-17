@@ -4,10 +4,9 @@
 #include "Character/ThirdPersonCharacter.h"
 
 #include "Camera/CameraComponent.h"
+#include "Component/PawnSpringArmComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Kismet/KismetMathLibrary.h"
-#include "Pawn/Component/PawnSpringArmComponent.h"
-
 
 AThirdPersonCharacter::AThirdPersonCharacter()
 {
