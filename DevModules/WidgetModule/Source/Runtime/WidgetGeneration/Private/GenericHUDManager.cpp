@@ -76,36 +76,14 @@ void UGenericHUDManager::HandleOnWorldEndPlay(UWorld* InWorld)
 
 void UGenericHUDManager::PreWidgetOpened(FOpenWidgetParameter& Parameter)
 {
-	if (Parameter.WidgetToHandle.IsA<UGenericHUD>())
-	{
-		Parameter.bAddToViewport = !Parameter.WidgetToHandle->SlotTag.IsValid();
-	}
-
-	if (Parameter.SlotTag.IsValid())
-	{
-		Parameter.Slot = GetSlot(Parameter.SlotTag);
-		Parameter.WidgetToRemove = GetSlotWidget(Parameter.SlotTag);
-	}
+	Parameter.Slot = GetSlot(Parameter.SlotTag);
+	Parameter.WidgetToRemove = GetSlotWidget(Parameter.SlotTag);
 }
 
-void UGenericHUDManager::OnWidgetOpened(const FOpenWidgetParameter& Parameter)
+void UGenericHUDManager::OnWidgetOpened(FOpenWidgetParameter& Parameter)
 {
-	if (Parameter.bAddToViewport)
-	{
-		UGenericHUD* GameHUD = Cast<UGenericHUD>(Parameter.WidgetToHandle);
-		if (IsValid(GameHUD))
-		{
-			Parameter.WidgetToHandle->AddToViewport(GameHUD->ViewportZOrder);
-		}
-		else
-		{
-			Parameter.WidgetToHandle->AddToViewport();
-		}
-	}
-	else
-	{
-		AddSlotWidget(Parameter.WidgetToHandle);
-	}
+	bool Result = AddSlotWidget(Parameter.WidgetToHandle);
+	Parameter.bOpenResult = Result;
 }
 
 void UGenericHUDManager::PreWidgetClosed(FCloseWidgetParameter& Parameter)
@@ -209,7 +187,7 @@ UGenericWidget* UGenericHUDManager::GetSlotWidget(FGameplayTag InSlotTag) const
 {
 	if (!InSlotTag.IsValid())
 	{
-		GenericLOG(GenericLogUI, Error, TEXT("SlotTag Is InValid"))
+		// GenericLOG(GenericLogUI, Error, TEXT("SlotTag Is InValid"))
 		return nullptr;
 	}
 
@@ -251,16 +229,32 @@ TArray<UGenericWidget*> UGenericHUDManager::GetSlotWidgets() const
 
 bool UGenericHUDManager::AddSlotWidget(UGenericWidget* InWidget) const
 {
-	if (UGameplayTagSlot* Slot = GetSlot(InWidget->SlotTag))
+	if (InWidget->SlotTag.IsValid())
 	{
-		return IsValid(Slot->AddChild(InWidget));
-	}
-	else if (UWidgetTree* WidgetTree = Cast<UWidgetTree>(InWidget->GetOuter()))
-	{
-		if (UGenericWidget* Widget = Cast<UGenericWidget>(WidgetTree->GetOuter()))
+		if (UGameplayTagSlot* Slot = GetSlot(InWidget->SlotTag))
 		{
-			Widget->AddChild(InWidget);
+			Slot->AddChild(InWidget);
 			return true;
+		}
+		else
+		{
+			GenericLOG(GenericLogUI, Warning, TEXT("Slot Is InValid"))
+		}
+	}
+	else
+	{
+		if (UGenericHUD* GameHUD = Cast<UGenericHUD>(InWidget))
+		{
+			InWidget->AddToViewport(GameHUD->ViewportZOrder);
+			return true;
+		}
+		else if (UWidgetTree* WidgetTree = Cast<UWidgetTree>(InWidget->GetOuter()))
+		{
+			if (UGenericWidget* Widget = Cast<UGenericWidget>(WidgetTree->GetOuter()))
+			{
+				Widget->AddChild(InWidget);
+				return true;
+			}
 		}
 	}
 

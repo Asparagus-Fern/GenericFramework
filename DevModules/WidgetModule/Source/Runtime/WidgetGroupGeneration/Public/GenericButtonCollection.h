@@ -55,8 +55,8 @@ protected:
 	void BuildChildButtonGroup(FGameplayTag InButtonTag);
 	void DestroyChildButtonGroup(FGameplayTag InButtonTag);
 
-	UGenericButtonContainer* BuildButtonGroupWidget(FGameplayTag InButtonTag) const;
-	UGenericButtonWidget* BuildButtonWidget(FGameplayTag InButtonTag,UGenericButtonContainer* GroupWidget) const;
+	UGenericButtonContainer* BuildButtonGroupWidget(FGameplayTag InButtonTag, UGenericButtonWidget* ButtonWidget) const;
+	UGenericButtonWidget* BuildButtonWidget(FGameplayTag InButtonTag, UGenericButtonContainer* GroupWidget) const;
 
 private:
 	void RegisterButtonGroup(FGameplayTag InButtonTag, UGenericButtonGroup* InButtonGroup);

@@ -46,7 +46,14 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="UI"))
 	FGameplayTag SelfTag = FGameplayTag::EmptyTag;
 
-	/* Unique Tag To Mark Which Slot To Add This Widget */
+	/*
+	 * Unique Tag To Mark Which Slot To Add This Widget
+	 * If Valid : Will Find The Slot To Add This Widget
+	 * If NULL  :
+	 *   Check This Widget == UGameHUD, If True Will Add To Viewport
+	 *   Check This Widget Outer == UGenericWidget, If True Call Outer Widget AddChild To Add This Widget
+	 *   If All Fail : Destroy This Widget
+	 */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="UI.HUD"))
 	FGameplayTag SlotTag;
 

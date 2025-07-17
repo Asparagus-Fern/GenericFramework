@@ -59,8 +59,8 @@ public:
 
 public:
 	UPROPERTY()
-	bool bAddToViewport = false;
-
+	bool bOpenResult = false;
+	
 	UPROPERTY()
 	TObjectPtr<UGenericWidget> WidgetToRemove = nullptr;
 };

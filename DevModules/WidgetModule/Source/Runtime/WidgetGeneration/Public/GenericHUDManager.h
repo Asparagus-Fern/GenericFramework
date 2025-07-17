@@ -53,7 +53,7 @@ protected:
 	/* Delegate From UWidgetManager */
 private:
 	void PreWidgetOpened(FOpenWidgetParameter& Parameter);
-	void OnWidgetOpened(const FOpenWidgetParameter& Parameter);
+	void OnWidgetOpened(FOpenWidgetParameter& Parameter);
 	void PreWidgetClosed(FCloseWidgetParameter& Parameter);
 	void PostWidgetClosed(UGenericWidget* InWidget);
 

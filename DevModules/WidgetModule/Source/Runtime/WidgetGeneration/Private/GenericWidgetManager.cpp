@@ -50,6 +50,11 @@ void UGenericWidgetManager::HandleOnWorldEndPlay(UWorld* InWorld)
 	Widgets.Reset();
 }
 
+TArray<UGenericWidget*> UGenericWidgetManager::GetActivedWidgets() const
+{
+	return Widgets;
+}
+
 UGenericWidget* UGenericWidgetManager::OpenUserWidget(TSubclassOf<UGenericWidget> InWidgetClass, FOnWidgetActiveStateChanged OnFinish)
 {
 	UGenericWidget* NewWidget = CreateWidget<UGenericWidget>(GetWorld(), InWidgetClass);
@@ -204,10 +209,18 @@ void UGenericWidgetManager::OnActiveAnimationPlayFinish(UGenericWidget* InWidget
 	if (OpenWidgetParameters.Contains(InWidget))
 	{
 		FOpenWidgetParameter Parameter = *OpenWidgetParameters.FindByKey(InWidget);
-
 		OpenWidgetParameters.Remove(Parameter);
-		Parameter.OnFinish.ExecuteIfBound(Parameter.WidgetToHandle);
-		BROADCAST_UNIFIED_DELEGATE(Delegate_PostWidgetOpened, BPDelegate_PostWidgetOpened, Parameter.WidgetToHandle);
+
+		if (Parameter.bOpenResult)
+		{
+			Parameter.OnFinish.ExecuteIfBound(Parameter.WidgetToHandle);
+			BROADCAST_UNIFIED_DELEGATE(Delegate_PostWidgetOpened, BPDelegate_PostWidgetOpened, Parameter.WidgetToHandle);
+		}
+		else
+		{
+			GenericLOG(GenericLogUI, Warning, TEXT("Fail To Open Widget : %s"), *InWidget->GetName())
+			CloseUserWidget(InWidget);
+		}
 	}
 }
 

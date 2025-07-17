@@ -28,4 +28,10 @@ public:
 	virtual void RemoveChild(int32 InIndex) = 0;
 	virtual void RemoveChild(UGenericWidget* InWidget) = 0;
 	virtual void ClearChildren() = 0;
+
+	template <typename T>
+	T* GetChildByIndex(int32 InIndex)
+	{
+		return Cast<T>(GetChildByIndex(InIndex));
+	}
 };

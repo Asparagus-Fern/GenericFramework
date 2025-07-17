@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "WidgetType.h"
+#include "Base/GenericWidget.h"
 #include "Manager/CoreInternalManager.h"
 #include "Manager/ManagerStatics.h"
 #include "Subsystems/WorldSubsystem.h"
@@ -16,8 +17,8 @@ class UGenericWidget;
 DECLARE_MULTICAST_DELEGATE_OneParam(FDelegate_PreWidgetOpened, FOpenWidgetParameter&);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FBPDelegate_PreWidgetOpened, FOpenWidgetParameter&, Parameter);
 
-DECLARE_MULTICAST_DELEGATE_OneParam(FDelegate_OnWidgetOpened, const FOpenWidgetParameter&);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FBPDelegate_OnWidgetOpened, const FOpenWidgetParameter&, Parameter);
+DECLARE_MULTICAST_DELEGATE_OneParam(FDelegate_OnWidgetOpened, FOpenWidgetParameter&);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FBPDelegate_OnWidgetOpened, FOpenWidgetParameter&, Parameter);
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FDelegate_PostWidgetOpened, UGenericWidget*);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FBPDelegate_PostWidgetOpened, UGenericWidget*, InWidget);
@@ -52,7 +53,21 @@ protected:
 
 	/* UWidgetManager */
 public:
-	TArray<UGenericWidget*> GetActivedWidgets() { return Widgets; }
+	TArray<UGenericWidget*> GetActivedWidgets() const;
+
+	template <typename T>
+	T* GetActiveWidget(FGameplayTag InWidgetTag)
+	{
+		for (auto& Widget : Widgets)
+		{
+			if (Widget->SelfTag == InWidgetTag)
+			{
+				return Cast<T>(Widget);
+			}
+		}
+
+		return nullptr;
+	}
 
 public:
 	template <typename T>
@@ -68,7 +83,7 @@ public:
 	WIDGETGENERATION_API virtual UGenericWidget* OpenUserWidget(TSubclassOf<UGenericWidget> InWidgetClass, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged());
 	WIDGETGENERATION_API virtual bool OpenUserWidget(UGenericWidget* InWidget, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged());
 	WIDGETGENERATION_API virtual bool OpenUserWidget(FOpenWidgetParameter& OpenWidgetParameter);
-	
+
 	WIDGETGENERATION_API virtual bool CloseUserWidget(FGameplayTag InSlotTag, bool MarkAsGarbage = true, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged());
 	WIDGETGENERATION_API virtual bool CloseUserWidget(UGenericWidget* InWidget, bool MarkAsGarbage = true, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged());
 	WIDGETGENERATION_API virtual bool CloseUserWidget(FCloseWidgetParameter& CloseWidgetParameter);

@@ -71,21 +71,21 @@ void UGenericButtonCollection::BuildChildButtonGroup(FGameplayTag InButtonTag)
 	}
 
 	UGenericWidgetManager* GenericWidgetManager = GetManager<UGenericWidgetManager>();
-	UGenericButtonBuilder* ButtonBuilder = GetButtonBuilder(InButtonTag);
-
 	if (!IsValid(GenericWidgetManager))
 	{
 		GenericLOG(GenericLogUI, Warning, TEXT("GenericWidgetManager Is InValid"))
 		return;
 	}
 
+	UGenericButtonBuilder* ButtonBuilder = GetButtonBuilder(InButtonTag);
 	if (!IsValid(ButtonBuilder))
 	{
 		GenericLOG(GenericLogUI, Warning, TEXT("ButtonBuilder Is InValid"))
 		return;
 	}
 
-	if (UGenericButtonContainer* GroupWidget = BuildButtonGroupWidget(InButtonTag))
+	UGenericButtonWidget* ButtonWidget = GenericWidgetManager->GetActiveWidget<UGenericButtonWidget>(InButtonTag);
+	if (UGenericButtonContainer* GroupWidget = BuildButtonGroupWidget(InButtonTag, ButtonWidget))
 	{
 		UGenericButtonGroup* ButtonGroup = NewObject<UGenericButtonGroup>(GetOuter());
 		ButtonGroup->SetButtonGroupWidget(GroupWidget);
@@ -100,17 +100,17 @@ void UGenericButtonCollection::BuildChildButtonGroup(FGameplayTag InButtonTag)
 		for (int32 It = 0; It < ChildrenTagContainer.Num(); It++)
 		{
 			FGameplayTag ChildTag = ChildrenTagContainer.GetByIndex(It);
-			if (UGenericButtonWidget* ButtonWidget = BuildButtonWidget(ChildTag, GroupWidget))
+			if (UGenericButtonWidget* ChildButtonWidget = BuildButtonWidget(ChildTag, GroupWidget))
 			{
-				if (!GenericWidgetManager->OpenUserWidget(ButtonWidget))
+				if (!GenericWidgetManager->OpenUserWidget(ChildButtonWidget))
 				{
 					GenericLOG(GenericLogUI, Error, TEXT("Open Button Widget Fail"))
 					continue;
 				}
 
-				ButtonWidget->SelfTag = ChildTag;
-				ButtonGroup->AddButton(ButtonWidget);
-				ButtonWidget->NativeConstructButtonParameters(GetButtonBuilder(ChildTag)->ButtonParameter);
+				ChildButtonWidget->SelfTag = ChildTag;
+				ButtonGroup->AddButton(ChildButtonWidget);
+				ChildButtonWidget->NativeConstructButtonParameters(GetButtonBuilder(ChildTag)->ButtonParameter);
 			}
 		}
 
@@ -154,14 +154,21 @@ void UGenericButtonCollection::DestroyChildButtonGroup(FGameplayTag InButtonTag)
 	UnRegisterButtonGroup(InButtonTag);
 }
 
-UGenericButtonContainer* UGenericButtonCollection::BuildButtonGroupWidget(FGameplayTag InButtonTag) const
+UGenericButtonContainer* UGenericButtonCollection::BuildButtonGroupWidget(FGameplayTag InButtonTag, UGenericButtonWidget* ButtonWidget) const
 {
 	UGenericButtonContainer* ButtonContainer = nullptr;
 	if (UGenericButtonBuilder* Builder = GetButtonBuilder(InButtonTag))
 	{
 		if (Builder->ButtonGroupClass)
 		{
-			ButtonContainer = CreateWidget<UGenericButtonContainer>(GetWorld(), Builder->ButtonGroupClass);
+			if (IsValid(ButtonWidget))
+			{
+				ButtonContainer = CreateWidget<UGenericButtonContainer>(ButtonWidget, Builder->ButtonGroupClass);
+			}
+			else
+			{
+				ButtonContainer = CreateWidget<UGenericButtonContainer>(GetWorld(), Builder->ButtonGroupClass);
+			}
 		}
 	}
 
