@@ -4,13 +4,13 @@
 #include "HandleLevelAsyncAction.h"
 
 #include "LevelStreamingManager.h"
-#include "Manager/ManagerProxy.h"
+#include "Manager/ManagerStatics.h"
 
 UHandleLevelAsyncAction* UHandleLevelAsyncAction::LoadLevel(const TSoftObjectPtr<UWorld> Level, const bool bMakeVisibleAfterLoad, const bool bShouldBlockOnLoad)
 {
 	UHandleLevelAsyncAction* NewAction = NewObject<UHandleLevelAsyncAction>();
 
-	if (ULevelStreamingManager* LevelStreamingManager = UManagerProxy::Get()->GetManager<ULevelStreamingManager>())
+	if (ULevelStreamingManager* LevelStreamingManager = GetManagerOwner<ULevelStreamingManager>())
 	{
 		LevelStreamingManager->LoadLevel(Level, bMakeVisibleAfterLoad, bShouldBlockOnLoad, FOnHandleLevelStreamingFinish::CreateUObject(NewAction, &UHandleLevelAsyncAction::OnHandleFinish));
 	}
@@ -22,7 +22,7 @@ UHandleLevelAsyncAction* UHandleLevelAsyncAction::UnloadLevel(const TSoftObjectP
 {
 	UHandleLevelAsyncAction* NewAction = NewObject<UHandleLevelAsyncAction>();
 
-	if (ULevelStreamingManager* LevelStreamingManager = UManagerProxy::Get()->GetManager<ULevelStreamingManager>())
+	if (ULevelStreamingManager* LevelStreamingManager = GetManagerOwner<ULevelStreamingManager>())
 	{
 		LevelStreamingManager->UnloadLevel(Level, bShouldBlockOnUnload, FOnHandleLevelStreamingFinish::CreateUObject(NewAction, &UHandleLevelAsyncAction::OnHandleFinish));
 	}
@@ -34,7 +34,7 @@ UHandleLevelAsyncAction* UHandleLevelAsyncAction::SetLevelVisibility(const TSoft
 {
 	UHandleLevelAsyncAction* NewAction = NewObject<UHandleLevelAsyncAction>();
 
-	if (ULevelStreamingManager* LevelStreamingManager = UManagerProxy::Get()->GetManager<ULevelStreamingManager>())
+	if (ULevelStreamingManager* LevelStreamingManager = GetManagerOwner<ULevelStreamingManager>())
 	{
 		LevelStreamingManager->SetLevelVisibility(Level, bVisible, FOnHandleLevelStreamingFinish::CreateUObject(NewAction, &UHandleLevelAsyncAction::OnHandleFinish));
 	}

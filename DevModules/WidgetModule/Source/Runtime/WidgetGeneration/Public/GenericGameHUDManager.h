@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameplayTagContainer.h"
 #include "WidgetType.h"
 #include "Manager/CoreInternalManager.h"
 #include "Subsystems/WorldSubsystem.h"

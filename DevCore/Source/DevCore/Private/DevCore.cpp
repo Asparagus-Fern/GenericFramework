@@ -9,12 +9,11 @@
 
 void FDevCoreModule::StartupModule()
 {
-	UManagerProxy::InitializeManagerProxy();
+	UManagerProxy::GetManagerProxy();
 }
 
 void FDevCoreModule::ShutdownModule()
 {
-	UManagerProxy::DeInitializeManagerProxy();
 }
 
 #undef LOCTEXT_NAMESPACE

@@ -7,7 +7,7 @@
 
 void UHandleBase::UnRegister()
 {
-	if (UHandleManager* HandleManager = GetManager<UHandleManager>())
+	if (UHandleManager* HandleManager = GetManagerOwner<UHandleManager>())
 	{
 		HandleManager->UnRegisterHandle(this);
 	}

@@ -173,7 +173,7 @@ bool UBPFunctions_File::DeleteFile(const FString FileName, const bool RequireExi
 	return FileManager.Delete(*FileName, RequireExists, EvenReadOnly);
 }
 
-bool UBPFunctions_File::IsFileReadOoly(const FString& FileName)
+bool UBPFunctions_File::IsFileReadOnly(const FString& FileName)
 {
 	IFileManager& FileManager = IFileManager::Get();
 	return FileManager.IsReadOnly(*FileName);

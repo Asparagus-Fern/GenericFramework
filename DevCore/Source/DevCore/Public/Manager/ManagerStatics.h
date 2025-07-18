@@ -7,25 +7,7 @@
 // #include "ManagerStatics.generated.h"
 
 template <typename T>
-bool ExistManager()
+T* GetManagerOwner()
 {
-	return UManagerProxy::Get()->ExistManager<T>();
-}
-
-template <typename T>
-T* GetManager()
-{
-	return UManagerProxy::Get()->GetManager<T>();
-}
-
-template <typename T>
-T* GetManager(FGuid ManagerID)
-{
-	return UManagerProxy::Get()->GetManager<T>(ManagerID);
-}
-
-template <typename T>
-TArray<T*> GetManagers()
-{
-	return UManagerProxy::Get()->GetManagers<T>();
+	return UManagerProxy::GetManagerProxy()->GetManagerOwner<T>();
 }

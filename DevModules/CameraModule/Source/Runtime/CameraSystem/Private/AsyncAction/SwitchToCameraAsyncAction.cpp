@@ -4,13 +4,13 @@
 #include "AsyncAction/SwitchToCameraAsyncAction.h"
 
 #include "CameraManager.h"
-#include "Manager/ManagerProxy.h"
+#include "Manager/ManagerStatics.h"
 
 USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCamera_Transform_HandleClass(const int32 InPlayerIndex, const FVector Location, const FRotator Rotation, const TSubclassOf<UCameraSwitchMethod> InCameraHandleClass)
 {
 	USwitchToCameraAsyncAction* NewAction = NewObject<USwitchToCameraAsyncAction>();
 
-	if (UCameraManager* CameraManager = UManagerProxy::Get()->GetManager<UCameraManager>())
+	if (UCameraManager* CameraManager = GetManagerOwner<UCameraManager>())
 	{
 		CameraManager->SwitchToCamera(InPlayerIndex, Location, Rotation, InCameraHandleClass, FSimpleDelegate::CreateUObject(NewAction, &USwitchToCameraAsyncAction::OnHandleFinish));
 	}
@@ -22,7 +22,7 @@ USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCamera_Transform
 {
 	USwitchToCameraAsyncAction* NewAction = NewObject<USwitchToCameraAsyncAction>();
 
-	if (UCameraManager* CameraManager = UManagerProxy::Get()->GetManager<UCameraManager>())
+	if (UCameraManager* CameraManager = GetManagerOwner<UCameraManager>())
 	{
 		CameraManager->SwitchToCamera(InPlayerIndex, Location, Rotation, InCameraHandle, FSimpleDelegate::CreateUObject(NewAction, &USwitchToCameraAsyncAction::OnHandleFinish));
 	}
@@ -34,7 +34,7 @@ USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCamera_Actor_Han
 {
 	USwitchToCameraAsyncAction* NewAction = NewObject<USwitchToCameraAsyncAction>();
 
-	if (UCameraManager* CameraManager = UManagerProxy::Get()->GetManager<UCameraManager>())
+	if (UCameraManager* CameraManager = GetManagerOwner<UCameraManager>())
 	{
 		CameraManager->SwitchToCamera(InPlayerIndex, InCameraActor, InCameraHandleClass, FSimpleDelegate::CreateUObject(NewAction, &USwitchToCameraAsyncAction::OnHandleFinish));
 	}
@@ -46,7 +46,7 @@ USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCamera_Actor_Han
 {
 	USwitchToCameraAsyncAction* NewAction = NewObject<USwitchToCameraAsyncAction>();
 
-	if (UCameraManager* CameraManager = UManagerProxy::Get()->GetManager<UCameraManager>())
+	if (UCameraManager* CameraManager = GetManagerOwner<UCameraManager>())
 	{
 		CameraManager->SwitchToCamera(InPlayerIndex, InCameraActor, InCameraHandle, FSimpleDelegate::CreateUObject(NewAction, &USwitchToCameraAsyncAction::OnHandleFinish));
 	}
@@ -58,7 +58,7 @@ USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCamera_Component
 {
 	USwitchToCameraAsyncAction* NewAction = NewObject<USwitchToCameraAsyncAction>();
 
-	if (UCameraManager* CameraManager = UManagerProxy::Get()->GetManager<UCameraManager>())
+	if (UCameraManager* CameraManager = GetManagerOwner<UCameraManager>())
 	{
 		CameraManager->SwitchToCamera(InPlayerIndex, InCameraComponent, InCameraHandleClass, FSimpleDelegate::CreateUObject(NewAction, &USwitchToCameraAsyncAction::OnHandleFinish));
 	}
@@ -70,7 +70,7 @@ USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCamera_Component
 {
 	USwitchToCameraAsyncAction* NewAction = NewObject<USwitchToCameraAsyncAction>();
 
-	if (UCameraManager* CameraManager = UManagerProxy::Get()->GetManager<UCameraManager>())
+	if (UCameraManager* CameraManager = GetManagerOwner<UCameraManager>())
 	{
 		CameraManager->SwitchToCamera(InPlayerIndex, InCameraComponent, InCameraHandle, FSimpleDelegate::CreateUObject(NewAction, &USwitchToCameraAsyncAction::OnHandleFinish));
 	}
@@ -82,7 +82,7 @@ USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCamera_Tag_Handl
 {
 	USwitchToCameraAsyncAction* NewAction = NewObject<USwitchToCameraAsyncAction>();
 
-	if (UCameraManager* CameraManager = UManagerProxy::Get()->GetManager<UCameraManager>())
+	if (UCameraManager* CameraManager = GetManagerOwner<UCameraManager>())
 	{
 		CameraManager->SwitchToCamera(InPlayerIndex, InCameraTag, InCameraHandleClass, FSimpleDelegate::CreateUObject(NewAction, &USwitchToCameraAsyncAction::OnHandleFinish));
 	}
@@ -94,7 +94,7 @@ USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCamera_Tag_Handl
 {
 	USwitchToCameraAsyncAction* NewAction = NewObject<USwitchToCameraAsyncAction>();
 
-	if (UCameraManager* CameraManager = UManagerProxy::Get()->GetManager<UCameraManager>())
+	if (UCameraManager* CameraManager = GetManagerOwner<UCameraManager>())
 	{
 		CameraManager->SwitchToCamera(InPlayerIndex, InCameraTag, InCameraHandle, FSimpleDelegate::CreateUObject(NewAction, &USwitchToCameraAsyncAction::OnHandleFinish));
 	}
@@ -106,7 +106,7 @@ USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCamera_CameraPoi
 {
 	USwitchToCameraAsyncAction* NewAction = NewObject<USwitchToCameraAsyncAction>();
 
-	if (UCameraManager* CameraManager = UManagerProxy::Get()->GetManager<UCameraManager>())
+	if (UCameraManager* CameraManager = GetManagerOwner<UCameraManager>())
 	{
 		CameraManager->SwitchToCamera(InPlayerIndex, InCameraPoint, InCameraHandleClass, FSimpleDelegate::CreateUObject(NewAction, &USwitchToCameraAsyncAction::OnHandleFinish));
 	}
@@ -118,7 +118,7 @@ USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCamera_CameraPoi
 {
 	USwitchToCameraAsyncAction* NewAction = NewObject<USwitchToCameraAsyncAction>();
 
-	if (UCameraManager* CameraManager = UManagerProxy::Get()->GetManager<UCameraManager>())
+	if (UCameraManager* CameraManager = GetManagerOwner<UCameraManager>())
 	{
 		CameraManager->SwitchToCamera(InPlayerIndex, InCameraPoint, InCameraHandle, FSimpleDelegate::CreateUObject(NewAction, &USwitchToCameraAsyncAction::OnHandleFinish));
 	}
@@ -130,7 +130,7 @@ USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCurrent_HandleCl
 {
 	USwitchToCameraAsyncAction* NewAction = NewObject<USwitchToCameraAsyncAction>();
 
-	if (UCameraManager* CameraManager = UManagerProxy::Get()->GetManager<UCameraManager>())
+	if (UCameraManager* CameraManager = GetManagerOwner<UCameraManager>())
 	{
 		CameraManager->SwitchToCurrent(InPlayerIndex, InCameraHandleClass, FSimpleDelegate::CreateUObject(NewAction, &USwitchToCameraAsyncAction::OnHandleFinish));
 	}
@@ -142,7 +142,7 @@ USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCurrent_Handle(i
 {
 	USwitchToCameraAsyncAction* NewAction = NewObject<USwitchToCameraAsyncAction>();
 
-	if (UCameraManager* CameraManager = UManagerProxy::Get()->GetManager<UCameraManager>())
+	if (UCameraManager* CameraManager = GetManagerOwner<UCameraManager>())
 	{
 		CameraManager->SwitchToCurrent(InPlayerIndex, InCameraHandle, FSimpleDelegate::CreateUObject(NewAction, &USwitchToCameraAsyncAction::OnHandleFinish));
 	}
@@ -154,7 +154,7 @@ USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToPrevious_HandleC
 {
 	USwitchToCameraAsyncAction* NewAction = NewObject<USwitchToCameraAsyncAction>();
 
-	if (UCameraManager* CameraManager = UManagerProxy::Get()->GetManager<UCameraManager>())
+	if (UCameraManager* CameraManager = GetManagerOwner<UCameraManager>())
 	{
 		CameraManager->SwitchToPrevious(InPlayerIndex, InCameraHandleClass, FSimpleDelegate::CreateUObject(NewAction, &USwitchToCameraAsyncAction::OnHandleFinish));
 	}
@@ -166,7 +166,7 @@ USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToPrevious_Handle(
 {
 	USwitchToCameraAsyncAction* NewAction = NewObject<USwitchToCameraAsyncAction>();
 
-	if (UCameraManager* CameraManager = UManagerProxy::Get()->GetManager<UCameraManager>())
+	if (UCameraManager* CameraManager = GetManagerOwner<UCameraManager>())
 	{
 		CameraManager->SwitchToPrevious(InPlayerIndex, InCameraHandle, FSimpleDelegate::CreateUObject(NewAction, &USwitchToCameraAsyncAction::OnHandleFinish));
 	}

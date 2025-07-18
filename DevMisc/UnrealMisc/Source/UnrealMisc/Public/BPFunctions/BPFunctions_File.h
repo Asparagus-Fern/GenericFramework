@@ -76,7 +76,7 @@ public:
 	static bool DeleteFile(FString FileName, bool RequireExists = false, bool EvenReadOnly = false);
 
 	UFUNCTION(BlueprintPure, Category="File")
-	static bool IsFileReadOoly(const FString& FileName);
+	static bool IsFileReadOnly(const FString& FileName);
 
 	/**
 	 * 

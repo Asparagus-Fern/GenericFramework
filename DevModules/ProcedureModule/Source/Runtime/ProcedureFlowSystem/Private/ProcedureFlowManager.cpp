@@ -47,7 +47,7 @@ void UProcedureFlowManager::HandleOnWorldBeginPlay(UWorld* InWorld)
 		}
 	);
 
-	if (UProcedureFlowSettings::Get()->AutoEnterDefaultProcedureFlowTag)
+	if (UProcedureFlowSettings::Get()->AutoEnterDefaultProcedureFlow)
 	{
 		if (const UProcedureFlowComponent* FirstProcedureFlow = GetProcedureFlowComponent(UProcedureFlowSettings::Get()->DefaultProcedureFlowTag))
 		{

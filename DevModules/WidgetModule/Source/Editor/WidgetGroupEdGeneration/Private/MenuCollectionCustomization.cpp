@@ -234,7 +234,7 @@ TArray<UK2Node_CustomEvent*> FGenericButtonCollectionCustomization::GenerateEven
 
 	/* Get Collection Blueprint */
 	UBlueprint* Blueprint = nullptr;
-	if (UBlueprintEditorManager* BlueprintEditorManager = GetManager<UBlueprintEditorManager>())
+	if (UBlueprintEditorManager* BlueprintEditorManager = GetManagerOwner<UBlueprintEditorManager>())
 	{
 		Blueprint = BlueprintEditorManager->FindOpenedBlueprintByCDO(Collection);
 	}

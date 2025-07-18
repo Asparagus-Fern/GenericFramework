@@ -54,7 +54,7 @@ bool UWorldWidgetEdManager::DoesSupportWorldType(const EWorldType::Type WorldTyp
 void UWorldWidgetEdManager::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	
 	TArray<FEditorWorldWidget> TempEditorWorldWidgets = EditorWorldWidgets;
 	for (auto& EditorWorldWidget : TempEditorWorldWidgets)
 	{
@@ -211,9 +211,9 @@ void UWorldWidgetEdManager::AddWorldWidgetToScreen(UWorldWidgetComponent* InWorl
 
 			UGenericWidget* DuplicateWorldWidget = DuplicateObject(InWorldWidgetComponent->WorldWidget, InWorldWidgetComponent);
 			TSharedPtr<SEditorWorldWidget> NewEditorWorldWidget = SNew(SEditorWorldWidget)
-			[
-				DuplicateWorldWidget->TakeWidget()
-			];
+				[
+					DuplicateWorldWidget->TakeWidget()
+				];
 
 			SConstraintCanvas::FSlot* NewSlot;
 			EditorWorldWidget.ConstraintCanvas->AddSlot()

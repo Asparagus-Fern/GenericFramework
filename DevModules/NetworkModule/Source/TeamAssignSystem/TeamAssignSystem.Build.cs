@@ -21,8 +21,8 @@ public class TeamAssignSystem : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
-				
-				"DevGameplay",
+
+				"GenericGameplaySystem",
 			}
 		);
 	}

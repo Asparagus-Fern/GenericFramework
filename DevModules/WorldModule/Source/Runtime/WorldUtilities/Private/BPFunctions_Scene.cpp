@@ -28,7 +28,7 @@ ESceneWorldType UBPFunctions_Scene::GetWorldType(const UObject* WorldContextObje
 
 float UBPFunctions_Scene::GetPlayerForwardAngle(const int32 PlayerIndex)
 {
-	if (const USceneManager* SceneManager = GetManager<USceneManager>())
+	if (const USceneManager* SceneManager = GetManagerOwner<USceneManager>())
 	{
 		return SceneManager->GetPlayerPointToNorthAngle(PlayerIndex);
 	}

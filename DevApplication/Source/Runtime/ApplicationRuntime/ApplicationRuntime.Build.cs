@@ -38,7 +38,7 @@ public class ApplicationRuntime : ModuleRules
 				"GenericJson",
 				"GenericProtocol",
 				"EventUtilities",
-				"DevGameplay",
+				"GenericGameplaySystem",
 				"PlayerInputUtilities",
 				"ExternalData",
 				"NativeAPI",

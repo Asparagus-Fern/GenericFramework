@@ -29,7 +29,7 @@ URegisterMediaHandleAction* URegisterMediaHandleAction::RegisterMediaHandleByMed
 		return nullptr;
 	}
 
-	if (UHandleManager* HandleManager = GetManager<UHandleManager>())
+	if (UHandleManager* HandleManager = GetManagerOwner<UHandleManager>())
 	{
 		UMediaHandle* NewHandle = nullptr;
 
@@ -77,7 +77,7 @@ URegisterMediaHandleAction* URegisterMediaHandleAction::RegisterMediaHandleByMed
 		return nullptr;
 	}
 
-	if (UHandleManager* HandleManager = GetManager<UHandleManager>())
+	if (UHandleManager* HandleManager = GetManagerOwner<UHandleManager>())
 	{
 		UMediaHandle* NewHandle = nullptr;
 

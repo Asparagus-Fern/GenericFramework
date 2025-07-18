@@ -61,7 +61,7 @@ void USetLevelStreamingVisibilityHandle::ExecuteHandle(int32 Index)
 
 	if (!LoadLevelSettings.IsEmpty())
 	{
-		GetManager<ULevelStreamingManager>()->LoadLevelsBySetting(LoadLevelSettings, nullptr, FOnHandleLevelStreamingFinish::CreateUObject(this, &USetLevelStreamingVisibilityHandle::LoadLevelsBeforeSetVisibility));
+		GetManagerOwner<ULevelStreamingManager>()->LoadLevelsBySetting(LoadLevelSettings, nullptr, FOnHandleLevelStreamingFinish::CreateUObject(this, &USetLevelStreamingVisibilityHandle::LoadLevelsBeforeSetVisibility));
 		return;
 	}
 

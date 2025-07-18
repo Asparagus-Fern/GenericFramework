@@ -13,31 +13,23 @@ FCoreInternalManager::~FCoreInternalManager()
 {
 }
 
-UManagerInfo* FCoreInternalManager::GetManagerInfo()
+bool FCoreInternalManager::GetManagerHandle(FManagerHandle& OutManagerHandle)
 {
-	return UManagerProxy::Get()->GetManagerInfo(this);
+	return UManagerProxy::GetManagerProxy()->GetManagerHandle(ManagerID, OutManagerHandle);
 }
 
-FGuid FCoreInternalManager::RegisterManager(UObject* InOwner)
+void FCoreInternalManager::RegisterManager(UObject* InOwner)
 {
-	ManagerID = FGuid::NewGuid();
-
-	if (IsValid(InOwner))
+	if (!UManagerProxy::GetManagerProxy()->RegisterManager(FManagerHandle(InOwner, MakeShareable(this)), ManagerID))
 	{
-		Owner = InOwner;
-		UManagerProxy::Get()->RegisterManager(this);
-		OnManagerInitialized();
+		GenericLOG(GenericLogManager, Error, TEXT("Register Manager Fail"));
 	}
-	else
-	{
-		GenericLOG(GenericLogManager, Error, TEXT("Regist Manager Fail, Must Provide Owner For Internal Manager"));
-	}
-
-	return ManagerID;
 }
 
 void FCoreInternalManager::UnRegisterManager()
 {
-	UManagerProxy::Get()->UnRegisterManager(this);
-	OnManagerDeinitialized();
+	if (!UManagerProxy::GetManagerProxy()->UnRegisterManager(ManagerID))
+	{
+		GenericLOG(GenericLogManager, Error, TEXT("UnRegister Manager Fail"));
+	}
 }

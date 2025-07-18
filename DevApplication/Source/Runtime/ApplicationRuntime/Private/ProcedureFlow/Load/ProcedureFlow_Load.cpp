@@ -33,7 +33,7 @@ void AProcedureFlow_Load::OnProcedureFlowExit_Implementation()
 
 void AProcedureFlow_Load::SwitchToNextProcedureFlow() const
 {
-	if (UProcedureFlowManager* ProcedureFlowManager = GetManager<UProcedureFlowManager>())
+	if (UProcedureFlowManager* ProcedureFlowManager = GetManagerOwner<UProcedureFlowManager>())
 	{
 		ProcedureFlowManager->EnterProcedureFlow(NextProcedureFlowTag);
 	}

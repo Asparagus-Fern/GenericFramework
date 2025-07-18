@@ -28,7 +28,7 @@ void UDynamicPositionWidget::NativePreConstruct()
 			}
 			else
 			{
-				// if (UScreenWidgetManager* ScreenWidgetManager = UManagerProxy::Get()->GetManager<UScreenWidgetManager>())
+				// if (UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
 				// {
 				// 	UUserWidgetBase* ContainerWidget = ScreenWidgetManager->GetContainerWidget(CanvasPanelWidget.WidgetContainer);
 				// 	if (IsValid(ContainerWidget))

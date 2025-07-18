@@ -19,7 +19,7 @@ void UProcedureFlowComponent::BeginPlay()
 
 	if (ProcedureFlowTag.IsValid() && !bManualRegister && (bRegisterEvenIsHidden || (!bRegisterEvenIsHidden && !GetOwner()->IsHidden())))
 	{
-		if (UProcedureFlowManager* ProcedureFlowManager = GetManager<UProcedureFlowManager>())
+		if (UProcedureFlowManager* ProcedureFlowManager = GetManagerOwner<UProcedureFlowManager>())
 		{
 			ProcedureFlowManager->RegisterProcedureFlow(this);
 		}
@@ -30,7 +30,7 @@ void UProcedureFlowComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	if (ProcedureFlowTag.IsValid())
 	{
-		if (UProcedureFlowManager* ProcedureFlowManager = GetManager<UProcedureFlowManager>())
+		if (UProcedureFlowManager* ProcedureFlowManager = GetManagerOwner<UProcedureFlowManager>())
 		{
 			ProcedureFlowManager->UnRegisterProcedureFlow(this);
 		}

@@ -10,7 +10,7 @@
 
 void UBPFunctions_ProcedureFlow::RegisterProcedureFlowByActor(AProcedureFlowActor* InActor)
 {
-	if (UProcedureFlowManager* ProcedureFlowManager = GetManager<UProcedureFlowManager>())
+	if (UProcedureFlowManager* ProcedureFlowManager = GetManagerOwner<UProcedureFlowManager>())
 	{
 		ProcedureFlowManager->RegisterProcedureFlow(InActor);
 	}
@@ -18,7 +18,7 @@ void UBPFunctions_ProcedureFlow::RegisterProcedureFlowByActor(AProcedureFlowActo
 
 void UBPFunctions_ProcedureFlow::RegisterProcedureFlowByComponent(UProcedureFlowComponent* InComponent)
 {
-	if (UProcedureFlowManager* ProcedureFlowManager = GetManager<UProcedureFlowManager>())
+	if (UProcedureFlowManager* ProcedureFlowManager = GetManagerOwner<UProcedureFlowManager>())
 	{
 		ProcedureFlowManager->RegisterProcedureFlow(InComponent);
 	}
@@ -26,7 +26,7 @@ void UBPFunctions_ProcedureFlow::RegisterProcedureFlowByComponent(UProcedureFlow
 
 void UBPFunctions_ProcedureFlow::EnterProcedureFlowByActor(AProcedureFlowActor* InActor)
 {
-	if (UProcedureFlowManager* ProcedureFlowManager = GetManager<UProcedureFlowManager>())
+	if (UProcedureFlowManager* ProcedureFlowManager = GetManagerOwner<UProcedureFlowManager>())
 	{
 		ProcedureFlowManager->EnterProcedureFlow(InActor);
 	}
@@ -34,7 +34,7 @@ void UBPFunctions_ProcedureFlow::EnterProcedureFlowByActor(AProcedureFlowActor* 
 
 void UBPFunctions_ProcedureFlow::EnterProcedureFlowByComponent(UProcedureFlowComponent* InComponent)
 {
-	if (UProcedureFlowManager* ProcedureFlowManager = GetManager<UProcedureFlowManager>())
+	if (UProcedureFlowManager* ProcedureFlowManager = GetManagerOwner<UProcedureFlowManager>())
 	{
 		ProcedureFlowManager->EnterProcedureFlow(InComponent);
 	}
@@ -42,7 +42,7 @@ void UBPFunctions_ProcedureFlow::EnterProcedureFlowByComponent(UProcedureFlowCom
 
 void UBPFunctions_ProcedureFlow::EnterProcedureFlowByTag(FGameplayTag InProcedureFlowTag)
 {
-	if (UProcedureFlowManager* ProcedureFlowManager = GetManager<UProcedureFlowManager>())
+	if (UProcedureFlowManager* ProcedureFlowManager = GetManagerOwner<UProcedureFlowManager>())
 	{
 		ProcedureFlowManager->EnterProcedureFlow(InProcedureFlowTag);
 	}
@@ -50,7 +50,7 @@ void UBPFunctions_ProcedureFlow::EnterProcedureFlowByTag(FGameplayTag InProcedur
 
 void UBPFunctions_ProcedureFlow::RefreshCurrentProcedureFlow()
 {
-	if (UProcedureFlowManager* ProcedureFlowManager = GetManager<UProcedureFlowManager>())
+	if (UProcedureFlowManager* ProcedureFlowManager = GetManagerOwner<UProcedureFlowManager>())
 	{
 		ProcedureFlowManager->RefreshCurrentProcedureFlow();
 	}
@@ -58,7 +58,7 @@ void UBPFunctions_ProcedureFlow::RefreshCurrentProcedureFlow()
 
 void UBPFunctions_ProcedureFlow::ReEnterCurrentProcedureFlow()
 {
-	if (UProcedureFlowManager* ProcedureFlowManager = GetManager<UProcedureFlowManager>())
+	if (UProcedureFlowManager* ProcedureFlowManager = GetManagerOwner<UProcedureFlowManager>())
 	{
 		ProcedureFlowManager->ReEnterCurrentProcedureFlow();
 	}
@@ -66,7 +66,7 @@ void UBPFunctions_ProcedureFlow::ReEnterCurrentProcedureFlow()
 
 void UBPFunctions_ProcedureFlow::ExitProcedureFlowByActor(AProcedureFlowActor* InActor)
 {
-	if (UProcedureFlowManager* ProcedureFlowManager = GetManager<UProcedureFlowManager>())
+	if (UProcedureFlowManager* ProcedureFlowManager = GetManagerOwner<UProcedureFlowManager>())
 	{
 		ProcedureFlowManager->ExitProcedureFlow(InActor);
 	}
@@ -74,7 +74,7 @@ void UBPFunctions_ProcedureFlow::ExitProcedureFlowByActor(AProcedureFlowActor* I
 
 void UBPFunctions_ProcedureFlow::ExitProcedureFlowByComponent(UProcedureFlowComponent* InComponent)
 {
-	if (UProcedureFlowManager* ProcedureFlowManager = GetManager<UProcedureFlowManager>())
+	if (UProcedureFlowManager* ProcedureFlowManager = GetManagerOwner<UProcedureFlowManager>())
 	{
 		ProcedureFlowManager->ExitProcedureFlow(InComponent);
 	}
@@ -82,7 +82,7 @@ void UBPFunctions_ProcedureFlow::ExitProcedureFlowByComponent(UProcedureFlowComp
 
 void UBPFunctions_ProcedureFlow::ExitProcedureFlowByTag(FGameplayTag InProcedureFlowTag)
 {
-	if (UProcedureFlowManager* ProcedureFlowManager = GetManager<UProcedureFlowManager>())
+	if (UProcedureFlowManager* ProcedureFlowManager = GetManagerOwner<UProcedureFlowManager>())
 	{
 		ProcedureFlowManager->ExitProcedureFlow(InProcedureFlowTag);
 	}
@@ -90,7 +90,7 @@ void UBPFunctions_ProcedureFlow::ExitProcedureFlowByTag(FGameplayTag InProcedure
 
 void UBPFunctions_ProcedureFlow::UnRegisterProcedureFlowByActor(AProcedureFlowActor* InActor)
 {
-	if (UProcedureFlowManager* ProcedureFlowManager = GetManager<UProcedureFlowManager>())
+	if (UProcedureFlowManager* ProcedureFlowManager = GetManagerOwner<UProcedureFlowManager>())
 	{
 		ProcedureFlowManager->UnRegisterProcedureFlow(InActor);
 	}
@@ -98,7 +98,7 @@ void UBPFunctions_ProcedureFlow::UnRegisterProcedureFlowByActor(AProcedureFlowAc
 
 void UBPFunctions_ProcedureFlow::UnRegisterProcedureFlowByComponent(UProcedureFlowComponent* InComponent)
 {
-	if (UProcedureFlowManager* ProcedureFlowManager = GetManager<UProcedureFlowManager>())
+	if (UProcedureFlowManager* ProcedureFlowManager = GetManagerOwner<UProcedureFlowManager>())
 	{
 		ProcedureFlowManager->UnRegisterProcedureFlow(InComponent);
 	}
@@ -106,7 +106,7 @@ void UBPFunctions_ProcedureFlow::UnRegisterProcedureFlowByComponent(UProcedureFl
 
 bool UBPFunctions_ProcedureFlow::IsProcedureFlowActorActived(const AProcedureFlowActor* InActor)
 {
-	if (const UProcedureFlowManager* ProcedureFlowManager = GetManager<UProcedureFlowManager>())
+	if (const UProcedureFlowManager* ProcedureFlowManager = GetManagerOwner<UProcedureFlowManager>())
 	{
 		return ProcedureFlowManager->IsProcedureFlowActived(InActor);
 	}
@@ -116,7 +116,7 @@ bool UBPFunctions_ProcedureFlow::IsProcedureFlowActorActived(const AProcedureFlo
 
 bool UBPFunctions_ProcedureFlow::IsProcedureFlowComponentActived(const UProcedureFlowComponent* InComponent)
 {
-	if (const UProcedureFlowManager* ProcedureFlowManager = GetManager<UProcedureFlowManager>())
+	if (const UProcedureFlowManager* ProcedureFlowManager = GetManagerOwner<UProcedureFlowManager>())
 	{
 		return ProcedureFlowManager->IsProcedureFlowActived(InComponent);
 	}
@@ -126,7 +126,7 @@ bool UBPFunctions_ProcedureFlow::IsProcedureFlowComponentActived(const UProcedur
 
 bool UBPFunctions_ProcedureFlow::IsProcedureFlowActived(FGameplayTag InProcedureFlowTag)
 {
-	if (const UProcedureFlowManager* ProcedureFlowManager = GetManager<UProcedureFlowManager>())
+	if (const UProcedureFlowManager* ProcedureFlowManager = GetManagerOwner<UProcedureFlowManager>())
 	{
 		return ProcedureFlowManager->IsProcedureFlowActived(InProcedureFlowTag);
 	}
@@ -136,7 +136,7 @@ bool UBPFunctions_ProcedureFlow::IsProcedureFlowActived(FGameplayTag InProcedure
 
 FGameplayTag UBPFunctions_ProcedureFlow::GetCurrentProcedureFlowTag()
 {
-	if (const UProcedureFlowManager* ProcedureFlowManager = GetManager<UProcedureFlowManager>())
+	if (const UProcedureFlowManager* ProcedureFlowManager = GetManagerOwner<UProcedureFlowManager>())
 	{
 		return ProcedureFlowManager->GetCurrentProcedureFlowTag();
 	}
@@ -146,7 +146,7 @@ FGameplayTag UBPFunctions_ProcedureFlow::GetCurrentProcedureFlowTag()
 
 UProcedureFlowComponent* UBPFunctions_ProcedureFlow::GetCurrentProcedureFlowComponent()
 {
-	if (UProcedureFlowManager* ProcedureFlowManager = GetManager<UProcedureFlowManager>())
+	if (UProcedureFlowManager* ProcedureFlowManager = GetManagerOwner<UProcedureFlowManager>())
 	{
 		return ProcedureFlowManager->GetCurrentProcedureFlowComponent();
 	}
@@ -158,7 +158,7 @@ UProcedureFlowComponent* UBPFunctions_ProcedureFlow::GetCurrentProcedureFlowComp
 {
 	ensure(InClass);
 
-	if (UProcedureFlowManager* ProcedureFlowManager = GetManager<UProcedureFlowManager>())
+	if (UProcedureFlowManager* ProcedureFlowManager = GetManagerOwner<UProcedureFlowManager>())
 	{
 		return ProcedureFlowManager->GetCurrentProcedureFlowComponent<UProcedureFlowComponent>();
 	}
@@ -168,7 +168,7 @@ UProcedureFlowComponent* UBPFunctions_ProcedureFlow::GetCurrentProcedureFlowComp
 
 UProcedureFlowComponent* UBPFunctions_ProcedureFlow::GetProcedureFlowComponent(FGameplayTag InProcedureFlowTag)
 {
-	if (UProcedureFlowManager* ProcedureFlowManager = GetManager<UProcedureFlowManager>())
+	if (UProcedureFlowManager* ProcedureFlowManager = GetManagerOwner<UProcedureFlowManager>())
 	{
 		return ProcedureFlowManager->GetProcedureFlowComponent(InProcedureFlowTag);
 	}
@@ -180,7 +180,7 @@ UProcedureFlowComponent* UBPFunctions_ProcedureFlow::GetProcedureFlowComponentBy
 {
 	ensure(InClass);
 
-	if (UProcedureFlowManager* ProcedureFlowManager = GetManager<UProcedureFlowManager>())
+	if (UProcedureFlowManager* ProcedureFlowManager = GetManagerOwner<UProcedureFlowManager>())
 	{
 		return ProcedureFlowManager->GetProcedureFlowComponent<UProcedureFlowComponent>(InProcedureFlowTag);
 	}
@@ -190,7 +190,7 @@ UProcedureFlowComponent* UBPFunctions_ProcedureFlow::GetProcedureFlowComponentBy
 
 TArray<UProcedureFlowComponent*> UBPFunctions_ProcedureFlow::GetProcedureFlowComponents()
 {
-	if (UProcedureFlowManager* ProcedureFlowManager = GetManager<UProcedureFlowManager>())
+	if (UProcedureFlowManager* ProcedureFlowManager = GetManagerOwner<UProcedureFlowManager>())
 	{
 		return ProcedureFlowManager->GetProcedureFlowComponents();
 	}

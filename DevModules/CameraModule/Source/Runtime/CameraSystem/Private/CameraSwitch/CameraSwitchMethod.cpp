@@ -3,11 +3,10 @@
 #include "CameraSwitch/CameraSwitchMethod.h"
 
 #include "CameraManager.h"
-#include "CameraManagerSettings.h"
 #include "CameraPoint/CameraPointBase.h"
 #include "CameraSwitch/CameraSwitchInterface.h"
 #include "Kismet/GameplayStatics.h"
-#include "Manager/ManagerProxy.h"
+#include "Manager/ManagerStatics.h"
 
 UCameraSwitchMethod::FCameraHandleDelegate UCameraSwitchMethod::OnSwitchCameraBegin;
 UCameraSwitchMethod::FCameraHandleDelegate UCameraSwitchMethod::OnSwitchCameraFinish;
@@ -17,7 +16,7 @@ UWorld* UCameraSwitchMethod::GetWorld() const
 	if (!HasAnyFlags(RF_ClassDefaultObject) && ensureMsgf(GetOuter(), TEXT("CommonButtonEvent: %s has a null OuterPrivate in UCommonButtonEvent::GetWorld()"), *GetFullName())
 		&& !GetOuter()->HasAnyFlags(RF_BeginDestroyed) && !GetOuter()->IsUnreachable())
 	{
-		if (const UCameraManager* CameraManager = UManagerProxy::Get()->GetManager<UCameraManager>())
+		if (const UCameraManager* CameraManager = GetManagerOwner<UCameraManager>())
 		{
 			return CameraManager->GetWorld();
 		}
@@ -91,7 +90,7 @@ void UCameraSwitchMethod::NativeOnSwitchToCameraPointFinish()
 		ICameraSwitchInterface::Execute_HandleSwitchToCameraFinish(Actor, this);
 	}
 
-	if (IsValid(TargetCameraPoint) && !TargetCameraPoint->CameraTag.IsValid() && UCameraManagerSettings::Get()->bDestroyEmptyCameraPointAfterSwitchFinish)
+	if (IsValid(TargetCameraPoint) && !TargetCameraPoint->CameraTag.IsValid())
 	{
 		TargetCameraPoint->Destroy();
 	}

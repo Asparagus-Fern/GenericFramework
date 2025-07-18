@@ -4,63 +4,47 @@
 
 #include "CoreMinimal.h"
 #include "CoreInternalManager.h"
-#include "ManagerInfo.h"
+#include "ManagerType.h"
 #include "Generic/GenericObject.h"
 #include "Interface/WorldInterface.h"
 #include "ManagerProxy.generated.h"
 
-class UManagerInfo;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnManagerRegister, UManagerInfo*, ManagerInfo);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnManagerRegister, const FManagerHandle&, ManagerHandle);
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnManagerUnRegister, UManagerInfo*, ManagerInfo);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnManagerUnRegister, const FManagerHandle&, ManagerHandle);
 
 /**
  * 
  */
-UCLASS()
-class DEVCORE_API UManagerProxy final : public UGenericObject, public IWorldInterface
+UCLASS(MinimalAPI)
+class UManagerProxy final : public UGenericObject, public IWorldInterface
 {
 	GENERATED_BODY()
 
 public:
 	UFUNCTION(BlueprintPure, Category="Manager")
-	static UManagerProxy* GetManagerProxy();
+	static DEVCORE_API UManagerProxy* GetManagerProxy();
 
 public:
-	static UManagerProxy* InitializeManagerProxy();
-	static void DeInitializeManagerProxy();
-	static UManagerProxy* Get();
+	DEVCORE_API bool ExistManager(FGuid InManagerID) const;
+	DEVCORE_API bool ExistManager(const UObject* InManagerOwner) const;
+	DEVCORE_API bool ExistManager(const TSubclassOf<UObject>& InManagerOwnerClass) const;
+	DEVCORE_API bool GetManagerHandle(FGuid InManagerID, FManagerHandle& OutManagerHandle) const;
+	DEVCORE_API bool GetManagerOwner(FGuid InManagerID, UObject*& OutManagerOwner) const;
+	DEVCORE_API bool GetManager(FGuid InManagerID, TSharedRef<FCoreInternalManager>& OutManager) const;
+	DEVCORE_API TArray<FManagerHandle> GetAllManagerHandles() const;
 
-	void RegisterManager(IManagerInterface* InManager);
-	void UnRegisterManager(const IManagerInterface* InManager);
-
-	bool IsManagerExist(const IManagerInterface* InManager);
-	bool IsManagerExist(FGuid InManagerID);
-
+public:
 	/* Is Specific Class Of Manager Object Exist */
 	template <typename T>
-	bool ExistManager()
+	bool ExistManagerOwner()
 	{
-		for (const auto& Manager : ManagerInfos)
+		for (const auto& Manager : ManagerList)
 		{
-			if (Manager->GetManagerOwner()->GetClass() == T::StaticClass())
+			if (Manager.Value.GetManagerOwner()->GetClass() == T::StaticClass())
 			{
-				return IsManagerExist(Manager);
-			}
-		}
-		return false;
-	}
-
-	/* Is Specific Class Of Manager Object Exist */
-	template <typename T>
-	bool ExistManager(FGuid ManagerID)
-	{
-		for (const auto& Manager : ManagerInfos)
-		{
-			if (Manager->GetManagerOwner()->GetClass() == T::StaticClass() && Manager->GetManagerID() == ManagerID)
-			{
-				return IsManagerExist(Manager);
+				return true;
 			}
 		}
 		return false;
@@ -68,65 +52,17 @@ public:
 
 	/* Get Specific Manager Object By Class */
 	template <typename T>
-	T* GetManager()
+	T* GetManagerOwner()
 	{
-		for (const auto& Manager : ManagerInfos)
+		for (const auto& Manager : ManagerList)
 		{
-			if (Manager->GetManagerOwner()->GetClass() == T::StaticClass())
+			if (Manager.Value.GetManagerOwner()->GetClass() == T::StaticClass())
 			{
-				return Cast<T>(Manager->GetManagerOwner());
+				return Cast<T>(Manager.Value.GetManagerOwner());
 			}
 		}
 		return nullptr;
 	}
-
-	/* Get Specific Manager Object By Guid */
-	template <typename T>
-	T* GetManager(FGuid ManagerID)
-	{
-		for (const auto& Manager : ManagerInfos)
-		{
-			if (Manager->GetManagerOwner()->GetClass() == T::StaticClass() && Manager->GetManagerID() == ManagerID)
-			{
-				return Cast<T>(Manager->GetManagerOwner());
-			}
-		}
-		return nullptr;
-	}
-
-	/* Get Specific Manager Objects */
-	template <typename T>
-	TArray<T*> GetManagers()
-	{
-		TArray<T*> Result;
-
-		for (const auto& Manager : ManagerInfos)
-		{
-			if (Manager->GetManagerOwner()->GetClass() == T::StaticClass())
-			{
-				Result.Add(Cast<T>(Manager->GetManagerOwner()));
-			}
-		}
-
-		return Result;
-	}
-
-	/* Sort ManagerInfos With ManagerOrder */
-	void SortManagers();
-
-	/* Get Specific ManagerInfo By Interface */
-	UManagerInfo* GetManagerInfo(const IManagerInterface* InManager) const;
-
-	/* Get Specific ManagerInfo By Guid */
-	UManagerInfo* GetManagerInfo(FGuid ManagerID) const;
-
-	/* Get Specific ManagerInfo By ManagerName */
-	UFUNCTION(BlueprintPure, Category="Manager")
-	UManagerInfo* GetManagerInfo(FName ManagerName) const;
-
-	/* Get All ManagerInfos */
-	UFUNCTION(BlueprintPure, Category="Manager")
-	TArray<UManagerInfo*> GetManagerInfos();
 
 public:
 	UPROPERTY(BlueprintAssignable)
@@ -135,22 +71,25 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FOnManagerUnRegister OnManagerUnRegister;
 
-protected:
-	virtual void InitializeInternal();
-
-	/* IWorldInterface */
+	/* ==================== IWorldInterface ==================== */
 protected:
 	virtual void HandleOnWorldCreation(UWorld* InWorld) override;
-	virtual void HandleOnWorldBeginTearDown(UWorld* InWorld) override;
-
 	virtual void HandleOnWorldMatchStarting(UWorld* InWorld) override;
 	virtual void HandleOnWorldBeginPlay(UWorld* InWorld) override;
 	virtual void HandleOnWorldEndPlay(UWorld* InWorld) override;
+	virtual void HandleOnWorldBeginTearDown(UWorld* InWorld) override;
+
+	/* ==================== UManagerProxy ==================== */
+public:
+	DEVCORE_API bool RegisterManager(const FManagerHandle& InManagerHandle, FGuid& OutManagerID);
+	DEVCORE_API bool UnRegisterManager(FGuid InManagerID);
 
 private:
+	void InitializeInternal();
+
 	static UManagerProxy* Instance;
 	bool bIsInitialize = false;
 
 	UPROPERTY()
-	TArray<UManagerInfo*> ManagerInfos;
+	TMap<FGuid, FManagerHandle> ManagerList;
 };

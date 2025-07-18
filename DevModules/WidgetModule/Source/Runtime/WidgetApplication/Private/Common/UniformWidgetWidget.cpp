@@ -31,7 +31,7 @@ void UUniformWidgetWidget::NativePreConstruct()
 			}
 			else
 			{
-				// if (UScreenWidgetManager* ScreenWidgetManager = UManagerProxy::Get()->GetManager<UScreenWidgetManager>())
+				// if (UScreenWidgetManager* ScreenWidgetManager = GetManager<UScreenWidgetManager>())
 				// {
 				// 	UUserWidgetBase* ContainerWidget = ScreenWidgetManager->GetContainerWidget(UniformGridPanelWidget.WidgetContainer);
 				// 	if (IsValid(ContainerWidget))

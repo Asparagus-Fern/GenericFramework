@@ -27,7 +27,7 @@ void AProcedureFlow_PlaySmartCity::OnProcedureFlowEnter_Implementation()
 	// }
 	// }
 
-	if (UCameraManager* CameraManager = GetManager<UCameraManager>())
+	if (UCameraManager* CameraManager = GetManagerOwner<UCameraManager>())
 	{
 		if (DefaultCameraTag.IsValid() && IsValid(CameraHandle))
 		{
@@ -84,7 +84,7 @@ void AProcedureFlow_PlaySmartCity::OnCameraPointRegister(ACameraPointBase* InCam
 {
 	UCameraManager::Delegate_OnCameraPointRegister.RemoveAll(this);
 
-	if (UCameraManager* CameraManager = GetManager<UCameraManager>())
+	if (UCameraManager* CameraManager = GetManagerOwner<UCameraManager>())
 	{
 		if (InCameraPoint->CameraTag == DefaultCameraTag)
 		{

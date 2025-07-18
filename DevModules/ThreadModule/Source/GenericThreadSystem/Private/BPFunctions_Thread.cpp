@@ -13,7 +13,7 @@ bool UBPFunctions_Thread::IsThreadValid(const FThreadHandle& ThreadHandle)
 		return false;
 	}
 
-	if (UThreadManager* ThreadManager = GetManager<UThreadManager>())
+	if (UThreadManager* ThreadManager = GetManagerOwner<UThreadManager>())
 	{
 		TSharedPtr<FGenericThread> Thread = ThreadManager->GetThreadByGuid(ThreadHandle.GetThreadGuid());
 		return Thread.IsValid();
@@ -29,7 +29,7 @@ bool UBPFunctions_Thread::IsThreadRunning(const FThreadHandle& ThreadHandle)
 		return false;
 	}
 
-	if (UThreadManager* ThreadManager = GetManager<UThreadManager>())
+	if (UThreadManager* ThreadManager = GetManagerOwner<UThreadManager>())
 	{
 		TSharedPtr<FGenericThread> Thread = ThreadManager->GetThreadByGuid(ThreadHandle.GetThreadGuid());
 		return Thread->GetIsRunning();
@@ -45,7 +45,7 @@ bool UBPFunctions_Thread::GetThreadName(const FThreadHandle& ThreadHandle, FStri
 		return false;
 	}
 
-	if (UThreadManager* ThreadManager = GetManager<UThreadManager>())
+	if (UThreadManager* ThreadManager = GetManagerOwner<UThreadManager>())
 	{
 		TSharedPtr<FGenericThread> Thread = ThreadManager->GetThreadByGuid(ThreadHandle.GetThreadGuid());
 		ThreadName = Thread->GetThreadName();
@@ -63,7 +63,7 @@ bool UBPFunctions_Thread::GetThreadDuration(const FThreadHandle& ThreadHandle, F
 		return false;
 	}
 
-	if (UThreadManager* ThreadManager = GetManager<UThreadManager>())
+	if (UThreadManager* ThreadManager = GetManagerOwner<UThreadManager>())
 	{
 		TSharedPtr<FGenericThread> Thread = ThreadManager->GetThreadByGuid(ThreadHandle.GetThreadGuid());
 		Duration = Thread->GetDuration();

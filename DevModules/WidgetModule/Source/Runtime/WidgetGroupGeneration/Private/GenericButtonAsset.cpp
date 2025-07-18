@@ -4,6 +4,7 @@
 
 #include "GameplayTagsManager.h"
 #include "GenericButtonBuilder.h"
+#include "GenericButtonContainer.h"
 #include "Debug/DebugType.h"
 
 #if WITH_EDITOR
@@ -46,6 +47,16 @@ void UGenericButtonAsset::GenerateButtons()
 
 			 UGenericButtonBuilder* NewBuilder = NewObject<UGenericButtonBuilder>(this);;
 			 NewBuilder->ButtonTag = InButtonTag;
+
+			 if (DefaultButtonClass)
+			 {
+				 NewBuilder->ButtonClass = DefaultButtonClass;
+			 }
+
+			 if (DefaultButtonGroupClass)
+			 {
+				 NewBuilder->ButtonGroupClass = DefaultButtonGroupClass;
+			 }
 
 			 ButtonBuilders.Add(NewBuilder);
 		 };

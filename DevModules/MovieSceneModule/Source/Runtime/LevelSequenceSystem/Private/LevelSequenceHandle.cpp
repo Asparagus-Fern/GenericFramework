@@ -23,7 +23,7 @@ ULevelSequenceHandle* ULevelSequenceHandle::RegisterLevelSequenceHandle(FName Ha
 		return NewHandle;
 	}
 
-	if (UHandleManager* HandleManager = GetManager<UHandleManager>())
+	if (UHandleManager* HandleManager = GetManagerOwner<UHandleManager>())
 	{
 		if (HandleManager->IsHandleRegister(HandleName))
 		{

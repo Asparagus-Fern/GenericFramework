@@ -9,7 +9,7 @@
 
 TArray<UWorldWidgetComponent*> UBPFunctions_WorldWidget::GetWorldWidgetComponents()
 {
-	if (UWorldWidgetManager* WorldWidgetManager = GetManager<UWorldWidgetManager>())
+	if (UWorldWidgetManager* WorldWidgetManager = GetManagerOwner<UWorldWidgetManager>())
 	{
 		return WorldWidgetManager->GetWorldWidgetComponents();
 	}
@@ -19,7 +19,7 @@ TArray<UWorldWidgetComponent*> UBPFunctions_WorldWidget::GetWorldWidgetComponent
 
 TArray<UWorldWidgetComponent*> UBPFunctions_WorldWidget::GetWorldWidgetComponents2D()
 {
-	if (UWorldWidgetManager* WorldWidgetManager = GetManager<UWorldWidgetManager>())
+	if (UWorldWidgetManager* WorldWidgetManager = GetManagerOwner<UWorldWidgetManager>())
 	{
 		return WorldWidgetManager->GetWorldWidgetComponents2D();
 	}
@@ -29,7 +29,7 @@ TArray<UWorldWidgetComponent*> UBPFunctions_WorldWidget::GetWorldWidgetComponent
 
 TArray<UWorldWidgetComponent*> UBPFunctions_WorldWidget::GetWorldWidgetComponents3D()
 {
-	if (UWorldWidgetManager* WorldWidgetManager = GetManager<UWorldWidgetManager>())
+	if (UWorldWidgetManager* WorldWidgetManager = GetManagerOwner<UWorldWidgetManager>())
 	{
 		return WorldWidgetManager->GetWorldWidgetComponents3D();
 	}
@@ -39,7 +39,7 @@ TArray<UWorldWidgetComponent*> UBPFunctions_WorldWidget::GetWorldWidgetComponent
 
 UWorldWidgetComponent* UBPFunctions_WorldWidget::FindWorldWidgetComponent(FGameplayTag WorldWidgetTag)
 {
-	if (UWorldWidgetManager* WorldWidgetManager = GetManager<UWorldWidgetManager>())
+	if (UWorldWidgetManager* WorldWidgetManager = GetManagerOwner<UWorldWidgetManager>())
 	{
 		return WorldWidgetManager->FindWorldWidgetComponent(WorldWidgetTag);
 	}
@@ -49,7 +49,7 @@ UWorldWidgetComponent* UBPFunctions_WorldWidget::FindWorldWidgetComponent(FGamep
 
 TArray<UWorldWidgetComponent*> UBPFunctions_WorldWidget::FindWorldWidgetComponents(FGameplayTag WorldWidgetTag)
 {
-	if (UWorldWidgetManager* WorldWidgetManager = GetManager<UWorldWidgetManager>())
+	if (UWorldWidgetManager* WorldWidgetManager = GetManagerOwner<UWorldWidgetManager>())
 	{
 		return WorldWidgetManager->FindWorldWidgetComponents(WorldWidgetTag);
 	}
@@ -59,7 +59,7 @@ TArray<UWorldWidgetComponent*> UBPFunctions_WorldWidget::FindWorldWidgetComponen
 
 UGenericButtonGroup* UBPFunctions_WorldWidget::GetWorldWidgetGroup(FGameplayTag InGroupTag)
 {
-	if (UWorldWidgetGroupManager* WorldWidgetGroupManager = GetManager<UWorldWidgetGroupManager>())
+	if (UWorldWidgetGroupManager* WorldWidgetGroupManager = GetManagerOwner<UWorldWidgetGroupManager>())
 	{
 		return WorldWidgetGroupManager->GetWorldWidgetGroup(InGroupTag);
 	}

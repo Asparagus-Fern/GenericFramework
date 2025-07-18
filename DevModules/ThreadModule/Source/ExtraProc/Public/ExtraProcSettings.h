@@ -11,16 +11,12 @@
  * 
  */
 UCLASS()
-class EXTRAPROC_API UExtraProcSettings : public UGenericSettings
+class UExtraProcSettings : public UGenericSettings
 {
 	GENERATED_BODY()
 
 public:
 	static ThisClass* Get() { return GetMutableDefault<ThisClass>(); }
-
-#if WITH_EDITOR
-	virtual FText GetSectionText() const override { return FText::FromString(TEXT("Extra Proc")); }
-#endif
 
 public:
 	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category="ExtraProc")

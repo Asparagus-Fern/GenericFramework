@@ -4,12 +4,11 @@
 #include "BPFunctions_LevelStreaming.h"
 
 #include "LevelStreamingManager.h"
-#include "Kismet/GameplayStatics.h"
-#include "Manager/ManagerProxy.h"
+#include "Manager/ManagerStatics.h"
 
 void UBPFunctions_LevelStreaming::LoadLevel(const TSoftObjectPtr<UWorld> Level, const bool bMakeVisibleAfterLoad, const bool bShouldBlockOnLoad, FHandleLevelStreamingFinish OnFinish)
 {
-	if (ULevelStreamingManager* LevelStreamingManager = UManagerProxy::Get()->GetManager<ULevelStreamingManager>())
+	if (ULevelStreamingManager* LevelStreamingManager = GetManagerOwner<ULevelStreamingManager>())
 	{
 		const auto HandleFinish = FOnHandleLevelStreamingOnceFinish::CreateLambda([&OnFinish]()
 			{
@@ -23,7 +22,7 @@ void UBPFunctions_LevelStreaming::LoadLevel(const TSoftObjectPtr<UWorld> Level, 
 
 void UBPFunctions_LevelStreaming::LoadLevels(const TArray<TSoftObjectPtr<UWorld>> Levels, const bool bMakeVisibleAfterLoad, const bool bShouldBlockOnLoad, FHandleLevelStreamingOnceFinish OnOnceFinish, FHandleLevelStreamingFinish OnFinish)
 {
-	if (ULevelStreamingManager* LevelStreamingManager = UManagerProxy::Get()->GetManager<ULevelStreamingManager>())
+	if (ULevelStreamingManager* LevelStreamingManager = GetManagerOwner<ULevelStreamingManager>())
 	{
 		const auto HandleOnceFinish = FOnHandleLevelStreamingOnceFinish::CreateLambda([&OnOnceFinish]()
 			{
@@ -43,7 +42,7 @@ void UBPFunctions_LevelStreaming::LoadLevels(const TArray<TSoftObjectPtr<UWorld>
 
 void UBPFunctions_LevelStreaming::LoadLevelsBySetting(const TArray<FLoadLevelStreamingSetting> LoadLevelStreamingSettings, FHandleLevelStreamingOnceFinish OnOnceFinish, FHandleLevelStreamingFinish OnFinish)
 {
-	if (ULevelStreamingManager* LevelStreamingManager = UManagerProxy::Get()->GetManager<ULevelStreamingManager>())
+	if (ULevelStreamingManager* LevelStreamingManager = GetManagerOwner<ULevelStreamingManager>())
 	{
 		const auto HandleOnceFinish = FOnHandleLevelStreamingOnceFinish::CreateLambda([&OnOnceFinish]()
 			{
@@ -63,7 +62,7 @@ void UBPFunctions_LevelStreaming::LoadLevelsBySetting(const TArray<FLoadLevelStr
 
 void UBPFunctions_LevelStreaming::UnloadLevel(const TSoftObjectPtr<UWorld> Level, const bool bShouldBlockOnUnload, FHandleLevelStreamingFinish OnFinish)
 {
-	if (ULevelStreamingManager* LevelStreamingManager = UManagerProxy::Get()->GetManager<ULevelStreamingManager>())
+	if (ULevelStreamingManager* LevelStreamingManager = GetManagerOwner<ULevelStreamingManager>())
 	{
 		const auto HandleFinish = FOnHandleLevelStreamingOnceFinish::CreateLambda([&OnFinish]()
 			{
@@ -77,7 +76,7 @@ void UBPFunctions_LevelStreaming::UnloadLevel(const TSoftObjectPtr<UWorld> Level
 
 void UBPFunctions_LevelStreaming::UnloadLevels(const TArray<TSoftObjectPtr<UWorld>> Levels, const bool bShouldBlockOnUnload, FHandleLevelStreamingOnceFinish OnOnceFinish, FHandleLevelStreamingFinish OnFinish)
 {
-	if (ULevelStreamingManager* LevelStreamingManager = UManagerProxy::Get()->GetManager<ULevelStreamingManager>())
+	if (ULevelStreamingManager* LevelStreamingManager = GetManagerOwner<ULevelStreamingManager>())
 	{
 		const auto HandleOnceFinish = FOnHandleLevelStreamingOnceFinish::CreateLambda([&OnOnceFinish]()
 			{
@@ -97,7 +96,7 @@ void UBPFunctions_LevelStreaming::UnloadLevels(const TArray<TSoftObjectPtr<UWorl
 
 void UBPFunctions_LevelStreaming::UnloadLevelsBySetting(const TArray<FUnloadLevelStreamingSetting> UnloadLevelStreamingSettings, FHandleLevelStreamingOnceFinish OnOnceFinish, FHandleLevelStreamingFinish OnFinish)
 {
-	if (ULevelStreamingManager* LevelStreamingManager = UManagerProxy::Get()->GetManager<ULevelStreamingManager>())
+	if (ULevelStreamingManager* LevelStreamingManager = GetManagerOwner<ULevelStreamingManager>())
 	{
 		const auto HandleOnceFinish = FOnHandleLevelStreamingOnceFinish::CreateLambda([&OnOnceFinish]()
 			{
@@ -117,7 +116,7 @@ void UBPFunctions_LevelStreaming::UnloadLevelsBySetting(const TArray<FUnloadLeve
 
 void UBPFunctions_LevelStreaming::SetLevelVisibility(const TSoftObjectPtr<UWorld> Level, const bool bVisible, FHandleLevelStreamingFinish OnFinish)
 {
-	if (ULevelStreamingManager* LevelStreamingManager = UManagerProxy::Get()->GetManager<ULevelStreamingManager>())
+	if (ULevelStreamingManager* LevelStreamingManager = GetManagerOwner<ULevelStreamingManager>())
 	{
 		const auto HandleFinish = FOnHandleLevelStreamingOnceFinish::CreateLambda([&OnFinish]()
 			{
@@ -131,7 +130,7 @@ void UBPFunctions_LevelStreaming::SetLevelVisibility(const TSoftObjectPtr<UWorld
 
 void UBPFunctions_LevelStreaming::SetLevelsVisibility(const TArray<TSoftObjectPtr<UWorld>> Levels, const bool bVisible, FHandleLevelStreamingOnceFinish OnOnceFinish, FHandleLevelStreamingFinish OnFinish)
 {
-	if (ULevelStreamingManager* LevelStreamingManager = UManagerProxy::Get()->GetManager<ULevelStreamingManager>())
+	if (ULevelStreamingManager* LevelStreamingManager = GetManagerOwner<ULevelStreamingManager>())
 	{
 		const auto HandleOnceFinish = FOnHandleLevelStreamingOnceFinish::CreateLambda([&OnOnceFinish]()
 			{
@@ -151,7 +150,7 @@ void UBPFunctions_LevelStreaming::SetLevelsVisibility(const TArray<TSoftObjectPt
 
 void UBPFunctions_LevelStreaming::LoadCurrentWorldLevelStreaming(FHandleLevelStreamingOnceFinish OnOnceFinish, FHandleLevelStreamingFinish OnFinish)
 {
-	if (ULevelStreamingManager* LevelStreamingManager = UManagerProxy::Get()->GetManager<ULevelStreamingManager>())
+	if (ULevelStreamingManager* LevelStreamingManager = GetManagerOwner<ULevelStreamingManager>())
 	{
 		const auto HandleOnceFinish = FOnHandleLevelStreamingOnceFinish::CreateLambda([&OnOnceFinish]()
 			{
@@ -171,7 +170,7 @@ void UBPFunctions_LevelStreaming::LoadCurrentWorldLevelStreaming(FHandleLevelStr
 
 void UBPFunctions_LevelStreaming::UnLoadCurrentWorldLevelStreaming(FHandleLevelStreamingOnceFinish OnOnceFinish, FHandleLevelStreamingFinish OnFinish)
 {
-	if (ULevelStreamingManager* LevelStreamingManager = UManagerProxy::Get()->GetManager<ULevelStreamingManager>())
+	if (ULevelStreamingManager* LevelStreamingManager = GetManagerOwner<ULevelStreamingManager>())
 	{
 		const auto HandleOnceFinish = FOnHandleLevelStreamingOnceFinish::CreateLambda([&OnOnceFinish]()
 			{
@@ -191,7 +190,7 @@ void UBPFunctions_LevelStreaming::UnLoadCurrentWorldLevelStreaming(FHandleLevelS
 
 ULevelStreaming* UBPFunctions_LevelStreaming::GetLevelStreaming(TSoftObjectPtr<UWorld> Level)
 {
-	if (const ULevelStreamingManager* LevelStreamingManager = UManagerProxy::Get()->GetManager<ULevelStreamingManager>())
+	if (const ULevelStreamingManager* LevelStreamingManager = GetManagerOwner<ULevelStreamingManager>())
 	{
 		return LevelStreamingManager->GetLevelStreaming(Level);
 	}
@@ -209,7 +208,7 @@ bool UBPFunctions_LevelStreaming::IsLevelLoaded(TSoftObjectPtr<UWorld> Level)
 
 bool UBPFunctions_LevelStreaming::IsCurrentWorldContainLevel(TSoftObjectPtr<UWorld> Level, bool& Contain)
 {
-	if (const ULevelStreamingManager* LevelStreamingManager = UManagerProxy::Get()->GetManager<ULevelStreamingManager>())
+	if (const ULevelStreamingManager* LevelStreamingManager = GetManagerOwner<ULevelStreamingManager>())
 	{
 		Contain = LevelStreamingManager->IsCurrentWorldContainLevel(Level);
 		return true;

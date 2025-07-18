@@ -70,7 +70,7 @@ void UGenericButtonCollection::BuildChildButtonGroup(FGameplayTag InButtonTag)
 		return;
 	}
 
-	UGenericWidgetManager* GenericWidgetManager = GetManager<UGenericWidgetManager>();
+	UGenericWidgetManager* GenericWidgetManager = GetManagerOwner<UGenericWidgetManager>();
 	if (!IsValid(GenericWidgetManager))
 	{
 		GenericLOG(GenericLogUI, Warning, TEXT("GenericWidgetManager Is InValid"))
@@ -132,7 +132,7 @@ void UGenericButtonCollection::DestroyChildButtonGroup(FGameplayTag InButtonTag)
 		return;
 	}
 
-	UGenericWidgetManager* GenericWidgetManager = GetManager<UGenericWidgetManager>();
+	UGenericWidgetManager* GenericWidgetManager = GetManagerOwner<UGenericWidgetManager>();
 	TObjectPtr<UGenericButtonGroup> ButtonGroup = ButtonGroups.FindRef(InButtonTag);
 
 	if (IsValid(GenericWidgetManager))

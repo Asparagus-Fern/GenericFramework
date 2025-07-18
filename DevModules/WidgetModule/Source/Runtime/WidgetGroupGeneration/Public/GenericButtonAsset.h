@@ -7,6 +7,8 @@
 #include "Engine/DataAsset.h"
 #include "GenericButtonAsset.generated.h"
 
+class UGenericButtonContainer;
+class UGenericButtonWidget;
 class UGenericButtonBuilder;
 
 /**
@@ -23,6 +25,12 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TObjectPtr<UDataTable> ButtonTable = nullptr;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UGenericButtonWidget> DefaultButtonClass = nullptr;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UGenericButtonContainer> DefaultButtonGroupClass = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced, meta = (TitleProperty = "ButtonTag"))
 	TArray<TObjectPtr<UGenericButtonBuilder>> ButtonBuilders;

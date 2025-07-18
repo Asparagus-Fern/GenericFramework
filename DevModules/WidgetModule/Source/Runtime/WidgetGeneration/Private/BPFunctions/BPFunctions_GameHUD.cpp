@@ -8,7 +8,7 @@
 
 void UBPFunctions_GameHUD::CreateGameHUDListBySoftClass(const TArray<TSoftClassPtr<UGenericGameHUD>>& InGameHUDClasses)
 {
-	if (UGenericGameHUDManager* GameHUDManager = GetManager<UGenericGameHUDManager>())
+	if (UGenericGameHUDManager* GameHUDManager = GetManagerOwner<UGenericGameHUDManager>())
 	{
 		GameHUDManager->CreateGameHUDs(InGameHUDClasses);
 	}
@@ -16,7 +16,7 @@ void UBPFunctions_GameHUD::CreateGameHUDListBySoftClass(const TArray<TSoftClassP
 
 void UBPFunctions_GameHUD::CreateGameHUDListByClass(TArray<TSubclassOf<UGenericGameHUD>> InGameHUDClasses)
 {
-	if (UGenericGameHUDManager* GameHUDManager = GetManager<UGenericGameHUDManager>())
+	if (UGenericGameHUDManager* GameHUDManager = GetManagerOwner<UGenericGameHUDManager>())
 	{
 		GameHUDManager->CreateGameHUDs(InGameHUDClasses);
 	}
@@ -24,7 +24,7 @@ void UBPFunctions_GameHUD::CreateGameHUDListByClass(TArray<TSubclassOf<UGenericG
 
 void UBPFunctions_GameHUD::CreateGameHUDList(TArray<UGenericGameHUD*> InGameHUDs)
 {
-	if (UGenericGameHUDManager* GameHUDManager = GetManager<UGenericGameHUDManager>())
+	if (UGenericGameHUDManager* GameHUDManager = GetManagerOwner<UGenericGameHUDManager>())
 	{
 		GameHUDManager->CreateGameHUDs(InGameHUDs);
 	}
@@ -32,7 +32,7 @@ void UBPFunctions_GameHUD::CreateGameHUDList(TArray<UGenericGameHUD*> InGameHUDs
 
 void UBPFunctions_GameHUD::CreateGameHUD(UGenericGameHUD* InGameHUD)
 {
-	if (UGenericGameHUDManager* GameHUDManager = GetManager<UGenericGameHUDManager>())
+	if (UGenericGameHUDManager* GameHUDManager = GetManagerOwner<UGenericGameHUDManager>())
 	{
 		GameHUDManager->CreateGameHUD(InGameHUD);
 	}
@@ -40,7 +40,7 @@ void UBPFunctions_GameHUD::CreateGameHUD(UGenericGameHUD* InGameHUD)
 
 void UBPFunctions_GameHUD::RemoveGameHUDList(TArray<UGenericGameHUD*> InGameHUDs)
 {
-	if (UGenericGameHUDManager* GameHUDManager = GetManager<UGenericGameHUDManager>())
+	if (UGenericGameHUDManager* GameHUDManager = GetManagerOwner<UGenericGameHUDManager>())
 	{
 		GameHUDManager->RemoveGameHUDs(InGameHUDs);
 	}
@@ -48,7 +48,7 @@ void UBPFunctions_GameHUD::RemoveGameHUDList(TArray<UGenericGameHUD*> InGameHUDs
 
 void UBPFunctions_GameHUD::RemoveGameHUD(UGenericGameHUD* InGameHUD)
 {
-	if (UGenericGameHUDManager* GameHUDManager = GetManager<UGenericGameHUDManager>())
+	if (UGenericGameHUDManager* GameHUDManager = GetManagerOwner<UGenericGameHUDManager>())
 	{
 		GameHUDManager->RemoveGameHUD(InGameHUD);
 	}
@@ -56,7 +56,7 @@ void UBPFunctions_GameHUD::RemoveGameHUD(UGenericGameHUD* InGameHUD)
 
 void UBPFunctions_GameHUD::ClearAllGameHUD()
 {
-	if (UGenericGameHUDManager* GameHUDManager = GetManager<UGenericGameHUDManager>())
+	if (UGenericGameHUDManager* GameHUDManager = GetManagerOwner<UGenericGameHUDManager>())
 	{
 		GameHUDManager->ClearGameHUDs();
 	}

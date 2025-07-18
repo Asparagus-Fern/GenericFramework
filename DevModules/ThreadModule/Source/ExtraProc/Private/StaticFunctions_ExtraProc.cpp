@@ -80,7 +80,7 @@ bool FStaticFunctions_ExtraProc::LaunchExtraProc(const FString& Urls, const FStr
 
 void FStaticFunctions_ExtraProc::TerminationExtraProc(FGuid ProcId, bool bKillTree)
 {
-	if (UThreadManager* ThreadManager = GetManager<UThreadManager>())
+	if (UThreadManager* ThreadManager = GetManagerOwner<UThreadManager>())
 	{
 		TSharedPtr<FExtraProcThread> ExtraProcThread = ThreadManager->GetThread<FExtraProcThread>(ProcId);
 		if (ExtraProcThread.IsValid())

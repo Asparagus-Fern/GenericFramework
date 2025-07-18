@@ -94,7 +94,7 @@ ULoadLevelStreamingHandle* ULevelStreamingManager::LoadLevelsBySetting(TArray<FL
 	}
 
 	/* Handle Valid Level */
-	if (UHandleManager* HandleManager = GetManager<UHandleManager>())
+	if (UHandleManager* HandleManager = GetManagerOwner<UHandleManager>())
 	{
 		ULoadLevelStreamingHandle* LoadLevelStreamingHandle = HandleManager->RegisterHandle<ULoadLevelStreamingHandle>(this);
 		LoadLevelStreamingHandle->GetHandleOnceFinishEvent().AddUObject(this, &ULevelStreamingManager::OnHandleLevelOnceFinish);
@@ -165,7 +165,7 @@ UUnLoadLevelStreamingHandle* ULevelStreamingManager::UnloadLevelsBySetting(TArra
 	}
 
 	/* Handle Valid Level */
-	if (UHandleManager* HandleManager = GetManager<UHandleManager>())
+	if (UHandleManager* HandleManager = GetManagerOwner<UHandleManager>())
 	{
 		UUnLoadLevelStreamingHandle* UnLoadLevelStreamingHandle = HandleManager->RegisterHandle<UUnLoadLevelStreamingHandle>(this);
 		UnLoadLevelStreamingHandle->GetHandleOnceFinishEvent().AddUObject(this, &ULevelStreamingManager::OnHandleLevelOnceFinish);
@@ -237,7 +237,7 @@ USetLevelStreamingVisibilityHandle* ULevelStreamingManager::SetLevelsVisibilityB
 	}
 
 	/* Handle Valid Level */
-	if (UHandleManager* HandleManager = GetManager<UHandleManager>())
+	if (UHandleManager* HandleManager = GetManagerOwner<UHandleManager>())
 	{
 		USetLevelStreamingVisibilityHandle* SetLevelStreamingVisibilityHandle = HandleManager->RegisterHandle<USetLevelStreamingVisibilityHandle>(this);
 		SetLevelStreamingVisibilityHandle->GetHandleOnceFinishEvent().AddUObject(this, &ULevelStreamingManager::OnHandleLevelOnceFinish);
@@ -471,7 +471,7 @@ void ULevelStreamingManager::OnHandleLevelFinish(ULevelStreamingHandle* InHandle
 	InHandle->GetHandleOnceFinishEvent().RemoveAll(this);
 	InHandle->GetHandleFinishEvent().RemoveAll(this);
 
-	GetManager<UHandleManager>()->UnRegisterHandle(InHandle);
+	GetManagerOwner<UHandleManager>()->UnRegisterHandle(InHandle);
 	LevelStreamingHandles.Remove(InHandle);
 }
 

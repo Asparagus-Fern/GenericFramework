@@ -1,14 +1,9 @@
 ﻿// Copyright ChenTaiye 2025. All Rights Reserved.
 
-
 #include "Manager/TickableInternalManager.h"
 
-UWorld* FTickableInternalManager::GetTickableGameObjectWorld() const
-{
-	if (!GetManagerOwner())
-	{
-		return nullptr;
-	}
-
-	return GetManagerOwner()->GetWorld();;
-}
+// bool FTickableInternalManager::TickInternal(float DeltaTime)
+// {
+// 	QUICK_SCOPE_CYCLE_COUNTER(STAT_FTickableInternalManager_TickInternal);
+// 	return false;
+// }

@@ -17,7 +17,7 @@ void AProcedureFlow_LoadLevelStreaming::OnProcedureFlowEnter_Implementation()
 
 	if (!GetWorld()->IsPartitionedWorld())
 	{
-		if (ULevelStreamingManager* LevelStreamingManager = GetManager<ULevelStreamingManager>())
+		if (ULevelStreamingManager* LevelStreamingManager = GetManagerOwner<ULevelStreamingManager>())
 		{
 			if (bLoadCurrentWorldLevels)
 			{
@@ -55,7 +55,7 @@ void AProcedureFlow_LoadLevelStreaming::NativeOnLoadCurrentWorldLevelStreamingFi
 	OnLoadingOnceFinish();
 	OnLoadCurrentWorldLevelStreamingFinish();
 
-	if (ULevelStreamingManager* LevelStreamingManager = GetManager<ULevelStreamingManager>())
+	if (ULevelStreamingManager* LevelStreamingManager = GetManagerOwner<ULevelStreamingManager>())
 	{
 		LevelStreamingManager->LoadLevels(VisibleLevels, true, false, FOnHandleLevelStreamingOnceFinish::CreateUObject(this, &AProcedureFlow_LoadLevelStreaming::NativeOnLoadVisibleLevelsOnceFinish), FOnHandleLevelStreamingFinish::CreateUObject(this, &AProcedureFlow_LoadLevelStreaming::NativeOnLoadVisibleLevelsFinish));
 	}

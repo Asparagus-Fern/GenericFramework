@@ -10,7 +10,7 @@ UCloseUserWidgetAsyncAction* UCloseUserWidgetAsyncAction::AsyncCloseUserWidget(U
 {
 	UCloseUserWidgetAsyncAction* NewAction = NewObject<UCloseUserWidgetAsyncAction>();
 
-	if (UGenericWidgetManager* WidgetManager = GetManager<UGenericWidgetManager>())
+	if (UGenericWidgetManager* WidgetManager = GetManagerOwner<UGenericWidgetManager>())
 	{
 		UGenericWidgetManager::Delegate_PostWidgetClosed.AddUObject(NewAction, &UCloseUserWidgetAsyncAction::OnWidgetInactivedAnimationFinish);
 		WidgetManager->CloseUserWidget(InWidget, MarkAsGarbage, FOnWidgetActiveStateChanged::CreateUObject(NewAction, &UCloseUserWidgetAsyncAction::OnWidgetInactived));
@@ -23,7 +23,7 @@ UCloseUserWidgetAsyncAction* UCloseUserWidgetAsyncAction::AsyncCloseUserWidgetBy
 {
 	UCloseUserWidgetAsyncAction* NewAction = NewObject<UCloseUserWidgetAsyncAction>();
 
-	if (UGenericWidgetManager* WidgetManager = GetManager<UGenericWidgetManager>())
+	if (UGenericWidgetManager* WidgetManager = GetManagerOwner<UGenericWidgetManager>())
 	{
 		UGenericWidgetManager::Delegate_PostWidgetClosed.AddUObject(NewAction, &UCloseUserWidgetAsyncAction::OnWidgetInactivedAnimationFinish);
 		WidgetManager->CloseUserWidget(InSlotTag, MarkAsGarbage, FOnWidgetActiveStateChanged::CreateUObject(NewAction, &UCloseUserWidgetAsyncAction::OnWidgetInactived));

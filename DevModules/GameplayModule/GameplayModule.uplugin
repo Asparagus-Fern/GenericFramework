@@ -41,17 +41,17 @@
   ],
   "Modules": [
     {
-      "Name": "DevGameplay",
+      "Name": "GenericGameplaySystem",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
+    },
+    {
+      "Name": "GenericSaveGameSystem",
       "Type": "Runtime",
       "LoadingPhase": "Default"
     },
     {
       "Name": "GameSettingSystem",
-      "Type": "Runtime",
-      "LoadingPhase": "Default"
-    },
-    {
-      "Name": "BackpackSystem",
       "Type": "Runtime",
       "LoadingPhase": "Default"
     }

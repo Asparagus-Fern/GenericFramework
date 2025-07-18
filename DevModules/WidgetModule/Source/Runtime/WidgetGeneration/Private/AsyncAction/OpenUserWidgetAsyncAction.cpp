@@ -10,7 +10,7 @@ UOpenUserWidgetAsyncAction* UOpenUserWidgetAsyncAction::AsyncOpenUserWidget(UGen
 {
 	UOpenUserWidgetAsyncAction* NewAction = NewObject<UOpenUserWidgetAsyncAction>();
 
-	if (UGenericWidgetManager* WidgetManager = GetManager<UGenericWidgetManager>())
+	if (UGenericWidgetManager* WidgetManager = GetManagerOwner<UGenericWidgetManager>())
 	{
 		UGenericWidgetManager::Delegate_PostWidgetOpened.AddUObject(NewAction, &UOpenUserWidgetAsyncAction::OnWidgetActivedAnimationFinish);
 		WidgetManager->OpenUserWidget(InWidget, FOnWidgetActiveStateChanged::CreateUObject(NewAction, &UOpenUserWidgetAsyncAction::OnWidgetActived));
@@ -23,7 +23,7 @@ UOpenUserWidgetAsyncAction* UOpenUserWidgetAsyncAction::AsyncOpenUserWidgetByCla
 {
 	UOpenUserWidgetAsyncAction* NewAction = NewObject<UOpenUserWidgetAsyncAction>();
 
-	if (UGenericWidgetManager* WidgetManager = GetManager<UGenericWidgetManager>())
+	if (UGenericWidgetManager* WidgetManager = GetManagerOwner<UGenericWidgetManager>())
 	{
 		UGenericWidgetManager::Delegate_PostWidgetOpened.AddUObject(NewAction, &UOpenUserWidgetAsyncAction::OnWidgetActivedAnimationFinish);
 		WidgetManager->OpenUserWidget(InWidgetClass, FOnWidgetActiveStateChanged::CreateUObject(NewAction, &UOpenUserWidgetAsyncAction::OnWidgetActived));

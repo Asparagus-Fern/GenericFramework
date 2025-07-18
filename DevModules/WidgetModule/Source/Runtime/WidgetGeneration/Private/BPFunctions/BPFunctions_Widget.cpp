@@ -8,7 +8,7 @@
 
 UGenericWidget* UBPFunctions_Widget::OpenUserWidgetByClass(TSubclassOf<UGenericWidget> InWidgetClass)
 {
-	if (UGenericWidgetManager* WidgetManager = GetManager<UGenericWidgetManager>())
+	if (UGenericWidgetManager* WidgetManager = GetManagerOwner<UGenericWidgetManager>())
 	{
 		ensure(InWidgetClass);
 		return Cast<UGenericWidget>(WidgetManager->OpenUserWidget(InWidgetClass));
@@ -18,7 +18,7 @@ UGenericWidget* UBPFunctions_Widget::OpenUserWidgetByClass(TSubclassOf<UGenericW
 
 bool UBPFunctions_Widget::OpenUserWidget(UGenericWidget* InWidget)
 {
-	if (UGenericWidgetManager* WidgetManager = GetManager<UGenericWidgetManager>())
+	if (UGenericWidgetManager* WidgetManager = GetManagerOwner<UGenericWidgetManager>())
 	{
 		return WidgetManager->OpenUserWidget(InWidget);
 	}
@@ -27,7 +27,7 @@ bool UBPFunctions_Widget::OpenUserWidget(UGenericWidget* InWidget)
 
 bool UBPFunctions_Widget::CloseUserWidgetByTag(FGameplayTag InSlotTag, bool MarkAsGarbage)
 {
-	if (UGenericWidgetManager* WidgetManager = GetManager<UGenericWidgetManager>())
+	if (UGenericWidgetManager* WidgetManager = GetManagerOwner<UGenericWidgetManager>())
 	{
 		return WidgetManager->CloseUserWidget(InSlotTag, MarkAsGarbage);
 	}
@@ -36,7 +36,7 @@ bool UBPFunctions_Widget::CloseUserWidgetByTag(FGameplayTag InSlotTag, bool Mark
 
 bool UBPFunctions_Widget::CloseUserWidget(UGenericWidget* InWidget, bool MarkAsGarbage)
 {
-	if (UGenericWidgetManager* WidgetManager = GetManager<UGenericWidgetManager>())
+	if (UGenericWidgetManager* WidgetManager = GetManagerOwner<UGenericWidgetManager>())
 	{
 		return WidgetManager->CloseUserWidget(InWidget, MarkAsGarbage);
 	}
@@ -45,7 +45,7 @@ bool UBPFunctions_Widget::CloseUserWidget(UGenericWidget* InWidget, bool MarkAsG
 
 TArray<UGenericWidget*> UBPFunctions_Widget::GetActivedWidgets()
 {
-	if (UGenericWidgetManager* WidgetManager = GetManager<UGenericWidgetManager>())
+	if (UGenericWidgetManager* WidgetManager = GetManagerOwner<UGenericWidgetManager>())
 	{
 		return WidgetManager->GetActivedWidgets();
 	}

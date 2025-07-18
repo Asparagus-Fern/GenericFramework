@@ -11,7 +11,7 @@
  * 
  */
 UCLASS()
-class PROCEDUREFLOWSYSTEM_API UProcedureFlowSettings : public UGenericSettings
+class UProcedureFlowSettings : public UGenericSettings
 {
 	GENERATED_UCLASS_BODY()
 
@@ -19,14 +19,9 @@ public:
 	static ThisClass* Get() { return GetMutableDefault<ThisClass>(); }
 
 public:
-#if WITH_EDITOR
-	virtual FText GetSectionText() const override { return FText::FromString(TEXT("Procedure Flow")); }
-#endif
-
-public:
 	/* If True, Enter Default Procedure Flow After BeginPlay */
 	UPROPERTY(Config, EditAnywhere)
-	bool AutoEnterDefaultProcedureFlowTag = true;
+	bool AutoEnterDefaultProcedureFlow = true;
 
 	UPROPERTY(Config, EditAnywhere, meta=(Categories="Procedure.Flow"))
 	FGameplayTag DefaultProcedureFlowTag = FGameplayTag::EmptyTag;

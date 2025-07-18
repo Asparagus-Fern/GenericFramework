@@ -2,7 +2,7 @@
 
 #include "GenericGameHUDManager.h"
 
-#include "GenericWidgetSettings.h"
+#include "GameHUDSettings.h"
 #include "GenericWidgetManager.h"
 #include "Base/GenericGameHUD.h"
 #include "Base/GenericWidget.h"
@@ -45,10 +45,10 @@ void UGenericGameHUDManager::HandleOnWorldMatchStarting(UWorld* InWorld)
 {
 	FCoreInternalManager::HandleOnWorldMatchStarting(InWorld);
 
-	if (UGenericWidgetSettings::Get()->AutoCreateGameHUD)
+	if (UGameHUDSettings::Get()->AutoCreateGameHUD)
 	{
 		BROADCAST_UNIFIED_DELEGATE(Delegate_PreHUDCreated, BPDelegate_PreHUDCreated);
-		CreateGameHUDs(UGenericWidgetSettings::Get()->GenericHUDClasses);
+		CreateGameHUDs(UGameHUDSettings::Get()->GenericHUDClasses);
 		BROADCAST_UNIFIED_DELEGATE(Delegate_PostHUDCreated, BPDelegate_PostHUDCreated);
 	}
 }
@@ -127,7 +127,7 @@ void UGenericGameHUDManager::CreateGameHUD(UGenericGameHUD* InGameHUD)
 		return;
 	}
 
-	GetManager<UGenericWidgetManager>()->OpenUserWidget(InGameHUD);
+	GetManagerOwner<UGenericWidgetManager>()->OpenUserWidget(InGameHUD);
 }
 
 void UGenericGameHUDManager::RemoveGameHUDs(TArray<UGenericGameHUD*> InGameHUDs)
@@ -158,7 +158,7 @@ void UGenericGameHUDManager::RemoveGameHUD(UGenericGameHUD* InGameHUD)
 		return;
 	}
 
-	GetManager<UGenericWidgetManager>()->CloseUserWidget(InGameHUD);
+	GetManagerOwner<UGenericWidgetManager>()->CloseUserWidget(InGameHUD);
 }
 
 void UGenericGameHUDManager::ClearGameHUDs()

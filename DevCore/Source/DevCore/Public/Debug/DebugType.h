@@ -48,7 +48,7 @@ extern DEVCORE_API float DNotifyFadeOutDuration;
 extern DEVCORE_API float DNotifyDuration;
 
 #define GenericLOG(CategoryName, Verbosity, Format, ...) \
-UE_LOG(CategoryName, Type::Verbosity, TEXT("(%s) %s"), ANSI_TO_TCHAR(__FUNCTION__), *FString::Printf(Format, ##__VA_ARGS__))
+UE_LOG(CategoryName, Type::Verbosity, TEXT("[Line:%d %s] %s"), __LINE__, ANSI_TO_TCHAR(__FUNCTION__), *FString::Printf(Format, ##__VA_ARGS__))
 
 #define GenericPRINT(Verbosity, Format, ...) \
 if(IsValid(GEngine)){ \

@@ -20,10 +20,11 @@ class UNativeAPISettings : public UGenericSettings
 public:
 	static ThisClass* Get() { return GetMutableDefault<ThisClass>(); }
 
+public:
 #if WITH_EDITOR
-	virtual FText GetSectionText() const override { return FText::FromString(TEXT("Native API")); }
+	virtual FText GetSectionText() const override { return FText::FromString(TEXT("Native API Settings")); }
 #endif
-
+	
 public:
 	UPROPERTY(Config, EditAnywhere, Category = "WebSocket")
 	bool bSupportWebSocket = false;

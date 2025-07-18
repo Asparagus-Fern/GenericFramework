@@ -9,7 +9,7 @@
 
 void UBPFunctions_GameSlot::RegisterSlot(UGameplayTagSlot* InSlot)
 {
-	if (UGenericGameSlotManager* GameHUDManager = GetManager<UGenericGameSlotManager>())
+	if (UGenericGameSlotManager* GameHUDManager = GetManagerOwner<UGenericGameSlotManager>())
 	{
 		GameHUDManager->RegisterSlot(InSlot);
 	}
@@ -17,7 +17,7 @@ void UBPFunctions_GameSlot::RegisterSlot(UGameplayTagSlot* InSlot)
 
 void UBPFunctions_GameSlot::UnRegisterSlot(UGameplayTagSlot* InSlot)
 {
-	if (UGenericGameSlotManager* GameHUDManager = GetManager<UGenericGameSlotManager>())
+	if (UGenericGameSlotManager* GameHUDManager = GetManagerOwner<UGenericGameSlotManager>())
 	{
 		GameHUDManager->UnRegisterSlot(InSlot);
 	}

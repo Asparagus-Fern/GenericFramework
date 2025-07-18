@@ -44,7 +44,7 @@ void UCameraAutoSwitchAction::SwitchToNext()
 	CurrentIndex++;
 	const FGameplayTag TagToSwitch = AutoSwitchTags.IsValidIndex(CurrentIndex) ? AutoSwitchTags[CurrentIndex] : AutoSwitchTags[0];
 
-	if (UCameraManager* CameraManager = GetManager<UCameraManager>())
+	if (UCameraManager* CameraManager = GetManagerOwner<UCameraManager>())
 	{
 		if (CameraManager->CanSwitchToCamera(TagToSwitch))
 		{

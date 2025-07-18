@@ -10,15 +10,15 @@
 UGenericButtonCollection* UBPFunctions_GenericButtonWidget::RegisterButtonCollectionByClass(TSubclassOf<UGenericButtonCollection> InCollectionClass, bool InActived)
 {
 	ensure(InCollectionClass);
-	return Cast<UGenericButtonCollection>(GetManager<UGenericButtonManager>()->RegisterButtonCollection(InCollectionClass, InActived));
+	return Cast<UGenericButtonCollection>(GetManagerOwner<UGenericButtonManager>()->RegisterButtonCollection(InCollectionClass, InActived));
 }
 
 bool UBPFunctions_GenericButtonWidget::RegisterButtonCollection(UGenericButtonCollection* InCollection, bool InActived)
 {
-	return GetManager<UGenericButtonManager>()->RegisterButtonCollection(InCollection, InActived);
+	return GetManagerOwner<UGenericButtonManager>()->RegisterButtonCollection(InCollection, InActived);
 }
 
 bool UBPFunctions_GenericButtonWidget::UnRegisterButtonCollection(UGenericButtonCollection* InCollection)
 {
-	return GetManager<UGenericButtonManager>()->UnRegisterButtonCollection(InCollection);
+	return GetManagerOwner<UGenericButtonManager>()->UnRegisterButtonCollection(InCollection);
 }

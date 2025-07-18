@@ -11,107 +11,29 @@ UManagerProxy* UManagerProxy::Instance = nullptr;
 
 UManagerProxy* UManagerProxy::GetManagerProxy()
 {
-	return UManagerProxy::Get();
-}
-
-UManagerProxy* UManagerProxy::InitializeManagerProxy()
-{
 	if (!Instance)
 	{
 		Instance = NewObject<UManagerProxy>();
 		Instance->AddToRoot();
-	}
-
-	Instance->InitializeInternal();
-
-	return Instance;
-}
-
-void UManagerProxy::DeInitializeManagerProxy()
-{
-}
-
-UManagerProxy* UManagerProxy::Get()
-{
-	if (!Instance)
-	{
-		Instance = NewObject<UManagerProxy>();
-		Instance->AddToRoot();
+		Instance->InitializeInternal();
 	}
 
 	return Instance;
 }
 
-void UManagerProxy::RegisterManager(IManagerInterface* InManager)
+bool UManagerProxy::ExistManager(const FGuid InManagerID) const
 {
-	if (!UGlobalManagerSettings::Get()->bEnableAllManager)
-	{
-		GenericLOG(GenericLogManager, Log, TEXT("Disable Manager Register"))
-		return;
-	}
-
-	if (!InManager)
-	{
-		GenericLOG(GenericLogManager, Error, TEXT("InManager Is NULL"))
-		return;
-	}
-
-	if (IsManagerExist(InManager))
-	{
-		GenericLOG(GenericLogManager, Warning, TEXT("InManager Is Already Registed"))
-		return;
-	}
-
-	UManagerInfo* NewManagerInfo = NewObject<UManagerInfo>();
-	NewManagerInfo->AddToRoot();
-
-	NewManagerInfo->InitializeManagerInfo(InManager);
-	ManagerInfos.Add(NewManagerInfo);
-
-	OnManagerRegister.Broadcast(NewManagerInfo);
-
-	SortManagers();
-	GenericLOG(GenericLogManager, Log, TEXT("%s"), *InManager->GetManagerOwner()->GetName());
+	return ManagerList.Contains(InManagerID);
 }
 
-void UManagerProxy::UnRegisterManager(const IManagerInterface* InManager)
+bool UManagerProxy::ExistManager(const UObject* InManagerOwner) const
 {
-	if (!InManager)
+	TArray<FManagerHandle> ManagerHandles;
+	ManagerList.GenerateValueArray(ManagerHandles);
+
+	for (auto& ManagerHandle : ManagerHandles)
 	{
-		GenericLOG(GenericLogManager, Error, TEXT("InManager Is NULL"))
-		return;
-	}
-
-	if (!IsManagerExist(InManager))
-	{
-		GenericLOG(GenericLogManager, Warning, TEXT("InManager Is Already UnRegisted"))
-		return;
-	}
-
-	UManagerInfo* RemoveManagerInfo = GetManagerInfo(InManager);
-	if (IsValid(RemoveManagerInfo))
-	{
-		OnManagerUnRegister.Broadcast(RemoveManagerInfo);
-
-		ManagerInfos.Remove(RemoveManagerInfo);
-		RemoveManagerInfo->RemoveFromRoot();
-		RemoveManagerInfo->MarkAsGarbage();
-
-		SortManagers();
-		GenericLOG(GenericLogManager, Log, TEXT("%s"), *InManager->GetManagerOwner()->GetName());
-	}
-}
-
-bool UManagerProxy::IsManagerExist(const IManagerInterface* InManager)
-{
-	return IsManagerExist(InManager->GetManagerID());
-}
-
-bool UManagerProxy::IsManagerExist(FGuid InManagerID)
-{
-	for (const auto& Manager : ManagerInfos)
-	{
-		if (Manager->GetManagerID() == InManagerID)
+		if (ManagerHandle.GetManagerOwner() == InManagerOwner)
 		{
 			return true;
 		}
@@ -120,47 +42,160 @@ bool UManagerProxy::IsManagerExist(FGuid InManagerID)
 	return false;
 }
 
-void UManagerProxy::SortManagers()
+bool UManagerProxy::ExistManager(const TSubclassOf<UObject>& InManagerOwnerClass) const
 {
-	ManagerInfos.Sort([](UManagerInfo& A, UManagerInfo& B)
-		{
-			return A.GetManagerOrder() > B.GetManagerOrder();
-		}
-	);
-}
+	TArray<FManagerHandle> ManagerHandles;
+	ManagerList.GenerateValueArray(ManagerHandles);
 
-UManagerInfo* UManagerProxy::GetManagerInfo(const IManagerInterface* InManager) const
-{
-	return GetManagerInfo(InManager->GetManagerID());
-}
-
-UManagerInfo* UManagerProxy::GetManagerInfo(FGuid ManagerID) const
-{
-	for (const auto& ManagerInfo : ManagerInfos)
+	for (auto& ManagerHandle : ManagerHandles)
 	{
-		if (ManagerInfo->GetManagerID() == ManagerID)
+		if (ManagerHandle.GetManagerOwner()->GetClass() == InManagerOwnerClass)
 		{
-			return ManagerInfo;
+			return true;
 		}
 	}
-	return nullptr;
+
+	return false;
 }
 
-UManagerInfo* UManagerProxy::GetManagerInfo(FName ManagerName) const
+bool UManagerProxy::GetManagerHandle(const FGuid InManagerID, FManagerHandle& OutManagerHandle) const
 {
-	for (const auto& ManagerInfo : ManagerInfos)
+	if (!ManagerList.Contains(InManagerID))
 	{
-		if (ManagerInfo->GetManagerName() == ManagerName)
-		{
-			return ManagerInfo;
-		}
+		return false;
 	}
-	return nullptr;
+
+	OutManagerHandle = ManagerList.FindRef(InManagerID);
+	return true;
 }
 
-TArray<UManagerInfo*> UManagerProxy::GetManagerInfos()
+bool UManagerProxy::GetManagerOwner(FGuid InManagerID, UObject*& OutManagerOwner) const
 {
-	return ManagerInfos;
+	if (!ManagerList.Contains(InManagerID))
+	{
+		return false;
+	}
+
+	OutManagerOwner = ManagerList.FindRef(InManagerID).GetManagerOwner();
+	return true;
+}
+
+bool UManagerProxy::GetManager(FGuid InManagerID, TSharedRef<FCoreInternalManager>& OutManager) const
+{
+	if (!ManagerList.Contains(InManagerID))
+	{
+		return false;
+	}
+
+	OutManager = ManagerList.FindRef(InManagerID).GetManager();
+	return true;
+}
+
+TArray<FManagerHandle> UManagerProxy::GetAllManagerHandles() const
+{
+	TArray<FManagerHandle> Result;
+	ManagerList.GenerateValueArray(Result);
+	return Result;
+}
+
+/* ==================== IWorldInterface ==================== */
+
+void UManagerProxy::HandleOnWorldCreation(UWorld* InWorld)
+{
+	for (auto& Manager : ManagerList)
+	{
+		Manager.Value.GetManager()->HandleOnWorldCreation(InWorld);
+	}
+}
+
+void UManagerProxy::HandleOnWorldMatchStarting(UWorld* InWorld)
+{
+	for (const auto& Manager : ManagerList)
+	{
+		Manager.Value.GetManager()->HandleOnWorldMatchStarting(InWorld);
+	}
+}
+
+void UManagerProxy::HandleOnWorldBeginPlay(UWorld* InWorld)
+{
+	for (const auto& Manager : ManagerList)
+	{
+		Manager.Value.GetManager()->HandleOnWorldBeginPlay(InWorld);
+	}
+}
+
+void UManagerProxy::HandleOnWorldEndPlay(UWorld* InWorld)
+{
+	for (const auto& Manager : ManagerList)
+	{
+		Manager.Value.GetManager()->HandleOnWorldEndPlay(InWorld);
+	}
+}
+
+void UManagerProxy::HandleOnWorldBeginTearDown(UWorld* InWorld)
+{
+	for (const auto& Manager : ManagerList)
+	{
+		Manager.Value.GetManager()->HandleOnWorldBeginTearDown(InWorld);
+	}
+}
+
+/* ==================== UManagerProxy ==================== */
+bool UManagerProxy::RegisterManager(const FManagerHandle& InManagerHandle, FGuid& OutManagerID)
+{
+	if (!UGlobalManagerSettings::Get()->bEnableAllManager)
+	{
+		GenericLOG(GenericLogManager, Log, TEXT("Disable Manager Register"))
+		return false;
+	}
+
+	if (!InManagerHandle.CheckIsValid())
+	{
+		GenericLOG(GenericLogManager, Error, TEXT("InManager Is InValid"))
+		return false;
+	}
+
+	if (ExistManager(InManagerHandle.GetManagerID()) || ExistManager(InManagerHandle.GetManagerOwner()->GetClass()))
+	{
+		GenericLOG(GenericLogManager, Warning, TEXT("InManager Is Already Register"))
+		return false;
+	}
+
+	FGuid ManagerID = InManagerHandle.GetManagerID();
+	OutManagerID = ManagerID;
+	ManagerList.Add(ManagerID, InManagerHandle);
+
+	InManagerHandle.GetManager()->OnManagerInitialized();
+	OnManagerRegister.Broadcast(InManagerHandle);
+
+	return true;
+}
+
+bool UManagerProxy::UnRegisterManager(FGuid InManagerID)
+{
+	if (!InManagerID.IsValid())
+	{
+		GenericLOG(GenericLogManager, Error, TEXT("InManagerID Is InValid"))
+		return false;
+	}
+
+	if (!ExistManager(InManagerID))
+	{
+		GenericLOG(GenericLogManager, Warning, TEXT("InManager Is Already UnRegister"))
+		return false;
+	}
+
+	FManagerHandle ManagerHandle;
+	if (GetManagerHandle(InManagerID, ManagerHandle))
+	{
+		ManagerList.Remove(InManagerID);
+		ManagerHandle.GetManager()->OnManagerDeinitialized();
+		OnManagerUnRegister.Broadcast(ManagerHandle);
+
+		return true;
+	}
+
+	return false;
 }
 
 void UManagerProxy::InitializeInternal()
@@ -172,44 +207,4 @@ void UManagerProxy::InitializeInternal()
 
 	bIsInitialize = true;
 	InitializeWorldInterface();
-}
-
-void UManagerProxy::HandleOnWorldCreation(UWorld* InWorld)
-{
-	for (const auto& Manager : ManagerInfos)
-	{
-		static_cast<FCoreInternalManager*>(Manager->ManagerInterface)->HandleOnWorldCreation(InWorld);
-	}
-}
-
-void UManagerProxy::HandleOnWorldBeginTearDown(UWorld* InWorld)
-{
-	for (const auto& Manager : ManagerInfos)
-	{
-		static_cast<FCoreInternalManager*>(Manager->ManagerInterface)->HandleOnWorldBeginTearDown(InWorld);
-	}
-}
-
-void UManagerProxy::HandleOnWorldMatchStarting(UWorld* InWorld)
-{
-	for (const auto& Manager : ManagerInfos)
-	{
-		static_cast<FCoreInternalManager*>(Manager->ManagerInterface)->HandleOnWorldMatchStarting(InWorld);
-	}
-}
-
-void UManagerProxy::HandleOnWorldBeginPlay(UWorld* InWorld)
-{
-	for (const auto& Manager : ManagerInfos)
-	{
-		static_cast<FCoreInternalManager*>(Manager->ManagerInterface)->HandleOnWorldBeginPlay(InWorld);
-	}
-}
-
-void UManagerProxy::HandleOnWorldEndPlay(UWorld* InWorld)
-{
-	for (const auto& Manager : ManagerInfos)
-	{
-		static_cast<FCoreInternalManager*>(Manager->ManagerInterface)->HandleOnWorldEndPlay(InWorld);
-	}
 }
