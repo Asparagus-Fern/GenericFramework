@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Generic/GenericSettings.h"
-#include "GlobalManagerSettings.generated.h"
+#include "ManagerSettings.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class DEVCORE_API UGlobalManagerSettings : public UGenericSettings
+class DEVCORE_API UManagerSettings : public UGenericSettings
 {
 	GENERATED_BODY()
 
@@ -23,7 +23,6 @@ public:
 public:
 	virtual void PostInitProperties() override;
 #if WITH_EDITOR
-	virtual FText GetSectionText() const override { return FText::FromString(TEXT("Manager")); }
 	virtual void PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent) override;
 
 private:

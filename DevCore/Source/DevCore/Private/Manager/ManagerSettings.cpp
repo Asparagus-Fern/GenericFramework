@@ -1,12 +1,12 @@
 ﻿// Copyright ChenTaiye 2025. All Rights Reserved.
 
 
-#include "Manager/GlobalManagerSettings.h"
+#include "Manager/ManagerSettings.h"
 
 #include "GameplayTagsSettings.h"
 #include "StaticFunctions/StaticFunctions_Object.h"
 
-void UGlobalManagerSettings::PostInitProperties()
+void UManagerSettings::PostInitProperties()
 {
 	Super::PostInitProperties();
 
@@ -15,11 +15,11 @@ void UGlobalManagerSettings::PostInitProperties()
 #endif
 }
 
-void UGlobalManagerSettings::PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent)
+void UManagerSettings::PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent)
 {
 	Super::PostEditChangeProperty(PropertyChangedEvent);
 
-	static FName Name_GameplayTagTables = GET_MEMBER_NAME_CHECKED(UGlobalManagerSettings, GameplayTagTables);
+	static FName Name_GameplayTagTables = GET_MEMBER_NAME_CHECKED(UManagerSettings, GameplayTagTables);
 	if (PropertyChangedEvent.Property)
 	{
 		if (PropertyChangedEvent.Property->GetFName() == Name_GameplayTagTables || PropertyChangedEvent.Property->GetFName() == Name_GameplayTagTables)
@@ -29,7 +29,7 @@ void UGlobalManagerSettings::PostEditChangeProperty(struct FPropertyChangedEvent
 	}
 }
 
-void UGlobalManagerSettings::UpdateGameplayTagSettings()
+void UManagerSettings::UpdateGameplayTagSettings()
 {
 	if (UGameplayTagsSettings* GameplayTagsSettings = GetMutableDefault<UGameplayTagsSettings>())
 	{

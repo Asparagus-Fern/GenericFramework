@@ -5,21 +5,15 @@
 #include "CoreMinimal.h"
 // #include "WorldInterface.generated.h"
 
+
 /**
  * 
  */
 class DEVCORE_API IWorldInterface
 {
 public:
-	void InitializeWorldInterface();
+	IWorldInterface();
 	virtual ~IWorldInterface();
-
-private:
-	void HandleOnWorldCreationInternal(UWorld* InWorld);
-	void HandleOnWorldBeginTearDownInternal(UWorld* InWorld);
-
-	void HandleOnWorldMatchStartingInternal(UWorld* InWorld);
-	void HandleOnWorldBeginPlayInternal(UWorld* InWorld);
 
 protected:
 	virtual void HandleOnWorldCreation(UWorld* InWorld) { return; }

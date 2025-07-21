@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "WidgetType.h"
-#include "Manager/CoreInternalManager.h"
+#include "Interface/ManagerInterface.h"
 #include "Subsystems/WorldSubsystem.h"
 #include "GenericGameHUDManager.generated.h"
 
@@ -27,7 +27,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FBPDelegate_OnHUDActiveStateChanged
  * 
  */
 UCLASS(MinimalAPI)
-class UGenericGameHUDManager : public UWorldSubsystem, public FCoreInternalManager
+class UGenericGameHUDManager : public UWorldSubsystem, public FManagerInterface
 {
 	GENERATED_BODY()
 

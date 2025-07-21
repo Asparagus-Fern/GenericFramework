@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "HandleInterface.h"
-#include "Manager/CoreInternalManager.h"
+#include "Interface/ManagerInterface.h"
 #include "Subsystems/EngineSubsystem.h"
 #include "HandleManager.generated.h"
 
@@ -14,7 +14,7 @@ class ULevelSequenceHandle;
  * 
  */
 UCLASS(MinimalAPI)
-class UHandleManager : public UWorldSubsystem, public FCoreInternalManager
+class UHandleManager : public UWorldSubsystem, public FManagerInterface
 {
 	GENERATED_BODY()
 

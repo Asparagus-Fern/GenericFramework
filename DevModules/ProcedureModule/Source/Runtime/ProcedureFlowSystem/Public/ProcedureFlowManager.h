@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
-#include "Manager/CoreInternalManager.h"
+#include "Interface/ManagerInterface.h"
 #include "Subsystems/WorldSubsystem.h"
 #include "ProcedureFlowManager.generated.h"
 
@@ -27,7 +27,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FBPDelegate_OnProcedureFlowUnRegiste
  * 
  */
 UCLASS(MinimalAPI)
-class UProcedureFlowManager : public UWorldSubsystem, public FCoreInternalManager
+class UProcedureFlowManager : public UWorldSubsystem, public FManagerInterface
 {
 	GENERATED_BODY()
 

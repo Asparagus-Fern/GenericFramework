@@ -6,7 +6,7 @@
 #include "EditorSubsystem.h"
 #include "Generic/GenericObject.h"
 #include "Interface/StateInterface.h"
-#include "Manager/CoreInternalManager.h"
+#include "Interface/ManagerInterface.h"
 #include "TrackEditor/MovieSceneUMGTrackEditor.h"
 #include "MovieSceneUMGEdManager.generated.h"
 
@@ -44,7 +44,7 @@ protected:
  * 
  */
 UCLASS(MinimalAPI)
-class UMovieSceneUMGEdManager : public UEditorSubsystem, public FCoreInternalManager
+class UMovieSceneUMGEdManager : public UEditorSubsystem, public FManagerInterface
 {
 	GENERATED_BODY()
 

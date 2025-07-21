@@ -31,12 +31,12 @@ bool UProcedureFlowManager::DoesSupportWorldType(const EWorldType::Type WorldTyp
 
 void UProcedureFlowManager::HandleOnWorldMatchStarting(UWorld* InWorld)
 {
-	FCoreInternalManager::HandleOnWorldMatchStarting(InWorld);
+	FManagerInterface::HandleOnWorldMatchStarting(InWorld);
 }
 
 void UProcedureFlowManager::HandleOnWorldBeginPlay(UWorld* InWorld)
 {
-	FCoreInternalManager::HandleOnWorldBeginPlay(InWorld);
+	FManagerInterface::HandleOnWorldBeginPlay(InWorld);
 
 	/* After Procedure Component BeginPlay, Sort Components And Initialize, Then Enter The Setting Default Procedure FLow Tag*/
 
@@ -58,7 +58,7 @@ void UProcedureFlowManager::HandleOnWorldBeginPlay(UWorld* InWorld)
 
 void UProcedureFlowManager::HandleOnWorldEndPlay(UWorld* InWorld)
 {
-	FCoreInternalManager::HandleOnWorldEndPlay(InWorld);
+	FManagerInterface::HandleOnWorldEndPlay(InWorld);
 
 	SortProcedureFlowComponentsAsDeinitialize();
 	Execute([](UProcedureFlowComponent* Component)

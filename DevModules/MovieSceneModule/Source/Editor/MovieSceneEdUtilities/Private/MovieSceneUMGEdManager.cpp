@@ -106,13 +106,13 @@ void UMovieSceneUMGEdManager::Deinitialize()
 
 void UMovieSceneUMGEdManager::HandleOnWorldBeginPlay(UWorld* InWorld)
 {
-	FCoreInternalManager::HandleOnWorldBeginPlay(InWorld);
+	FManagerInterface::HandleOnWorldBeginPlay(InWorld);
 	DestroyMovieSceneUMGPanels();
 }
 
 void UMovieSceneUMGEdManager::HandleOnWorldEndPlay(UWorld* InWorld)
 {
-	FCoreInternalManager::HandleOnWorldEndPlay(InWorld);
+	FManagerInterface::HandleOnWorldEndPlay(InWorld);
 	GenerateMovieSceneUMGPanels();
 }
 

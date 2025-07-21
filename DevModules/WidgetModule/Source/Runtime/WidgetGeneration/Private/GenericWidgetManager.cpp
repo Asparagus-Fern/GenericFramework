@@ -34,12 +34,12 @@ bool UGenericWidgetManager::DoesSupportWorldType(const EWorldType::Type WorldTyp
 
 void UGenericWidgetManager::HandleOnWorldMatchStarting(UWorld* InWorld)
 {
-	FCoreInternalManager::HandleOnWorldMatchStarting(InWorld);
+	FManagerInterface::HandleOnWorldMatchStarting(InWorld);
 }
 
 void UGenericWidgetManager::HandleOnWorldEndPlay(UWorld* InWorld)
 {
-	FCoreInternalManager::HandleOnWorldEndPlay(InWorld);
+	FManagerInterface::HandleOnWorldEndPlay(InWorld);
 
 	for (const auto& ActivedWidget : Widgets)
 	{
@@ -176,13 +176,21 @@ void UGenericWidgetManager::ActiveWidget(FOpenWidgetParameter& OpenWidgetParamet
 		return;
 	}
 
-	Widgets.Add(OpenWidgetParameter.WidgetToHandle);
-	OpenWidgetParameters.Add(OpenWidgetParameter);
-
 	BROADCAST_UNIFIED_DELEGATE(Delegate_OnWidgetOpened, BPDelegate_OnWidgetOpened, OpenWidgetParameter);
 
-	OpenWidgetParameter.WidgetToHandle->GetOnWidgetActiveAnimationPlayFinish().AddUObject(this, &UGenericWidgetManager::OnActiveAnimationPlayFinish);
-	OpenWidgetParameter.WidgetToHandle->NativeOnActived();
+	if (OpenWidgetParameter.bOpenResult)
+	{
+		Widgets.Add(OpenWidgetParameter.WidgetToHandle);
+		OpenWidgetParameters.Add(OpenWidgetParameter);
+
+		OpenWidgetParameter.WidgetToHandle->GetOnWidgetActiveAnimationPlayFinish().AddUObject(this, &UGenericWidgetManager::OnActiveAnimationPlayFinish);
+		OpenWidgetParameter.WidgetToHandle->NativeOnActived();
+	}
+	else
+	{
+		GenericLOG(GenericLogUI, Warning, TEXT("Fail To Open Widget : %s"), *OpenWidgetParameter.WidgetToHandle->GetName())
+		CloseUserWidget(OpenWidgetParameter.WidgetToHandle);
+	}
 }
 
 void UGenericWidgetManager::InactiveWidget(FCloseWidgetParameter& CloseWidgetParameter)
@@ -211,16 +219,8 @@ void UGenericWidgetManager::OnActiveAnimationPlayFinish(UGenericWidget* InWidget
 		FOpenWidgetParameter Parameter = *OpenWidgetParameters.FindByKey(InWidget);
 		OpenWidgetParameters.Remove(Parameter);
 
-		if (Parameter.bOpenResult)
-		{
-			Parameter.OnFinish.ExecuteIfBound(Parameter.WidgetToHandle);
-			BROADCAST_UNIFIED_DELEGATE(Delegate_PostWidgetOpened, BPDelegate_PostWidgetOpened, Parameter.WidgetToHandle);
-		}
-		else
-		{
-			GenericLOG(GenericLogUI, Warning, TEXT("Fail To Open Widget : %s"), *InWidget->GetName())
-			CloseUserWidget(InWidget);
-		}
+		Parameter.OnFinish.ExecuteIfBound(Parameter.WidgetToHandle);
+		BROADCAST_UNIFIED_DELEGATE(Delegate_PostWidgetOpened, BPDelegate_PostWidgetOpened, Parameter.WidgetToHandle);
 	}
 }
 

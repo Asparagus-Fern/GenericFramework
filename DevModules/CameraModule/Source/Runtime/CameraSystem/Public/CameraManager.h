@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
 #include "CameraPoint/CameraPointBase.h"
-#include "Manager/CoreInternalManager.h"
+#include "Interface/ManagerInterface.h"
 #include "CameraManager.generated.h"
 
 class UCameraLensMovement;
@@ -25,7 +25,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FBPDelegate_CameraPointSwitchDelega
  * 
  */
 UCLASS(MinimalAPI)
-class UCameraManager : public UWorldSubsystem, public FCoreInternalManager
+class UCameraManager : public UWorldSubsystem, public FManagerInterface
 {
 	GENERATED_BODY()
 

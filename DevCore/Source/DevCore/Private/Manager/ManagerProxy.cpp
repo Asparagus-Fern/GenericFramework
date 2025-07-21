@@ -4,10 +4,21 @@
 #include "Manager/ManagerProxy.h"
 
 #include "Debug/DebugType.h"
-#include "Manager/CoreInternalManager.h"
-#include "Manager/GlobalManagerSettings.h"
+#include "Interface/ManagerInterface.h"
+#include "Manager/ManagerSettings.h"
 
 UManagerProxy* UManagerProxy::Instance = nullptr;
+
+UManagerProxy::UManagerProxy(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
+{
+}
+
+void UManagerProxy::BeginDestroy()
+{
+	Super::BeginDestroy();
+	DeinitializeInternal();
+}
 
 UManagerProxy* UManagerProxy::GetManagerProxy()
 {
@@ -80,7 +91,7 @@ bool UManagerProxy::GetManagerOwner(FGuid InManagerID, UObject*& OutManagerOwner
 	return true;
 }
 
-bool UManagerProxy::GetManager(FGuid InManagerID, TSharedRef<FCoreInternalManager>& OutManager) const
+bool UManagerProxy::GetManager(FGuid InManagerID, FManagerInterface*& OutManager) const
 {
 	if (!ManagerList.Contains(InManagerID))
 	{
@@ -140,10 +151,40 @@ void UManagerProxy::HandleOnWorldBeginTearDown(UWorld* InWorld)
 	}
 }
 
+void UManagerProxy::HandleOnWorldCreationInternal(UWorld* InWorld)
+{
+	InWorld->OnWorldMatchStarting.AddUObject(this, &UManagerProxy::HandleOnWorldMatchStartingInternal, InWorld);
+	InWorld->OnWorldBeginPlay.AddUObject(this, &UManagerProxy::HandleOnWorldBeginPlayInternal, InWorld);
+
+	HandleOnWorldCreation(InWorld);
+}
+
+void UManagerProxy::HandleOnWorldBeginTearDownInternal(UWorld* InWorld)
+{
+	if (InWorld->IsGameWorld())
+	{
+		HandleOnWorldEndPlay(InWorld);
+	}
+
+	HandleOnWorldBeginTearDown(InWorld);
+}
+
+void UManagerProxy::HandleOnWorldMatchStartingInternal(UWorld* InWorld)
+{
+	InWorld->OnWorldMatchStarting.RemoveAll(this);
+	HandleOnWorldMatchStarting(InWorld);
+}
+
+void UManagerProxy::HandleOnWorldBeginPlayInternal(UWorld* InWorld)
+{
+	InWorld->OnWorldBeginPlay.RemoveAll(this);
+	HandleOnWorldBeginPlay(InWorld);
+}
+
 /* ==================== UManagerProxy ==================== */
 bool UManagerProxy::RegisterManager(const FManagerHandle& InManagerHandle, FGuid& OutManagerID)
 {
-	if (!UGlobalManagerSettings::Get()->bEnableAllManager)
+	if (!UManagerSettings::Get()->bEnableAllManager)
 	{
 		GenericLOG(GenericLogManager, Log, TEXT("Disable Manager Register"))
 		return false;
@@ -206,5 +247,13 @@ void UManagerProxy::InitializeInternal()
 	}
 
 	bIsInitialize = true;
-	InitializeWorldInterface();
+	FWorldDelegates::OnPostWorldCreation.AddUObject(this, &UManagerProxy::HandleOnWorldCreationInternal);
+	FWorldDelegates::OnWorldBeginTearDown.AddUObject(this, &UManagerProxy::HandleOnWorldBeginTearDownInternal);
+}
+
+void UManagerProxy::DeinitializeInternal()
+{
+	FWorldDelegates::OnPostWorldCreation.RemoveAll(this);
+	FWorldDelegates::OnWorldBeginTearDown.RemoveAll(this);
+	ManagerList.Reset();
 }

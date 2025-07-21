@@ -6,7 +6,7 @@
 #include "UObject/Object.h"
 #include "ManagerType.generated.h"
 
-class FCoreInternalManager;
+class FManagerInterface;
 
 USTRUCT(BlueprintType)
 struct FManagerHandle
@@ -15,7 +15,8 @@ struct FManagerHandle
 
 public:
 	FManagerHandle();
-	FManagerHandle(UObject* InOwner, const TSharedRef<FCoreInternalManager>& InManager);
+	FManagerHandle(UObject* InOwner, FManagerInterface* InManager);
+	~FManagerHandle();
 
 	bool operator==(const FManagerHandle& Other) const { return ManagerID == Other.ManagerID; }
 	bool operator==(const FGuid Other) const { return ManagerID == Other; }
@@ -25,7 +26,7 @@ public:
 	DEVCORE_API bool CheckIsValid() const;
 	DEVCORE_API UObject* GetManagerOwner() const;
 	DEVCORE_API FGuid GetManagerID() const;
-	DEVCORE_API TSharedRef<FCoreInternalManager> GetManager() const;
+	DEVCORE_API FManagerInterface* GetManager() const;
 
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
@@ -36,8 +37,8 @@ public:
 
 private:
 	UPROPERTY()
-	UObject* ManagerOwner = nullptr;
+	TObjectPtr<UObject> ManagerOwner = nullptr;
 
-	FGuid ManagerID;
-	TSharedPtr<FCoreInternalManager> Manager;
+	FGuid ManagerID = FGuid::NewGuid();
+	FManagerInterface* Manager = nullptr;
 };

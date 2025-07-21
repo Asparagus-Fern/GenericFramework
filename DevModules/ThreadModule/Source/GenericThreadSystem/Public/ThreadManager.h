@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Manager/CoreInternalManager.h"
+#include "Interface/ManagerInterface.h"
 #include "Subsystems/EngineSubsystem.h"
 #include "ThreadManager.generated.h"
 
@@ -13,7 +13,7 @@ class FGenericThread;
  * 
  */
 UCLASS()
-class GENERICTHREADSYSTEM_API UThreadManager : public UEngineSubsystem, public FCoreInternalManager
+class GENERICTHREADSYSTEM_API UThreadManager : public UEngineSubsystem, public FManagerInterface
 {
 	GENERATED_BODY()
 

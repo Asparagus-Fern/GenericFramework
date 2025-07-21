@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "SaveGameType.h"
-#include "Manager/CoreInternalManager.h"
+#include "Interface/ManagerInterface.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "GenericSaveGameManager.generated.h"
 
@@ -15,7 +15,7 @@ class UGenericSaveGame;
  * 
  */
 UCLASS()
-class GENERICSAVEGAMESYSTEM_API UGenericSaveGameManager : public UGameInstanceSubsystem, public FCoreInternalManager
+class GENERICSAVEGAMESYSTEM_API UGenericSaveGameManager : public UGameInstanceSubsystem, public FManagerInterface
 {
 	GENERATED_BODY()
 

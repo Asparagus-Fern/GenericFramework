@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
-#include "Manager/CoreInternalManager.h"
+#include "Interface/ManagerInterface.h"
 #include "Subsystems/WorldSubsystem.h"
 #include "WorldWidgetGroupManager.generated.h"
 
@@ -15,7 +15,7 @@ class UGenericButtonGroup;
  * 
  */
 UCLASS(MinimalAPI)
-class UWorldWidgetGroupManager : public UWorldSubsystem, public FCoreInternalManager
+class UWorldWidgetGroupManager : public UWorldSubsystem, public FManagerInterface
 {
 	GENERATED_BODY()
 

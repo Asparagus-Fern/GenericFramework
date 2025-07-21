@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Manager/CoreInternalManager.h"
+#include "Interface/ManagerInterface.h"
 #include "CharacterManager.generated.h"
 
 class AGenericCharacter;
@@ -11,7 +11,7 @@ class AGenericCharacter;
  * 
  */
 UCLASS(MinimalAPI)
-class UCharacterManager : public UWorldSubsystem, public FCoreInternalManager
+class UCharacterManager : public UWorldSubsystem, public FManagerInterface
 {
 	GENERATED_BODY()
 

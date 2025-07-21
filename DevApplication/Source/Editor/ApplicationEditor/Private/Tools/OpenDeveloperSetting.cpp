@@ -10,7 +10,7 @@
 #include "ISettingsEditorModel.h"
 #include "ISettingsEditorModule.h"
 #include "ISettingsModule.h"
-#include "Manager/GlobalManagerSettings.h"
+#include "Manager/ManagerSettings.h"
 
 #define LOCTEXT_NAMESPACE "UOpenDeveloperSetting"
 
@@ -31,7 +31,7 @@ void UOpenDeveloperSetting::Initialize(FSubsystemCollectionBase& Collection)
 				"Developer", "Global", "Global",
 				LOCTEXT("ManagerGlobalSettingsSettingsName", "Manager"),
 				LOCTEXT("ManagerGlobalSettingsDescription", "Manager Settings"),
-				GetMutableDefault<UGlobalManagerSettings>()
+				GetMutableDefault<UManagerSettings>()
 			);
 
 			SettingsModule->RegisterViewer("Developer", *this);

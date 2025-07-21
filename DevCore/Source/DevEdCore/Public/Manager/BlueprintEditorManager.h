@@ -4,14 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "EditorSubsystem.h"
-#include "Manager/CoreInternalManager.h"
+#include "Interface/ManagerInterface.h"
 #include "BlueprintEditorManager.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class DEVEDCORE_API UBlueprintEditorManager : public UEditorSubsystem, public FCoreInternalManager
+class DEVEDCORE_API UBlueprintEditorManager : public UEditorSubsystem, public FManagerInterface
 {
 	GENERATED_BODY()
 

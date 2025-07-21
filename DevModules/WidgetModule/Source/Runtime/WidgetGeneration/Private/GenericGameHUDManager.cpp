@@ -43,7 +43,7 @@ bool UGenericGameHUDManager::DoesSupportWorldType(const EWorldType::Type WorldTy
 
 void UGenericGameHUDManager::HandleOnWorldMatchStarting(UWorld* InWorld)
 {
-	FCoreInternalManager::HandleOnWorldMatchStarting(InWorld);
+	FManagerInterface::HandleOnWorldMatchStarting(InWorld);
 
 	if (UGameHUDSettings::Get()->AutoCreateGameHUD)
 	{
@@ -55,7 +55,7 @@ void UGenericGameHUDManager::HandleOnWorldMatchStarting(UWorld* InWorld)
 
 void UGenericGameHUDManager::HandleOnWorldEndPlay(UWorld* InWorld)
 {
-	FCoreInternalManager::HandleOnWorldEndPlay(InWorld);
+	FManagerInterface::HandleOnWorldEndPlay(InWorld);
 
 	GameHUDs.Reset();
 }

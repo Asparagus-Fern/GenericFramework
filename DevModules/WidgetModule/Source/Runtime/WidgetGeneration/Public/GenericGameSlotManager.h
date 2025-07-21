@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
 #include "WidgetType.h"
-#include "Manager/CoreInternalManager.h"
+#include "Interface/ManagerInterface.h"
 #include "Subsystems/WorldSubsystem.h"
 #include "GenericGameSlotManager.generated.h"
 
@@ -22,7 +22,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FBPDelegate_OnSlotUnRegister, UGamep
  * 
  */
 UCLASS(MinimalAPI)
-class UGenericGameSlotManager : public UWorldSubsystem, public FCoreInternalManager
+class UGenericGameSlotManager : public UWorldSubsystem, public FManagerInterface
 {
 	GENERATED_BODY()
 

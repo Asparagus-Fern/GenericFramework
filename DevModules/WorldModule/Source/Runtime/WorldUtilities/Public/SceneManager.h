@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "SceneType.h"
-#include "Manager/CoreInternalManager.h"
+#include "Interface/ManagerInterface.h"
 #include "SceneManager.generated.h"
 
 class AMapScaleActor;
@@ -14,7 +14,7 @@ class ACompassActor;
  * 
  */
 UCLASS(MinimalAPI)
-class USceneManager : public UWorldSubsystem, public FCoreInternalManager
+class USceneManager : public UWorldSubsystem, public FManagerInterface
 {
 	GENERATED_BODY()
 

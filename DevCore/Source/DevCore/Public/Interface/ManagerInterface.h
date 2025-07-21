@@ -3,9 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ManagerType.h"
 #include "Debug/DebugType.h"
+#include "Manager/ManagerType.h"
 #include "Interface/WorldInterface.h"
+// #include "ManagerInterface.generated.h"
 
 #define BROADCAST_UNIFIED_DELEGATE(DelegateName, BPDelegateName, ...) \
 	DelegateName.Broadcast(__VA_ARGS__); \
@@ -14,13 +15,9 @@
 /**
  * 
  */
-class DEVCORE_API FCoreInternalManager : public IWorldInterface
+class DEVCORE_API FManagerInterface : public IWorldInterface
 {
 	friend class UManagerProxy;
-
-public:
-	FCoreInternalManager();
-	virtual ~FCoreInternalManager() override;
 
 	/* IWorldInterface */
 protected:
@@ -33,7 +30,7 @@ protected:
 	/* FCoreInternalManager */
 public:
 	virtual bool GetManagerHandle(FManagerHandle& OutManagerHandle);
-	
+
 protected:
 	void RegisterManager(UObject* InOwner);
 	void UnRegisterManager();

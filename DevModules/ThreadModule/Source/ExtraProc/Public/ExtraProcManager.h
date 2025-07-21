@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "HAL/Platform.h"
 #include "Misc/Timespan.h"
-#include "Manager/CoreInternalManager.h"
+#include "Interface/ManagerInterface.h"
 #include "Subsystems/EngineSubsystem.h"
 #include "ExtraProcManager.generated.h"
 
@@ -17,7 +17,7 @@ static FString ExtrasPath = FPaths::Combine(FPaths::ProjectDir(), TEXT("Extras")
  * 
  */
 UCLASS(MinimalAPI)
-class UExtraProcManager : public UEngineSubsystem, public FCoreInternalManager
+class UExtraProcManager : public UEngineSubsystem, public FManagerInterface
 {
 	GENERATED_BODY()
 

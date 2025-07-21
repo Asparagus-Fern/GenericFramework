@@ -54,12 +54,12 @@ bool UGenericGameSlotManager::DoesSupportWorldType(const EWorldType::Type WorldT
 
 void UGenericGameSlotManager::HandleOnWorldMatchStarting(UWorld* InWorld)
 {
-	FCoreInternalManager::HandleOnWorldMatchStarting(InWorld);
+	FManagerInterface::HandleOnWorldMatchStarting(InWorld);
 }
 
 void UGenericGameSlotManager::HandleOnWorldEndPlay(UWorld* InWorld)
 {
-	FCoreInternalManager::HandleOnWorldEndPlay(InWorld);
+	FManagerInterface::HandleOnWorldEndPlay(InWorld);
 	Slots.Reset();
 }
 

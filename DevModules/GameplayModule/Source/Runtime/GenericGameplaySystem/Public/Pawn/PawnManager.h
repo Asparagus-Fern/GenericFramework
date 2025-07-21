@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Manager/CoreInternalManager.h"
+#include "Interface/ManagerInterface.h"
 #include "PawnManager.generated.h"
 
 class AGenericPawn;
@@ -12,7 +12,7 @@ class AGenericPawn;
  * 
  */
 UCLASS(MinimalAPI)
-class UPawnManager : public UWorldSubsystem, public FCoreInternalManager
+class UPawnManager : public UWorldSubsystem, public FManagerInterface
 {
 	GENERATED_BODY()
 

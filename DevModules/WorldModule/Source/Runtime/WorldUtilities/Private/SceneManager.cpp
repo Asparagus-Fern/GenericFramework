@@ -31,7 +31,7 @@ bool USceneManager::DoesSupportWorldType(const EWorldType::Type WorldType) const
 
 void USceneManager::HandleOnWorldMatchStarting(UWorld* InWorld)
 {
-	FCoreInternalManager::HandleOnWorldMatchStarting(InWorld);
+	FManagerInterface::HandleOnWorldMatchStarting(InWorld);
 
 	CompassActor = Cast<ACompassActor>(UGameplayStatics::GetActorOfClass(this, ACompassActor::StaticClass()));
 	MapScaleActor = Cast<AMapScaleActor>(UGameplayStatics::GetActorOfClass(this, AMapScaleActor::StaticClass()));
@@ -39,7 +39,7 @@ void USceneManager::HandleOnWorldMatchStarting(UWorld* InWorld)
 
 void USceneManager::HandleOnWorldEndPlay(UWorld* InWorld)
 {
-	FCoreInternalManager::HandleOnWorldEndPlay(InWorld);
+	FManagerInterface::HandleOnWorldEndPlay(InWorld);
 }
 
 TArray<AActor*> USceneManager::FindActors(const FFindActorHandle& InFindActorHandle, const bool bUpdate)

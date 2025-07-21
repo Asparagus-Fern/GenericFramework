@@ -29,7 +29,7 @@ bool UTerrainGenerationManager::DoesSupportWorldType(const EWorldType::Type Worl
 
 void UTerrainGenerationManager::HandleOnWorldMatchStarting(UWorld* InWorld)
 {
-	FCoreInternalManager::HandleOnWorldMatchStarting(InWorld);
+	FManagerInterface::HandleOnWorldMatchStarting(InWorld);
 	CreateNewLandScape();
 }
 

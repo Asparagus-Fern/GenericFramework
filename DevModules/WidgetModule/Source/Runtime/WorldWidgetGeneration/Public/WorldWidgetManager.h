@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
-#include "Manager/TickableInternalManager.h"
+#include "Interface/TickableManagerInterface.h"
 #include "WorldWidgetManager.generated.h"
 
 class UWorldWidgetComponent;
@@ -22,7 +22,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FBPDelegate_OnWorldWidgetComponentUn
  * 
  */
 UCLASS()
-class WORLDWIDGETGENERATION_API UWorldWidgetManager : public UWorldSubsystem, public FTickableInternalManager
+class WORLDWIDGETGENERATION_API UWorldWidgetManager : public UWorldSubsystem, public FTickableManagerInterface
 {
 	GENERATED_BODY()
 

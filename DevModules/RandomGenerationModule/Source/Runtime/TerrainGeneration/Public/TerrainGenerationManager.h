@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Manager/CoreInternalManager.h"
+#include "Interface/ManagerInterface.h"
 #include "Subsystems/WorldSubsystem.h"
 #include "TerrainGenerationManager.generated.h"
 
@@ -13,7 +13,7 @@ class ALandscape;
  * 
  */
 UCLASS()
-class TERRAINGENERATION_API UTerrainGenerationManager : public UWorldSubsystem, public FCoreInternalManager
+class TERRAINGENERATION_API UTerrainGenerationManager : public UWorldSubsystem, public FManagerInterface
 {
 	GENERATED_BODY()
 

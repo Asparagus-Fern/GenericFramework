@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "WidgetType.h"
 #include "Base/GenericWidget.h"
-#include "Manager/CoreInternalManager.h"
+#include "Interface/ManagerInterface.h"
 #include "Manager/ManagerStatics.h"
 #include "Subsystems/WorldSubsystem.h"
 #include "UWidget/GameplayTagSlot.h"
@@ -36,7 +36,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FBPDelegate_PostWidgetClosed, UGener
  * 
  */
 UCLASS(MinimalAPI)
-class UGenericWidgetManager : public UWorldSubsystem, public FCoreInternalManager
+class UGenericWidgetManager : public UWorldSubsystem, public FManagerInterface
 {
 	GENERATED_BODY()
 

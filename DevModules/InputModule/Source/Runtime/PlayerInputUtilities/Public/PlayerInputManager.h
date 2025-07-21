@@ -4,14 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "EnhancedInputSubsystems.h"
-#include "Manager/CoreInternalManager.h"
+#include "Interface/ManagerInterface.h"
 #include "PlayerInputManager.generated.h"
 
 /**
  * 
  */
 UCLASS(MinimalAPI)
-class UPlayerInputManager : public UEnhancedInputLocalPlayerSubsystem, public FCoreInternalManager
+class UPlayerInputManager : public UEnhancedInputLocalPlayerSubsystem, public FManagerInterface
 {
 	GENERATED_BODY()
 

@@ -3,23 +3,25 @@
 
 #include "Manager/ManagerType.h"
 
-#include "Manager/CoreInternalManager.h"
+#include "Interface/ManagerInterface.h"
 
 FManagerHandle::FManagerHandle()
 {
-	ManagerID = FGuid::NewGuid();
 }
 
-FManagerHandle::FManagerHandle(UObject* InOwner, const TSharedRef<FCoreInternalManager>& InManager)
+FManagerHandle::FManagerHandle(UObject* InOwner, FManagerInterface* InManager)
 	: ManagerOwner(InOwner),
 	  Manager(InManager)
 {
-	ManagerID = FGuid::NewGuid();
+}
+
+FManagerHandle::~FManagerHandle()
+{
 }
 
 bool FManagerHandle::CheckIsValid() const
 {
-	return IsValid(ManagerOwner) && Manager;
+	return IsValid(ManagerOwner);
 }
 
 UObject* FManagerHandle::GetManagerOwner() const
@@ -32,7 +34,7 @@ FGuid FManagerHandle::GetManagerID() const
 	return ManagerID;
 }
 
-TSharedRef<FCoreInternalManager> FManagerHandle::GetManager() const
+FManagerInterface* FManagerHandle::GetManager() const
 {
-	return Manager.ToSharedRef();
+	return Manager;
 }

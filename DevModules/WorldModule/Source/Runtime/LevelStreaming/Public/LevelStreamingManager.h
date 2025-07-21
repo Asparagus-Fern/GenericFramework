@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "LevelStreamingType.h"
-#include "Manager/CoreInternalManager.h"
+#include "Interface/ManagerInterface.h"
 #include "LevelStreamingManager.generated.h"
 
 class USetLevelStreamingVisibilityHandle;
@@ -16,7 +16,7 @@ class ULevelStreamingHandle;
  * 
  */
 UCLASS(MinimalAPI)
-class ULevelStreamingManager : public UWorldSubsystem, public FCoreInternalManager
+class ULevelStreamingManager : public UWorldSubsystem, public FManagerInterface
 {
 	GENERATED_BODY()
 

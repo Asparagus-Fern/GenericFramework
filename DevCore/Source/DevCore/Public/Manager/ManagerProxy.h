@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "CoreInternalManager.h"
 #include "ManagerType.h"
 #include "Generic/GenericObject.h"
 #include "Interface/WorldInterface.h"
@@ -23,6 +22,10 @@ class UManagerProxy final : public UGenericObject, public IWorldInterface
 	GENERATED_BODY()
 
 public:
+	UManagerProxy(const FObjectInitializer& ObjectInitializer);
+	virtual void BeginDestroy() override;
+	
+public:
 	UFUNCTION(BlueprintPure, Category="Manager")
 	static DEVCORE_API UManagerProxy* GetManagerProxy();
 
@@ -32,7 +35,7 @@ public:
 	DEVCORE_API bool ExistManager(const TSubclassOf<UObject>& InManagerOwnerClass) const;
 	DEVCORE_API bool GetManagerHandle(FGuid InManagerID, FManagerHandle& OutManagerHandle) const;
 	DEVCORE_API bool GetManagerOwner(FGuid InManagerID, UObject*& OutManagerOwner) const;
-	DEVCORE_API bool GetManager(FGuid InManagerID, TSharedRef<FCoreInternalManager>& OutManager) const;
+	DEVCORE_API bool GetManager(FGuid InManagerID, FManagerInterface*& OutManager) const;
 	DEVCORE_API TArray<FManagerHandle> GetAllManagerHandles() const;
 
 public:
@@ -79,6 +82,13 @@ protected:
 	virtual void HandleOnWorldEndPlay(UWorld* InWorld) override;
 	virtual void HandleOnWorldBeginTearDown(UWorld* InWorld) override;
 
+private:
+	void HandleOnWorldCreationInternal(UWorld* InWorld);
+	void HandleOnWorldBeginTearDownInternal(UWorld* InWorld);
+
+	void HandleOnWorldMatchStartingInternal(UWorld* InWorld);
+	void HandleOnWorldBeginPlayInternal(UWorld* InWorld);
+
 	/* ==================== UManagerProxy ==================== */
 public:
 	DEVCORE_API bool RegisterManager(const FManagerHandle& InManagerHandle, FGuid& OutManagerID);
@@ -86,6 +96,7 @@ public:
 
 private:
 	void InitializeInternal();
+	void DeinitializeInternal();
 
 	static UManagerProxy* Instance;
 	bool bIsInitialize = false;
