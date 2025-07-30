@@ -3,10 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Spline2DType.h"
 
 #include "Components/Widget.h"
 #include "Components/PanelWidget.h"
+#include "SWidget/Spline2D/Spline2DType.h"
 #include "Spline2D.generated.h"
 
 class USpline2DSlot;

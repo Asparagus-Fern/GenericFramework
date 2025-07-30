@@ -2,8 +2,6 @@
 
 #include "Component/PawnLockStateComponent.h"
 
-#include "Pawn/PawnType.h"
-
 UPawnLockStateComponent::UPawnLockStateComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
@@ -12,10 +10,6 @@ UPawnLockStateComponent::UPawnLockStateComponent()
 void UPawnLockStateComponent::BeginPlay()
 {
 	Super::BeginPlay();
-}
-
-IPawnLockStateInterface::IPawnLockStateInterface()
-{
 }
 
 FPawnLockState UPawnLockStateComponent::GetPawnLockState()

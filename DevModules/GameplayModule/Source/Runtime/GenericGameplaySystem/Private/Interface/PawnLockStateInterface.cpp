@@ -1,7 +1,6 @@
 ﻿// Copyright ChenTaiye 2025. All Rights Reserved.
 
-
-#include "Pawn/PawnType.h"
+#include "Interface/PawnLockStateInterface.h"
 
 bool FPawnLocationLimit::CanMove(const FVector& TargetLocation) const
 {

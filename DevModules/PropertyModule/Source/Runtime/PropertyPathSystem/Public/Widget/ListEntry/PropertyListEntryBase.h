@@ -15,8 +15,8 @@ class UPropertyEntity;
 /**
  * 
  */
-UCLASS(Abstract, NotBlueprintable)
-class PROPERTYPATHSYSTEM_API UPropertyListEntryBase : public UUserWidget, public IUserObjectListEntry
+UCLASS(Abstract, NotBlueprintable, MinimalAPI)
+class UPropertyListEntryBase : public UUserWidget, public IUserObjectListEntry
 {
 	GENERATED_BODY()
 

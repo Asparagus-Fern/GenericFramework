@@ -13,26 +13,26 @@ DECLARE_DYNAMIC_DELEGATE_OneParam(FOnExecuteDynamicPropertyAction, UPropertyEnti
 /**
  * 事件类型的属性
  */
-UCLASS()
-class PROPERTYPATHSYSTEM_API UPropertyActionValue : public UPropertyEntity
+UCLASS(MinimalAPI)
+class UPropertyActionValue : public UPropertyEntity
 {
 	GENERATED_BODY()
 
 public:
 	UFUNCTION(BlueprintPure)
-	FText GetActionText() const;
+	PROPERTYPATHSYSTEM_API FText GetActionText() const;
 
 	UFUNCTION(BlueprintCallable)
-	void SetActionText(FText InActionText);
+	PROPERTYPATHSYSTEM_API void SetActionText(FText InActionText);
 
-	void SetAction(const FOnExecutePropertyAction& InAction);
-	void SetAction(TFunction<void(UPropertyEntity*)> InAction);
-
-	UFUNCTION(BlueprintCallable)
-	void SetDynamicAction(FOnExecuteDynamicPropertyAction InAction);
+	PROPERTYPATHSYSTEM_API void SetAction(const FOnExecutePropertyAction& InAction);
+	PROPERTYPATHSYSTEM_API void SetAction(TFunction<void(UPropertyEntity*)> InAction);
 
 	UFUNCTION(BlueprintCallable)
-	virtual void ExecuteAction();
+	PROPERTYPATHSYSTEM_API void SetDynamicAction(FOnExecuteDynamicPropertyAction InAction);
+
+	UFUNCTION(BlueprintCallable)
+	PROPERTYPATHSYSTEM_API virtual void ExecuteAction();
 
 protected:
 	/* 事件名 */

@@ -17,8 +17,8 @@ class UPropertyDetailPanel;
 /**
  * 
  */
-UCLASS(Abstract)
-class PROPERTYPATHSYSTEM_API UPropertyPanel : public UGenericWidget
+UCLASS(Abstract, MinimalAPI)
+class UPropertyPanel : public UGenericWidget
 {
 	GENERATED_BODY()
 
@@ -32,17 +32,17 @@ public:
 
 public:
 	/* 初始化属性面板 */
-	virtual void SetupProperty();
+	PROPERTYPATHSYSTEM_API virtual void SetupProperty();
 
 	/* 清除属性面板 */
-	virtual void ClearupProperty();
+	PROPERTYPATHSYSTEM_API virtual void ClearupProperty();
 
 	/* 刷新属性面板 */
-	void RefreshProperty();
+	PROPERTYPATHSYSTEM_API void RefreshProperty();
 
 	template <typename PropertyRegistryT = UPropertyRegistry>
 	PropertyRegistryT* GetRegistry() const { return Cast<PropertyRegistryT>(Registry); }
-	
+
 protected:
 	void SetPropertyCollection(UPropertyCollection* InCollection);
 

@@ -2,6 +2,7 @@
 
 #include "TeamState.h"
 
+#include "TeamAssignComponent.h"
 #include "Gameplay/TeamGameState.h"
 #include "Gameplay/TeamPlayerState.h"
 #include "Net/UnrealNetwork.h"
@@ -10,29 +11,22 @@ ATeamState::ATeamState()
 {
 	PrimaryActorTick.bCanEverTick = true;
 	bReplicates = true;
+
+	TeamAssignComponent = CreateDefaultSubobject<UTeamAssignComponent>(TEXT("TeamAssignComponent"));
 }
 
 bool ATeamState::IsNetRelevantFor(const AActor* RealViewer, const AActor* ViewTarget, const FVector& SrcLocation) const
 {
-	if (const APlayerController* TargetPC = Cast<APlayerController>(RealViewer))
+	if (TeamAssignComponent->TeamID != INDEX_NONE)
 	{
-		if (const APlayerState* TargetPS = Cast<APlayerState>(TargetPC->PlayerState))
+		if (UTeamAssignComponent* TargetTeamComponent = RealViewer->GetComponentByClass<UTeamAssignComponent>())
 		{
-			if (ATeamGameState* TeamGameState = Cast<ATeamGameState>(GetWorld()->GetGameState()))
-			{
-				const TArray<FPlayerTeam>& PlayerTeams = TeamGameState->GetPlayerTeams();
+			return TargetTeamComponent->TeamID == TeamAssignComponent->TeamID;
+		}
 
-				const FPlayerTeam* PlayerTeam = PlayerTeams.FindByPredicate([this](const FPlayerTeam& PlayerTeam)
-					{
-						return PlayerTeam.TeamState == this;
-					}
-				);
-
-				if (PlayerTeam)
-				{
-					return PlayerTeam->PlayerStates.Contains(TargetPS);
-				}
-			}
+		if (UTeamAssignComponent* TargetTeamComponent = ViewTarget->GetComponentByClass<UTeamAssignComponent>())
+		{
+			return TargetTeamComponent->TeamID == TeamAssignComponent->TeamID;
 		}
 	}
 

@@ -3,15 +3,10 @@
 #include "Pawn/GenericPawn.h"
 
 #include "AIController.h"
-#include "Camera/CameraComponent.h"
+#include "Component/PawnInputMovementComponent.h"
+#include "Component/PawnLockStateComponent.h"
 #include "GameFramework/FloatingPawnMovement.h"
-
-AGenericPawn::FPawnDelegate AGenericPawn::OnPawnRegister;
-AGenericPawn::FPawnDelegate AGenericPawn::OnPawnUnRegister;
-
-IPawnInterface::IPawnInterface()
-{
-}
+#include "GameFramework/PlayerState.h"
 
 AGenericPawn::AGenericPawn(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -21,8 +16,7 @@ AGenericPawn::AGenericPawn(const FObjectInitializer& ObjectInitializer)
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = false;
-
-	PawnName = "DevPawn";
+	
 	SceneComponent = CreateDefaultSubobject<USceneComponent>("Root");
 	RootComponent = SceneComponent;
 
@@ -31,16 +25,14 @@ AGenericPawn::AGenericPawn(const FObjectInitializer& ObjectInitializer)
 	InputMovementComponent = CreateDefaultSubobject<UPawnInputMovementComponent>("InputMovementComponent");
 }
 
-void AGenericPawn::BeginPlay()
+int32 AGenericPawn::GetPlayerIdentity()
 {
-	Super::BeginPlay();
-	OnPawnRegister.Broadcast(this);
+	return GetPlayerState()->GetPlayerId();
 }
 
-void AGenericPawn::EndPlay(const EEndPlayReason::Type EndPlayReason)
+const FUniqueNetIdRepl& AGenericPawn::GetPlayerUniqueIdentity()
 {
-	OnPawnUnRegister.Broadcast(this);
-	Super::EndPlay(EndPlayReason);
+	return GetPlayerState()->GetUniqueId();
 }
 
 bool AGenericPawn::IsPlayer()

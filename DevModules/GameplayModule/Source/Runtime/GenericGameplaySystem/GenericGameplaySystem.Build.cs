@@ -30,7 +30,8 @@ public class GenericGameplaySystem : ModuleRules
 				"GameplayCameras",
 
 				"CameraSystem",
-				"UnrealMisc"
+				"UnrealMisc",
+				"WidgetGeneration"
 			}
 		);
 	}

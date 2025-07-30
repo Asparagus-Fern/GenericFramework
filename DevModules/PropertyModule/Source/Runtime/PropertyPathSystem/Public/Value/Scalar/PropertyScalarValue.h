@@ -30,39 +30,39 @@ private:
 /**
  * 连续类型属性基类
  */
-UCLASS()
-class PROPERTYPATHSYSTEM_API UPropertyScalarValue : public UPropertyValueBase, public FPropertyScalarValueInterface
+UCLASS(MinimalAPI)
+class UPropertyScalarValue : public UPropertyValueBase, public FPropertyScalarValueInterface
 {
 	GENERATED_BODY()
 
 	/* UPropertyEntity */
 public:
-	virtual void OnInitialized() override;
-	virtual void Startup() override;
+	PROPERTYPATHSYSTEM_API virtual void OnInitialized() override;
+	PROPERTYPATHSYSTEM_API virtual void Startup() override;
 
 protected:
 	void OnDataSourcesReady();
 
 	/* UPropertyValueBase */
 public:
-	virtual void StoreInitial() override;
-	virtual void ResetToInitial() override;
-	virtual void ResetToDefault() override;
+	PROPERTYPATHSYSTEM_API virtual void StoreInitial() override;
+	PROPERTYPATHSYSTEM_API virtual void ResetToInitial() override;
+	PROPERTYPATHSYSTEM_API virtual void ResetToDefault() override;
 
 	/* FPropertyScalarValueInterface */
 public:
-	virtual double GetValue() const override;
-	virtual void SetValue(double InValue, EPropertyChangeReason Reason = EPropertyChangeReason::Change) override;
+	PROPERTYPATHSYSTEM_API virtual double GetValue() const override;
+	PROPERTYPATHSYSTEM_API virtual void SetValue(double InValue, EPropertyChangeReason Reason = EPropertyChangeReason::Change) override;
 
-	virtual FText GetFormattedText() const override;
+	PROPERTYPATHSYSTEM_API virtual FText GetFormattedText() const override;
 
 	/* UPropertyScalarValue */
 public:
 	/* 获取显示格式 */
-	FPropertyScalarFormatFunction GetDisplayFormat();
-	
+	PROPERTYPATHSYSTEM_API FPropertyScalarFormatFunction GetDisplayFormat();
+
 	/* 设置显示格式 */
-	void SetDisplayFormat(const FPropertyScalarFormatFunction& InDisplayFormat);
+	PROPERTYPATHSYSTEM_API void SetDisplayFormat(const FPropertyScalarFormatFunction& InDisplayFormat);
 
 protected:
 	FPropertyScalarFormatFunction DisplayFormat;

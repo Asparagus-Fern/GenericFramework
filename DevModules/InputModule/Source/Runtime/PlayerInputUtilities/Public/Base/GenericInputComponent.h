@@ -4,15 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "EnhancedInputComponent.h"
-#include "CommonInputComponent.generated.h"
+#include "GenericInputComponent.generated.h"
 
 UCLASS()
-class PLAYERINPUTUTILITIES_API UCommonInputComponent : public UEnhancedInputComponent
+class PLAYERINPUTUTILITIES_API UGenericInputComponent : public UEnhancedInputComponent
 {
 	GENERATED_BODY()
 
 public:
-	UCommonInputComponent();
+	UGenericInputComponent();
 	virtual void BeginPlay() override;
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 };

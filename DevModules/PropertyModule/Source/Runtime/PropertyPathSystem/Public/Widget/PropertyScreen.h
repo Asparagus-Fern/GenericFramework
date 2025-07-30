@@ -11,8 +11,8 @@ class UPropertyPanel;
 /**
  * 
  */
-UCLASS()
-class PROPERTYPATHSYSTEM_API UPropertyScreen : public UGenericWidget
+UCLASS(MinimalAPI)
+class UPropertyScreen : public UGenericWidget
 {
 	GENERATED_BODY()
 

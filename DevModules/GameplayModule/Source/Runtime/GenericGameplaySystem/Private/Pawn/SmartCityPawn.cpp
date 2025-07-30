@@ -11,8 +11,6 @@
 ASmartCityPawn::ASmartCityPawn(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
-	PawnName = "SmartCityPawn";
-
 	PlayerInputIdleActionComponent = CreateDefaultSubobject<UPlayerInputIdleActionComponent>("PlayerInputIdleActionComponent");
 }
 

@@ -9,15 +9,15 @@
 /**
  * 
  */
-UCLASS()
-class PROPERTYPATHSYSTEM_API UPropertyDiscreteValue_Rotator : public UPropertyDiscreteValue
+UCLASS(MinimalAPI)
+class  UPropertyDiscreteValue_Rotator : public UPropertyDiscreteValue
 {
 	GENERATED_BODY()
 
 public:
-	FRotator GetRotatorValue() const;
-	void SetRotatorValue(const FRotator& InValue);
+	PROPERTYPATHSYSTEM_API FRotator GetRotatorValue() const;
+	PROPERTYPATHSYSTEM_API void SetRotatorValue(const FRotator& InValue);
 
-	FRotator GetDefaultRotatorValue() const;
-	void SetDefaultRotatorValue(const FRotator& InValue);
+	PROPERTYPATHSYSTEM_API FRotator GetDefaultRotatorValue() const;
+	PROPERTYPATHSYSTEM_API void SetDefaultRotatorValue(const FRotator& InValue);
 };

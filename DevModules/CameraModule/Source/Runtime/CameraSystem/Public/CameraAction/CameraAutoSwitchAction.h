@@ -30,7 +30,7 @@ protected:
 public:
 	/* If True, Start Timer When Camera Switch Finish. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool bIsTimerAfrerSwitchFinsih = true;
+	bool bIsTimerAfterSwitchFinish = true;
 
 	/* The Interval Idle Time When Switch Camera From A To B. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(UIMin = 0, ClampMin = 0, Units = "s"))
@@ -41,7 +41,7 @@ public:
 	UCameraSwitchMethod* CameraHandle = nullptr;
 
 	/* Camera Tag Need To Switch */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(Categories="Camera", EditCondition = "bEnableCameraAutoSwitch"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(Categories="Camera"))
 	TArray<FGameplayTag> AutoSwitchTags;
 
 private:

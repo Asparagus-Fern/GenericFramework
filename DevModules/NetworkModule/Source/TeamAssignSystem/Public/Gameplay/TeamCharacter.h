@@ -6,6 +6,8 @@
 #include "Character/ThirdPersonCharacter.h"
 #include "TeamCharacter.generated.h"
 
+class UTeamAssignComponent;
+
 UCLASS()
 class TEAMASSIGNSYSTEM_API ATeamCharacter : public AThirdPersonCharacter
 {
@@ -13,7 +15,9 @@ class TEAMASSIGNSYSTEM_API ATeamCharacter : public AThirdPersonCharacter
 
 public:
 	ATeamCharacter();
-	virtual void BeginPlay() override;
-	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	virtual bool IsNetRelevantFor(const AActor* RealViewer, const AActor* ViewTarget, const FVector& SrcLocation) const override;
+	
+protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TObjectPtr<UTeamAssignComponent> TeamAssignComponent = nullptr;
 };

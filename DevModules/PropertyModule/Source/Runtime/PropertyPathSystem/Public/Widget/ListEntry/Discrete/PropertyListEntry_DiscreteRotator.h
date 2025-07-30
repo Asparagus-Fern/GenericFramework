@@ -9,8 +9,8 @@
 /**
  * 
  */
-UCLASS(Abstract, Blueprintable)
-class PROPERTYPATHSYSTEM_API UPropertyListEntry_DiscreteRotator : public UPropertyListEntry_Discrete
+UCLASS(Abstract, Blueprintable, MinimalAPI)
+class UPropertyListEntry_DiscreteRotator : public UPropertyListEntry_Discrete
 {
 	GENERATED_BODY()
 

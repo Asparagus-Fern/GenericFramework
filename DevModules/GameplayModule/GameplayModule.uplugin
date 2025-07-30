@@ -37,6 +37,10 @@
     {
       "Name": "GameplayCameras",
       "Enabled": true
+    },
+    {
+      "Name": "WidgetModule",
+      "Enabled": true
     }
   ],
   "Modules": [

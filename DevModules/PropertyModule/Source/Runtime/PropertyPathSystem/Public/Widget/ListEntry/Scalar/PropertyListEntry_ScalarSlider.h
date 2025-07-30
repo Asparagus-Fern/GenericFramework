@@ -9,8 +9,8 @@
 /**
  * 
  */
-UCLASS(Abstract, Blueprintable)
-class PROPERTYPATHSYSTEM_API UPropertyListEntry_ScalarSlider : public UPropertyListEntry_Scalar
+UCLASS(Abstract, Blueprintable, MinimalAPI)
+class UPropertyListEntry_ScalarSlider : public UPropertyListEntry_Scalar
 {
 	GENERATED_BODY()
 

@@ -19,9 +19,6 @@
 
 UE_DEFINE_GAMEPLAY_TAG(TAG_Camera, "Camera");
 
-ACameraPointBase::FCameraPointDelegate ACameraPointBase::OnCameraPointRegister;
-ACameraPointBase::FCameraPointDelegate ACameraPointBase::OnCameraPointUnRegister;
-
 ACameraPointBase::ACameraPointBase(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {

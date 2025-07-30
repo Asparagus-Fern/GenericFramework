@@ -60,11 +60,11 @@ public:
 	WIDGETGENERATION_API bool RemoveSlotWidget(UGenericWidget* InWidget) const;
 
 public:
-	inline static FDelegate_OnSlotRegister Delegate_OnSlotRegister;
+	WIDGETGENERATION_API inline static FDelegate_OnSlotRegister Delegate_OnSlotRegister;
 	UPROPERTY(BlueprintAssignable)
 	FBPDelegate_OnSlotRegister BPDelegate_OnSlotRegister;
 
-	inline static FDelegate_OnSlotUnRegister Delegate_OnSlotUnRegister;
+	WIDGETGENERATION_API inline static FDelegate_OnSlotUnRegister Delegate_OnSlotUnRegister;
 	UPROPERTY(BlueprintAssignable)
 	FBPDelegate_OnSlotUnRegister BPDelegate_OnSlotUnRegister;
 

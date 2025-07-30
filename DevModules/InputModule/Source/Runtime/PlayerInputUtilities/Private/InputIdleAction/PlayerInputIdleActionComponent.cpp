@@ -3,7 +3,6 @@
 #include "InputIdleAction/PlayerInputIdleActionComponent.h"
 
 #include "EnhancedInputComponent.h"
-#include "PlayerInputManager.h"
 #include "InputIdleAction/PlayerInputIdleAction.h"
 
 UPlayerInputIdleActionComponent::UPlayerInputIdleActionComponent()

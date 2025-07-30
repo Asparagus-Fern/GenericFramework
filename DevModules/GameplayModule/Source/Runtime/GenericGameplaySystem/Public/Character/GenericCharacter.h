@@ -4,25 +4,31 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "Pawn/GenericPawn.h"
-#include "Component/PawnInputMovementComponent.h"
+#include "Interface/PawnInterface.h"
+#include "Interface/PawnInputMovementInterface.h"
+#include "Interface/PawnLockStateInterface.h"
+#include "Interface/PlayerIdentityInterface.h"
 #include "GenericCharacter.generated.h"
 
+class UPawnLockStateComponent;
+class UPawnInputMovementComponent;
+
 UCLASS()
-class GENERICGAMEPLAYSYSTEM_API AGenericCharacter : public ACharacter, public IPawnInterface, public IPawnInputMovementInterface, public IPawnLockStateInterface
+class GENERICGAMEPLAYSYSTEM_API AGenericCharacter : public ACharacter, public IPlayerIdentityInterface, public IPawnInterface, public IPawnInputMovementInterface, public IPawnLockStateInterface
 {
 	GENERATED_BODY()
 
 public:
 	AGenericCharacter();
-	virtual void BeginPlay() override;
-	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInput) override;
 
+	/* IPlayerIdentityInterface */
 public:
-	DECLARE_MULTICAST_DELEGATE_OneParam(FCharacterDelegate, AGenericCharacter*)
-	static FCharacterDelegate OnCharacterRegister;
-	static FCharacterDelegate OnCharacterUnRegister;
+	UFUNCTION(BlueprintPure)
+	virtual int32 GetPlayerIdentity() override;
+
+	UFUNCTION(BlueprintPure)
+	virtual const FUniqueNetIdRepl& GetPlayerUniqueIdentity() override;
 
 	/* IPawnLockStateInterface */
 public:
@@ -54,9 +60,6 @@ public:
 	virtual void SetIsLockSpringArm_Implementation(bool InLockSpringArm) override;
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	FName CharacterName;
-
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	UPawnInputMovementComponent* InputMovementComponent;
 

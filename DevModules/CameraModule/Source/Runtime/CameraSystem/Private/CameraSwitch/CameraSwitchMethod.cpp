@@ -8,9 +8,6 @@
 #include "Kismet/GameplayStatics.h"
 #include "Manager/ManagerStatics.h"
 
-UCameraSwitchMethod::FCameraHandleDelegate UCameraSwitchMethod::OnSwitchCameraBegin;
-UCameraSwitchMethod::FCameraHandleDelegate UCameraSwitchMethod::OnSwitchCameraFinish;
-
 UWorld* UCameraSwitchMethod::GetWorld() const
 {
 	if (!HasAnyFlags(RF_ClassDefaultObject) && ensureMsgf(GetOuter(), TEXT("CommonButtonEvent: %s has a null OuterPrivate in UCommonButtonEvent::GetWorld()"), *GetFullName())

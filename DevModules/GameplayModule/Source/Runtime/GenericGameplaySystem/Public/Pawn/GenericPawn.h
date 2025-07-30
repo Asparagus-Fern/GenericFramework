@@ -3,56 +3,36 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "PawnType.h"
-#include "Component/PawnInputMovementComponent.h"
-#include "Component/PawnLockStateComponent.h"
 #include "GameFramework/Pawn.h"
+#include "Interface/PawnInterface.h"
+#include "Interface/PawnInputMovementInterface.h"
+#include "Interface/PawnLockStateInterface.h"
+#include "Interface/PlayerIdentityInterface.h"
 #include "GenericPawn.generated.h"
 
-class AAIController;
+class UPawnInputMovementComponent;
+class UPawnLockStateComponent;
 class UFloatingPawnMovement;
-
-UINTERFACE(MinimalAPI)
-class UPawnInterface : public UInterface
-{
-	GENERATED_BODY()
-};
-
-/**
- * 
- */
-class GENERICGAMEPLAYSYSTEM_API IPawnInterface
-{
-	GENERATED_BODY()
-
-public:
-	IPawnInterface();
-
-public:
-	virtual bool IsPlayer() { return false; }
-	virtual bool IsAI() { return false; }
-	virtual APlayerController* GetPlayerController() { return nullptr; }
-	virtual AAIController* GetAIController() { return nullptr; }
-};
 
 /**
  * 
  */
 UCLASS()
-class GENERICGAMEPLAYSYSTEM_API AGenericPawn : public APawn, public IPawnInterface, public IPawnInputMovementInterface, public IPawnLockStateInterface
+class GENERICGAMEPLAYSYSTEM_API AGenericPawn : public APawn, public IPlayerIdentityInterface, public IPawnInterface, public IPawnInputMovementInterface, public IPawnLockStateInterface
 {
 	GENERATED_BODY()
 
 public:
 	AGenericPawn(const FObjectInitializer& ObjectInitializer);
-	virtual void BeginPlay() override;
-	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
+	/* IPlayerIdentityInterface */
 public:
-	DECLARE_MULTICAST_DELEGATE_OneParam(FPawnDelegate, AGenericPawn*)
-	static FPawnDelegate OnPawnRegister;
-	static FPawnDelegate OnPawnUnRegister;
+	UFUNCTION(BlueprintPure)
+	virtual int32 GetPlayerIdentity() override;
 
+	UFUNCTION(BlueprintPure)
+	virtual const FUniqueNetIdRepl& GetPlayerUniqueIdentity() override;
+	
 	/* IPawnInterface */
 public:
 	UFUNCTION(BlueprintPure, Category="Pawn Basic")
@@ -124,9 +104,6 @@ public:
 	virtual void SetIsLockSpringArm_Implementation(bool InLockSpringArm) override;
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	FName PawnName;
-
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	USceneComponent* SceneComponent = nullptr;
 

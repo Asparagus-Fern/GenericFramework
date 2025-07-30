@@ -16,7 +16,4 @@ class GENERICGAMEPLAYSYSTEM_API AGenericHUD : public AHUD
 
 public:
 	virtual void DrawHUD() override;
-
-protected:
-	virtual void DrawMapScale();
 };

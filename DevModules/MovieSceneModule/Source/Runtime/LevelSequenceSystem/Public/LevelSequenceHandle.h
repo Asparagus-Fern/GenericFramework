@@ -22,90 +22,90 @@ class ULevelSequenceHandle : public UMovieSceneHandleBase
 
 public:
 	UFUNCTION(BlueprintCallable, meta=(HandleName = "DefaultLevelSequenceHandle"))
-	static ULevelSequenceHandle* RegisterLevelSequenceHandle(FName HandleName, ULevelSequence* InLevelSequence, FMovieSceneSequencePlaybackSettings InSettings = FMovieSceneSequencePlaybackSettings());
+	static LEVELSEQUENCESYSTEM_API ULevelSequenceHandle* RegisterLevelSequenceHandle(FName HandleName, ULevelSequence* InLevelSequence, FMovieSceneSequencePlaybackSettings InSettings = FMovieSceneSequencePlaybackSettings());
 
 	/* IMovieSceneInterface */
 protected:
-	virtual void OnMovieSceneOpened() override;
-	virtual void OnMovieSceneClosed() override;
+	LEVELSEQUENCESYSTEM_API virtual void OnMovieSceneOpened() override;
+	LEVELSEQUENCESYSTEM_API virtual void OnMovieSceneClosed() override;
 
 public:
 	/* Start playback forwards from the current time cursor position, using the current play rate. */
 	UFUNCTION(BlueprintCallable)
-	virtual bool PlayMovieScene() override;
+	LEVELSEQUENCESYSTEM_API virtual bool PlayMovieScene() override;
 
 	UFUNCTION(BlueprintCallable)
-	virtual bool PlayMovieSceneFromStart() override;
+	LEVELSEQUENCESYSTEM_API virtual bool PlayMovieSceneFromStart() override;
 
 	/**
 	 * Start playback from the current time cursor position, looping the specified number of times.
 	 * @param NumLoops - The number of loops to play. -1 indicates infinite looping.
 	 */
 	UFUNCTION(BlueprintCallable)
-	virtual bool PlayLoopingMovieScene(int32 NumLoops = -1) override;
+	LEVELSEQUENCESYSTEM_API virtual bool PlayLoopingMovieScene(int32 NumLoops = -1) override;
 
 	/* Reverse playback. */
 	UFUNCTION(BlueprintCallable)
-	virtual bool PlayReverseMovieScene() override;
+	LEVELSEQUENCESYSTEM_API virtual bool PlayReverseMovieScene() override;
 
 	/* Pause playback. */
 	UFUNCTION(BlueprintCallable)
-	virtual bool PauseMovieScene() override;
+	LEVELSEQUENCESYSTEM_API virtual bool PauseMovieScene() override;
 
 	/* Stop playback and move the cursor to the end (or start, for reversed playback) of the sequence. */
 	UFUNCTION(BlueprintCallable)
-	virtual bool StopMovieScene() override;
+	LEVELSEQUENCESYSTEM_API virtual bool StopMovieScene() override;
 
 	/**
 	 * Set the current time of the player by evaluating from the current time to the specified time, as if the sequence is playing. 
 	 * Triggers events that lie within the evaluated range. Does not alter the persistent playback status of the player (IsPlaying).
 	 */
 	UFUNCTION(BlueprintCallable)
-	virtual bool SeekMovieScene(FTimecode SeekTime) override;
+	LEVELSEQUENCESYSTEM_API virtual bool SeekMovieScene(FTimecode SeekTime) override;
 
 	/* Changes the direction of playback (go in reverse if it was going forward, or vice versa) */
 	UFUNCTION(BlueprintCallable)
-	virtual void ChangeMovieSceneDirection() override;
+	LEVELSEQUENCESYSTEM_API virtual void ChangeMovieSceneDirection() override;
 
 	/* Check whether the sequence is actively playing. */
 	UFUNCTION(BlueprintPure)
-	virtual bool IsPlaying() override;
+	LEVELSEQUENCESYSTEM_API virtual bool IsPlaying() override;
 
 	/* Check whether the sequence is Looping. */
 	UFUNCTION(BlueprintPure)
-	virtual bool IsLooping() override;
+	LEVELSEQUENCESYSTEM_API virtual bool IsLooping() override;
 
 	/* Check whether the sequence is paused. */
 	UFUNCTION(BlueprintPure)
-	virtual bool IsPaused() override;
+	LEVELSEQUENCESYSTEM_API virtual bool IsPaused() override;
 
 	/* Check whether playback is reversed. */
 	UFUNCTION(BlueprintPure)
-	virtual bool IsReversed() override;
+	LEVELSEQUENCESYSTEM_API virtual bool IsReversed() override;
 
 	/* Get the current playback position */
 	UFUNCTION(BlueprintPure)
-	virtual FTimecode GetCurrentTime() override;
+	LEVELSEQUENCESYSTEM_API virtual FTimecode GetCurrentTime() override;
 
 	/* Get the total duration of the sequence */
 	UFUNCTION(BlueprintPure)
-	virtual FTimecode GetDuration() override;
+	LEVELSEQUENCESYSTEM_API virtual FTimecode GetDuration() override;
 
 	/* Get this sequence's display rate. */
 	UFUNCTION(BlueprintPure)
-	virtual FFrameRate GetFrameRate() override;
+	LEVELSEQUENCESYSTEM_API virtual FFrameRate GetFrameRate() override;
 
 	/* Set the frame-rate that this player should play with, making all frame numbers in the specified time-space */
 	UFUNCTION(BlueprintCallable)
-	virtual void SetFrameRate(FFrameRate FrameRate) override;
+	LEVELSEQUENCESYSTEM_API virtual void SetFrameRate(FFrameRate FrameRate) override;
 
 	/* Get the playback rate of this player. */
 	UFUNCTION(BlueprintPure)
-	virtual float GetPlayRate() override;
+	LEVELSEQUENCESYSTEM_API virtual float GetPlayRate() override;
 
 	/* Set the playback rate of this player. Negative values will play the animation in reverse. */
 	UFUNCTION(BlueprintCallable)
-	virtual void SetPlayRate(float InPlayRate) override;
+	LEVELSEQUENCESYSTEM_API virtual void SetPlayRate(float InPlayRate) override;
 
 	/* ULevelSequenceHandle */
 public:
@@ -115,40 +115,40 @@ public:
 	 * @param Duration        The length to play for
 	 */
 	UFUNCTION(BlueprintCallable)
-	void SetTimeRange(float StartTime, float Duration);
+	LEVELSEQUENCESYSTEM_API void SetTimeRange(float StartTime, float Duration);
 
 	UFUNCTION(BlueprintPure)
-	bool GetDisableCameraCuts() const;
+	LEVELSEQUENCESYSTEM_API bool GetDisableCameraCuts() const;
 
 	/* Set whether to disable camera cuts */
 	UFUNCTION(BlueprintCallable)
-	void SetDisableCameraCuts(bool bInDisableCameraCuts);
+	LEVELSEQUENCESYSTEM_API void SetDisableCameraCuts(bool bInDisableCameraCuts);
 
 public:
 	UFUNCTION(BlueprintPure)
-	ALevelSequenceActor* GetLevelSequenceActor() const;
+	LEVELSEQUENCESYSTEM_API ALevelSequenceActor* GetLevelSequenceActor() const;
 
 	UFUNCTION(BlueprintPure)
-	ULevelSequencePlayer* GetULevelSequencePlayer() const;
+	LEVELSEQUENCESYSTEM_API ULevelSequencePlayer* GetULevelSequencePlayer() const;
 
 	UFUNCTION(BlueprintPure)
-	FString GetSequenceName() const;
+	LEVELSEQUENCESYSTEM_API FString GetSequenceName() const;
 
 public:
 	/* Get the level sequence being played by this actor. */
 	UFUNCTION(BlueprintPure)
-	ULevelSequence* GetSequence() const;
+	LEVELSEQUENCESYSTEM_API ULevelSequence* GetSequence() const;
 
 	/* Set the level sequence being played by this actor. */
 	UFUNCTION(BlueprintCallable)
-	void SetSequence(ULevelSequence* InSequence, bool bIsPlay = true);
+	LEVELSEQUENCESYSTEM_API void SetSequence(ULevelSequence* InSequence, bool bIsPlay = true);
 
 	UFUNCTION(BlueprintPure)
-	FMovieSceneSequencePlaybackSettings GetPlaybackSettings() const;
+	LEVELSEQUENCESYSTEM_API FMovieSceneSequencePlaybackSettings GetPlaybackSettings() const;
 
 	/* Assign this player's playback settings */
 	UFUNCTION(BlueprintCallable)
-	void SetPlaybackSettings(const FMovieSceneSequencePlaybackSettings& InSettings);
+	LEVELSEQUENCESYSTEM_API void SetPlaybackSettings(const FMovieSceneSequencePlaybackSettings& InSettings);
 
 private:
 	UFUNCTION()

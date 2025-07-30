@@ -9,28 +9,28 @@
 /**
  * 
  */
-UCLASS(Abstract, EditInlineNew)
-class PLAYERINPUTUTILITIES_API UPlayerInputIdleAction : public UTickableObject
+UCLASS(Abstract, EditInlineNew, MinimalAPI)
+class UPlayerInputIdleAction : public UTickableObject
 {
 	GENERATED_BODY()
 
 	/* FTickableGameObject */
 protected:
-	virtual bool IsTickable() const override;
-	virtual void Tick(float DeltaTime) override;
+	PLAYERINPUTUTILITIES_API virtual bool IsTickable() const override;
+	PLAYERINPUTUTILITIES_API virtual void Tick(float DeltaTime) override;
 
 	/* UPlayerInputIdleAction */
 public:
 	UFUNCTION(BlueprintCallable)
-	void Start();
+	PLAYERINPUTUTILITIES_API void Start();
 
 	UFUNCTION(BlueprintCallable)
-	void Stop();
+	PLAYERINPUTUTILITIES_API void Stop();
 
 protected:
-	virtual void HandleStartAction();
-	virtual void HandleStopAction();
-	virtual void HandleReverseAction();
+	PLAYERINPUTUTILITIES_API virtual void HandleStartAction();
+	PLAYERINPUTUTILITIES_API virtual void HandleStopAction();
+	PLAYERINPUTUTILITIES_API virtual void HandleReverseAction();
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnActionStart();
@@ -39,7 +39,7 @@ protected:
 	void OnActionStop();
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void OnActionTriggle(float DeltaTime, float Alpha);
+	void OnActionToggle(float DeltaTime, float Alpha);
 
 public:
 	/* If True, Action Will Reverse. */
@@ -50,7 +50,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(UIMin = 0, ClampMin = 0, Units = "s"))
 	float ActionWaitTime = 30.f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(UIMin = 0, ClampMin = 0, Units = "s", EditConditionHides, EditCondition = "bEnableReverseMovement"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(UIMin = 0, ClampMin = 0, Units = "s"))
 	float ReverseDuration = 10.f;
 
 	/* Exclude Keys. Default Is Any Key Down Will Refresh The Timer. */
@@ -59,13 +59,13 @@ public:
 
 protected:
 	UFUNCTION(BlueprintPure)
-	APlayerController* GetOwnerPlayerController() const;
+	PLAYERINPUTUTILITIES_API APlayerController* GetOwnerPlayerController() const;
 
 	UFUNCTION(BlueprintPure)
-	bool GetIsActionStart() const;
+	PLAYERINPUTUTILITIES_API bool GetIsActionStart() const;
 
 	UFUNCTION(BlueprintPure)
-	bool GetIsActionReverse() const;
+	PLAYERINPUTUTILITIES_API bool GetIsActionReverse() const;
 
 private:
 	FTimerHandle WaitingTimerHandle;

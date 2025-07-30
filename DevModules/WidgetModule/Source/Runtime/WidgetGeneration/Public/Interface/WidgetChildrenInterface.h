@@ -3,8 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-
 #include "WidgetChildrenInterface.generated.h"
+
+class UGenericWidget;
 
 // This class does not need to be modified.
 UINTERFACE()

@@ -12,24 +12,40 @@
 
 bool UGenericWidgetManager::ShouldCreateSubsystem(UObject* Outer) const
 {
-	return Super::ShouldCreateSubsystem(Outer);
+	return Super::ShouldCreateSubsystem(Outer) && !IsRunningDedicatedServer();
 }
 
 void UGenericWidgetManager::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
 	RegisterManager(this);
+
+	UGenericGameHUDManager::Delegate_PostHUDCreated.AddUObject(this, &UGenericWidgetManager::PostHUDCreated);
 }
 
 void UGenericWidgetManager::Deinitialize()
 {
 	Super::Deinitialize();
 	UnRegisterManager();
+
+	UGenericGameHUDManager::Delegate_PostHUDCreated.RemoveAll(this);
 }
 
 bool UGenericWidgetManager::DoesSupportWorldType(const EWorldType::Type WorldType) const
 {
 	return WorldType == EWorldType::Game || WorldType == EWorldType::PIE;
+}
+
+void UGenericWidgetManager::PostHUDCreated()
+{
+	UGenericGameHUDManager::Delegate_PostHUDCreated.RemoveAll(this);
+
+	for (auto& CacheOpenWidget : CacheOpenWidgets)
+	{
+		OpenGenericWidget(CacheOpenWidget);
+	}
+
+	CacheOpenWidgets.Reset();
 }
 
 void UGenericWidgetManager::HandleOnWorldMatchStarting(UWorld* InWorld)
@@ -55,10 +71,10 @@ TArray<UGenericWidget*> UGenericWidgetManager::GetActivedWidgets() const
 	return Widgets;
 }
 
-UGenericWidget* UGenericWidgetManager::OpenUserWidget(TSubclassOf<UGenericWidget> InWidgetClass, FOnWidgetActiveStateChanged OnFinish)
+UGenericWidget* UGenericWidgetManager::OpenGenericWidget(TSubclassOf<UGenericWidget> InWidgetClass, FOnWidgetActiveStateChanged OnFinish)
 {
 	UGenericWidget* NewWidget = CreateWidget<UGenericWidget>(GetWorld(), InWidgetClass);
-	if (!OpenUserWidget(NewWidget, OnFinish))
+	if (!OpenGenericWidget(NewWidget, OnFinish))
 	{
 		GenericLOG(GenericLogUI, Error, TEXT("Open Widget Fail"))
 		return nullptr;
@@ -67,7 +83,7 @@ UGenericWidget* UGenericWidgetManager::OpenUserWidget(TSubclassOf<UGenericWidget
 	return NewWidget;
 }
 
-bool UGenericWidgetManager::OpenUserWidget(UGenericWidget* InWidget, FOnWidgetActiveStateChanged OnFinish)
+bool UGenericWidgetManager::OpenGenericWidget(UGenericWidget* InWidget, FOnWidgetActiveStateChanged OnFinish)
 {
 	if (!IsValid(InWidget))
 	{
@@ -80,10 +96,10 @@ bool UGenericWidgetManager::OpenUserWidget(UGenericWidget* InWidget, FOnWidgetAc
 	Parameter.WidgetToHandle = InWidget;
 	Parameter.OnFinish = OnFinish;
 
-	return OpenUserWidget(Parameter);
+	return OpenGenericWidget(Parameter);
 }
 
-bool UGenericWidgetManager::OpenUserWidget(FOpenWidgetParameter& OpenWidgetParameter)
+bool UGenericWidgetManager::OpenGenericWidget(FOpenWidgetParameter& OpenWidgetParameter)
 {
 	BROADCAST_UNIFIED_DELEGATE(Delegate_PreWidgetOpened, BPDelegate_PreWidgetOpened, OpenWidgetParameter);
 
@@ -120,7 +136,7 @@ bool UGenericWidgetManager::OpenUserWidget(FOpenWidgetParameter& OpenWidgetParam
 	return false;
 }
 
-bool UGenericWidgetManager::CloseUserWidget(FGameplayTag InSlotTag, bool MarkAsGarbage, FOnWidgetActiveStateChanged OnFinish)
+bool UGenericWidgetManager::CloseGenericWidget(FGameplayTag InSlotTag, bool MarkAsGarbage, FOnWidgetActiveStateChanged OnFinish)
 {
 	if (!InSlotTag.IsValid())
 	{
@@ -133,10 +149,10 @@ bool UGenericWidgetManager::CloseUserWidget(FGameplayTag InSlotTag, bool MarkAsG
 	CloseWidgetParameter.bMarkAsGarbage = MarkAsGarbage;
 	CloseWidgetParameter.OnFinish = OnFinish;
 
-	return CloseUserWidget(CloseWidgetParameter);
+	return CloseGenericWidget(CloseWidgetParameter);
 }
 
-bool UGenericWidgetManager::CloseUserWidget(UGenericWidget* InWidget, bool MarkAsGarbage, FOnWidgetActiveStateChanged OnFinish)
+bool UGenericWidgetManager::CloseGenericWidget(UGenericWidget* InWidget, bool MarkAsGarbage, FOnWidgetActiveStateChanged OnFinish)
 {
 	if (!IsValid(InWidget))
 	{
@@ -151,10 +167,10 @@ bool UGenericWidgetManager::CloseUserWidget(UGenericWidget* InWidget, bool MarkA
 	CloseWidgetParameter.bMarkAsGarbage = MarkAsGarbage;
 	CloseWidgetParameter.OnFinish = OnFinish;
 
-	return CloseUserWidget(CloseWidgetParameter);
+	return CloseGenericWidget(CloseWidgetParameter);
 }
 
-bool UGenericWidgetManager::CloseUserWidget(FCloseWidgetParameter& CloseWidgetParameter)
+bool UGenericWidgetManager::CloseGenericWidget(FCloseWidgetParameter& CloseWidgetParameter)
 {
 	BROADCAST_UNIFIED_DELEGATE(Delegate_PreWidgetClosed, BPDelegate_PreWidgetClosed, CloseWidgetParameter);
 
@@ -169,18 +185,16 @@ bool UGenericWidgetManager::CloseUserWidget(FCloseWidgetParameter& CloseWidgetPa
 
 void UGenericWidgetManager::ActiveWidget(FOpenWidgetParameter& OpenWidgetParameter)
 {
-	if (Widgets.Contains(OpenWidgetParameter.WidgetToHandle))
-	{
-		GenericLOG(GenericLogUI, Warning, TEXT("InWidget Is Already Actived"))
-		OpenWidgetParameter.OnFinish.ExecuteIfBound(OpenWidgetParameter.WidgetToHandle);
-		return;
-	}
-
 	BROADCAST_UNIFIED_DELEGATE(Delegate_OnWidgetOpened, BPDelegate_OnWidgetOpened, OpenWidgetParameter);
 
 	if (OpenWidgetParameter.bOpenResult)
 	{
-		Widgets.Add(OpenWidgetParameter.WidgetToHandle);
+		if (!Widgets.Contains(OpenWidgetParameter.WidgetToHandle))
+		{
+			Widgets.Add(OpenWidgetParameter.WidgetToHandle);
+			OpenWidgetParameter.WidgetToHandle->NativeOnCreate();
+		}
+
 		OpenWidgetParameters.Add(OpenWidgetParameter);
 
 		OpenWidgetParameter.WidgetToHandle->GetOnWidgetActiveAnimationPlayFinish().AddUObject(this, &UGenericWidgetManager::OnActiveAnimationPlayFinish);
@@ -188,13 +202,26 @@ void UGenericWidgetManager::ActiveWidget(FOpenWidgetParameter& OpenWidgetParamet
 	}
 	else
 	{
+		if (!GIsGameHUDCreated)
+		{
+			CacheOpenWidgets.Emplace(OpenWidgetParameter);
+			return;
+		}
+
 		GenericLOG(GenericLogUI, Warning, TEXT("Fail To Open Widget : %s"), *OpenWidgetParameter.WidgetToHandle->GetName())
-		CloseUserWidget(OpenWidgetParameter.WidgetToHandle);
+		CloseGenericWidget(OpenWidgetParameter.WidgetToHandle);
 	}
 }
 
 void UGenericWidgetManager::InactiveWidget(FCloseWidgetParameter& CloseWidgetParameter)
 {
+	if (!GIsGameHUDCreated && CacheOpenWidgets.Contains(CloseWidgetParameter.WidgetToHandle))
+	{
+		FOpenWidgetParameter Parameter = *CacheOpenWidgets.FindByKey(CloseWidgetParameter.WidgetToHandle);
+		CacheOpenWidgets.Remove(Parameter);
+		return;
+	}
+
 	if (!Widgets.Contains(CloseWidgetParameter.WidgetToHandle))
 	{
 		GenericLOG(GenericLogUI, Warning, TEXT("InWidget Is Already Inactived"))

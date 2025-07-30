@@ -3,30 +3,25 @@
 
 #include "Gameplay/TeamPlayerState.h"
 
-#include "Gameplay/TeamGameState.h"
-#include "Net/UnrealNetwork.h"
+#include "TeamAssignComponent.h"
+
+ATeamPlayerState::ATeamPlayerState()
+{
+	TeamAssignComponent = CreateDefaultSubobject<UTeamAssignComponent>(TEXT("TeamAssignComponent"));
+}
 
 bool ATeamPlayerState::IsNetRelevantFor(const AActor* RealViewer, const AActor* ViewTarget, const FVector& SrcLocation) const
 {
-	if (const APlayerController* TargetPC = Cast<APlayerController>(RealViewer))
+	if (TeamAssignComponent->TeamID != INDEX_NONE)
 	{
-		if (const ATeamPlayerState* TargetPS = Cast<ATeamPlayerState>(TargetPC->PlayerState))
+		if (UTeamAssignComponent* TargetTeamComponent = RealViewer->GetComponentByClass<UTeamAssignComponent>())
 		{
-			if (ATeamGameState* TeamGameState = Cast<ATeamGameState>(GetWorld()->GetGameState()))
-			{
-				const TArray<FPlayerTeam>& PlayerTeams = TeamGameState->GetPlayerTeams();
+			return TargetTeamComponent->TeamID == TeamAssignComponent->TeamID;
+		}
 
-				const FPlayerTeam* PlayerTeam = PlayerTeams.FindByPredicate([this](const FPlayerTeam& PlayerTeam)
-					{
-						return PlayerTeam.PlayerStates.Contains(this);
-					}
-				);
-
-				if (PlayerTeam)
-				{
-					return PlayerTeam->PlayerStates.Contains(TargetPS);
-				}
-			}
+		if (UTeamAssignComponent* TargetTeamComponent = ViewTarget->GetComponentByClass<UTeamAssignComponent>())
+		{
+			return TargetTeamComponent->TeamID == TeamAssignComponent->TeamID;
 		}
 	}
 

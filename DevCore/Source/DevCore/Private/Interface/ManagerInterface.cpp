@@ -12,16 +12,10 @@ bool FManagerInterface::GetManagerHandle(FManagerHandle& OutManagerHandle)
 
 void FManagerInterface::RegisterManager(UObject* InOwner)
 {
-	if (!UManagerProxy::GetManagerProxy()->RegisterManager(FManagerHandle(InOwner, this), ManagerID))
-	{
-		GenericLOG(GenericLogManager, Error, TEXT("Register Manager Fail"));
-	}
+	UManagerProxy::GetManagerProxy()->RegisterManager(FManagerHandle(InOwner, this), ManagerID);
 }
 
 void FManagerInterface::UnRegisterManager()
 {
-	if (!UManagerProxy::GetManagerProxy()->UnRegisterManager(ManagerID))
-	{
-		GenericLOG(GenericLogManager, Error, TEXT("UnRegister Manager Fail"));
-	}
+	UManagerProxy::GetManagerProxy()->UnRegisterManager(ManagerID);
 }

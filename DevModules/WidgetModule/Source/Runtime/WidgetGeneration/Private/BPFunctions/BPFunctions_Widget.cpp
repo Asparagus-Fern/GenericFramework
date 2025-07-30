@@ -6,41 +6,24 @@
 #include "Base/GenericWidget.h"
 #include "Manager/ManagerStatics.h"
 
-UGenericWidget* UBPFunctions_Widget::OpenUserWidgetByClass(TSubclassOf<UGenericWidget> InWidgetClass)
+UGenericWidget* UBPFunctions_Widget::BP_OpenGenericWidgetByClass(TSubclassOf<UGenericWidget> InWidgetClass)
 {
-	if (UGenericWidgetManager* WidgetManager = GetManagerOwner<UGenericWidgetManager>())
-	{
-		ensure(InWidgetClass);
-		return Cast<UGenericWidget>(WidgetManager->OpenUserWidget(InWidgetClass));
-	}
-	return nullptr;
+	return Cast<UGenericWidget>(OpenGenericWidget(InWidgetClass));
 }
 
-bool UBPFunctions_Widget::OpenUserWidget(UGenericWidget* InWidget)
+bool UBPFunctions_Widget::BP_OpenGenericWidget(UGenericWidget* InWidget)
 {
-	if (UGenericWidgetManager* WidgetManager = GetManagerOwner<UGenericWidgetManager>())
-	{
-		return WidgetManager->OpenUserWidget(InWidget);
-	}
-	return false;
+	return OpenGenericWidget(InWidget);
 }
 
-bool UBPFunctions_Widget::CloseUserWidgetByTag(FGameplayTag InSlotTag, bool MarkAsGarbage)
+bool UBPFunctions_Widget::BP_CloseGenericWidgetByTag(FGameplayTag InSlotTag, bool MarkAsGarbage)
 {
-	if (UGenericWidgetManager* WidgetManager = GetManagerOwner<UGenericWidgetManager>())
-	{
-		return WidgetManager->CloseUserWidget(InSlotTag, MarkAsGarbage);
-	}
-	return false;
+	return CloseGenericWidget(InSlotTag, MarkAsGarbage);
 }
 
-bool UBPFunctions_Widget::CloseUserWidget(UGenericWidget* InWidget, bool MarkAsGarbage)
+bool UBPFunctions_Widget::BP_CloseGenericWidget(UGenericWidget* InWidget, bool MarkAsGarbage)
 {
-	if (UGenericWidgetManager* WidgetManager = GetManagerOwner<UGenericWidgetManager>())
-	{
-		return WidgetManager->CloseUserWidget(InWidget, MarkAsGarbage);
-	}
-	return false;
+	return CloseGenericWidget(InWidget, MarkAsGarbage);
 }
 
 TArray<UGenericWidget*> UBPFunctions_Widget::GetActivedWidgets()

@@ -5,9 +5,8 @@
 #include "CoreMinimal.h"
 #include "Layout/Visibility.h"
 #include "Input/Reply.h"
-
 #include "IDetailCustomization.h"
-#include "Spline2DType.h"
+#include "SWidget/Spline2D/Spline2DType.h"
 
 class USpline2D;
 class IDetailLayoutBuilder;
@@ -26,7 +25,7 @@ public:
 
 protected:
 	void OnSplineInfoValueChanged(const FSpline2DInfo& NewSplineInfo);
-	FOptionalSize GetSplineEditPanelHieght() const;
+	FOptionalSize GetSplineEditPanelHeight() const;
 
 private:
 	TWeakObjectPtr<USpline2D> SplineWidgetPtr;

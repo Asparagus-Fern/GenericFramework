@@ -5,6 +5,7 @@
 
 #include "LevelStreamingManager.h"
 #include "ProcedureFlowManager.h"
+#include "Manager/ManagerStatics.h"
 
 AProcedureFlow_LoadLevelStreaming::AProcedureFlow_LoadLevelStreaming()
 {

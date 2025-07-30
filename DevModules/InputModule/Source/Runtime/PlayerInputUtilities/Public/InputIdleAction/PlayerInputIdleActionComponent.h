@@ -50,13 +50,13 @@ protected:
 
 public:
 	UFUNCTION(BlueprintCallable)
-	void ResetInputIdleAction();
+	PLAYERINPUTUTILITIES_API void ResetInputIdleAction();
 
 	UFUNCTION(BlueprintPure)
-	APlayerController* GetOwnerPlayerController() const;
+	PLAYERINPUTUTILITIES_API APlayerController* GetOwnerPlayerController() const;
 
 	UFUNCTION(BlueprintPure)
-	UEnhancedInputComponent* GetOwnerEnhancedInputComponent() const;
+	PLAYERINPUTUTILITIES_API UEnhancedInputComponent* GetOwnerEnhancedInputComponent() const;
 
 protected:
 	/* The Key To Refresh Action.Default Is AnyKey. */

@@ -13,7 +13,7 @@
 
 bool UGenericGameSlotManager::ShouldCreateSubsystem(UObject* Outer) const
 {
-	return Super::ShouldCreateSubsystem(Outer);
+	return Super::ShouldCreateSubsystem(Outer) && !IsRunningDedicatedServer();
 }
 
 void UGenericGameSlotManager::Initialize(FSubsystemCollectionBase& Collection)

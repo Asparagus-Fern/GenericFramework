@@ -9,8 +9,8 @@
 /**
  * 
  */
-UCLASS(Abstract, NotBlueprintable, meta=(DisableNativeTick))
-class PROPERTYPATHSYSTEM_API UPropertyListEntry : public UPropertyListEntryBase
+UCLASS(Abstract, NotBlueprintable, meta=(DisableNativeTick), MinimalAPI)
+class UPropertyListEntry : public UPropertyListEntryBase
 {
 	GENERATED_BODY()
 

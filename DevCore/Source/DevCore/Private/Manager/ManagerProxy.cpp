@@ -214,6 +214,12 @@ bool UManagerProxy::RegisterManager(const FManagerHandle& InManagerHandle, FGuid
 
 bool UManagerProxy::UnRegisterManager(FGuid InManagerID)
 {
+	if (!UManagerSettings::Get()->bEnableAllManager)
+	{
+		GenericLOG(GenericLogManager, Log, TEXT("Disable Manager Register"))
+		return false;
+	}
+	
 	if (!InManagerID.IsValid())
 	{
 		GenericLOG(GenericLogManager, Error, TEXT("InManagerID Is InValid"))

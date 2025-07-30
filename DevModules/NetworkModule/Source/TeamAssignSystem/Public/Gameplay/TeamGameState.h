@@ -9,9 +9,11 @@
 #include "GameState/GenericGameState.h"
 #include "TeamGameState.generated.h"
 
-class UTeamAssignPolicy;
+class ATeamAssignPolicy;
 class ATeamGameMode;
 class ATeamState;
+class UTeamAssignInfo;
+
 
 /**
  * 
@@ -21,47 +23,58 @@ class TEAMASSIGNSYSTEM_API ATeamGameState : public AGenericGameState
 {
 	GENERATED_BODY()
 
-	friend ATeamGameMode;
-
 protected:
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 private:
+	void CreateTeamAssignPolicy();
+	void DestroyTeamAssignPolicy();
+
+	void LoginPlayer(APlayerController* InPlayer);
+	void LogoutPlayer(APlayerController* InPlayer);
+	
 	UFUNCTION(Server, Reliable)
-	void Server_LoginPlayer(APlayerState* InPlayerState);
+	void Server_LoginPlayer(APlayerController* InPlayer);
 
 	UFUNCTION(Server, Reliable)
-	void Server_LogoutPlayer(APlayerState* InPlayerState);
+	void Server_LogoutPlayer(APlayerController* InPlayer);
+
+	void OnTeamComponentRegister(UTeamAssignComponent* InComponent);
+	void OnTeamComponentUnRegister(UTeamAssignComponent* InComponent);
+
+	UFUNCTION()
+	virtual void OnTeamAssignFinish(TArray<UTeamAssignInfo*> InPlayerTeams);
 
 public:
-	UFUNCTION(BlueprintPure)
-	const TArray<FPlayerTeam>& GetPlayerTeams();
+	const TArray<UTeamAssignInfo*>& GetPlayerTeams();
 
-	UFUNCTION(BlueprintPure)
-	bool GetPlayerTeamByID(int32 InTeamID, FPlayerTeam& OutPlayerTeam);
+	UTeamAssignInfo* GetPlayerTeam(int32 InTeamID);
+	UTeamAssignInfo* GetPlayerTeam(ATeamState* InTeamState);
+	UTeamAssignInfo* GetPlayerTeam(const APawn* InPawn);
+	UTeamAssignInfo* GetPlayerTeam(const APlayerController* InPlayerController);
+	UTeamAssignInfo* GetPlayerTeam(const APlayerState* InPlayerState);
+	UTeamAssignInfo* GetPlayerTeam(const UTeamAssignComponent* InTeamComponent);
 
-	UFUNCTION(BlueprintPure)
-	bool GetPlayerTeamByTeamState(ATeamState* InTeamState, FPlayerTeam& OutPlayerTeam);
+	UFUNCTION(BlueprintCallable, Server, Reliable)
+	void Server_ReAssignTeam();
 
-	UFUNCTION(BlueprintPure)
-	bool GetPlayerTeamByPlayerState(APlayerState* InPlayerState, FPlayerTeam& OutPlayerTeam);
+private:
+	void AddTeamComponent(UTeamAssignComponent* InTeamComponent);
+	void UpdateTeamComponent(UTeamAssignComponent* InTeamComponent);
+	void RemoveTeamComponent(UTeamAssignComponent* InTeamComponent);
 
 protected:
 	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UTeamAssignPolicy> TeamAssignPolicyClass = UTeamAssignPolicy::StaticClass();
+	TSubclassOf<ATeamAssignPolicy> TeamAssignPolicyClass = ATeamAssignPolicy::StaticClass();
 
 	UPROPERTY(Transient)
-	TObjectPtr<UTeamAssignPolicy> TeamAssignPolicy = nullptr;
+	TObjectPtr<ATeamAssignPolicy> TeamAssignPolicy = nullptr;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TSubclassOf<ATeamState> TeamStateClass = ATeamState::StaticClass();
+	UPROPERTY(Transient)
+	TArray<TObjectPtr<UTeamAssignInfo>> PlayerTeamInfos;
 
-	UPROPERTY(Transient, Replicated)
-	TArray<FPlayerTeam> PlayerTeams;
-
-private:
-	UFUNCTION()
-	virtual void OnTeamAssignFinish();
+	UPROPERTY(Transient)
+	TArray<TObjectPtr<UTeamAssignComponent>> TeamAssignComponents;
 };

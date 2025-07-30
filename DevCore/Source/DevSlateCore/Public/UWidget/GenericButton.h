@@ -7,6 +7,7 @@
 #include "Widgets/Layout/SBox.h"
 #include "GenericButton.generated.h"
 
+class UGenericButtonStyle;
 class SGenericButton;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnButtonDoubleClickedDelegate);
@@ -25,23 +26,24 @@ class DEVSLATECORE_API UGenericButton : public UButton
 
 protected:
 	virtual TSharedRef<SWidget> RebuildWidget() override;
+	virtual void SynchronizeProperties() override;
 	virtual void ReleaseSlateResources(bool bReleaseChildren) override;
 
 public:
 	/* If true, this button is enabled. */
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Generic Button")
-	bool bButtonEnabled;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Generic Button")
+	bool bButtonEnabled = true;
 
 	/* If true, this button can be interacted with it normally. Otherwise, it will not react to being hovered or clicked. */
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Generic Button")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Generic Button")
 	bool bInteractionEnabled = true;
 
 	/* The minimum width of the button */
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Generic Button")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Generic Button")
 	int32 MinWidth;
 
 	/* The minimum height of the button */
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Generic Button")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Generic Button")
 	int32 MinHeight;
 
 public:
@@ -73,8 +75,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Generic Button")
 	void SetMinDesiredWidth(int32 InMinWidth);
 
-	virtual bool IsHovered() const override;
-	bool IsPressed() const;
+	bool IsButtonHovered() const;
+	bool IsButtonPressed() const;
 
 protected:
 	virtual FReply SlateHandleClickedOverride();

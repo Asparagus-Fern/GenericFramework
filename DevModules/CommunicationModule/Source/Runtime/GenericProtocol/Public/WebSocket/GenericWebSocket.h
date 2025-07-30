@@ -31,8 +31,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FWebSocketReStartErrorEvent, const F
 /**
  * 
  */
-UCLASS()
-class GENERICPROTOCOL_API UGenericWebSocket : public UGenericObject
+UCLASS(MinimalAPI)
+class UGenericWebSocket : public UGenericObject
 {
 	GENERATED_BODY()
 
@@ -42,43 +42,43 @@ public:
 public:
 	/* 创建一个 WebSocket 对象以连接到 WebSocket 服务器 */
 	UFUNCTION(BlueprintPure, Category = "WebSocket")
-	static UGenericWebSocket* CreateWebSocket();
+	static GENERICPROTOCOL_API UGenericWebSocket* CreateWebSocket();
 
 	/* 返回此socket当前是否连接到服务器。 */
 	UFUNCTION(BlueprintPure, Category = "WebSocket")
-	bool IsConnected() const;
+	GENERICPROTOCOL_API bool IsConnected() const;
 
 	/* 连接到 WebSocket 服务器 */
 	UFUNCTION(BlueprintCallable, Category = "WebSocket")
-	void ConnectWithConnection(const FWebSocketConnection& InWebSocketConnect);
+	GENERICPROTOCOL_API void ConnectWithConnection(const FWebSocketConnection& InWebSocketConnect);
 
 	/* 连接到 WebSocket 服务器 */
 	UFUNCTION(BlueprintCallable, Category = "WebSocket", meta=(AutoCreateRefTerm = "Headers"))
-	void ConnectWithURL(FString Host, int32 Port, EWebSocketProtocol Protocol, const TMap<FString, FString>& Headers);
+	GENERICPROTOCOL_API void ConnectWithURL(FString Host, int32 Port, EWebSocketProtocol Protocol, const TMap<FString, FString>& Headers);
 
 	/* 连接到 WebSocket 服务器 */
 	UFUNCTION(BlueprintCallable, Category = "WebSocket")
-	void Connect();
+	GENERICPROTOCOL_API void Connect();
 
 	/* 关闭与 WebSocket 服务器的连接 */
 	UFUNCTION(BlueprintCallable, Category = "WebSocket")
-	void Close(int32 Code = 1000, FString Reason = "Close Normal");
+	GENERICPROTOCOL_API void Close(int32 Code = 1000, FString Reason = "Close Normal");
 
 	/* 重启与 WebSocket 服务器的连接 */
 	UFUNCTION(BlueprintCallable, Category = "WebSocket")
-	void ReStart();
+	GENERICPROTOCOL_API void ReStart();
 
 	/* 将指定的消息发送到 WebSocket 服务器 */
 	UFUNCTION(BlueprintCallable, Category = "WebSocket")
-	void SendMessage(const FString& Message);
+	GENERICPROTOCOL_API void SendMessage(const FString& Message);
 
 	/* 将指定的消息发送到 WebSocket 服务器 */
 	UFUNCTION(BlueprintCallable, Category = "WebSocket")
-	void SendJsonMessage(UGenericJsonObject* JsonObject);
+	GENERICPROTOCOL_API void SendJsonMessage(UGenericJsonObject* JsonObject);
 
 	/* 将指定的消息发送到 WebSocket 服务器 */
 	UFUNCTION(BlueprintCallable, Category = "WebSocket")
-	void SendBinaryMessage(const TArray<uint8>& Message, const bool bIsBinary = false);
+	GENERICPROTOCOL_API void SendBinaryMessage(const TArray<uint8>& Message, const bool bIsBinary = false);
 
 private:
 	void BindWebSocketDelegate();
@@ -86,40 +86,40 @@ private:
 
 public:
 	UFUNCTION(BlueprintPure, Category = "WebSocket")
-	FString GetHost() const;
+	GENERICPROTOCOL_API FString GetHost() const;
 
 	UFUNCTION(BlueprintCallable, Category = "WebSocket")
-	void SetHost(FString InHost);
+	GENERICPROTOCOL_API void SetHost(FString InHost);
 
 	UFUNCTION(BlueprintPure, Category = "WebSocket")
-	int32 GetPort() const;
+	GENERICPROTOCOL_API int32 GetPort() const;
 
 	UFUNCTION(BlueprintCallable, Category = "WebSocket")
-	void SetPort(int32 InPort);
+	GENERICPROTOCOL_API void SetPort(int32 InPort);
 
 	UFUNCTION(BlueprintPure, Category = "WebSocket")
-	EWebSocketProtocol GetProtocol() const;
+	GENERICPROTOCOL_API EWebSocketProtocol GetProtocol() const;
 
 	UFUNCTION(BlueprintCallable, Category = "WebSocket")
-	void SetProtocol(EWebSocketProtocol InProtocol);
+	GENERICPROTOCOL_API void SetProtocol(EWebSocketProtocol InProtocol);
 
 	UFUNCTION(BlueprintCallable)
-	void AddHeader(const FString& Header, const FString& Value);
+	GENERICPROTOCOL_API void AddHeader(const FString& Header, const FString& Value);
 
 	UFUNCTION(BlueprintCallable)
-	void AddHeaders(TMap<FString, FString> Headers);
+	GENERICPROTOCOL_API void AddHeaders(TMap<FString, FString> Headers);
 
 	UFUNCTION(BlueprintCallable)
-	void RemoveHeader(const FString& Header);
+	GENERICPROTOCOL_API void RemoveHeader(const FString& Header);
 
 	UFUNCTION(BlueprintCallable)
-	void RemoveHeaders(TArray<FString> Headers);
+	GENERICPROTOCOL_API void RemoveHeaders(TArray<FString> Headers);
 
 	UFUNCTION(BlueprintPure)
-	TMap<FString, FString> GetHeaders();
+	GENERICPROTOCOL_API TMap<FString, FString> GetHeaders();
 
 	UFUNCTION(BlueprintCallable)
-	void SetHeaders(TMap<FString, FString> Headers);
+	GENERICPROTOCOL_API void SetHeaders(TMap<FString, FString> Headers);
 
 public:
 	/* 当 WebSocket 成功连接到服务器时调用此事件 */
@@ -159,13 +159,13 @@ public:
 	FWebSocketReStartErrorEvent OnReStartErrorEvent;
 
 protected:
-	virtual void OnConnected();
-	virtual void OnConnectionError(const FString& Error);
-	virtual void OnRawMessage(const void* Data, SIZE_T Size, SIZE_T BytesRemaining);
-	virtual void OnBinaryMessage(const void* Data, SIZE_T Size, bool bIsLastFragment);
-	virtual void OnMessage(const FString& Message);
-	virtual void OnMessageSent(const FString& Message);
-	virtual void OnClosed(int32 Status, const FString& Reason, bool bWasClean);
+	GENERICPROTOCOL_API virtual void OnConnected();
+	GENERICPROTOCOL_API virtual void OnConnectionError(const FString& Error);
+	GENERICPROTOCOL_API virtual void OnRawMessage(const void* Data, SIZE_T Size, SIZE_T BytesRemaining);
+	GENERICPROTOCOL_API virtual void OnBinaryMessage(const void* Data, SIZE_T Size, bool bIsLastFragment);
+	GENERICPROTOCOL_API virtual void OnMessage(const FString& Message);
+	GENERICPROTOCOL_API virtual void OnMessageSent(const FString& Message);
+	GENERICPROTOCOL_API virtual void OnClosed(int32 Status, const FString& Reason, bool bWasClean);
 
 private:
 	TSharedPtr<IWebSocket> WebSocket = nullptr;

@@ -5,10 +5,6 @@
 #include "Component/PawnLockStateComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 
-IPawnInputMovementInterface::IPawnInputMovementInterface()
-{
-}
-
 UPawnInputMovementComponent::UPawnInputMovementComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;

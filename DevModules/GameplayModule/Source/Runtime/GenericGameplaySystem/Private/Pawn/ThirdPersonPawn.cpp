@@ -6,6 +6,7 @@
 #include "Camera/CameraComponent.h"
 #include "CameraSwitch/CameraSwitchMethod.h"
 #include "CameraPoint/CameraPointBase.h"
+#include "Component/PawnLockStateComponent.h"
 #include "Component/PawnSpringArmComponent.h"
 #include "GameFramework/FloatingPawnMovement.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -13,8 +14,6 @@
 AThirdPersonPawn::AThirdPersonPawn(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
-	PawnName = "ThirdPersonPawn";
-
 	SpringArmComponent = CreateDefaultSubobject<UPawnSpringArmComponent>("SpringArmComponent");
 	SpringArmComponent->SetupAttachment(GetRootComponent());
 

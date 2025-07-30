@@ -12,13 +12,13 @@ class UCommonButtonBase;
 /**
  * 
  */
-UCLASS(Abstract, Blueprintable)
-class PROPERTYPATHSYSTEM_API UPropertyListEntry_Action : public UPropertyListEntry
+UCLASS(Abstract, Blueprintable, MinimalAPI)
+class UPropertyListEntry_Action : public UPropertyListEntry
 {
 	GENERATED_BODY()
 
 public:
-	virtual void SetPropertyEntity(UPropertyEntity* InProperty) override;
+	PROPERTYPATHSYSTEM_API virtual void SetPropertyEntity(UPropertyEntity* InProperty) override;
 
 protected:
 	virtual void NativeOnInitialized() override;

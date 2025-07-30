@@ -18,7 +18,7 @@ void UPlayerInputIdleAction::Tick(float DeltaTime)
 		ReverseTime = bIsActionReverse ? ReverseTime - DeltaTime : ReverseTime + DeltaTime;
 	}
 
-	OnActionTriggle(DeltaTime, bEnableReverse ? (ReverseTime / ReverseDuration) : 1.f);
+	OnActionToggle(DeltaTime, bEnableReverse ? (ReverseTime / ReverseDuration) : 1.f);
 }
 
 void UPlayerInputIdleAction::Start()

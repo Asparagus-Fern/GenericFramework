@@ -12,14 +12,14 @@ class UPropertyEntity;
 /**
  * 
  */
-UCLASS()
-class PROPERTYPATHSYSTEM_API UPropertyVisualData : public UDataAsset
+UCLASS(MinimalAPI)
+class UPropertyVisualData : public UDataAsset
 {
 	GENERATED_BODY()
 
 public:
-	TSubclassOf<UPropertyListEntryBase> GetEntryForProperty(UPropertyEntity* InProperty);
-	
+	PROPERTYPATHSYSTEM_API TSubclassOf<UPropertyListEntryBase> GetEntryForProperty(UPropertyEntity* InProperty);
+
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = ListEntries, meta = (AllowAbstract))
 	TMap<TSubclassOf<UPropertyEntity>, TSubclassOf<UPropertyListEntryBase>> EntryWidgetForClass;

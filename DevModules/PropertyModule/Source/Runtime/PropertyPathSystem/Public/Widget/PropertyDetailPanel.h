@@ -13,13 +13,13 @@ class UPropertyListView;
 /**
  * 属性细节面板
  */
-UCLASS(Abstract)
-class PROPERTYPATHSYSTEM_API UPropertyDetailPanel : public UGenericWidget
+UCLASS(Abstract, MinimalAPI)
+class UPropertyDetailPanel : public UGenericWidget
 {
 	GENERATED_BODY()
 
 public:
-	void UpdatePropertyDetail(UPropertyCollection* InPropertyCollection);
+	PROPERTYPATHSYSTEM_API void UpdatePropertyDetail(UPropertyCollection* InPropertyCollection);
 
 private:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget, BlueprintProtected = true, AllowPrivateAccess = true))

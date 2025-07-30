@@ -3,9 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "TeamType.h"
 #include "GameFramework/Actor.h"
 #include "TeamState.generated.h"
+
+class UTeamAssignComponent;
 
 UCLASS()
 class TEAMASSIGNSYSTEM_API ATeamState : public AActor
@@ -16,8 +17,7 @@ public:
 	ATeamState();
 	virtual bool IsNetRelevantFor(const AActor* RealViewer, const AActor* ViewTarget, const FVector& SrcLocation) const override;
 
-public:
-	/* Init Only In Server */
-	UFUNCTION(BlueprintImplementableEvent)
-	void InitTeamState(int32 InTeamID);
+protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TObjectPtr<UTeamAssignComponent> TeamAssignComponent = nullptr;
 };

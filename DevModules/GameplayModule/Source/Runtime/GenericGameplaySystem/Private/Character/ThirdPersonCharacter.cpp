@@ -12,8 +12,6 @@ AThirdPersonCharacter::AThirdPersonCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	CharacterName = "ThirdPersonCharacter";
-
 	SpringArmComponent = CreateDefaultSubobject<UPawnSpringArmComponent>("SpringArm");
 	SpringArmComponent->SetupAttachment(GetRootComponent());
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>("Camera");

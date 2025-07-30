@@ -9,8 +9,8 @@
 /**
  * 枚举类型属性
  */
-UCLASS()
-class PROPERTYPATHSYSTEM_API UPropertyDiscreteValue_Enum : public UPropertyDiscreteValue
+UCLASS(MinimalAPI)
+class  UPropertyDiscreteValue_Enum : public UPropertyDiscreteValue
 {
 	GENERATED_BODY()
 

@@ -5,6 +5,7 @@
 
 #include "ProcedureFlowManager.h"
 #include "Loading/LoadingPanel.h"
+#include "Manager/ManagerStatics.h"
 
 
 AProcedureFlow_Load::AProcedureFlow_Load()

@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "CommonUserWidget.h"
 #include "GameplayTagContainer.h"
-#include "WidgetType.h"
 #include "Interface/StateInterface.h"
 #include "Interface/WidgetChildrenInterface.h"
 #include "Interface/WidgetAnimationInterface.h"
@@ -20,22 +19,22 @@ class UWidgetAnimationEvent;
 /**
  * 
  */
-UCLASS(Abstract)
-class WIDGETGENERATION_API UGenericWidget : public UCommonUserWidget,
-                                            public IStateInterface,
-                                            public IWidgetChildrenInterface,
-                                            public IWidgetAnimationInterface
+UCLASS(Abstract, MinimalAPI)
+class UGenericWidget : public UUserWidget,
+                       public IStateInterface,
+                       public IWidgetChildrenInterface,
+                       public IWidgetAnimationInterface
 {
 	GENERATED_BODY()
 
 protected:
-	UGenericWidget(const FObjectInitializer& ObjectInitializer);
-	virtual void OnWidgetRebuilt() override;
-	virtual bool Initialize() override;
-	virtual void NativeOnInitialized() override;
-	virtual void NativePreConstruct() override;
-	virtual void NativeConstruct() override;
-	virtual void NativeDestruct() override;
+	WIDGETGENERATION_API UGenericWidget(const FObjectInitializer& ObjectInitializer);
+	WIDGETGENERATION_API virtual void OnWidgetRebuilt() override;
+	WIDGETGENERATION_API virtual bool Initialize() override;
+	WIDGETGENERATION_API virtual void NativeOnInitialized() override;
+	WIDGETGENERATION_API virtual void NativePreConstruct() override;
+	WIDGETGENERATION_API virtual void NativeConstruct() override;
+	WIDGETGENERATION_API virtual void NativeDestruct() override;
 
 #if WITH_EDITOR
 	virtual const FText GetPaletteCategory() override { return NSLOCTEXT("DevWidget", "DevUserWidget", "User Widget Base"); }
@@ -77,40 +76,40 @@ private:
 	/* ==================== IStateInterface ==================== */
 public:
 	/* Widget Is Created, But Not At Screen */
-	virtual void NativeOnCreate() override;
+	WIDGETGENERATION_API virtual void NativeOnCreate() override;
 
 	/* Widget Is Adding To Screen */
-	virtual void NativeOnActived() override;
+	WIDGETGENERATION_API virtual void NativeOnActived() override;
 
 	/* Widget Is Already Added */
-	virtual void NativeOnActivedFinish() override;
+	WIDGETGENERATION_API virtual void NativeOnActivedFinish() override;
 
 	/* Widget Is Pre Remove From Screen */
-	virtual void NativeOnInactived() override;
+	WIDGETGENERATION_API virtual void NativeOnInactived() override;
 
 	/* Widget Is Removed From Screen */
-	virtual void NativeOnInactivedFinish() override;
+	WIDGETGENERATION_API virtual void NativeOnInactivedFinish() override;
 
 	/* Widget Is Pre Mark As Garbage */
-	virtual void NativeOnDestroy() override;
+	WIDGETGENERATION_API virtual void NativeOnDestroy() override;
 
 	UFUNCTION(BlueprintPure)
-	virtual bool GetIsActived() const override;
+	WIDGETGENERATION_API virtual bool GetIsActived() const override;
 
 	UFUNCTION(BlueprintCallable)
-	virtual void SetIsActived(const bool InActived) override;
+	WIDGETGENERATION_API virtual void SetIsActived(const bool InActived) override;
 
 protected:
-	virtual void OnActiveStateChanged() override;
+	WIDGETGENERATION_API virtual void OnActiveStateChanged() override;
 
 	/* ==================== IWidgetChildrenInterface ==================== */
 public:
-	virtual UGenericWidget* GetChildByIndex(int32 InIndex) override;
-	virtual void AddChild(UGenericWidget* InWidget) override;
-	virtual void AddChild(UGenericWidget* InWidget, int32 InIndex) override;
-	virtual void RemoveChild(int32 InIndex) override;
-	virtual void RemoveChild(UGenericWidget* InWidget) override;
-	virtual void ClearChildren() override;
+	WIDGETGENERATION_API virtual UGenericWidget* GetChildByIndex(int32 InIndex) override;
+	WIDGETGENERATION_API virtual void AddChild(UGenericWidget* InWidget) override;
+	WIDGETGENERATION_API virtual void AddChild(UGenericWidget* InWidget, int32 InIndex) override;
+	WIDGETGENERATION_API virtual void RemoveChild(int32 InIndex) override;
+	WIDGETGENERATION_API virtual void RemoveChild(UGenericWidget* InWidget) override;
+	WIDGETGENERATION_API virtual void ClearChildren() override;
 
 protected:
 	UFUNCTION(BlueprintImplementableEvent)
@@ -135,42 +134,42 @@ public:
 
 public:
 	UFUNCTION(BlueprintPure)
-	virtual bool HasWidgetAnimation(bool InIsActive) const override;
+	WIDGETGENERATION_API virtual bool HasWidgetAnimation(bool InIsActive) const override;
 
 	UFUNCTION(BlueprintPure)
-	virtual bool IsPlayingWidgetAnimation(bool InIsActive) const override;
+	WIDGETGENERATION_API virtual bool IsPlayingWidgetAnimation(bool InIsActive) const override;
 
 	UFUNCTION(BlueprintPure)
-	virtual float GetWidgetAnimationDuration(bool InIsActive) override;
+	WIDGETGENERATION_API virtual float GetWidgetAnimationDuration(bool InIsActive) override;
 
 	UFUNCTION(BlueprintPure)
-	virtual UWidgetAnimation* GetActiveAnimation() const override;
+	WIDGETGENERATION_API virtual UWidgetAnimation* GetActiveAnimation() const override;
 
 	UFUNCTION(BlueprintCallable)
-	virtual void SetActiveAnimation(UWidgetAnimation* InAnimation) override;
+	WIDGETGENERATION_API virtual void SetActiveAnimation(UWidgetAnimation* InAnimation) override;
 
 	UFUNCTION(BlueprintPure)
-	virtual UWidgetAnimation* GetInactiveAnimation() const override;
+	WIDGETGENERATION_API virtual UWidgetAnimation* GetInactiveAnimation() const override;
 
 	UFUNCTION(BlueprintCallable)
-	virtual void SetInactiveAnimation(UWidgetAnimation* InAnimation) override;
+	WIDGETGENERATION_API virtual void SetInactiveAnimation(UWidgetAnimation* InAnimation) override;
 
 	UFUNCTION(BlueprintCallable)
-	virtual void PlayWidgetAnimation(bool InIsActive) override;
+	WIDGETGENERATION_API virtual void PlayWidgetAnimation(bool InIsActive) override;
 
 	UFUNCTION(BlueprintCallable)
-	virtual void PlayWidgetAnimationRollback(bool InIsActive) override;
+	WIDGETGENERATION_API virtual void PlayWidgetAnimationRollback(bool InIsActive) override;
 
 	UFUNCTION(BlueprintCallable)
-	virtual void PauseWidgetAnimation(bool InIsActive) override;
+	WIDGETGENERATION_API virtual void PauseWidgetAnimation(bool InIsActive) override;
 
 	UFUNCTION(BlueprintCallable)
-	virtual void StopWidgetAnimation(bool InIsActive) override;
+	WIDGETGENERATION_API virtual void StopWidgetAnimation(bool InIsActive) override;
 
 protected:
 	UFUNCTION()
-	virtual void OnWidgetActiveAnimationPlayFinish() override;
+	WIDGETGENERATION_API virtual void OnWidgetActiveAnimationPlayFinish() override;
 
 	UFUNCTION()
-	virtual void OnWidgetInactiveAnimationPlayFinish() override;
+	WIDGETGENERATION_API virtual void OnWidgetInactiveAnimationPlayFinish() override;
 };

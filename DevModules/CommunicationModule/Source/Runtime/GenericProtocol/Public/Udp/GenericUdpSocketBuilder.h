@@ -13,30 +13,30 @@ class UGenericUdpSocket;
 /**
  * 
  */
-UCLASS()
-class GENERICPROTOCOL_API UGenericUdpSocketBuilder : public UGenericObject
+UCLASS(MinimalAPI)
+class UGenericUdpSocketBuilder : public UGenericObject
 {
 	GENERATED_BODY()
 
 public:
-	virtual FSocket* BuildSenderSocket();
-	virtual FSocket* BuildReceiverSocket();
+	GENERICPROTOCOL_API virtual FSocket* BuildSenderSocket();
+	GENERICPROTOCOL_API virtual FSocket* BuildReceiverSocket();
 
 private:
 	void Build(FUdpSocketBuilder* UdpSocketBuilder) const;
 
 public:
 	UFUNCTION(BlueprintCallable, Category="UDP")
-	void SetIsBlocking(bool IsBlocking = false);
+	GENERICPROTOCOL_API void SetIsBlocking(bool IsBlocking = false);
 
 	UFUNCTION(BlueprintCallable, Category="UDP")
-	void SetEnableReusable(bool EnableReusable);
+	GENERICPROTOCOL_API void SetEnableReusable(bool EnableReusable);
 
 	UFUNCTION(BlueprintCallable, Category="UDP")
-	void SetEnableBroadcast(bool EnableBroadcast);
+	GENERICPROTOCOL_API void SetEnableBroadcast(bool EnableBroadcast);
 
 	UFUNCTION(BlueprintCallable, Category="UDP")
-	void SetEnableMulticastLoopback(bool EnableMulticastLoopback);
+	GENERICPROTOCOL_API void SetEnableMulticastLoopback(bool EnableMulticastLoopback);
 
 protected:
 	UPROPERTY(BlueprintReadOnly, meta=(ExposeOnSpawn = "true"), Category="UDP")

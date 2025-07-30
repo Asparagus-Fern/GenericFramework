@@ -1,6 +1,6 @@
 // Copyright ChenTaiye 2025. All Rights Reserved.
 
-#include "..\Public\Spline2DType.h"
+#include "SWidget/Spline2D/Spline2DType.h"
 
 /* ==================== FUMGSplinePoint ==================== */
 

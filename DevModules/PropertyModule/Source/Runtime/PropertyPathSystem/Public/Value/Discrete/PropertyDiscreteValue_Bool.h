@@ -9,8 +9,8 @@
 /**
  * Bool类型属性
  */
-UCLASS()
-class PROPERTYPATHSYSTEM_API UPropertyDiscreteValue_Bool : public UPropertyDiscreteValue
+UCLASS(MinimalAPI)
+class UPropertyDiscreteValue_Bool : public UPropertyDiscreteValue
 {
 	GENERATED_BODY()
 
@@ -18,9 +18,9 @@ public:
 	UPropertyDiscreteValue_Bool();
 
 public:
-	bool GetDefaultBoolValue() const;
-	void SetDefaultBoolValue(bool InValue);
+	PROPERTYPATHSYSTEM_API bool GetDefaultBoolValue() const;
+	PROPERTYPATHSYSTEM_API void SetDefaultBoolValue(bool InValue);
 
-	void SetTrueText(const FText& InText);
-	void SetFalseText(const FText& InText);
+	PROPERTYPATHSYSTEM_API void SetTrueText(const FText& InText);
+	PROPERTYPATHSYSTEM_API void SetFalseText(const FText& InText);
 };

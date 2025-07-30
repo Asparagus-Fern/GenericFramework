@@ -90,7 +90,7 @@ void UGenericButtonCollection::BuildChildButtonGroup(FGameplayTag InButtonTag)
 		UGenericButtonGroup* ButtonGroup = NewObject<UGenericButtonGroup>(GetOuter());
 		ButtonGroup->SetButtonGroupWidget(GroupWidget);
 
-		if (!GenericWidgetManager->OpenUserWidget(GroupWidget))
+		if (!GenericWidgetManager->OpenGenericWidget(GroupWidget))
 		{
 			GenericLOG(GenericLogUI, Error, TEXT("Open Button Container Fail"))
 			return;
@@ -102,7 +102,7 @@ void UGenericButtonCollection::BuildChildButtonGroup(FGameplayTag InButtonTag)
 			FGameplayTag ChildTag = ChildrenTagContainer.GetByIndex(It);
 			if (UGenericButtonWidget* ChildButtonWidget = BuildButtonWidget(ChildTag, GroupWidget))
 			{
-				if (!GenericWidgetManager->OpenUserWidget(ChildButtonWidget))
+				if (!GenericWidgetManager->OpenGenericWidget(ChildButtonWidget))
 				{
 					GenericLOG(GenericLogUI, Error, TEXT("Open Button Widget Fail"))
 					continue;
@@ -144,10 +144,10 @@ void UGenericButtonCollection::DestroyChildButtonGroup(FGameplayTag InButtonTag)
 		{
 			ButtonGroup->RemoveButton(ButtonWidget);
 			ButtonContainer->RemoveChild(ButtonWidget);
-			GenericWidgetManager->CloseUserWidget(ButtonWidget);
+			GenericWidgetManager->CloseGenericWidget(ButtonWidget);
 		}
 
-		GenericWidgetManager->CloseUserWidget(ButtonContainer);
+		GenericWidgetManager->CloseGenericWidget(ButtonContainer);
 		ButtonGroup->SetButtonGroupWidget(nullptr);
 	}
 

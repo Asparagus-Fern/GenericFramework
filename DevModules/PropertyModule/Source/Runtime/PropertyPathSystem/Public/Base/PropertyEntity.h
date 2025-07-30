@@ -14,74 +14,74 @@ class UPropertyRegistry;
 /**
  * 属性
  */
-UCLASS(Abstract)
-class PROPERTYPATHSYSTEM_API UPropertyEntity : public UGenericObject
+UCLASS(Abstract, MinimalAPI)
+class UPropertyEntity : public UGenericObject
 {
 	GENERATED_BODY()
 
 	/* ==================== UPropertyEntity ==================== */
 public:
-	void Initialize(UObject* InContext);
-	void Apply();
+	PROPERTYPATHSYSTEM_API void Initialize(UObject* InContext);
+	PROPERTYPATHSYSTEM_API void Apply();
 
 protected:
 	/* 开始初始化 */
-	virtual void Startup();
+	PROPERTYPATHSYSTEM_API virtual void Startup();
 
 	/* 初始化可能出现异步的情况 */
-	void StartupComplete();
+	PROPERTYPATHSYSTEM_API void StartupComplete();
 
 	/* 初始化完成时调用 */
-	virtual void OnInitialized();
+	PROPERTYPATHSYSTEM_API virtual void OnInitialized();
 
 	/* 属性被应用时调用 */
-	virtual void OnApply();
+	PROPERTYPATHSYSTEM_API virtual void OnApply();
 
 	/* 通知属性发生变更 */
-	void NotifyPropertyChanged(EPropertyChangeReason Reason);
+	PROPERTYPATHSYSTEM_API void NotifyPropertyChanged(EPropertyChangeReason Reason);
 
 	/* 在属性发生变更时调用 */
-	virtual void OnPropertyChanged(EPropertyChangeReason Reason);
+	PROPERTYPATHSYSTEM_API virtual void OnPropertyChanged(EPropertyChangeReason Reason);
 
 public:
 	UFUNCTION(BlueprintPure)
-	bool IsContextValid() const;
+	PROPERTYPATHSYSTEM_API bool IsContextValid() const;
 
 	UFUNCTION(BlueprintPure)
-	UObject* GetContext();
+	PROPERTYPATHSYSTEM_API UObject* GetContext();
 
 	UFUNCTION(BlueprintPure)
-	UPropertyRegistry* GetOwnerRegistry();
+	PROPERTYPATHSYSTEM_API UPropertyRegistry* GetOwnerRegistry();
 
 	UFUNCTION(BlueprintCallable)
-	void SetOwningRegistry(UPropertyRegistry* InOwningRegistry);
+	PROPERTYPATHSYSTEM_API void SetOwningRegistry(UPropertyRegistry* InOwningRegistry);
 
 	UFUNCTION(BlueprintPure)
-	UPropertyEntity* GetOwnerProperty() const;
+	PROPERTYPATHSYSTEM_API UPropertyEntity* GetOwnerProperty() const;
 
 	UFUNCTION(BlueprintCallable)
-	void SetOwnerProperty(UPropertyEntity* InPropertyOwner);
+	PROPERTYPATHSYSTEM_API void SetOwnerProperty(UPropertyEntity* InPropertyOwner);
 
 	UFUNCTION(BlueprintPure)
-	virtual TArray<UPropertyEntity*> GetChildProperties();
+	PROPERTYPATHSYSTEM_API virtual TArray<UPropertyEntity*> GetChildProperties();
 
 	UFUNCTION(BlueprintPure)
-	FName GetPropertyName() const;
+	PROPERTYPATHSYSTEM_API FName GetPropertyName() const;
 
 	UFUNCTION(BlueprintCallable)
-	void SetPropertyName(FName InPropertyName);
+	PROPERTYPATHSYSTEM_API void SetPropertyName(FName InPropertyName);
 
 	UFUNCTION(BlueprintPure)
-	FText GetDisplayName() const;
+	PROPERTYPATHSYSTEM_API FText GetDisplayName() const;
 
 	UFUNCTION(BlueprintCallable)
-	void SetDisplayName(const FText& InDisplayName);
+	PROPERTYPATHSYSTEM_API void SetDisplayName(const FText& InDisplayName);
 
 	UFUNCTION(BlueprintPure)
-	FText GetDescriptionText() const;
+	PROPERTYPATHSYSTEM_API FText GetDescriptionText() const;
 
 	UFUNCTION(BlueprintCallable)
-	void SetDescriptionText(const FText& InDescriptionText);
+	PROPERTYPATHSYSTEM_API void SetDescriptionText(const FText& InDescriptionText);
 
 public:
 	DECLARE_EVENT_TwoParams(UPropertyEntity, FOnPropertyChanged, UPropertyEntity*, EPropertyChangeReason);
@@ -93,37 +93,37 @@ public:
 	FOnPropertyChanged OnPropertyChangedEvent;
 	FOnPropertyEditConditionChanged OnPropertyEditConditionChangedEvent;
 	FOnPropertyApplied OnPropertyAppliedEvent;
-	
+
 	/* ==================== Edit Dependency ==================== */
 public:
 	/* 添加属性的依赖，当依赖发生变更时，会刷新当前属性的状态 */
-	void AddEditDependency(UPropertyEntity* DependencyPropertyEntity);
+	PROPERTYPATHSYSTEM_API void AddEditDependency(UPropertyEntity* DependencyPropertyEntity);
 
 protected:
 	void HandleEditDependencyChanged(UPropertyEntity* DependencyProperty, EPropertyChangeReason Reason);
 	void HandleEditDependencyChanged(UPropertyEntity* DependencyProperty);
 
 	/* 属性的依赖发生变更时调用 */
-	virtual void OnDependencyChanged();
+	PROPERTYPATHSYSTEM_API virtual void OnDependencyChanged();
 
 	/* ==================== Edit Condition ==================== */
 public:
 	/* 添加属性的编辑条件 */
-	void AddEditCondition(const TSharedRef<FPropertyEditCondition>& InEditCondition);
+	PROPERTYPATHSYSTEM_API void AddEditCondition(const TSharedRef<FPropertyEditCondition>& InEditCondition);
 
 protected:
 	/* 通知属性编辑条件发生变更 */
 	void NotifyEditConditionsChanged();
 
 	/* 属性编辑条件发生变更时调用 */
-	virtual void OnEditConditionsChanged();
+	PROPERTYPATHSYSTEM_API virtual void OnEditConditionsChanged();
 
 private:
 	bool bOnEditConditionsChangedEventGuard = false;
 
 	/* ==================== Editable State ==================== */
 public:
-	const FPropertyEditableState& GetPropertyEditableState() const { return EditableStateCache; }
+	PROPERTYPATHSYSTEM_API const FPropertyEditableState& GetPropertyEditableState() const { return EditableStateCache; }
 
 protected:
 	/* 刷新编辑状态 */
@@ -133,7 +133,7 @@ protected:
 	FPropertyEditableState ComputeEditableState() const;
 
 	/* 属性重新评估编辑状态时调用 */
-	virtual void OnGatherEditState(FPropertyEditableState& InOutEditState) const;
+	PROPERTYPATHSYSTEM_API virtual void OnGatherEditState(FPropertyEditableState& InOutEditState) const;
 
 private:
 	/* 编辑状态缓存，防止每次都重新评估 */

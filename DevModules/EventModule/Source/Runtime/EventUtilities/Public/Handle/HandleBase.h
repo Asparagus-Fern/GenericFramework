@@ -9,53 +9,53 @@
 /**
  * 
  */
-UCLASS(Abstract)
-class EVENTUTILITIES_API UHandleBase : public UGenericObject
+UCLASS(Abstract, MinimalAPI)
+class UHandleBase : public UGenericObject
 {
 	GENERATED_BODY()
 
 public:
-	FGuid GetHandleID() const { return HandleID; }
+	EVENTUTILITIES_API FGuid GetHandleID() const { return HandleID; }
 
 public:
-	virtual void OnRegister() { return; }
-	virtual void OnUnRegister() { return; }
-
-public:
-	UFUNCTION(BlueprintCallable)
-	void UnRegister();
+	EVENTUTILITIES_API virtual void OnRegister() { return; }
+	EVENTUTILITIES_API virtual void OnUnRegister() { return; }
 
 public:
 	UFUNCTION(BlueprintCallable)
-	FName GetHandleName();
+	EVENTUTILITIES_API void UnRegister();
+
+public:
+	UFUNCTION(BlueprintCallable)
+	EVENTUTILITIES_API FName GetHandleName();
 
 	UFUNCTION(BlueprintCallable)
-	void SetHandleName(FName InHandleName);
+	EVENTUTILITIES_API void SetHandleName(FName InHandleName);
 
 	UFUNCTION(BlueprintCallable)
-	FText GetHandleDisplayName();
+	EVENTUTILITIES_API FText GetHandleDisplayName();
 
 	UFUNCTION(BlueprintCallable)
-	void SetHandleDisplayName(FText InHandleDisplayName);
+	EVENTUTILITIES_API void SetHandleDisplayName(FText InHandleDisplayName);
 
 public:
 	UFUNCTION(BlueprintPure, BlueprintNativeEvent, meta=(CompactNodeTitle = "==", BlueprintAutocast))
-	bool EqualID(const UHandleBase* Other);
+	EVENTUTILITIES_API bool EqualID(const UHandleBase* Other);
 
 	UFUNCTION(BlueprintPure, BlueprintNativeEvent, meta=(CompactNodeTitle = "==", BlueprintAutocast))
-	bool EqualName(FName Other);
+	EVENTUTILITIES_API bool EqualName(FName Other);
 
 	UFUNCTION(BlueprintPure, BlueprintNativeEvent, meta=(CompactNodeTitle = "!=", BlueprintAutocast))
-	bool NotEqualID(const UHandleBase* Other);
+	EVENTUTILITIES_API bool NotEqualID(const UHandleBase* Other);
 
 	UFUNCTION(BlueprintPure, BlueprintNativeEvent, meta=(CompactNodeTitle = "!=", BlueprintAutocast))
-	bool NotEqualName(FName Other);
+	EVENTUTILITIES_API bool NotEqualName(FName Other);
 
 	UFUNCTION(BlueprintPure, BlueprintNativeEvent, meta=(CompactNodeTitle = "Valid", BlueprintAutocast))
-	bool IsHandleValid();
+	EVENTUTILITIES_API bool IsHandleValid();
 
 	UFUNCTION(BlueprintPure, BlueprintNativeEvent, meta=(CompactNodeTitle = "InValid", BlueprintAutocast))
-	bool IsHandleInValid();
+	EVENTUTILITIES_API bool IsHandleInValid();
 
 protected:
 	FGuid HandleID;

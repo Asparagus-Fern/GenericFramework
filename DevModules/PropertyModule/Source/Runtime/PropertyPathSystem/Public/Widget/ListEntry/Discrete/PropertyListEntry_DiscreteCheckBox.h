@@ -11,14 +11,14 @@ class UCheckBox;
 /**
  * 
  */
-UCLASS(Abstract, Blueprintable)
-class PROPERTYPATHSYSTEM_API UPropertyListEntry_DiscreteCheckBox : public UPropertyListEntry_Discrete
+UCLASS(Abstract, Blueprintable, MinimalAPI)
+class UPropertyListEntry_DiscreteCheckBox : public UPropertyListEntry_Discrete
 {
 	GENERATED_BODY()
 
 public:
-	virtual void SetPropertyEntity(UPropertyEntity* InProperty) override;
-	
+	PROPERTYPATHSYSTEM_API virtual void SetPropertyEntity(UPropertyEntity* InProperty) override;
+
 protected:
 	virtual void NativeOnInitialized() override;
 	virtual void RefreshEditableState(FPropertyEditableState InEditableState) override;

@@ -6,6 +6,8 @@
 #include "PlayerState/GenericPlayerState.h"
 #include "TeamPlayerState.generated.h"
 
+class UTeamAssignComponent;
+
 /**
  * 
  */
@@ -14,6 +16,11 @@ class TEAMASSIGNSYSTEM_API ATeamPlayerState : public AGenericPlayerState
 {
 	GENERATED_BODY()
 
-protected:
+public:
+	ATeamPlayerState();
 	virtual bool IsNetRelevantFor(const AActor* RealViewer, const AActor* ViewTarget, const FVector& SrcLocation) const override;
+
+protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TObjectPtr<UTeamAssignComponent> TeamAssignComponent = nullptr;
 };

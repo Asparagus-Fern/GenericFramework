@@ -39,6 +39,23 @@ TSharedRef<SWidget> UGenericButton::RebuildWidget()
 	return MyBox.ToSharedRef();
 }
 
+void UGenericButton::SynchronizeProperties()
+{
+	Super::SynchronizeProperties();
+
+	if (MyBox.IsValid())
+	{
+		MyBox->SetMinDesiredWidth(MinWidth);
+		MyBox->SetMinDesiredHeight(MinHeight);
+	}
+
+	if (MyGenericButton.IsValid())
+	{
+		MyGenericButton->SetIsButtonEnabled(bButtonEnabled);
+		MyGenericButton->SetIsInteractionEnabled(bInteractionEnabled);
+	}
+}
+
 void UGenericButton::ReleaseSlateResources(bool bReleaseChildren)
 {
 	Super::ReleaseSlateResources(bReleaseChildren);
@@ -96,7 +113,7 @@ void UGenericButton::SetMinDesiredWidth(int32 InMinWidth)
 	}
 }
 
-bool UGenericButton::IsHovered() const
+bool UGenericButton::IsButtonHovered() const
 {
 	if (MyGenericButton.IsValid())
 	{
@@ -105,7 +122,7 @@ bool UGenericButton::IsHovered() const
 	return false;
 }
 
-bool UGenericButton::IsPressed() const
+bool UGenericButton::IsButtonPressed() const
 {
 	if (MyGenericButton.IsValid())
 	{

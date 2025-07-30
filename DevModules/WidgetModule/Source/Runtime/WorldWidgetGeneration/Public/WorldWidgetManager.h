@@ -21,44 +21,44 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FBPDelegate_OnWorldWidgetComponentUn
 /**
  * 
  */
-UCLASS()
-class WORLDWIDGETGENERATION_API UWorldWidgetManager : public UWorldSubsystem, public FTickableManagerInterface
+UCLASS(MinimalAPI)
+class UWorldWidgetManager : public UWorldSubsystem, public FTickableManagerInterface
 {
 	GENERATED_BODY()
 
 public:
-	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
-	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
-	virtual void Deinitialize() override;
-	virtual bool DoesSupportWorldType(const EWorldType::Type WorldType) const override;
+	WORLDWIDGETGENERATION_API virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
+	WORLDWIDGETGENERATION_API virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+	WORLDWIDGETGENERATION_API virtual void Deinitialize() override;
+	WORLDWIDGETGENERATION_API virtual bool DoesSupportWorldType(const EWorldType::Type WorldType) const override;
 
 	/* UWorldWidgetManager */
 protected:
-	virtual void RegisterWorldWidgetComponent(UWorldWidgetComponent* InWorldWidgetComponent);
+	WORLDWIDGETGENERATION_API virtual void RegisterWorldWidgetComponent(UWorldWidgetComponent* InWorldWidgetComponent);
 
-	virtual void UnRegisterWorldWidgetComponent(UWorldWidgetComponent* InWorldWidgetComponent);
-
-public:
-	TArray<UWorldWidgetComponent*> GetWorldWidgetComponents() { return WorldWidgetComponents; }
-
-	TArray<UWorldWidgetComponent*> GetWorldWidgetComponents2D();
-
-	TArray<UWorldWidgetComponent*> GetWorldWidgetComponents3D();
-
-	UWorldWidgetComponent* FindWorldWidgetComponent(FGameplayTag WorldWidgetTag);
-
-	TArray<UWorldWidgetComponent*> FindWorldWidgetComponents(FGameplayTag WorldWidgetTag);
+	WORLDWIDGETGENERATION_API virtual void UnRegisterWorldWidgetComponent(UWorldWidgetComponent* InWorldWidgetComponent);
 
 public:
-	inline static FDelegate_OnWorldWidgetComponentRegister Delegate_OnWorldWidgetComponentRegister;
+	WORLDWIDGETGENERATION_API TArray<UWorldWidgetComponent*> GetWorldWidgetComponents() { return WorldWidgetComponents; }
+
+	WORLDWIDGETGENERATION_API TArray<UWorldWidgetComponent*> GetWorldWidgetComponents2D();
+
+	WORLDWIDGETGENERATION_API TArray<UWorldWidgetComponent*> GetWorldWidgetComponents3D();
+
+	WORLDWIDGETGENERATION_API UWorldWidgetComponent* FindWorldWidgetComponent(FGameplayTag WorldWidgetTag);
+
+	WORLDWIDGETGENERATION_API TArray<UWorldWidgetComponent*> FindWorldWidgetComponents(FGameplayTag WorldWidgetTag);
+
+public:
+	WORLDWIDGETGENERATION_API inline static FDelegate_OnWorldWidgetComponentRegister Delegate_OnWorldWidgetComponentRegister;
 	UPROPERTY(BlueprintAssignable)
 	FBPDelegate_OnWorldWidgetComponentRegister BPDelegate_OnWorldWidgetComponentRegister;
 
-	inline static FDelegate_OnWorldWidgetComponentActiveStateChanged Delegate_OnWorldWidgetComponentActiveStateChanged;
+	WORLDWIDGETGENERATION_API inline static FDelegate_OnWorldWidgetComponentActiveStateChanged Delegate_OnWorldWidgetComponentActiveStateChanged;
 	UPROPERTY(BlueprintAssignable)
 	FBPDelegate_OnWorldWidgetComponentActiveStateChanged BPDelegate_OnWorldWidgetComponentActiveStateChanged;
 
-	inline static FDelegate_OnWorldWidgetComponentUnRegister Delegate_OnWorldWidgetComponentUnRegister;
+	WORLDWIDGETGENERATION_API inline static FDelegate_OnWorldWidgetComponentUnRegister Delegate_OnWorldWidgetComponentUnRegister;
 	UPROPERTY(BlueprintAssignable)
 	FBPDelegate_OnWorldWidgetComponentUnRegister BPDelegate_OnWorldWidgetComponentUnRegister;
 

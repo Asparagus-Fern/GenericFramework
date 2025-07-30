@@ -11,13 +11,13 @@ class UPropertyValueBase;
 /**
  * 
  */
-UCLASS(Abstract, Blueprintable)
-class PROPERTYPATHSYSTEM_API UPropertyListEntry_Dynamic : public UPropertyListEntryBase
+UCLASS(Abstract, Blueprintable, MinimalAPI)
+class UPropertyListEntry_Dynamic : public UPropertyListEntryBase
 {
 	GENERATED_BODY()
 
 public:
-	virtual void SetPropertyEntity(UPropertyEntity* InProperty) override;
+	PROPERTYPATHSYSTEM_API virtual void SetPropertyEntity(UPropertyEntity* InProperty) override;
 
 protected:
 	virtual void OnPropertyChanged(UPropertyEntity* InProperty, EPropertyChangeReason Reson) override;

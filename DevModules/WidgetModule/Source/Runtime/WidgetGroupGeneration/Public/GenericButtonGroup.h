@@ -27,8 +27,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnButtonSelectionChanged, UGener
 /**
  * 
  */
-UCLASS()
-class WIDGETGROUPGENERATION_API UGenericButtonGroup : public UGenericObject
+UCLASS(MinimalAPI)
+class UGenericButtonGroup : public UGenericObject
 {
 	GENERATED_BODY()
 
@@ -36,83 +36,83 @@ class WIDGETGROUPGENERATION_API UGenericButtonGroup : public UGenericObject
 
 public:
 	UFUNCTION(BlueprintPure)
-	UGenericButtonContainer* GetButtonGroupWidget();
+	WIDGETGROUPGENERATION_API UGenericButtonContainer* GetButtonGroupWidget();
 
 	UFUNCTION(BlueprintCallable)
-	void SetButtonGroupWidget(UGenericButtonContainer* InButtonGroupWidget);
+	WIDGETGROUPGENERATION_API void SetButtonGroupWidget(UGenericButtonContainer* InButtonGroupWidget);
 
 public:
 	UFUNCTION(BlueprintCallable)
-	void AddButtons(const TArray<UGenericButtonWidget*>& InButtons);
+	WIDGETGROUPGENERATION_API void AddButtons(const TArray<UGenericButtonWidget*>& InButtons);
 
 	UFUNCTION(BlueprintCallable)
-	void AddButton(UGenericButtonWidget* InButton);
+	WIDGETGROUPGENERATION_API void AddButton(UGenericButtonWidget* InButton);
 
 	UFUNCTION(BlueprintCallable)
-	void RemoveButtons(const TArray<UGenericButtonWidget*>& InButtons);
+	WIDGETGROUPGENERATION_API void RemoveButtons(const TArray<UGenericButtonWidget*>& InButtons);
 
 	UFUNCTION(BlueprintCallable)
-	void RemoveButtonByIndex(int32 InIndex);
+	WIDGETGROUPGENERATION_API void RemoveButtonByIndex(int32 InIndex);
 
 	UFUNCTION(BlueprintCallable)
-	void RemoveButton(UGenericButtonWidget* InButton);
+	WIDGETGROUPGENERATION_API void RemoveButton(UGenericButtonWidget* InButton);
 
 	UFUNCTION(BlueprintCallable)
-	void ClearAllButton();
+	WIDGETGROUPGENERATION_API void ClearAllButton();
 
 public:
 	UFUNCTION(BlueprintPure)
-	TArray<UGenericButtonWidget*> GetAllButton() const;
+	WIDGETGROUPGENERATION_API TArray<UGenericButtonWidget*> GetAllButton() const;
 
 	UFUNCTION(BlueprintPure)
-	int32 GetButtonCount() const;
+	WIDGETGROUPGENERATION_API int32 GetButtonCount() const;
 
 	UFUNCTION(BlueprintPure)
-	bool HasButton(UGenericButtonWidget* InButton) const;
+	WIDGETGROUPGENERATION_API bool HasButton(UGenericButtonWidget* InButton) const;
 
 	UFUNCTION(BlueprintPure)
-	UGenericButtonWidget* GetButtonByIndex(int32 InIndex);
+	WIDGETGROUPGENERATION_API UGenericButtonWidget* GetButtonByIndex(int32 InIndex);
 
 	UFUNCTION(BlueprintPure)
-	int32 FindButtonIndex(UGenericButtonWidget* InButton) const;
+	WIDGETGROUPGENERATION_API int32 FindButtonIndex(UGenericButtonWidget* InButton) const;
 
 public:
 	UFUNCTION(BlueprintPure)
-	bool HasLastSelectedButton() const;
+	WIDGETGROUPGENERATION_API bool HasLastSelectedButton() const;
 
 	UFUNCTION(BlueprintPure)
-	bool HasSelectedButton() const;
+	WIDGETGROUPGENERATION_API bool HasSelectedButton() const;
 
 	UFUNCTION(BlueprintPure)
-	UGenericButtonWidget* GetLastSelectedButton() const;
+	WIDGETGROUPGENERATION_API UGenericButtonWidget* GetLastSelectedButton() const;
 
 	UFUNCTION(BlueprintPure)
-	int32 GetLastSelectedButtonIndex() const;
+	WIDGETGROUPGENERATION_API int32 GetLastSelectedButtonIndex() const;
 
 	UFUNCTION(BlueprintPure)
-	UGenericButtonWidget* GetSelectedButton() const;
+	WIDGETGROUPGENERATION_API UGenericButtonWidget* GetSelectedButton() const;
 
 	UFUNCTION(BlueprintCallable)
-	void SetSelectedButton(UGenericButtonWidget* InButton);
+	WIDGETGROUPGENERATION_API void SetSelectedButton(UGenericButtonWidget* InButton);
 
 	UFUNCTION(BlueprintPure)
-	int32 GetSelectedButtonIndex() const;
+	WIDGETGROUPGENERATION_API int32 GetSelectedButtonIndex() const;
 
 	UFUNCTION(BlueprintCallable)
-	void SetSelectedButtonByIndex(int32 InIndex);
+	WIDGETGROUPGENERATION_API void SetSelectedButtonByIndex(int32 InIndex);
 
 public:
 	UFUNCTION(BlueprintCallable)
-	void SelectLastButton();
+	WIDGETGROUPGENERATION_API void SelectLastButton();
 
 	UFUNCTION(BlueprintCallable)
-	void SelectPreviousButton(bool bAllowWrapping);
+	WIDGETGROUPGENERATION_API void SelectPreviousButton(bool bAllowWrapping);
 
 	UFUNCTION(BlueprintCallable)
-	void SelectNextButton(bool bAllowWrapping);
+	WIDGETGROUPGENERATION_API void SelectNextButton(bool bAllowWrapping);
 
 	UFUNCTION(BlueprintCallable)
-	void DeselectAll();
+	WIDGETGROUPGENERATION_API void DeselectAll();
 
 	/* Binding From Widget (If Exist) */
 private:

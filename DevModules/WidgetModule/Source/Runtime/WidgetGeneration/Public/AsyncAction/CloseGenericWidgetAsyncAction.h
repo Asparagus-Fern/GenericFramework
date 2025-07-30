@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
-#include "CloseUserWidgetAsyncAction.generated.h"
+#include "CloseGenericWidgetAsyncAction.generated.h"
 
 class UGenericWidget;
 
@@ -17,16 +17,16 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnUserWidgetInactivedAnimationDelegate);
  * 
  */
 UCLASS()
-class WIDGETGENERATION_API UCloseUserWidgetAsyncAction : public UBlueprintAsyncActionBase
+class WIDGETGENERATION_API UCloseGenericWidgetAsyncAction : public UBlueprintAsyncActionBase
 {
 	GENERATED_BODY()
 
 public:
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true", AdvancedDisplay = 1))
-	static UCloseUserWidgetAsyncAction* AsyncCloseUserWidget(UGenericWidget* InWidget, bool MarkAsGarbage = true);
+	static UCloseGenericWidgetAsyncAction* AsyncCloseGenericWidget(UGenericWidget* InWidget, bool MarkAsGarbage = true);
 
 	UFUNCTION(BlueprintCallable, meta = (GameplayTagFilter="UI.HUD", BlueprintInternalUseOnly = "true", AdvancedDisplay = 1))
-	static UCloseUserWidgetAsyncAction* AsyncCloseUserWidgetByTag(FGameplayTag InSlotTag, bool MarkAsGarbage = true);
+	static UCloseGenericWidgetAsyncAction* AsyncCloseGenericWidgetByTag(FGameplayTag InSlotTag, bool MarkAsGarbage = true);
 
 public:
 	UPROPERTY(BlueprintAssignable)

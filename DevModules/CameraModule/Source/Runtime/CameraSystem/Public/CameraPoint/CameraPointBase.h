@@ -57,8 +57,8 @@ public:
 public:
 	DECLARE_EVENT_OneParam(ACameraPointBase, FCameraPointDelegate, ACameraPointBase*)
 
-	static FCameraPointDelegate OnCameraPointRegister;
-	static FCameraPointDelegate OnCameraPointUnRegister;
+	CAMERASYSTEM_API inline static FCameraPointDelegate OnCameraPointRegister;
+	CAMERASYSTEM_API inline static FCameraPointDelegate OnCameraPointUnRegister;
 
 #if WITH_EDITOR
 

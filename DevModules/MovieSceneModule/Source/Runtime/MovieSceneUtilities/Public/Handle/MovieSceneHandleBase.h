@@ -15,15 +15,15 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FMovieSceneEvent);
 /**
  * 
  */
-UCLASS(Abstract)
-class MOVIESCENEUTILITIES_API UMovieSceneHandleBase : public UHandleBase, public IMovieSceneInterface
+UCLASS(Abstract, MinimalAPI)
+class UMovieSceneHandleBase : public UHandleBase, public IMovieSceneInterface
 {
 	GENERATED_BODY()
 
 	/* UHandleBase */
 protected:
-	virtual void OnRegister() override;
-	virtual void OnUnRegister() override;
+	MOVIESCENEUTILITIES_API virtual void OnRegister() override;
+	MOVIESCENEUTILITIES_API virtual void OnUnRegister() override;
 
 	/* IMovieSceneInterface */
 public:
@@ -37,12 +37,12 @@ public:
 	FLevelSequenceEvent OnMovieScenePlayFinishEvent;
 
 protected:
-	virtual void OnMovieScenePlay() override;
-	virtual void OnMovieScenePlayReverse() override;
-	virtual void OnMovieScenePause() override;
-	virtual void OnMovieSceneStop() override;
-	virtual void OnMovieSceneSeek() override;
-	virtual void OnMovieScenePlayFinish() override;
+	MOVIESCENEUTILITIES_API virtual void OnMovieScenePlay() override;
+	MOVIESCENEUTILITIES_API virtual void OnMovieScenePlayReverse() override;
+	MOVIESCENEUTILITIES_API virtual void OnMovieScenePause() override;
+	MOVIESCENEUTILITIES_API virtual void OnMovieSceneStop() override;
+	MOVIESCENEUTILITIES_API virtual void OnMovieSceneSeek() override;
+	MOVIESCENEUTILITIES_API virtual void OnMovieScenePlayFinish() override;
 
 protected:
 	UPROPERTY(BlueprintAssignable)

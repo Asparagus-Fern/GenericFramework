@@ -14,8 +14,8 @@ class UGenericButtonBuilder;
 /**
  * 
  */
-UCLASS()
-class WIDGETGROUPGENERATION_API UGenericButtonAsset : public UDataAsset
+UCLASS(MinimalAPI)
+class UGenericButtonAsset : public UDataAsset
 {
 	GENERATED_BODY()
 

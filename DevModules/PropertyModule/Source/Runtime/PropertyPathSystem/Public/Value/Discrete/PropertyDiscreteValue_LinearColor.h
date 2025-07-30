@@ -9,15 +9,15 @@
 /**
  * 
  */
-UCLASS()
-class PROPERTYPATHSYSTEM_API UPropertyDiscreteValue_LinearColor : public UPropertyDiscreteValue
+UCLASS(MinimalAPI)
+class  UPropertyDiscreteValue_LinearColor : public UPropertyDiscreteValue
 {
 	GENERATED_BODY()
 
 public:
-	FLinearColor GetLinearColorValue() const;
-	void SetLinearColorValue(FLinearColor InValue);
+	PROPERTYPATHSYSTEM_API FLinearColor GetLinearColorValue() const;
+	PROPERTYPATHSYSTEM_API void SetLinearColorValue(FLinearColor InValue);
 
-	FLinearColor GetDefaultLinearColorValue() const;
-	void SetDefaultLinearColorValue(FLinearColor InValue);
+	PROPERTYPATHSYSTEM_API FLinearColor GetDefaultLinearColorValue() const;
+	PROPERTYPATHSYSTEM_API void SetDefaultLinearColorValue(FLinearColor InValue);
 };

@@ -11,8 +11,8 @@ class UPropertyVisualData;
 /**
  * 
  */
-UCLASS(meta = (EntryClass = PropertyListEntryBase))
-class PROPERTYPATHSYSTEM_API UPropertyListView : public UListView
+UCLASS(MinimalAPI, meta = (EntryClass = PropertyListEntryBase))
+class UPropertyListView : public UListView
 {
 	GENERATED_BODY()
 
@@ -22,8 +22,8 @@ public:
 #endif
 
 public:
-	void SetVisualDataOverride(UPropertyVisualData* InVisualData);
-	
+	PROPERTYPATHSYSTEM_API void SetVisualDataOverride(UPropertyVisualData* InVisualData);
+
 protected:
 	virtual UUserWidget& OnGenerateEntryWidgetInternal(UObject* Item, TSubclassOf<UUserWidget> DesiredEntryClass, const TSharedRef<STableViewBase>& OwnerTable) override;
 	virtual bool OnIsSelectableOrNavigableInternal(UObject* FirstSelectedItem) override;

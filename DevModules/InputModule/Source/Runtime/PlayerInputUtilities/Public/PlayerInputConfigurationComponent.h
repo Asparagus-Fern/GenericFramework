@@ -9,7 +9,6 @@
 #include "PlayerInputConfigurationComponent.generated.h"
 
 class UPlayerInputManager;
-
 /**
  * 
  */
@@ -36,22 +35,22 @@ public:
 /**
  * 
  */
-UCLASS(ClassGroup=(Developer), meta=(BlueprintSpawnableComponent))
-class PLAYERINPUTUTILITIES_API UPlayerInputConfigurationComponent : public UActorComponent
+UCLASS(ClassGroup=(Developer), meta=(BlueprintSpawnableComponent), MinimalAPI)
+class UPlayerInputConfigurationComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:
-	UPlayerInputConfigurationComponent();
-	virtual void BeginPlay() override;
-	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+	PLAYERINPUTUTILITIES_API UPlayerInputConfigurationComponent();
+	PLAYERINPUTUTILITIES_API virtual void BeginPlay() override;
+	PLAYERINPUTUTILITIES_API virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 public:
 	UFUNCTION(BlueprintNativeEvent)
-	void SetupPlayerInput();
+	PLAYERINPUTUTILITIES_API void SetupPlayerInput();
 
 	UFUNCTION(BlueprintNativeEvent)
-	void RemovePlayerInput();
+	PLAYERINPUTUTILITIES_API void RemovePlayerInput();
 
 protected:
 	UPlayerInputManager* GetOwnerPlayerInputManager() const;

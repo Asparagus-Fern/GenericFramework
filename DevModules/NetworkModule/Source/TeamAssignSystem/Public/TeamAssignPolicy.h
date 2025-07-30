@@ -4,78 +4,93 @@
 
 #include "CoreMinimal.h"
 #include "TeamType.h"
-#include "Generic/GenericObject.h"
+#include "Interface/StateInterface.h"
 #include "TeamAssignPolicy.generated.h"
 
+class UTeamAssignViewModel;
+class UTeamAssignPanel;
+class UTeamAssignInfo;
 class ATeamPlayerState;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTeamPlayerAdded, APlayerState*, PlayerState);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTeamPlayerRemoved, APlayerState*, PlayerState);
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnTeamAssignFinish);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTeamAssignFinish, TArray<UTeamAssignInfo*>, PlayerTeams);
 
 
 /**
  * 队伍的分配策略
  */
 UCLASS()
-class TEAMASSIGNSYSTEM_API UTeamAssignPolicy : public UGenericObject
+class TEAMASSIGNSYSTEM_API ATeamAssignPolicy : public AActor, public IStateInterface
 {
 	GENERATED_BODY()
 
 public:
-	virtual void InitAssignPolicy();
-	void LoginPlayer(ATeamPlayerState* InPlayerState);
-	void LogoutPlayer(ATeamPlayerState* InPlayerState);
+	ATeamAssignPolicy(const FObjectInitializer& ObjectInitializer);
+	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
 
+	/* IStateInterface */
 public:
-	UFUNCTION(BlueprintPure)
-	TArray<FPlayerTeam>& GetPlayerTeams();
+	virtual void NativeOnCreate() override;
+	virtual void NativeOnDestroy() override;
+
+	/* UTeamAssignPolicy */
+public:
+	bool IsPolicyValid() const;
+
+	UFUNCTION(Server, Reliable)
+	void Server_AddPlayer(APlayerController* InPlayer);
+
+	UFUNCTION(Server, Reliable)
+	void Server_RemovePlayer(APlayerController* InPlayer);
+
+	TArray<APlayerController*> GetAllPlayer() const;
+	TArray<APlayerController*> GetPlayers(ETeamAssignState InState);
+	TArray<UTeamAssignInfo*> GetPlayerTeams();
+	bool GetIsTeamAssignFinish() const;
+
+private:
+	UFUNCTION(Server, Reliable)
+	void Server_CreateNewTeamAssignInfos();
+
+	UFUNCTION(Server, Reliable)
+	void Server_SetPlayerAssignState(APlayerController* InPlayer, ETeamAssignState InState);
 
 protected:
-	virtual bool HasPlayer(APlayerState* InPlayerState) const;
-	virtual bool CanCreateNewTeam();
-	virtual FPlayerTeam CreateNewTeam();
-	virtual bool CanPlayerJoinTeam(const FPlayerTeam& InTeam);
-	virtual FPlayerTeam& GetTeamPlayerJoin(ATeamPlayerState* InPlayerState);
-	virtual bool IsTeamFull();
-	virtual void FinishAssignTeam();
+	virtual UTeamAssignInfo* CreateNewTeam();
+	virtual bool EvaluatePlayerValid(APlayerController* InPlayer);
+	virtual void OnPlayerAssignStateChanged(APlayerController* InPlayer, ETeamAssignState NewState);
 
 public:
-	UPROPERTY(BlueprintAssignable)
-	FOnTeamPlayerAdded OnTeamPlayerAddedEvent;
-
-	UPROPERTY(BlueprintAssignable)
-	FOnTeamPlayerRemoved OnTeamPlayerRemovedEvent;
-
 	UPROPERTY(BlueprintAssignable)
 	FOnTeamAssignFinish OnTeamAssignFinishEvent;
 
 protected:
-	/* 在队伍满员时自动结束队伍分配 */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	bool bAutoFinishAssignTeam = true;
+	TSubclassOf<ATeamState> TeamStateClass;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	ETeamAssignMethod TeamAssignMethod = ETeamAssignMethod::Dynamic;
+	TSubclassOf<UTeamAssignViewModel> TeamAssignViewModelClass = nullptr;
 
-	/* 队伍数量，仅在 TeamAssignMethod = ETeamAssignMethod::Static 时启用 */
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(UIMin = 1, ClampMin = 1, EditConditionHides, EditCondition = "TeamAssignMethod == ETeamAssignMethod::Static"))
-	int32 TeamCount = 2;
+	UPROPERTY(Transient, Replicated)
+	TObjectPtr<UTeamAssignViewModel> TeamAssignViewModel = nullptr;
 
-	/* 队伍的最大数量，仅在 TeamAssignMethod = ETeamAssignMethod::Dynamic 时启用 */
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(UIMin = 1, ClampMin = 1, EditConditionHides, EditCondition = "TeamAssignMethod == ETeamAssignMethod::Dynamic"))
-	int32 MaxTeamCount = 2;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	bool bEnableTeamAssignPanel = true;
 
-	/* 每个队伍的最大玩家数量 */
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(UIMin = 1, ClampMin = 1))
-	int32 MaxTeamPlayerCount = 2;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(EditCondition = "bEnableTeamAssignPanel"))
+	TSubclassOf<UTeamAssignPanel> TeamAssignPanelClass = nullptr;
 
 private:
 	UPROPERTY(Transient)
-	TArray<APlayerState*> PlayerStates;
+	TMap<APlayerController*, ETeamAssignState> Players;
 
 	UPROPERTY(Transient)
-	TArray<FPlayerTeam> PlayerTeams;
+	TArray<TObjectPtr<UTeamAssignInfo>> PlayerTeams;
+
+	bool bIsTeamAssignFinish = false;
 };

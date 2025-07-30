@@ -9,11 +9,12 @@
 #include "Blueprint/WidgetTree.h"
 #include "Manager/ManagerStatics.h"
 #include "StaticFunctions/StaticFunctions_Object.h"
-#include "UWidget/GameplayTagSlot.h"
+
+// FDelegate_HUDDelegate UGenericGameHUDManager::Delegate_PostHUDCreated = FDelegate_HUDDelegate();
 
 bool UGenericGameHUDManager::ShouldCreateSubsystem(UObject* Outer) const
 {
-	return Super::ShouldCreateSubsystem(Outer);
+	return Super::ShouldCreateSubsystem(Outer) && !IsRunningDedicatedServer();
 }
 
 void UGenericGameHUDManager::Initialize(FSubsystemCollectionBase& Collection)
@@ -36,6 +37,11 @@ void UGenericGameHUDManager::Deinitialize()
 	UnRegisterManager();
 }
 
+void UGenericGameHUDManager::OnWorldBeginPlay(UWorld& InWorld)
+{
+	Super::OnWorldBeginPlay(InWorld);
+}
+
 bool UGenericGameHUDManager::DoesSupportWorldType(const EWorldType::Type WorldType) const
 {
 	return WorldType == EWorldType::Game || WorldType == EWorldType::PIE;
@@ -45,10 +51,13 @@ void UGenericGameHUDManager::HandleOnWorldMatchStarting(UWorld* InWorld)
 {
 	FManagerInterface::HandleOnWorldMatchStarting(InWorld);
 
+	ENetMode Mode = InWorld->GetNetMode();
+
 	if (UGameHUDSettings::Get()->AutoCreateGameHUD)
 	{
 		BROADCAST_UNIFIED_DELEGATE(Delegate_PreHUDCreated, BPDelegate_PreHUDCreated);
 		CreateGameHUDs(UGameHUDSettings::Get()->GenericHUDClasses);
+		GIsGameHUDCreated = true;
 		BROADCAST_UNIFIED_DELEGATE(Delegate_PostHUDCreated, BPDelegate_PostHUDCreated);
 	}
 }
@@ -127,7 +136,7 @@ void UGenericGameHUDManager::CreateGameHUD(UGenericGameHUD* InGameHUD)
 		return;
 	}
 
-	GetManagerOwner<UGenericWidgetManager>()->OpenUserWidget(InGameHUD);
+	GetManagerOwner<UGenericWidgetManager>()->OpenGenericWidget(InGameHUD);
 }
 
 void UGenericGameHUDManager::RemoveGameHUDs(TArray<UGenericGameHUD*> InGameHUDs)
@@ -158,7 +167,7 @@ void UGenericGameHUDManager::RemoveGameHUD(UGenericGameHUD* InGameHUD)
 		return;
 	}
 
-	GetManagerOwner<UGenericWidgetManager>()->CloseUserWidget(InGameHUD);
+	GetManagerOwner<UGenericWidgetManager>()->CloseGenericWidget(InGameHUD);
 }
 
 void UGenericGameHUDManager::ClearGameHUDs()

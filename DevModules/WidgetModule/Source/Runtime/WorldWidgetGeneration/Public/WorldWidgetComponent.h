@@ -83,8 +83,8 @@ public:
 public:
 	DECLARE_EVENT_OneParam(UWorldWidgetComponent, FWorldWidgetComponentDelegate, UWorldWidgetComponent*);
 
-	inline static FWorldWidgetComponentDelegate OnWorldWidgetComponentRegister;
-	inline static FWorldWidgetComponentDelegate OnWorldWidgetComponentUnRegister;
+	WORLDWIDGETGENERATION_API inline static FWorldWidgetComponentDelegate OnWorldWidgetComponentRegister;
+	WORLDWIDGETGENERATION_API inline static FWorldWidgetComponentDelegate OnWorldWidgetComponentUnRegister;
 
 public:
 	/* Unique Tag */
@@ -116,30 +116,29 @@ public:
 
 public:
 	UFUNCTION(BlueprintCallable)
-	void SetWorldWidgetPaintMethod(EWorldWidgetPaintMethod InMethod);
+	WORLDWIDGETGENERATION_API void SetWorldWidgetPaintMethod(EWorldWidgetPaintMethod InMethod);
 
 	UFUNCTION(BlueprintCallable)
-	void SetAlwaysInFront(bool AlwaysInFront);
+	WORLDWIDGETGENERATION_API void SetAlwaysInFront(bool AlwaysInFront);
 
 	UFUNCTION(BlueprintCallable)
-	void SetWorldWidgetLookAtSetting(const FWorldWidgetLookAtSetting& InSetting);
+	WORLDWIDGETGENERATION_API void SetWorldWidgetLookAtSetting(const FWorldWidgetLookAtSetting& InSetting);
 
 	UFUNCTION(BlueprintCallable)
-	void SetWorldWidgetByClass(TSubclassOf<UGenericWidget> InWorldWidgetClass);
+	WORLDWIDGETGENERATION_API void SetWorldWidgetByClass(TSubclassOf<UGenericWidget> InWorldWidgetClass);
 
 	UFUNCTION(BlueprintCallable)
-	void SetWorldWidget(UGenericWidget* InWorldWidget);
+	WORLDWIDGETGENERATION_API void SetWorldWidget(UGenericWidget* InWorldWidget);
 
 	UFUNCTION(BlueprintCallable)
-	void SetWidgetVisibility(bool InWidgetVisibility);
+	WORLDWIDGETGENERATION_API void SetWidgetVisibility(bool InWidgetVisibility);
 
-public:
+protected:
 	virtual void ChangeWidgetActiveState(bool IsActive);
 	virtual void UpdateWorldWidget();
 	virtual void UpdateWorldWidgetLookAtRotation();
 	virtual void UpdateWorldWidgetLookAtRotation(FVector InLocation);
 
-protected:
 	UFUNCTION()
 	virtual void OnWidgetActiveAnimationFinish();
 

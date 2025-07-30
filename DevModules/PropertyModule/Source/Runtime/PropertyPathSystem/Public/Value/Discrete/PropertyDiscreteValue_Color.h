@@ -9,15 +9,15 @@
 /**
  * 
  */
-UCLASS()
-class PROPERTYPATHSYSTEM_API UPropertyDiscreteValue_Color : public UPropertyDiscreteValue
+UCLASS(MinimalAPI)
+class UPropertyDiscreteValue_Color : public UPropertyDiscreteValue
 {
 	GENERATED_BODY()
 
 public:
-	FColor GetColorValue() const;
-	void SetColorValue(FColor InValue);
+	PROPERTYPATHSYSTEM_API FColor GetColorValue() const;
+	PROPERTYPATHSYSTEM_API void SetColorValue(FColor InValue);
 
-	FColor GetDefaultColorValue() const;
-	void SetDefaultColorValue(FColor InValue);
+	PROPERTYPATHSYSTEM_API FColor GetDefaultColorValue() const;
+	PROPERTYPATHSYSTEM_API void SetDefaultColorValue(FColor InValue);
 };

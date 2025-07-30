@@ -4,16 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "EnhancedPlayerInput.h"
-#include "CommonPlayerInput.generated.h"
+#include "GenericPlayerInput.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PLAYERINPUTUTILITIES_API UCommonPlayerInput : public UEnhancedPlayerInput
+class PLAYERINPUTUTILITIES_API UGenericPlayerInput : public UEnhancedPlayerInput
 {
 	GENERATED_BODY()
 
 public:
-	UCommonPlayerInput();
+	UGenericPlayerInput();
 };

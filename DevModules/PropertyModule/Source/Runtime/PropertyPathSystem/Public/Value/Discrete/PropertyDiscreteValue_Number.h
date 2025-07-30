@@ -9,8 +9,8 @@
 /**
  * 数字类型属性
  */
-UCLASS()
-class PROPERTYPATHSYSTEM_API UPropertyDiscreteValue_Number : public UPropertyDiscreteValue
+UCLASS(MinimalAPI)
+class  UPropertyDiscreteValue_Number : public UPropertyDiscreteValue
 {
 	GENERATED_BODY()
 

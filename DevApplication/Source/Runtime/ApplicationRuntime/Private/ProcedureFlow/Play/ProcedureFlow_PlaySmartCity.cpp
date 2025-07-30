@@ -5,6 +5,7 @@
 
 #include "CameraManager.h"
 #include "CameraSwitch/CameraSwitchMethod.h"
+#include "Manager/ManagerStatics.h"
 
 AProcedureFlow_PlaySmartCity::AProcedureFlow_PlaySmartCity()
 {

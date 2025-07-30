@@ -12,8 +12,8 @@ class FGenericThread;
 /**
  * 
  */
-UCLASS()
-class GENERICTHREADSYSTEM_API UThreadManager : public UEngineSubsystem, public FManagerInterface
+UCLASS(MinimalAPI)
+class UThreadManager : public UEngineSubsystem, public FManagerInterface
 {
 	GENERATED_BODY()
 
@@ -37,10 +37,10 @@ private:
 	void OnThreadCompleted(FGuid ThreadGuid);
 
 public:
-	TArray<FGuid> GetAllThreadGuid() const;
-	TArray<TSharedPtr<FGenericThread>> GetAllThreads() const;
-	TMap<FGuid, TSharedPtr<FGenericThread>> GetThreadMapping() const { return ThreadMapping; }
-	TSharedPtr<FGenericThread> GetThreadByGuid(const FGuid& ThreadGuid) const;
+	GENERICTHREADSYSTEM_API TArray<FGuid> GetAllThreadGuid() const;
+	GENERICTHREADSYSTEM_API TArray<TSharedPtr<FGenericThread>> GetAllThreads() const;
+	GENERICTHREADSYSTEM_API TMap<FGuid, TSharedPtr<FGenericThread>> GetThreadMapping() const { return ThreadMapping; }
+	GENERICTHREADSYSTEM_API TSharedPtr<FGenericThread> GetThreadByGuid(const FGuid& ThreadGuid) const;
 
 	template <typename T>
 	TSharedPtr<T> GetThread(const FGuid& ThreadGuid)

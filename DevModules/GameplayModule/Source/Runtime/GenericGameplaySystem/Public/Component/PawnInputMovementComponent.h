@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "PlayerInputConfigurationComponent.h"
 #include "Components/ActorComponent.h"
+#include "Interface/PawnInputMovementInterface.h"
 #include "PawnInputMovementComponent.generated.h"
 
 UENUM(BlueprintType)
@@ -20,53 +21,6 @@ enum class ECameraRig : uint8
 	Target
 };
 
-UINTERFACE(MinimalAPI)
-class UPawnInputMovementInterface : public UInterface
-{
-	GENERATED_BODY()
-};
-
-/**
- * 
- */
-class GENERICGAMEPLAYSYSTEM_API IPawnInputMovementInterface
-{
-	GENERATED_BODY()
-
-public:
-	IPawnInputMovementInterface();
-
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Pawn Input Movement Interface")
-	void AddLocation(FVector2D InValue);
-
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Pawn Input Movement Interface")
-	void AddRotation(FVector2D InValue);
-
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Pawn Input Movement Interface")
-	void AddZoom(float InValue);
-
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Pawn Input Movement Interface")
-	void SetLocation(FVector InValue);
-
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Pawn Input Movement Interface")
-	void SetRotation(FRotator InValue);
-
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Pawn Input Movement Interface")
-	void SetZoom(float InValue);
-
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Pawn Input Movement Interface")
-	bool ReassessmentFocus();
-
-public:
-	virtual FVector GetLocation() { return FVector::ZeroVector; }
-	virtual FRotator GetRotation() { return FRotator::ZeroRotator; }
-	virtual float GetZoom() { return 0.f; }
-
-public:
-	virtual float GetMovementSpeedRate() { return 0.f; }
-	virtual float GetRotationSpeedRate() { return 0.f; }
-	virtual float GetZoomSpeedRate() { return 0.f; }
-};
 
 /**
  * 对接增强输入，提供简单运动接口

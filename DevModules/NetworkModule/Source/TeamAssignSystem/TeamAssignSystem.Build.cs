@@ -10,7 +10,7 @@ public class TeamAssignSystem : ModuleRules
 			new string[]
 			{
 				"Core",
-				"DevCore"
+				"DevCore",
 			}
 		);
 
@@ -22,7 +22,13 @@ public class TeamAssignSystem : ModuleRules
 				"Slate",
 				"SlateCore",
 
+				"UMG",
+				"CommonUI",
+				"ModelViewViewModel",
+
+				"UnrealMisc",
 				"GenericGameplaySystem",
+				"WidgetGeneration"
 			}
 		);
 	}

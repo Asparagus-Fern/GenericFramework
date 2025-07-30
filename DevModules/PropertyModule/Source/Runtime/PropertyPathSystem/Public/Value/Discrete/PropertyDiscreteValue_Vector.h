@@ -9,15 +9,15 @@
 /**
  * 
  */
-UCLASS()
-class PROPERTYPATHSYSTEM_API UPropertyDiscreteValue_Vector : public UPropertyDiscreteValue
+UCLASS(MinimalAPI)
+class UPropertyDiscreteValue_Vector : public UPropertyDiscreteValue
 {
 	GENERATED_BODY()
 
 public:
-	FVector GetVectorValue() const;
-	void SetVectorValue(const FVector& InValue);
+	PROPERTYPATHSYSTEM_API FVector GetVectorValue() const;
+	PROPERTYPATHSYSTEM_API void SetVectorValue(const FVector& InValue);
 
-	FVector GetDefaultVectorValue() const;
-	void SetDefaultVectorValue(const FVector& InValue);
+	PROPERTYPATHSYSTEM_API FVector GetDefaultVectorValue() const;
+	PROPERTYPATHSYSTEM_API void SetDefaultVectorValue(const FVector& InValue);
 };

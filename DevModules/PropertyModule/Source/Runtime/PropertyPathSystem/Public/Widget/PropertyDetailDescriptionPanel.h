@@ -11,11 +11,11 @@ class UPropertyCollection;
 /**
  * 属性详细描述面板
  */
-UCLASS()
-class PROPERTYPATHSYSTEM_API UPropertyDetailDescriptionPanel : public UGenericWidget
+UCLASS(MinimalAPI)
+class UPropertyDetailDescriptionPanel : public UGenericWidget
 {
 	GENERATED_BODY()
 
 public:
-	void UpdatePropertyDetailDescription(UPropertyCollection* InPropertyCollection);
+	PROPERTYPATHSYSTEM_API void UpdatePropertyDetailDescription(UPropertyCollection* InPropertyCollection);
 };

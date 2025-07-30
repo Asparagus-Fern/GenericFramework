@@ -11,6 +11,8 @@
 class UGenericWidget;
 class UGenericGameHUD;
 
+inline extern bool GIsGameHUDCreated = false;
+
 DECLARE_MULTICAST_DELEGATE(FDelegate_HUDDelegate);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FBPDelegate_HUDDelegate);
 
@@ -35,6 +37,7 @@ public:
 	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void Deinitialize() override;
+	virtual void OnWorldBeginPlay(UWorld& InWorld) override;
 	virtual bool DoesSupportWorldType(const EWorldType::Type WorldType) const override;
 
 	/* IStateInterface */
@@ -46,37 +49,37 @@ protected:
 private:
 	void OnWidgetOpened(FOpenWidgetParameter& Parameter);
 	void PostWidgetClosed(UGenericWidget* InWidget);
-	
+
 	/* Game HUD */
 public:
 	WIDGETGENERATION_API void CreateGameHUDs(const TArray<TSoftClassPtr<UGenericGameHUD>>& InGameHUDClasses);
 	WIDGETGENERATION_API void CreateGameHUDs(TArray<TSubclassOf<UGenericGameHUD>> InGameHUDClasses);
 	WIDGETGENERATION_API void CreateGameHUDs(TArray<UGenericGameHUD*> InGameHUDs);
 	WIDGETGENERATION_API void CreateGameHUD(UGenericGameHUD* InGameHUD);
-	
+
 	WIDGETGENERATION_API void RemoveGameHUDs(TArray<UGenericGameHUD*> InGameHUDs);
 	WIDGETGENERATION_API void RemoveGameHUD(UGenericGameHUD* InGameHUD);
 
 	WIDGETGENERATION_API void ClearGameHUDs();
 
 public:
-	inline static FDelegate_HUDDelegate Delegate_PreHUDCreated;
+	WIDGETGENERATION_API inline static FDelegate_HUDDelegate Delegate_PreHUDCreated;
 	UPROPERTY(BlueprintAssignable)
 	FBPDelegate_HUDDelegate BPDelegate_PreHUDCreated;
 
-	inline static FDelegate_OnHUDCreated Delegate_OnHUDCreated;
+	WIDGETGENERATION_API inline static FDelegate_OnHUDCreated Delegate_OnHUDCreated;
 	UPROPERTY(BlueprintAssignable)
 	FBPDelegate_OnHUDCreated BPDelegate_OnHUDCreated;
 
-	inline static FDelegate_HUDDelegate Delegate_PostHUDCreated;
+	WIDGETGENERATION_API inline static FDelegate_HUDDelegate Delegate_PostHUDCreated;
 	UPROPERTY(BlueprintAssignable)
 	FBPDelegate_HUDDelegate BPDelegate_PostHUDCreated;
 
-	inline static FDelegate_OnHUDDestroyed Delegate_OnHUDDestroyed;
+	WIDGETGENERATION_API inline static FDelegate_OnHUDDestroyed Delegate_OnHUDDestroyed;
 	UPROPERTY(BlueprintAssignable)
 	FBPDelegate_OnHUDDestroyed BPDelegate_OnHUDDestroyed;
 
-	inline static FDelegate_OnHUDActiveStateChanged Delegate_OnHUDActiveStateChanged;
+	WIDGETGENERATION_API inline static FDelegate_OnHUDActiveStateChanged Delegate_OnHUDActiveStateChanged;
 	UPROPERTY(BlueprintAssignable)
 	FBPDelegate_OnHUDActiveStateChanged BPDelegate_OnHUDActiveStateChanged;
 

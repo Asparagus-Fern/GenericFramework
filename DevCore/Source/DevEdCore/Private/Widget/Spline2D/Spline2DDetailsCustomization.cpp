@@ -55,7 +55,7 @@ void FSpline2DDetailsCustomization::CustomizeDetails(IDetailLayoutBuilder& Detai
 		.AutoHeight()
 		[
 			SNew(SBox)
-			.HeightOverride(this, &FSpline2DDetailsCustomization::GetSplineEditPanelHieght)
+			.HeightOverride(this, &FSpline2DDetailsCustomization::GetSplineEditPanelHeight)
 			[
 				SNew(SSpline2DEditPanel)
 				.SplineInfo_UObject(SplineWidget, &USpline2D::GetSplineInfo)
@@ -78,7 +78,7 @@ void FSpline2DDetailsCustomization::OnSplineInfoValueChanged(const FSpline2DInfo
 	check(Result == FPropertyAccess::Success);
 }
 
-FOptionalSize FSpline2DDetailsCustomization::GetSplineEditPanelHieght() const
+FOptionalSize FSpline2DDetailsCustomization::GetSplineEditPanelHeight() const
 {
 	return UUMGEdSetting::Get()->PanelHeight;
 }

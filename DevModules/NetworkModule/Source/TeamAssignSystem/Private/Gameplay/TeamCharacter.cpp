@@ -2,48 +2,31 @@
 
 #include "Gameplay/TeamCharacter.h"
 
-#include "Gameplay/TeamGameState.h"
-#include "Gameplay/TeamPlayerState.h"
+#include "TeamAssignComponent.h"
+#include "Debug/DebugType.h"
 
 ATeamCharacter::ATeamCharacter()
 {
-	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-}
-
-void ATeamCharacter::BeginPlay()
-{
-	Super::BeginPlay();
-}
-
-void ATeamCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
-{
-	Super::EndPlay(EndPlayReason);
+	TeamAssignComponent = CreateDefaultSubobject<UTeamAssignComponent>(TEXT("TeamAssignComponent"));
 }
 
 bool ATeamCharacter::IsNetRelevantFor(const AActor* RealViewer, const AActor* ViewTarget, const FVector& SrcLocation) const
 {
-	if (const APlayerController* TargetPC = Cast<APlayerController>(RealViewer))
+	bool Result = Super::IsNetRelevantFor(RealViewer, ViewTarget, SrcLocation);
+
+	if (TeamAssignComponent->TeamID != INDEX_NONE)
 	{
-		if (const ATeamPlayerState* TargetPS = Cast<ATeamPlayerState>(TargetPC->PlayerState))
+		if (UTeamAssignComponent* TargetTeamComponent = RealViewer->GetComponentByClass<UTeamAssignComponent>())
 		{
-			if (ATeamGameState* TeamGameState = Cast<ATeamGameState>(GetWorld()->GetGameState()))
-			{
-				const TArray<FPlayerTeam>& PlayerTeams = TeamGameState->GetPlayerTeams();
+			return Result && TargetTeamComponent->TeamID == TeamAssignComponent->TeamID;
+		}
 
-				const FPlayerTeam* PlayerTeam = PlayerTeams.FindByPredicate([this](const FPlayerTeam& PlayerTeam)
-					{
-						return PlayerTeam.PlayerStates.Contains(GetPlayerState());
-					}
-				);
-
-				if (PlayerTeam)
-				{
-					return PlayerTeam->PlayerStates.Contains(TargetPS);
-				}
-			}
+		if (UTeamAssignComponent* TargetTeamComponent = ViewTarget->GetComponentByClass<UTeamAssignComponent>())
+		{
+			return Result && TargetTeamComponent->TeamID == TeamAssignComponent->TeamID;
 		}
 	}
 
-	return Super::IsNetRelevantFor(RealViewer, ViewTarget, SrcLocation);
+	return Result;
 }

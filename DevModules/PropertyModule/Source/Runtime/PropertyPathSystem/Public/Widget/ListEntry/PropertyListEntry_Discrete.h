@@ -13,13 +13,13 @@ class UCommonRotator;
 /**
  * 
  */
-UCLASS(Abstract)
-class PROPERTYPATHSYSTEM_API UPropertyListEntry_Discrete : public UPropertyListEntry
+UCLASS(Abstract, MinimalAPI)
+class UPropertyListEntry_Discrete : public UPropertyListEntry
 {
 	GENERATED_BODY()
 
 public:
-	virtual void SetPropertyEntity(UPropertyEntity* InProperty) override;
+	PROPERTYPATHSYSTEM_API virtual void SetPropertyEntity(UPropertyEntity* InProperty) override;
 
 protected:
 	virtual void NativeOnEntryReleased() override;

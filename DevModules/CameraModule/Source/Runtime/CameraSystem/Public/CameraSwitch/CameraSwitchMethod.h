@@ -14,38 +14,38 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSwitchCameraFinish);
 /**
  * 
  */
-UCLASS(Abstract, EditInlineNew)
-class CAMERASYSTEM_API UCameraSwitchMethod : public UGenericObject
+UCLASS(Abstract, EditInlineNew, MinimalAPI)
+class UCameraSwitchMethod : public UGenericObject
 {
 	GENERATED_BODY()
 
 public:
-	virtual UWorld* GetWorld() const override;
+	CAMERASYSTEM_API virtual UWorld* GetWorld() const override;
 
 public:
 	UFUNCTION(BlueprintCallable)
-	void Reset();
+	CAMERASYSTEM_API void Reset();
 
 public:
 	/* 处理相机过渡 */
 	UFUNCTION(BlueprintNativeEvent)
-	bool HandleSwitchToCameraPoint(APlayerController* InPlayerController, ACameraPointBase* InCameraPoint);
-	virtual bool NativeHandleSwitchToCameraPoint(APlayerController* InPlayerController, ACameraPointBase* InCameraPoint, FSimpleDelegate OnFinish = FSimpleDelegate());
+	CAMERASYSTEM_API bool HandleSwitchToCameraPoint(APlayerController* InPlayerController, ACameraPointBase* InCameraPoint);
+	CAMERASYSTEM_API virtual bool NativeHandleSwitchToCameraPoint(APlayerController* InPlayerController, ACameraPointBase* InCameraPoint, FSimpleDelegate OnFinish = FSimpleDelegate());
 
 	/* 当相机过渡被打断时 */
 	UFUNCTION(BlueprintNativeEvent)
-	void OnSwitchToCameraPointReset();
-	virtual void NativeOnSwitchToCameraPointReset();
+	CAMERASYSTEM_API void OnSwitchToCameraPointReset();
+	CAMERASYSTEM_API virtual void NativeOnSwitchToCameraPointReset();
 
 	/* 当相机过渡完成时 */
 	UFUNCTION(BlueprintNativeEvent)
-	void OnSwitchToCameraPointFinish();
-	virtual void NativeOnSwitchToCameraPointFinish();
+	CAMERASYSTEM_API void OnSwitchToCameraPointFinish();
+	CAMERASYSTEM_API virtual void NativeOnSwitchToCameraPointFinish();
 
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	float GetSwitchDuration();
-	
+	CAMERASYSTEM_API float GetSwitchDuration();
+
 public:
 	UPROPERTY(BlueprintReadOnly)
 	APlayerController* OwnerPlayerController = nullptr;
@@ -55,8 +55,8 @@ public:
 
 public:
 	DECLARE_MULTICAST_DELEGATE_OneParam(FCameraHandleDelegate, UCameraSwitchMethod*)
-	static FCameraHandleDelegate OnSwitchCameraBegin;
-	static FCameraHandleDelegate OnSwitchCameraFinish;
+	CAMERASYSTEM_API inline static FCameraHandleDelegate OnSwitchCameraBegin;
+	CAMERASYSTEM_API inline static FCameraHandleDelegate OnSwitchCameraFinish;
 
 protected:
 	FSimpleDelegate OnHandleFinish;

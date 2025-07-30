@@ -2,10 +2,12 @@
 
 #include "Gameplay/TeamGameMode.h"
 
+#include "GenericGameHUDManager.h"
 #include "Gameplay/TeamGameState.h"
 #include "Gameplay/TeamPlayerController.h"
 #include "Gameplay/TeamPlayerState.h"
 #include "Gameplay/TeamCharacter.h"
+#include "Manager/ManagerStatics.h"
 
 ATeamGameMode::ATeamGameMode(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -14,24 +16,4 @@ ATeamGameMode::ATeamGameMode(const FObjectInitializer& ObjectInitializer)
 	DefaultPawnClass = ATeamCharacter::StaticClass();
 	PlayerControllerClass = ATeamPlayerController::StaticClass();
 	PlayerStateClass = ATeamPlayerState::StaticClass();
-}
-
-void ATeamGameMode::PostLogin(APlayerController* NewPlayer)
-{
-	Super::PostLogin(NewPlayer);
-
-	if (ATeamGameState* TeamGameState = Cast<ATeamGameState>(GameState))
-	{
-		TeamGameState->Server_LoginPlayer(NewPlayer->GetPlayerState<APlayerState>());
-	}
-}
-
-void ATeamGameMode::Logout(AController* Exiting)
-{
-	if (ATeamGameState* TeamGameState = Cast<ATeamGameState>(GameState))
-	{
-		TeamGameState->Server_LogoutPlayer(Exiting->GetPlayerState<APlayerState>());
-	}
-
-	Super::Logout(Exiting);
 }

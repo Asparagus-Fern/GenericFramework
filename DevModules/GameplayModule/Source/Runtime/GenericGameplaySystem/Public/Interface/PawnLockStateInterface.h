@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UObject/Object.h"
-#include "PawnType.generated.h"
+#include "UObject/Interface.h"
+#include "PawnLockStateInterface.generated.h"
 
 /**
  * 
@@ -37,6 +37,7 @@ public:
 	bool CanMove(const FVector& TargetLocation) const;
 };
 
+
 /**
  * 
  */
@@ -68,6 +69,7 @@ public:
 	bool CanTurn(const FRotator& TargetRotation) const;
 };
 
+
 /**
  * 
  */
@@ -86,6 +88,7 @@ public:
 public:
 	bool CanZoom(float TargetSpringArmLength) const;
 };
+
 
 /**
  * 
@@ -119,4 +122,45 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FSpringArmLimit SpringArmLimit;
+};
+
+// This class does not need to be modified.
+UINTERFACE()
+class UPawnLockStateInterface : public UInterface
+{
+	GENERATED_BODY()
+};
+
+/**
+ * 
+ */
+class GENERICGAMEPLAYSYSTEM_API IPawnLockStateInterface
+{
+	GENERATED_BODY()
+
+public:
+	virtual FPawnLockState GetPawnLockState() { return FPawnLockState(); }
+
+	virtual bool CanMove(const FVector& TargetLocation) const { return false; }
+	virtual bool CanTurn(const FRotator& TargetRotation) const { return false; }
+	virtual bool CanZoom(float TargetSpringArmLength) const { return false; }
+
+	virtual FVector GetLimitLocation(const FVector& TargetLocation) const { return FVector::ZeroVector; }
+	virtual FRotator GetLimitRotation(const FRotator& TargetRotation) const { return FRotator::ZeroRotator; }
+	virtual float GetLimitSpringArmLength(float TargetSpringArmLength) const { return 0.f; }
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Pawn Lock State Interface")
+	void SetPawnLockState(const FPawnLockState& InPawnLockState);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Pawn Lock State Interface")
+	void SetIsFullyLock(bool InFullyLock);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Pawn Lock State Interface")
+	void SetIsLockLocation(bool InLockLocation);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Pawn Lock State Interface")
+	void SetIsLockRotation(bool InLockRotation);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Pawn Lock State Interface")
+	void SetIsLockSpringArm(bool InLockSpringArm);
 };

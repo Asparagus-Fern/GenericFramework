@@ -3,9 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Spline2DType.h"
 #include "Framework/SlateDelegates.h"
 #include "Layout/ChildrenBase.h"
+#include "Spline2D/Spline2DType.h"
 #include "Widgets/SPanel.h"
 #include "Widgets/SLeafWidget.h"
 

@@ -4,7 +4,6 @@
 
 // Core Include
 #include "CoreMinimal.h"
-#include "Spline2DType.h"
 #include "Widgets/SCompoundWidget.h"
 #include "Misc/Attribute.h"
 #include "Input/Reply.h"
@@ -12,6 +11,7 @@
 #include "Framework/SlateDelegates.h"
 #include "Rendering/DrawElements.h"
 #include "Styling/CoreStyle.h"
+#include "SWidget/Spline2D/Spline2DType.h"
 
 class FPaintArgs;
 class FSlateWindowElementList;

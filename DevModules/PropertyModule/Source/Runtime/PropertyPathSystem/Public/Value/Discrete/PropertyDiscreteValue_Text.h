@@ -9,15 +9,15 @@
 /**
  * 
  */
-UCLASS()
-class PROPERTYPATHSYSTEM_API UPropertyDiscreteValue_Text : public UPropertyDiscreteValue
+UCLASS(MinimalAPI)
+class UPropertyDiscreteValue_Text : public UPropertyDiscreteValue
 {
 	GENERATED_BODY()
 
 public:
-	FText GetTextValue() const;
-	void SetTextValue(const FText& InValue);
+	PROPERTYPATHSYSTEM_API FText GetTextValue() const;
+	PROPERTYPATHSYSTEM_API void SetTextValue(const FText& InValue);
 
-	FText GetDefaultTextValue() const;
-	void SetDefaultTextValue(const FText& InValue);
+	PROPERTYPATHSYSTEM_API FText GetDefaultTextValue() const;
+	PROPERTYPATHSYSTEM_API void SetDefaultTextValue(const FText& InValue);
 };

@@ -21,141 +21,141 @@ class UMediaHandle : public UMovieSceneHandleBase
 	GENERATED_UCLASS_BODY()
 
 public:
-	void Register(UMediaPlayer* InMediaPlayer, UMediaSource* InMediaSource, FMovieSceneMediaPlaybackSettings InSettings = FMovieSceneMediaPlaybackSettings());
-	void Register(UMediaPlayer* InMediaPlayer, UMediaPlaylist* InMediaPlaylist, FMovieSceneMediaPlaybackSettings InSettings = FMovieSceneMediaPlaybackSettings());
+	MEDIASYSTEM_API void Register(UMediaPlayer* InMediaPlayer, UMediaSource* InMediaSource, FMovieSceneMediaPlaybackSettings InSettings = FMovieSceneMediaPlaybackSettings());
+	MEDIASYSTEM_API void Register(UMediaPlayer* InMediaPlayer, UMediaPlaylist* InMediaPlaylist, FMovieSceneMediaPlaybackSettings InSettings = FMovieSceneMediaPlaybackSettings());
 
 	/* IMovieSceneInterface */
 public:
-	virtual void OpenMovieScene() override;
-	virtual void CloseMovieScene() override;
+	MEDIASYSTEM_API virtual void OpenMovieScene() override;
+	MEDIASYSTEM_API virtual void CloseMovieScene() override;
 
 protected:
-	virtual void OnMovieSceneOpened() override;
-	virtual void OnMovieSceneClosed() override;
+	MEDIASYSTEM_API virtual void OnMovieSceneOpened() override;
+	MEDIASYSTEM_API virtual void OnMovieSceneClosed() override;
 
 public:
 	/* Starts media playback. */
 	UFUNCTION(BlueprintCallable)
-	virtual bool PlayMovieScene() override;
+	MEDIASYSTEM_API virtual bool PlayMovieScene() override;
 
 	/* Starts playback from the media opened event */
 	UFUNCTION(BlueprintCallable)
-	virtual bool PlayMovieSceneFromStart() override;
+	MEDIASYSTEM_API virtual bool PlayMovieSceneFromStart() override;
 
 	/**
 	 * Start playback from the current time cursor position, looping the specified number of times.
 	 * @param NumLoops - The number of loops to play. -1 indicates infinite looping.
 	 */
 	UFUNCTION(BlueprintCallable)
-	virtual bool PlayLoopingMovieScene(int32 NumLoops = -1) override;
+	MEDIASYSTEM_API virtual bool PlayLoopingMovieScene(int32 NumLoops = -1) override;
 
 	/* Reverse playback. */
 	UFUNCTION(BlueprintCallable)
-	virtual bool PlayReverseMovieScene() override;
+	MEDIASYSTEM_API virtual bool PlayReverseMovieScene() override;
 
 	/* Pause playback. */
 	UFUNCTION(BlueprintCallable)
-	virtual bool PauseMovieScene() override;
+	MEDIASYSTEM_API virtual bool PauseMovieScene() override;
 
 	/* Stop playback and move the cursor to the end of the media. */
 	UFUNCTION(BlueprintCallable)
-	virtual bool StopMovieScene() override;
+	MEDIASYSTEM_API virtual bool StopMovieScene() override;
 
 	/* Seeks to the specified playback time. */
 	UFUNCTION(BlueprintCallable)
-	virtual bool SeekMovieScene(FTimecode SeekTime) override;
+	MEDIASYSTEM_API virtual bool SeekMovieScene(FTimecode SeekTime) override;
 
 	/* Changes the direction of playback (go in reverse if it was going forward, or vice versa) */
 	UFUNCTION(BlueprintCallable)
-	virtual void ChangeMovieSceneDirection() override;
+	MEDIASYSTEM_API virtual void ChangeMovieSceneDirection() override;
 
 	/* Check whether playback has started. */
 	UFUNCTION(BlueprintPure)
-	virtual bool IsPlaying() override;
+	MEDIASYSTEM_API virtual bool IsPlaying() override;
 
 	/* Check whether playback is Looping. */
 	UFUNCTION(BlueprintPure)
-	virtual bool IsLooping() override;
+	MEDIASYSTEM_API virtual bool IsLooping() override;
 
 	/* Check whether playback is currently paused. */
 	UFUNCTION(BlueprintPure)
-	virtual bool IsPaused() override;
+	MEDIASYSTEM_API virtual bool IsPaused() override;
 
 	/* Check whether playback is reversed. */
 	UFUNCTION(BlueprintPure)
-	virtual bool IsReversed() override;
+	MEDIASYSTEM_API virtual bool IsReversed() override;
 
 	/* Get the media's current playback time. */
 	UFUNCTION(BlueprintPure)
-	virtual FTimecode GetCurrentTime() override;
+	MEDIASYSTEM_API virtual FTimecode GetCurrentTime() override;
 
 	/* Get the media's duration. */
 	UFUNCTION(BlueprintPure)
-	virtual FTimecode GetDuration() override;
+	MEDIASYSTEM_API virtual FTimecode GetDuration() override;
 
 	/* Get this media's display rate. */
 	UFUNCTION(BlueprintPure)
-	virtual FFrameRate GetFrameRate() override;
+	MEDIASYSTEM_API virtual FFrameRate GetFrameRate() override;
 
 	/* !!! Media can not set frame rate. !!! */
 	UFUNCTION(BlueprintCallable)
-	virtual void SetFrameRate(FFrameRate FrameRate) override;
+	MEDIASYSTEM_API virtual void SetFrameRate(FFrameRate FrameRate) override;
 
 	/* Get the media's current playback rate. */
 	UFUNCTION(BlueprintPure)
-	virtual float GetPlayRate() override;
+	MEDIASYSTEM_API virtual float GetPlayRate() override;
 
 	/* Changes the media's playback rate. todo:If Set a High PlayRate,The Media Is Already Play Finish,But The Delegate OnEndReached May Not Called */
 	UFUNCTION(BlueprintCallable)
-	virtual void SetPlayRate(float InPlayRate) override;
+	MEDIASYSTEM_API virtual void SetPlayRate(float InPlayRate) override;
 
 	/* UMediaHandle */
 public:
 	/* Check whether the player is in an error state. */
 	UFUNCTION(BlueprintPure)
-	bool HasError() const;
+	MEDIASYSTEM_API bool HasError() const;
 
 	/* Check whether playback is buffering data. */
 	UFUNCTION(BlueprintPure)
-	bool IsBuffering() const;
+	MEDIASYSTEM_API bool IsBuffering() const;
 
 	/* Check whether the player is currently connecting to a media source. */
 	UFUNCTION(BlueprintPure)
-	bool IsConnecting() const;
+	MEDIASYSTEM_API bool IsConnecting() const;
 
 	/* Check whether the media is currently opening or buffering. */
 	UFUNCTION(BlueprintPure)
-	bool IsPreparing() const;
+	MEDIASYSTEM_API bool IsPreparing() const;
 
 	/* Whether media is currently closed. */
 	UFUNCTION(BlueprintPure)
-	bool IsClosed() const;
+	MEDIASYSTEM_API bool IsClosed() const;
 
 	UFUNCTION(BlueprintPure)
-	bool IsReady() const;
+	MEDIASYSTEM_API bool IsReady() const;
 
 	/* Check whether media playback can be paused right now. */
 	UFUNCTION(BlueprintPure)
-	bool CanPause() const;
+	MEDIASYSTEM_API bool CanPause() const;
 
 	/* Check whether the specified media source can be played by this player. */
 	UFUNCTION(BlueprintPure)
-	bool CanPlaySource(UMediaSource* InMediaSource) const;
+	MEDIASYSTEM_API bool CanPlaySource(UMediaSource* InMediaSource) const;
 
 	/* Check whether the specified URL can be played by this player. */
 	UFUNCTION(BlueprintPure)
-	bool CanPlayUrl(const FString& Url) const;
+	MEDIASYSTEM_API bool CanPlayUrl(const FString& Url) const;
 
 	/* Get the human readable name of the currently loaded media source. */
 	UFUNCTION(BlueprintPure)
-	virtual FText GetMediaName() const;
+	MEDIASYSTEM_API virtual FText GetMediaName() const;
 
 	UFUNCTION(BlueprintPure)
-	FName GetPlayerName() const;
+	MEDIASYSTEM_API FName GetPlayerName() const;
 
 	/* Get the name of the current desired native player. */
 	UFUNCTION(BlueprintPure)
-	FName GetDesiredPlayerName() const;
+	MEDIASYSTEM_API FName GetDesiredPlayerName() const;
 
 	/**
 	 * Get the supported playback rates.
@@ -164,11 +164,11 @@ public:
 	 * @param Unthinned Whether the rates are for unthinned playback.
 	 */
 	UFUNCTION(BlueprintPure)
-	void GetSupportedRates(TArray<FFloatRange>& OutRates, bool Unthinned) const;
+	MEDIASYSTEM_API void GetSupportedRates(TArray<FFloatRange>& OutRates, bool Unthinned) const;
 
 	/* Get the URL of the currently loaded media, if any. */
 	UFUNCTION(BlueprintPure)
-	const FString& GetUrl() const;
+	MEDIASYSTEM_API const FString& GetUrl() const;
 
 	/**
 	 * Set the time on which to block.
@@ -179,7 +179,7 @@ public:
 	 * @param Time The time to block on, or FTimespan::MinValue to disable.
 	 */
 	UFUNCTION(BlueprintCallable)
-	void SetBlockOnTime(const FTimespan& Time) const;
+	MEDIASYSTEM_API void SetBlockOnTime(const FTimespan& Time) const;
 
 	/**
 	 * Set the time range on which to block.
@@ -189,7 +189,7 @@ public:
 	 *
 	 * @param TimeRange The time range to block on, or empty range to disable.
 	 */
-	void SetBlockOnTimeRange(const TRange<FTimespan>& TimeRange) const;
+	MEDIASYSTEM_API void SetBlockOnTimeRange(const TRange<FTimespan>& TimeRange) const;
 
 	/**
 	 * Enables or disables playback looping.
@@ -198,7 +198,7 @@ public:
 	 * @return true on success, false otherwise.
 	 */
 	UFUNCTION(BlueprintPure)
-	bool SetLooping(bool Looping) const;
+	MEDIASYSTEM_API bool SetLooping(bool Looping) const;
 
 	/**
 	 * Set the volume on the native player if not mixing with Sound Wave asset.
@@ -210,7 +210,7 @@ public:
 	 * @return true on success, false otherwise.
 	 */
 	UFUNCTION(BlueprintCallable)
-	bool SetNativeVolume(float Volume);
+	MEDIASYSTEM_API bool SetNativeVolume(float Volume);
 
 	/**
 	 * Delay of the player's time.
@@ -218,7 +218,7 @@ public:
 	 * @return Delay added to the player's time used to manually sync multiple sources.
 	 */
 	UFUNCTION(BlueprintPure)
-	FTimespan GetTimeDelay() const;
+	MEDIASYSTEM_API FTimespan GetTimeDelay() const;
 
 	/**
 	 * Delay of the player's time.
@@ -229,7 +229,7 @@ public:
 	 * @return true on success, false otherwise.
 	 */
 	UFUNCTION(BlueprintCallable)
-	void SetTimeDelay(FTimespan TimeDelay);
+	MEDIASYSTEM_API void SetTimeDelay(FTimespan TimeDelay);
 
 	/**
 	 * Check whether the specified playback rate is supported.
@@ -238,7 +238,7 @@ public:
 	 * @param Unthinned Whether no frames should be dropped at the given rate.
 	 */
 	UFUNCTION(BlueprintPure)
-	bool SupportsRate(float Rate, bool Unthinned) const;
+	MEDIASYSTEM_API bool SupportsRate(float Rate, bool Unthinned) const;
 
 	/**
 	 * Check whether the currently loaded media supports scrubbing.
@@ -246,7 +246,7 @@ public:
 	 * @return true if scrubbing is supported, false otherwise.
 	 */
 	UFUNCTION(BlueprintPure)
-	bool SupportsScrubbing() const;
+	MEDIASYSTEM_API bool SupportsScrubbing() const;
 
 	/**
 	 * Check whether the currently loaded media can jump to a certain position.
@@ -254,7 +254,7 @@ public:
 	 * @return true if seeking is supported, false otherwise.
 	 */
 	UFUNCTION(BlueprintPure)
-	bool SupportsSeeking() const;
+	MEDIASYSTEM_API bool SupportsSeeking() const;
 
 public:
 	/**
@@ -264,7 +264,7 @@ public:
 	 * @return Number of tracks.
 	 */
 	UFUNCTION(BlueprintPure)
-	int32 GetNumTracks(EMediaPlayerTrack TrackType) const;
+	MEDIASYSTEM_API int32 GetNumTracks(EMediaPlayerTrack TrackType) const;
 
 	/**
 	 * Get the number of formats of the specified track.
@@ -274,7 +274,7 @@ public:
 	 * @return Number of formats.
 	 */
 	UFUNCTION(BlueprintPure)
-	int32 GetNumTrackFormats(EMediaPlayerTrack TrackType, int32 TrackIndex) const;
+	MEDIASYSTEM_API int32 GetNumTrackFormats(EMediaPlayerTrack TrackType, int32 TrackIndex) const;
 
 	/**
 	 * Get the index of the currently selected track of the given type.
@@ -283,7 +283,7 @@ public:
 	 * @return The index of the selected track, or INDEX_NONE if no track is active.
 	 */
 	UFUNCTION(BlueprintPure)
-	int32 GetSelectedTrack(EMediaPlayerTrack TrackType) const;
+	MEDIASYSTEM_API int32 GetSelectedTrack(EMediaPlayerTrack TrackType) const;
 
 	/**
 	 * Get the human readable name of the specified track.
@@ -293,7 +293,7 @@ public:
 	 * @return Display name.
 	 */
 	UFUNCTION(BlueprintPure)
-	FText GetTrackDisplayName(EMediaPlayerTrack TrackType, int32 TrackIndex) const;
+	MEDIASYSTEM_API FText GetTrackDisplayName(EMediaPlayerTrack TrackType, int32 TrackIndex) const;
 
 	/**
 	 * Get the index of the active format of the specified track type.
@@ -303,7 +303,7 @@ public:
 	 * @return The index of the selected format.
 	 */
 	UFUNCTION(BlueprintPure)
-	int32 GetTrackFormat(EMediaPlayerTrack TrackType, int32 TrackIndex) const;
+	MEDIASYSTEM_API int32 GetTrackFormat(EMediaPlayerTrack TrackType, int32 TrackIndex) const;
 
 	/**
 	 * Get the language tag of the specified track.
@@ -313,7 +313,7 @@ public:
 	 * @return Language tag, i.e. "en-US" for English, or "und" for undefined.
 	 */
 	UFUNCTION(BlueprintPure)
-	FString GetTrackLanguage(EMediaPlayerTrack TrackType, int32 TrackIndex) const;
+	MEDIASYSTEM_API FString GetTrackLanguage(EMediaPlayerTrack TrackType, int32 TrackIndex) const;
 
 	/**
 	 * Select the active track of the given type.
@@ -327,7 +327,7 @@ public:
 	 * @return true if the track was selected, false otherwise.
 	 */
 	UFUNCTION(BlueprintCallable)
-	bool SelectTrack(EMediaPlayerTrack TrackType, int32 TrackIndex);
+	MEDIASYSTEM_API bool SelectTrack(EMediaPlayerTrack TrackType, int32 TrackIndex);
 
 	/**
 	 * Set the format on the specified track.
@@ -342,7 +342,7 @@ public:
 	 * @return true if the track was selected, false otherwise.
 	 */
 	UFUNCTION(BlueprintCallable)
-	bool SetTrackFormat(EMediaPlayerTrack TrackType, int32 TrackIndex, int32 FormatIndex);
+	MEDIASYSTEM_API bool SetTrackFormat(EMediaPlayerTrack TrackType, int32 TrackIndex, int32 FormatIndex);
 
 	/**
 	 * Get the number of channels in the specified audio track.
@@ -352,7 +352,7 @@ public:
 	 * @return Number of channels.
 	 */
 	UFUNCTION(BlueprintPure)
-	int32 GetAudioTrackChannels(int32 TrackIndex, int32 FormatIndex) const;
+	MEDIASYSTEM_API int32 GetAudioTrackChannels(int32 TrackIndex, int32 FormatIndex) const;
 
 	/**
 	 * Get the type of the specified audio track format.
@@ -362,7 +362,7 @@ public:
 	 * @return Audio format type string.
 	 */
 	UFUNCTION(BlueprintPure)
-	FString GetAudioTrackType(int32 TrackIndex, int32 FormatIndex) const;
+	MEDIASYSTEM_API FString GetAudioTrackType(int32 TrackIndex, int32 FormatIndex) const;
 
 	/**
 	 * Get the sample rate of the specified audio track.
@@ -372,7 +372,7 @@ public:
 	 * @return Samples per second.
 	 */
 	UFUNCTION(BlueprintPure)
-	int32 GetAudioTrackSampleRate(int32 TrackIndex, int32 FormatIndex) const;
+	MEDIASYSTEM_API int32 GetAudioTrackSampleRate(int32 TrackIndex, int32 FormatIndex) const;
 
 	/**
 	 * Get the type of the specified video track format.
@@ -383,7 +383,7 @@ public:
 	 * @see GetVideoTrackAspectRatio, GetVideoTrackDimensions, GetVideoTrackFrameRate, GetVideoTrackFrameRates
 	 */
 	UFUNCTION(BlueprintPure)
-	FString GetVideoTrackType(int32 TrackIndex, int32 FormatIndex) const;
+	MEDIASYSTEM_API FString GetVideoTrackType(int32 TrackIndex, int32 FormatIndex) const;
 
 	/**
 	 * Get the aspect ratio of the specified video track.
@@ -393,7 +393,7 @@ public:
 	 * @return Aspect ratio.
 	 */
 	UFUNCTION(BlueprintPure)
-	float GetVideoTrackAspectRatio(int32 TrackIndex, int32 FormatIndex) const;
+	MEDIASYSTEM_API float GetVideoTrackAspectRatio(int32 TrackIndex, int32 FormatIndex) const;
 
 	/**
 	 * Get the current dimensions of the specified video track.
@@ -403,7 +403,7 @@ public:
 	 * @return Video dimensions (in pixels).
 	 */
 	UFUNCTION(BlueprintPure)
-	FIntPoint GetVideoTrackDimensions(int32 TrackIndex, int32 FormatIndex) const;
+	MEDIASYSTEM_API FIntPoint GetVideoTrackDimensions(int32 TrackIndex, int32 FormatIndex) const;
 
 	/**
 	 * Get the frame rate of the specified video track.
@@ -413,7 +413,7 @@ public:
 	 * @return Frame rate (in frames per second).
 	 */
 	UFUNCTION(BlueprintPure)
-	float GetVideoTrackFrameRate(int32 TrackIndex, int32 FormatIndex) const;
+	MEDIASYSTEM_API float GetVideoTrackFrameRate(int32 TrackIndex, int32 FormatIndex) const;
 
 	/**
 	 * Get the supported range of frame rates of the specified video track.
@@ -423,7 +423,7 @@ public:
 	 * @return Frame rate range (in frames per second).
 	 */
 	UFUNCTION(BlueprintPure)
-	FFloatRange GetVideoTrackFrameRates(int32 TrackIndex, int32 FormatIndex) const;
+	MEDIASYSTEM_API FFloatRange GetVideoTrackFrameRates(int32 TrackIndex, int32 FormatIndex) const;
 
 	/**
 	 * Set the frame rate of the specified video track.
@@ -434,20 +434,20 @@ public:
 	 * @return true on success, false otherwise.
 	 */
 	UFUNCTION(BlueprintCallable)
-	bool SetVideoTrackFrameRate(int32 TrackIndex, int32 FormatIndex, float FrameRate);
+	MEDIASYSTEM_API bool SetVideoTrackFrameRate(int32 TrackIndex, int32 FormatIndex, float FrameRate);
 
 public:
 	/* Only for 360 videos : Get the current horizontal field of view (in Euler degrees). */
 	UFUNCTION(BlueprintPure)
-	float GetHorizontalFieldOfView() const;
+	MEDIASYSTEM_API float GetHorizontalFieldOfView() const;
 
 	/* Only for 360 videos : Get the current vertical field of view (in Euler degrees). */
 	UFUNCTION(BlueprintPure)
-	float GetVerticalFieldOfView() const;
+	MEDIASYSTEM_API float GetVerticalFieldOfView() const;
 
 	/* Only for 360 videos : Get the current view rotation. */
 	UFUNCTION(BlueprintPure)
-	FRotator GetViewRotation() const;
+	MEDIASYSTEM_API FRotator GetViewRotation() const;
 
 	/**
 	 * Only for 360 videos : Set the field of view.
@@ -458,7 +458,7 @@ public:
 	 * @return true on success, false otherwise.
 	 */
 	UFUNCTION(BlueprintCallable)
-	bool SetViewField(float Horizontal, float Vertical, bool Absolute);
+	MEDIASYSTEM_API bool SetViewField(float Horizontal, float Vertical, bool Absolute);
 
 	/**
 	 * Set the view's rotation (only for 360 videos).
@@ -468,14 +468,14 @@ public:
 	 * @return true on success, false otherwise.
 	 */
 	UFUNCTION(BlueprintCallable)
-	bool SetViewRotation(const FRotator& Rotation, bool Absolute);
+	MEDIASYSTEM_API bool SetViewRotation(const FRotator& Rotation, bool Absolute);
 
 public:
 	UFUNCTION(BlueprintPure)
-	UMediaPlayer* GetMediaPlayer() const;
+	MEDIASYSTEM_API UMediaPlayer* GetMediaPlayer() const;
 
 	UFUNCTION(BlueprintPure)
-	UMediaSource* GetMediaSource() const;
+	MEDIASYSTEM_API UMediaSource* GetMediaSource() const;
 
 private:
 	UFUNCTION()

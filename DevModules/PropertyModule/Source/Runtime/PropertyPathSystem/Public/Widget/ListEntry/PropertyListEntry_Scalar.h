@@ -12,20 +12,20 @@ class USlider;
 /**
  * 
  */
-UCLASS(Abstract)
-class PROPERTYPATHSYSTEM_API UPropertyListEntry_Scalar : public UPropertyListEntry
+UCLASS(Abstract, MinimalAPI)
+class UPropertyListEntry_Scalar : public UPropertyListEntry
 {
 	GENERATED_BODY()
 
 public:
-	virtual void SetPropertyEntity(UPropertyEntity* InProperty) override;
+	PROPERTYPATHSYSTEM_API virtual void SetPropertyEntity(UPropertyEntity* InProperty) override;
 
 protected:
 	virtual void NativeOnInitialized() override;
 	virtual void NativeOnEntryReleased() override;
 	virtual void OnPropertyChanged(UPropertyEntity* InProperty, EPropertyChangeReason Reson) override;
 	virtual void RefreshEditableState(FPropertyEditableState InEditableState) override;
-	
+
 	virtual void Refresh();
 
 protected:
@@ -42,7 +42,7 @@ protected:
 protected:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	TObjectPtr<UPanelWidget> Panel_Value;
-	
+
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidgetOptional))
 	TObjectPtr<UTextBlock> Text_PropertyValue;
 };

@@ -3,36 +3,32 @@
 #include "Character/GenericCharacter.h"
 
 #include "AIController.h"
+#include "Component/PawnInputMovementComponent.h"
+#include "Component/PawnLockStateComponent.h"
+#include "GameFramework/PlayerState.h"
 #include "Kismet/KismetMathLibrary.h"
-
-AGenericCharacter::FCharacterDelegate AGenericCharacter::OnCharacterRegister;
-AGenericCharacter::FCharacterDelegate AGenericCharacter::OnCharacterUnRegister;
 
 AGenericCharacter::AGenericCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	CharacterName = "DevCharacter";
-
 	InputMovementComponent = CreateDefaultSubobject<UPawnInputMovementComponent>("InputMovementComponent");
 	LockStateComponent = CreateDefaultSubobject<UPawnLockStateComponent>("LockStateComponent");
-}
-
-void AGenericCharacter::BeginPlay()
-{
-	Super::BeginPlay();
-	OnCharacterRegister.Broadcast(this);
-}
-
-void AGenericCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
-{
-	OnCharacterUnRegister.Broadcast(this);
-	Super::EndPlay(EndPlayReason);
 }
 
 void AGenericCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput)
 {
 	Super::SetupPlayerInputComponent(PlayerInput);
+}
+
+int32 AGenericCharacter::GetPlayerIdentity()
+{
+	return GetPlayerState()->GetPlayerId();
+}
+
+const FUniqueNetIdRepl& AGenericCharacter::GetPlayerUniqueIdentity()
+{
+	return GetPlayerState()->GetUniqueId();
 }
 
 FPawnLockState AGenericCharacter::GetPawnLockState()

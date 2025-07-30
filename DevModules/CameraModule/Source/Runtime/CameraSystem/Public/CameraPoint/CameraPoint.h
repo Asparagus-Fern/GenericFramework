@@ -10,8 +10,8 @@
 class UCameraSwitchMethod;
 class UCameraComponent;
 
-UCLASS()
-class CAMERASYSTEM_API ACameraPoint : public ACameraPointBase
+UCLASS(MinimalAPI)
+class ACameraPoint : public ACameraPointBase
 {
 	GENERATED_BODY()
 
@@ -20,8 +20,8 @@ public:
 
 	/* ACameraPointBase */
 public:
-	virtual UCameraComponent* GetCameraComponent_Implementation() override;
-	virtual void SetCameraComponent_Implementation(UCameraComponent* InCameraComponent) override;
+	CAMERASYSTEM_API virtual UCameraComponent* GetCameraComponent_Implementation() override;
+	CAMERASYSTEM_API virtual void SetCameraComponent_Implementation(UCameraComponent* InCameraComponent) override;
 
 	/* ACameraPoint */
 public:

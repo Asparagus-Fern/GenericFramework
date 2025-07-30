@@ -2,7 +2,6 @@
 
 #include "SWidget/SSpline2D.h"
 
-#include "Spline2DType.h"
 #include "SWidget/Spline2D/Spline2DBuilder.h"
 #include "SWidget/Spline2D/Spline2DRenderBatch.h"
 

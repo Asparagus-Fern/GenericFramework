@@ -19,17 +19,17 @@ class WIDGETGENERATION_API UBPFunctions_Widget : public UBlueprintFunctionLibrar
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintCallable, meta = (DeterminesOutputType = "InWidgetClass"))
-	static UGenericWidget* OpenUserWidgetByClass(TSubclassOf<UGenericWidget> InWidgetClass);
+	UFUNCTION(BlueprintCallable, meta = (DeterminesOutputType = "InWidgetClass"), DisplayName="OpenGenericWidgetByClass")
+	static UGenericWidget* BP_OpenGenericWidgetByClass(TSubclassOf<UGenericWidget> InWidgetClass);
 
-	UFUNCTION(BlueprintCallable)
-	static bool OpenUserWidget(UGenericWidget* InWidget);
+	UFUNCTION(BlueprintCallable, DisplayName="OpenGenericWidget")
+	static bool BP_OpenGenericWidget(UGenericWidget* InWidget);
 
-	UFUNCTION(BlueprintCallable, meta=(GameplayTagFilter="UI.HUD"))
-	static bool CloseUserWidgetByTag(FGameplayTag InSlotTag, bool MarkAsGarbage = true);
+	UFUNCTION(BlueprintCallable, meta=(GameplayTagFilter="UI.HUD"), DisplayName="CloseGenericWidgetByTag")
+	static bool BP_CloseGenericWidgetByTag(FGameplayTag InSlotTag, bool MarkAsGarbage = true);
 
-	UFUNCTION(BlueprintCallable)
-	static bool CloseUserWidget(UGenericWidget* InWidget, bool MarkAsGarbage = true);
+	UFUNCTION(BlueprintCallable, DisplayName="CloseGenericWidget")
+	static bool BP_CloseGenericWidget(UGenericWidget* InWidget, bool MarkAsGarbage = true);
 
 	UFUNCTION(BlueprintPure)
 	static TArray<UGenericWidget*> GetActivedWidgets();

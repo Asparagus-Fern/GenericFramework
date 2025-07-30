@@ -72,19 +72,19 @@ private:
 	void UpdateCameraTag(int32 InPlayerIndex, FGameplayTag InCameraTag);
 
 public:
-	inline static FDelegate_CameraPointDelegate Delegate_OnCameraPointRegister;
+	CAMERASYSTEM_API inline static FDelegate_CameraPointDelegate Delegate_OnCameraPointRegister;
 	UPROPERTY(BlueprintAssignable)
 	FBPDelegate_CameraPointDelegate BPDelegate_OnCameraPointRegister;
 
-	inline static FDelegate_CameraPointDelegate Delegate_OnCameraPointUnRegister;
+	CAMERASYSTEM_API inline static FDelegate_CameraPointDelegate Delegate_OnCameraPointUnRegister;
 	UPROPERTY(BlueprintAssignable)
 	FBPDelegate_CameraPointDelegate BPDelegate_OnCameraPointUnRegister;
 
-	inline static FDelegate_CameraPointSwitchDelegate Delegate_OnCameraSwitchBegin;
+	CAMERASYSTEM_API inline static FDelegate_CameraPointSwitchDelegate Delegate_OnCameraSwitchBegin;
 	UPROPERTY(BlueprintAssignable)
 	FBPDelegate_CameraPointSwitchDelegate BPDelegate_OnCameraSwitchBegin;
 
-	inline static FDelegate_CameraPointSwitchDelegate Delegate_OnCameraSwitchEnd;
+	CAMERASYSTEM_API inline static FDelegate_CameraPointSwitchDelegate Delegate_OnCameraSwitchEnd;
 	UPROPERTY(BlueprintAssignable)
 	FBPDelegate_CameraPointSwitchDelegate BPDelegate_OnCameraSwitchEnd;
 

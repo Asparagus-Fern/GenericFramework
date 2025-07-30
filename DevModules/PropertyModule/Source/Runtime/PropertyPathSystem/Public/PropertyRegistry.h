@@ -13,32 +13,32 @@ class UPropertyEntity;
 /**
  * 负责属性的注册反注册，属性变更的追踪
  */
-UCLASS(Abstract)
-class PROPERTYPATHSYSTEM_API UPropertyRegistry : public UGenericObject
+UCLASS(Abstract, MinimalAPI)
+class UPropertyRegistry : public UGenericObject
 {
 	GENERATED_BODY()
 
 public:
-	virtual void Initialize() PURE_VIRTUAL(,)
+	PROPERTYPATHSYSTEM_API virtual void Initialize() PURE_VIRTUAL(,)
 
 	/* 应用属性的修改 */
-	virtual void ApplyPropertyChanges();
+	PROPERTYPATHSYSTEM_API virtual void ApplyPropertyChanges();
 
 	/* 保存属性的修改 */
-	virtual void SavePropertyChanges();
+	PROPERTYPATHSYSTEM_API virtual void SavePropertyChanges();
 
 	/* 撤回属性的修改 */
-	virtual void RestoreToInitial();
+	PROPERTYPATHSYSTEM_API virtual void RestoreToInitial();
 
 protected:
-	void ClearDirtyState();
+	PROPERTYPATHSYSTEM_API void ClearDirtyState();
 
 public:
 	UFUNCTION(BlueprintCallable)
-	void RegisterProperty(UPropertyEntity* InPropertyEntity);
+	PROPERTYPATHSYSTEM_API void RegisterProperty(UPropertyEntity* InPropertyEntity);
 
 	UFUNCTION(BlueprintCallable)
-	void UnRegisterProperty(UPropertyEntity* InPropertyEntity);
+	PROPERTYPATHSYSTEM_API void UnRegisterProperty(UPropertyEntity* InPropertyEntity);
 
 private:
 	void RegisterInnerProperty(UPropertyEntity* InPropertyEntity);
@@ -49,12 +49,12 @@ private:
 	void HandlePropertyEditConditionsChanged(UPropertyEntity* Property);
 
 protected:
-	virtual void OnPropertyChanged(UPropertyEntity* Property, EPropertyChangeReason Reason) { return; }
-	virtual void OnPropertyApplied(UPropertyEntity* Property) { return; }
-	virtual void OnPropertyEditConditionsChanged(UPropertyEntity* Property) { return; }
+	PROPERTYPATHSYSTEM_API virtual void OnPropertyChanged(UPropertyEntity* Property, EPropertyChangeReason Reason) { return; }
+	PROPERTYPATHSYSTEM_API virtual void OnPropertyApplied(UPropertyEntity* Property) { return; }
+	PROPERTYPATHSYSTEM_API virtual void OnPropertyEditConditionsChanged(UPropertyEntity* Property) { return; }
 
 	/* 是否在修改时即刻保存属性值 */
-	virtual bool GetIsAutoSaveProperty() { return true; }
+	PROPERTYPATHSYSTEM_API virtual bool GetIsAutoSaveProperty() { return true; }
 
 public:
 	DECLARE_EVENT_TwoParams(UPropertyRegistry, FOnPropertyChanged, UPropertyEntity*, EPropertyChangeReason);

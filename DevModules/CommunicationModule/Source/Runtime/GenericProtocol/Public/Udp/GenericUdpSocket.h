@@ -35,34 +35,34 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FUdpSocketReceiverClosedEvent);
 /**
  * 
  */
-UCLASS()
-class GENERICPROTOCOL_API UGenericUdpSocket : public UGenericObject
+UCLASS(MinimalAPI)
+class UGenericUdpSocket : public UGenericObject
 {
 	GENERATED_BODY()
 
 public:
 	UFUNCTION(BlueprintPure, Category="UDP")
-	static UGenericUdpSocket* CreateUdpSocket(UGenericUdpSocketBuilder* InBuilder);
+	static GENERICPROTOCOL_API UGenericUdpSocket* CreateUdpSocket(UGenericUdpSocketBuilder* InBuilder);
 
 public:
 	UFUNCTION(BlueprintCallable, Category="UDP")
-	void UpdateUdpSocket(UGenericUdpSocketBuilder* Builder);
+	GENERICPROTOCOL_API void UpdateUdpSocket(UGenericUdpSocketBuilder* Builder);
 
 public:
 	UFUNCTION(BlueprintCallable, Category="UDP")
-	bool ConnectSender();
+	GENERICPROTOCOL_API bool ConnectSender();
 
 	UFUNCTION(BlueprintCallable, Category="UDP")
-	bool SendMessage(FString InMessage);
+	GENERICPROTOCOL_API bool SendMessage(FString InMessage);
 
 	UFUNCTION(BlueprintCallable, Category="UDP")
-	bool CloseSender();
+	GENERICPROTOCOL_API bool CloseSender();
 
 	UFUNCTION(BlueprintCallable, Category="UDP")
-	bool ConnectReceiver();
+	GENERICPROTOCOL_API bool ConnectReceiver();
 
 	UFUNCTION(BlueprintCallable, Category="UDP")
-	bool CloseReceiver();
+	GENERICPROTOCOL_API bool CloseReceiver();
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, BlueprintAssignable, Category = "UDP")

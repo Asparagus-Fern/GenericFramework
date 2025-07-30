@@ -52,7 +52,7 @@ void UCameraAutoSwitchAction::SwitchToNext()
 
 			if (!AutoSwitchCameraTimerHandle.IsValid())
 			{
-				GetWorld()->GetTimerManager().SetTimer(AutoSwitchCameraTimerHandle, this, &UCameraAutoSwitchAction::SwitchToNext, TimeInterval + bIsTimerAfrerSwitchFinsih ? CameraHandle->GetSwitchDuration() : 0.f, true);
+				GetWorld()->GetTimerManager().SetTimer(AutoSwitchCameraTimerHandle, this, &UCameraAutoSwitchAction::SwitchToNext, TimeInterval + bIsTimerAfterSwitchFinish ? CameraHandle->GetSwitchDuration() : 0.f, true);
 			}
 		}
 	}

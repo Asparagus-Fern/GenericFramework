@@ -90,19 +90,19 @@ private:
 	void Execute(const TFunctionRef<void(UProcedureFlowComponent* InComponent)>& Func);
 
 public:
-	inline static FDelegate_OnProcedureFlowRegister Delegate_OnProcedureFlowRegister;
+	PROCEDUREFLOWSYSTEM_API inline static FDelegate_OnProcedureFlowRegister Delegate_OnProcedureFlowRegister;
 	UPROPERTY(BlueprintAssignable)
 	FBPDelegate_OnProcedureFlowRegister BPDelegate_OnProcedureFlowRegister;
 
-	inline static FDelegate_OnProcedureFlowEnter Delegate_OnProcedureFlowEnter;
+	PROCEDUREFLOWSYSTEM_API inline static FDelegate_OnProcedureFlowEnter Delegate_OnProcedureFlowEnter;
 	UPROPERTY(BlueprintAssignable)
 	FBPDelegate_OnProcedureFlowEnter BPDelegate_OnProcedureFlowEnter;
 
-	inline static FDelegate_OnProcedureFlowExit Delegate_OnProcedureFlowExit;
+	PROCEDUREFLOWSYSTEM_API inline static FDelegate_OnProcedureFlowExit Delegate_OnProcedureFlowExit;
 	UPROPERTY(BlueprintAssignable)
 	FBPDelegate_OnProcedureFlowExit BPDelegate_OnProcedureFlowExit;
 
-	inline static FDelegate_OnProcedureFlowUnRegister Delegate_OnProcedureFlowUnRegister;
+	PROCEDUREFLOWSYSTEM_API inline static FDelegate_OnProcedureFlowUnRegister Delegate_OnProcedureFlowUnRegister;
 	UPROPERTY(BlueprintAssignable)
 	FBPDelegate_OnProcedureFlowUnRegister BPDelegate_OnProcedureFlowUnRegister;
 
