@@ -2,12 +2,14 @@
 
 #pragma once
 
+#if WITH_EDITOR
+
 #include "CoreMinimal.h"
 #include "EditorSubsystem.h"
 #include "Generic/GenericObject.h"
 #include "Interface/StateInterface.h"
 #include "Interface/ManagerInterface.h"
-#include "TrackEditor/MovieSceneUMGTrackEditor.h"
+#include "Track/MovieSceneUMGEdTrack.h"
 #include "MovieSceneUMGEdManager.generated.h"
 
 class SConstraintCanvas;
@@ -59,8 +61,10 @@ public:
 	virtual void HandleOnWorldEndPlay(UWorld* InWorld) override;
 
 protected:
+#if WITH_EDITORONLY_DATA
 	UPROPERTY(Transient)
 	TArray<UMovieSceneUMGPanel*> MovieSceneUMGPanels;
+#endif
 
 	FDelegateHandle LevelEditorCreatedHandle;
 	void OnLevelEditorCreated(TSharedPtr<ILevelEditor> LevelEditor);
@@ -88,3 +92,5 @@ private:
 	void OnSequencerClosed(TSharedRef<ISequencer> InSequencer);
 	void OnGlobalTimeChanged();
 };
+
+#endif

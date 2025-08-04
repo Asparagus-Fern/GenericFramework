@@ -1,6 +1,8 @@
 ﻿// Copyright ChenTaiye 2025. All Rights Reserved.
 
-#include "TrackEditor/MovieSceneUMGTrackEditor.h"
+#if WITH_EDITOR
+
+#include "Track/MovieSceneUMGEdTrack.h"
 
 #include "ClassViewerModule.h"
 #include "ContentBrowserDelegates.h"
@@ -10,34 +12,34 @@
 #include "SequencerUtilities.h"
 #include "Blueprint/UserWidget.h"
 #include "Blueprint/UserWidgetBlueprint.h"
-#include "Section/UMGSection.h"
+#include "Section/MovieSceneUMGEdSection.h"
 #include "Styling/SlateIconFinder.h"
 #include "Track/MovieSceneUMGTrack.h"
 #include "Tracks/MovieSceneSpawnTrack.h"
 
-#define LOCTEXT_NAMESPACE "FMovieSceneEdUtilitiesModule"
+#define LOCTEXT_NAMESPACE "FMovieSceneExtendModule"
 
-FMovieSceneUMGTrackEditor::FMovieSceneUMGTrackEditor(TSharedRef<ISequencer> InSequencer)
+FMovieSceneUMGEdTrack::FMovieSceneUMGEdTrack(TSharedRef<ISequencer> InSequencer)
 	: FMovieSceneTrackEditor(InSequencer)
 {
 }
 
-TSharedRef<ISequencerTrackEditor> FMovieSceneUMGTrackEditor::CreateTrackEditor(TSharedRef<ISequencer> InSequencer)
+TSharedRef<ISequencerTrackEditor> FMovieSceneUMGEdTrack::CreateTrackEditor(TSharedRef<ISequencer> InSequencer)
 {
-	return MakeShareable(new FMovieSceneUMGTrackEditor(InSequencer));
+	return MakeShareable(new FMovieSceneUMGEdTrack(InSequencer));
 }
 
-bool FMovieSceneUMGTrackEditor::SupportsType(TSubclassOf<UMovieSceneTrack> TrackClass) const
+bool FMovieSceneUMGEdTrack::SupportsType(TSubclassOf<UMovieSceneTrack> TrackClass) const
 {
 	return UMovieSceneUMGTrack::StaticClass() == TrackClass;
 }
 
-TSharedRef<ISequencerSection> FMovieSceneUMGTrackEditor::MakeSectionInterface(UMovieSceneSection& SectionObject, UMovieSceneTrack& Track, FGuid ObjectBinding)
+TSharedRef<ISequencerSection> FMovieSceneUMGEdTrack::MakeSectionInterface(UMovieSceneSection& SectionObject, UMovieSceneTrack& Track, FGuid ObjectBinding)
 {
-	return MakeShareable(new FUMGSection(SectionObject));
+	return MakeShareable(new FMovieSceneUMGEdSection(SectionObject));
 }
 
-void FMovieSceneUMGTrackEditor::BuildAddTrackMenu(FMenuBuilder& MenuBuilder)
+void FMovieSceneUMGEdTrack::BuildAddTrackMenu(FMenuBuilder& MenuBuilder)
 {
 	/* 仅在LevelSequence可使用 */
 	if (!IsValid(Cast<ULevelSequence>(GetSequencer()->GetFocusedMovieSceneSequence())))
@@ -60,12 +62,12 @@ void FMovieSceneUMGTrackEditor::BuildAddTrackMenu(FMenuBuilder& MenuBuilder)
 	);
 }
 
-TSharedPtr<SWidget> FMovieSceneUMGTrackEditor::BuildOutlinerEditWidget(const FGuid& ObjectBinding, UMovieSceneTrack* Track, const FBuildEditWidgetParams& Params)
+TSharedPtr<SWidget> FMovieSceneUMGEdTrack::BuildOutlinerEditWidget(const FGuid& ObjectBinding, UMovieSceneTrack* Track, const FBuildEditWidgetParams& Params)
 {
 	return FSequencerUtilities::MakeAddButton(LOCTEXT("AddUMGWidget", "UMG Widget"), FOnGetContent(), Params.NodeIsHovered, GetSequencer());
 }
 
-TSharedRef<SWidget> FMovieSceneUMGTrackEditor::CreateUMGAssetPicker()
+TSharedRef<SWidget> FMovieSceneUMGEdTrack::CreateUMGAssetPicker()
 {
 	UMovieSceneSequence* Sequence = GetSequencer().IsValid() ? GetSequencer()->GetFocusedMovieSceneSequence() : nullptr;
 
@@ -75,8 +77,8 @@ TSharedRef<SWidget> FMovieSceneUMGTrackEditor::CreateUMGAssetPicker()
 	FAssetPickerConfig AssetPickerConfig;
 	{
 		AssetPickerConfig.SelectionMode = ESelectionMode::Single;
-		AssetPickerConfig.OnAssetSelected = FOnAssetSelected::CreateRaw(this, &FMovieSceneUMGTrackEditor::OnUMGAssetSelected);
-		AssetPickerConfig.OnAssetEnterPressed = FOnAssetEnterPressed::CreateRaw(this, &FMovieSceneUMGTrackEditor::OnUMGAssetEnterPressed);
+		AssetPickerConfig.OnAssetSelected = FOnAssetSelected::CreateRaw(this, &FMovieSceneUMGEdTrack::OnUMGAssetSelected);
+		AssetPickerConfig.OnAssetEnterPressed = FOnAssetEnterPressed::CreateRaw(this, &FMovieSceneUMGEdTrack::OnUMGAssetEnterPressed);
 		AssetPickerConfig.bAllowNullSelection = false;
 		AssetPickerConfig.bAddFilterUI = true;
 		AssetPickerConfig.InitialAssetViewType = EAssetViewType::Tile;
@@ -95,7 +97,7 @@ TSharedRef<SWidget> FMovieSceneUMGTrackEditor::CreateUMGAssetPicker()
 		];
 }
 
-void FMovieSceneUMGTrackEditor::OnUMGAssetSelected(const FAssetData& InAssetData)
+void FMovieSceneUMGEdTrack::OnUMGAssetSelected(const FAssetData& InAssetData)
 {
 	/* 关闭所有菜单 */
 	FSlateApplication::Get().DismissAllMenus();
@@ -123,7 +125,7 @@ void FMovieSceneUMGTrackEditor::OnUMGAssetSelected(const FAssetData& InAssetData
 	AddUMGBinding(SelectedUMGAsset);
 }
 
-void FMovieSceneUMGTrackEditor::OnUMGAssetEnterPressed(const TArray<FAssetData>& InAssetData)
+void FMovieSceneUMGEdTrack::OnUMGAssetEnterPressed(const TArray<FAssetData>& InAssetData)
 {
 	if (InAssetData.Num() > 0)
 	{
@@ -131,7 +133,7 @@ void FMovieSceneUMGTrackEditor::OnUMGAssetEnterPressed(const TArray<FAssetData>&
 	}
 }
 
-bool FMovieSceneUMGTrackEditor::IsUMGBindingExist(UUserWidgetBlueprint* InUserWidgetBP)
+bool FMovieSceneUMGEdTrack::IsUMGBindingExist(UUserWidgetBlueprint* InUserWidgetBP)
 {
 	UMovieSceneSequence* Sequence = GetSequencer()->GetFocusedMovieSceneSequence();
 	UMovieScene* MovieScene = Sequence->GetMovieScene();
@@ -150,7 +152,7 @@ bool FMovieSceneUMGTrackEditor::IsUMGBindingExist(UUserWidgetBlueprint* InUserWi
 	return false;
 }
 
-void FMovieSceneUMGTrackEditor::AddUMGBinding(UUserWidgetBlueprint* InUserWidgetBP)
+void FMovieSceneUMGEdTrack::AddUMGBinding(UUserWidgetBlueprint* InUserWidgetBP)
 {
 	const FScopedTransaction Transaction(LOCTEXT("AddTrackDescription", "Add UMG Track"));
 
@@ -160,3 +162,5 @@ void FMovieSceneUMGTrackEditor::AddUMGBinding(UUserWidgetBlueprint* InUserWidget
 }
 
 #undef LOCTEXT_NAMESPACE
+
+#endif

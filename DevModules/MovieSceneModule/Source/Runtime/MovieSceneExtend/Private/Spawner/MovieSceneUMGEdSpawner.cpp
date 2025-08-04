@@ -1,5 +1,7 @@
 ﻿// Copyright ChenTaiye 2025. All Rights Reserved.
 
+#if WITH_EDITOR
+
 #include "Spawner/MovieSceneUMGEdSpawner.h"
 
 #include "MovieScene.h"
@@ -9,14 +11,12 @@
 #include "Sections/MovieSceneBoolSection.h"
 #include "Tracks/MovieSceneSpawnTrack.h"
 
-#define LOCTEXT_NAMESPACE "FMovieSceneEdUtilitiesModule"
+#define LOCTEXT_NAMESPACE "FMovieSceneExtendModule"
 
 TSharedRef<IMovieSceneObjectSpawner> FMovieSceneUMGEdSpawner::CreateObjectSpawner()
 {
-    return MakeShareable(new FMovieSceneUMGEdSpawner);
+	return MakeShareable(new FMovieSceneUMGEdSpawner);
 }
-
-#if WITH_EDITOR
 
 TValueOrError<FNewSpawnable, FText> FMovieSceneUMGEdSpawner::CreateNewSpawnableType(UObject& SourceObject, UMovieScene& OwnerMovieScene, UActorFactory* ActorFactory)
 {
@@ -43,7 +43,7 @@ bool FMovieSceneUMGEdSpawner::CanSetupDefaultsForSpawnable(UObject* SpawnedObjec
 	{
 		return true;
 	}
-	
+
 	return FMovieSceneUMGSpawner::CanSetupDefaultsForSpawnable(SpawnedObject);
 }
 
@@ -72,6 +72,6 @@ void FMovieSceneUMGEdSpawner::SetupDefaultsForSpawnable(UObject* SpawnedObject, 
 	}
 }
 
-#endif
-
 #undef LOCTEXT_NAMESPACE
+
+#endif

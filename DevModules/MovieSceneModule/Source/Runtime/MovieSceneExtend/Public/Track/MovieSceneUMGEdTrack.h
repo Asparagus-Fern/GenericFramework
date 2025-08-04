@@ -2,6 +2,8 @@
 
 #pragma once
 
+#if WITH_EDITOR
+
 #include "CoreMinimal.h"
 #include "MovieSceneTrackEditor.h"
 
@@ -11,12 +13,12 @@ class UMovieSceneUMGTrack;
 /**
  * 
  */
-class FMovieSceneUMGTrackEditor : public FMovieSceneTrackEditor
+class FMovieSceneUMGEdTrack : public FMovieSceneTrackEditor
 {
 public:
-	FMovieSceneUMGTrackEditor(TSharedRef<ISequencer> InSequencer);
+	FMovieSceneUMGEdTrack(TSharedRef<ISequencer> InSequencer);
 	static TSharedRef<ISequencerTrackEditor> CreateTrackEditor(TSharedRef<ISequencer> InSequencer);
-	
+
 	virtual bool SupportsType(TSubclassOf<UMovieSceneTrack> TrackClass) const override;
 	virtual TSharedRef<ISequencerSection> MakeSectionInterface(UMovieSceneSection& SectionObject, UMovieSceneTrack& Track, FGuid ObjectBinding) override;
 	virtual void BuildAddTrackMenu(FMenuBuilder& MenuBuilder) override;
@@ -30,3 +32,5 @@ private:
 	bool IsUMGBindingExist(UUserWidgetBlueprint* InUserWidgetBP);
 	void AddUMGBinding(UUserWidgetBlueprint* InUserWidgetBP);
 };
+
+#endif

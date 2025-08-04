@@ -3,13 +3,20 @@
 #include "CoreMinimal.h"
 #include "Modules/ModuleManager.h"
 
-class FMovieSceneEdUtilitiesModule : public IModuleInterface
+class FMovieSceneExtendModule : public IModuleInterface
 {
 public:
 	virtual void StartupModule() override;
 	virtual void ShutdownModule() override;
 
 private:
+	FDelegateHandle OnCreateMovieSceneUMGSpawnerDelegateHandle;
+
+#if WITH_EDITOR
+
+private:
 	FDelegateHandle EditorUMGSpawnerDelegateHandle;
 	FDelegateHandle UMGTrackCreateEditorHandle;
+
+#endif
 };

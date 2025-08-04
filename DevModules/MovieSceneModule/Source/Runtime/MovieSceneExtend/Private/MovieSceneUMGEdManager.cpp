@@ -1,5 +1,6 @@
 ﻿// Copyright ChenTaiye 2025. All Rights Reserved.
 
+#if WITH_EDITOR
 
 #include "MovieSceneUMGEdManager.h"
 
@@ -13,7 +14,6 @@
 #include "Tracks/MovieSceneSpawnTrack.h"
 #include "Widgets/Layout/SConstraintCanvas.h"
 
-class ILevelSequenceModule;
 
 void UMovieSceneUMGPanel::NativeOnCreate()
 {
@@ -242,3 +242,5 @@ void UMovieSceneUMGEdManager::OnGlobalTimeChanged()
 {
 	RefreshMovieSceneUMGPanels();
 }
+
+#endif

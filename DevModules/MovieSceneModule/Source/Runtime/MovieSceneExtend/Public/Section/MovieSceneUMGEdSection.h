@@ -10,10 +10,10 @@ class UMovieSceneUMGSection;
 /**
  * 
  */
-class FUMGSection : public FSequencerSection
+class FMovieSceneUMGEdSection : public FSequencerSection
 {
 public:
-	FUMGSection(UMovieSceneSection& InSectionObject);
+	FMovieSceneUMGEdSection(UMovieSceneSection& InSectionObject);
 
 	virtual FText GetSectionTitle() const override;
 	virtual FText GetSectionToolTip() const override;
