@@ -19,7 +19,7 @@ class DEVSLATECORE_API USimpleTextBox : public UWidget
 
 protected:
 #if WITH_EDITOR
-	virtual const FText GetPaletteCategory() override { return NSLOCTEXT("DevWidget", "Common", "Dev Widget"); }
+	virtual const FText GetPaletteCategory() override { return NSLOCTEXT("GenericWidget", "Generic", "Generic Widget"); }
 #endif
 	virtual TSharedRef<SWidget> RebuildWidget() override;
 	virtual void SynchronizeProperties() override;

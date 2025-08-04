@@ -17,91 +17,91 @@ class UFloatingPawnMovement;
 /**
  * 
  */
-UCLASS()
-class GENERICGAMEPLAYSYSTEM_API AGenericPawn : public APawn, public IPlayerIdentityInterface, public IPawnInterface, public IPawnInputMovementInterface, public IPawnLockStateInterface
+UCLASS(MinimalAPI)
+class AGenericPawn : public APawn, public IPlayerIdentityInterface, public IPawnInterface, public IPawnInputMovementInterface, public IPawnLockStateInterface
 {
 	GENERATED_BODY()
 
 public:
-	AGenericPawn(const FObjectInitializer& ObjectInitializer);
+	GENERICGAMEPLAYSYSTEM_API AGenericPawn(const FObjectInitializer& ObjectInitializer);
 
 	/* IPlayerIdentityInterface */
 public:
 	UFUNCTION(BlueprintPure)
-	virtual int32 GetPlayerIdentity() override;
+	GENERICGAMEPLAYSYSTEM_API virtual int32 GetPlayerIdentity() override;
 
 	UFUNCTION(BlueprintPure)
-	virtual const FUniqueNetIdRepl& GetPlayerUniqueIdentity() override;
-	
+	GENERICGAMEPLAYSYSTEM_API virtual const FUniqueNetIdRepl& GetPlayerUniqueIdentity() override;
+
 	/* IPawnInterface */
 public:
 	UFUNCTION(BlueprintPure, Category="Pawn Basic")
-	virtual bool IsPlayer() override;
+	GENERICGAMEPLAYSYSTEM_API virtual bool IsPlayer() override;
 
 	UFUNCTION(BlueprintPure, Category="Pawn Basic")
-	virtual bool IsAI() override;
+	GENERICGAMEPLAYSYSTEM_API virtual bool IsAI() override;
 
 	UFUNCTION(BlueprintPure, Category="Pawn Basic")
-	virtual APlayerController* GetPlayerController() override;
+	GENERICGAMEPLAYSYSTEM_API virtual APlayerController* GetPlayerController() override;
 
 	UFUNCTION(BlueprintPure, Category="Pawn Basic")
-	virtual AAIController* GetAIController() override;
+	GENERICGAMEPLAYSYSTEM_API virtual AAIController* GetAIController() override;
 
 	/* IPawnInputMovementInterface */
 public:
-	virtual void AddLocation_Implementation(FVector2D InValue) override;
-	virtual void AddRotation_Implementation(FVector2D InValue) override;
-	virtual void AddZoom_Implementation(float InValue) override;
-	virtual void SetLocation_Implementation(FVector InValue) override;
-	virtual void SetRotation_Implementation(FRotator InValue) override;
-	virtual void SetZoom_Implementation(float InValue) override;
+	GENERICGAMEPLAYSYSTEM_API virtual void AddLocation_Implementation(FVector2D InValue) override;
+	GENERICGAMEPLAYSYSTEM_API virtual void AddRotation_Implementation(FVector2D InValue) override;
+	GENERICGAMEPLAYSYSTEM_API virtual void AddZoom_Implementation(float InValue) override;
+	GENERICGAMEPLAYSYSTEM_API virtual void SetLocation_Implementation(FVector InValue) override;
+	GENERICGAMEPLAYSYSTEM_API virtual void SetRotation_Implementation(FRotator InValue) override;
+	GENERICGAMEPLAYSYSTEM_API virtual void SetZoom_Implementation(float InValue) override;
 
 	UFUNCTION(BlueprintPure, Category="Pawn Input Movement")
-	virtual FVector GetLocation() override;
+	GENERICGAMEPLAYSYSTEM_API virtual FVector GetLocation() override;
 
 	UFUNCTION(BlueprintPure, Category="Pawn Input Movement")
-	virtual FRotator GetRotation() override;
+	GENERICGAMEPLAYSYSTEM_API virtual FRotator GetRotation() override;
 
 	UFUNCTION(BlueprintPure, Category="Pawn Input Movement")
-	virtual float GetZoom() override;
+	GENERICGAMEPLAYSYSTEM_API virtual float GetZoom() override;
 
 	UFUNCTION(BlueprintPure, Category="Pawn Input Movement")
-	virtual float GetMovementSpeedRate() override;
+	GENERICGAMEPLAYSYSTEM_API virtual float GetMovementSpeedRate() override;
 
 	UFUNCTION(BlueprintPure, Category="Pawn Input Movement")
-	virtual float GetRotationSpeedRate() override;
+	GENERICGAMEPLAYSYSTEM_API virtual float GetRotationSpeedRate() override;
 
 	UFUNCTION(BlueprintPure, Category="Pawn Input Movement")
-	virtual float GetZoomSpeedRate() override;
+	GENERICGAMEPLAYSYSTEM_API virtual float GetZoomSpeedRate() override;
 
 	/* IPawnLockStateInterface */
 public:
 	UFUNCTION(BlueprintPure, Category="Pawn Lock State")
-	virtual FPawnLockState GetPawnLockState() override;
+	GENERICGAMEPLAYSYSTEM_API virtual FPawnLockState GetPawnLockState() override;
 
 	UFUNCTION(BlueprintPure, Category="Pawn Lock State")
-	virtual bool CanMove(const FVector& TargetLocation) const override;
+	GENERICGAMEPLAYSYSTEM_API virtual bool CanMove(const FVector& TargetLocation) const override;
 
 	UFUNCTION(BlueprintPure, Category="Pawn Lock State")
-	virtual bool CanTurn(const FRotator& TargetRotation) const override;
+	GENERICGAMEPLAYSYSTEM_API virtual bool CanTurn(const FRotator& TargetRotation) const override;
 
 	UFUNCTION(BlueprintPure, Category="Pawn Lock State")
-	virtual bool CanZoom(float TargetSpringArmLength) const override;
+	GENERICGAMEPLAYSYSTEM_API virtual bool CanZoom(float TargetSpringArmLength) const override;
 
 	UFUNCTION(BlueprintPure, Category="Pawn Lock State")
-	virtual FVector GetLimitLocation(const FVector& TargetLocation) const override;
+	GENERICGAMEPLAYSYSTEM_API virtual FVector GetLimitLocation(const FVector& TargetLocation) const override;
 
 	UFUNCTION(BlueprintPure, Category="Pawn Lock State")
-	virtual FRotator GetLimitRotation(const FRotator& TargetRotation) const override;
+	GENERICGAMEPLAYSYSTEM_API virtual FRotator GetLimitRotation(const FRotator& TargetRotation) const override;
 
 	UFUNCTION(BlueprintPure, Category="Pawn Lock State")
-	virtual float GetLimitSpringArmLength(float TargetSpringArmLength) const override;
+	GENERICGAMEPLAYSYSTEM_API virtual float GetLimitSpringArmLength(float TargetSpringArmLength) const override;
 
-	virtual void SetPawnLockState_Implementation(const FPawnLockState& InPawnLockState) override;
-	virtual void SetIsFullyLock_Implementation(bool InFullyLock) override;
-	virtual void SetIsLockLocation_Implementation(bool InLockLocation) override;
-	virtual void SetIsLockRotation_Implementation(bool InLockRotation) override;
-	virtual void SetIsLockSpringArm_Implementation(bool InLockSpringArm) override;
+	GENERICGAMEPLAYSYSTEM_API virtual void SetPawnLockState_Implementation(const FPawnLockState& InPawnLockState) override;
+	GENERICGAMEPLAYSYSTEM_API virtual void SetIsFullyLock_Implementation(bool InFullyLock) override;
+	GENERICGAMEPLAYSYSTEM_API virtual void SetIsLockLocation_Implementation(bool InLockLocation) override;
+	GENERICGAMEPLAYSYSTEM_API virtual void SetIsLockRotation_Implementation(bool InLockRotation) override;
+	GENERICGAMEPLAYSYSTEM_API virtual void SetIsLockSpringArm_Implementation(bool InLockSpringArm) override;
 
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)

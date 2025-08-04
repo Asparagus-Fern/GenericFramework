@@ -6,9 +6,31 @@
 #include "Base/GenericWidget.h"
 #include "Manager/ManagerStatics.h"
 
-UGenericWidget* UBPFunctions_Widget::BP_OpenGenericWidgetByClass(TSubclassOf<UGenericWidget> InWidgetClass)
+UGenericWidget* UBPFunctions_Widget::BP_OpenGenericWidgetByClass(UObject* WorldContextObject, TSubclassOf<UGenericWidget> InWidgetClass, APlayerController* OwningPlayer)
 {
-	return Cast<UGenericWidget>(OpenGenericWidget(InWidgetClass));
+	if (InWidgetClass == nullptr)
+	{
+		return nullptr;
+	}
+
+	if (OwningPlayer)
+	{
+		return OpenGenericWidget<UGenericWidget>(OwningPlayer, InWidgetClass);
+	}
+	else if (APlayerController* ImpliedOwningPlayer = Cast<APlayerController>(WorldContextObject))
+	{
+		return OpenGenericWidget<UGenericWidget>(ImpliedOwningPlayer, InWidgetClass);
+	}
+	else if (UUserWidget* OwningWidget = Cast<UUserWidget>(WorldContextObject))
+	{
+		return OpenGenericWidget<UGenericWidget>(OwningWidget, InWidgetClass);
+	}
+	else if (UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull))
+	{
+		return OpenGenericWidget<UGenericWidget>(World, InWidgetClass);
+	}
+
+	return nullptr;
 }
 
 bool UBPFunctions_Widget::BP_OpenGenericWidget(UGenericWidget* InWidget)

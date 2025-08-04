@@ -5,7 +5,7 @@
 
 #include "AssetToolsModule.h"
 
-#define LOCTEXT_NAMESPACE "UAssetFactory"
+#define LOCTEXT_NAMESPACE "FDevEdCoreModule"
 
 UAssetFactory::UAssetFactory()
 {

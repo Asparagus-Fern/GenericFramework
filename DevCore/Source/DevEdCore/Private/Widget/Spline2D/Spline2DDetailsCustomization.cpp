@@ -9,7 +9,7 @@
 #include "Widget/Spline2D/Spline2DEditPanel.h"
 #include "Widget/UMGEdSetting.h"
 
-#define LOCTEXT_NAMESPACE "FUMGSplineDetailsCustomization"
+#define LOCTEXT_NAMESPACE "FDevEdCoreModule"
 
 TSharedRef<IDetailCustomization> FSpline2DDetailsCustomization::MakeInstance()
 {

@@ -10,16 +10,16 @@ class UCameraComponent;
 class UPawnSpringArmComponent;
 class UCameraSwitchMethod;
 
-UCLASS()
-class GENERICGAMEPLAYSYSTEM_API AThirdPersonPawn : public AGenericPawn
+UCLASS(MinimalAPI)
+class AThirdPersonPawn : public AGenericPawn
 {
 	GENERATED_BODY()
 
 public:
-	AThirdPersonPawn(const FObjectInitializer& ObjectInitializer);
-	virtual void BeginPlay() override;
-	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
-	virtual void CalcCamera(float DeltaTime, FMinimalViewInfo& OutResult) override;
+	GENERICGAMEPLAYSYSTEM_API AThirdPersonPawn(const FObjectInitializer& ObjectInitializer);
+	GENERICGAMEPLAYSYSTEM_API virtual void BeginPlay() override;
+	GENERICGAMEPLAYSYSTEM_API virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+	GENERICGAMEPLAYSYSTEM_API virtual void CalcCamera(float DeltaTime, FMinimalViewInfo& OutResult) override;
 
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
@@ -33,20 +33,20 @@ public:
 
 	/* IPawnInputMovementInterface */
 public:
-	virtual void AddLocation_Implementation(FVector2D InValue) override;
-	virtual void AddRotation_Implementation(FVector2D InValue) override;
-	virtual void AddZoom_Implementation(float InValue) override;
-	virtual void SetLocation_Implementation(FVector InValue) override;
-	virtual void SetRotation_Implementation(FRotator InValue) override;
-	virtual void SetZoom_Implementation(float InValue) override;
-	virtual FVector GetLocation() override;
-	virtual FRotator GetRotation() override;
-	virtual float GetZoom() override;
+	GENERICGAMEPLAYSYSTEM_API virtual void AddLocation_Implementation(FVector2D InValue) override;
+	GENERICGAMEPLAYSYSTEM_API virtual void AddRotation_Implementation(FVector2D InValue) override;
+	GENERICGAMEPLAYSYSTEM_API virtual void AddZoom_Implementation(float InValue) override;
+	GENERICGAMEPLAYSYSTEM_API virtual void SetLocation_Implementation(FVector InValue) override;
+	GENERICGAMEPLAYSYSTEM_API virtual void SetRotation_Implementation(FRotator InValue) override;
+	GENERICGAMEPLAYSYSTEM_API virtual void SetZoom_Implementation(float InValue) override;
+	GENERICGAMEPLAYSYSTEM_API virtual FVector GetLocation() override;
+	GENERICGAMEPLAYSYSTEM_API virtual FRotator GetRotation() override;
+	GENERICGAMEPLAYSYSTEM_API virtual float GetZoom() override;
 
 	/* AThirdPersonPawn */
 protected:
-	virtual void OnSwitchCameraBegin(UCameraSwitchMethod* InCameraHandle);
-	virtual void OnSwitchCameraFinish(UCameraSwitchMethod* InCameraHandle);
+	GENERICGAMEPLAYSYSTEM_API virtual void OnSwitchCameraBegin(UCameraSwitchMethod* InCameraHandle);
+	GENERICGAMEPLAYSYSTEM_API virtual void OnSwitchCameraFinish(UCameraSwitchMethod* InCameraHandle);
 
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)

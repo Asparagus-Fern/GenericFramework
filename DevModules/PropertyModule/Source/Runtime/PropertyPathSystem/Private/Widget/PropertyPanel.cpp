@@ -12,7 +12,7 @@
 #include "Editor/WidgetCompilerLog.h"
 #endif
 
-#define LOCTEXT_NAMESPACE "PropertyDetailViewSystem"
+#define LOCTEXT_NAMESPACE "FPropertyPathSystemModule"
 
 void UPropertyPanel::NativeConstruct()
 {

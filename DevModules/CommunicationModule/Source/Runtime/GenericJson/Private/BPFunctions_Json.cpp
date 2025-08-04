@@ -8,7 +8,7 @@
 #include "JsonObjectConverter.h"
 #include "Blueprint/BlueprintExceptionInfo.h"
 
-#define LOCTEXT_NAMESPACE "UBPFunctions_Json"
+#define LOCTEXT_NAMESPACE "FGenericJsonModule"
 
 FJsonObjectConverter::CustomExportCallback EnumOverrideExportCallback;
 

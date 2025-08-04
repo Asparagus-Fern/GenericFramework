@@ -1,6 +1,6 @@
 ﻿#include "DocumentReader.h"
 
-#define LOCTEXT_NAMESPACE "FDocumentReaderModule"
+#define LOCTEXT_NAMESPACE "FApplicationEditorModule"
 
 void FDocumentReaderModule::StartupModule()
 {

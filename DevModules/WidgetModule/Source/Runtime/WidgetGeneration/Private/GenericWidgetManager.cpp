@@ -6,6 +6,7 @@
 #include "GenericGameHUDManager.h"
 #include "Base/GenericWidget.h"
 #include "Blueprint/UserWidget.h"
+#include "Blueprint/WidgetTree.h"
 #include "Manager/ManagerStatics.h"
 
 /* ==================== UWidgetManager ==================== */
@@ -71,19 +72,7 @@ TArray<UGenericWidget*> UGenericWidgetManager::GetActivedWidgets() const
 	return Widgets;
 }
 
-UGenericWidget* UGenericWidgetManager::OpenGenericWidget(TSubclassOf<UGenericWidget> InWidgetClass, FOnWidgetActiveStateChanged OnFinish)
-{
-	UGenericWidget* NewWidget = CreateWidget<UGenericWidget>(GetWorld(), InWidgetClass);
-	if (!OpenGenericWidget(NewWidget, OnFinish))
-	{
-		GenericLOG(GenericLogUI, Error, TEXT("Open Widget Fail"))
-		return nullptr;
-	}
-
-	return NewWidget;
-}
-
-bool UGenericWidgetManager::OpenGenericWidget(UGenericWidget* InWidget, FOnWidgetActiveStateChanged OnFinish)
+bool UGenericWidgetManager::OpenGenericWidget(UGenericWidget* InWidget, const FOnWidgetActiveStateChanged& OnFinish)
 {
 	if (!IsValid(InWidget))
 	{
@@ -136,7 +125,7 @@ bool UGenericWidgetManager::OpenGenericWidget(FOpenWidgetParameter& OpenWidgetPa
 	return false;
 }
 
-bool UGenericWidgetManager::CloseGenericWidget(FGameplayTag InSlotTag, bool MarkAsGarbage, FOnWidgetActiveStateChanged OnFinish)
+bool UGenericWidgetManager::CloseGenericWidget(FGameplayTag InSlotTag, bool MarkAsGarbage, const FOnWidgetActiveStateChanged& OnFinish)
 {
 	if (!InSlotTag.IsValid())
 	{
@@ -152,7 +141,7 @@ bool UGenericWidgetManager::CloseGenericWidget(FGameplayTag InSlotTag, bool Mark
 	return CloseGenericWidget(CloseWidgetParameter);
 }
 
-bool UGenericWidgetManager::CloseGenericWidget(UGenericWidget* InWidget, bool MarkAsGarbage, FOnWidgetActiveStateChanged OnFinish)
+bool UGenericWidgetManager::CloseGenericWidget(UGenericWidget* InWidget, bool MarkAsGarbage, const FOnWidgetActiveStateChanged& OnFinish)
 {
 	if (!IsValid(InWidget))
 	{
@@ -185,6 +174,8 @@ bool UGenericWidgetManager::CloseGenericWidget(FCloseWidgetParameter& CloseWidge
 
 void UGenericWidgetManager::ActiveWidget(FOpenWidgetParameter& OpenWidgetParameter)
 {
+	OpenWidgetParameter.WidgetToHandle->NativeOnCreate();
+
 	BROADCAST_UNIFIED_DELEGATE(Delegate_OnWidgetOpened, BPDelegate_OnWidgetOpened, OpenWidgetParameter);
 
 	if (OpenWidgetParameter.bOpenResult)
@@ -192,7 +183,6 @@ void UGenericWidgetManager::ActiveWidget(FOpenWidgetParameter& OpenWidgetParamet
 		if (!Widgets.Contains(OpenWidgetParameter.WidgetToHandle))
 		{
 			Widgets.Add(OpenWidgetParameter.WidgetToHandle);
-			OpenWidgetParameter.WidgetToHandle->NativeOnCreate();
 		}
 
 		OpenWidgetParameters.Add(OpenWidgetParameter);
@@ -239,7 +229,6 @@ void UGenericWidgetManager::InactiveWidget(FCloseWidgetParameter& CloseWidgetPar
 void UGenericWidgetManager::OnActiveAnimationPlayFinish(UGenericWidget* InWidget)
 {
 	InWidget->GetOnWidgetActiveAnimationPlayFinish().RemoveAll(this);
-	InWidget->NativeOnActivedFinish();
 
 	if (OpenWidgetParameters.Contains(InWidget))
 	{
@@ -254,7 +243,6 @@ void UGenericWidgetManager::OnActiveAnimationPlayFinish(UGenericWidget* InWidget
 void UGenericWidgetManager::OnInactiveAnimationPlayFinish(UGenericWidget* InWidget)
 {
 	InWidget->GetOnWidgetInactiveAnimationPlayFinish().RemoveAll(this);
-	InWidget->NativeOnInactivedFinish();
 
 	if (CloseWidgetParameters.Contains(InWidget))
 	{

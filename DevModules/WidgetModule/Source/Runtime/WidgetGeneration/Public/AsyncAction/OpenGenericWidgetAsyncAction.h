@@ -24,8 +24,8 @@ public:
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"))
 	static UOpenGenericWidgetAsyncAction* AsyncOpenGenericWidget(UGenericWidget* InWidget);
 
-	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"))
-	static UOpenGenericWidgetAsyncAction* AsyncOpenGenericWidgetByClass(TSubclassOf<UGenericWidget> InWidgetClass);
+	UFUNCTION(BlueprintCallable, meta = (DeterminesOutputType = "InWidgetClass", WorldContext="WorldContextObject", BlueprintInternalUseOnly = "true"))
+	static UOpenGenericWidgetAsyncAction* AsyncOpenGenericWidgetByClass(UObject* WorldContextObject, TSubclassOf<class UGenericWidget> InWidgetClass, APlayerController* OwningPlayer);
 
 public:
 	UPROPERTY(BlueprintAssignable)
@@ -37,4 +37,7 @@ public:
 private:
 	virtual void OnWidgetActived(UGenericWidget* InWidget);
 	virtual void OnWidgetActivedAnimationFinish(UGenericWidget* InWidget);
+
+	UPROPERTY()
+	UGenericWidget* Widget;
 };

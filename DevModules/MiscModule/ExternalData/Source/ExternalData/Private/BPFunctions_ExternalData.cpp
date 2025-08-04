@@ -4,7 +4,7 @@
 #include "ExternalData.h"
 #include "Blueprint/BlueprintExceptionInfo.h"
 
-#define LOCTEXT_NAMESPACE "ExternalDataBlueprintLibrary"
+#define LOCTEXT_NAMESPACE "FExternalDataModule"
 
 void UBPFunctions_ExternalData::GetData(EExternalDataResult& ExecResult, const UExternalData* Data, int32& Value)
 {

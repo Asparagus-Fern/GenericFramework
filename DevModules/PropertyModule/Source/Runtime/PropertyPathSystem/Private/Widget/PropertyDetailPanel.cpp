@@ -7,7 +7,7 @@
 #include "Components/TextBlock.h"
 #include "Widget/ListView/PropertyListView.h"
 
-#define LOCTEXT_NAMESPACE "PropertyDetailViewSystem"
+#define LOCTEXT_NAMESPACE "FPropertyPathSystemModule"
 
 void UPropertyDetailPanel::UpdatePropertyDetail(UPropertyCollection* InPropertyCollection)
 {

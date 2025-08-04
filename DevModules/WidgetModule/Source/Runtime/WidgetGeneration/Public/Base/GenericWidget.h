@@ -17,7 +17,7 @@ class UCommonButton;
 class UWidgetAnimationEvent;
 
 /**
- * 
+ *  
  */
 UCLASS(Abstract, MinimalAPI)
 class UGenericWidget : public UUserWidget,

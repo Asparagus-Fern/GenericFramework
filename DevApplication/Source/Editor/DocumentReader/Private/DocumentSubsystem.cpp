@@ -6,7 +6,7 @@
 #include "DevCoreStyle.h"
 #include "DevFrameworkEdSubsystem.h"
 
-#define LOCTEXT_NAMESPACE "UFastSwitchLanguage"
+#define LOCTEXT_NAMESPACE "FApplicationEditorModule"
 
 void UDocumentSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {

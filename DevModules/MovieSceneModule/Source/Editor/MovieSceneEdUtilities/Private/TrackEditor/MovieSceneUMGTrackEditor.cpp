@@ -15,7 +15,7 @@
 #include "Track/MovieSceneUMGTrack.h"
 #include "Tracks/MovieSceneSpawnTrack.h"
 
-#define LOCTEXT_NAMESPACE "UMGTrackEditor"
+#define LOCTEXT_NAMESPACE "FMovieSceneEdUtilitiesModule"
 
 FMovieSceneUMGTrackEditor::FMovieSceneUMGTrackEditor(TSharedRef<ISequencer> InSequencer)
 	: FMovieSceneTrackEditor(InSequencer)

@@ -12,7 +12,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Manager/ManagerProxy.h"
 
-#define LOCTEXT_NAMESPACE "UCoreManager"
+#define LOCTEXT_NAMESPACE "FCameraSystemModule"
 
 bool UCameraManager::ShouldCreateSubsystem(UObject* Outer) const
 {

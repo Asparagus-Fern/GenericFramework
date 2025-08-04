@@ -15,6 +15,11 @@ AGenericPlayerController::AGenericPlayerController()
 void AGenericPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if (IsLocalController())
+	{
+		UGenericGameHUDManager::Delegate_PostHUDCreated.AddUObject(this, &AGenericPlayerController::NativeOnPlayerGameHUDCreated);
+	}
 }
 
 void AGenericPlayerController::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -30,4 +35,10 @@ int32 AGenericPlayerController::GetPlayerIdentity()
 const FUniqueNetIdRepl& AGenericPlayerController::GetPlayerUniqueIdentity()
 {
 	return GetPlayerState<APlayerState>()->GetUniqueId();
+}
+
+void AGenericPlayerController::NativeOnPlayerGameHUDCreated()
+{
+	UGenericGameHUDManager::Delegate_PostHUDCreated.RemoveAll(this);
+	OnPlayerGameHUDCreated();
 }

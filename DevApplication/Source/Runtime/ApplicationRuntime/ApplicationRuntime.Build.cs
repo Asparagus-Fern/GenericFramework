@@ -45,7 +45,6 @@ public class ApplicationRuntime : ModuleRules
 				"MovieSceneUtilities",
 				"LevelSequenceSystem",
 				"MediaSystem",
-				"TeamAssignSystem",
 				"ProcedureFlowSystem",
 				"PropertyUtilities",
 				"GenericThreadSystem",

@@ -2,7 +2,7 @@
 
 #include "GameSettingRegistry.h"
 
-#define LOCTEXT_NAMESPACE "UGameSettingRegistry"
+#define LOCTEXT_NAMESPACE "FGameSettingSystemModule"
 
 void UGameSettingRegistry::Initialize()
 {

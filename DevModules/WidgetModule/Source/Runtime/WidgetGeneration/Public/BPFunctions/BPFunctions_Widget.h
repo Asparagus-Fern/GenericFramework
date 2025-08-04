@@ -19,8 +19,8 @@ class WIDGETGENERATION_API UBPFunctions_Widget : public UBlueprintFunctionLibrar
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintCallable, meta = (DeterminesOutputType = "InWidgetClass"), DisplayName="OpenGenericWidgetByClass")
-	static UGenericWidget* BP_OpenGenericWidgetByClass(TSubclassOf<UGenericWidget> InWidgetClass);
+	UFUNCTION(BlueprintCallable, BlueprintCosmetic, meta=(DeterminesOutputType = "InWidgetClass", WorldContext="WorldContextObject"), DisplayName="OpenGenericWidgetByClass")
+	static UGenericWidget* BP_OpenGenericWidgetByClass(UObject* WorldContextObject, TSubclassOf<class UGenericWidget> InWidgetClass, APlayerController* OwningPlayer);
 
 	UFUNCTION(BlueprintCallable, DisplayName="OpenGenericWidget")
 	static bool BP_OpenGenericWidget(UGenericWidget* InWidget);

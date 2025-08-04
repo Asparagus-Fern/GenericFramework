@@ -107,11 +107,29 @@ void UGenericWidget::NativeDestruct()
 void UGenericWidget::NativeOnCreate()
 {
 	IStateInterface::NativeOnCreate();
+
+	WidgetTree->ForEachWidget([&](UWidget* Widget)
+		{
+			if (IStateInterface* StateInterface = Cast<IStateInterface>(Widget))
+			{
+				StateInterface->NativeOnCreate();
+			}
+		}
+	);
 }
 
 void UGenericWidget::NativeOnActived()
 {
 	IStateInterface::NativeOnActived();
+
+	WidgetTree->ForEachWidget([](UWidget* Widget)
+		{
+			if (IStateInterface* StateInterface = Cast<IStateInterface>(Widget))
+			{
+				StateInterface->NativeOnActived();
+			}
+		}
+	);
 }
 
 void UGenericWidget::NativeOnActivedFinish()
@@ -122,6 +140,15 @@ void UGenericWidget::NativeOnActivedFinish()
 void UGenericWidget::NativeOnInactived()
 {
 	IStateInterface::NativeOnInactived();
+
+	WidgetTree->ForEachWidget([](UWidget* Widget)
+		{
+			if (IStateInterface* StateInterface = Cast<IStateInterface>(Widget))
+			{
+				StateInterface->NativeOnInactived();
+			}
+		}
+	);
 }
 
 void UGenericWidget::NativeOnInactivedFinish()
@@ -338,11 +365,13 @@ void UGenericWidget::StopWidgetAnimation(bool InIsActive)
 
 void UGenericWidget::OnWidgetActiveAnimationPlayFinish()
 {
+	NativeOnActivedFinish();
 	OnWidgetActiveAnimationPlayFinishEvent.Broadcast(this);
 }
 
 void UGenericWidget::OnWidgetInactiveAnimationPlayFinish()
 {
 	SetVisibility(ESlateVisibility::Collapsed);
+	NativeOnInactivedFinish();
 	OnWidgetInactiveAnimationPlayFinishEvent.Broadcast(this);
 }

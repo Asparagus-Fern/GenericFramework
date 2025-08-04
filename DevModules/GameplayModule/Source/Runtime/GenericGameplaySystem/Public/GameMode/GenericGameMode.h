@@ -13,19 +13,19 @@ DECLARE_MULTICAST_DELEGATE_OneParam(FOnPlayerLogout, APlayerController*);
 /**
  * 
  */
-UCLASS()
-class GENERICGAMEPLAYSYSTEM_API AGenericGameMode : public AGameMode
+UCLASS(MinimalAPI)
+class AGenericGameMode : public AGameMode
 {
 	GENERATED_UCLASS_BODY()
 
 public:
-	virtual void PostLogin(APlayerController* NewPlayer) override;
-	virtual void Logout(AController* Exiting) override;
+	GENERICGAMEPLAYSYSTEM_API virtual void PostLogin(APlayerController* NewPlayer) override;
+	GENERICGAMEPLAYSYSTEM_API virtual void Logout(AController* Exiting) override;
 
 public:
-	TArray<APlayerController*> GetPlayers() { return Players; }
-	static FOnPlayerLogin& GetOnPlayerLogin() { return OnPlayerLoginEvent; }
-	static FOnPlayerLogout& GetOnPlayerLogout() { return OnPlayerLogoutEvent; }
+	GENERICGAMEPLAYSYSTEM_API TArray<APlayerController*> GetPlayers() { return Players; }
+	GENERICGAMEPLAYSYSTEM_API static FOnPlayerLogin& GetOnPlayerLogin() { return OnPlayerLoginEvent; }
+	GENERICGAMEPLAYSYSTEM_API static FOnPlayerLogout& GetOnPlayerLogout() { return OnPlayerLogoutEvent; }
 
 private:
 	UPROPERTY(Transient)

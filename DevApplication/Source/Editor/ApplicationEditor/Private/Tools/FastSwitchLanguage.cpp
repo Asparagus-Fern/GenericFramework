@@ -8,7 +8,7 @@
 #include "Internationalization/Culture.h"
 #include "Kismet2/BlueprintEditorUtils.h"
 
-#define LOCTEXT_NAMESPACE "UFastSwitchLanguage"
+#define LOCTEXT_NAMESPACE "FApplicationEditorModule"
 
 void UFastSwitchLanguage::Initialize(FSubsystemCollectionBase& Collection)
 {

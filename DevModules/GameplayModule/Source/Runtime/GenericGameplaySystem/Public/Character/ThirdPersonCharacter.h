@@ -10,27 +10,27 @@ class USpringArmComponent;
 class UPawnSpringArmComponent;
 class UCameraComponent;
 
-UCLASS()
-class GENERICGAMEPLAYSYSTEM_API AThirdPersonCharacter : public AGenericCharacter
+UCLASS(MinimalAPI)
+class AThirdPersonCharacter : public AGenericCharacter
 {
 	GENERATED_BODY()
 
 public:
-	AThirdPersonCharacter();
-	virtual void BeginPlay() override;
-	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+	GENERICGAMEPLAYSYSTEM_API AThirdPersonCharacter();
+	GENERICGAMEPLAYSYSTEM_API virtual void BeginPlay() override;
+	GENERICGAMEPLAYSYSTEM_API virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 	/* IPawnInputMovementInterface */
 public:
-	virtual void AddLocation_Implementation(FVector2D InValue) override;
-	virtual void AddRotation_Implementation(FVector2D InValue) override;
-	virtual void AddZoom_Implementation(float InValue) override;
-	virtual void SetLocation_Implementation(FVector InValue) override;
-	virtual void SetRotation_Implementation(FRotator InValue) override;
-	virtual void SetZoom_Implementation(float InValue) override;
-	virtual FVector GetLocation() override;
-	virtual FRotator GetRotation() override;
-	virtual float GetZoom() override;
+	GENERICGAMEPLAYSYSTEM_API virtual void AddLocation_Implementation(FVector2D InValue) override;
+	GENERICGAMEPLAYSYSTEM_API virtual void AddRotation_Implementation(FVector2D InValue) override;
+	GENERICGAMEPLAYSYSTEM_API virtual void AddZoom_Implementation(float InValue) override;
+	GENERICGAMEPLAYSYSTEM_API virtual void SetLocation_Implementation(FVector InValue) override;
+	GENERICGAMEPLAYSYSTEM_API virtual void SetRotation_Implementation(FRotator InValue) override;
+	GENERICGAMEPLAYSYSTEM_API virtual void SetZoom_Implementation(float InValue) override;
+	GENERICGAMEPLAYSYSTEM_API virtual FVector GetLocation() override;
+	GENERICGAMEPLAYSYSTEM_API virtual FRotator GetRotation() override;
+	GENERICGAMEPLAYSYSTEM_API virtual float GetZoom() override;
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)

@@ -10,7 +10,7 @@
 #include "BPFunctions/BPFunctions_EditorWidget.h"
 #include "Widgets/Layout/SConstraintCanvas.h"
 
-#define LOCTEXT_NAMESPACE "UWorldWidgetManager"
+#define LOCTEXT_NAMESPACE "FWorldWidgetEdGenerationModule"
 
 FEditorWorldWidget::FEditorWorldWidget()
 	: bInitialized(false)

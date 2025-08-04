@@ -9,8 +9,8 @@
 /**
  * 
  */
-UCLASS()
-class GENERICGAMEPLAYSYSTEM_API UGenericGameInstance : public UGameInstance
+UCLASS(MinimalAPI)
+class UGenericGameInstance : public UGameInstance
 {
 	GENERATED_BODY()
 };

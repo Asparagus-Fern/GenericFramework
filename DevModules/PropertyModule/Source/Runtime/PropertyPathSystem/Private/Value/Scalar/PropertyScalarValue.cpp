@@ -4,7 +4,7 @@
 
 #include "Base/PropertyDataSource.h"
 
-#define LOCTEXT_NAMESPACE "PropertyDetailViewSystem"
+#define LOCTEXT_NAMESPACE "FPropertyPathSystemModule"
 
 /* ==================== FPropertyScalarFormat ==================== */
 

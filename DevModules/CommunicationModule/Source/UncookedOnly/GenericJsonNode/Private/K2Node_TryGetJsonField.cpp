@@ -7,7 +7,7 @@
 #include "BPFunctions_Json.h"
 #include "Kismet2/BlueprintEditorUtils.h"
 
-#define LOCTEXT_NAMESPACE "K2Node_GetJsonField"
+#define LOCTEXT_NAMESPACE "FGenericJsonNodeModule"
 
 UK2Node_TryGetJsonField::UK2Node_TryGetJsonField()
 {

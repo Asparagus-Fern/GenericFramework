@@ -9,7 +9,7 @@
 #include "Components/SpinBox.h"
 #include "Components/TextBlock.h"
 
-#define LOCTEXT_NAMESPACE "ULoadingProgressBar"
+#define LOCTEXT_NAMESPACE "FWidgetApplicationModule"
 
 void ULoadingProgressBar::NativePreConstruct()
 {

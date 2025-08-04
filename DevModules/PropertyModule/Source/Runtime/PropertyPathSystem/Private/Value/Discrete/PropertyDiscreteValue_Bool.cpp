@@ -3,7 +3,7 @@
 
 #include "Value/Discrete/PropertyDiscreteValue_Bool.h"
 
-#define LOCTEXT_NAMESPACE "GameSettingValueDiscreteDynamic_Bool"
+#define LOCTEXT_NAMESPACE "FPropertyPathSystemModule"
 
 UPropertyDiscreteValue_Bool::UPropertyDiscreteValue_Bool()
 {

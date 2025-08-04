@@ -3,7 +3,7 @@
 
 #include "Generaic/GenericEdSettings.h"
 
-#define LOCTEXT_NAMESPACE "UManagerEdSetting"
+#define LOCTEXT_NAMESPACE "FDevEdCoreModule"
 
 FName UGenericEdSettings::GetCategoryName() const
 {

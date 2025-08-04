@@ -5,7 +5,7 @@
 
 #include "LevelEditor.h"
 
-#define LOCTEXT_NAMESPACE "UManagerEdSubsystem"
+#define LOCTEXT_NAMESPACE "FDevEdCoreModule"
 
 FOnCommandListInitialize FDevFrameworkDelegate::OnCommandListInitialize;
 FToolMenuDelegate FDevFrameworkDelegate::OnMenuBarExtend;

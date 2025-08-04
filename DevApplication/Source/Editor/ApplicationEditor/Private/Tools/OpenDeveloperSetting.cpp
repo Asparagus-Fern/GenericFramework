@@ -12,7 +12,7 @@
 #include "ISettingsModule.h"
 #include "Manager/ManagerSettings.h"
 
-#define LOCTEXT_NAMESPACE "UOpenDeveloperSetting"
+#define LOCTEXT_NAMESPACE "FApplicationEditorModule"
 
 void UOpenDeveloperSetting::Initialize(FSubsystemCollectionBase& Collection)
 {

@@ -47,7 +47,7 @@ public:
 
 private:
 	void PostHUDCreated();
-	
+
 	/* IStateInterface */
 protected:
 	virtual void HandleOnWorldMatchStarting(UWorld* InWorld) override;
@@ -72,22 +72,24 @@ public:
 	}
 
 public:
-	template <typename T>
-	T* OpenGenericWidget(TSubclassOf<UGenericWidget> InWidgetClass, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged())
+	template <typename WidgetT = UGenericWidget, typename OwnerType = UObject>
+	WidgetT* OpenGenericWidget(OwnerType OwningObject, TSubclassOf<UGenericWidget> InWidgetClass, const FOnWidgetActiveStateChanged& OnFinish = FOnWidgetActiveStateChanged())
 	{
-		if (UGenericWidget* NewWidget = OpenGenericWidget(InWidgetClass, OnFinish))
+		UGenericWidget* NewWidget = CreateWidget<UGenericWidget>(OwningObject, InWidgetClass);
+		if (!OpenGenericWidget(NewWidget, OnFinish))
 		{
-			return Cast<T>(NewWidget);
+			GenericLOG(GenericLogUI, Error, TEXT("Open Widget Fail"))
+			return nullptr;
 		}
-		return nullptr;
+
+		return Cast<WidgetT>(NewWidget);
 	}
 
-	WIDGETGENERATION_API virtual UGenericWidget* OpenGenericWidget(TSubclassOf<UGenericWidget> InWidgetClass, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged());
-	WIDGETGENERATION_API virtual bool OpenGenericWidget(UGenericWidget* InWidget, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged());
+	WIDGETGENERATION_API virtual bool OpenGenericWidget(UGenericWidget* InWidget, const FOnWidgetActiveStateChanged& OnFinish = FOnWidgetActiveStateChanged());
 	WIDGETGENERATION_API virtual bool OpenGenericWidget(FOpenWidgetParameter& OpenWidgetParameter);
 
-	WIDGETGENERATION_API virtual bool CloseGenericWidget(FGameplayTag InSlotTag, bool MarkAsGarbage = true, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged());
-	WIDGETGENERATION_API virtual bool CloseGenericWidget(UGenericWidget* InWidget, bool MarkAsGarbage = true, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged());
+	WIDGETGENERATION_API virtual bool CloseGenericWidget(FGameplayTag InSlotTag, bool MarkAsGarbage = true, const FOnWidgetActiveStateChanged& OnFinish = FOnWidgetActiveStateChanged());
+	WIDGETGENERATION_API virtual bool CloseGenericWidget(UGenericWidget* InWidget, bool MarkAsGarbage = true, const FOnWidgetActiveStateChanged& OnFinish = FOnWidgetActiveStateChanged());
 	WIDGETGENERATION_API virtual bool CloseGenericWidget(FCloseWidgetParameter& CloseWidgetParameter);
 
 	virtual void ActiveWidget(FOpenWidgetParameter& OpenWidgetParameter);
@@ -143,29 +145,32 @@ private:
 	TArray<FOpenWidgetParameter> CacheOpenWidgets;
 };
 
-template <typename T>
-T* OpenGenericWidget(TSubclassOf<UGenericWidget> InWidgetClass, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged())
+template <typename WidgetT = UGenericWidget, typename OwnerType = UObject>
+WidgetT* OpenGenericWidget(OwnerType OwningObject, TSubclassOf<UGenericWidget> InWidgetClass, const FOnWidgetActiveStateChanged& OnFinish = FOnWidgetActiveStateChanged())
 {
 	if (UGenericWidgetManager* GenericWidgetManager = GetManagerOwner<UGenericWidgetManager>())
 	{
-		if (UGenericWidget* NewWidget = GenericWidgetManager->OpenGenericWidget(InWidgetClass, OnFinish))
-		{
-			return Cast<T>(NewWidget);
-		}
+		return GenericWidgetManager->OpenGenericWidget<WidgetT>(OwningObject, InWidgetClass, OnFinish);
 	}
 	return nullptr;
 }
 
-inline static UGenericWidget* OpenGenericWidget(TSubclassOf<UGenericWidget> InWidgetClass, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged())
+template <typename WidgetT = UGenericWidget>
+WidgetT* OpenGenericWidget(TSubclassOf<UGenericWidget> InWidgetClass, const FOnWidgetActiveStateChanged& OnFinish = FOnWidgetActiveStateChanged())
 {
 	if (UGenericWidgetManager* GenericWidgetManager = GetManagerOwner<UGenericWidgetManager>())
 	{
-		return GenericWidgetManager->OpenGenericWidget(InWidgetClass, OnFinish);
+		return GenericWidgetManager->OpenGenericWidget<WidgetT>(GenericWidgetManager->GetWorld(), InWidgetClass, OnFinish);
 	}
 	return nullptr;
 }
 
-inline static bool OpenGenericWidget(UGenericWidget* InWidget, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged())
+inline static UGenericWidget* OpenGenericWidget(const TSubclassOf<UGenericWidget>& InWidgetClass, const FOnWidgetActiveStateChanged& OnFinish = FOnWidgetActiveStateChanged())
+{
+	return OpenGenericWidget<UGenericWidget>(InWidgetClass, OnFinish);
+}
+
+inline static bool OpenGenericWidget(UGenericWidget* InWidget, const FOnWidgetActiveStateChanged& OnFinish = FOnWidgetActiveStateChanged())
 {
 	if (UGenericWidgetManager* GenericWidgetManager = GetManagerOwner<UGenericWidgetManager>())
 	{
@@ -183,7 +188,7 @@ inline static bool OpenGenericWidget(FOpenWidgetParameter& OpenWidgetParameter)
 	return false;
 }
 
-inline static bool CloseGenericWidget(FGameplayTag InSlotTag, bool MarkAsGarbage = true, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged())
+inline static bool CloseGenericWidget(FGameplayTag InSlotTag, bool MarkAsGarbage = true, const FOnWidgetActiveStateChanged& OnFinish = FOnWidgetActiveStateChanged())
 {
 	if (UGenericWidgetManager* GenericWidgetManager = GetManagerOwner<UGenericWidgetManager>())
 	{
@@ -192,7 +197,7 @@ inline static bool CloseGenericWidget(FGameplayTag InSlotTag, bool MarkAsGarbage
 	return false;
 }
 
-inline static bool CloseGenericWidget(UGenericWidget* InWidget, bool MarkAsGarbage = true, FOnWidgetActiveStateChanged OnFinish = FOnWidgetActiveStateChanged())
+inline static bool CloseGenericWidget(UGenericWidget* InWidget, bool MarkAsGarbage = true, const FOnWidgetActiveStateChanged& OnFinish = FOnWidgetActiveStateChanged())
 {
 	if (UGenericWidgetManager* GenericWidgetManager = GetManagerOwner<UGenericWidgetManager>())
 	{

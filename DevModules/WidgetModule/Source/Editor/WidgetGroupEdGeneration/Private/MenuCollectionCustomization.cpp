@@ -13,7 +13,7 @@
 #include "Manager/ManagerStatics.h"
 #include "Runtime/WidgetGroupGeneration/Public/GenericButtonCollection.h"
 
-#define LOCTEXT_NAMESPACE "FMenuCollectionCustomization"
+#define LOCTEXT_NAMESPACE "FWidgetGroupEdGenerationModule"
 
 TSharedRef<IDetailCustomization> FGenericButtonCollectionCustomization::MakeInstance()
 {

@@ -12,21 +12,27 @@ class IPawnInputInterface;
 /**
  * 
  */
-UCLASS()
-class GENERICGAMEPLAYSYSTEM_API AGenericPlayerController : public APlayerController, public IPlayerIdentityInterface
+UCLASS(MinimalAPI)
+class AGenericPlayerController : public APlayerController, public IPlayerIdentityInterface
 {
 	GENERATED_BODY()
 
 public:
-	AGenericPlayerController();
-	virtual void BeginPlay() override;
-	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+	GENERICGAMEPLAYSYSTEM_API AGenericPlayerController();
+	GENERICGAMEPLAYSYSTEM_API virtual void BeginPlay() override;
+	GENERICGAMEPLAYSYSTEM_API virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 	/* IPlayerIdentityInterface */
 public:
 	UFUNCTION(BlueprintPure)
-	virtual int32 GetPlayerIdentity() override;
+	GENERICGAMEPLAYSYSTEM_API virtual int32 GetPlayerIdentity() override;
 
 	UFUNCTION(BlueprintPure)
-	virtual const FUniqueNetIdRepl& GetPlayerUniqueIdentity() override;
+	GENERICGAMEPLAYSYSTEM_API virtual const FUniqueNetIdRepl& GetPlayerUniqueIdentity() override;
+
+	/* AGenericPlayerController */
+protected:
+	GENERICGAMEPLAYSYSTEM_API virtual void NativeOnPlayerGameHUDCreated();
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnPlayerGameHUDCreated();
 };

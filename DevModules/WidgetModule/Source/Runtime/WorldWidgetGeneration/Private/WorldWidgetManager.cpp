@@ -6,7 +6,7 @@
 #include "WorldWidgetComponent.h"
 #include "Base/GenericWidget.h"
 
-#define LOCTEXT_NAMESPACE "UWorldWidgetManager"
+#define LOCTEXT_NAMESPACE "FWorldWidgetGenerationModule"
 
 bool UWorldWidgetManager::ShouldCreateSubsystem(UObject* Outer) const
 {

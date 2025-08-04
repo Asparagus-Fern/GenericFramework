@@ -3,7 +3,7 @@
 
 #include "Asset/AssetDefinitionBase.h"
 
-#define LOCTEXT_NAMESPACE "UAssetDefinition_MenuCollection"
+#define LOCTEXT_NAMESPACE "FDevEdCoreModule"
 
 FAssetCategoryPath UAssetDefinitionBase::DeveloperCategory(LOCTEXT("Developer_Category_Path", "Developer"));
 

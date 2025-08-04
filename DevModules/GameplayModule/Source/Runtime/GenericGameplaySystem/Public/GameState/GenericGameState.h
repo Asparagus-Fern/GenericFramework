@@ -9,8 +9,8 @@
 /**
  * 
  */
-UCLASS()
-class GENERICGAMEPLAYSYSTEM_API AGenericGameState : public AGameState
+UCLASS(MinimalAPI)
+class AGenericGameState : public AGameState
 {
 	GENERATED_BODY()
 };

@@ -3,7 +3,7 @@
 
 #include "Generic/GenericSettings.h"
 
-#define LOCTEXT_NAMESPACE "UManagerSetting"
+#define LOCTEXT_NAMESPACE "FDevCoreModule"
 
 FName UGenericSettings::GetContainerName() const
 {

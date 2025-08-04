@@ -9,7 +9,7 @@
 #include "Sections/MovieSceneBoolSection.h"
 #include "Tracks/MovieSceneSpawnTrack.h"
 
-#define LOCTEXT_NAMESPACE "MovieSceneUMGEdSpawner"
+#define LOCTEXT_NAMESPACE "FMovieSceneEdUtilitiesModule"
 
 TSharedRef<IMovieSceneObjectSpawner> FMovieSceneUMGEdSpawner::CreateObjectSpawner()
 {

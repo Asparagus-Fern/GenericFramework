@@ -9,7 +9,7 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "Tool/ZoneShapeContainer.h"
 
-#define LOCTEXT_NAMESPACE "DrawZoneShapeTool"
+#define LOCTEXT_NAMESPACE "FExtendEdModeModule"
 
 struct FZoneShapePoint;
 

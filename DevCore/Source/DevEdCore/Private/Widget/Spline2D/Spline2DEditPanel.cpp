@@ -9,7 +9,7 @@
 #include "SWidget/Spline2D/Spline2DRenderBatch.h"
 #include "Widget/UMGEdSetting.h"
 
-#define LOCTEXT_NAMESPACE "SUMGSplineEditPanel"
+#define LOCTEXT_NAMESPACE "FDevEdCoreModule"
 
 const static FVector2D CONST_KeySize = FVector2D(11, 11);
 const static FVector2D CONST_TangentSize = FVector2D(7, 7);

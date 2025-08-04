@@ -10,7 +10,7 @@ DECLARE_MULTICAST_DELEGATE_OneParam(FOnActivedFinish, UObject*)
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnInactivedFinish, UObject*)
 
 // This class does not need to be modified.
-UINTERFACE()
+UINTERFACE(MinimalAPI)
 class UStateInterface : public UInterface
 {
 	GENERATED_BODY()
@@ -39,7 +39,7 @@ public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="State Interface")
 	void OnRefresh();
 	virtual void NativeOnRefresh();
-
+	
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="State Interface")
 	void OnInactived();
 	virtual void NativeOnInactived();

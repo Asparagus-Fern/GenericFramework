@@ -77,7 +77,7 @@ class DEVSLATECORE_API UGeneraicDynamicEntryBox : public UDynamicEntryBox
 
 protected:
 #if WITH_EDITOR
-	virtual const FText GetPaletteCategory() override { return NSLOCTEXT("DevWidget", "Common", "Dev Widget"); }
+	virtual const FText GetPaletteCategory() override { return NSLOCTEXT("GenericWidget", "Generic", "Generic Widget"); }
 #endif
 
 public:

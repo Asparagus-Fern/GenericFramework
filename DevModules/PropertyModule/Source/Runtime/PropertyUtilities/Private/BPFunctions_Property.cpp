@@ -5,7 +5,7 @@
 
 #include "Blueprint/BlueprintExceptionInfo.h"
 
-#define LOCTEXT_NAMESPACE "UBPFunctions_Property"
+#define LOCTEXT_NAMESPACE "FPropertyUtilitiesModule"
 
 bool UBPFunctions_Property::GetBooleanValue(const UObject* Target, const FName& PropertyName, bool& Value)
 {

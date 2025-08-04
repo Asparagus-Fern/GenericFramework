@@ -8,17 +8,17 @@
 
 class UPlayerInputIdleActionComponent;
 
-UCLASS()
-class GENERICGAMEPLAYSYSTEM_API ASmartCityPawn : public AThirdPersonPawn
+UCLASS(MinimalAPI)
+class ASmartCityPawn : public AThirdPersonPawn
 {
 	GENERATED_BODY()
 
 public:
-	ASmartCityPawn(const FObjectInitializer& ObjectInitializer);
+	GENERICGAMEPLAYSYSTEM_API ASmartCityPawn(const FObjectInitializer& ObjectInitializer);
 
 	/* IPawnInputMovementInterface */
 public:
-	virtual bool ReassessmentFocus_Implementation() override;
+	GENERICGAMEPLAYSYSTEM_API virtual bool ReassessmentFocus_Implementation() override;
 
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)

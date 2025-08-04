@@ -13,51 +13,51 @@
 class UPawnLockStateComponent;
 class UPawnInputMovementComponent;
 
-UCLASS()
-class GENERICGAMEPLAYSYSTEM_API AGenericCharacter : public ACharacter, public IPlayerIdentityInterface, public IPawnInterface, public IPawnInputMovementInterface, public IPawnLockStateInterface
+UCLASS(MinimalAPI)
+class  AGenericCharacter : public ACharacter, public IPlayerIdentityInterface, public IPawnInterface, public IPawnInputMovementInterface, public IPawnLockStateInterface
 {
 	GENERATED_BODY()
 
 public:
-	AGenericCharacter();
-	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInput) override;
+	GENERICGAMEPLAYSYSTEM_API AGenericCharacter();
+	GENERICGAMEPLAYSYSTEM_API virtual void SetupPlayerInputComponent(UInputComponent* PlayerInput) override;
 
 	/* IPlayerIdentityInterface */
 public:
 	UFUNCTION(BlueprintPure)
-	virtual int32 GetPlayerIdentity() override;
+	GENERICGAMEPLAYSYSTEM_API virtual int32 GetPlayerIdentity() override;
 
 	UFUNCTION(BlueprintPure)
-	virtual const FUniqueNetIdRepl& GetPlayerUniqueIdentity() override;
+	GENERICGAMEPLAYSYSTEM_API virtual const FUniqueNetIdRepl& GetPlayerUniqueIdentity() override;
 
 	/* IPawnLockStateInterface */
 public:
 	UFUNCTION(BlueprintPure, Category="Character Lock State")
-	virtual FPawnLockState GetPawnLockState() override;
+	GENERICGAMEPLAYSYSTEM_API virtual FPawnLockState GetPawnLockState() override;
 
 	UFUNCTION(BlueprintPure, Category="Character Lock State")
-	virtual bool CanMove(const FVector& TargetLocation) const override;
+	GENERICGAMEPLAYSYSTEM_API virtual bool CanMove(const FVector& TargetLocation) const override;
 
 	UFUNCTION(BlueprintPure, Category="Character Lock State")
-	virtual bool CanTurn(const FRotator& TargetRotation) const override;
+	GENERICGAMEPLAYSYSTEM_API virtual bool CanTurn(const FRotator& TargetRotation) const override;
 
 	UFUNCTION(BlueprintPure, Category="Character Lock State")
-	virtual bool CanZoom(float TargetSpringArmLength) const override;
+	GENERICGAMEPLAYSYSTEM_API virtual bool CanZoom(float TargetSpringArmLength) const override;
 
 	UFUNCTION(BlueprintPure, Category="Character Lock State")
-	virtual FVector GetLimitLocation(const FVector& TargetLocation) const override;
+	GENERICGAMEPLAYSYSTEM_API virtual FVector GetLimitLocation(const FVector& TargetLocation) const override;
 
 	UFUNCTION(BlueprintPure, Category="Character Lock State")
-	virtual FRotator GetLimitRotation(const FRotator& TargetRotation) const override;
+	GENERICGAMEPLAYSYSTEM_API virtual FRotator GetLimitRotation(const FRotator& TargetRotation) const override;
 
 	UFUNCTION(BlueprintPure, Category="Character Lock State")
-	virtual float GetLimitSpringArmLength(float TargetSpringArmLength) const override;
+	GENERICGAMEPLAYSYSTEM_API virtual float GetLimitSpringArmLength(float TargetSpringArmLength) const override;
 
-	virtual void SetPawnLockState_Implementation(const FPawnLockState& InPawnLockState) override;
-	virtual void SetIsFullyLock_Implementation(bool InFullyLock) override;
-	virtual void SetIsLockLocation_Implementation(bool InLockLocation) override;
-	virtual void SetIsLockRotation_Implementation(bool InLockRotation) override;
-	virtual void SetIsLockSpringArm_Implementation(bool InLockSpringArm) override;
+	GENERICGAMEPLAYSYSTEM_API virtual void SetPawnLockState_Implementation(const FPawnLockState& InPawnLockState) override;
+	GENERICGAMEPLAYSYSTEM_API virtual void SetIsFullyLock_Implementation(bool InFullyLock) override;
+	GENERICGAMEPLAYSYSTEM_API virtual void SetIsLockLocation_Implementation(bool InLockLocation) override;
+	GENERICGAMEPLAYSYSTEM_API virtual void SetIsLockRotation_Implementation(bool InLockRotation) override;
+	GENERICGAMEPLAYSYSTEM_API virtual void SetIsLockSpringArm_Implementation(bool InLockSpringArm) override;
 
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)

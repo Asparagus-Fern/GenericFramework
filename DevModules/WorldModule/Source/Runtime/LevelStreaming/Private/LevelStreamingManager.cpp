@@ -13,7 +13,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Manager/ManagerStatics.h"
 
-#define LOCTEXT_NAMESPACE "ULevelStreamingManager"
+#define LOCTEXT_NAMESPACE "FLevelStreamingModule"
 
 bool ULevelStreamingManager::ShouldCreateSubsystem(UObject* Outer) const
 {

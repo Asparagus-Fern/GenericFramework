@@ -12,7 +12,7 @@
 #include "Misc/Paths.h"
 #include "UObject/ObjectSaveContext.h"
 
-#define LOCTEXT_NAMESPACE "ExternalData"
+#define LOCTEXT_NAMESPACE "FExternalDataModule"
 
 DECLARE_LOG_CATEGORY_CLASS(LogExternalData, Log, All);
 
