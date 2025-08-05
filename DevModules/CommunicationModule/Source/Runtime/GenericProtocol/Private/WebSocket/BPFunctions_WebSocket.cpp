@@ -2,27 +2,27 @@
 
 #include "WebSocket/BPFunctions_WebSocket.h"
 
-EWebSocketProtocol UBPFunctions_WebSocket::BP_ConvertToWebSocketProtocolEnum(FString InProtocol)
+EGenericWebSocketProtocol UBPFunctions_WebSocket::BP_ConvertToWebSocketProtocolEnum(FString InProtocol)
 {
 	return ConvertToWebSocketProtocolEnum(InProtocol);
 }
 
-FString UBPFunctions_WebSocket::BP_ConvertToWebSocketProtocolString(EWebSocketProtocol InProtocol)
+FString UBPFunctions_WebSocket::BP_ConvertToWebSocketProtocolString(EGenericWebSocketProtocol InProtocol)
 {
 	return ConvertToWebSocketProtocolString(InProtocol);
 }
 
-EWebSocketCode UBPFunctions_WebSocket::BP_ConvertToWebSocketCodeEnum(int32 InCode)
+EGenericWebSocketCode UBPFunctions_WebSocket::BP_ConvertToWebSocketCodeEnum(int32 InCode)
 {
 	return ConvertToWebSocketCodeEnum(InCode);
 }
 
-int32 UBPFunctions_WebSocket::BP_ConvertToWebSocketCodeInt(EWebSocketCode InCode)
+int32 UBPFunctions_WebSocket::BP_ConvertToWebSocketCodeInt(EGenericWebSocketCode InCode)
 {
 	return ConvertToWebSocketCodeInt(InCode);
 }
 
-FString UBPFunctions_WebSocket::GetWebSocketUrl(FString Host, int32 Port, EWebSocketProtocol Protocol)
+FString UBPFunctions_WebSocket::GetWebSocketUrl(FString Host, int32 Port, EGenericWebSocketProtocol Protocol)
 {
 	FStringFormatNamedArguments Arguments;
 	Arguments.Add(TEXT("PROTOCOL"), ConvertToWebSocketProtocolString(Protocol));

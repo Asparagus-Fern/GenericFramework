@@ -50,11 +50,11 @@ public:
 
 	/* 连接到 WebSocket 服务器 */
 	UFUNCTION(BlueprintCallable, Category = "WebSocket")
-	GENERICPROTOCOL_API void ConnectWithConnection(const FWebSocketConnection& InWebSocketConnect);
+	GENERICPROTOCOL_API void ConnectWithConnection(const FGenericWebSocketConnection& InWebSocketConnect);
 
 	/* 连接到 WebSocket 服务器 */
 	UFUNCTION(BlueprintCallable, Category = "WebSocket", meta=(AutoCreateRefTerm = "Headers"))
-	GENERICPROTOCOL_API void ConnectWithURL(FString Host, int32 Port, EWebSocketProtocol Protocol, const TMap<FString, FString>& Headers);
+	GENERICPROTOCOL_API void ConnectWithURL(FString Host, int32 Port, EGenericWebSocketProtocol Protocol, const TMap<FString, FString>& Headers);
 
 	/* 连接到 WebSocket 服务器 */
 	UFUNCTION(BlueprintCallable, Category = "WebSocket")
@@ -98,10 +98,10 @@ public:
 	GENERICPROTOCOL_API void SetPort(int32 InPort);
 
 	UFUNCTION(BlueprintPure, Category = "WebSocket")
-	GENERICPROTOCOL_API EWebSocketProtocol GetProtocol() const;
+	GENERICPROTOCOL_API EGenericWebSocketProtocol GetProtocol() const;
 
 	UFUNCTION(BlueprintCallable, Category = "WebSocket")
-	GENERICPROTOCOL_API void SetProtocol(EWebSocketProtocol InProtocol);
+	GENERICPROTOCOL_API void SetProtocol(EGenericWebSocketProtocol InProtocol);
 
 	UFUNCTION(BlueprintCallable)
 	GENERICPROTOCOL_API void AddHeader(const FString& Header, const FString& Value);
@@ -170,7 +170,7 @@ protected:
 private:
 	TSharedPtr<IWebSocket> WebSocket = nullptr;
 	TSharedPtr<IWebSocket> WebSocketCache = nullptr;
-	FWebSocketConnection WebSocketConnect;
+	FGenericWebSocketConnection WebSocketConnect;
 
 	bool bBroadcastReStart = false;
 };

@@ -36,5 +36,5 @@ private:
 	TSharedPtr<IWebSocket> WebSocket;
 #endif
 
-	FWebSocketConnection Connection;
+	FGenericWebSocketConnection Connection;
 };

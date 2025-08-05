@@ -4,7 +4,7 @@
 
 #include "WebSocket/GenericWebSocket.h"
 
-UConnectWebSocketAsyncAction* UConnectWebSocketAsyncAction::ConnectWebSocketWithConnection(UGenericWebSocket* InWebSocket, FWebSocketConnection InWebSocketConnect)
+UConnectWebSocketAsyncAction* UConnectWebSocketAsyncAction::ConnectWebSocketWithConnection(UGenericWebSocket* InWebSocket, FGenericWebSocketConnection InWebSocketConnect)
 {
 	UConnectWebSocketAsyncAction* Action = NewObject<UConnectWebSocketAsyncAction>();
 	Action->InitWebSocket(InWebSocket);
@@ -12,7 +12,7 @@ UConnectWebSocketAsyncAction* UConnectWebSocketAsyncAction::ConnectWebSocketWith
 	return Action;
 }
 
-UConnectWebSocketAsyncAction* UConnectWebSocketAsyncAction::ConnectWebSocketWithURL(UGenericWebSocket* InWebSocket, FString Host, int32 Port, EWebSocketProtocol Protocol, TMap<FString, FString> Headers)
+UConnectWebSocketAsyncAction* UConnectWebSocketAsyncAction::ConnectWebSocketWithURL(UGenericWebSocket* InWebSocket, FString Host, int32 Port, EGenericWebSocketProtocol Protocol, TMap<FString, FString> Headers)
 {
 	UConnectWebSocketAsyncAction* Action = NewObject<UConnectWebSocketAsyncAction>();
 	Action->InitWebSocket(InWebSocket);

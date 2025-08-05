@@ -23,10 +23,10 @@ public:
 
 public:
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category ="WebSocket")
-	static UConnectWebSocketAsyncAction* ConnectWebSocketWithConnection(UGenericWebSocket* InWebSocket, FWebSocketConnection InWebSocketConnect);
+	static UConnectWebSocketAsyncAction* ConnectWebSocketWithConnection(UGenericWebSocket* InWebSocket, FGenericWebSocketConnection InWebSocketConnect);
 
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true", AutoCreateRefTerm = "Headers"), Category ="WebSocket")
-	static UConnectWebSocketAsyncAction* ConnectWebSocketWithURL(UGenericWebSocket* InWebSocket, FString Host, int32 Port, EWebSocketProtocol Protocol, TMap<FString, FString> Headers);
+	static UConnectWebSocketAsyncAction* ConnectWebSocketWithURL(UGenericWebSocket* InWebSocket, FString Host, int32 Port, EGenericWebSocketProtocol Protocol, TMap<FString, FString> Headers);
 
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category ="WebSocket")
 	static UConnectWebSocketAsyncAction* ConnectWebSocket(UGenericWebSocket* InWebSocket);

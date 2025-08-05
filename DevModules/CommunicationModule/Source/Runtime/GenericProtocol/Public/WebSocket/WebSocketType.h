@@ -11,24 +11,24 @@
  * 
  */
 UENUM(BlueprintType)
-enum class EWebSocketProtocol : uint8
+enum class EGenericWebSocketProtocol : uint8
 {
 	ws,
 	wss
 };
 
-inline EWebSocketProtocol ConvertToWebSocketProtocolEnum(const FString& InProtocol)
+inline EGenericWebSocketProtocol ConvertToWebSocketProtocolEnum(const FString& InProtocol)
 {
-	EWebSocketProtocol HttpVerb;
+	EGenericWebSocketProtocol HttpVerb;
 	if (FStaticFunctions_Enum::GetEnumByNameString(InProtocol, HttpVerb))
 	{
 		return HttpVerb;
 	}
 
-	return EWebSocketProtocol::ws;
+	return EGenericWebSocketProtocol::ws;
 }
 
-inline FString ConvertToWebSocketProtocolString(EWebSocketProtocol InProtocol)
+inline FString ConvertToWebSocketProtocolString(EGenericWebSocketProtocol InProtocol)
 {
 	return FStaticFunctions_Enum::GetEnumNameString(InProtocol);
 }
@@ -37,7 +37,7 @@ inline FString ConvertToWebSocketProtocolString(EWebSocketProtocol InProtocol)
  * 
  */
 USTRUCT(BlueprintType)
-struct GENERICPROTOCOL_API FWebSocketConnection
+struct GENERICPROTOCOL_API FGenericWebSocketConnection
 {
 	GENERATED_BODY()
 
@@ -52,7 +52,7 @@ public:
 
 	// Protocol, i.e. "ws" or "wss"
 	UPROPERTY(Config, EditAnywhere, BlueprintReadWrite)
-	EWebSocketProtocol Protocol = EWebSocketProtocol::ws;
+	EGenericWebSocketProtocol Protocol = EGenericWebSocketProtocol::ws;
 
 	// headers
 	UPROPERTY(Config, EditAnywhere, BlueprintReadWrite)
@@ -77,7 +77,7 @@ public:
  * 官方响应代码
  */
 UENUM(BlueprintType)
-enum class EWebSocketCode : uint8
+enum class EGenericWebSocketCode : uint8
 {
 	Code1000 UMETA(DisplayName="Code1000 : Close Normal", ToolTip="正常关闭; 无论为何目的而创建，该链接都已成功完成任务。"),
 	Code1001 UMETA(DisplayName="Code1001 : Close Going Away", ToolTip="终端离开，可能因为服务端错误，也可能因为浏览器正从打开连接的页面跳转离开。"),
@@ -99,22 +99,22 @@ enum class EWebSocketCode : uint8
 	CodeUnKnown UMETA(DisplayName="UnKnown Error")
 };
 
-inline EWebSocketCode ConvertToWebSocketCodeEnum(const int32 InCode)
+inline EGenericWebSocketCode ConvertToWebSocketCodeEnum(const int32 InCode)
 {
 	const FString CodeString = TEXT("Code") + FString::FromInt(InCode);
 
-	EWebSocketCode Code;
+	EGenericWebSocketCode Code;
 	if (FStaticFunctions_Enum::GetEnumByNameString(CodeString, Code))
 	{
 		return Code;
 	}
 
-	return EWebSocketCode::CodeUnKnown;
+	return EGenericWebSocketCode::CodeUnKnown;
 }
 
-inline int32 ConvertToWebSocketCodeInt(const EWebSocketCode InCode)
+inline int32 ConvertToWebSocketCodeInt(const EGenericWebSocketCode InCode)
 {
-	if (InCode == EWebSocketCode::CodeUnKnown)
+	if (InCode == EGenericWebSocketCode::CodeUnKnown)
 	{
 		return -1;
 	}

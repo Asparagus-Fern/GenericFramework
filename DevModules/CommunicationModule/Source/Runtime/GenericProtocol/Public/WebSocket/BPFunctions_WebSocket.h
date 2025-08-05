@@ -17,18 +17,18 @@ class GENERICPROTOCOL_API UBPFunctions_WebSocket : public UBlueprintFunctionLibr
 
 public:
 	UFUNCTION(BlueprintPure, meta = (DisplayName = "To WebSocket Protocol Enum", CompactNodeTitle = "->", BlueprintAutocast), Category="WebSocket")
-	static EWebSocketProtocol BP_ConvertToWebSocketProtocolEnum(FString InProtocol);
+	static EGenericWebSocketProtocol BP_ConvertToWebSocketProtocolEnum(FString InProtocol);
 
 	UFUNCTION(BlueprintPure, meta = (DisplayName = "To WebSocket Protocol String", CompactNodeTitle = "->", BlueprintAutocast), Category="WebSocket")
-	static FString BP_ConvertToWebSocketProtocolString(EWebSocketProtocol InProtocol);
+	static FString BP_ConvertToWebSocketProtocolString(EGenericWebSocketProtocol InProtocol);
 
 	UFUNCTION(BlueprintPure, meta = (DisplayName = "To WebSocket Code Enum", CompactNodeTitle = "->", BlueprintAutocast), Category="WebSocket")
-	static EWebSocketCode BP_ConvertToWebSocketCodeEnum(int32 InCode);
+	static EGenericWebSocketCode BP_ConvertToWebSocketCodeEnum(int32 InCode);
 
 	UFUNCTION(BlueprintPure, meta = (DisplayName = "To WebSocket Code Int", CompactNodeTitle = "->", BlueprintAutocast), Category="WebSocket")
-	static int32 BP_ConvertToWebSocketCodeInt(EWebSocketCode InCode);
+	static int32 BP_ConvertToWebSocketCodeInt(EGenericWebSocketCode InCode);
 
 public:
 	UFUNCTION(BlueprintPure, Category = "WebSocket")
-	static FString GetWebSocketUrl(FString Host, int32 Port, EWebSocketProtocol Protocol);
+	static FString GetWebSocketUrl(FString Host, int32 Port, EGenericWebSocketProtocol Protocol);
 };

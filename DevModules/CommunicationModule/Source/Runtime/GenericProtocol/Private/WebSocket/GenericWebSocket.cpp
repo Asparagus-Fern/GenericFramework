@@ -23,7 +23,7 @@ bool UGenericWebSocket::IsConnected() const
 	return WebSocket.IsValid() ? WebSocket->IsConnected() : false;
 }
 
-void UGenericWebSocket::ConnectWithConnection(const FWebSocketConnection& InWebSocketConnect)
+void UGenericWebSocket::ConnectWithConnection(const FGenericWebSocketConnection& InWebSocketConnect)
 {
 	if (!InWebSocketConnect.IsValid())
 	{
@@ -34,7 +34,7 @@ void UGenericWebSocket::ConnectWithConnection(const FWebSocketConnection& InWebS
 	ConnectWithURL(InWebSocketConnect.Host, InWebSocketConnect.Port, InWebSocketConnect.Protocol, InWebSocketConnect.Headers);
 }
 
-void UGenericWebSocket::ConnectWithURL(const FString Host, const int32 Port, const EWebSocketProtocol Protocol, const TMap<FString, FString>& Headers)
+void UGenericWebSocket::ConnectWithURL(const FString Host, const int32 Port, const EGenericWebSocketProtocol Protocol, const TMap<FString, FString>& Headers)
 {
 	if (!WebSocket.IsValid())
 	{
@@ -176,12 +176,12 @@ void UGenericWebSocket::SetPort(int32 InPort)
 	WebSocketConnect.Port = InPort;
 }
 
-EWebSocketProtocol UGenericWebSocket::GetProtocol() const
+EGenericWebSocketProtocol UGenericWebSocket::GetProtocol() const
 {
 	return WebSocketConnect.Protocol;
 }
 
-void UGenericWebSocket::SetProtocol(EWebSocketProtocol InProtocol)
+void UGenericWebSocket::SetProtocol(EGenericWebSocketProtocol InProtocol)
 {
 	WebSocketConnect.Protocol = InProtocol;
 }

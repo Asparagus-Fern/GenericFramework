@@ -30,7 +30,7 @@ public:
 	bool bSupportWebSocket = false;
 
 	UPROPERTY(Config, EditAnywhere, meta = (EditCondition = "bSupportWebSocket"), Category = "WebSocket")
-	FWebSocketConnection Connect;
+	FGenericWebSocketConnection Connect;
 
 public:
 	UPROPERTY(Config, EditAnywhere, Category = "HTTP")
