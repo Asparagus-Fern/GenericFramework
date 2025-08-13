@@ -36,11 +36,6 @@
       "Name": "NetworkUtilities",
       "Type": "Runtime",
       "LoadingPhase": "Default"
-    },
-    {
-      "Name": "TeamAllocationSystem",
-      "Type": "Runtime",
-      "LoadingPhase": "Default"
     }
   ]
 }

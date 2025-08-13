@@ -4,20 +4,19 @@ using UnrealBuildTool;
 
 public class ExternalDataNode : ModuleRules
 {
-    public ExternalDataNode(ReadOnlyTargetRules Target) : base(Target)
-    {
-        PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
+	public ExternalDataNode(ReadOnlyTargetRules Target) : base(Target)
+	{
+		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 
-        PrivateDependencyModuleNames.AddRange(
-            new string[]
-            {
-                "Core",
-                "CoreUObject",
-                "Engine",
-                "ExternalData",
-                "BlueprintGraph",
-                "StructUtils"
-            }
-        );
-    }
+		PrivateDependencyModuleNames.AddRange(
+			new string[]
+			{
+				"Core",
+				"CoreUObject",
+				"Engine",
+				"ExternalData",
+				"BlueprintGraph",
+			}
+		);
+	}
 }

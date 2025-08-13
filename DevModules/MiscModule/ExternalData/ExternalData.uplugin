@@ -21,10 +21,6 @@
     {
       "Name": "CommunicationModule",
       "Enabled": true
-    },
-    {
-      "Name": "StructUtils",
-      "Enabled": true
     }
   ],
   "Modules": [
