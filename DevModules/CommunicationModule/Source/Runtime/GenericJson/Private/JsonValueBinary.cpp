@@ -2,7 +2,7 @@
 
 #include "JsonValueBinary.h"
 
-#include "Debug/DebugType.h"
+#include "Type/DebugType.h"
 
 bool FJsonValueBinary::IsBinary(const TSharedPtr<FJsonValue>& InJsonValue)
 {

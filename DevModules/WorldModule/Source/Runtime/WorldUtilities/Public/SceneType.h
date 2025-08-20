@@ -4,6 +4,8 @@
 #include "Generic/GenericObject.h"
 #include "SceneType.generated.h"
 
+WORLDUTILITIES_API DECLARE_LOG_CATEGORY_EXTERN(GenericLogWorld, Log, All);
+
 /**
  * 蓝图可使用的WorldType
  */

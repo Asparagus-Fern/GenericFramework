@@ -4,7 +4,7 @@
 #include "NativeAPIProxyComponent.h"
 #include "NativeAPITypes.h"
 #include "NativeAPILog.h"
-#include "Debug/DebugType.h"
+#include "Type/DebugType.h"
 
 UNativeAPIWorldSubsystem* UNativeAPIWorldSubsystem::Get(const UWorld* World)
 {

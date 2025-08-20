@@ -10,6 +10,7 @@ public class GenericProtocol : ModuleRules
 			new string[]
 			{
 				"Core",
+				"UnrealMisc",
 				"DevCore",
 			}
 		);
@@ -30,7 +31,6 @@ public class GenericProtocol : ModuleRules
 				"Networking",
 
 				"GenericJson",
-				"UnrealMisc"
 			}
 		);
 

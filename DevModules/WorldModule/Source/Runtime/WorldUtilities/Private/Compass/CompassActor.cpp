@@ -4,7 +4,7 @@
 
 #include "Components/ArrowComponent.h"
 #include "Components/TextRenderComponent.h"
-#include "Debug/DebugType.h"
+#include "Type/DebugType.h"
 
 
 ACompassActor::ACompassActor()

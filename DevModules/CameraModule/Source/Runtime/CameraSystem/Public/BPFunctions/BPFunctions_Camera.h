@@ -20,7 +20,7 @@ class CAMERASYSTEM_API UBPFunctions_Camera : public UBlueprintFunctionLibrary
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintPure, meta=( GameplayTagFilter="Camera"))
+	UFUNCTION(BlueprintPure, meta=(GameplayTagFilter="Camera"))
 	static ACameraPointBase* GetCameraPoint(FGameplayTag InCameraTag);
 
 public:

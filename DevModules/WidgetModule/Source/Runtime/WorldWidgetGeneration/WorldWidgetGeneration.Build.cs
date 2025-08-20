@@ -10,6 +10,7 @@ public class WorldWidgetGeneration : ModuleRules
 			new string[]
 			{
 				"Core",
+				"UnrealMisc",
 				"DevCore",
 			}
 		);
@@ -28,7 +29,6 @@ public class WorldWidgetGeneration : ModuleRules
 				"InputCore",
 				"DeveloperSettings",
 
-				"UnrealMisc",
 				"WidgetGeneration",
 				"WidgetGroupGeneration",
 			}

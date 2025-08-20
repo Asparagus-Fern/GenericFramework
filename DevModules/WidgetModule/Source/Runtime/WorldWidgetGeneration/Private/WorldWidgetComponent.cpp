@@ -3,11 +3,12 @@
 
 #include "WorldWidgetComponent.h"
 
+#include "WidgetType.h"
 #include "Animation/WidgetAnimation.h"
 #include "Base/GenericWidget.h"
 #include "BPFunctions/BPFunctions_Gameplay.h"
 #include "Components/WidgetComponent.h"
-#include "Debug/DebugType.h"
+#include "Type/DebugType.h"
 #include "Kismet/KismetMathLibrary.h"
 
 #if WITH_EDITOR

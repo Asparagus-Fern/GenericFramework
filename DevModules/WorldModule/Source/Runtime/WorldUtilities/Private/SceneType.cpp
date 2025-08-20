@@ -2,6 +2,8 @@
 
 #include "BPFunctions/BPFunctions_Math.h"
 
+DEFINE_LOG_CATEGORY(GenericLogWorld);
+
 /* ==================== FFindActorHandle ==================== */
 
 FFindActorHandle::FFindActorHandle()

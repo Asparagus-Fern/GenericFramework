@@ -16,23 +16,13 @@ AGenericPawn::AGenericPawn(const FObjectInitializer& ObjectInitializer)
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = false;
-	
+
 	SceneComponent = CreateDefaultSubobject<USceneComponent>("Root");
 	RootComponent = SceneComponent;
 
 	FloatingPawnMovement = CreateDefaultSubobject<UFloatingPawnMovement>("MovementComponent");
 	LockStateComponent = CreateDefaultSubobject<UPawnLockStateComponent>("LockStateComponent");
 	InputMovementComponent = CreateDefaultSubobject<UPawnInputMovementComponent>("InputMovementComponent");
-}
-
-int32 AGenericPawn::GetPlayerIdentity()
-{
-	return GetPlayerState()->GetPlayerId();
-}
-
-const FUniqueNetIdRepl& AGenericPawn::GetPlayerUniqueIdentity()
-{
-	return GetPlayerState()->GetUniqueId();
 }
 
 bool AGenericPawn::IsPlayer()

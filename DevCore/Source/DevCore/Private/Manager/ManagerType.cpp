@@ -5,6 +5,8 @@
 
 #include "Interface/ManagerInterface.h"
 
+DEFINE_LOG_CATEGORY(GenericLogManager);
+
 FManagerHandle::FManagerHandle()
 {
 }

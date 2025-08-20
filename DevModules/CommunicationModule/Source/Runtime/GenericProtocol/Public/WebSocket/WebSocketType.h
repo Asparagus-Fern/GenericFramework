@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Debug/DebugType.h"
+#include "Type/DebugType.h"
 #include "StaticFunctions/StaticFunctions_Enum.h"
 #include "WebSocketType.generated.h"
 

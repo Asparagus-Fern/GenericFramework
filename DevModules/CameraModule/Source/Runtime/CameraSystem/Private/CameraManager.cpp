@@ -3,6 +3,7 @@
 
 #include "CameraManager.h"
 
+#include "CameraType.h"
 #include "CineCameraComponent.h"
 #include "Camera/CameraActor.h"
 #include "CameraPoint/CameraPoint.h"

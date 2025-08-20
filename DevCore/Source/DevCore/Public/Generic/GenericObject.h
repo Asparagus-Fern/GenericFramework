@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Debug/DebugType.h"
+#include "Type/DebugType.h"
 #include "UObject/Object.h"
 #include "GenericObject.generated.h"
 
 /**
  * 
  */
-UCLASS(Abstract, Blueprintable, BlueprintType)
+UCLASS(Abstract, BlueprintType)
 class DEVCORE_API UGenericObject : public UObject
 {
 	GENERATED_BODY()

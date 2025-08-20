@@ -4,4 +4,6 @@
 #include "WidgetType.h"
 
 #include "Base/GenericWidget.h"
-#include "Debug/DebugType.h"
+#include "Type/DebugType.h"
+
+DEFINE_LOG_CATEGORY(GenericLogUI);

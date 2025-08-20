@@ -12,8 +12,8 @@ public class CameraSystem : ModuleRules
 			new string[]
 			{
 				"Core",
+				"UnrealMisc",
 				"DevCore",
-				 
 			}
 		);
 
@@ -30,7 +30,6 @@ public class CameraSystem : ModuleRules
 				"DeveloperSettings",
 
 				"PlayerInputUtilities",
-				"UnrealMisc"
 			}
 		);
 

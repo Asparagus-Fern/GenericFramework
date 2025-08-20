@@ -6,6 +6,7 @@
 #include "JsonConvert.h"
 #include "GenericJsonObject.h"
 #include "JsonObjectConverter.h"
+#include "JsonType.h"
 #include "Blueprint/BlueprintExceptionInfo.h"
 
 #define LOCTEXT_NAMESPACE "FGenericJsonModule"

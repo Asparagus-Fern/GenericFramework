@@ -21,16 +21,6 @@ void AGenericCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput)
 	Super::SetupPlayerInputComponent(PlayerInput);
 }
 
-int32 AGenericCharacter::GetPlayerIdentity()
-{
-	return GetPlayerState()->GetPlayerId();
-}
-
-const FUniqueNetIdRepl& AGenericCharacter::GetPlayerUniqueIdentity()
-{
-	return GetPlayerState()->GetUniqueId();
-}
-
 FPawnLockState AGenericCharacter::GetPawnLockState()
 {
 	return LockStateComponent->GetPawnLockState();

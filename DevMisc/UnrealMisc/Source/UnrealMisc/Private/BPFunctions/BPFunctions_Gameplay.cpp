@@ -52,42 +52,6 @@ AGameStateBase* UBPFunctions_Gameplay::GetGameStateByClass(const UObject* WorldC
 	return nullptr;
 }
 
-AHUD* UBPFunctions_Gameplay::GetHUDByClass(const UObject* WorldContextObject, const TSubclassOf<AHUD> InClass)
-{
-	ensure(InClass);
-
-	if (const APlayerController* PC = GetFirstPlayerControllerByClass(WorldContextObject, APlayerController::StaticClass()))
-	{
-		return PC->GetHUD<AHUD>();
-	}
-
-	return nullptr;
-}
-
-APawn* UBPFunctions_Gameplay::GetPawnByClass(const UObject* WorldContextObject, const TSubclassOf<APawn> InClass)
-{
-	ensure(InClass);
-
-	if (const APlayerController* PC = GetFirstPlayerControllerByClass(WorldContextObject, APlayerController::StaticClass()))
-	{
-		return PC->GetPawn<APawn>();
-	}
-
-	return nullptr;
-}
-
-APlayerController* UBPFunctions_Gameplay::GetFirstPlayerControllerByClass(const UObject* WorldContextObject, const TSubclassOf<APlayerController> InClass)
-{
-	ensure(InClass);
-
-	if (const UWorld* World = GEngine->GetWorldFromContextObjectChecked(WorldContextObject))
-	{
-		return World->GetFirstPlayerController<APlayerController>();
-	}
-
-	return nullptr;
-}
-
 APlayerController* UBPFunctions_Gameplay::GetPlayerControllerByClass(const UObject* WorldContextObject, const TSubclassOf<APlayerController> InClass, int32 InIndex)
 {
 	ensure(InClass);
@@ -95,16 +59,78 @@ APlayerController* UBPFunctions_Gameplay::GetPlayerControllerByClass(const UObje
 	return UGameplayStatics::GetPlayerController(WorldContextObject, InIndex);
 }
 
-APlayerState* UBPFunctions_Gameplay::GetPlayerStateByClass(const UObject* WorldContextObject, const TSubclassOf<APlayerState> InClass)
+APlayerState* UBPFunctions_Gameplay::GetPlayerStateByClass(const UObject* WorldContextObject, const TSubclassOf<APlayerState> InClass, int32 InIndex)
 {
 	ensure(InClass);
 
-	if (const APlayerController* PC = GetFirstPlayerControllerByClass(WorldContextObject, APlayerController::StaticClass()))
+	if (const APlayerController* PC = GetPlayerControllerByClass(WorldContextObject, APlayerController::StaticClass(), InIndex))
 	{
 		return PC->GetPlayerState<APlayerState>();
 	}
 
 	return nullptr;
+}
+
+AHUD* UBPFunctions_Gameplay::GetHUDByClass(const UObject* WorldContextObject, const TSubclassOf<AHUD> InClass, int32 InIndex)
+{
+	ensure(InClass);
+
+	if (const APlayerController* PC = GetPlayerControllerByClass(WorldContextObject, APlayerController::StaticClass(), InIndex))
+	{
+		return PC->GetHUD<AHUD>();
+	}
+
+	return nullptr;
+}
+
+APawn* UBPFunctions_Gameplay::GetPawnByClass(const UObject* WorldContextObject, const TSubclassOf<APawn> InClass, int32 InIndex)
+{
+	ensure(InClass);
+
+	if (const APlayerController* PC = GetPlayerControllerByClass(WorldContextObject, APlayerController::StaticClass(), InIndex))
+	{
+		return PC->GetPawn<APawn>();
+	}
+
+	return nullptr;
+}
+
+int32 UBPFunctions_Gameplay::GetPlayerID(const APlayerController* InPlayer)
+{
+	return InPlayer->GetPlayerState<APlayerState>()->GetPlayerId();
+}
+
+int32 UBPFunctions_Gameplay::GetPlayerIDByPlayerState(const APlayerState* InPlayerState)
+{
+	return InPlayerState->GetPlayerId();
+}
+
+int32 UBPFunctions_Gameplay::GetPlayerIDByPawn(const APawn* InPawn)
+{
+	return InPawn->GetPlayerState()->GetPlayerId();
+}
+
+const FUniqueNetIdRepl& UBPFunctions_Gameplay::GetPlayerUniqueNetID(const APlayerController* InPlayer)
+{
+	check(InPlayer);
+	return InPlayer->GetPlayerState<APlayerState>()->GetUniqueId();
+}
+
+const FUniqueNetIdRepl& UBPFunctions_Gameplay::GetPlayerUniqueNetIDByPlayerIndex(const UObject* WorldContextObject, int32 InPlayerIndex)
+{
+	return GetPlayerUniqueNetID(GetPlayerControllerByClass(WorldContextObject, APlayerController::StaticClass(), InPlayerIndex));
+}
+
+const FUniqueNetIdRepl& UBPFunctions_Gameplay::GetPlayerUniqueNetIDByPlayerState(const APlayerState* InPlayerState)
+{
+	check(InPlayerState);
+	return InPlayerState->GetUniqueId();
+}
+
+const FUniqueNetIdRepl& UBPFunctions_Gameplay::GetPlayerUniqueNetIDByPawn(const APawn* InPawn)
+{
+	check(InPawn);
+	return InPawn->GetPlayerState()->GetUniqueId();
 }
 
 bool UBPFunctions_Gameplay::GetIsPlayerPossessPawn(const APawn* InPawn)

@@ -6,6 +6,7 @@
 #include "ProcedureFlowActor.h"
 #include "ProcedureFlowComponent.h"
 #include "ProcedureFlowSettings.h"
+#include "ProcedureFlowType.h"
 
 bool UProcedureFlowManager::ShouldCreateSubsystem(UObject* Outer) const
 {
@@ -72,7 +73,7 @@ void UProcedureFlowManager::RegisterProcedureFlow(const AProcedureFlowActor* InA
 {
 	if (!IsValid(InActor))
 	{
-		GenericLOG(GenericLogProcedure, Error, TEXT("ProcedureFlowActor Is NULL"))
+		GenericLOG(GenericLogProcedureFlow, Error, TEXT("ProcedureFlowActor Is NULL"))
 		return;
 	}
 
@@ -83,13 +84,13 @@ void UProcedureFlowManager::RegisterProcedureFlow(UProcedureFlowComponent* InCom
 {
 	if (!IsValid(InComponent) || !InComponent->ProcedureFlowTag.IsValid())
 	{
-		GenericLOG(GenericLogProcedure, Error, TEXT("ProcedureFlowComponent / FlowTag Is NULL"))
+		GenericLOG(GenericLogProcedureFlow, Error, TEXT("ProcedureFlowComponent / FlowTag Is NULL"))
 		return;
 	}
 
 	if (ProcedureFlowComponents.Contains(InComponent))
 	{
-		GenericLOG(GenericLogProcedure, Warning, TEXT("ProcedureFlowComponent Already Register"))
+		GenericLOG(GenericLogProcedureFlow, Warning, TEXT("ProcedureFlowComponent Already Register"))
 		return;
 	}
 
@@ -102,7 +103,7 @@ void UProcedureFlowManager::UnRegisterProcedureFlow(const AProcedureFlowActor* I
 {
 	if (!IsValid(InActor))
 	{
-		GenericLOG(GenericLogProcedure, Error, TEXT("ProcedureFlowActor Is NULL"))
+		GenericLOG(GenericLogProcedureFlow, Error, TEXT("ProcedureFlowActor Is NULL"))
 		return;
 	}
 
@@ -113,13 +114,13 @@ void UProcedureFlowManager::UnRegisterProcedureFlow(UProcedureFlowComponent* InC
 {
 	if (!IsValid(InComponent) || !InComponent->ProcedureFlowTag.IsValid())
 	{
-		GenericLOG(GenericLogProcedure, Error, TEXT("ProcedureFlowComponent / FlowTag Is NULL"))
+		GenericLOG(GenericLogProcedureFlow, Error, TEXT("ProcedureFlowComponent / FlowTag Is NULL"))
 		return;
 	}
 
 	if (!ProcedureFlowComponents.Contains(InComponent))
 	{
-		GenericLOG(GenericLogProcedure, Warning, TEXT("ProcedureFlowComponent Is Not Register"))
+		GenericLOG(GenericLogProcedureFlow, Warning, TEXT("ProcedureFlowComponent Is Not Register"))
 		return;
 	}
 
@@ -132,7 +133,7 @@ void UProcedureFlowManager::EnterProcedureFlow(const AProcedureFlowActor* InActo
 {
 	if (!IsValid(InActor))
 	{
-		GenericLOG(GenericLogProcedure, Error, TEXT("ProcedureFlowActor Is NULL"))
+		GenericLOG(GenericLogProcedureFlow, Error, TEXT("ProcedureFlowActor Is NULL"))
 		return;
 	}
 
@@ -143,7 +144,7 @@ void UProcedureFlowManager::EnterProcedureFlow(const UProcedureFlowComponent* In
 {
 	if (!IsValid(InComponent))
 	{
-		GenericLOG(GenericLogProcedure, Error, TEXT("ProcedureFlowComponent Is NULL"))
+		GenericLOG(GenericLogProcedureFlow, Error, TEXT("ProcedureFlowComponent Is NULL"))
 		return;
 	}
 
@@ -154,7 +155,7 @@ void UProcedureFlowManager::EnterProcedureFlow(FGameplayTag InProcedureFlowTag)
 {
 	if (!InProcedureFlowTag.IsValid())
 	{
-		GenericLOG(GenericLogProcedure, Error, TEXT("FlowTag Is NULL"))
+		GenericLOG(GenericLogProcedureFlow, Error, TEXT("FlowTag Is NULL"))
 		return;
 	}
 
@@ -184,7 +185,7 @@ void UProcedureFlowManager::ExitProcedureFlow(const AProcedureFlowActor* InActor
 {
 	if (!IsValid(InActor))
 	{
-		GenericLOG(GenericLogProcedure, Error, TEXT("ProcedureFlowActor Is NULL"))
+		GenericLOG(GenericLogProcedureFlow, Error, TEXT("ProcedureFlowActor Is NULL"))
 		return;
 	}
 
@@ -195,7 +196,7 @@ void UProcedureFlowManager::ExitProcedureFlow(const UProcedureFlowComponent* InC
 {
 	if (!IsValid(InComponent))
 	{
-		GenericLOG(GenericLogProcedure, Error, TEXT("ProcedureFlowComponent Is NULL"))
+		GenericLOG(GenericLogProcedureFlow, Error, TEXT("ProcedureFlowComponent Is NULL"))
 		return;
 	}
 
@@ -206,7 +207,7 @@ void UProcedureFlowManager::ExitProcedureFlow(FGameplayTag InProcedureFlowTag)
 {
 	if (!InProcedureFlowTag.IsValid())
 	{
-		GenericLOG(GenericLogProcedure, Error, TEXT("FlowTag Is NULL"))
+		GenericLOG(GenericLogProcedureFlow, Error, TEXT("FlowTag Is NULL"))
 		return;
 	}
 
@@ -223,7 +224,7 @@ bool UProcedureFlowManager::IsProcedureFlowActived(const AProcedureFlowActor* In
 {
 	if (!IsValid(InActor))
 	{
-		GenericLOG(GenericLogProcedure, Error, TEXT("ProcedureFlowActor Is NULL"))
+		GenericLOG(GenericLogProcedureFlow, Error, TEXT("ProcedureFlowActor Is NULL"))
 		return false;
 	}
 
@@ -234,7 +235,7 @@ bool UProcedureFlowManager::IsProcedureFlowActived(const UProcedureFlowComponent
 {
 	if (!IsValid(InComponent))
 	{
-		GenericLOG(GenericLogProcedure, Error, TEXT("ProcedureFlowComponent Is NULL"))
+		GenericLOG(GenericLogProcedureFlow, Error, TEXT("ProcedureFlowComponent Is NULL"))
 		return false;
 	}
 
@@ -265,7 +266,7 @@ UProcedureFlowComponent* UProcedureFlowManager::GetProcedureFlowComponent(FGamep
 {
 	if (!InProcedureFlowTag.IsValid())
 	{
-		GenericLOG(GenericLogProcedure, Error, TEXT("FlowTag Is NULL"))
+		GenericLOG(GenericLogProcedureFlow, Error, TEXT("FlowTag Is NULL"))
 		return nullptr;
 	}
 

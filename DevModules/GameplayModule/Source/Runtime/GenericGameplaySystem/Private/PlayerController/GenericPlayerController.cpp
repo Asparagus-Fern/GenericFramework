@@ -27,16 +27,6 @@ void AGenericPlayerController::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	Super::EndPlay(EndPlayReason);
 }
 
-int32 AGenericPlayerController::GetPlayerIdentity()
-{
-	return GetPlayerState<APlayerState>()->GetPlayerId();
-}
-
-const FUniqueNetIdRepl& AGenericPlayerController::GetPlayerUniqueIdentity()
-{
-	return GetPlayerState<APlayerState>()->GetUniqueId();
-}
-
 void AGenericPlayerController::NativeOnPlayerGameHUDCreated()
 {
 	UGenericGameHUDManager::Delegate_PostHUDCreated.RemoveAll(this);

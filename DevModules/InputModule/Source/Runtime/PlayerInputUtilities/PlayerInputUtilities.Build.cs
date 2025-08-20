@@ -10,8 +10,6 @@ public class PlayerInputUtilities : ModuleRules
 			new string[]
 			{
 				"Core",
-				"InputCore",
-				"EnhancedInput",
 
 				"DevCore",
 			}
@@ -23,7 +21,10 @@ public class PlayerInputUtilities : ModuleRules
 				"CoreUObject",
 				"Engine",
 				"Slate",
-				"SlateCore"
+				"SlateCore",
+				
+				"InputCore",
+				"EnhancedInput",
 			}
 		);
 	}

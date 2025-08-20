@@ -3,7 +3,7 @@
 
 #include "Manager/ManagerProxy.h"
 
-#include "Debug/DebugType.h"
+#include "Type/DebugType.h"
 #include "Interface/ManagerInterface.h"
 #include "Manager/ManagerSettings.h"
 

@@ -3,7 +3,7 @@
 
 #include "ExtraProcThread.h"
 
-#include "Debug/DebugType.h"
+#include "Type/DebugType.h"
 #include "Platform/WindowsExtraProcHelper.h"
 
 FExtraProcThread::FExtraProcThread(const FString& InUrl, const FString& InParams, bool InRunInBackground, bool TerminateWithParentProc, bool InCreatePipe)

@@ -22,12 +22,12 @@ public class WidgetApplication : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
-
 				"UMG",
 				"GameplayTags",
 				"CommonUI",
 				"InputCore",
 				"DeveloperSettings",
+				"ModelViewViewModel",
 
 				"UnrealMisc",
 				"WidgetGeneration",

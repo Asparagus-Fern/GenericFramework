@@ -4,7 +4,7 @@
 #include "NativeAPILog.h"
 #include "NativeAPITypes.h"
 #include "NativeAPIUtilities.h"
-#include "Debug/DebugType.h"
+#include "Type/DebugType.h"
 #include "Serialization/JsonReader.h"
 #include "Serialization/JsonSerializer.h"
 

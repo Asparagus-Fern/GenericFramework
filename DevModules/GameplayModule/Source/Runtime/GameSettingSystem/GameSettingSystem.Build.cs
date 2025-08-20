@@ -11,7 +11,7 @@ public class GameSettingSystem : ModuleRules
 			{
 				"Core",
 
-				"DevCore",
+				"DevCore", 
 			}
 		);
 
@@ -23,10 +23,9 @@ public class GameSettingSystem : ModuleRules
 				"Slate",
 				"SlateCore",
 
+				"UMG",
 				"ModelViewViewModel",
-
-				"PropertyViewModelSystem",
-				"PropertyPathSystem"
+				"WidgetGeneration",
 			}
 		);
 	}

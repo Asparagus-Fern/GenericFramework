@@ -46,7 +46,6 @@ public class ApplicationRuntime : ModuleRules
 				"LevelSequenceSystem",
 				"MediaSystem",
 				"ProcedureFlowSystem",
-				"PropertyUtilities",
 				"GenericThreadSystem",
 				"ExtraProc",
 				"WidgetGeneration",

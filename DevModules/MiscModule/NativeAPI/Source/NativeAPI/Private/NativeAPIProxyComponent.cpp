@@ -8,7 +8,7 @@
 #include "NativeAPITypes.h"
 #include "NativeAPIUtilities.h"
 #include "NativeAPIWorldSubsystem.h"
-#include "Debug/DebugType.h"
+#include "Type/DebugType.h"
 
 FName UNativeAPIProxyComponent::NativeAPIProxyComponentDefaultName = TEXT("NativeAPIProxy");
 

@@ -4,6 +4,7 @@
 
 #include "LevelSequenceActor.h"
 #include "LevelSequencePlayer.h"
+#include "MovieSceneType.h"
 #include "Handle/HandleManager.h"
 #include "Manager/ManagerStatics.h"
 

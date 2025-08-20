@@ -4,7 +4,7 @@
 #include "GenericButtonGroup.h"
 
 #include "GenericButtonWidget.h"
-#include "Debug/DebugType.h"
+#include "Type/DebugType.h"
 
 UGenericButtonContainer* UGenericButtonGroup::GetButtonGroupWidget()
 {

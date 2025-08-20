@@ -6,7 +6,10 @@ public class DevCore : ModuleRules
 {
 	public DevCore(ReadOnlyTargetRules Target) : base(Target)
 	{
-		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
+		PCHUsage = ModuleRules.PCHUsageMode.UseSharedPCHs;
+		SharedPCHHeaderFile = "Public/SharedPCHHeader.h";	
+		PrivatePCHHeaderFile = "Public/PrivatePCHHeader.h";
+		
 		PrecompileForTargets = PrecompileTargetsType.Any;
 		bUsePrecompiled = false;
 
@@ -30,11 +33,10 @@ public class DevCore : ModuleRules
 			new string[]
 			{
 				"Core",
-				"UnrealMisc"
+				"UnrealMisc",
 				// ... add other public dependencies that you statically link with here ...
 			}
 		);
-
 
 		PrivateDependencyModuleNames.AddRange(
 			new string[]
@@ -44,15 +46,10 @@ public class DevCore : ModuleRules
 				"Slate",
 				"SlateCore",
 
-				"UMG",
 				"GameplayTags",
-				"AssetRegistry",
-				"EnhancedInput",
-				"InputCore",
 				"DeveloperSettings",
 			}
 		);
-
 
 		DynamicallyLoadedModuleNames.AddRange(
 			new string[]

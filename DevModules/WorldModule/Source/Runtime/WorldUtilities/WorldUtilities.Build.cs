@@ -27,7 +27,6 @@ public class WorldUtilities : ModuleRules
 				"DeveloperSettings",
 				
 				"WidgetGeneration",
-				"UnrealMisc"
 			}
 		);
 	}

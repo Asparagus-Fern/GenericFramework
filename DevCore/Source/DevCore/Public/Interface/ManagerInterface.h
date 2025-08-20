@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Debug/DebugType.h"
+#include "Type/DebugType.h"
 #include "Manager/ManagerType.h"
 #include "Interface/WorldInterface.h"
 // #include "ManagerInterface.generated.h"

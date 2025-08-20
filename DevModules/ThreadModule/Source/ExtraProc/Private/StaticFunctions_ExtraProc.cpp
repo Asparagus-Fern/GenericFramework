@@ -5,7 +5,7 @@
 #include "ExtraProcThread.h"
 #include "StaticFunctions_Thread.h"
 #include "ThreadManager.h"
-#include "Debug/DebugType.h"
+#include "Type/DebugType.h"
 #include "Manager/ManagerStatics.h"
 
 bool FStaticFunctions_ExtraProc::LaunchExtraProc(const FProcStartUpInfo& Info, FGuid& ProcId)

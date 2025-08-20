@@ -7,28 +7,19 @@
 #include "Interface/PawnInterface.h"
 #include "Interface/PawnInputMovementInterface.h"
 #include "Interface/PawnLockStateInterface.h"
-#include "Interface/PlayerIdentityInterface.h"
 #include "GenericCharacter.generated.h"
 
 class UPawnLockStateComponent;
 class UPawnInputMovementComponent;
 
 UCLASS(MinimalAPI)
-class  AGenericCharacter : public ACharacter, public IPlayerIdentityInterface, public IPawnInterface, public IPawnInputMovementInterface, public IPawnLockStateInterface
+class  AGenericCharacter : public ACharacter, public IPawnInterface, public IPawnInputMovementInterface, public IPawnLockStateInterface
 {
 	GENERATED_BODY()
 
 public:
 	GENERICGAMEPLAYSYSTEM_API AGenericCharacter();
 	GENERICGAMEPLAYSYSTEM_API virtual void SetupPlayerInputComponent(UInputComponent* PlayerInput) override;
-
-	/* IPlayerIdentityInterface */
-public:
-	UFUNCTION(BlueprintPure)
-	GENERICGAMEPLAYSYSTEM_API virtual int32 GetPlayerIdentity() override;
-
-	UFUNCTION(BlueprintPure)
-	GENERICGAMEPLAYSYSTEM_API virtual const FUniqueNetIdRepl& GetPlayerUniqueIdentity() override;
 
 	/* IPawnLockStateInterface */
 public:

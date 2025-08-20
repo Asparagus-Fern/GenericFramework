@@ -15,15 +15,15 @@
   "Installed": false,
   "Plugins": [
     {
+      "Name": "UnrealMisc",
+      "Enabled": true
+    },
+    {
       "Name": "DevCore",
       "Enabled": true
     },
     {
       "Name": "InputModule",
-      "Enabled": true
-    },
-    {
-      "Name": "PropertyModule",
       "Enabled": true
     },
     {

@@ -14,7 +14,6 @@ public class DevEdCore : ModuleRules
 				"Core",
 				"DevCore",
 				"DevSlateCore",
-				"DeveloperSettings",
 			}
 		);
 
@@ -39,7 +38,8 @@ public class DevEdCore : ModuleRules
 				"BlueprintGraph",
 				"SubobjectEditor",
 				"AssetDefinition",
-				"InputCore"
+				"InputCore",
+				"DeveloperSettings",
 			}
 		);
 	}

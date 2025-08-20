@@ -8,7 +8,7 @@
 #include "NativeAPILog.h"
 #include "NativeAPITypes.h"
 #include "NativeAPIWorldSubsystem.h"
-#include "Debug/DebugType.h"
+#include "Type/DebugType.h"
 #include "Features/IModularFeatures.h"
 
 #if WITH_EDITOR

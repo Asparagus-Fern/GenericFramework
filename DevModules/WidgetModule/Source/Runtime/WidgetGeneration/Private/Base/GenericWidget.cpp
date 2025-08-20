@@ -82,7 +82,7 @@ void UGenericWidget::NativeConstruct()
 	}
 
 	/* 传递当前UI，计算Slate所需大小 */
-	TakeWidget()->SlatePrepass();
+	TakeWidget()->SlatePrepass(FSlateApplicationBase::Get().GetApplicationScale());
 }
 
 void UGenericWidget::NativeDestruct()

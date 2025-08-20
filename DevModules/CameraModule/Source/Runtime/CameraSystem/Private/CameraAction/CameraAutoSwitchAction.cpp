@@ -4,6 +4,7 @@
 #include "CameraAction/CameraAutoSwitchAction.h"
 
 #include "CameraManager.h"
+#include "CameraType.h"
 #include "CameraSwitch/CameraSwitchMethod.h"
 #include "Manager/ManagerStatics.h"
 

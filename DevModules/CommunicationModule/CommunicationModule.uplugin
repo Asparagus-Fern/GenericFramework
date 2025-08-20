@@ -15,6 +15,10 @@
   "Installed": false,
   "Plugins": [
     {
+      "Name": "UnrealMisc",
+      "Enabled": true
+    },
+    {
       "Name": "DevCore",
       "Enabled": true
     }

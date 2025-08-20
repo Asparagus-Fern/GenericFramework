@@ -3,6 +3,7 @@
 
 #include "Pawn/ThirdPersonPawn.h"
 
+#include "CameraType.h"
 #include "Camera/CameraComponent.h"
 #include "CameraSwitch/CameraSwitchMethod.h"
 #include "CameraPoint/CameraPointBase.h"

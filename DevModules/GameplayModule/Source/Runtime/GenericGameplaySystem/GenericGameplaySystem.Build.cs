@@ -10,8 +10,8 @@ public class GenericGameplaySystem : ModuleRules
 			new string[]
 			{
 				"Core",
+				"UnrealMisc",
 				"DevCore",
-				"PlayerInputUtilities",
 			}
 		);
 
@@ -28,9 +28,9 @@ public class GenericGameplaySystem : ModuleRules
 				"EnhancedInput",
 				"AIModule",
 				"GameplayCameras",
+				"PlayerInputUtilities",
 
 				"CameraSystem",
-				"UnrealMisc",
 				"WidgetGeneration"
 			}
 		);

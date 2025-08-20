@@ -6,6 +6,8 @@
 #include "UObject/Object.h"
 #include "ManagerType.generated.h"
 
+DEVCORE_API DECLARE_LOG_CATEGORY_EXTERN(GenericLogManager, Log, All);
+
 class FManagerInterface;
 
 USTRUCT(BlueprintType)

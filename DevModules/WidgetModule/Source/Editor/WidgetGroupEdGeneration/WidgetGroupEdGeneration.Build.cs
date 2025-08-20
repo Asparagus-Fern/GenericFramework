@@ -10,6 +10,7 @@ public class WidgetGroupEdGeneration : ModuleRules
 			new string[]
 			{
 				"Core",
+				"UnrealMisc",
 				"DevCore",
 				"DevEdCore",
 			}

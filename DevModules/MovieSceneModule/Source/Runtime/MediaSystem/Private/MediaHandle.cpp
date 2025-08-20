@@ -6,6 +6,7 @@
 #include "MediaPlayer.h"
 #include "MediaPlayerFacade.h"
 #include "MediaPlaylist.h"
+#include "MovieSceneType.h"
 #include "Manager/ManagerStatics.h"
 
 UMediaHandle::UMediaHandle(const FObjectInitializer& ObjectInitializer)

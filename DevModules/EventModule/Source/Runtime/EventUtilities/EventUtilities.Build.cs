@@ -20,7 +20,7 @@ public class EventUtilities : ModuleRules
 				"CoreUObject",
 				"Engine",
 				"Slate",
-				"SlateCore", 
+				"SlateCore",
 			}
 		);
 	}

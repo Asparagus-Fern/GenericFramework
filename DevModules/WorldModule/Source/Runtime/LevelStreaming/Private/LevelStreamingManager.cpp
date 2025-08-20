@@ -4,7 +4,7 @@
 #include "LevelStreamingManager.h"
 
 #include "BPFunctions_LevelStreaming.h"
-#include "Debug/DebugType.h"
+#include "Type/DebugType.h"
 #include "Engine/LevelStreamingAlwaysLoaded.h"
 #include "Handle/HandleManager.h"
 #include "Handle/LoadLevelStreamingHandle.h"
@@ -12,6 +12,7 @@
 #include "Handle/UnLoadLevelStreamingHandle.h"
 #include "Kismet/GameplayStatics.h"
 #include "Manager/ManagerStatics.h"
+#include "SceneType.h"
 
 #define LOCTEXT_NAMESPACE "FLevelStreamingModule"
 

@@ -11,6 +11,8 @@
 class UGameplayTagSlot;
 class UGenericWidget;
 
+WIDGETGENERATION_API DECLARE_LOG_CATEGORY_EXTERN(GenericLogUI, Log, All);
+
 DECLARE_DELEGATE_OneParam(FOnWidgetActiveStateChanged, UGenericWidget*);
 
 /**
@@ -59,7 +61,7 @@ public:
 public:
 	UPROPERTY()
 	bool bOpenResult = false;
-	
+
 	UPROPERTY()
 	TObjectPtr<UGenericWidget> WidgetToRemove = nullptr;
 };

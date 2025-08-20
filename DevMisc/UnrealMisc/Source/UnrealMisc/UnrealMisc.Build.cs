@@ -67,7 +67,7 @@ public class UnrealMisc : ModuleRules
 				}
 			);
 		}
-		
+
 		if (Target.Platform == UnrealTargetPlatform.Win64)
 		{
 			PublicAdditionalLibraries.Add("pdh.lib");

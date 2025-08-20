@@ -16,6 +16,6 @@ class GAMEMAPSYSTEM_API UGameMapBackground : public UGenericWidget
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(ExposeOnSpawn = true))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(ExposeOnSpawn = "true"))
 	FImageBrush BackgroundImageBrush;
 };

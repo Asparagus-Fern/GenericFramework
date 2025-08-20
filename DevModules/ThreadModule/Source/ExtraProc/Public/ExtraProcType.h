@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "ExtraProcType.generated.h"
 
+EXTRAPROC_API DECLARE_LOG_CATEGORY_EXTERN(GenericLogExtraProc, Log, All);
+
 /**
  * 
  */

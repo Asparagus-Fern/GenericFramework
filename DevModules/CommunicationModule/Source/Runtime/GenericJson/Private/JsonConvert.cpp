@@ -3,8 +3,9 @@
 
 #include "JsonConvert.h"
 #include "JsonObjectConverter.h"
+#include "JsonType.h"
 #include "JsonValueBinary.h"
-#include "Debug/DebugType.h"
+#include "Type/DebugType.h"
 #include "Policies/CondensedJsonPrintPolicy.h"
 
 typedef TJsonWriterFactory<TCHAR, TCondensedJsonPrintPolicy<TCHAR>> FCondensedJsonStringWriterFactory;

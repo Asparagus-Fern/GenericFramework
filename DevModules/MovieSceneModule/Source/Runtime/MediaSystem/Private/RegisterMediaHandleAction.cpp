@@ -6,6 +6,7 @@
 #include "MediaHandle.h"
 #include "MediaPlayer.h"
 #include "MediaSource.h"
+#include "MovieSceneType.h"
 #include "Handle/HandleManager.h"
 #include "Manager/ManagerStatics.h"
 

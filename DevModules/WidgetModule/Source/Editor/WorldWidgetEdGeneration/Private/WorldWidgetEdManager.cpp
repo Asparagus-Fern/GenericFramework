@@ -5,6 +5,7 @@
 #include "LevelEditor.h"
 #include "LevelEditorViewport.h"
 #include "SEditorWorldWidget.h"
+#include "WidgetType.h"
 #include "WorldWidgetComponent.h"
 #include "Base/GenericWidget.h"
 #include "BPFunctions/BPFunctions_EditorWidget.h"
@@ -54,7 +55,7 @@ bool UWorldWidgetEdManager::DoesSupportWorldType(const EWorldType::Type WorldTyp
 void UWorldWidgetEdManager::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	
+
 	TArray<FEditorWorldWidget> TempEditorWorldWidgets = EditorWorldWidgets;
 	for (auto& EditorWorldWidget : TempEditorWorldWidgets)
 	{

@@ -4,7 +4,7 @@
 
 #include "Kismet/GameplayStatics.h"
 #include "Compass/CompassActor.h"
-#include "Debug/DebugType.h"
+#include "Type/DebugType.h"
 #include "MapScale/MapScaleActor.h"
 
 bool USceneManager::ShouldCreateSubsystem(UObject* Outer) const

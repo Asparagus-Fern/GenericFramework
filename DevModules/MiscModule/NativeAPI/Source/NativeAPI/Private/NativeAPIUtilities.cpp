@@ -5,7 +5,7 @@
 #include "Serialization/JsonSerializer.h"
 #include "Misc/PackageName.h"
 #include "NativeAPILog.h"
-#include "Debug/DebugType.h"
+#include "Type/DebugType.h"
 
 #define NATIVE_API_ENTITY_CLASS_FIELD TEXT("EntityClass")
 #define NATIVE_API_WORLD_PATH_FIELD TEXT("WorldPath")

@@ -7,7 +7,6 @@
 #include "Interface/PawnInterface.h"
 #include "Interface/PawnInputMovementInterface.h"
 #include "Interface/PawnLockStateInterface.h"
-#include "Interface/PlayerIdentityInterface.h"
 #include "GenericPawn.generated.h"
 
 class UPawnInputMovementComponent;
@@ -18,20 +17,12 @@ class UFloatingPawnMovement;
  * 
  */
 UCLASS(MinimalAPI)
-class AGenericPawn : public APawn, public IPlayerIdentityInterface, public IPawnInterface, public IPawnInputMovementInterface, public IPawnLockStateInterface
+class AGenericPawn : public APawn, public IPawnInterface, public IPawnInputMovementInterface, public IPawnLockStateInterface
 {
 	GENERATED_BODY()
 
 public:
 	GENERICGAMEPLAYSYSTEM_API AGenericPawn(const FObjectInitializer& ObjectInitializer);
-
-	/* IPlayerIdentityInterface */
-public:
-	UFUNCTION(BlueprintPure)
-	GENERICGAMEPLAYSYSTEM_API virtual int32 GetPlayerIdentity() override;
-
-	UFUNCTION(BlueprintPure)
-	GENERICGAMEPLAYSYSTEM_API virtual const FUniqueNetIdRepl& GetPlayerUniqueIdentity() override;
 
 	/* IPawnInterface */
 public:

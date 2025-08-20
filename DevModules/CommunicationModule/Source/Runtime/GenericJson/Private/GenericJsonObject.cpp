@@ -2,6 +2,8 @@
 
 #include "GenericJsonObject.h"
 
+#include "JsonType.h"
+
 typedef TJsonWriterFactory<TCHAR, TPrettyJsonPrintPolicy<TCHAR>> FJsonWriterFactory;
 typedef TJsonWriter<TCHAR, TPrettyJsonPrintPolicy<TCHAR>> FJsonWriter;
 

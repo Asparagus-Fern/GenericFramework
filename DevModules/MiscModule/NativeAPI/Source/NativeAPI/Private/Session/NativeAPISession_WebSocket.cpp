@@ -5,7 +5,7 @@
 #include "NativeAPITypes.h"
 #include "NativeAPIUtilities.h"
 #include "WebSocketsModule.h"
-#include "Debug/DebugType.h"
+#include "Type/DebugType.h"
 #include "Serialization/JsonReader.h"
 #include "Serialization/JsonSerializer.h"
 #include "WebSocket/BPFunctions_WebSocket.h"

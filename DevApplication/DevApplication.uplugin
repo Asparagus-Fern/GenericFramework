@@ -51,15 +51,7 @@
       "Enabled": true
     },
     {
-      "Name": "NetworkModule",
-      "Enabled": true
-    },
-    {
       "Name": "ProcedureModule",
-      "Enabled": true
-    },
-    {
-      "Name": "PropertyModule",
       "Enabled": true
     },
     {

@@ -22,7 +22,8 @@ public class LevelStreaming : ModuleRules
 				"Slate",
 				"SlateCore",
 
-				"EventUtilities"
+				"EventUtilities",
+				"WorldUtilities"
 			}
 		);
 	}
