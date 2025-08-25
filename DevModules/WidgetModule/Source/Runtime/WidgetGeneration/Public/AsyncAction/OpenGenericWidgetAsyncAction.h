@@ -21,11 +21,11 @@ class WIDGETGENERATION_API UOpenGenericWidgetAsyncAction : public UBlueprintAsyn
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"))
-	static UOpenGenericWidgetAsyncAction* AsyncOpenGenericWidget(UGenericWidget* InWidget);
-
-	UFUNCTION(BlueprintCallable, meta = (DeterminesOutputType = "InWidgetClass", WorldContext="WorldContextObject", BlueprintInternalUseOnly = "true"))
-	static UOpenGenericWidgetAsyncAction* AsyncOpenGenericWidgetByClass(UObject* WorldContextObject, TSubclassOf<class UGenericWidget> InWidgetClass, APlayerController* OwningPlayer);
+	virtual void Activate() override;
+	
+public:
+	UFUNCTION(BlueprintCallable, DisplayName="Open Generic Widget", meta = (BlueprintInternalUseOnly = "true"))
+	static UOpenGenericWidgetAsyncAction* AsyncOpenGenericWidget( UGenericWidget* InWidget);
 
 public:
 	UPROPERTY(BlueprintAssignable)
@@ -39,5 +39,5 @@ private:
 	virtual void OnWidgetActivedAnimationFinish(UGenericWidget* InWidget);
 
 	UPROPERTY()
-	UGenericWidget* Widget;
+	TObjectPtr<UGenericWidget> Widget;
 };

@@ -11,7 +11,7 @@ public class PropertySystem : ModuleRules
 			{
 				"Core",
 				"DevCore",
-				"DevSlateCore", 
+				"DevSlateCore",
 			}
 		);
 
@@ -30,5 +30,10 @@ public class PropertySystem : ModuleRules
 				"WidgetGeneration",
 			}
 		);
+
+		if (Target.bBuildEditor)
+		{
+			PrivateDependencyModuleNames.Add("UnrealEd");
+		}
 	}
 }

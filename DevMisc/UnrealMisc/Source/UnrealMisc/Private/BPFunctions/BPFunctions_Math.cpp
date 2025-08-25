@@ -15,6 +15,7 @@ FVector UBPFunctions_Math::Vector_MiddleRadians(const FVector& V1, const FVector
 	return Vector_MiddleDegrees(V1, V2, Alpha, FMath::RadiansToDegrees(Radians));
 }
 
+/*
 FVector UBPFunctions_Math::Vector_MapRangeClamped(const FVector& InValue, const FVector& InRangeA, const FVector& InRangeB, const FVector& OutRangeA, const FVector& OutRangeB)
 {
 	return FVector
@@ -34,12 +35,14 @@ FVector UBPFunctions_Math::Vector_MapRangeUnclamped(const FVector& InValue, cons
 		FMath::GetMappedRangeValueUnclamped(FVector2D(InRangeA.Z, InRangeB.Z), FVector2D(OutRangeA.Z, OutRangeB.Z), InValue.Z)
 	);
 }
+*/
 
 FRotator UBPFunctions_Math::Rotator_Safe(FRotator R)
 {
 	return FRotator(R.Pitch, FRotator::ClampAxis(R.Yaw + R.Roll), 0.f);
 }
 
+/*
 FRotator UBPFunctions_Math::Rotator_MapRangeClamped(const FRotator& InValue, const FRotator& InRangeA, const FRotator& InRangeB, const FRotator& OutRangeA, const FRotator& OutRangeB)
 {
 	return FRotator
@@ -77,3 +80,4 @@ FVector2D UBPFunctions_Math::Vector2D_MapRangeUnclamped(const FVector2D& InValue
 		FMath::GetMappedRangeValueUnclamped(FVector2D(InRangeA.Y, InRangeB.Y), FVector2D(OutRangeA.Y, OutRangeB.Y), InValue.Y)
 	);
 }
+*/

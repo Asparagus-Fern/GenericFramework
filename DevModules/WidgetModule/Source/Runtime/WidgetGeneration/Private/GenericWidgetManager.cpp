@@ -1,11 +1,9 @@
 // Copyright ChenTaiye 2025. All Rights Reserved.
 
-
 #include "GenericWidgetManager.h"
 
 #include "GenericGameHUDManager.h"
 #include "Base/GenericWidget.h"
-#include "Blueprint/UserWidget.h"
 #include "Blueprint/WidgetTree.h"
 #include "Manager/ManagerStatics.h"
 
@@ -20,33 +18,17 @@ void UGenericWidgetManager::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
 	RegisterManager(this);
-
-	UGenericGameHUDManager::Delegate_PostHUDCreated.AddUObject(this, &UGenericWidgetManager::PostHUDCreated);
 }
 
 void UGenericWidgetManager::Deinitialize()
 {
 	Super::Deinitialize();
 	UnRegisterManager();
-
-	UGenericGameHUDManager::Delegate_PostHUDCreated.RemoveAll(this);
 }
 
 bool UGenericWidgetManager::DoesSupportWorldType(const EWorldType::Type WorldType) const
 {
 	return WorldType == EWorldType::Game || WorldType == EWorldType::PIE;
-}
-
-void UGenericWidgetManager::PostHUDCreated()
-{
-	UGenericGameHUDManager::Delegate_PostHUDCreated.RemoveAll(this);
-
-	for (auto& CacheOpenWidget : CacheOpenWidgets)
-	{
-		OpenGenericWidget(CacheOpenWidget);
-	}
-
-	CacheOpenWidgets.Reset();
 }
 
 void UGenericWidgetManager::HandleOnWorldMatchStarting(UWorld* InWorld)
@@ -192,12 +174,6 @@ void UGenericWidgetManager::ActiveWidget(FOpenWidgetParameter& OpenWidgetParamet
 	}
 	else
 	{
-		if (!GIsGameHUDCreated)
-		{
-			CacheOpenWidgets.Emplace(OpenWidgetParameter);
-			return;
-		}
-
 		GenericLOG(GenericLogUI, Warning, TEXT("Fail To Open Widget : %s"), *OpenWidgetParameter.WidgetToHandle->GetName())
 		CloseGenericWidget(OpenWidgetParameter.WidgetToHandle);
 	}
@@ -205,13 +181,6 @@ void UGenericWidgetManager::ActiveWidget(FOpenWidgetParameter& OpenWidgetParamet
 
 void UGenericWidgetManager::InactiveWidget(FCloseWidgetParameter& CloseWidgetParameter)
 {
-	if (!GIsGameHUDCreated && CacheOpenWidgets.Contains(CloseWidgetParameter.WidgetToHandle))
-	{
-		FOpenWidgetParameter Parameter = *CacheOpenWidgets.FindByKey(CloseWidgetParameter.WidgetToHandle);
-		CacheOpenWidgets.Remove(Parameter);
-		return;
-	}
-
 	if (!Widgets.Contains(CloseWidgetParameter.WidgetToHandle))
 	{
 		GenericLOG(GenericLogUI, Warning, TEXT("InWidget Is Already Inactived"))

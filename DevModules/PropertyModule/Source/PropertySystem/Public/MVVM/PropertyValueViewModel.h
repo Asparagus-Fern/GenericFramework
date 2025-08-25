@@ -9,7 +9,7 @@
 /**
  * 
  */
-UCLASS(Abstract)
+UCLASS(Abstract, EditInlineNew)
 class PROPERTYSYSTEM_API UPropertyValueViewModel : public UMVVMViewModelBase
 {
 	GENERATED_BODY()

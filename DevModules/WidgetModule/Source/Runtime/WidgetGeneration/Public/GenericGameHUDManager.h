@@ -11,8 +11,6 @@
 class UGenericWidget;
 class UGenericGameHUD;
 
-inline extern bool GIsGameHUDCreated = false;
-
 DECLARE_MULTICAST_DELEGATE(FDelegate_HUDDelegate);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FBPDelegate_HUDDelegate);
 
@@ -39,11 +37,6 @@ public:
 	virtual void Deinitialize() override;
 	virtual void OnWorldBeginPlay(UWorld& InWorld) override;
 	virtual bool DoesSupportWorldType(const EWorldType::Type WorldType) const override;
-
-	/* IStateInterface */
-protected:
-	virtual void HandleOnWorldMatchStarting(UWorld* InWorld) override;
-	virtual void HandleOnWorldEndPlay(UWorld* InWorld) override;
 
 	/* Delegate From UWidgetManager */
 private:

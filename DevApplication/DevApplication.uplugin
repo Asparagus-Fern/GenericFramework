@@ -55,10 +55,6 @@
       "Enabled": true
     },
     {
-      "Name": "RandomGenerationModule",
-      "Enabled": true
-    },
-    {
       "Name": "ThreadModule",
       "Enabled": true
     },

@@ -45,9 +45,6 @@ public:
 	virtual void Deinitialize() override;
 	virtual bool DoesSupportWorldType(const EWorldType::Type WorldType) const override;
 
-private:
-	void PostHUDCreated();
-
 	/* IStateInterface */
 protected:
 	virtual void HandleOnWorldMatchStarting(UWorld* InWorld) override;
@@ -140,9 +137,6 @@ private:
 
 	UPROPERTY(Transient)
 	TArray<FCloseWidgetParameter> CloseWidgetParameters;
-
-	UPROPERTY()
-	TArray<FOpenWidgetParameter> CacheOpenWidgets;
 };
 
 template <typename WidgetT = UGenericWidget, typename OwnerType = UObject>

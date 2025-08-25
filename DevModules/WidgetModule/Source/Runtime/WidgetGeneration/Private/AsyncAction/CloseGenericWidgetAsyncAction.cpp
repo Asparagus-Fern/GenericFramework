@@ -1,29 +1,49 @@
 ﻿// Copyright ChenTaiye 2025. All Rights Reserved.
 
-
 #include "AsyncAction/CloseGenericWidgetAsyncAction.h"
 
+#include "GenericGameSlotManager.h"
 #include "GenericWidgetManager.h"
 #include "Manager/ManagerStatics.h"
 
+void UCloseGenericWidgetAsyncAction::Activate()
+{
+	Super::Activate();
+
+	if (!Widget)
+	{
+		FFrame::KismetExecutionMessage(TEXT("Close Generic Widget Must Provide a Widget."), ELogVerbosity::Error);
+		return;
+	}
+
+	Widget->GetOnWidgetInactiveAnimationPlayFinish().AddUObject(this, &UCloseGenericWidgetAsyncAction::OnWidgetInactivedAnimationFinish);
+	CloseGenericWidget(Widget, bMarkAsGarbage, FOnWidgetActiveStateChanged::CreateUObject(this, &UCloseGenericWidgetAsyncAction::OnWidgetInactived));
+}
+
 UCloseGenericWidgetAsyncAction* UCloseGenericWidgetAsyncAction::AsyncCloseGenericWidget(UGenericWidget* InWidget, const bool MarkAsGarbage)
 {
-	UCloseGenericWidgetAsyncAction* NewAction = NewObject<UCloseGenericWidgetAsyncAction>();
+	check(InWidget)
 
-	UGenericWidgetManager::Delegate_PostWidgetClosed.AddUObject(NewAction, &UCloseGenericWidgetAsyncAction::OnWidgetInactivedAnimationFinish);
-	CloseGenericWidget(InWidget, MarkAsGarbage, FOnWidgetActiveStateChanged::CreateUObject(NewAction, &UCloseGenericWidgetAsyncAction::OnWidgetInactived));
+	UCloseGenericWidgetAsyncAction* NewAction = NewObject<UCloseGenericWidgetAsyncAction>();
+	NewAction->Widget = InWidget;
+	NewAction->bMarkAsGarbage = MarkAsGarbage;
 
 	return NewAction;
 }
 
 UCloseGenericWidgetAsyncAction* UCloseGenericWidgetAsyncAction::AsyncCloseGenericWidgetByTag(const FGameplayTag InSlotTag, const bool MarkAsGarbage)
 {
-	UCloseGenericWidgetAsyncAction* NewAction = NewObject<UCloseGenericWidgetAsyncAction>();
+	check(InSlotTag.IsValid())
 
-	UGenericWidgetManager::Delegate_PostWidgetClosed.AddUObject(NewAction, &UCloseGenericWidgetAsyncAction::OnWidgetInactivedAnimationFinish);
-	CloseGenericWidget(InSlotTag, MarkAsGarbage, FOnWidgetActiveStateChanged::CreateUObject(NewAction, &UCloseGenericWidgetAsyncAction::OnWidgetInactived));
+	if (UGenericGameSlotManager* GameSlotManager = GetManagerOwner<UGenericGameSlotManager>())
+	{
+		if (UGenericWidget* GameSlotWidget = GameSlotManager->GetSlotWidget(InSlotTag))
+		{
+			return AsyncCloseGenericWidget(GameSlotWidget, MarkAsGarbage);
+		}
+	}
 
-	return NewAction;
+	return nullptr;
 }
 
 void UCloseGenericWidgetAsyncAction::OnWidgetInactived(UGenericWidget* InWidget)
@@ -33,6 +53,6 @@ void UCloseGenericWidgetAsyncAction::OnWidgetInactived(UGenericWidget* InWidget)
 
 void UCloseGenericWidgetAsyncAction::OnWidgetInactivedAnimationFinish(UGenericWidget* InWidget)
 {
-	UGenericWidgetManager::Delegate_PostWidgetClosed.RemoveAll(this);
+	InWidget->GetOnWidgetInactiveAnimationPlayFinish().RemoveAll(this);
 	OnAnimationFinish.Broadcast();
 }

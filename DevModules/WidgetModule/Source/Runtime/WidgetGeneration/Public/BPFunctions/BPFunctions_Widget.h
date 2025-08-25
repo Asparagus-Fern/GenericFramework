@@ -10,6 +10,8 @@
 
 class UGenericWidget;
 
+DECLARE_DYNAMIC_DELEGATE(FOnOpenGenericWidgetFinish);
+
 /**
  * 
  */
@@ -19,18 +21,6 @@ class WIDGETGENERATION_API UBPFunctions_Widget : public UBlueprintFunctionLibrar
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintCallable, BlueprintCosmetic, meta=(DeterminesOutputType = "InWidgetClass", WorldContext="WorldContextObject"), DisplayName="OpenGenericWidgetByClass")
-	static UGenericWidget* BP_OpenGenericWidgetByClass(UObject* WorldContextObject, TSubclassOf<class UGenericWidget> InWidgetClass, APlayerController* OwningPlayer);
-
-	UFUNCTION(BlueprintCallable, DisplayName="OpenGenericWidget")
-	static bool BP_OpenGenericWidget(UGenericWidget* InWidget);
-
-	UFUNCTION(BlueprintCallable, meta=(GameplayTagFilter="UI.HUD"), DisplayName="CloseGenericWidgetByTag")
-	static bool BP_CloseGenericWidgetByTag(FGameplayTag InSlotTag, bool MarkAsGarbage = true);
-
-	UFUNCTION(BlueprintCallable, DisplayName="CloseGenericWidget")
-	static bool BP_CloseGenericWidget(UGenericWidget* InWidget, bool MarkAsGarbage = true);
-
 	UFUNCTION(BlueprintPure)
 	static TArray<UGenericWidget*> GetActivedWidgets();
 };

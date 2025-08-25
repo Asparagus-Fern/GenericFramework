@@ -1,62 +1,62 @@
 ﻿{
-  "FileVersion": 3,
-  "Version": 1,
-  "VersionName": "1.0",
-  "FriendlyName": "WidgetModule",
-  "Description": "",
-  "Category": "Other",
-  "CreatedBy": "Chen",
-  "CreatedByURL": "",
-  "DocsURL": "",
-  "MarketplaceURL": "",
-  "CanContainContent": true,
-  "IsBetaVersion": false,
-  "IsExperimentalVersion": false,
-  "Installed": false,
-  "Plugins": [
-    {
-      "Name": "UnrealMisc",
-      "Enabled": true
-    },
-    {
-      "Name": "DevCore",
-      "Enabled": true
-    },
-    {
-      "Name": "ModelViewViewModel",
-      "Enabled": true
-    }
-  ],
-  "Modules": [
-    {
-      "Name": "WidgetGeneration",
-      "Type": "Runtime",
-      "LoadingPhase": "Default"
-    },
-    {
-      "Name": "WidgetGroupGeneration",
-      "Type": "Runtime",
-      "LoadingPhase": "Default"
-    },
-    {
-      "Name": "WidgetGroupEdGeneration",
-      "Type": "Editor",
-      "LoadingPhase": "Default"
-    },
-    {
-      "Name": "WorldWidgetGeneration",
-      "Type": "Runtime",
-      "LoadingPhase": "Default"
-    },
-    {
-      "Name": "WorldWidgetEdGeneration",
-      "Type": "Editor",
-      "LoadingPhase": "PostEngineInit"
-    },
-    {
-      "Name": "WidgetApplication",
-      "Type": "Runtime",
-      "LoadingPhase": "Default"
-    }
-  ]
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "WidgetModule",
+	"Description": "",
+	"Category": "Other",
+	"CreatedBy": "Chen",
+	"CreatedByURL": "",
+	"DocsURL": "",
+	"MarketplaceURL": "",
+	"CanContainContent": true,
+	"IsBetaVersion": false,
+	"IsExperimentalVersion": false,
+	"Installed": false,
+	"Plugins": [
+		{
+			"Name": "UnrealMisc",
+			"Enabled": true
+		},
+		{
+			"Name": "DevCore",
+			"Enabled": true
+		},
+		{
+			"Name": "ModelViewViewModel",
+			"Enabled": true
+		}
+	],
+	"Modules": [
+		{
+			"Name": "WidgetGeneration",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "WidgetGroupGeneration",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "WidgetGroupEdGeneration",
+			"Type": "Editor",
+			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "WorldWidgetGeneration",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "WorldWidgetEdGeneration",
+			"Type": "Editor",
+			"LoadingPhase": "PostEngineInit"
+		},
+		{
+			"Name": "WidgetApplication",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	]
 }

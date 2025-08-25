@@ -32,11 +32,6 @@ public:
 	virtual void Deinitialize() override;
 	virtual bool DoesSupportWorldType(const EWorldType::Type WorldType) const override;
 
-	/* IStateInterface */
-protected:
-	virtual void HandleOnWorldMatchStarting(UWorld* InWorld) override;
-	virtual void HandleOnWorldEndPlay(UWorld* InWorld) override;
-
 	/* Delegate From UWidgetManager */
 private:
 	void PreWidgetOpened(FOpenWidgetParameter& Parameter);

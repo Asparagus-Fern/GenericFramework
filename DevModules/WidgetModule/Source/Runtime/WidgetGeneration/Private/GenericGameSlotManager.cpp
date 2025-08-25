@@ -45,22 +45,13 @@ void UGenericGameSlotManager::Deinitialize()
 
 	UGenericWidgetManager::Delegate_PreWidgetClosed.RemoveAll(this);
 	UGenericWidgetManager::Delegate_PostWidgetClosed.RemoveAll(this);
+
+	Slots.Reset();
 }
 
 bool UGenericGameSlotManager::DoesSupportWorldType(const EWorldType::Type WorldType) const
 {
 	return WorldType == EWorldType::Game || WorldType == EWorldType::PIE;
-}
-
-void UGenericGameSlotManager::HandleOnWorldMatchStarting(UWorld* InWorld)
-{
-	FManagerInterface::HandleOnWorldMatchStarting(InWorld);
-}
-
-void UGenericGameSlotManager::HandleOnWorldEndPlay(UWorld* InWorld)
-{
-	FManagerInterface::HandleOnWorldEndPlay(InWorld);
-	Slots.Reset();
 }
 
 /* ==================== DelegateBinding ==================== */

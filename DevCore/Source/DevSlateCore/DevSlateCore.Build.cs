@@ -11,7 +11,7 @@ public class DevSlateCore : ModuleRules
 		PublicDependencyModuleNames.AddRange(
 			new string[]
 			{
-				"Core",
+				"Core", 
 			}
 		);
 

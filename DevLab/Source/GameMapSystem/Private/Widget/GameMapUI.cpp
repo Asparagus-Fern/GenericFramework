@@ -47,28 +47,30 @@ FVector2D UGameMapUI::GetPlayerSize() const
 
 FVector2D UGameMapUI::CalculatePlayerSceneLocationToMapLocation_Implementation(FVector InPlayerSceneLocation)
 {
-	const FVector2D ConvertSceneLocation = UKismetMathLibrary::GetRotated2D(UKismetMathLibrary::Conv_VectorToVector2D(InPlayerSceneLocation), SceneAngle * -1);
-	FVector2D MinMapTranslation = FVector2D::ZeroVector;
-	FVector2D MaxMapTranslation = FVector2D::ZeroVector;
-	FVector2D PlayerOffset = FVector2D::ZeroVector;
+	// const FVector2D ConvertSceneLocation = UKismetMathLibrary::GetRotated2D(UKismetMathLibrary::Conv_VectorToVector2D(InPlayerSceneLocation), SceneAngle * -1);
+	// FVector2D MinMapTranslation = FVector2D::ZeroVector;
+	// FVector2D MaxMapTranslation = FVector2D::ZeroVector;
+	// FVector2D PlayerOffset = FVector2D::ZeroVector;
+	//
+	// switch (Maptype)
+	// {
+	// case EMapType::StaticMap:
+	// 	MaxMapTranslation = GetBackgroundSize();
+	// 	PlayerOffset = GetPlayerSize() / 2;
+	// 	break;
+	//
+	// case EMapType::StaticPlayer:
+	// 	MinMapTranslation = FVector2D::ZeroVector + GetBackgroundSize() / 2;
+	// 	MaxMapTranslation = FVector2D::ZeroVector - GetBackgroundSize() / 2;
+	// 	break;
+	//
+	// default: ;
+	// }
 
-	switch (Maptype)
-	{
-	case EMapType::StaticMap:
-		MaxMapTranslation = GetBackgroundSize();
-		PlayerOffset = GetPlayerSize() / 2;
-		break;
-
-	case EMapType::StaticPlayer:
-		MinMapTranslation = FVector2D::ZeroVector + GetBackgroundSize() / 2;
-		MaxMapTranslation = FVector2D::ZeroVector - GetBackgroundSize() / 2;
-		break;
-
-	default: ;
-	}
-
-	const FVector2D Translation = UBPFunctions_Math::Vector2D_MapRangeClamped(ConvertSceneLocation, FVector2D::ZeroVector, SceneSize, MinMapTranslation, MaxMapTranslation);
-	return Translation - PlayerOffset;
+	// const FVector2D Translation = UBPFunctions_Math::Vector2D_MapRangeClamped(ConvertSceneLocation, FVector2D::ZeroVector, SceneSize, MinMapTranslation, MaxMapTranslation);
+	// return Translation - PlayerOffset;
+	
+	return FVector2D::ZeroVector;
 }
 
 float UGameMapUI::CalculatePlayerSceneRotationToMapLocation_Implementation(FRotator InPlayerSceneRotation)

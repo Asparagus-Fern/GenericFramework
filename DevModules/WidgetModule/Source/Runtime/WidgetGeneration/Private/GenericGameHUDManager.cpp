@@ -10,8 +10,6 @@
 #include "Manager/ManagerStatics.h"
 #include "StaticFunctions/StaticFunctions_Object.h"
 
-// FDelegate_HUDDelegate UGenericGameHUDManager::Delegate_PostHUDCreated = FDelegate_HUDDelegate();
-
 bool UGenericGameHUDManager::ShouldCreateSubsystem(UObject* Outer) const
 {
 	return Super::ShouldCreateSubsystem(Outer) && !IsRunningDedicatedServer();
@@ -35,38 +33,25 @@ void UGenericGameHUDManager::Deinitialize()
 	UGenericWidgetManager::Delegate_PostWidgetClosed.RemoveAll(this);
 
 	UnRegisterManager();
+
+	GameHUDs.Reset();
 }
 
 void UGenericGameHUDManager::OnWorldBeginPlay(UWorld& InWorld)
 {
 	Super::OnWorldBeginPlay(InWorld);
-}
-
-bool UGenericGameHUDManager::DoesSupportWorldType(const EWorldType::Type WorldType) const
-{
-	return WorldType == EWorldType::Game || WorldType == EWorldType::PIE;
-}
-
-void UGenericGameHUDManager::HandleOnWorldMatchStarting(UWorld* InWorld)
-{
-	FManagerInterface::HandleOnWorldMatchStarting(InWorld);
-
-	ENetMode Mode = InWorld->GetNetMode();
 
 	if (UGameHUDSettings::Get()->AutoCreateGameHUD)
 	{
 		BROADCAST_UNIFIED_DELEGATE(Delegate_PreHUDCreated, BPDelegate_PreHUDCreated);
 		CreateGameHUDs(UGameHUDSettings::Get()->GenericHUDClasses);
-		GIsGameHUDCreated = true;
 		BROADCAST_UNIFIED_DELEGATE(Delegate_PostHUDCreated, BPDelegate_PostHUDCreated);
 	}
 }
 
-void UGenericGameHUDManager::HandleOnWorldEndPlay(UWorld* InWorld)
+bool UGenericGameHUDManager::DoesSupportWorldType(const EWorldType::Type WorldType) const
 {
-	FManagerInterface::HandleOnWorldEndPlay(InWorld);
-
-	GameHUDs.Reset();
+	return WorldType == EWorldType::Game || WorldType == EWorldType::PIE;
 }
 
 void UGenericGameHUDManager::OnWidgetOpened(FOpenWidgetParameter& Parameter)
