@@ -15,20 +15,10 @@ class UPropertySingleValueBase : public UPropertyValueBase
 	GENERATED_BODY()
 
 public:
-	PROPERTYSYSTEM_API virtual TSubclassOf<UPropertyValueViewModel> GetSupportViewModelClass() override;
-	PROPERTYSYSTEM_API virtual void PostInitViewModelProperty() override;
+	PROPERTYSYSTEM_API virtual TSubclassOf<UPropertyValueViewModel> GetSupportPropertyViewModelClass() override;
+	PROPERTYSYSTEM_API virtual void PostInitPropertyViewModel() override;
 	PROPERTYSYSTEM_API virtual void NativeOnViewModelInitialized() override;
 	PROPERTYSYSTEM_API virtual void NativeOnViewModelDeinitialized() override;
-
-private:
-	FDelegateHandle OnPropertyValueNameChangedHandle;
-	virtual void HandleOnPropertyValueNameChanged(UObject* InObject, UE::FieldNotification::FFieldId InFieldId);
-
-	FDelegateHandle OnPropertyValueDisplayNameChangedHandle;
-	virtual void HandleOnPropertyValueDisplayNameChanged(UObject* InObject, UE::FieldNotification::FFieldId InFieldId);
-
-	FDelegateHandle OnPropertyValueTooltipChangedHandle;
-	virtual void HandleOnPropertyValueTooltipChanged(UObject* InObject, UE::FieldNotification::FFieldId InFieldId);
 
 protected:
 	UFUNCTION(BlueprintNativeEvent)

@@ -18,46 +18,12 @@ class UPropertyScalarValueBase : public UPropertySingleValueBase
 	GENERATED_BODY()
 
 public:
-	PROPERTYSYSTEM_API virtual TSubclassOf<UPropertyValueViewModel> GetSupportViewModelClass() override;
-	PROPERTYSYSTEM_API virtual void PostInitViewModelProperty() override;
+	PROPERTYSYSTEM_API virtual TSubclassOf<UPropertyValueViewModel> GetSupportPropertyViewModelClass() override;
+	PROPERTYSYSTEM_API virtual void PostInitPropertyViewModel() override;
 	PROPERTYSYSTEM_API virtual void NativeOnViewModelInitialized() override;
 	PROPERTYSYSTEM_API virtual void NativeOnViewModelDeinitialized() override;
 
-private:
-	FDelegateHandle OnDisplayFormatChangedHandle;
-	virtual void HandleOnDisplayFormatChanged(UObject* InObject, UE::FieldNotification::FFieldId InFieldId);
-
-	FDelegateHandle OnDefaultValueChangedHandle;
-	virtual void HandleOnDefaultValueChanged(UObject* InObject, UE::FieldNotification::FFieldId InFieldId);
-
-	FDelegateHandle OnNormalizedDefaultValueChangedHandle;
-	virtual void HandleOnNormalizedDefaultValueChanged(UObject* InObject, UE::FieldNotification::FFieldId InFieldId);
-
-	FDelegateHandle OnCurrentValueChangedHandle;
-	virtual void HandleOnCurrentValueChanged(UObject* InObject, UE::FieldNotification::FFieldId InFieldId);
-
-	FDelegateHandle OnNormalizedCurrentValueChangedHandle;
-	virtual void HandleOnNormalizedCurrentValueChanged(UObject* InObject, UE::FieldNotification::FFieldId InFieldId);
-
-	FDelegateHandle OnValueStepChangedHandle;
-	virtual void HandleOnValueStepChanged(UObject* InObject, UE::FieldNotification::FFieldId InFieldId);
-
-	FDelegateHandle OnValueRangeChangedHandle;
-	virtual void HandleOnValueRangeChanged(UObject* InObject, UE::FieldNotification::FFieldId InFieldId);
-
-	FDelegateHandle OnNormalizedValueRangeChangedHandle;
-	virtual void HandleOnNormalizedValueRangeChanged(UObject* InObject, UE::FieldNotification::FFieldId InFieldId);
-
-	FDelegateHandle OnValueInteractionRangeChangedHandle;
-	virtual void HandleOnValueInteractionRangeChanged(UObject* InObject, UE::FieldNotification::FFieldId InFieldId);
-
-	FDelegateHandle OnNormalizedValueInteractionRangeChangedHandle;
-	virtual void HandleOnNormalizedValueInteractionRangeChanged(UObject* InObject, UE::FieldNotification::FFieldId InFieldId);
-
 protected:
-	UFUNCTION(BlueprintNativeEvent)
-	PROPERTYSYSTEM_API void UpdateCustomDisplayFormat();
-
 	UFUNCTION(BlueprintNativeEvent)
 	PROPERTYSYSTEM_API void OnDefaultValueChanged(double DefaultValue);
 
@@ -84,6 +50,9 @@ protected:
 
 	UFUNCTION(BlueprintNativeEvent)
 	PROPERTYSYSTEM_API void OnNormalizedValueInteractionRangeChanged(FVector2D NormalizedValueInteractionRange);
+
+	UFUNCTION(BlueprintNativeEvent)
+	PROPERTYSYSTEM_API void OnDisplayFormatChanged(EScalarPropertyValueDisplayFormat DisplayFormat);
 
 protected:
 	UPROPERTY(BlueprintReadOnly)

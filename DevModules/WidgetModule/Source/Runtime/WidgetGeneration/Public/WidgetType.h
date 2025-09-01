@@ -84,67 +84,71 @@ public:
 };
 
 
-/**
- * 
- */
-USTRUCT(BlueprintType)
-struct FWidgetDescriptionParameter
+template <typename T>
+struct ExtractFromTObjectPtr
 {
-	GENERATED_BODY()
-
-public:
-	FWidgetDescriptionParameter() { return; }
-
-public:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Description")
-	FText PrimaryName = FText::FromString("PrimaryName");
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Description")
-	FText SecondaryName = FText::FromString("SecondaryName");
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Description")
-	FText TooltipText;
+	using Type = void;
 };
 
-
-/**
- * 
- */
-USTRUCT(BlueprintType)
-struct FWidgetRenderParameter
+template <typename T>
+struct ExtractFromTObjectPtr<TObjectPtr<T>>
 {
-	GENERATED_BODY()
-
-public:
-	FWidgetRenderParameter() { return; }
-
-public:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Render")
-	ESlateVisibility Visibility = ESlateVisibility::SelfHitTestInvisible;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Render")
-	FVector2D RenderTransformPivot = FVector2D(0.5f, 0.5f);
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Render")
-	FWidgetTransform RenderTransform;
+	using Type = T;
 };
 
-
-/**
- * 
- */
-USTRUCT(BlueprintType)
-struct FWidgetParameter
+template <typename T>
+struct ExtractFromRawPtr
 {
-	GENERATED_BODY()
-
-public:
-	FWidgetParameter() { return; }
-
-public:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	FWidgetDescriptionParameter DescriptionParameter;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	FWidgetRenderParameter RenderParameter;
+	using Type = void;
 };
+
+template <typename T>
+struct ExtractFromRawPtr<T*>
+{
+	using Type = T;
+};
+
+template <typename T>
+struct TMVVMRegisterTypeExtractor
+{
+private:
+	using TObjectPtrType = typename ExtractFromTObjectPtr<T>::Type;
+	using RawPtrType = typename ExtractFromRawPtr<T>::Type;
+
+public:
+	using Type = typename std::conditional<
+		!std::is_same_v<TObjectPtrType, void>,
+		TObjectPtrType,
+		RawPtrType
+	>::type;
+};
+
+#define REGISTER_MVVM_PROPERTY(ViewModel, Value, FunctionName, CallFunction) \
+{ \
+	if(ViewModel) \
+	{ \
+		using ViewModelClass = typename TMVVMRegisterTypeExtractor<decltype(ViewModel)>::Type; \
+		ViewModelClass* ViewModelRef = ViewModel; \
+		ViewModel->AddFieldValueChangedDelegate \
+		( \
+		ViewModelClass::FFieldNotificationClassDescriptor::Value, \
+			ViewModelClass::FFieldValueChangedDelegate::CreateLambda \
+			( \
+			[this, ViewModelRef](UObject* InObject, UE::FieldNotification::FFieldId InFieldId) \
+				{ \
+					FunctionName(ViewModelRef->Value); \
+				} \
+			) \
+		); \
+		if(CallFunction) \
+		{ \
+			FunctionName(ViewModel->Value); \
+		} \
+	} \
+}
+
+#define UNREGISTER_MVVM_PROPERTY(ViewModel) \
+	if(ViewModel) \
+	{ \
+		ViewModel->RemoveAllFieldValueChangedDelegates(this); \
+	}

@@ -2,19 +2,19 @@
 
 #include "UMG/PropertyValue/PropertyDiscreteValueBase.h"
 
-#include "PropertyType.h"
+#include "WidgetType.h"
 #include "MVVM/Multi/MultiPropertyValueViewModel.h"
 
-TSubclassOf<UPropertyValueViewModel> UPropertyDiscreteValueBase::GetSupportViewModelClass()
+TSubclassOf<UPropertyValueViewModel> UPropertyDiscreteValueBase::GetSupportPropertyViewModelClass()
 {
 	return UMultiPropertyValueViewModel::StaticClass();
 }
 
-void UPropertyDiscreteValueBase::PostInitViewModelProperty()
+void UPropertyDiscreteValueBase::PostInitPropertyViewModel()
 {
-	Super::PostInitViewModelProperty();
+	Super::PostInitPropertyViewModel();
 
-	if (UMultiPropertyValueViewModel* ViewModel = GetViewModel<UMultiPropertyValueViewModel>())
+	if (UMultiPropertyValueViewModel* ViewModel = GetPropertyViewModel<UMultiPropertyValueViewModel>())
 	{
 		MultiPropertyValueViewModel = ViewModel;
 	}
@@ -28,14 +28,14 @@ void UPropertyDiscreteValueBase::NativeOnViewModelInitialized()
 	{
 		MultiPropertyValueViewModel->OnPropertyValueAddedEvent.AddUObject(this, &UPropertyDiscreteValueBase::HandleOnPropertyValueAdded);
 		MultiPropertyValueViewModel->OnPropertyValueRemovedEvent.AddUObject(this, &UPropertyDiscreteValueBase::HandleOnPropertyValueRemoved);
-		MVVM_REGISTRY(OnSelectedValueIndexChangedHandle, MultiPropertyValueViewModel, SelectedValueIndex, HandleOnSelectedValueIndexChanged)
 
 		for (auto& Value : MultiPropertyValueViewModel->PropertyValues)
 		{
 			HandleOnPropertyValueAdded(Value);
 		}
 
-		OnSelectedValueIndexChanged(MultiPropertyValueViewModel->GetSelectedValue());
+		REGISTER_MVVM_PROPERTY(MultiPropertyValueViewModel, bAllowWrap, OnAllowWrapChanged, true)
+		REGISTER_MVVM_PROPERTY(MultiPropertyValueViewModel, SelectedValueIndex, OnSelectedValueIndexChanged, true)
 	}
 }
 
@@ -47,7 +47,6 @@ void UPropertyDiscreteValueBase::NativeOnViewModelDeinitialized()
 	{
 		MultiPropertyValueViewModel->OnPropertyValueAddedEvent.RemoveAll(this);
 		MultiPropertyValueViewModel->OnPropertyValueRemovedEvent.RemoveAll(this);
-		MVVM_UNREGISTRY(OnSelectedValueIndexChangedHandle, MultiPropertyValueViewModel, SelectedValueIndex)
 	}
 }
 
@@ -61,9 +60,8 @@ void UPropertyDiscreteValueBase::HandleOnPropertyValueRemoved(USinglePropertyVal
 	OnPropertyValueRemoved(ViewModel);
 }
 
-void UPropertyDiscreteValueBase::HandleOnSelectedValueIndexChanged(UObject* InObject, UE::FieldNotification::FFieldId InFieldId)
+void UPropertyDiscreteValueBase::OnAllowWrapChanged_Implementation(bool IsAllowWrap)
 {
-	OnSelectedValueIndexChanged(MultiPropertyValueViewModel->GetSelectedValue());
 }
 
 void UPropertyDiscreteValueBase::OnPropertyValueAdded_Implementation(USinglePropertyValueViewModel* ViewModel)
@@ -74,6 +72,6 @@ void UPropertyDiscreteValueBase::OnPropertyValueRemoved_Implementation(USinglePr
 {
 }
 
-void UPropertyDiscreteValueBase::OnSelectedValueIndexChanged_Implementation(USinglePropertyValueViewModel* ViewModel)
+void UPropertyDiscreteValueBase::OnSelectedValueIndexChanged_Implementation(int32 SelectedValueIndex)
 {
 }

@@ -110,7 +110,10 @@ void UGenericButtonCollection::BuildChildButtonGroup(FGameplayTag InButtonTag)
 
 				ChildButtonWidget->SelfTag = ChildTag;
 				ButtonGroup->AddButton(ChildButtonWidget);
-				ChildButtonWidget->NativeConstructButtonParameters(GetButtonBuilder(ChildTag)->ButtonParameter);
+
+				ChildButtonWidget->SetButtonSelectionViewModel(GetButtonBuilder(ChildTag)->ButtonSelectionViewModel);
+				ChildButtonWidget->SetButtonInputViewModel(GetButtonBuilder(ChildTag)->ButtonInputViewModel);
+				ChildButtonWidget->SetButtonSoundViewModel(GetButtonBuilder(ChildTag)->ButtonSoundViewModel);
 			}
 		}
 

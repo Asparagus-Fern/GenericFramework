@@ -51,12 +51,12 @@ void UDiscreteValue_ComboBox::OnPropertyValueRemoved_Implementation(USinglePrope
 	}
 }
 
-void UDiscreteValue_ComboBox::OnSelectedValueIndexChanged_Implementation(USinglePropertyValueViewModel* ViewModel)
+void UDiscreteValue_ComboBox::OnSelectedValueIndexChanged_Implementation(int32 SelectedValueIndex)
 {
-	Super::OnSelectedValueIndexChanged_Implementation(ViewModel);
+	Super::OnSelectedValueIndexChanged_Implementation(SelectedValueIndex);
 
 	if (ComboBox_PropertyValue)
 	{
-		ComboBox_PropertyValue->SetSelectedIndex(MultiPropertyValueViewModel->SelectedValueIndex);
+		ComboBox_PropertyValue->SetSelectedIndex(SelectedValueIndex);
 	}
 }

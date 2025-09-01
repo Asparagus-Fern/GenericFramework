@@ -3,11 +3,14 @@
 #include "GenericButtonWidget.h"
 
 #include "CommonButtonBase.h"
+#include "WidgetType.h"
 #include "Binding/States/WidgetStateRegistration.h"
 #include "Blueprint/WidgetTree.h"
-#include "BPFunctions/BPFunctions_File.h"
 #include "Components/Button.h"
 #include "Components/ButtonSlot.h"
+#include "MVVM/ButtonInputViewModel.h"
+#include "MVVM/ButtonSelectionViewModel.h"
+#include "MVVM/ButtonSoundViewModel.h"
 #include "Style/GenericButtonStyle.h"
 #include "UWidget/GenericButton.h"
 
@@ -111,6 +114,16 @@ bool UGenericButtonWidget::Initialize()
 	return bInitializedThisCall;
 }
 
+void UGenericButtonWidget::NativeConstruct()
+{
+	Super::NativeConstruct();
+}
+
+void UGenericButtonWidget::NativeDestruct()
+{
+	Super::NativeDestruct();
+}
+
 bool UGenericButtonWidget::NativeIsInteractable() const
 {
 	// If it's enabled, it's "interactable" from a UMG perspective. 
@@ -173,28 +186,6 @@ void UGenericButtonWidget::SetButtonFocusable(bool bInIsFocusable)
 	{
 		RootButton->SetButtonFocusable(bInIsFocusable);
 	}
-}
-
-void UGenericButtonWidget::NativeConstructButtonParameters(const FButtonParameter& ButtonParameter)
-{
-	ConstructButtonParameters(ButtonParameter);
-
-	SetToolTipText(ButtonParameter.DescriptionParameter.TooltipText);
-
-	SetVisibility(ButtonParameter.RenderParameter.Visibility);
-	SetRenderTransformPivot(ButtonParameter.RenderParameter.RenderTransformPivot);
-	SetRenderTransform(ButtonParameter.RenderParameter.RenderTransform);
-
-	SetIsSelectable(ButtonParameter.SelectionParameter.bSelectable);
-	SetIsToggleable(ButtonParameter.SelectionParameter.bToggleable);
-	SetIsDefaultSelected(ButtonParameter.SelectionParameter.bDefaultSelected);
-	SetIsSelectedWhenReceiveFocus(ButtonParameter.SelectionParameter.bShouldSelectUponReceivingFocus);
-	SetIsInteractableWhenSelected(ButtonParameter.SelectionParameter.bInteractableWhenSelected);
-	SetIsTriggerClickedAfterSelection(ButtonParameter.SelectionParameter.bTriggerClickedAfterSelection);
-
-	SetClickMethod(ButtonParameter.InputParameter.ClickMethod);
-	SetTouchMethod(ButtonParameter.InputParameter.TouchMethod);
-	SetPressMethod(ButtonParameter.InputParameter.PressMethod);
 }
 
 UGenericButton* UGenericButtonWidget::ConstructInternalButton()
@@ -459,7 +450,7 @@ void UGenericButtonWidget::UpdateInternalStyle(const TSubclassOf<UGenericButtonS
 void UGenericButtonWidget::BuildStyles()
 {
 #define UPDATE_INTERNAL_STYLE(StyleClass) \
-	UpdateInternalStyle(StyleClass,Internal##StyleClass);
+	UpdateInternalStyle(StyleClass, Internal##StyleClass);
 
 	UPDATE_INTERNAL_STYLE(NormalStyle)
 	UPDATE_INTERNAL_STYLE(SelectedStyle)
@@ -467,6 +458,16 @@ void UGenericButtonWidget::BuildStyles()
 	UPDATE_INTERNAL_STYLE(DisabledStyle)
 
 #undef UPDATE_INTERNAL_STYLE
+
+#define UPDATE_INTERNAL_STYLE_HOVERED_SOUND_OVERRIDE(Style, HoveredSlateSoundOverride, PressedSlateSoundOverride) \
+	if (IsValid(HoveredSlateSoundOverride.GetResourceObject())){Style.HoveredSlateSound = HoveredSlateSoundOverride;} \
+	if (IsValid(PressedSlateSoundOverride.GetResourceObject())){Style.PressedSlateSound = PressedSlateSoundOverride;}
+
+	UPDATE_INTERNAL_STYLE_HOVERED_SOUND_OVERRIDE(InternalNormalStyle, HoveredSlateSoundOverride, PressedSlateSoundOverride)
+	UPDATE_INTERNAL_STYLE_HOVERED_SOUND_OVERRIDE(InternalSelectedStyle, SelectedHoveredSlateSoundOverride, SelectedPressedSlateSoundOverride)
+	UPDATE_INTERNAL_STYLE_HOVERED_SOUND_OVERRIDE(InternalLockedStyle, LockedHoveredSlateSoundOverride, LockedPressedSlateSoundOverride)
+
+#undef UPDATE_INTERNAL_STYLE_HOVERED_SOUND
 
 	SetButtonStyle();
 	RefreshDimensions();
@@ -687,6 +688,61 @@ void UGenericButtonWidget::SetSelectedInternal(bool bInSelected, bool bGiveClick
 	}
 }
 
+UButtonSelectionViewModel* UGenericButtonWidget::GetButtonSelectionViewModel() const
+{
+	return ButtonSelectionViewModel;
+}
+
+void UGenericButtonWidget::SetButtonSelectionViewModel(UButtonSelectionViewModel* InViewModel)
+{
+	if (ButtonSelectionViewModel)
+	{
+		ButtonSelectionViewModel->RemoveAllFieldValueChangedDelegates(this);
+	}
+
+	ButtonSelectionViewModel = InViewModel;
+
+	if (ButtonSelectionViewModel)
+	{
+		REGISTER_MVVM_PROPERTY(ButtonSelectionViewModel, bSelectable, OnSelectableChanged, true)
+		REGISTER_MVVM_PROPERTY(ButtonSelectionViewModel, bToggleable, OnToggleableChanged, true)
+		REGISTER_MVVM_PROPERTY(ButtonSelectionViewModel, bDefaultSelected, OnDefaultSelectedChanged, true)
+		REGISTER_MVVM_PROPERTY(ButtonSelectionViewModel, bShouldSelectUponReceivingFocus, OnShouldSelectUponReceivingFocusChanged, true)
+		REGISTER_MVVM_PROPERTY(ButtonSelectionViewModel, bInteractableWhenSelected, OnInteractableWhenSelectedChanged, true)
+		REGISTER_MVVM_PROPERTY(ButtonSelectionViewModel, bTriggerClickedAfterSelection, OnTriggerClickedAfterSelectionChanged, true)
+	}
+}
+
+void UGenericButtonWidget::OnSelectableChanged_Implementation(bool IsSelectable)
+{
+	SetIsSelectable(IsSelectable);
+}
+
+void UGenericButtonWidget::OnToggleableChanged_Implementation(bool IsToggleable)
+{
+	SetIsToggleable(IsToggleable);
+}
+
+void UGenericButtonWidget::OnDefaultSelectedChanged_Implementation(bool IsDefaultSelected)
+{
+	SetIsDefaultSelected(IsDefaultSelected);
+}
+
+void UGenericButtonWidget::OnShouldSelectUponReceivingFocusChanged_Implementation(bool IsShouldSelectUponReceivingFocus)
+{
+	SetIsSelectedWhenReceiveFocus(IsShouldSelectUponReceivingFocus);
+}
+
+void UGenericButtonWidget::OnInteractableWhenSelectedChanged_Implementation(bool IsInteractableWhenSelected)
+{
+	SetIsInteractableWhenSelected(IsInteractableWhenSelected);
+}
+
+void UGenericButtonWidget::OnTriggerClickedAfterSelectionChanged_Implementation(bool IsTriggerClickedAfterSelection)
+{
+	SetIsTriggerClickedAfterSelection(IsTriggerClickedAfterSelection);
+}
+
 /* ==================== Input ==================== */
 
 void UGenericButtonWidget::SetClickMethod(EButtonClickMethod::Type InClickMethod)
@@ -714,6 +770,208 @@ void UGenericButtonWidget::SetPressMethod(EButtonPressMethod::Type InPressMethod
 	{
 		RootButton->SetPressMethod(InPressMethod);
 	}
+}
+
+UButtonInputViewModel* UGenericButtonWidget::GetButtonInputViewModel() const
+{
+	return ButtonInputViewModel;
+}
+
+void UGenericButtonWidget::SetButtonInputViewModel(UButtonInputViewModel* InViewModel)
+{
+	if (ButtonInputViewModel)
+	{
+		ButtonInputViewModel->RemoveAllFieldValueChangedDelegates(this);
+	}
+
+	ButtonInputViewModel = InViewModel;
+
+	if (ButtonInputViewModel)
+	{
+		REGISTER_MVVM_PROPERTY(ButtonInputViewModel, ClickMethod, OnClickMethodChanged, true)
+		REGISTER_MVVM_PROPERTY(ButtonInputViewModel, TouchMethod, OnTouchMethodChanged, true)
+		REGISTER_MVVM_PROPERTY(ButtonInputViewModel, PressMethod, OnPressMethodChanged, true)
+	}
+}
+
+void UGenericButtonWidget::OnClickMethodChanged_Implementation(EButtonClickMethod::Type InClickMethod)
+{
+	SetClickMethod(InClickMethod);
+}
+
+void UGenericButtonWidget::OnTouchMethodChanged_Implementation(EButtonTouchMethod::Type InTouchMethod)
+{
+	SetTouchMethod(InTouchMethod);
+}
+
+void UGenericButtonWidget::OnPressMethodChanged_Implementation(EButtonPressMethod::Type InPressMethod)
+{
+	SetPressMethod(InPressMethod);
+}
+
+/* ==================== Sound ==================== */
+
+void UGenericButtonWidget::SetHoveredSoundOverride(USoundBase* Sound)
+{
+	if (HoveredSlateSoundOverride.GetResourceObject() != Sound)
+	{
+		HoveredSlateSoundOverride.SetResourceObject(Sound);
+		BuildStyles();
+	}
+}
+
+void UGenericButtonWidget::SetHoveredSlateSoundOverride(const FSlateSound& Sound)
+{
+	if (HoveredSlateSoundOverride.GetResourceObject() != Sound.GetResourceObject())
+	{
+		HoveredSlateSoundOverride.SetResourceObject(Sound.GetResourceObject());
+		BuildStyles();
+	}
+}
+
+void UGenericButtonWidget::SetPressedSoundOverride(USoundBase* Sound)
+{
+	if (PressedSlateSoundOverride.GetResourceObject() != Sound)
+	{
+		PressedSlateSoundOverride.SetResourceObject(Sound);
+		BuildStyles();
+	}
+}
+
+void UGenericButtonWidget::SetPressedSlateSoundOverride(const FSlateSound& Sound)
+{
+	if (PressedSlateSoundOverride.GetResourceObject() != Sound.GetResourceObject())
+	{
+		PressedSlateSoundOverride.SetResourceObject(Sound.GetResourceObject());
+		BuildStyles();
+	}
+}
+
+void UGenericButtonWidget::SetSelectedHoveredSoundOverride(USoundBase* Sound)
+{
+	if (SelectedHoveredSlateSoundOverride.GetResourceObject() != Sound)
+	{
+		SelectedHoveredSlateSoundOverride.SetResourceObject(Sound);
+		BuildStyles();
+	}
+}
+
+void UGenericButtonWidget::SetSelectedHoveredSlateSoundOverride(const FSlateSound& Sound)
+{
+	if (SelectedHoveredSlateSoundOverride.GetResourceObject() != Sound.GetResourceObject())
+	{
+		SelectedHoveredSlateSoundOverride.SetResourceObject(Sound.GetResourceObject());
+		BuildStyles();
+	}
+}
+
+void UGenericButtonWidget::SetSelectedPressedSoundOverride(USoundBase* Sound)
+{
+	if (SelectedPressedSlateSoundOverride.GetResourceObject() != Sound)
+	{
+		SelectedPressedSlateSoundOverride.SetResourceObject(Sound);
+		BuildStyles();
+	}
+}
+
+void UGenericButtonWidget::SetSelectedPressedSlateSoundOverride(const FSlateSound& Sound)
+{
+	if (SelectedPressedSlateSoundOverride.GetResourceObject() != Sound.GetResourceObject())
+	{
+		SelectedPressedSlateSoundOverride.SetResourceObject(Sound.GetResourceObject());
+		BuildStyles();
+	}
+}
+
+void UGenericButtonWidget::SetLockedHoveredSoundOverride(USoundBase* Sound)
+{
+	if (LockedHoveredSlateSoundOverride.GetResourceObject() != Sound)
+	{
+		LockedHoveredSlateSoundOverride.SetResourceObject(Sound);
+		BuildStyles();
+	}
+}
+
+void UGenericButtonWidget::SetLockedHoveredSlateSoundOverride(const FSlateSound& Sound)
+{
+	if (LockedHoveredSlateSoundOverride.GetResourceObject() != Sound.GetResourceObject())
+	{
+		LockedHoveredSlateSoundOverride.SetResourceObject(Sound.GetResourceObject());
+		BuildStyles();
+	}
+}
+
+void UGenericButtonWidget::SetLockedPressedSoundOverride(USoundBase* Sound)
+{
+	if (LockedPressedSlateSoundOverride.GetResourceObject() != Sound)
+	{
+		LockedPressedSlateSoundOverride.SetResourceObject(Sound);
+		BuildStyles();
+	}
+}
+
+void UGenericButtonWidget::SetLockedPressedSlateSoundOverride(const FSlateSound& Sound)
+{
+	if (LockedPressedSlateSoundOverride.GetResourceObject() != Sound.GetResourceObject())
+	{
+		LockedPressedSlateSoundOverride.SetResourceObject(Sound.GetResourceObject());
+		BuildStyles();
+	}
+}
+
+UButtonSoundViewModel* UGenericButtonWidget::GetButtonSoundViewModel() const
+{
+	return ButtonSoundViewModel;
+}
+
+void UGenericButtonWidget::SetButtonSoundViewModel(UButtonSoundViewModel* InViewModel)
+{
+	if (ButtonSoundViewModel)
+	{
+		ButtonSoundViewModel->RemoveAllFieldValueChangedDelegates(this);
+	}
+
+	ButtonSoundViewModel = InViewModel;
+
+	if (ButtonSoundViewModel)
+	{
+		REGISTER_MVVM_PROPERTY(ButtonSoundViewModel, HoveredSlateSoundOverride, OnHoveredSlateSoundOverrideChanged, true)
+		REGISTER_MVVM_PROPERTY(ButtonSoundViewModel, PressedSlateSoundOverride, OnPressedSlateSoundOverrideChanged, true)
+		REGISTER_MVVM_PROPERTY(ButtonSoundViewModel, SelectedHoveredSlateSoundOverride, OnSelectedHoveredSlateSoundOverrideChanged, true)
+		REGISTER_MVVM_PROPERTY(ButtonSoundViewModel, SelectedPressedSlateSoundOverride, OnSelectedPressedSlateSoundOverrideChanged, true)
+		REGISTER_MVVM_PROPERTY(ButtonSoundViewModel, LockedHoveredSlateSoundOverride, OnLockedHoveredSlateSoundOverrideChanged, true)
+		REGISTER_MVVM_PROPERTY(ButtonSoundViewModel, LockedPressedSlateSoundOverride, OnLockedPressedSlateSoundOverrideChanged, true)
+	}
+}
+
+void UGenericButtonWidget::OnHoveredSlateSoundOverrideChanged_Implementation(FSlateSound InSlateSound)
+{
+	SetHoveredSlateSoundOverride(InSlateSound);
+}
+
+void UGenericButtonWidget::OnPressedSlateSoundOverrideChanged_Implementation(FSlateSound InSlateSound)
+{
+	SetPressedSlateSoundOverride(InSlateSound);
+}
+
+void UGenericButtonWidget::OnSelectedHoveredSlateSoundOverrideChanged_Implementation(FSlateSound InSlateSound)
+{
+	SetSelectedHoveredSlateSoundOverride(InSlateSound);
+}
+
+void UGenericButtonWidget::OnSelectedPressedSlateSoundOverrideChanged_Implementation(FSlateSound InSlateSound)
+{
+	SetSelectedPressedSlateSoundOverride(InSlateSound);
+}
+
+void UGenericButtonWidget::OnLockedHoveredSlateSoundOverrideChanged_Implementation(FSlateSound InSlateSound)
+{
+	SetLockedHoveredSlateSoundOverride(InSlateSound);
+}
+
+void UGenericButtonWidget::OnLockedPressedSlateSoundOverrideChanged_Implementation(FSlateSound InSlateSound)
+{
+	SetLockedPressedSlateSoundOverride(InSlateSound);
 }
 
 /* ==================== Interaction ==================== */

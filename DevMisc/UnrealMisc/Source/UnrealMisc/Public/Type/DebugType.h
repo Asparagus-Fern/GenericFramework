@@ -19,17 +19,17 @@ UE_LOG(CategoryName, Type::Verbosity, TEXT("[Line:%d %s] %s"), __LINE__, ANSI_TO
 #define GenericPRINT(Verbosity, Format, ...) \
 if(IsValid(GEngine)){ \
 	if (::ELogVerbosity::Verbosity == ::ELogVerbosity::Error) \
-		GEngine->AddOnScreenDebugMessage(-1, DPrintDuration, DErrorColor, FString::Printf(Format,##__VA_ARGS__)); \
+		GEngine->AddOnScreenDebugMessage(-1, DPrintDuration, DErrorColor, FString::Printf(Format, ##__VA_ARGS__)); \
 	else if (::ELogVerbosity::Verbosity == ::ELogVerbosity::Warning) \
-		GEngine->AddOnScreenDebugMessage(-1, DPrintDuration, DWarningColor, FString::Printf(Format,##__VA_ARGS__)); \
+		GEngine->AddOnScreenDebugMessage(-1, DPrintDuration, DWarningColor, FString::Printf(Format, ##__VA_ARGS__)); \
 	else \
-		GEngine->AddOnScreenDebugMessage(-1, DPrintDuration, DMessageColor, FString::Printf(Format,##__VA_ARGS__)); \
+		GEngine->AddOnScreenDebugMessage(-1, DPrintDuration, DMessageColor, FString::Printf(Format, ##__VA_ARGS__)); \
 }
 
 #define GenericNOTIFY(Format, ...) \
 { \
 	FNotificationInfo NotificationInfo(FText::FromString(FString::Printf(TEXT("%s"),ANSI_TO_TCHAR(__FUNCTION__)))); \
-	NotificationInfo.SubText = FText::FromString(FString::Printf(Format,##__VA_ARGS__)); \
+	NotificationInfo.SubText = FText::FromString(FString::Printf(Format, ##__VA_ARGS__)); \
 	NotificationInfo.FadeInDuration = DNotifyFadeInDuration; \
 	NotificationInfo.FadeOutDuration = DNotifyFadeOutDuration; \
 	NotificationInfo.ExpireDuration = DNotifyDuration; \

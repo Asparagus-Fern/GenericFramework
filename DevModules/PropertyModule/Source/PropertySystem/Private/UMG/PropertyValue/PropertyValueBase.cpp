@@ -1,9 +1,8 @@
 ﻿// Copyright ChenTaiye 2025. All Rights Reserved.
 
-
 #include "UMG/PropertyValue/PropertyValueBase.h"
 
-#include "PropertyType.h"
+#include "WidgetType.h"
 
 void UPropertyValueBase::NativeConstruct()
 {
@@ -14,19 +13,18 @@ void UPropertyValueBase::NativeDestruct()
 {
 	Super::NativeDestruct();
 
-	NativeOnViewModelDeinitialized();
-	OnViewModelDeinitialized();
+	UNREGISTER_MVVM_PROPERTY(PropertyValueViewModel);
 }
 
-UPropertyValueViewModel* UPropertyValueBase::BP_GetViewModel(TSubclassOf<UPropertyValueViewModel> InClass)
+UPropertyValueViewModel* UPropertyValueBase::BP_GetPropertyViewModel(TSubclassOf<UPropertyValueViewModel> InClass)
 {
 	ensure(InClass);
-	return GetViewModel<UPropertyValueViewModel>();
+	return GetPropertyViewModel<UPropertyValueViewModel>();
 }
 
-void UPropertyValueBase::BP_SetViewModel(UPropertyValueViewModel* InViewModel)
+void UPropertyValueBase::BP_SetPropertyViewModel(UPropertyValueViewModel* InViewModel)
 {
-	SetViewModel(InViewModel);
+	SetPropertyViewModel(InViewModel);
 }
 
 void UPropertyValueBase::NativeOnViewModelInitialized()

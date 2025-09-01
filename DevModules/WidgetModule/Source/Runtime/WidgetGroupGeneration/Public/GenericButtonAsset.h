@@ -51,5 +51,5 @@ protected:
 #endif
 
 protected:
-	bool IsContainButtonTag(FGameplayTag InButtonTag);
+	WIDGETGROUPGENERATION_API bool IsContainButtonTag(FGameplayTag InButtonTag);
 };

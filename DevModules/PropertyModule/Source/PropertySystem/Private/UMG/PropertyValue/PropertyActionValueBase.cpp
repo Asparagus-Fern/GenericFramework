@@ -4,16 +4,16 @@
 
 #include "MVVM/Action/ActionPropertyValueViewModel.h"
 
-TSubclassOf<UPropertyValueViewModel> UPropertyActionValueBase::GetSupportViewModelClass()
+TSubclassOf<UPropertyValueViewModel> UPropertyActionValueBase::GetSupportPropertyViewModelClass()
 {
 	return UActionPropertyValueViewModel::StaticClass();
 }
 
-void UPropertyActionValueBase::PostInitViewModelProperty()
+void UPropertyActionValueBase::PostInitPropertyViewModel()
 {
-	Super::PostInitViewModelProperty();
+	Super::PostInitPropertyViewModel();
 
-	if (UActionPropertyValueViewModel* ViewModel = GetViewModel<UActionPropertyValueViewModel>())
+	if (UActionPropertyValueViewModel* ViewModel = GetPropertyViewModel<UActionPropertyValueViewModel>())
 	{
 		ActionPropertyValueViewModel = ViewModel;
 	}

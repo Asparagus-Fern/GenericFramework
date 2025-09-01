@@ -29,17 +29,17 @@ public:
 	static FName GetEventNodeName(FName EventName, FGameplayTag ButtonTag);
 };
 
-UCLASS(MinimalAPI)
+UCLASS(MinimalAPI, Blueprintable)
 class UGenericButtonCollection : public UGenericObject, public IStateInterface
 {
 	GENERATED_BODY()
 
 	/* IStateInterface */
 public:
-	virtual void NativeOnCreate() override;
-	virtual void NativeOnActived() override;
-	virtual void NativeOnInactived() override;
-	virtual void NativeOnDestroy() override;
+	WIDGETGROUPGENERATION_API virtual void NativeOnCreate() override;
+	WIDGETGROUPGENERATION_API virtual void NativeOnActived() override;
+	WIDGETGROUPGENERATION_API virtual void NativeOnInactived() override;
+	WIDGETGROUPGENERATION_API virtual void NativeOnDestroy() override;
 
 	UFUNCTION(BlueprintPure)
 	WIDGETGROUPGENERATION_API virtual bool GetIsActived() const override;
@@ -52,11 +52,11 @@ protected:
 	TObjectPtr<UGenericButtonAsset> WidgetAsset = nullptr;
 
 protected:
-	void BuildChildButtonGroup(FGameplayTag InButtonTag);
-	void DestroyChildButtonGroup(FGameplayTag InButtonTag);
+	WIDGETGROUPGENERATION_API void BuildChildButtonGroup(FGameplayTag InButtonTag);
+	WIDGETGROUPGENERATION_API void DestroyChildButtonGroup(FGameplayTag InButtonTag);
 
-	UGenericButtonContainer* BuildButtonGroupWidget(FGameplayTag InButtonTag, UGenericButtonWidget* ButtonWidget) const;
-	UGenericButtonWidget* BuildButtonWidget(FGameplayTag InButtonTag, UGenericButtonContainer* GroupWidget) const;
+	WIDGETGROUPGENERATION_API UGenericButtonContainer* BuildButtonGroupWidget(FGameplayTag InButtonTag, UGenericButtonWidget* ButtonWidget) const;
+	WIDGETGROUPGENERATION_API UGenericButtonWidget* BuildButtonWidget(FGameplayTag InButtonTag, UGenericButtonContainer* GroupWidget) const;
 
 private:
 	void RegisterButtonGroup(FGameplayTag InButtonTag, UGenericButtonGroup* InButtonGroup);
@@ -86,16 +86,16 @@ private:
 public:
 	WIDGETGROUPGENERATION_API TArray<FGameplayTag> GetAllButtonTags() const;
 	WIDGETGROUPGENERATION_API FGameplayTag GetRootButtonTag() const;
-	TArray<UGenericButtonBuilder*> GetAllButtonBuilder() const;
-	UGenericButtonBuilder* GetButtonBuilder(FGameplayTag InButtonTag) const;
-	TArray<UGenericButtonBuilder*> GetChildButtonBuilder(FGameplayTag InButtonTag) const;
+	WIDGETGROUPGENERATION_API TArray<UGenericButtonBuilder*> GetAllButtonBuilder() const;
+	WIDGETGROUPGENERATION_API UGenericButtonBuilder* GetButtonBuilder(FGameplayTag InButtonTag) const;
+	WIDGETGROUPGENERATION_API TArray<UGenericButtonBuilder*> GetChildButtonBuilder(FGameplayTag InButtonTag) const;
 
 public:
 	UFUNCTION(BlueprintPure)
-	TArray<UGenericButtonGroup*> GetAllButtonGroup() const;
+	WIDGETGROUPGENERATION_API TArray<UGenericButtonGroup*> GetAllButtonGroup() const;
 
 	UFUNCTION(BlueprintPure)
-	UGenericButtonGroup* GetButtonGroup(FGameplayTag InButtonTag) const;
+	WIDGETGROUPGENERATION_API UGenericButtonGroup* GetButtonGroup(FGameplayTag InButtonTag) const;
 
 private:
 	UPROPERTY(Transient)

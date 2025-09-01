@@ -3,15 +3,18 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ButtonType.h"
+
 #include "NativeGameplayTags.h"
 #include "Base/GenericWidget.h"
 #include "GenericButtonWidget.generated.h"
 
-UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Button);
-
+class UButtonSoundViewModel;
+class UButtonInputViewModel;
+class UButtonSelectionViewModel;
 class UGenericButtonStyle;
 class UGenericButton;
+
+UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Button);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FInteractableWidgetEvent, UGenericButtonWidget*, Button);
 
@@ -33,21 +36,23 @@ class UGenericButtonWidget : public UGenericWidget
 
 	/* ==================== UGenericButtonWidget ==================== */
 public:
-	UGenericButtonWidget(const FObjectInitializer& ObjectInitializer);
+	WIDGETGROUPGENERATION_API UGenericButtonWidget(const FObjectInitializer& ObjectInitializer);
 
 	//~ Begin UWidget interface
-	virtual void SynchronizeProperties() override;
-	virtual void SetIsEnabled(bool bInIsEnabled) override;
-	virtual bool IsHovered() const override;
+	WIDGETGROUPGENERATION_API virtual void SynchronizeProperties() override;
+	WIDGETGROUPGENERATION_API virtual void SetIsEnabled(bool bInIsEnabled) override;
+	WIDGETGROUPGENERATION_API virtual bool IsHovered() const override;
 	//~ End UWidget Interface
 
 	//~ Begin UUserWidget interface
-	virtual bool Initialize() override;
-	virtual bool NativeIsInteractable() const override;
-	virtual FReply NativeOnFocusReceived(const FGeometry& InGeometry, const FFocusEvent& InFocusEvent) override;
-	virtual void NativeOnFocusLost(const FFocusEvent& InFocusEvent) override;
-	virtual void NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
-	virtual void NativeOnMouseLeave(const FPointerEvent& InMouseEvent) override;
+	WIDGETGROUPGENERATION_API virtual bool Initialize() override;
+	WIDGETGROUPGENERATION_API virtual void NativeConstruct() override;
+	WIDGETGROUPGENERATION_API virtual void NativeDestruct() override;
+	WIDGETGROUPGENERATION_API virtual bool NativeIsInteractable() const override;
+	WIDGETGROUPGENERATION_API virtual FReply NativeOnFocusReceived(const FGeometry& InGeometry, const FFocusEvent& InFocusEvent) override;
+	WIDGETGROUPGENERATION_API virtual void NativeOnFocusLost(const FFocusEvent& InFocusEvent) override;
+	WIDGETGROUPGENERATION_API virtual void NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
+	WIDGETGROUPGENERATION_API virtual void NativeOnMouseLeave(const FPointerEvent& InMouseEvent) override;
 	//~ End UUserWidget Interface
 
 	/* Gets the bIsFocusable flag */
@@ -57,10 +62,6 @@ public:
 	/* Updates the bIsFocusable flag */
 	UFUNCTION(BlueprintCallable)
 	WIDGETGROUPGENERATION_API void SetButtonFocusable(bool bInIsFocusable);
-
-	void NativeConstructButtonParameters(const FButtonParameter& ButtonParameter);
-	UFUNCTION(BlueprintImplementableEvent)
-	void ConstructButtonParameters(const FButtonParameter& ButtonParameter);
 
 private:
 	virtual UGenericButton* ConstructInternalButton();
@@ -93,22 +94,22 @@ protected:
 	virtual void HandleFocusLost();
 
 protected:
-	virtual void NativeOnEnabled();
-	virtual void NativeOnDisabled();
-	virtual void NativeOnPressed();
-	virtual void NativeOnReleased();
-	virtual void NativeOnHovered();
-	virtual void NativeOnUnhovered();
-	virtual void NativeOnClicked();
-	virtual void NativeOnDoubleClicked();
-	virtual void NativeOnSelected();
-	virtual void NativeOnDeselected();
-	virtual void NativeOnFocusReceived();
-	virtual void NativeOnFocusLost();
-	virtual void NativeOnLockedChanged(bool bIsLocked);
-	virtual void NativeOnLockClicked();
-	virtual void NativeOnLockDoubleClicked();
-	virtual void NativeOnButtonStyleChanged();
+	WIDGETGROUPGENERATION_API virtual void NativeOnEnabled();
+	WIDGETGROUPGENERATION_API virtual void NativeOnDisabled();
+	WIDGETGROUPGENERATION_API virtual void NativeOnPressed();
+	WIDGETGROUPGENERATION_API virtual void NativeOnReleased();
+	WIDGETGROUPGENERATION_API virtual void NativeOnHovered();
+	WIDGETGROUPGENERATION_API virtual void NativeOnUnhovered();
+	WIDGETGROUPGENERATION_API virtual void NativeOnClicked();
+	WIDGETGROUPGENERATION_API virtual void NativeOnDoubleClicked();
+	WIDGETGROUPGENERATION_API virtual void NativeOnSelected();
+	WIDGETGROUPGENERATION_API virtual void NativeOnDeselected();
+	WIDGETGROUPGENERATION_API virtual void NativeOnFocusReceived();
+	WIDGETGROUPGENERATION_API virtual void NativeOnFocusLost();
+	WIDGETGROUPGENERATION_API virtual void NativeOnLockedChanged(bool bIsLocked);
+	WIDGETGROUPGENERATION_API virtual void NativeOnLockClicked();
+	WIDGETGROUPGENERATION_API virtual void NativeOnLockDoubleClicked();
+	WIDGETGROUPGENERATION_API virtual void NativeOnButtonStyleChanged();
 
 public:
 	UPROPERTY(BlueprintAssignable, Category = "Events")
@@ -158,49 +159,49 @@ public:
 
 public:
 	UFUNCTION(BlueprintImplementableEvent)
-	void HandleOnButtonEnabled();
+	WIDGETGROUPGENERATION_API void HandleOnButtonEnabled();
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void HandleOnButtonDisabled();
+	WIDGETGROUPGENERATION_API void HandleOnButtonDisabled();
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void HandleOnButtonPressed();
+	WIDGETGROUPGENERATION_API void HandleOnButtonPressed();
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void HandleOnButtonReleased();
+	WIDGETGROUPGENERATION_API void HandleOnButtonReleased();
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void HandleOnButtonHovered();
+	WIDGETGROUPGENERATION_API void HandleOnButtonHovered();
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void HandleOnButtonUnhovered();
+	WIDGETGROUPGENERATION_API void HandleOnButtonUnhovered();
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void HandleOnButtonClicked();
+	WIDGETGROUPGENERATION_API void HandleOnButtonClicked();
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void HandleOnButtonDoubleClicked();
+	WIDGETGROUPGENERATION_API void HandleOnButtonDoubleClicked();
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void HandleOnButtonSelectionChanged(bool IsSelected);
+	WIDGETGROUPGENERATION_API void HandleOnButtonSelectionChanged(bool IsSelected);
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void HandleOnButtonFocusReceived();
+	WIDGETGROUPGENERATION_API void HandleOnButtonFocusReceived();
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void HandleOnButtonFocusLost();
+	WIDGETGROUPGENERATION_API void HandleOnButtonFocusLost();
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void HandleOnButtonLockedChanged(bool IsLock);
+	WIDGETGROUPGENERATION_API void HandleOnButtonLockedChanged(bool IsLock);
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void HandleOnButtonLockClicked();
+	WIDGETGROUPGENERATION_API void HandleOnButtonLockClicked();
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void HandleOnButtonLockDoubleClicked();
+	WIDGETGROUPGENERATION_API void HandleOnButtonLockDoubleClicked();
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void HandleOnButtonStyleChanged();
+	WIDGETGROUPGENERATION_API void HandleOnButtonStyleChanged();
 
 public:
 	UPROPERTY(meta=(BindWidgetAnimOptional), Transient)
@@ -239,7 +240,7 @@ public:
 	WIDGETGROUPGENERATION_API void SetMinHeight(int32 InMinHeight);
 
 protected:
-	void RefreshDimensions() const;
+	WIDGETGROUPGENERATION_API void RefreshDimensions() const;
 
 private:
 	const UGenericButtonStyle* GetStyleCDO(const TSubclassOf<UGenericButtonStyle>& InClass) const;
@@ -355,7 +356,36 @@ public:
 	WIDGETGROUPGENERATION_API void SetIsSelected(bool InSelected, bool bGiveClickFeedback = true);
 
 protected:
-	void SetSelectedInternal(bool bInSelected, bool bGiveClickFeedback = true, bool bBroadcast = true);
+	WIDGETGROUPGENERATION_API void SetSelectedInternal(bool bInSelected, bool bGiveClickFeedback = true, bool bBroadcast = true);
+
+public:
+	UFUNCTION(BlueprintPure)
+	UButtonSelectionViewModel* GetButtonSelectionViewModel() const;
+
+	UFUNCTION(BlueprintCallable)
+	void SetButtonSelectionViewModel(UButtonSelectionViewModel* InViewModel);
+
+protected:
+	UFUNCTION(BlueprintNativeEvent)
+	WIDGETGROUPGENERATION_API void OnSelectableChanged(bool IsSelectable);
+
+	UFUNCTION(BlueprintNativeEvent)
+	WIDGETGROUPGENERATION_API void OnToggleableChanged(bool IsToggleable);
+
+	UFUNCTION(BlueprintNativeEvent)
+	WIDGETGROUPGENERATION_API void OnDefaultSelectedChanged(bool IsDefaultSelected);
+
+	UFUNCTION(BlueprintNativeEvent)
+	WIDGETGROUPGENERATION_API void OnShouldSelectUponReceivingFocusChanged(bool IsShouldSelectUponReceivingFocus);
+
+	UFUNCTION(BlueprintNativeEvent)
+	WIDGETGROUPGENERATION_API void OnInteractableWhenSelectedChanged(bool IsInteractableWhenSelected);
+
+	UFUNCTION(BlueprintNativeEvent)
+	WIDGETGROUPGENERATION_API void OnTriggerClickedAfterSelectionChanged(bool IsTriggerClickedAfterSelection);
+
+	UPROPERTY(EditAnywhere, Instanced, meta=(ExposeOnSpawn = "true"), Getter, Setter, BlueprintGetter="GetButtonSelectionViewModel", BlueprintSetter="SetButtonSelectionViewModel")
+	TObjectPtr<UButtonSelectionViewModel> ButtonSelectionViewModel = nullptr;
 
 private:
 	/* True if this button is currently selected */
@@ -385,6 +415,118 @@ public:
 	/* Set the click method for keyboard/gamepad button press interaction */
 	UFUNCTION(BlueprintCallable)
 	WIDGETGROUPGENERATION_API void SetPressMethod(EButtonPressMethod::Type InPressMethod);
+
+public:
+	UFUNCTION(BlueprintPure)
+	UButtonInputViewModel* GetButtonInputViewModel() const;
+
+	UFUNCTION(BlueprintCallable)
+	void SetButtonInputViewModel(UButtonInputViewModel* InViewModel);
+
+protected:
+	UFUNCTION(BlueprintNativeEvent)
+	WIDGETGROUPGENERATION_API void OnClickMethodChanged(EButtonClickMethod::Type InClickMethod);
+
+	UFUNCTION(BlueprintNativeEvent)
+	WIDGETGROUPGENERATION_API void OnTouchMethodChanged(EButtonTouchMethod::Type InTouchMethod);
+
+	UFUNCTION(BlueprintNativeEvent)
+	WIDGETGROUPGENERATION_API void OnPressMethodChanged(EButtonPressMethod::Type InPressMethod);
+
+	UPROPERTY(EditAnywhere, Instanced, meta=(ExposeOnSpawn = "true"), Getter, Setter, BlueprintGetter="GetButtonInputViewModel", BlueprintSetter="SetButtonInputViewModel")
+	TObjectPtr<UButtonInputViewModel> ButtonInputViewModel = nullptr;
+
+	/* ==================== Sound ==================== */
+public:
+	/* Optional override for the sound to play when this button is hovered. */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Sound", meta = (DisplayName = "Hovered Sound Override"))
+	FSlateSound HoveredSlateSoundOverride;
+
+	/* Optional override for the sound to play when this button is pressed. */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Sound", meta = (DisplayName = "Pressed Sound Override"))
+	FSlateSound PressedSlateSoundOverride;
+
+	/* Optional override for the sound to play when this button is hovered while Selected */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Sound", meta = (DisplayName = "Selected Hovered Sound Override"))
+	FSlateSound SelectedHoveredSlateSoundOverride;
+
+	/* Optional override for the sound to play when this button is pressed while Selected */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Sound", meta = (DisplayName = "Selected Pressed Sound Override"))
+	FSlateSound SelectedPressedSlateSoundOverride;
+
+	/* Optional override for the sound to play when this button is hovered while Locked */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Sound", meta = (DisplayName = "Locked Hovered Sound Override"))
+	FSlateSound LockedHoveredSlateSoundOverride;
+
+	/* Optional override for the sound to play when this button is pressed while Locked */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Sound", meta = (DisplayName = "Locked Pressed Sound Override"))
+	FSlateSound LockedPressedSlateSoundOverride;
+
+public:
+	UFUNCTION(BlueprintCallable)
+	void SetHoveredSoundOverride(USoundBase* Sound);
+
+	UFUNCTION(BlueprintCallable)
+	void SetHoveredSlateSoundOverride(const FSlateSound& Sound);
+
+	UFUNCTION(BlueprintCallable)
+	void SetPressedSoundOverride(USoundBase* Sound);
+
+	UFUNCTION(BlueprintCallable)
+	void SetPressedSlateSoundOverride(const FSlateSound& Sound);
+
+	UFUNCTION(BlueprintCallable)
+	void SetSelectedHoveredSoundOverride(USoundBase* Sound);
+
+	UFUNCTION(BlueprintCallable)
+	void SetSelectedHoveredSlateSoundOverride(const FSlateSound& Sound);
+
+	UFUNCTION(BlueprintCallable)
+	void SetSelectedPressedSoundOverride(USoundBase* Sound);
+
+	UFUNCTION(BlueprintCallable)
+	void SetSelectedPressedSlateSoundOverride(const FSlateSound& Sound);
+
+	UFUNCTION(BlueprintCallable)
+	void SetLockedHoveredSoundOverride(USoundBase* Sound);
+
+	UFUNCTION(BlueprintCallable)
+	void SetLockedHoveredSlateSoundOverride(const FSlateSound& Sound);
+
+	UFUNCTION(BlueprintCallable)
+	void SetLockedPressedSoundOverride(USoundBase* Sound);
+
+	UFUNCTION(BlueprintCallable)
+	void SetLockedPressedSlateSoundOverride(const FSlateSound& Sound);
+
+public:
+	UFUNCTION(BlueprintPure)
+	UButtonSoundViewModel* GetButtonSoundViewModel() const;
+
+	UFUNCTION(BlueprintCallable)
+	void SetButtonSoundViewModel(UButtonSoundViewModel* InViewModel);
+
+protected:
+	UFUNCTION(BlueprintNativeEvent)
+	WIDGETGROUPGENERATION_API void OnHoveredSlateSoundOverrideChanged(FSlateSound InSlateSound);
+
+	UFUNCTION(BlueprintNativeEvent)
+	WIDGETGROUPGENERATION_API void OnPressedSlateSoundOverrideChanged(FSlateSound InSlateSound);
+
+	UFUNCTION(BlueprintNativeEvent)
+	WIDGETGROUPGENERATION_API void OnSelectedHoveredSlateSoundOverrideChanged(FSlateSound InSlateSound);
+
+	UFUNCTION(BlueprintNativeEvent)
+	WIDGETGROUPGENERATION_API void OnSelectedPressedSlateSoundOverrideChanged(FSlateSound InSlateSound);
+
+	UFUNCTION(BlueprintNativeEvent)
+	WIDGETGROUPGENERATION_API void OnLockedHoveredSlateSoundOverrideChanged(FSlateSound InSlateSound);
+
+	UFUNCTION(BlueprintNativeEvent)
+	WIDGETGROUPGENERATION_API void OnLockedPressedSlateSoundOverrideChanged(FSlateSound InSlateSound);
+
+	UPROPERTY(EditAnywhere, Instanced, meta=(ExposeOnSpawn = "true"), Getter, Setter, BlueprintGetter="GetButtonSoundViewModel", BlueprintSetter="SetButtonSoundViewModel")
+	TObjectPtr<UButtonSoundViewModel> ButtonSoundViewModel = nullptr;
 
 	/* ==================== Interaction ==================== */
 public:

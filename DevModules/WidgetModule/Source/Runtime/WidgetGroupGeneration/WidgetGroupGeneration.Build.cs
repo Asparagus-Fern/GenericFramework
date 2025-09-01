@@ -29,6 +29,7 @@ public class WidgetGroupGeneration : ModuleRules
 				"CommonInput",
 				"InputCore",
 				"EnhancedInput",
+				"ModelViewViewModel",
 
 				"UnrealMisc",
 				"WidgetGeneration",

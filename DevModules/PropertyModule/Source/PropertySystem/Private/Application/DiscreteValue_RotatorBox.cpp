@@ -2,7 +2,6 @@
 
 #include "Application/DiscreteValue_RotatorBox.h"
 
-#include "PropertyType.h"
 #include "MVVM/Multi/MultiPropertyValueViewModel.h"
 #include "MVVM/Single/SinglePropertyValueViewModel.h"
 #include "UWidget/GenericRotatorBox.h"
@@ -14,8 +13,6 @@ void UDiscreteValue_RotatorBox::NativeConstruct()
 	if (GenericRotator_PropertyValue)
 	{
 		GenericRotator_PropertyValue->OnRotatedWithDirection.AddUniqueDynamic(this, &UDiscreteValue_RotatorBox::OnRotatedWithDirection);
-
-		GenericRotator_PropertyValue->SetIsAllowWrap(MultiPropertyValueViewModel->bAllowWrap);
 	}
 }
 
@@ -29,34 +26,22 @@ void UDiscreteValue_RotatorBox::NativeDestruct()
 	}
 }
 
-void UDiscreteValue_RotatorBox::NativeOnViewModelInitialized()
-{
-	Super::NativeOnViewModelInitialized();
-
-	if (MultiPropertyValueViewModel)
-	{
-		MVVM_REGISTRY(OnAllowWrapChangedHandle, MultiPropertyValueViewModel, bAllowWrap, HandleOnAllowWrapChanged)
-	}
-}
-
-void UDiscreteValue_RotatorBox::NativeOnViewModelDeinitialized()
-{
-	Super::NativeOnViewModelDeinitialized();
-
-	if (MultiPropertyValueViewModel)
-	{
-		MVVM_UNREGISTRY(OnAllowWrapChangedHandle, MultiPropertyValueViewModel, bAllowWrap)
-	}
-}
-
 void UDiscreteValue_RotatorBox::OnRotatedWithDirection(int32 Value, ERotatorDirection RotatorDir)
 {
-	MultiPropertyValueViewModel->SetSelectedValue(Value);
+	if (MultiPropertyValueViewModel)
+	{
+		MultiPropertyValueViewModel->SetSelectedValue(Value);
+	}
 }
 
-void UDiscreteValue_RotatorBox::HandleOnAllowWrapChanged(UObject* InObject, UE::FieldNotification::FFieldId InFieldId)
+void UDiscreteValue_RotatorBox::OnAllowWrapChanged_Implementation(bool IsAllowWrap)
 {
-	GenericRotator_PropertyValue->SetIsAllowWrap(MultiPropertyValueViewModel->bAllowWrap);
+	Super::OnAllowWrapChanged_Implementation(IsAllowWrap);
+
+	if (GenericRotator_PropertyValue)
+	{
+		GenericRotator_PropertyValue->SetIsAllowWrap(MultiPropertyValueViewModel->bAllowWrap);
+	}
 }
 
 void UDiscreteValue_RotatorBox::OnPropertyValueAdded_Implementation(USinglePropertyValueViewModel* ViewModel)
@@ -79,12 +64,12 @@ void UDiscreteValue_RotatorBox::OnPropertyValueRemoved_Implementation(USinglePro
 	}
 }
 
-void UDiscreteValue_RotatorBox::OnSelectedValueIndexChanged_Implementation(USinglePropertyValueViewModel* ViewModel)
+void UDiscreteValue_RotatorBox::OnSelectedValueIndexChanged_Implementation(int32 SelectedValueIndex)
 {
-	Super::OnSelectedValueIndexChanged_Implementation(ViewModel);
+	Super::OnSelectedValueIndexChanged_Implementation(SelectedValueIndex);
 
 	if (GenericRotator_PropertyValue)
 	{
-		GenericRotator_PropertyValue->SetSelectedItem(MultiPropertyValueViewModel->SelectedValueIndex);
+		GenericRotator_PropertyValue->SetSelectedItem(SelectedValueIndex);
 	}
 }

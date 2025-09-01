@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ButtonType.h"
 #include "GameplayTagContainer.h"
 #include "GenericButtonWidget.h"
 #include "Generic/GenericObject.h"
@@ -21,7 +20,7 @@ class UGenericButtonBuilder : public UGenericObject
 	GENERATED_BODY()
 
 public:
-	UGenericButtonBuilder(const FObjectInitializer& ObjectInitializer);
+	WIDGETGROUPGENERATION_API UGenericButtonBuilder(const FObjectInitializer& ObjectInitializer);
 
 public:
 	UPROPERTY(EditDefaultsOnly, meta=(Categories="UI.Button"))
@@ -33,6 +32,12 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UGenericButtonContainer> ButtonGroupClass;
 
-	UPROPERTY(EditDefaultsOnly)
-	FButtonParameter ButtonParameter;
+	UPROPERTY(EditDefaultsOnly, Instanced)
+	TObjectPtr<UButtonSelectionViewModel> ButtonSelectionViewModel = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, Instanced)
+	TObjectPtr<UButtonInputViewModel> ButtonInputViewModel = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, Instanced)
+	TObjectPtr<UButtonSoundViewModel> ButtonSoundViewModel = nullptr;
 };

@@ -22,24 +22,27 @@ public:
 	PROPERTYSYSTEM_API virtual void NativeDestruct() override;
 
 public:
-	UFUNCTION(BlueprintPure, DisplayName="GetViewModel", meta=(DeterminesOutputType = "InClass"))
-	PROPERTYSYSTEM_API UPropertyValueViewModel* BP_GetViewModel(TSubclassOf<UPropertyValueViewModel> InClass);
+	UFUNCTION(BlueprintPure, DisplayName="GetPropertyViewModel", meta=(DeterminesOutputType = "InClass"))
+	PROPERTYSYSTEM_API UPropertyValueViewModel* BP_GetPropertyViewModel(TSubclassOf<UPropertyValueViewModel> InClass);
 
-	UFUNCTION(BlueprintCallable, DisplayName="SetViewModel")
-	PROPERTYSYSTEM_API void BP_SetViewModel(UPropertyValueViewModel* InViewModel);
+	UFUNCTION(BlueprintCallable, DisplayName="SetPropertyViewModel")
+	PROPERTYSYSTEM_API void BP_SetPropertyViewModel(UPropertyValueViewModel* InViewModel);
 
 public:
 	template <typename T = UPropertyValueViewModel>
-	T* GetViewModel()
+	T* GetPropertyViewModel()
 	{
 		return IsValid(PropertyValueViewModel) ? Cast<T>(PropertyValueViewModel) : nullptr;
 	}
 
-	PROPERTYSYSTEM_API void SetViewModel(UPropertyValueViewModel* InViewModel)
+	PROPERTYSYSTEM_API void SetPropertyViewModel(UPropertyValueViewModel* InViewModel)
 	{
 		check(InViewModel);
+
+		PreInitPropertyViewModel();
 		PropertyValueViewModel = InViewModel;
-		PostInitViewModelProperty();
+		PostInitPropertyViewModel();
+
 		NativeOnViewModelInitialized();
 		OnViewModelInitialized();
 	}
@@ -47,9 +50,10 @@ public:
 protected:
 	friend UPropertyValueSpawner;
 
-	PROPERTYSYSTEM_API virtual TSubclassOf<UPropertyValueViewModel> GetSupportViewModelClass() PURE_VIRTUAL(, return nullptr;)
+	PROPERTYSYSTEM_API virtual TSubclassOf<UPropertyValueViewModel> GetSupportPropertyViewModelClass() PURE_VIRTUAL(, return nullptr;)
 
-	PROPERTYSYSTEM_API virtual void PostInitViewModelProperty() { return; }
+	PROPERTYSYSTEM_API virtual void PreInitPropertyViewModel() { return; }
+	PROPERTYSYSTEM_API virtual void PostInitPropertyViewModel() { return; }
 
 	PROPERTYSYSTEM_API virtual void NativeOnViewModelInitialized();
 	UFUNCTION(BlueprintImplementableEvent)

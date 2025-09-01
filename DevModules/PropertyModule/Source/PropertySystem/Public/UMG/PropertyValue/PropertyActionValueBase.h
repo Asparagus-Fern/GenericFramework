@@ -17,8 +17,8 @@ class UPropertyActionValueBase : public UPropertySingleValueBase
 	GENERATED_BODY()
 
 public:
-	PROPERTYSYSTEM_API virtual TSubclassOf<UPropertyValueViewModel> GetSupportViewModelClass() override;
-	PROPERTYSYSTEM_API virtual void PostInitViewModelProperty() override;
+	PROPERTYSYSTEM_API virtual TSubclassOf<UPropertyValueViewModel> GetSupportPropertyViewModelClass() override;
+	PROPERTYSYSTEM_API virtual void PostInitPropertyViewModel() override;
 	PROPERTYSYSTEM_API virtual void NativeOnViewModelInitialized() override;
 	PROPERTYSYSTEM_API virtual void NativeOnViewModelDeinitialized() override;
 	

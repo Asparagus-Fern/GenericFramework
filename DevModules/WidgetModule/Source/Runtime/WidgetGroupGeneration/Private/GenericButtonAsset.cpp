@@ -5,6 +5,7 @@
 #include "GameplayTagsManager.h"
 #include "GenericButtonBuilder.h"
 #include "GenericButtonContainer.h"
+#include "WidgetType.h"
 #include "Type/DebugType.h"
 
 #if WITH_EDITOR

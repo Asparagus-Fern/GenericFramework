@@ -27,7 +27,7 @@ private:
 protected:
 	PROPERTYSYSTEM_API virtual void OnPropertyValueAdded_Implementation(USinglePropertyValueViewModel* ViewModel) override;
 	PROPERTYSYSTEM_API virtual void OnPropertyValueRemoved_Implementation(USinglePropertyValueViewModel* ViewModel) override;
-	PROPERTYSYSTEM_API virtual void OnSelectedValueIndexChanged_Implementation(USinglePropertyValueViewModel* ViewModel) override;
+	PROPERTYSYSTEM_API virtual void OnSelectedValueIndexChanged_Implementation(int32 SelectedValueIndex) override;
 
 private:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget, BlueprintProtected = true, AllowPrivateAccess = true))

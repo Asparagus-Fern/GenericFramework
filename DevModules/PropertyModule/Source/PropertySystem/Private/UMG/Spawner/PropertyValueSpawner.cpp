@@ -6,10 +6,28 @@
 #include "PropertyType.h"
 #include "Type/DebugType.h"
 #include "UMG/PropertyValue/PropertyValueBase.h"
+#include "UMG/PropertyValue/PropertyValueWarning.h"
+
+#define LOCTEXT_NAMESPACE "FPropertyModule"
 
 TSharedRef<SWidget> UPropertyValueSpawner::RebuildWidget()
 {
-	return Super::RebuildWidget();
+	MyBox = SNew(SBox);
+
+	if (IsDesignTime())
+	{
+		MyBox->SetContent(
+			SNew(SBox)
+			.HAlign(HAlign_Center)
+			.VAlign(VAlign_Center)
+			[
+				SNew(STextBlock)
+				.Text(FText::FromName(GetFName()))
+			]
+		);
+	}
+
+	return MyBox.ToSharedRef();
 }
 
 void UPropertyValueSpawner::SynchronizeProperties()
@@ -17,10 +35,21 @@ void UPropertyValueSpawner::SynchronizeProperties()
 	Super::SynchronizeProperties();
 
 	ClearChildren();
-	if (IsDesignTime() && PropertyWidgetClass)
+	if (IsDesignTime())
 	{
-		PropertyWidget = CreateWidget<UPropertyValueBase>(this, PropertyWidgetClass);
-		AddChild(PropertyWidget);
+		if (PropertyWidgetClass)
+		{
+			PropertyWidget = CreateWidget<UPropertyValueBase>(this, PropertyWidgetClass);
+			AddChild(PropertyWidget);
+		}
+		else
+		{
+			if (PropertyWarningClass)
+			{
+				UPropertyValueWarning* WarningWidget = CreateWidget<UPropertyValueWarning>(this, PropertyWarningClass);
+				AddChild(WarningWidget);
+			}
+		}
 	}
 }
 
@@ -30,22 +59,63 @@ void UPropertyValueSpawner::ReleaseSlateResources(bool bReleaseChildren)
 	PropertyWidget = nullptr;
 }
 
-void UPropertyValueSpawner::SpawnPropertyWidget(const TSubclassOf<UPropertyValueBase>& InClass, UPropertyValueViewModel* InViewModel)
+bool UPropertyValueSpawner::SpawnPropertyWidget(const TSubclassOf<UPropertyValueBase>& InClass, UPropertyValueViewModel* InViewModel)
 {
-	ensureAlways(InClass);
+	if (!InClass)
+	{
+		GenericLOG(GenericLogProperty, Error, TEXT("PropertyValueWidgetClass Is InValid"))
+
+		FFormatNamedArguments Arguments;
+		SpawnPropertyValueWarningWidget(FText::FromString(TEXT("Property Value Widget Class Is InValid")));
+
+		return false;
+	}
+
+	if (!IsValid(InViewModel))
+	{
+		GenericLOG(GenericLogProperty, Error, TEXT("PropertyViewModel Is InValid"))
+
+		FFormatNamedArguments Arguments;
+		SpawnPropertyValueWarningWidget(FText::FromString(TEXT("Property View Model Is InValid")));
+
+		return false;
+	}
 
 	ClearChildren();
 
 	PropertyWidget = CreateWidget<UPropertyValueBase>(this, InClass);
 
-	if (InViewModel->GetClass()->IsChildOf(PropertyWidget->GetSupportViewModelClass()))
-	{
-		PropertyWidget->SetViewModel(InViewModel);
-		AddChild(PropertyWidget);
-	}
-	else
+	if (!PropertyWidget->GetSupportPropertyViewModelClass() || !InViewModel->GetClass()->IsChildOf(PropertyWidget->GetSupportPropertyViewModelClass()))
 	{
 		PropertyWidget->MarkAsGarbage();
-		GenericLOG(GenericLogProperty, Error, TEXT("Class : %s Not Support ViewModel : %s"), *InClass->GetName(), * InViewModel->GetClass()->GetName())
+
+		FFormatNamedArguments Arguments;
+		Arguments.Add(TEXT("PropertyWidgetClass"), FText::FromString(*InClass->GetName()));
+		Arguments.Add(TEXT("PropertyViewModelClass"), FText::FromString(*InViewModel->GetClass()->GetName()));
+		SpawnPropertyValueWarningWidget(FText::Format(LOCTEXT("SpawnPropertyWidgetError", "Property Widget Class : {PropertyWidgetClass} Not Support Property View Model : {PropertyViewModelClass}"), Arguments));
+
+		return false;
+	}
+
+	PropertyWidget->SetPropertyViewModel(InViewModel);
+	AddChild(PropertyWidget);
+
+	return true;
+}
+
+UPropertyValueBase* UPropertyValueSpawner::GetPropertyWidget()
+{
+	return PropertyWidget;
+}
+
+void UPropertyValueSpawner::SpawnPropertyValueWarningWidget(const FText& InWarningText)
+{
+	if (PropertyWarningClass)
+	{
+		UPropertyValueWarning* WarningWidget = CreateWidget<UPropertyValueWarning>(this, PropertyWarningClass);
+		WarningWidget->SetWarningText(InWarningText);
+		AddChild(WarningWidget);
 	}
 }
+
+#undef LOCTEXT_NAMESPACE

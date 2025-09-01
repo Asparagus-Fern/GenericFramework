@@ -32,11 +32,13 @@ protected:
 	PROPERTYSYSTEM_API virtual void OnNormalizedValueRangeChanged_Implementation(FVector2D NormalizedValueRange) override;
 	PROPERTYSYSTEM_API virtual void OnValueInteractionRangeChanged_Implementation(FVector2D ValueInteractionRange) override;
 	PROPERTYSYSTEM_API virtual void OnNormalizedValueInteractionRangeChanged_Implementation(FVector2D NormalizedValueInteractionRange) override;
-
+	PROPERTYSYSTEM_API virtual void OnDisplayFormatChanged_Implementation(EScalarPropertyValueDisplayFormat DisplayFormat) override;
+	
 protected:
+	virtual void RefreshSpinBox();
 	UFUNCTION(BlueprintNativeEvent)
-	PROPERTYSYSTEM_API void OnSpinBoxValueChanged(float InValue);
-
+	void RefreshSpinBoxCustom();
+	
 private:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget, BlueprintProtected = true, AllowPrivateAccess = true))
 	TObjectPtr<USpinBox> SpinBox_PropertyValue;

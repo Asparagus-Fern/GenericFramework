@@ -112,11 +112,11 @@ public:
 	WIDGETGENERATION_API virtual void ClearChildren() override;
 
 protected:
-	UFUNCTION(BlueprintImplementableEvent)
-	void OnChildAdded(UGenericWidget* InWidget, int32 InIndex);
+	UFUNCTION(BlueprintNativeEvent)
+	WIDGETGENERATION_API void OnChildAdded(UGenericWidget* InWidget, int32 InIndex);
 
-	UFUNCTION(BlueprintImplementableEvent)
-	void OnChildRemoved(UGenericWidget* InWidget, int32 InIndex);
+	UFUNCTION(BlueprintNativeEvent)
+	WIDGETGENERATION_API void OnChildRemoved(UGenericWidget* InWidget, int32 InIndex);
 
 protected:
 	UPROPERTY()
