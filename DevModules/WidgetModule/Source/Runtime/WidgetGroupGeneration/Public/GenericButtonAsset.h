@@ -17,7 +17,7 @@ class UGenericButtonBuilder;
 UCLASS(MinimalAPI)
 class UGenericButtonAsset : public UDataAsset
 {
-	GENERATED_BODY()
+	GENERATED_UCLASS_BODY()
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="UI.Button"))
@@ -27,10 +27,7 @@ public:
 	TObjectPtr<UDataTable> ButtonTable = nullptr;
 
 	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UGenericButtonWidget> DefaultButtonClass = nullptr;
-
-	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UGenericButtonContainer> DefaultButtonGroupClass = nullptr;
+	TSubclassOf<UGenericButtonBuilder> BuilderClass = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced, meta = (TitleProperty = "ButtonTag"))
 	TArray<TObjectPtr<UGenericButtonBuilder>> ButtonBuilders;

@@ -9,7 +9,7 @@ void IStateInterface::NativeOnCreate()
 {
 	if (UObject* Object = Cast<UObject>(this))
 	{
-		IStateInterface::Execute_OnCreate(Object);
+		IStateInterface::Execute_HandleOnCreate(Object);
 		GenericLOG(GenericLogDefault, Log, TEXT("On Created : %s"), *Object->GetName());
 	}
 }
@@ -20,7 +20,7 @@ void IStateInterface::NativeOnActived()
 
 	if (UObject* Object = Cast<UObject>(this))
 	{
-		IStateInterface::Execute_OnActived(Object);
+		IStateInterface::Execute_HandleOnActived(Object);
 		GenericLOG(GenericLogDefault, Log, TEXT("On Actived : %s"), *Object->GetName());
 	}
 }
@@ -30,7 +30,7 @@ void IStateInterface::NativeOnActivedFinish()
 	if (UObject* Object = Cast<UObject>(this))
 	{
 		OnActivedFinishDelegate.Broadcast(Object);
-		IStateInterface::Execute_OnActivedFinish(Object);
+		IStateInterface::Execute_HandleOnActivedFinish(Object);
 		GenericLOG(GenericLogDefault, Log, TEXT("On Actived Finish : %s"), *Object->GetName());
 	}
 }
@@ -39,7 +39,7 @@ void IStateInterface::NativeOnRefresh()
 {
 	if (UObject* Object = Cast<UObject>(this))
 	{
-		IStateInterface::Execute_OnRefresh(Object);
+		IStateInterface::Execute_HandleOnRefresh(Object);
 	}
 }
 
@@ -50,7 +50,7 @@ void IStateInterface::NativeOnInactived()
 	if (UObject* Object = Cast<UObject>(this))
 	{
 		OnInactivedFinishDelegate.Broadcast(Object);
-		IStateInterface::Execute_OnInactived(Object);
+		IStateInterface::Execute_HandleOnInactived(Object);
 		GenericLOG(GenericLogDefault, Log, TEXT("On Inactived : %s"), *Object->GetName());
 	}
 }
@@ -59,7 +59,7 @@ void IStateInterface::NativeOnInactivedFinish()
 {
 	if (UObject* Object = Cast<UObject>(this))
 	{
-		IStateInterface::Execute_OnInactivedFinish(Object);
+		IStateInterface::Execute_HandleOnInactivedFinish(Object);
 		GenericLOG(GenericLogDefault, Log, TEXT("On Inactived Finish : %s"), *Object->GetName());
 	}
 }
@@ -68,7 +68,7 @@ void IStateInterface::NativeOnDestroy()
 {
 	if (UObject* Object = Cast<UObject>(this))
 	{
-		IStateInterface::Execute_OnDestroy(Object);
+		IStateInterface::Execute_HandleOnDestroy(Object);
 		GenericLOG(GenericLogDefault, Log, TEXT("On Destroy : %s"), *Object->GetName());
 	}
 }
@@ -84,5 +84,17 @@ void IStateInterface::SetIsActived(const bool InActived)
 	{
 		bIsActived = InActived;
 		OnActiveStateChanged();
+	}
+}
+
+void IStateInterface::OnActiveStateChanged()
+{
+	if (bIsActived)
+	{
+		NativeOnActived();
+	}
+	else
+	{
+		NativeOnInactived();
 	}
 }

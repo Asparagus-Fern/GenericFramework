@@ -25,31 +25,31 @@ class DEVCORE_API IStateInterface
 
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="State Interface")
-	void OnCreate();
+	void HandleOnCreate();
 	virtual void NativeOnCreate();
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="State Interface")
-	void OnActived();
+	void HandleOnActived();
 	virtual void NativeOnActived();
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="State Interface")
-	void OnActivedFinish();
+	void HandleOnActivedFinish();
 	virtual void NativeOnActivedFinish();
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="State Interface")
-	void OnRefresh();
+	void HandleOnRefresh();
 	virtual void NativeOnRefresh();
 	
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="State Interface")
-	void OnInactived();
+	void HandleOnInactived();
 	virtual void NativeOnInactived();
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="State Interface")
-	void OnInactivedFinish();
+	void HandleOnInactivedFinish();
 	virtual void NativeOnInactivedFinish();
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="State Interface")
-	void OnDestroy();
+	void HandleOnDestroy();
 	virtual void NativeOnDestroy();
 
 public:
@@ -64,5 +64,5 @@ protected:
 	FOnActivedFinish OnActivedFinishDelegate;
 	FOnInactivedFinish OnInactivedFinishDelegate;
 
-	virtual void OnActiveStateChanged() { return; }
+	virtual void OnActiveStateChanged();
 };

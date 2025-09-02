@@ -32,8 +32,8 @@ public:
 
 	/* IProcedureInterface */
 public:
-	virtual void OnActived_Implementation() override;
-	virtual void OnInactived_Implementation() override;
+	virtual void HandleOnActived_Implementation() override;
+	virtual void HandleOnInactived_Implementation() override;
 
 	/* IFloorBodyInteractionInterface */
 protected:

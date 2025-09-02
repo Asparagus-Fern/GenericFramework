@@ -4,13 +4,11 @@
 
 #include "GenericButtonContainer.h"
 #include "GenericButtonGroup.h"
-#include "GenericWidgetManager.h"
-#include "Manager/ManagerStatics.h"
+#include "MVVM/WidgetDescriptionViewModel.h"
 
 UGenericButtonBuilder::UGenericButtonBuilder(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
-	ButtonGroupClass = UGenericButtonContainer::StaticClass();
 	ButtonClass = UGenericButtonWidget::StaticClass();
+	WidgetDescriptionViewModel = CreateDefaultSubobject<UWidgetDescriptionViewModel>(TEXT("WidgetDescriptionViewModel"));
 }
-

@@ -39,9 +39,6 @@ UGenericButtonWidget::UGenericButtonWidget(const FObjectInitializer& ObjectIniti
 void UGenericButtonWidget::SynchronizeProperties()
 {
 	Super::SynchronizeProperties();
-
-	RefreshDimensions();
-	BuildStyles();
 }
 
 void UGenericButtonWidget::SetIsEnabled(bool bInIsEnabled)
@@ -112,6 +109,12 @@ bool UGenericButtonWidget::Initialize()
 	}
 
 	return bInitializedThisCall;
+}
+
+void UGenericButtonWidget::NativePreConstruct()
+{
+	Super::NativePreConstruct();
+	BuildStyles();
 }
 
 void UGenericButtonWidget::NativeConstruct()
@@ -435,7 +438,6 @@ void UGenericButtonWidget::UpdateInternalStyle(const TSubclassOf<UGenericButtonS
 		OutStyle.Normal = StyleCDO->Normal;
 		OutStyle.Hovered = StyleCDO->Hovered;
 		OutStyle.Pressed = StyleCDO->Pressed;
-		OutStyle.Disabled = StyleCDO->Disabled;
 		OutStyle.NormalForeground = StyleCDO->NormalForeground;
 		OutStyle.HoveredForeground = StyleCDO->HoveredForeground;
 		OutStyle.PressedForeground = StyleCDO->PressedForeground;
@@ -477,23 +479,49 @@ void UGenericButtonWidget::SetButtonStyle()
 {
 	if (UButton* ButtonPtr = RootButton.Get())
 	{
-		const FButtonStyle* UseStyle;
-		if (bLocked)
+		const FButtonStyle* UseStyle = nullptr;
+
+		if (IsDesignTime())
 		{
-			UseStyle = &InternalLockedStyle;
-		}
-		else if (bSelected)
-		{
-			UseStyle = &InternalSelectedStyle;
-		}
-		else if (bButtonEnabled)
-		{
-			UseStyle = &InternalNormalStyle;
+#if WITH_EDITOR
+			if (DesiredButtonStyle == EDesiredButtonStyle::Normal)
+			{
+				UseStyle = &InternalNormalStyle;
+			}
+			else if (DesiredButtonStyle == EDesiredButtonStyle::Selected)
+			{
+				UseStyle = &InternalSelectedStyle;
+			}
+			else if (DesiredButtonStyle == EDesiredButtonStyle::Locked)
+			{
+				UseStyle = &InternalLockedStyle;
+			}
+			else if (DesiredButtonStyle == EDesiredButtonStyle::Disabled)
+			{
+				UseStyle = &InternalDisabledStyle;
+			}
+#endif
 		}
 		else
 		{
-			UseStyle = &InternalDisabledStyle;
+			if (bLocked)
+			{
+				UseStyle = &InternalLockedStyle;
+			}
+			else if (bSelected)
+			{
+				UseStyle = &InternalSelectedStyle;
+			}
+			else if (bButtonEnabled)
+			{
+				UseStyle = &InternalNormalStyle;
+			}
+			else
+			{
+				UseStyle = &InternalDisabledStyle;
+			}
 		}
+
 		ButtonPtr->SetStyle(*UseStyle);
 		NativeOnButtonStyleChanged();
 	}

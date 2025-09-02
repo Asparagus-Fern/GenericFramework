@@ -2,6 +2,15 @@
 
 #include "UWidget/GenericDynamicEntryBox.h"
 
+#if WITH_EDITOR
+
+void UGenericDynamicEntryBox::ValidateCompiledDefaults(class IWidgetCompilerLog& CompileLog) const
+{
+	Super::ValidateCompiledDefaults(CompileLog);
+}
+
+#endif
+
 void UGenericDynamicEntryBox::AddEntry(UUserWidget* InUserWidget)
 {
 	AddEntryChild(*InUserWidget);

@@ -26,9 +26,9 @@ protected:
 	virtual void NativeOnActived() override;
 	virtual void NativeOnInactived() override;
 
-	virtual void OnRefresh_Implementation() override;
-	virtual void OnActived_Implementation() override;
-	virtual void OnInactived_Implementation() override;
+	virtual void HandleOnRefresh_Implementation() override;
+	virtual void HandleOnActived_Implementation() override;
+	virtual void HandleOnInactived_Implementation() override;
 	
 	/* ABuildingActor */
 public:

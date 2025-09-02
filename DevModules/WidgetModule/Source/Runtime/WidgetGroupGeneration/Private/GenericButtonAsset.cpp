@@ -6,7 +6,14 @@
 #include "GenericButtonBuilder.h"
 #include "GenericButtonContainer.h"
 #include "WidgetType.h"
+#include "MVVM/WidgetDescriptionViewModel.h"
 #include "Type/DebugType.h"
+
+UGenericButtonAsset::UGenericButtonAsset(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
+{
+	BuilderClass = UGenericButtonBuilder::StaticClass();
+}
 
 #if WITH_EDITOR
 
@@ -21,6 +28,12 @@ void UGenericButtonAsset::GenerateButtons()
 	if (!IsValid(ButtonTable))
 	{
 		GenericNOTIFY(TEXT("MenuTagTable is InValid"))
+		return;
+	}
+
+	if (!BuilderClass)
+	{
+		GenericNOTIFY(TEXT("BuilderClass is InValid"))
 		return;
 	}
 
@@ -46,17 +59,12 @@ void UGenericButtonAsset::GenerateButtons()
 			 /* Add In GameplayTagContainer And Make MenuEntity */
 			 GameplayTagContainer.AddTag(InButtonTag);
 
-			 UGenericButtonBuilder* NewBuilder = NewObject<UGenericButtonBuilder>(this);;
+			 UGenericButtonBuilder* NewBuilder = NewObject<UGenericButtonBuilder>(this, BuilderClass);;
 			 NewBuilder->ButtonTag = InButtonTag;
 
-			 if (DefaultButtonClass)
+			 if (NewBuilder->WidgetDescriptionViewModel)
 			 {
-				 NewBuilder->ButtonClass = DefaultButtonClass;
-			 }
-
-			 if (DefaultButtonGroupClass)
-			 {
-				 NewBuilder->ButtonGroupClass = DefaultButtonGroupClass;
+				 NewBuilder->WidgetDescriptionViewModel->PrimaryName = FText::FromString(InWidgetInfo.DevComment);
 			 }
 
 			 ButtonBuilders.Add(NewBuilder);

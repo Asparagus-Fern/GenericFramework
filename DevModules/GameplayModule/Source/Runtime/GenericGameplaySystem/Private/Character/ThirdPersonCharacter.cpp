@@ -6,6 +6,7 @@
 #include "Camera/CameraComponent.h"
 #include "Component/PawnSpringArmComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 
 AThirdPersonCharacter::AThirdPersonCharacter()
@@ -40,6 +41,9 @@ AThirdPersonCharacter::AThirdPersonCharacter()
 		MeshComponent->SetRelativeLocation(FVector(0.f, 0.f, -88.f));
 		MeshComponent->SetRelativeRotation(FRotator(0.f, 270.f, 0.f));
 	}
+
+	GetCharacterMovement()->bOrientRotationToMovement = true;
+	bUseControllerRotationYaw = false;
 }
 
 void AThirdPersonCharacter::BeginPlay()

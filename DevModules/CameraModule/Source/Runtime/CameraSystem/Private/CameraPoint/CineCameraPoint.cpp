@@ -25,6 +25,14 @@ void ACineCameraPoint::SetCameraComponent_Implementation(UCameraComponent* InCam
 	{
 		if (UCineCameraComponent* CastComponent = Cast<UCineCameraComponent>(InCameraComponent))
 		{
+			CineCameraComponent->SetFilmback(CastComponent->Filmback);
+			CineCameraComponent->SetLensSettings(CastComponent->LensSettings);
+			CineCameraComponent->SetFocusSettings(CastComponent->FocusSettings);
+			CineCameraComponent->SetCropSettings(CastComponent->CropSettings);
+			CineCameraComponent->SetCurrentFocalLength(CastComponent->CurrentFocalLength);
+			CineCameraComponent->SetCurrentAperture(CastComponent->CurrentAperture);
+			CineCameraComponent->SetFieldOfView(CastComponent->FieldOfView);
+			CineCameraComponent->SetCustomNearClippingPlane(CastComponent->CustomNearClippingPlane);
 		}
 	}
 }

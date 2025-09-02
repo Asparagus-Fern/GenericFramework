@@ -5,22 +5,22 @@
 
 #include "UWidget/GenericDynamicEntryBox.h"
 
-void UButtonContainer_DynamicEntryBox::OnChildAdded_Implementation(UGenericWidget* InWidget, int32 InIndex)
+void UButtonContainer_DynamicEntryBox::OnChildAdded_Implementation(UGenericWidget* InWidget, int32 NewChildrenCount)
 {
-	Super::OnChildAdded_Implementation(InWidget, InIndex);
+	Super::OnChildAdded_Implementation(InWidget, NewChildrenCount);
 
-	if (GenericDynamicEntryBox)
+	if (GenericDynamicEntryBox_ButtonContainer)
 	{
-		GenericDynamicEntryBox->AddEntry(InWidget);
+		GenericDynamicEntryBox_ButtonContainer->AddEntry(InWidget);
 	}
 }
 
-void UButtonContainer_DynamicEntryBox::OnChildRemoved_Implementation(UGenericWidget* InWidget, int32 InIndex)
+void UButtonContainer_DynamicEntryBox::OnChildRemoved_Implementation(UGenericWidget* InWidget, int32 NewChildrenCount)
 {
-	Super::OnChildRemoved_Implementation(InWidget, InIndex);
+	Super::OnChildRemoved_Implementation(InWidget, NewChildrenCount);
 
-	if (GenericDynamicEntryBox)
+	if (GenericDynamicEntryBox_ButtonContainer)
 	{
-		GenericDynamicEntryBox->RemoveEntry(InWidget);
+		GenericDynamicEntryBox_ButtonContainer->RemoveEntry(InWidget);
 	}
 }

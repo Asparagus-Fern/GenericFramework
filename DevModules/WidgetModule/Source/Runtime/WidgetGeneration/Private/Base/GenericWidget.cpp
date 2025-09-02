@@ -7,6 +7,8 @@
 #include "Blueprint/WidgetTree.h"
 #include "Components/ScaleBox.h"
 #include "Components/ScaleBoxSlot.h"
+#include "MVVM/WidgetDescriptionViewModel.h"
+#include "MVVM/WidgetRenderViewModel.h"
 
 UGenericWidget::UGenericWidget(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer),
@@ -88,6 +90,85 @@ void UGenericWidget::NativeConstruct()
 void UGenericWidget::NativeDestruct()
 {
 	Super::NativeDestruct();
+}
+
+/* ==================== UWidgetDescriptionViewModel ==================== */
+
+UWidgetDescriptionViewModel* UGenericWidget::GetWidgetDescriptionViewModel() const
+{
+	return WidgetDescriptionViewModel;
+}
+
+void UGenericWidget::SetWidgetDescriptionViewModel(UWidgetDescriptionViewModel* InViewModel)
+{
+	if (WidgetDescriptionViewModel)
+	{
+		WidgetDescriptionViewModel->RemoveAllFieldValueChangedDelegates(this);
+	}
+
+	WidgetDescriptionViewModel = InViewModel;
+
+	if (WidgetDescriptionViewModel)
+	{
+		REGISTER_MVVM_PROPERTY(WidgetDescriptionViewModel, PrimaryName, OnPrimaryNameChanged, true)
+		REGISTER_MVVM_PROPERTY(WidgetDescriptionViewModel, SecondaryName, OnSecondaryNameChanged, true)
+		REGISTER_MVVM_PROPERTY(WidgetDescriptionViewModel, TooltipText, OnTooltipTextChanged, true)
+	}
+}
+
+void UGenericWidget::OnPrimaryNameChanged_Implementation(const FText& InPrimaryName)
+{
+}
+
+void UGenericWidget::OnSecondaryNameChanged_Implementation(const FText& InSecondaryName)
+{
+}
+
+void UGenericWidget::OnTooltipTextChanged_Implementation(const FText& InTooltipText)
+{
+	if (!InTooltipText.IsEmpty())
+	{
+		SetToolTipText(InTooltipText);
+	}
+}
+
+/* ==================== UWidgetRenderViewModel ==================== */
+
+UWidgetRenderViewModel* UGenericWidget::GetWidgetRenderViewModel() const
+{
+	return WidgetRenderViewModel;
+}
+
+void UGenericWidget::SetWidgetRenderViewModel(UWidgetRenderViewModel* InViewModel)
+{
+	if (WidgetRenderViewModel)
+	{
+		WidgetRenderViewModel->RemoveAllFieldValueChangedDelegates(this);
+	}
+
+	WidgetRenderViewModel = InViewModel;
+
+	if (WidgetRenderViewModel)
+	{
+		REGISTER_MVVM_PROPERTY(WidgetRenderViewModel, Visibility, OnVisibilityChanged, true)
+		REGISTER_MVVM_PROPERTY(WidgetRenderViewModel, RenderTransformPivot, OnRenderTransformPivotChanged, true)
+		REGISTER_MVVM_PROPERTY(WidgetRenderViewModel, RenderTransform, OnRenderTransformChanged, true)
+	}
+}
+
+void UGenericWidget::OnVisibilityChanged_Implementation(ESlateVisibility InVisibility)
+{
+	SetVisibility(InVisibility);
+}
+
+void UGenericWidget::OnRenderTransformPivotChanged_Implementation(FVector2D InRenderTransformPivot)
+{
+	SetRenderTransformPivot(InRenderTransformPivot);
+}
+
+void UGenericWidget::OnRenderTransformChanged_Implementation(const FWidgetTransform& InRenderTransform)
+{
+	SetRenderTransform(InRenderTransform);
 }
 
 /* ==================== IStateInterface ==================== */
@@ -174,8 +255,6 @@ void UGenericWidget::SetIsActived(const bool InActived)
 
 void UGenericWidget::OnActiveStateChanged()
 {
-	IStateInterface::OnActiveStateChanged();
-
 	if (const UWorld* World = GetWorld())
 	{
 		/* Check Is Game World */
@@ -210,15 +289,10 @@ UGenericWidget* UGenericWidget::GetChildByIndex(int32 InIndex)
 
 void UGenericWidget::AddChild(UGenericWidget* InWidget)
 {
-	AddChild(InWidget, Children.Num());
-}
-
-void UGenericWidget::AddChild(UGenericWidget* InWidget, int32 InIndex)
-{
 	if (IsValid(InWidget) && !Children.Contains(InWidget))
 	{
 		Children.Add(InWidget);
-		OnChildAdded(InWidget, InIndex);
+		OnChildAdded(InWidget, Children.Num());
 	}
 }
 
@@ -244,11 +318,11 @@ void UGenericWidget::ClearChildren()
 	Children.Reset();
 }
 
-void UGenericWidget::OnChildAdded_Implementation(UGenericWidget* InWidget, int32 InIndex)
+void UGenericWidget::OnChildAdded_Implementation(UGenericWidget* InWidget, int32 NewChildrenCount)
 {
 }
 
-void UGenericWidget::OnChildRemoved_Implementation(UGenericWidget* InWidget, int32 InIndex)
+void UGenericWidget::OnChildRemoved_Implementation(UGenericWidget* InWidget, int32 NewChildrenCount)
 {
 }
 

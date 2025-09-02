@@ -25,12 +25,11 @@ public:
 	WIDGETGROUPGENERATION_API virtual bool DoesSupportWorldType(const EWorldType::Type WorldType) const override;
 
 public:
-	WIDGETGROUPGENERATION_API UGenericButtonCollection* RegisterButtonCollection(TSubclassOf<UGenericButtonCollection> InCollectionClass, bool InActived = true);
-	WIDGETGROUPGENERATION_API bool RegisterButtonCollection(UGenericButtonCollection* InCollection, bool InActived = true);
+	WIDGETGROUPGENERATION_API UGenericButtonCollection* RegisterButtonCollection(APlayerController* Player, TSubclassOf<UGenericButtonCollection> InCollectionClass, bool InActived = true);
 	WIDGETGROUPGENERATION_API bool UnRegisterButtonCollection(UGenericButtonCollection* InCollection);
 
-public:
 	WIDGETGROUPGENERATION_API TArray<TObjectPtr<UGenericButtonCollection>> GetAllCollection() { return Collections; }
+	WIDGETGROUPGENERATION_API UGenericButtonCollection* GetButtonCollection(FGameplayTag InRootButtonTag);
 
 private:
 	TArray<TObjectPtr<UGenericButtonCollection>> Collections;

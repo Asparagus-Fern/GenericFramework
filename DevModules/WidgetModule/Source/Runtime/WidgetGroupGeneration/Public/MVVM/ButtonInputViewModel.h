@@ -9,7 +9,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(EditInlineNew)
 class WIDGETGROUPGENERATION_API UButtonInputViewModel : public UMVVMViewModelBase
 {
 	GENERATED_BODY()

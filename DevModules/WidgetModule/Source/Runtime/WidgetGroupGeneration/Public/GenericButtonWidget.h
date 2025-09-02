@@ -24,6 +24,15 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnButtonLockEvent, UGenericButtonW
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnButtonHoldingEvent, UGenericButtonWidget*, Button, float, Percent);
 
+UENUM(BlueprintType)
+enum class EDesiredButtonStyle : uint8
+{
+	Normal,
+	Selected,
+	Locked,
+	Disabled
+};
+
 /**
  * 
  */
@@ -46,6 +55,7 @@ public:
 
 	//~ Begin UUserWidget interface
 	WIDGETGROUPGENERATION_API virtual bool Initialize() override;
+	WIDGETGROUPGENERATION_API virtual void NativePreConstruct() override;
 	WIDGETGROUPGENERATION_API virtual void NativeConstruct() override;
 	WIDGETGROUPGENERATION_API virtual void NativeDestruct() override;
 	WIDGETGROUPGENERATION_API virtual bool NativeIsInteractable() const override;
@@ -212,6 +222,11 @@ public:
 
 	/* ==================== Style ==================== */
 public:
+#if WITH_EDITORONLY_DATA
+	UPROPERTY(EditAnywhere, Category = "Generic Button Widget | Style")
+	EDesiredButtonStyle DesiredButtonStyle = EDesiredButtonStyle::Normal;
+#endif
+
 	/* The minimum width of the button (only used if greater than the style's minimum) */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Generic Button Widget | Style", meta = (ClampMin = "0"))
 	int32 MinWidth;
@@ -354,7 +369,7 @@ public:
 	/* Change the selected state manually. */
 	UFUNCTION(BlueprintCallable)
 	WIDGETGROUPGENERATION_API void SetIsSelected(bool InSelected, bool bGiveClickFeedback = true);
-
+	
 protected:
 	WIDGETGROUPGENERATION_API void SetSelectedInternal(bool bInSelected, bool bGiveClickFeedback = true, bool bBroadcast = true);
 
@@ -366,25 +381,25 @@ public:
 	void SetButtonSelectionViewModel(UButtonSelectionViewModel* InViewModel);
 
 protected:
-	UFUNCTION(BlueprintNativeEvent)
+	UFUNCTION(BlueprintNativeEvent, Category="Button Selection View Model")
 	WIDGETGROUPGENERATION_API void OnSelectableChanged(bool IsSelectable);
 
-	UFUNCTION(BlueprintNativeEvent)
+	UFUNCTION(BlueprintNativeEvent, Category="Button Selection View Model")
 	WIDGETGROUPGENERATION_API void OnToggleableChanged(bool IsToggleable);
 
-	UFUNCTION(BlueprintNativeEvent)
+	UFUNCTION(BlueprintNativeEvent, Category="Button Selection View Model")
 	WIDGETGROUPGENERATION_API void OnDefaultSelectedChanged(bool IsDefaultSelected);
 
-	UFUNCTION(BlueprintNativeEvent)
+	UFUNCTION(BlueprintNativeEvent, Category="Button Selection View Model")
 	WIDGETGROUPGENERATION_API void OnShouldSelectUponReceivingFocusChanged(bool IsShouldSelectUponReceivingFocus);
 
-	UFUNCTION(BlueprintNativeEvent)
+	UFUNCTION(BlueprintNativeEvent, Category="Button Selection View Model")
 	WIDGETGROUPGENERATION_API void OnInteractableWhenSelectedChanged(bool IsInteractableWhenSelected);
 
-	UFUNCTION(BlueprintNativeEvent)
+	UFUNCTION(BlueprintNativeEvent, Category="Button Selection View Model")
 	WIDGETGROUPGENERATION_API void OnTriggerClickedAfterSelectionChanged(bool IsTriggerClickedAfterSelection);
 
-	UPROPERTY(EditAnywhere, Instanced, meta=(ExposeOnSpawn = "true"), Getter, Setter, BlueprintGetter="GetButtonSelectionViewModel", BlueprintSetter="SetButtonSelectionViewModel")
+	UPROPERTY(VisibleAnywhere, Instanced, Getter, Setter, BlueprintGetter="GetButtonSelectionViewModel", BlueprintSetter="SetButtonSelectionViewModel", Category = "Generic Button Widget | ViewModel")
 	TObjectPtr<UButtonSelectionViewModel> ButtonSelectionViewModel = nullptr;
 
 private:
@@ -424,42 +439,42 @@ public:
 	void SetButtonInputViewModel(UButtonInputViewModel* InViewModel);
 
 protected:
-	UFUNCTION(BlueprintNativeEvent)
+	UFUNCTION(BlueprintNativeEvent, Category="Button Input View Model")
 	WIDGETGROUPGENERATION_API void OnClickMethodChanged(EButtonClickMethod::Type InClickMethod);
 
-	UFUNCTION(BlueprintNativeEvent)
+	UFUNCTION(BlueprintNativeEvent, Category="Button Input View Model")
 	WIDGETGROUPGENERATION_API void OnTouchMethodChanged(EButtonTouchMethod::Type InTouchMethod);
 
-	UFUNCTION(BlueprintNativeEvent)
+	UFUNCTION(BlueprintNativeEvent, Category="Button Input View Model")
 	WIDGETGROUPGENERATION_API void OnPressMethodChanged(EButtonPressMethod::Type InPressMethod);
 
-	UPROPERTY(EditAnywhere, Instanced, meta=(ExposeOnSpawn = "true"), Getter, Setter, BlueprintGetter="GetButtonInputViewModel", BlueprintSetter="SetButtonInputViewModel")
+	UPROPERTY(VisibleAnywhere, Getter, Setter, BlueprintGetter="GetButtonInputViewModel", BlueprintSetter="SetButtonInputViewModel", Category = "Generic Button Widget | ViewModel")
 	TObjectPtr<UButtonInputViewModel> ButtonInputViewModel = nullptr;
 
 	/* ==================== Sound ==================== */
 public:
 	/* Optional override for the sound to play when this button is hovered. */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Sound", meta = (DisplayName = "Hovered Sound Override"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Generic Button Widget | Sound", meta = (DisplayName = "Hovered Sound Override"))
 	FSlateSound HoveredSlateSoundOverride;
 
 	/* Optional override for the sound to play when this button is pressed. */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Sound", meta = (DisplayName = "Pressed Sound Override"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Generic Button Widget | Sound", meta = (DisplayName = "Pressed Sound Override"))
 	FSlateSound PressedSlateSoundOverride;
 
 	/* Optional override for the sound to play when this button is hovered while Selected */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Sound", meta = (DisplayName = "Selected Hovered Sound Override"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Generic Button Widget | Sound", meta = (DisplayName = "Selected Hovered Sound Override"))
 	FSlateSound SelectedHoveredSlateSoundOverride;
 
 	/* Optional override for the sound to play when this button is pressed while Selected */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Sound", meta = (DisplayName = "Selected Pressed Sound Override"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Generic Button Widget | Sound", meta = (DisplayName = "Selected Pressed Sound Override"))
 	FSlateSound SelectedPressedSlateSoundOverride;
 
 	/* Optional override for the sound to play when this button is hovered while Locked */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Sound", meta = (DisplayName = "Locked Hovered Sound Override"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Generic Button Widget | Sound", meta = (DisplayName = "Locked Hovered Sound Override"))
 	FSlateSound LockedHoveredSlateSoundOverride;
 
 	/* Optional override for the sound to play when this button is pressed while Locked */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Sound", meta = (DisplayName = "Locked Pressed Sound Override"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Generic Button Widget | Sound", meta = (DisplayName = "Locked Pressed Sound Override"))
 	FSlateSound LockedPressedSlateSoundOverride;
 
 public:
@@ -507,25 +522,25 @@ public:
 	void SetButtonSoundViewModel(UButtonSoundViewModel* InViewModel);
 
 protected:
-	UFUNCTION(BlueprintNativeEvent)
+	UFUNCTION(BlueprintNativeEvent, Category="Button Sound View Model")
 	WIDGETGROUPGENERATION_API void OnHoveredSlateSoundOverrideChanged(FSlateSound InSlateSound);
 
-	UFUNCTION(BlueprintNativeEvent)
+	UFUNCTION(BlueprintNativeEvent, Category="Button Sound View Model")
 	WIDGETGROUPGENERATION_API void OnPressedSlateSoundOverrideChanged(FSlateSound InSlateSound);
 
-	UFUNCTION(BlueprintNativeEvent)
+	UFUNCTION(BlueprintNativeEvent, Category="Button Sound View Model")
 	WIDGETGROUPGENERATION_API void OnSelectedHoveredSlateSoundOverrideChanged(FSlateSound InSlateSound);
 
-	UFUNCTION(BlueprintNativeEvent)
+	UFUNCTION(BlueprintNativeEvent, Category="Button Sound View Model")
 	WIDGETGROUPGENERATION_API void OnSelectedPressedSlateSoundOverrideChanged(FSlateSound InSlateSound);
 
-	UFUNCTION(BlueprintNativeEvent)
+	UFUNCTION(BlueprintNativeEvent, Category="Button Sound View Model")
 	WIDGETGROUPGENERATION_API void OnLockedHoveredSlateSoundOverrideChanged(FSlateSound InSlateSound);
 
-	UFUNCTION(BlueprintNativeEvent)
+	UFUNCTION(BlueprintNativeEvent, Category="Button Sound View Model")
 	WIDGETGROUPGENERATION_API void OnLockedPressedSlateSoundOverrideChanged(FSlateSound InSlateSound);
 
-	UPROPERTY(EditAnywhere, Instanced, meta=(ExposeOnSpawn = "true"), Getter, Setter, BlueprintGetter="GetButtonSoundViewModel", BlueprintSetter="SetButtonSoundViewModel")
+	UPROPERTY(VisibleAnywhere, Instanced, Getter, Setter, BlueprintGetter="GetButtonSoundViewModel", BlueprintSetter="SetButtonSoundViewModel", Category = "Generic Button Widget | ViewModel")
 	TObjectPtr<UButtonSoundViewModel> ButtonSoundViewModel = nullptr;
 
 	/* ==================== Interaction ==================== */

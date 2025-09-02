@@ -8,6 +8,7 @@
 #include "Generic/GenericObject.h"
 #include "GenericButtonBuilder.generated.h"
 
+class UButtonGroupViewModel;
 class UGenericButtonContainer;
 class UGenericButtonWidget;
 
@@ -33,6 +34,12 @@ public:
 	TSubclassOf<UGenericButtonContainer> ButtonGroupClass;
 
 	UPROPERTY(EditDefaultsOnly, Instanced)
+	TObjectPtr<UWidgetDescriptionViewModel> WidgetDescriptionViewModel = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, Instanced)
+	TObjectPtr<UWidgetRenderViewModel> WidgetRenderViewModel = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, Instanced)
 	TObjectPtr<UButtonSelectionViewModel> ButtonSelectionViewModel = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, Instanced)
@@ -40,4 +47,7 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Instanced)
 	TObjectPtr<UButtonSoundViewModel> ButtonSoundViewModel = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, Instanced)
+	TObjectPtr<UButtonGroupViewModel> ButtonGroupViewModel = nullptr;
 };

@@ -3,7 +3,10 @@
 
 #include "GenericButtonGroup.h"
 
+#include "GenericButtonContainer.h"
 #include "GenericButtonWidget.h"
+#include "WidgetType.h"
+#include "MVVM/ButtonGroupViewModel.h"
 #include "Type/DebugType.h"
 
 UGenericButtonContainer* UGenericButtonGroup::GetButtonGroupWidget()
@@ -248,7 +251,7 @@ void UGenericButtonGroup::DeselectAll()
 {
 	if (HasSelectedButton())
 	{
-		SelectedButton->SetIsSelected(false);
+		SelectedButton->SetSelectedInternal(false);
 		LastSelectedButton = SelectedButton;
 		SelectedButton = nullptr;
 	}
@@ -286,6 +289,7 @@ void UGenericButtonGroup::HandleOnButtonDoubleClicked(UGenericButtonWidget* InBu
 
 void UGenericButtonGroup::HandleOnButtonSelectionChanged(UGenericButtonWidget* InButton, bool Selection)
 {
+	/* Button State Already Changed In Button Widget, Here Is Sync Button State And Broadcast */
 	if (HasSelectedButton())
 	{
 		if (SelectedButton == InButton)
@@ -305,5 +309,24 @@ void UGenericButtonGroup::HandleOnButtonSelectionChanged(UGenericButtonWidget* I
 	{
 		SelectedButton = InButton;
 		OnButtonSelectionChanged.Broadcast(this, SelectedButton, Selection);
+	}
+}
+
+UButtonGroupViewModel* UGenericButtonGroup::GetButtonGroupViewModel()
+{
+	return ButtonGroupViewModel;
+}
+
+void UGenericButtonGroup::SetButtonGroupViewModel(UButtonGroupViewModel* InButtonGroupViewModel)
+{
+	if (ButtonGroupViewModel)
+	{
+		ButtonGroupViewModel->RemoveAllFieldValueChangedDelegates(this);
+	}
+
+	ButtonGroupViewModel = InButtonGroupViewModel;
+
+	if (ButtonGroupViewModel)
+	{
 	}
 }

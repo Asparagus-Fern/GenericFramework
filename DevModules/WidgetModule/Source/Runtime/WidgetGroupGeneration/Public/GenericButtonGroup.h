@@ -6,6 +6,7 @@
 #include "Generic/GenericObject.h"
 #include "GenericButtonGroup.generated.h"
 
+class UButtonGroupViewModel;
 class UGenericButtonContainer;
 class UGenericButtonWidget;
 class UGenericButtonGroup;
@@ -33,7 +34,6 @@ class UGenericButtonGroup : public UGenericObject
 	GENERATED_BODY()
 
 	/* UInteractableWidgetEntityGroup */
-
 public:
 	UFUNCTION(BlueprintPure)
 	WIDGETGROUPGENERATION_API UGenericButtonContainer* GetButtonGroupWidget();
@@ -171,4 +171,15 @@ protected:
 
 	UPROPERTY()
 	TArray<TObjectPtr<UGenericButtonWidget>> ButtonWidgets;
+
+public:
+	UFUNCTION(BlueprintPure)
+	WIDGETGROUPGENERATION_API UButtonGroupViewModel* GetButtonGroupViewModel();
+	
+	UFUNCTION(BlueprintCallable)
+	WIDGETGROUPGENERATION_API void SetButtonGroupViewModel(UButtonGroupViewModel* InButtonGroupViewModel);
+	
+private:
+	UPROPERTY()
+	TObjectPtr<UButtonGroupViewModel> ButtonGroupViewModel = nullptr;
 };

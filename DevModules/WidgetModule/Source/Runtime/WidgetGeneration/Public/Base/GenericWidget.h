@@ -10,8 +10,8 @@
 #include "Interface/WidgetAnimationInterface.h"
 #include "GenericWidget.generated.h"
 
-class UCommonUISubsystemBase;
-class UCommonInputSubsystem;
+class UWidgetRenderViewModel;
+class UWidgetDescriptionViewModel;
 class UGenericGameHUD;
 class UCommonButton;
 class UWidgetAnimationEvent;
@@ -42,7 +42,7 @@ protected:
 
 	/* ==================== UGenericWidget ==================== */
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="UI"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="UI"), Category = "Generic Widget | Base")
 	FGameplayTag SelfTag = FGameplayTag::EmptyTag;
 
 	/*
@@ -53,25 +53,67 @@ public:
 	 *   Check This Widget Outer == UGenericWidget, If True Call Outer Widget AddChild To Add This Widget
 	 *   If All Fail : Destroy This Widget
 	 */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="UI.HUD"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="UI.HUD"), Category = "Generic Widget | Base")
 	FGameplayTag SlotTag;
 
 public:
 	/* Widget ZOrder, Usefully In WorldWidget, It Decide a Widget How To Hierarchical */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, AdvancedDisplay)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, AdvancedDisplay, Category = "Generic Widget | Base")
 	int32 ZOrder = 0;
 
 	/* Widget Scale, Usefully In WorldWidget, It Decide a Widget Scale Size */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, AdvancedDisplay)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, AdvancedDisplay, Category = "Generic Widget | Base")
 	float Scale = 1.f;
 
 	/* Widget Anchor, Usefully In WorldWidget, It Decide a Widget How To Surrounding */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, AdvancedDisplay)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, AdvancedDisplay, Category = "Generic Widget | Base")
 	FVector2D Anchor = FVector2D(.5f, 1.f);
 
 private:
 	uint8 bHasInitialized : 1;
 	TWeakObjectPtr<class UScaleBox> ScaleBox;
+
+	/* ==================== UWidgetDescriptionViewModel ==================== */
+public:
+	UFUNCTION(BlueprintPure)
+	WIDGETGENERATION_API UWidgetDescriptionViewModel* GetWidgetDescriptionViewModel() const;
+
+	UFUNCTION(BlueprintCallable)
+	WIDGETGENERATION_API void SetWidgetDescriptionViewModel(UWidgetDescriptionViewModel* InViewModel);
+
+protected:
+	UFUNCTION(BlueprintNativeEvent, Category="Widget Description View Model")
+	WIDGETGENERATION_API void OnPrimaryNameChanged(const FText& InPrimaryName);
+
+	UFUNCTION(BlueprintNativeEvent, Category="Widget Description View Model")
+	WIDGETGENERATION_API void OnSecondaryNameChanged(const FText& InSecondaryName);
+
+	UFUNCTION(BlueprintNativeEvent, Category="Widget Description View Model")
+	WIDGETGENERATION_API void OnTooltipTextChanged(const FText& InTooltipText);
+
+	UPROPERTY(VisibleAnywhere, Instanced, Getter, Setter, BlueprintGetter="GetWidgetDescriptionViewModel", BlueprintSetter="SetWidgetDescriptionViewModel", Category = "Generic Widget | ViewModel")
+	TObjectPtr<UWidgetDescriptionViewModel> WidgetDescriptionViewModel = nullptr;
+
+	/* ==================== UWidgetRenderViewModel ==================== */
+public:
+	UFUNCTION(BlueprintPure)
+	WIDGETGENERATION_API UWidgetRenderViewModel* GetWidgetRenderViewModel() const;
+
+	UFUNCTION(BlueprintCallable)
+	WIDGETGENERATION_API void SetWidgetRenderViewModel(UWidgetRenderViewModel* InViewModel);
+
+protected:
+	UFUNCTION(BlueprintNativeEvent, Category="Widget Render View Model")
+	WIDGETGENERATION_API void OnVisibilityChanged(ESlateVisibility InVisibility);
+
+	UFUNCTION(BlueprintNativeEvent, Category="Widget Render View Model")
+	WIDGETGENERATION_API void OnRenderTransformPivotChanged(FVector2D InRenderTransformPivot);
+
+	UFUNCTION(BlueprintNativeEvent, Category="Widget Render View Model")
+	WIDGETGENERATION_API void OnRenderTransformChanged(const FWidgetTransform& InRenderTransform);
+
+	UPROPERTY(VisibleAnywhere, Instanced, Getter, Setter, BlueprintGetter="GetWidgetRenderViewModel", BlueprintSetter="SetWidgetRenderViewModel", Category = "Generic Widget | ViewModel")
+	TObjectPtr<UWidgetRenderViewModel> WidgetRenderViewModel = nullptr;
 
 	/* ==================== IStateInterface ==================== */
 public:
@@ -106,17 +148,16 @@ protected:
 public:
 	WIDGETGENERATION_API virtual UGenericWidget* GetChildByIndex(int32 InIndex) override;
 	WIDGETGENERATION_API virtual void AddChild(UGenericWidget* InWidget) override;
-	WIDGETGENERATION_API virtual void AddChild(UGenericWidget* InWidget, int32 InIndex) override;
 	WIDGETGENERATION_API virtual void RemoveChild(int32 InIndex) override;
 	WIDGETGENERATION_API virtual void RemoveChild(UGenericWidget* InWidget) override;
 	WIDGETGENERATION_API virtual void ClearChildren() override;
 
 protected:
 	UFUNCTION(BlueprintNativeEvent)
-	WIDGETGENERATION_API void OnChildAdded(UGenericWidget* InWidget, int32 InIndex);
+	WIDGETGENERATION_API void OnChildAdded(UGenericWidget* InWidget, int32 NewChildrenCount);
 
 	UFUNCTION(BlueprintNativeEvent)
-	WIDGETGENERATION_API void OnChildRemoved(UGenericWidget* InWidget, int32 InIndex);
+	WIDGETGENERATION_API void OnChildRemoved(UGenericWidget* InWidget, int32 NewChildrenCount);
 
 protected:
 	UPROPERTY()

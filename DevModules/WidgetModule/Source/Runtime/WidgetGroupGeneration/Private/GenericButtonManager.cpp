@@ -30,36 +30,20 @@ bool UGenericButtonManager::DoesSupportWorldType(const EWorldType::Type WorldTyp
 	return WorldType == EWorldType::Game || WorldType == EWorldType::PIE;
 }
 
-UGenericButtonCollection* UGenericButtonManager::RegisterButtonCollection(TSubclassOf<UGenericButtonCollection> InCollectionClass, bool InActived)
+UGenericButtonCollection* UGenericButtonManager::RegisterButtonCollection(APlayerController* Player, TSubclassOf<UGenericButtonCollection> InCollectionClass, bool InActived)
 {
-	UGenericButtonCollection* NewCollection = NewObject<UGenericButtonCollection>(this, InCollectionClass);
-	RegisterButtonCollection(NewCollection, InActived);
-	return NewCollection;
-}
+	check(Player)
 
-bool UGenericButtonManager::RegisterButtonCollection(UGenericButtonCollection* InCollection, bool InActived)
-{
-	if (!IsValid(InCollection))
-	{
-		GenericLOG(GenericLogUI, Error, TEXT("InCollection Is InValid"))
-		return false;
-	}
-
-	if (Collections.Contains(InCollection))
-	{
-		GenericLOG(GenericLogUI, Warning, TEXT("InCollection Is Already Register"))
-		return false;
-	}
-
-	InCollection->NativeOnCreate();
-	Collections.Add(InCollection);
+	UGenericButtonCollection* NewCollection = NewObject<UGenericButtonCollection>(Player, InCollectionClass);
+	NewCollection->NativeOnCreate();
+	Collections.Add(NewCollection);
 
 	if (InActived)
 	{
-		InCollection->NativeOnActived();
+		NewCollection->NativeOnActived();
 	}
 
-	return true;
+	return NewCollection;
 }
 
 bool UGenericButtonManager::UnRegisterButtonCollection(UGenericButtonCollection* InCollection)
@@ -85,4 +69,16 @@ bool UGenericButtonManager::UnRegisterButtonCollection(UGenericButtonCollection*
 	Collections.Remove(InCollection);
 
 	return true;
+}
+
+UGenericButtonCollection* UGenericButtonManager::GetButtonCollection(FGameplayTag InRootButtonTag)
+{
+	for (auto& Collection : Collections)
+	{
+		if (Collection->GetRootButtonTag() == InRootButtonTag)
+		{
+			return Collection;
+		}
+	}
+	return nullptr;
 }

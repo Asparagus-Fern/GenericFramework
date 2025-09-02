@@ -11,7 +11,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(EditInlineNew)
 class WIDGETGENERATION_API UWidgetRenderViewModel : public UMVVMViewModelBase
 {
 	GENERATED_BODY()

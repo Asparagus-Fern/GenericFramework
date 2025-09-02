@@ -25,7 +25,6 @@ class WIDGETGENERATION_API IWidgetChildrenInterface
 public:
 	virtual UGenericWidget* GetChildByIndex(int32 InIndex) = 0;
 	virtual void AddChild(UGenericWidget* InWidget) = 0;
-	virtual void AddChild(UGenericWidget* InWidget, int32 InIndex) = 0;
 	virtual void RemoveChild(int32 InIndex) = 0;
 	virtual void RemoveChild(UGenericWidget* InWidget) = 0;
 	virtual void ClearChildren() = 0;

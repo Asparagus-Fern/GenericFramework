@@ -63,9 +63,9 @@ void ABuildingActor::NativeOnInactived()
 	UFloorBodyComponent::OnBodyClicked.RemoveAll(this);
 }
 
-void ABuildingActor::OnRefresh_Implementation()
+void ABuildingActor::HandleOnRefresh_Implementation()
 {
-	IStateInterface::OnRefresh_Implementation();
+	IStateInterface::HandleOnRefresh_Implementation();
 
 	/* 移除所有楼层 */
 	{
@@ -107,14 +107,14 @@ void ABuildingActor::OnRefresh_Implementation()
 	}
 }
 
-void ABuildingActor::OnActived_Implementation()
+void ABuildingActor::HandleOnActived_Implementation()
 {
-	IStateInterface::OnActived_Implementation();
+	IStateInterface::HandleOnActived_Implementation();
 }
 
-void ABuildingActor::OnInactived_Implementation()
+void ABuildingActor::HandleOnInactived_Implementation()
 {
-	IStateInterface::OnInactived_Implementation();
+	IStateInterface::HandleOnInactived_Implementation();
 }
 
 #if WITH_EDITOR

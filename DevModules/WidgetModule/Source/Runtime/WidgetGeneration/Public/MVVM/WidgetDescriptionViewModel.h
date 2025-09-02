@@ -9,7 +9,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(EditInlineNew)
 class WIDGETGENERATION_API UWidgetDescriptionViewModel : public UMVVMViewModelBase
 {
 	GENERATED_BODY()
@@ -19,7 +19,7 @@ public:
 	FText PrimaryName = FText::FromString("PrimaryName");
 
 	UPROPERTY(FieldNotify, EditAnywhere, BlueprintReadWrite)
-	FText SecondaryName = FText::FromString("SecondaryName");
+	FText SecondaryName;
 
 	UPROPERTY(FieldNotify, EditAnywhere, BlueprintReadWrite)
 	FText TooltipText;

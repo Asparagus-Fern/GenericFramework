@@ -26,9 +26,6 @@ public:
 	FSlateBrush Pressed;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	FSlateBrush Disabled;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FSlateColor NormalForeground;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
