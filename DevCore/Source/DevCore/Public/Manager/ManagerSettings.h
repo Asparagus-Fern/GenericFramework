@@ -21,15 +21,6 @@ public:
 	virtual FName GetSectionName() const override { return "Global"; }
 
 public:
-	virtual void PostInitProperties() override;
-#if WITH_EDITOR
-	virtual void PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent) override;
-
-private:
-	void UpdateGameplayTagSettings();
-#endif
-
-public:
 	UPROPERTY(Config, EditAnywhere)
 	bool bEnableAllManager = true;
 

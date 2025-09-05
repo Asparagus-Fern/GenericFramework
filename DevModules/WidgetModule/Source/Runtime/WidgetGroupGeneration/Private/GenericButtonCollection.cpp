@@ -85,13 +85,23 @@ void UGenericButtonCollection::BuildChildButtonGroup(const FGameplayTag InButton
 		return;
 	}
 
+	if (!IsValid(ButtonBuilder->ButtonGroupClass))
+	{
+		GenericLOG(GenericLogUI, Warning, TEXT("Button Group Class Is InValid"))
+		return;
+	}
+
 	UGenericButtonWidget* ButtonWidget = GenericWidgetManager->GetActiveWidget<UGenericButtonWidget>(InButtonTag);
 	if (UGenericButtonContainer* GroupWidget = BuildButtonGroupWidget(InButtonTag, ButtonWidget))
 	{
 		/* Generate Button Group And Open The Button Container Widget */
-		UGenericButtonGroup* ButtonGroup = NewObject<UGenericButtonGroup>(GetOuter());
+		UGenericButtonGroup* ButtonGroup = NewObject<UGenericButtonGroup>(GetOuter(), ButtonBuilder->ButtonGroupClass);
+		ButtonGroup->SetButtonCollection(this);
 		ButtonGroup->SetButtonGroupWidget(GroupWidget);
 		ButtonGroup->SetButtonGroupViewModel(ButtonBuilder->ButtonGroupViewModel);
+
+		GroupWidget->SetButtonCollection(this);
+		GroupWidget->SetButtonGroup(ButtonGroup);
 
 		if (!GenericWidgetManager->OpenGenericWidget(GroupWidget))
 		{
@@ -188,18 +198,18 @@ UGenericButtonContainer* UGenericButtonCollection::BuildButtonGroupWidget(const 
 	UGenericButtonContainer* ButtonContainer = nullptr;
 	if (UGenericButtonBuilder* Builder = GetButtonBuilder(InButtonTag))
 	{
-		if (Builder->ButtonGroupClass)
+		if (Builder->ButtonContainerClass)
 		{
 			if (IsValid(ButtonWidget))
 			{
-				ButtonContainer = CreateWidget<UGenericButtonContainer>(ButtonWidget, Builder->ButtonGroupClass);
+				ButtonContainer = CreateWidget<UGenericButtonContainer>(ButtonWidget, Builder->ButtonContainerClass);
 			}
 			else
 			{
 				/* Outer Is Player Controller */
 				if (APlayerController* PC = Cast<APlayerController>(GetOuter()))
 				{
-					ButtonContainer = CreateWidget<UGenericButtonContainer>(PC, Builder->ButtonGroupClass);
+					ButtonContainer = CreateWidget<UGenericButtonContainer>(PC, Builder->ButtonContainerClass);
 				}
 			}
 		}
@@ -413,6 +423,16 @@ void UGenericButtonCollection::OnButtonSelectionChanged_Implementation(UGenericB
 	}
 }
 
+APlayerController* UGenericButtonCollection::GetOwnerPlayer() const
+{
+	return Cast<APlayerController>(GetOuter());
+}
+
+UGenericButtonAsset* UGenericButtonCollection::GetButtonAsset() const
+{
+	return ButtonAsset;
+}
+
 TArray<FGameplayTag> UGenericButtonCollection::GetAllButtonTags() const
 {
 	TArray<FGameplayTag> ButtonTags;
@@ -432,9 +452,9 @@ TArray<FGameplayTag> UGenericButtonCollection::GetAllButtonTags() const
 
 FGameplayTag UGenericButtonCollection::GetRootButtonTag() const
 {
-	if (WidgetAsset)
+	if (ButtonAsset)
 	{
-		return WidgetAsset->RootButtonTag;
+		return ButtonAsset->GetRootButtonTag();
 	}
 
 	return FGameplayTag::EmptyTag;
@@ -444,9 +464,9 @@ TArray<UGenericButtonBuilder*> UGenericButtonCollection::GetAllButtonBuilder() c
 {
 	TArray<UGenericButtonBuilder*> Result;
 
-	if (WidgetAsset)
+	if (ButtonAsset)
 	{
-		return WidgetAsset->ButtonBuilders;
+		return ButtonAsset->ButtonBuilders;
 	}
 
 	return Result;
@@ -468,32 +488,6 @@ UGenericButtonBuilder* UGenericButtonCollection::GetButtonBuilder(const FGamepla
 		}
 	}
 	return nullptr;
-}
-
-TArray<UGenericButtonBuilder*> UGenericButtonCollection::GetChildButtonBuilder(const FGameplayTag InButtonTag) const
-{
-	TArray<UGenericButtonBuilder*> Builders;
-
-	if (!InButtonTag.IsValid())
-	{
-		GenericLOG(GenericLogUI, Error, TEXT("ButtonTag Is InValid"))
-		return Builders;
-	}
-
-	for (const auto& Builder : GetAllButtonBuilder())
-	{
-		if (UBPFunctions_GameplayTag::GetDirectGameplayTagParent(Builder->ButtonTag) == InButtonTag)
-		{
-			Builders.Add(Builder);
-		}
-	}
-
-	return Builders;
-}
-
-APlayerController* UGenericButtonCollection::GetOwnerPlayer() const
-{
-	return Cast<APlayerController>(GetOuter());
 }
 
 TArray<UGenericButtonGroup*> UGenericButtonCollection::GetAllButtonGroup() const

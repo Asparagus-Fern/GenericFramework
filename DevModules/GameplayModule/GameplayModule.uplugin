@@ -31,15 +31,19 @@
       "Enabled": true
     },
     {
+      "Name": "WidgetModule",
+      "Enabled": true
+    },
+    {
+      "Name": "PropertyModule",
+      "Enabled": true
+    },
+    {
       "Name": "ModelViewViewModel",
       "Enabled": true
     },
     {
       "Name": "GameplayCameras",
-      "Enabled": true
-    },
-    {
-      "Name": "WidgetModule",
       "Enabled": true
     }
   ],
@@ -55,7 +59,7 @@
       "LoadingPhase": "Default"
     },
     {
-      "Name": "GameSettingSystem",
+      "Name": "GenericGameSettingSystem",
       "Type": "Runtime",
       "LoadingPhase": "Default"
     }

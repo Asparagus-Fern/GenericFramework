@@ -257,37 +257,37 @@ void UGenericButtonGroup::DeselectAll()
 	}
 }
 
-void UGenericButtonGroup::HandleOnButtonPressed(UGenericButtonWidget* InButton)
+void UGenericButtonGroup::HandleOnButtonPressed_Implementation(UGenericButtonWidget* InButton)
 {
 	OnButtonPressed.Broadcast(this, InButton);
 }
 
-void UGenericButtonGroup::HandleOnButtonReleased(UGenericButtonWidget* InButton)
+void UGenericButtonGroup::HandleOnButtonReleased_Implementation(UGenericButtonWidget* InButton)
 {
 	OnButtonReleased.Broadcast(this, InButton);
 }
 
-void UGenericButtonGroup::HandleOnButtonHovered(UGenericButtonWidget* InButton)
+void UGenericButtonGroup::HandleOnButtonHovered_Implementation(UGenericButtonWidget* InButton)
 {
 	OnButtonHovered.Broadcast(this, InButton);
 }
 
-void UGenericButtonGroup::HandleOnButtonUnhovered(UGenericButtonWidget* InButton)
+void UGenericButtonGroup::HandleOnButtonUnhovered_Implementation(UGenericButtonWidget* InButton)
 {
 	OnButtonUnhovered.Broadcast(this, InButton);
 }
 
-void UGenericButtonGroup::HandleOnButtonClicked(UGenericButtonWidget* InButton)
+void UGenericButtonGroup::HandleOnButtonClicked_Implementation(UGenericButtonWidget* InButton)
 {
 	OnButtonClicked.Broadcast(this, InButton);
 }
 
-void UGenericButtonGroup::HandleOnButtonDoubleClicked(UGenericButtonWidget* InButton)
+void UGenericButtonGroup::HandleOnButtonDoubleClicked_Implementation(UGenericButtonWidget* InButton)
 {
 	OnButtonDoubleClicked.Broadcast(this, InButton);
 }
 
-void UGenericButtonGroup::HandleOnButtonSelectionChanged(UGenericButtonWidget* InButton, bool Selection)
+void UGenericButtonGroup::HandleOnButtonSelectionChanged_Implementation(UGenericButtonWidget* InButton, bool Selection)
 {
 	/* Button State Already Changed In Button Widget, Here Is Sync Button State And Broadcast */
 	if (HasSelectedButton())
@@ -310,6 +310,16 @@ void UGenericButtonGroup::HandleOnButtonSelectionChanged(UGenericButtonWidget* I
 		SelectedButton = InButton;
 		OnButtonSelectionChanged.Broadcast(this, SelectedButton, Selection);
 	}
+}
+
+UGenericButtonCollection* UGenericButtonGroup::GetButtonCollection() const
+{
+	return ButtonCollection.IsValid() ? ButtonCollection.Get() : nullptr;
+}
+
+void UGenericButtonGroup::SetButtonCollection(UGenericButtonCollection* InButtonCollection)
+{
+	ButtonCollection = InButtonCollection;
 }
 
 UButtonGroupViewModel* UGenericButtonGroup::GetButtonGroupViewModel()

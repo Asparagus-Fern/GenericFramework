@@ -7,8 +7,7 @@
 #include "Engine/DataAsset.h"
 #include "GenericButtonAsset.generated.h"
 
-class UGenericButtonContainer;
-class UGenericButtonWidget;
+class UGenericButtonBuilderSettingAsset;
 class UGenericButtonBuilder;
 
 /**
@@ -20,33 +19,19 @@ class UGenericButtonAsset : public UDataAsset
 	GENERATED_UCLASS_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="UI.Button"))
-	FGameplayTag RootButtonTag = FGameplayTag::EmptyTag;
-
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TObjectPtr<UDataTable> ButtonTable = nullptr;
-
-	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UGenericButtonBuilder> BuilderClass = nullptr;
+	TObjectPtr<UGenericButtonBuilderSettingAsset> ButtonBuilderSetting = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced, meta = (TitleProperty = "ButtonTag"))
 	TArray<TObjectPtr<UGenericButtonBuilder>> ButtonBuilders;
 
 public:
+	bool IsContainButtonTag(FGameplayTag InButtonTag);
+	
 #if WITH_EDITOR
-	UFUNCTION(CallInEditor)
+	UFUNCTION(CallInEditor, DisplayName="Generate Buttons")
 	void GenerateButtons();
-
-	UFUNCTION(CallInEditor)
-	void ClearButtons();
 #endif
 
-protected:
-#if WITH_EDITORONLY_DATA
-	UPROPERTY()
-	FGameplayTagContainer GameplayTagContainer;
-#endif
-
-protected:
-	WIDGETGROUPGENERATION_API bool IsContainButtonTag(FGameplayTag InButtonTag);
+	WIDGETGROUPGENERATION_API FGameplayTag GetRootButtonTag() const;
 };

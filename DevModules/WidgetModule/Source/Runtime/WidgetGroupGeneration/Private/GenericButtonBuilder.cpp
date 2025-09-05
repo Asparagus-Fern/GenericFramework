@@ -9,6 +9,6 @@
 UGenericButtonBuilder::UGenericButtonBuilder(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
-	ButtonClass = UGenericButtonWidget::StaticClass();
+	ButtonGroupClass = UGenericButtonGroup::StaticClass();
 	WidgetDescriptionViewModel = CreateDefaultSubobject<UWidgetDescriptionViewModel>(TEXT("WidgetDescriptionViewModel"));
 }

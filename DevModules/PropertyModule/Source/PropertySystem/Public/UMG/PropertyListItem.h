@@ -20,7 +20,10 @@ class UPropertyListItemObject : public UGenericObject
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FText PropertyName;
+	FName PropertyName = NAME_None;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FText PropertyDisplayName;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<UPropertyValueBase> PropertyValueClass = nullptr;

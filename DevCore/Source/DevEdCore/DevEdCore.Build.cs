@@ -40,6 +40,7 @@ public class DevEdCore : ModuleRules
 				"AssetDefinition",
 				"InputCore",
 				"DeveloperSettings",
+				"GameplayTags"
 			}
 		);
 	}

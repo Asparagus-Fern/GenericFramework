@@ -6,6 +6,7 @@
 #include "Generic/GenericObject.h"
 #include "GenericButtonGroup.generated.h"
 
+class UGenericButtonCollection;
 class UButtonGroupViewModel;
 class UGenericButtonContainer;
 class UGenericButtonWidget;
@@ -115,27 +116,27 @@ public:
 	WIDGETGROUPGENERATION_API void DeselectAll();
 
 	/* Binding From Widget (If Exist) */
-private:
-	UFUNCTION()
-	virtual void HandleOnButtonPressed(UGenericButtonWidget* Button);
+protected:
+	UFUNCTION(BlueprintNativeEvent)
+	WIDGETGROUPGENERATION_API void HandleOnButtonPressed(UGenericButtonWidget* Button);
 
-	UFUNCTION()
-	virtual void HandleOnButtonReleased(UGenericButtonWidget* Button);
+	UFUNCTION(BlueprintNativeEvent)
+	WIDGETGROUPGENERATION_API void HandleOnButtonReleased(UGenericButtonWidget* Button);
 
-	UFUNCTION()
-	virtual void HandleOnButtonHovered(UGenericButtonWidget* Button);
+	UFUNCTION(BlueprintNativeEvent)
+	WIDGETGROUPGENERATION_API void HandleOnButtonHovered(UGenericButtonWidget* Button);
 
-	UFUNCTION()
-	virtual void HandleOnButtonUnhovered(UGenericButtonWidget* Button);
+	UFUNCTION(BlueprintNativeEvent)
+	WIDGETGROUPGENERATION_API void HandleOnButtonUnhovered(UGenericButtonWidget* Button);
 
-	UFUNCTION()
-	virtual void HandleOnButtonClicked(UGenericButtonWidget* Button);
+	UFUNCTION(BlueprintNativeEvent)
+	WIDGETGROUPGENERATION_API void HandleOnButtonClicked(UGenericButtonWidget* Button);
 
-	UFUNCTION()
-	virtual void HandleOnButtonDoubleClicked(UGenericButtonWidget* Button);
+	UFUNCTION(BlueprintNativeEvent)
+	WIDGETGROUPGENERATION_API void HandleOnButtonDoubleClicked(UGenericButtonWidget* Button);
 
-	UFUNCTION()
-	virtual void HandleOnButtonSelectionChanged(UGenericButtonWidget* Button, bool Selection);
+	UFUNCTION(BlueprintNativeEvent)
+	WIDGETGROUPGENERATION_API void HandleOnButtonSelectionChanged(UGenericButtonWidget* Button, bool Selection);
 
 public:
 	UPROPERTY(BlueprintAssignable)
@@ -174,12 +175,19 @@ protected:
 
 public:
 	UFUNCTION(BlueprintPure)
+	WIDGETGROUPGENERATION_API virtual UGenericButtonCollection* GetButtonCollection() const;
+	WIDGETGROUPGENERATION_API virtual void SetButtonCollection(UGenericButtonCollection* InButtonCollection);
+
+	UFUNCTION(BlueprintPure)
 	WIDGETGROUPGENERATION_API UButtonGroupViewModel* GetButtonGroupViewModel();
-	
+
 	UFUNCTION(BlueprintCallable)
 	WIDGETGROUPGENERATION_API void SetButtonGroupViewModel(UButtonGroupViewModel* InButtonGroupViewModel);
-	
+
 private:
+	UPROPERTY()
+	TWeakObjectPtr<UGenericButtonCollection> ButtonCollection = nullptr;
+
 	UPROPERTY()
 	TObjectPtr<UButtonGroupViewModel> ButtonGroupViewModel = nullptr;
 };

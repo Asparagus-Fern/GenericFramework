@@ -131,10 +131,10 @@ public:
 		ViewModelClass* ViewModelRef = ViewModel; \
 		ViewModel->AddFieldValueChangedDelegate \
 		( \
-		ViewModelClass::FFieldNotificationClassDescriptor::Value, \
+			ViewModelClass::FFieldNotificationClassDescriptor::Value, \
 			ViewModelClass::FFieldValueChangedDelegate::CreateLambda \
 			( \
-			[this, ViewModelRef](UObject* InObject, UE::FieldNotification::FFieldId InFieldId) \
+				[this, ViewModelRef](UObject* InObject, UE::FieldNotification::FFieldId InFieldId) \
 				{ \
 					FunctionName(ViewModelRef->Value); \
 				} \
@@ -143,6 +143,30 @@ public:
 		if(CallFunction) \
 		{ \
 			FunctionName(ViewModel->Value); \
+		} \
+	} \
+}
+
+#define REGISTER_MVVM_PROPERTY_LAMBDA(ViewModel, Value, Lambda, CallFunction) \
+{ \
+	if(ViewModel) \
+	{ \
+		using ViewModelClass = typename TMVVMRegisterTypeExtractor<decltype(ViewModel)>::Type; \
+		ViewModelClass* ViewModelRef = ViewModel; \
+		ViewModel->AddFieldValueChangedDelegate \
+		( \
+			ViewModelClass::FFieldNotificationClassDescriptor::Value, \
+			ViewModelClass::FFieldValueChangedDelegate::CreateLambda \
+			( \
+				[ViewModelRef, Lambda](UObject* InObject, UE::FieldNotification::FFieldId InFieldId) \
+				{ \
+					Lambda(ViewModelRef->Value); \
+				} \
+			) \
+		); \
+		if(CallFunction) \
+		{ \
+			Lambda(ViewModel->Value); \
 		} \
 	} \
 }

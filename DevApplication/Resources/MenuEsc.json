@@ -1,0 +1,57 @@
+[
+  {
+    "Name": "NewRow",
+    "Tag": "UI.Button.MenuEsc",
+    "DevComment": ""
+  },
+  {
+    "Name": "NewRow_0",
+    "Tag": "UI.Button.MenuEsc.Continue",
+    "DevComment": "Continue Game"
+  },
+  {
+    "Name": "NewRow_1",
+    "Tag": "UI.Button.MenuEsc.Settings",
+    "DevComment": "Settings"
+  },
+  {
+    "Name": "NewRow_2",
+    "Tag": "UI.Button.MenuEsc.AboutUs",
+    "DevComment": "About"
+  },
+  {
+    "Name": "NewRow_3",
+    "Tag": "UI.Button.MenuEsc.ExitToHome",
+    "DevComment": "Exit To Home"
+  },
+  {
+    "Name": "NewRow_4",
+    "Tag": "UI.Button.MenuEsc.ExitGame",
+    "DevComment": "Exit Game"
+  },
+  {
+    "Name": "NewRow_5",
+    "Tag": "UI.Button.MenuEsc.Settings.Game",
+    "DevComment": "Game Settings"
+  },
+  {
+    "Name": "NewRow_6",
+    "Tag": "UI.Button.MenuEsc.Settings.Video",
+    "DevComment": "Video Settings"
+  },
+  {
+    "Name": "NewRow_7",
+    "Tag": "UI.Button.MenuEsc.Settings.Sound",
+    "DevComment": "Sound Settings"
+  },
+  {
+    "Name": "NewRow_8",
+    "Tag": "UI.Button.MenuEsc.Settings.Keyboard",
+    "DevComment": "Keyboard Settings"
+  },
+  {
+    "Name": "NewRow_9",
+    "Tag": "UI.Button.MenuEsc.Settings.Controller",
+    "DevComment": "Controller Settings"
+  }
+]

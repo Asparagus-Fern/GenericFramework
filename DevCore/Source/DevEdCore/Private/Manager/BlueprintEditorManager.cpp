@@ -3,6 +3,11 @@
 
 #include "Manager/BlueprintEditorManager.h"
 
+bool UBlueprintEditorManager::ShouldCreateSubsystem(UObject* Outer) const
+{
+	return Super::ShouldCreateSubsystem(Outer);
+}
+
 void UBlueprintEditorManager::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);

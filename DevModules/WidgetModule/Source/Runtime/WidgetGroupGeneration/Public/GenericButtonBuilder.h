@@ -15,7 +15,7 @@ class UGenericButtonWidget;
 /**
  * 
  */
-UCLASS(MinimalAPI)
+UCLASS(MinimalAPI, EditInlineNew)
 class UGenericButtonBuilder : public UGenericObject
 {
 	GENERATED_BODY()
@@ -24,30 +24,33 @@ public:
 	WIDGETGROUPGENERATION_API UGenericButtonBuilder(const FObjectInitializer& ObjectInitializer);
 
 public:
-	UPROPERTY(EditDefaultsOnly, meta=(Categories="UI.Button"))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(Categories="UI.Button"))
 	FGameplayTag ButtonTag = FGameplayTag::EmptyTag;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<UGenericButtonWidget> ButtonClass;
 
-	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UGenericButtonContainer> ButtonGroupClass;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TSubclassOf<UGenericButtonContainer> ButtonContainerClass;
 
-	UPROPERTY(EditDefaultsOnly, Instanced)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TSubclassOf<UGenericButtonGroup> ButtonGroupClass;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Instanced)
 	TObjectPtr<UWidgetDescriptionViewModel> WidgetDescriptionViewModel = nullptr;
 
-	UPROPERTY(EditDefaultsOnly, Instanced)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Instanced)
 	TObjectPtr<UWidgetRenderViewModel> WidgetRenderViewModel = nullptr;
 
-	UPROPERTY(EditDefaultsOnly, Instanced)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Instanced)
 	TObjectPtr<UButtonSelectionViewModel> ButtonSelectionViewModel = nullptr;
 
-	UPROPERTY(EditDefaultsOnly, Instanced)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Instanced)
 	TObjectPtr<UButtonInputViewModel> ButtonInputViewModel = nullptr;
 
-	UPROPERTY(EditDefaultsOnly, Instanced)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Instanced)
 	TObjectPtr<UButtonSoundViewModel> ButtonSoundViewModel = nullptr;
 
-	UPROPERTY(EditDefaultsOnly, Instanced)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Instanced)
 	TObjectPtr<UButtonGroupViewModel> ButtonGroupViewModel = nullptr;
 };

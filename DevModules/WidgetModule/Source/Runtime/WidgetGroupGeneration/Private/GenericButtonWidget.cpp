@@ -125,6 +125,21 @@ void UGenericButtonWidget::NativeConstruct()
 void UGenericButtonWidget::NativeDestruct()
 {
 	Super::NativeDestruct();
+
+	if (ButtonSelectionViewModel)
+	{
+		ButtonSelectionViewModel->RemoveAllFieldValueChangedDelegates(this);
+	}
+
+	if (ButtonInputViewModel)
+	{
+		ButtonInputViewModel->RemoveAllFieldValueChangedDelegates(this);
+	}
+
+	if (ButtonSoundViewModel)
+	{
+		ButtonSoundViewModel->RemoveAllFieldValueChangedDelegates(this);
+	}
 }
 
 bool UGenericButtonWidget::NativeIsInteractable() const

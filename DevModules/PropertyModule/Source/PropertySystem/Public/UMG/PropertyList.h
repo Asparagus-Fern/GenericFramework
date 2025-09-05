@@ -6,9 +6,10 @@
 #include "Base/GenericWidget.h"
 #include "PropertyList.generated.h"
 
-class UPropertyListItemObject;
-class UPropertyListItemAsset;
+class UPropertyProxy;
 class UGenericListView;
+class UPropertyListItemObject;
+
 
 /**
  * 
@@ -25,19 +26,16 @@ public:
 
 public:
 	UFUNCTION(BlueprintCallable)
-	void SetPropertyListItemAsset(UPropertyListItemAsset* InAsset);
+	void SetPropertyProxyClass(TSubclassOf<UPropertyProxy> InClass);
 
-	UFUNCTION(BlueprintCallable)
-	void UpdatePropertyListView();
-
-public:
+protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TObjectPtr<UPropertyListItemAsset> PropertyListItemAsset = nullptr;
+	TSubclassOf<UPropertyProxy> PropertyProxyClass = nullptr;
+
+	UPROPERTY()
+	TObjectPtr<UPropertyProxy> PropertyProxy = nullptr;
 
 private:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget, BlueprintProtected = true, AllowPrivateAccess = true))
 	TObjectPtr<UGenericListView> GenericListView_Property;
-
-	UPROPERTY()
-	TArray<TObjectPtr<UPropertyListItemObject>> PropertyListItemObjects;
 };

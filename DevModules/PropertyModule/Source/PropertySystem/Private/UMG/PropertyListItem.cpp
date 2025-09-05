@@ -15,12 +15,15 @@ void UPropertyListItem::NativeOnListItemObjectSet(UObject* ListItemObject)
 	{
 		if (Text_PropertyName)
 		{
-			Text_PropertyName->SetText(PropertyListItemObject->PropertyName);
+			Text_PropertyName->SetText(PropertyListItemObject->PropertyDisplayName);
 		}
 
-		if (!PropertyValueSpawner || !PropertyValueSpawner->SpawnPropertyWidget(PropertyListItemObject->PropertyValueClass, PropertyListItemObject->PropertyValueViewModel))
+		if (PropertyValueSpawner)
 		{
-			
+			if (PropertyValueSpawner->SpawnPropertyWidget(PropertyListItemObject->PropertyValueClass, PropertyListItemObject->PropertyValueViewModel))
+			{
+				PropertyListItemObject->PropertyValueViewModel->Initialize();
+			}
 		}
 	}
 }

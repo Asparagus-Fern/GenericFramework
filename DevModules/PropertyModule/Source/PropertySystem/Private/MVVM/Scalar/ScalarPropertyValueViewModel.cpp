@@ -2,6 +2,28 @@
 
 #include "MVVM/Scalar/ScalarPropertyValueViewModel.h"
 
+void UScalarPropertyValueViewModel::Apply_Implementation()
+{
+	Super::Apply_Implementation();
+
+	SetDefaultValue(CurrentValue);
+	CacheCurrentValue = CurrentValue;
+}
+
+void UScalarPropertyValueViewModel::Reverse_Implementation()
+{
+	Super::Reverse_Implementation();
+
+	SetCurrentValue(CacheCurrentValue);
+}
+
+void UScalarPropertyValueViewModel::Reset_Implementation()
+{
+	Super::Reset_Implementation();
+
+	SetCurrentValue(DefaultValue);
+}
+
 double UScalarPropertyValueViewModel::GetDefaultValue() const
 {
 	return DefaultValue;
@@ -12,8 +34,10 @@ void UScalarPropertyValueViewModel::SetDefaultValue(double InValue)
 	const FDoubleRange Range(ValueRange.X, ValueRange.Y);
 	if (Range.Contains(InValue))
 	{
-		UE_MVVM_SET_PROPERTY_VALUE_INLINE(DefaultValue, InValue);
-		SetNormalizedDefaultValue(GetNormalizedDefaultValue());
+		if (UE_MVVM_SET_PROPERTY_VALUE_INLINE(DefaultValue, InValue))
+		{
+			SetNormalizedDefaultValue(GetNormalizedDefaultValue());
+		}
 	}
 }
 
@@ -41,8 +65,11 @@ void UScalarPropertyValueViewModel::SetCurrentValue(double InValue)
 	const FDoubleRange Range(ValueRange.X, ValueRange.Y);
 	if (Range.Contains(InValue))
 	{
-		UE_MVVM_SET_PROPERTY_VALUE_INLINE(CurrentValue, InValue);
-		SetNormalizedCurrentValue(GetNormalizedCurrentValue());
+		if (UE_MVVM_SET_PROPERTY_VALUE_INLINE(CurrentValue, InValue))
+		{
+			MarkAsPropertyDirty();
+			SetNormalizedCurrentValue(GetNormalizedCurrentValue());
+		}
 	}
 }
 
@@ -77,8 +104,10 @@ FVector2D UScalarPropertyValueViewModel::GetValueRange() const
 
 void UScalarPropertyValueViewModel::SetValueRange(FVector2D InValueRange)
 {
-	UE_MVVM_SET_PROPERTY_VALUE_INLINE(ValueRange, InValueRange);
-	SetNormalizedValueRange(GetNormalizedValueRange());
+	if (UE_MVVM_SET_PROPERTY_VALUE_INLINE(ValueRange, InValueRange))
+	{
+		SetNormalizedValueRange(GetNormalizedValueRange());
+	}
 }
 
 FVector2D UScalarPropertyValueViewModel::GetNormalizedValueRange() const
@@ -98,8 +127,10 @@ FVector2D UScalarPropertyValueViewModel::GetValueInteractionRange() const
 
 void UScalarPropertyValueViewModel::SetValueInteractionRange(FVector2D InValueRange)
 {
-	UE_MVVM_SET_PROPERTY_VALUE_INLINE(ValueInteractionRange, InValueRange);
-	SetNormalizedValueRange(GetNormalizedValueInteractionRange());
+	if (UE_MVVM_SET_PROPERTY_VALUE_INLINE(ValueInteractionRange, InValueRange))
+	{
+		SetNormalizedValueRange(GetNormalizedValueInteractionRange());
+	}
 }
 
 FVector2D UScalarPropertyValueViewModel::GetNormalizedValueInteractionRange() const

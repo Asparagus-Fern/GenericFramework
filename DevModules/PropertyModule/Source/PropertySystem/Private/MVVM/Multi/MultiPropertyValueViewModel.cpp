@@ -1,9 +1,44 @@
 ﻿// Copyright ChenTaiye 2025. All Rights Reserved.
 
-
 #include "MVVM/Multi/MultiPropertyValueViewModel.h"
 
 #include "MVVM/Single/SinglePropertyValueViewModel.h"
+
+void UMultiPropertyValueViewModel::Initialize_Implementation()
+{
+	Super::Initialize_Implementation();
+
+	SetDefaultValue(GetPropertyGetter().IsBound() ? GetPropertyGetter().Execute() : 0);
+	SetSelectedValue(GetPropertyGetter().IsBound() ? GetPropertyGetter().Execute() : 0);
+}
+
+void UMultiPropertyValueViewModel::Deinitialize_Implementation()
+{
+	Super::Deinitialize_Implementation();
+}
+
+void UMultiPropertyValueViewModel::Apply_Implementation()
+{
+	Super::Apply_Implementation();
+
+	SetDefaultValue(SelectedValueIndex);
+	GetPropertySetter().ExecuteIfBound(SelectedValueIndex);
+}
+
+void UMultiPropertyValueViewModel::Reverse_Implementation()
+{
+	Super::Reverse_Implementation();
+
+	SetSelectedValue(CacheSelectedValueIndex);
+}
+
+void UMultiPropertyValueViewModel::Reset_Implementation()
+{
+	Super::Reset_Implementation();
+
+	SetSelectedValue(DefaultValueIndex);
+	CacheSelectedValueIndex = SelectedValueIndex;
+}
 
 void UMultiPropertyValueViewModel::AddValue(USinglePropertyValueViewModel* InViewModel, const int32 Index)
 {
@@ -77,6 +112,22 @@ USinglePropertyValueViewModel* UMultiPropertyValueViewModel::GetSelectedValue()
 	return PropertyValues.IsValidIndex(SelectedValueIndex) ? PropertyValues[SelectedValueIndex] : nullptr;
 }
 
+void UMultiPropertyValueViewModel::SetDefaultValue(USinglePropertyValueViewModel* InValue)
+{
+	SetDefaultValue(FindViewModelIndex(InValue));
+}
+
+void UMultiPropertyValueViewModel::SetDefaultValue(FName InValueName)
+{
+	SetDefaultValue(FindViewModelIndex(InValueName));
+}
+
+void UMultiPropertyValueViewModel::SetDefaultValue(int32 InValueIndex)
+{
+	check(InValueIndex != INDEX_NONE && PropertyValues.IsValidIndex(InValueIndex))
+	UE_MVVM_SET_PROPERTY_VALUE_INLINE(DefaultValueIndex, InValueIndex);
+}
+
 void UMultiPropertyValueViewModel::SetSelectedValue(USinglePropertyValueViewModel* InValue)
 {
 	SetSelectedValue(FindViewModelIndex(InValue));
@@ -91,5 +142,8 @@ void UMultiPropertyValueViewModel::SetSelectedValue(int32 InValueIndex)
 {
 	check(InValueIndex != INDEX_NONE && PropertyValues.IsValidIndex(InValueIndex))
 
-	UE_MVVM_SET_PROPERTY_VALUE_INLINE(SelectedValueIndex, InValueIndex);
+	if (UE_MVVM_SET_PROPERTY_VALUE_INLINE(SelectedValueIndex, InValueIndex))
+	{
+		MarkAsPropertyDirty();
+	}
 }

@@ -26,6 +26,7 @@ public class PropertySystem : ModuleRules
 				"UMG",
 				"CommonUI",
 				"ModelViewViewModel",
+				"PropertyPath",
 
 				"WidgetGeneration",
 			}

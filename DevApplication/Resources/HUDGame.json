@@ -1,0 +1,12 @@
+[
+	{
+		"Name": "NewRow",
+		"Tag": "UI.HUD.Game.MenuEsc",
+		"DevComment": ""
+	},
+	{
+		"Name": "NewRow_0",
+		"Tag": "UI.HUD.Game.Settings",
+		"DevComment": ""
+	}
+]

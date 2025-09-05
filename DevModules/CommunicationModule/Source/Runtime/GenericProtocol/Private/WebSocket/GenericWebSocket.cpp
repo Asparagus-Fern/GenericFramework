@@ -5,6 +5,7 @@
 
 #include "GenericJsonObject.h"
 #include "IWebSocket.h"
+#include "ProtocolType.h"
 #include "WebSocketsModule.h"
 #include "WebSocket/BPFunctions_WebSocket.h"
 

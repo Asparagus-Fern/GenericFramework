@@ -90,6 +90,16 @@ void UGenericWidget::NativeConstruct()
 void UGenericWidget::NativeDestruct()
 {
 	Super::NativeDestruct();
+
+	if (WidgetDescriptionViewModel)
+	{
+		WidgetDescriptionViewModel->RemoveAllFieldValueChangedDelegates(this);
+	}
+
+	if (WidgetRenderViewModel)
+	{
+		WidgetRenderViewModel->RemoveAllFieldValueChangedDelegates(this);
+	}
 }
 
 /* ==================== UWidgetDescriptionViewModel ==================== */

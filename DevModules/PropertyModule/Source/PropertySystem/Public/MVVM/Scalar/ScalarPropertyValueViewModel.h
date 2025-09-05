@@ -23,6 +23,11 @@ class PROPERTYSYSTEM_API UScalarPropertyValueViewModel : public USinglePropertyV
 	GENERATED_BODY()
 
 public:
+	virtual void Apply_Implementation() override;
+	virtual void Reverse_Implementation() override;
+	virtual void Reset_Implementation() override;
+
+public:
 	UFUNCTION(FieldNotify, BlueprintPure)
 	double GetDefaultValue() const;
 
@@ -111,4 +116,7 @@ public:
 
 	UPROPERTY(FieldNotify, Getter, Setter, BlueprintGetter="GetNormalizedValueInteractionRange", BlueprintSetter="SetNormalizedValueInteractionRange")
 	FVector2D NormalizedValueInteractionRange = FVector2D::ZeroVector;
+
+private:
+	double CacheCurrentValue = CurrentValue;
 };
