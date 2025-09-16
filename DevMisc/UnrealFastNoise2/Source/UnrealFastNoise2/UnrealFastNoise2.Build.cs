@@ -6,10 +6,11 @@ public class UnrealFastNoise2 : ModuleRules
 {
 	public UnrealFastNoise2(ReadOnlyTargetRules Target) : base(Target)
 	{
-		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
+		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
 		PrivateIncludePaths.AddRange(
-			new string[] {
+			new string[]
+			{
 			}
 		);
 

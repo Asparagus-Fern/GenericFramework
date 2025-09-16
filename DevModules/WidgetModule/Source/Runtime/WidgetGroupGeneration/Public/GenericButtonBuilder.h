@@ -13,7 +13,8 @@ class UGenericButtonContainer;
 class UGenericButtonWidget;
 
 /**
- * 
+ * Used To Generate Button, And Also The Button Data Source.
+ * Inherit This Class To Make Custom Data.
  */
 UCLASS(MinimalAPI, EditInlineNew)
 class UGenericButtonBuilder : public UGenericObject
@@ -27,12 +28,15 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(Categories="UI.Button"))
 	FGameplayTag ButtonTag = FGameplayTag::EmptyTag;
 
+	/* The Button Widget To Generate */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<UGenericButtonWidget> ButtonClass;
 
+	/* The Button Container Widget To Generate */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<UGenericButtonContainer> ButtonContainerClass;
 
+	/* Custom Button Group Class */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<UGenericButtonGroup> ButtonGroupClass;
 

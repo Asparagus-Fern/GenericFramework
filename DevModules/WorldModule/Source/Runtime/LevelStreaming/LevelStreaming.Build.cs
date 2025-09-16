@@ -4,13 +4,13 @@ public class LevelStreaming : ModuleRules
 {
 	public LevelStreaming(ReadOnlyTargetRules Target) : base(Target)
 	{
-		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
+		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
 		PublicDependencyModuleNames.AddRange(
 			new string[]
 			{
 				"Core",
-				"DevCore",
+				"DevCore"
 			}
 		);
 

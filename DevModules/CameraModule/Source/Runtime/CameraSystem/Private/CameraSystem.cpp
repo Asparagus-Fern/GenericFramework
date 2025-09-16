@@ -15,5 +15,3 @@ void FCameraSystemModule::ShutdownModule()
 #undef LOCTEXT_NAMESPACE
 
 IMPLEMENT_MODULE(FCameraSystemModule, CameraSystem)
-
-

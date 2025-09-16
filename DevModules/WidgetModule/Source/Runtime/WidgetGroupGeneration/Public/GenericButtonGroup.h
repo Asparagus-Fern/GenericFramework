@@ -27,7 +27,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnButtonDoubleClicked, UGenericBut
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnButtonSelectionChanged, UGenericButtonGroup*, ButtonGroup, UGenericButtonWidget*, Button, bool, Selection);
 
 /**
- * 
+ * Determines How The Child Buttons Effect Each Other When Accept Input Event
  */
 UCLASS(MinimalAPI)
 class UGenericButtonGroup : public UGenericObject

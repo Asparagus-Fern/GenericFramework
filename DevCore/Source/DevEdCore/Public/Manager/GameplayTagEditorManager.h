@@ -19,9 +19,4 @@ public:
 	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void Deinitialize() override;
-
-private:
-	void OnSettingChanged(UObject* InObject, FPropertyChangedEvent& InPropertyChangedEvent);
-	void AddGameplayTagTables();
-	void RemoveGameplayTagTables();
 };

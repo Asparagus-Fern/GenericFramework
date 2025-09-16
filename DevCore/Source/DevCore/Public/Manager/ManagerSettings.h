@@ -23,7 +23,4 @@ public:
 public:
 	UPROPERTY(Config, EditAnywhere)
 	bool bEnableAllManager = true;
-
-	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly)
-	TArray<TSoftObjectPtr<UDataTable>> GameplayTagTables;
 };

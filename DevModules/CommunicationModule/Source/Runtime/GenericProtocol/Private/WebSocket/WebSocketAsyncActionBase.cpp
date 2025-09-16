@@ -18,7 +18,7 @@ void UWebSocketAsyncActionBase::InitWebSocket(UGenericWebSocket* InWebSocket)
 		GenericLOG(GenericLogWebSocket, Error, TEXT("Invalid WebSocket"));
 		return;
 	}
-	
+
 	WebSocketInternal = InWebSocket;
 	BindWebSocketDelegate();
 }

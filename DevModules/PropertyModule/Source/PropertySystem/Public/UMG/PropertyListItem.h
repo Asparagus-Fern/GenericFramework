@@ -8,9 +8,9 @@
 #include "Generic/GenericObject.h"
 #include "PropertyListItem.generated.h"
 
+class UPropertyViewModel;
 class UTextBlock;
 class UPropertyValueBase;
-class UPropertyValueViewModel;
 class UPropertyValueSpawner;
 
 UCLASS(EditInlineNew, MinimalAPI)
@@ -20,16 +20,10 @@ class UPropertyListItemObject : public UGenericObject
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FName PropertyName = NAME_None;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FText PropertyDisplayName;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<UPropertyValueBase> PropertyValueClass = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Instanced)
-	TObjectPtr<UPropertyValueViewModel> PropertyValueViewModel = nullptr;
+	TObjectPtr<UPropertyViewModel> PropertyViewModel = nullptr;
 };
 
 
@@ -46,6 +40,13 @@ protected:
 	virtual void NativeOnItemSelectionChanged(bool bIsSelected) override;
 	virtual void NativeOnItemExpansionChanged(bool bIsExpanded) override;
 	virtual void NativeOnEntryReleased() override;
+
+protected:
+	UFUNCTION(BlueprintNativeEvent)
+	void OnPropertyDisplayNameChanged(const FText& InDisplayName);
+
+	UPROPERTY(BlueprintReadOnly)
+	TObjectPtr<UPropertyViewModel> PropertyViewModel = nullptr;
 
 private:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidgetOptional, BlueprintProtected = true, AllowPrivateAccess = true))

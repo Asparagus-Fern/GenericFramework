@@ -4,13 +4,13 @@ public class BuildingsInteractionSystem : ModuleRules
 {
 	public BuildingsInteractionSystem(ReadOnlyTargetRules Target) : base(Target)
 	{
-		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
+		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
 		PublicDependencyModuleNames.AddRange(
 			new string[]
 			{
 				"Core",
-				"DevCore",
+				"DevCore"
 			}
 		);
 

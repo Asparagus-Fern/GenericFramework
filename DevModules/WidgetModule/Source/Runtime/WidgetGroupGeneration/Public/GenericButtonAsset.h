@@ -11,7 +11,7 @@ class UGenericButtonBuilderSettingAsset;
 class UGenericButtonBuilder;
 
 /**
- * 
+ * Store Button Builder Data
  */
 UCLASS(MinimalAPI)
 class UGenericButtonAsset : public UDataAsset
@@ -19,6 +19,7 @@ class UGenericButtonAsset : public UDataAsset
 	GENERATED_UCLASS_BODY()
 
 public:
+	/* Builder Settings Determines Which Builder Class To Generate */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TObjectPtr<UGenericButtonBuilderSettingAsset> ButtonBuilderSetting = nullptr;
 
@@ -27,7 +28,7 @@ public:
 
 public:
 	bool IsContainButtonTag(FGameplayTag InButtonTag);
-	
+
 #if WITH_EDITOR
 	UFUNCTION(CallInEditor, DisplayName="Generate Buttons")
 	void GenerateButtons();

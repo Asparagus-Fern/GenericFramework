@@ -4,7 +4,7 @@ public class GenericGameplaySystem : ModuleRules
 {
 	public GenericGameplaySystem(ReadOnlyTargetRules Target) : base(Target)
 	{
-		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
+		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
 		PublicDependencyModuleNames.AddRange(
 			new string[]
@@ -31,7 +31,7 @@ public class GenericGameplaySystem : ModuleRules
 				"PlayerInputUtilities",
 
 				"CameraSystem",
-				"WidgetGeneration"
+				"WidgetGeneration",
 			}
 		);
 	}

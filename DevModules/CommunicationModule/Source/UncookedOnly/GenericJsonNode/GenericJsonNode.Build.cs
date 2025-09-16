@@ -4,7 +4,7 @@ public class GenericJsonNode : ModuleRules
 {
 	public GenericJsonNode(ReadOnlyTargetRules Target) : base(Target)
 	{
-		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
+		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
 		PublicDependencyModuleNames.AddRange(
 			new string[]
@@ -26,7 +26,7 @@ public class GenericJsonNode : ModuleRules
 				"BlueprintGraph",
 				"GraphEditor",
 
-				"GenericJson",
+				"GenericJson"
 			}
 		);
 	}

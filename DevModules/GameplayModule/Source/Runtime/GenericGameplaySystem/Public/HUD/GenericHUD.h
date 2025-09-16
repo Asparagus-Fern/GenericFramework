@@ -15,5 +15,5 @@ class AGenericHUD : public AHUD
 	GENERATED_UCLASS_BODY()
 
 public:
-	GENERICGAMEPLAYSYSTEM_API  virtual void DrawHUD() override;
+	GENERICGAMEPLAYSYSTEM_API virtual void DrawHUD() override;
 };

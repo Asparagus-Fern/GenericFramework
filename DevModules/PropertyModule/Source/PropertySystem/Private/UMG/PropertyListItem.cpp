@@ -3,7 +3,9 @@
 #include "UMG/PropertyListItem.h"
 
 #include "PropertyType.h"
+#include "WidgetType.h"
 #include "Components/TextBlock.h"
+#include "MVVM/PropertyViewModel.h"
 #include "UMG/PropertyValue/PropertyValueBase.h"
 #include "UMG/Spawner/PropertyValueSpawner.h"
 
@@ -13,17 +15,13 @@ void UPropertyListItem::NativeOnListItemObjectSet(UObject* ListItemObject)
 
 	if (UPropertyListItemObject* PropertyListItemObject = GetListItem<UPropertyListItemObject>())
 	{
-		if (Text_PropertyName)
-		{
-			Text_PropertyName->SetText(PropertyListItemObject->PropertyDisplayName);
-		}
+		PropertyViewModel = PropertyListItemObject->PropertyViewModel;
+
+		REGISTER_MVVM_PROPERTY(PropertyViewModel, PropertyDisplayName, OnPropertyDisplayNameChanged, true)
 
 		if (PropertyValueSpawner)
 		{
-			if (PropertyValueSpawner->SpawnPropertyWidget(PropertyListItemObject->PropertyValueClass, PropertyListItemObject->PropertyValueViewModel))
-			{
-				PropertyListItemObject->PropertyValueViewModel->Initialize();
-			}
+			PropertyValueSpawner->SpawnPropertyWidget(PropertyListItemObject->PropertyValueClass, PropertyViewModel);
 		}
 	}
 }
@@ -41,4 +39,17 @@ void UPropertyListItem::NativeOnItemExpansionChanged(bool bIsExpanded)
 void UPropertyListItem::NativeOnEntryReleased()
 {
 	IUserObjectListEntry::NativeOnEntryReleased();
+
+	if (PropertyViewModel)
+	{
+		PropertyViewModel->RemoveAllFieldValueChangedDelegates(this);
+	}
+}
+
+void UPropertyListItem::OnPropertyDisplayNameChanged_Implementation(const FText& InDisplayName)
+{
+	if (Text_PropertyName)
+	{
+		Text_PropertyName->SetText(InDisplayName);
+	}
 }

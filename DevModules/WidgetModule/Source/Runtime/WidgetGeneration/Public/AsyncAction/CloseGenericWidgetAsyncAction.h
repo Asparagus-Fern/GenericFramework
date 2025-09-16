@@ -23,7 +23,7 @@ class WIDGETGENERATION_API UCloseGenericWidgetAsyncAction : public UBlueprintAsy
 
 public:
 	virtual void Activate() override;
-	
+
 public:
 	UFUNCTION(BlueprintCallable, DisplayName="Close Generic Widget", meta = (BlueprintInternalUseOnly = "true", AdvancedDisplay = 1))
 	static UCloseGenericWidgetAsyncAction* AsyncCloseGenericWidget(UGenericWidget* InWidget, bool MarkAsGarbage = true);

@@ -91,7 +91,10 @@ void UGenericButtonCollection::BuildChildButtonGroup(const FGameplayTag InButton
 		return;
 	}
 
+	/* Get This Actived Button Widget */
 	UGenericButtonWidget* ButtonWidget = GenericWidgetManager->GetActiveWidget<UGenericButtonWidget>(InButtonTag);
+
+	/* Button Container Is a Container To Accept Multi Buttons Widget */
 	if (UGenericButtonContainer* GroupWidget = BuildButtonGroupWidget(InButtonTag, ButtonWidget))
 	{
 		/* Generate Button Group And Open The Button Container Widget */
@@ -103,6 +106,7 @@ void UGenericButtonCollection::BuildChildButtonGroup(const FGameplayTag InButton
 		GroupWidget->SetButtonCollection(this);
 		GroupWidget->SetButtonGroup(ButtonGroup);
 
+		/* Try To Open This Container Widget,It Will Added To GameplaySlot Through Widget Slot Tag */
 		if (!GenericWidgetManager->OpenGenericWidget(GroupWidget))
 		{
 			GenericLOG(GenericLogUI, Error, TEXT("Open Button Container Fail"))
@@ -115,9 +119,11 @@ void UGenericButtonCollection::BuildChildButtonGroup(const FGameplayTag InButton
 		FGameplayTagContainer ChildrenTagContainer = GetChildrenButtonTag(InButtonTag);
 		for (int32 It = 0; It < ChildrenTagContainer.Num(); It++)
 		{
+			/* Get The Child Tag And Build Child Button Widget */
 			FGameplayTag ChildTag = ChildrenTagContainer.GetByIndex(It);
 			if (UGenericButtonWidget* ChildButtonWidget = BuildButtonWidget(ChildTag, GroupWidget))
 			{
+				/* Try To Open Child Widget, It Will Added To Container Through a Valid Container Widget, See More In UGenericGameSlotManager::AddSlotWidget */
 				if (!GenericWidgetManager->OpenGenericWidget(ChildButtonWidget))
 				{
 					GenericLOG(GenericLogUI, Error, TEXT("Open Button Widget Fail"))
@@ -200,6 +206,10 @@ UGenericButtonContainer* UGenericButtonCollection::BuildButtonGroupWidget(const 
 	{
 		if (Builder->ButtonContainerClass)
 		{
+			/*
+			 * if The Widget Is Valid, Use As Owner When Create This Button Container.
+			 * Otherwise, Means That This Button Tag May be a Root Tag, Container Owner Will Be PlayerController
+			 */
 			if (IsValid(ButtonWidget))
 			{
 				ButtonContainer = CreateWidget<UGenericButtonContainer>(ButtonWidget, Builder->ButtonContainerClass);

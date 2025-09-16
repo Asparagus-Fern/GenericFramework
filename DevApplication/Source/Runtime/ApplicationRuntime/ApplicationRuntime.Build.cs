@@ -4,13 +4,13 @@ public class ApplicationRuntime : ModuleRules
 {
 	public ApplicationRuntime(ReadOnlyTargetRules Target) : base(Target)
 	{
-		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
+		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
 		PublicDependencyModuleNames.AddRange(
 			new string[]
 			{
 				"Core",
-				"DevCore",
+				"DevCore"
 			}
 		);
 
@@ -58,7 +58,7 @@ public class ApplicationRuntime : ModuleRules
 
 				/* Marketplace */
 				"DBTween",
-				"UltraDynamicSkyUtilities",
+				"UltraDynamicSkyUtilities"
 			}
 		);
 	}

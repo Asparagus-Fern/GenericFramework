@@ -133,7 +133,7 @@ FEditorFileUtils::EPromptReturnCode UBPFunctions_Asset::SaveAssetsAndFixupRefere
 
 void UBPFunctions_Asset::DeleteAsset(UObject* InAsset)
 {
-	DeleteAssets(TArray<UObject*>{ InAsset });
+	DeleteAssets(TArray<UObject*>{InAsset});
 }
 
 void UBPFunctions_Asset::DeleteAssets(TArray<UObject*> InAssets)

@@ -6,6 +6,8 @@
 #include "Base/GenericWidget.h"
 #include "PropertyList.generated.h"
 
+class UPropertyListViewModel;
+class UTextBlock;
 class UPropertyProxy;
 class UGenericListView;
 class UPropertyListItemObject;
@@ -14,28 +16,37 @@ class UPropertyListItemObject;
 /**
  * 
  */
-UCLASS()
-class PROPERTYSYSTEM_API UPropertyList : public UGenericWidget
+UCLASS(Abstract, MinimalAPI)
+class UPropertyList : public UGenericWidget
 {
 	GENERATED_BODY()
 
 public:
-	virtual void NativePreConstruct() override;
-	virtual void NativeConstruct() override;
-	virtual void NativeDestruct() override;
+	PROPERTYSYSTEM_API virtual void NativePreConstruct() override;
+	PROPERTYSYSTEM_API virtual void NativeConstruct() override;
+	PROPERTYSYSTEM_API virtual void NativeDestruct() override;
 
 public:
 	UFUNCTION(BlueprintCallable)
-	void SetPropertyProxyClass(TSubclassOf<UPropertyProxy> InClass);
+	PROPERTYSYSTEM_API void SetPropertyListViewModel(UPropertyListViewModel* InViewModel);
 
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TSubclassOf<UPropertyProxy> PropertyProxyClass = nullptr;
+	UFUNCTION(BlueprintNativeEvent)
+	PROPERTYSYSTEM_API void OnPropertyCategoryChanged(const FText& InCategory);
 
-	UPROPERTY()
+	UFUNCTION(BlueprintNativeEvent)
+	PROPERTYSYSTEM_API void OnPropertyProxyClassChanged(TSubclassOf<UPropertyProxy> InClass);
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced)
+	TObjectPtr<UPropertyListViewModel> PropertyListViewModel = nullptr;
+
+	UPROPERTY(Transient)
 	TObjectPtr<UPropertyProxy> PropertyProxy = nullptr;
 
 private:
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget, BlueprintProtected = true, AllowPrivateAccess = true))
+	TObjectPtr<UTextBlock> Text_PropertyCategory;
+
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget, BlueprintProtected = true, AllowPrivateAccess = true))
 	TObjectPtr<UGenericListView> GenericListView_Property;
 };

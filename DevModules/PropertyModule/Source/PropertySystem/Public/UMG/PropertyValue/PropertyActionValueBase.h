@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "PropertySingleValueBase.h"
+#include "PropertyValueBase.h"
 #include "PropertyActionValueBase.generated.h"
 
 class UActionPropertyValueViewModel;
@@ -12,12 +12,12 @@ class UActionPropertyValueViewModel;
  * 
  */
 UCLASS(Abstract, MinimalAPI)
-class UPropertyActionValueBase : public UPropertySingleValueBase
+class UPropertyActionValueBase : public UPropertyValueBase
 {
 	GENERATED_BODY()
 
 public:
-	PROPERTYSYSTEM_API virtual TSubclassOf<UPropertyValueViewModel> GetSupportPropertyViewModelClass() override;
+	PROPERTYSYSTEM_API virtual TSubclassOf<UPropertyViewModel> GetSupportPropertyViewModelClass() override;
 	PROPERTYSYSTEM_API virtual void PostInitPropertyViewModel() override;
 	PROPERTYSYSTEM_API virtual void NativeOnViewModelInitialized() override;
 	PROPERTYSYSTEM_API virtual void NativeOnViewModelDeinitialized() override;

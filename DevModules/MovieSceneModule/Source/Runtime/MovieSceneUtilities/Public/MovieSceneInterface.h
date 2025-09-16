@@ -39,7 +39,7 @@ public:
 	virtual bool IsLooping() { return false; }
 	virtual bool IsPaused() { return false; }
 	virtual bool IsReversed() { return false; }
-	
+
 	virtual FTimecode GetCurrentTime() { return FTimecode(); }
 	virtual FTimecode GetDuration() { return FTimecode(); }
 

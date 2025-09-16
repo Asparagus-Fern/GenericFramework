@@ -6,7 +6,7 @@ public class NativeAPI : ModuleRules
 {
 	public NativeAPI(ReadOnlyTargetRules Target) : base(Target)
 	{
-		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
+		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
 		PublicIncludePaths.AddRange(
 			new string[]
@@ -50,7 +50,7 @@ public class NativeAPI : ModuleRules
 				"DeveloperSettings",
 				"WebSockets",
 				"HTTPServer",
-				"GenericProtocol",
+				"GenericProtocol"
 			}
 		);
 
@@ -62,9 +62,6 @@ public class NativeAPI : ModuleRules
 			}
 		);
 
-		if (Target.bBuildEditor)
-		{
-			PrivateDependencyModuleNames.Add("UnrealEd");
-		}
+		if (Target.bBuildEditor) PrivateDependencyModuleNames.Add("UnrealEd");
 	}
 }

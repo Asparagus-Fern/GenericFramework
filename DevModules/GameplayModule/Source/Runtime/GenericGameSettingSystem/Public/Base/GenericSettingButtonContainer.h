@@ -6,8 +6,8 @@
 #include "ButtonContainer/ButtonContainer_VerticalBox.h"
 #include "GenericSettingButtonContainer.generated.h"
 
+class UPropertyCollection;
 class UGenericButtonWidget;
-class UPropertyList;
 
 /**
  * 
@@ -27,5 +27,5 @@ protected:
 
 private:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget, BlueprintProtected = true, AllowPrivateAccess = true))
-	TObjectPtr<UPropertyList> PropertyList_Setting;
+	TObjectPtr<UPropertyCollection> PropertyCollection_Setting;
 };

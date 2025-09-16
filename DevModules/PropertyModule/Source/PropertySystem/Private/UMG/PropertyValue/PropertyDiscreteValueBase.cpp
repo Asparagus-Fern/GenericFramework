@@ -3,9 +3,9 @@
 #include "UMG/PropertyValue/PropertyDiscreteValueBase.h"
 
 #include "WidgetType.h"
-#include "MVVM/Multi/MultiPropertyValueViewModel.h"
+#include "MVVM/Data/Multi/MultiPropertyValueViewModel.h"
 
-TSubclassOf<UPropertyValueViewModel> UPropertyDiscreteValueBase::GetSupportPropertyViewModelClass()
+TSubclassOf<UPropertyViewModel> UPropertyDiscreteValueBase::GetSupportPropertyViewModelClass()
 {
 	return UMultiPropertyValueViewModel::StaticClass();
 }
@@ -31,11 +31,11 @@ void UPropertyDiscreteValueBase::NativeOnViewModelInitialized()
 
 		for (auto& Value : MultiPropertyValueViewModel->PropertyValues)
 		{
-			HandleOnPropertyValueAdded(Value);
+			HandleOnPropertyValueAdded(Value.Key, Value.Value);
 		}
 
 		REGISTER_MVVM_PROPERTY(MultiPropertyValueViewModel, bAllowWrap, OnAllowWrapChanged, true)
-		REGISTER_MVVM_PROPERTY(MultiPropertyValueViewModel, SelectedValueIndex, OnSelectedValueIndexChanged, true)
+		REGISTER_MVVM_PROPERTY(MultiPropertyValueViewModel, SelectedValue, OnSelectedValueChanged, true)
 	}
 }
 
@@ -50,28 +50,28 @@ void UPropertyDiscreteValueBase::NativeOnViewModelDeinitialized()
 	}
 }
 
-void UPropertyDiscreteValueBase::HandleOnPropertyValueAdded(USinglePropertyValueViewModel* ViewModel)
+void UPropertyDiscreteValueBase::HandleOnPropertyValueAdded(const FString& InName, UPropertyViewModel* InViewModel)
 {
-	OnPropertyValueAdded(ViewModel);
+	OnPropertyValueAdded(InName, InViewModel);
 }
 
-void UPropertyDiscreteValueBase::HandleOnPropertyValueRemoved(USinglePropertyValueViewModel* ViewModel)
+void UPropertyDiscreteValueBase::HandleOnPropertyValueRemoved(const FString& InName, UPropertyViewModel* InViewModel)
 {
-	OnPropertyValueRemoved(ViewModel);
+	OnPropertyValueRemoved(InName, InViewModel);
 }
 
 void UPropertyDiscreteValueBase::OnAllowWrapChanged_Implementation(bool IsAllowWrap)
 {
 }
 
-void UPropertyDiscreteValueBase::OnPropertyValueAdded_Implementation(USinglePropertyValueViewModel* ViewModel)
+void UPropertyDiscreteValueBase::OnPropertyValueAdded_Implementation(const FString& InName, UPropertyViewModel* InViewModel)
 {
 }
 
-void UPropertyDiscreteValueBase::OnPropertyValueRemoved_Implementation(USinglePropertyValueViewModel* ViewModel)
+void UPropertyDiscreteValueBase::OnPropertyValueRemoved_Implementation(const FString& InName, UPropertyViewModel* InViewModel)
 {
 }
 
-void UPropertyDiscreteValueBase::OnSelectedValueIndexChanged_Implementation(int32 SelectedValueIndex)
+void UPropertyDiscreteValueBase::OnSelectedValueChanged_Implementation(const FString& InSelectedValue)
 {
 }

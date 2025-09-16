@@ -3,9 +3,9 @@
 #include "UMG/PropertyValue/PropertyScalarValueBase.h"
 
 #include "WidgetType.h"
-#include "MVVM/Scalar/ScalarPropertyValueViewModel.h"
+#include "MVVM/Data/Scalar/ScalarPropertyValueViewModel.h"
 
-TSubclassOf<UPropertyValueViewModel> UPropertyScalarValueBase::GetSupportPropertyViewModelClass()
+TSubclassOf<UPropertyViewModel> UPropertyScalarValueBase::GetSupportPropertyViewModelClass()
 {
 	return UScalarPropertyValueViewModel::StaticClass();
 }
@@ -26,8 +26,8 @@ void UPropertyScalarValueBase::NativeOnViewModelInitialized()
 
 	if (ScalarPropertyValueViewModel)
 	{
-		REGISTER_MVVM_PROPERTY(ScalarPropertyValueViewModel, DefaultValue, OnDefaultValueChanged, false)
-		REGISTER_MVVM_PROPERTY(ScalarPropertyValueViewModel, NormalizedDefaultValue, OnNormalizedDefaultValueChanged, false)
+		REGISTER_MVVM_PROPERTY(ScalarPropertyValueViewModel, InitialValue, OnInitialValueChanged, false)
+		REGISTER_MVVM_PROPERTY(ScalarPropertyValueViewModel, NormalizedInitialValue, OnNormalizedInitialValueChanged, false)
 		REGISTER_MVVM_PROPERTY(ScalarPropertyValueViewModel, CurrentValue, OnCurrentValueChanged, false)
 		REGISTER_MVVM_PROPERTY(ScalarPropertyValueViewModel, NormalizedCurrentValue, OnNormalizedCurrentValueChanged, false)
 		REGISTER_MVVM_PROPERTY(ScalarPropertyValueViewModel, ValueStep, OnValueStepChanged, false)
@@ -44,11 +44,11 @@ void UPropertyScalarValueBase::NativeOnViewModelDeinitialized()
 	Super::NativeOnViewModelDeinitialized();
 }
 
-void UPropertyScalarValueBase::OnDefaultValueChanged_Implementation(double DefaultValue)
+void UPropertyScalarValueBase::OnInitialValueChanged_Implementation(double DefaultValue)
 {
 }
 
-void UPropertyScalarValueBase::OnNormalizedDefaultValueChanged_Implementation(double NormalizedDefaultValue)
+void UPropertyScalarValueBase::OnNormalizedInitialValueChanged_Implementation(double NormalizedDefaultValue)
 {
 }
 

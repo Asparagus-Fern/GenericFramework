@@ -18,27 +18,27 @@ class UPropertyDiscreteValueBase : public UPropertyValueBase
 	GENERATED_BODY()
 
 public:
-	PROPERTYSYSTEM_API virtual TSubclassOf<UPropertyValueViewModel> GetSupportPropertyViewModelClass() override;
+	PROPERTYSYSTEM_API virtual TSubclassOf<UPropertyViewModel> GetSupportPropertyViewModelClass() override;
 	PROPERTYSYSTEM_API virtual void PostInitPropertyViewModel() override;
 	PROPERTYSYSTEM_API virtual void NativeOnViewModelInitialized() override;
 	PROPERTYSYSTEM_API virtual void NativeOnViewModelDeinitialized() override;
 
 private:
-	void HandleOnPropertyValueAdded(USinglePropertyValueViewModel* ViewModel);
-	void HandleOnPropertyValueRemoved(USinglePropertyValueViewModel* ViewModel);
+	void HandleOnPropertyValueAdded(const FString& InName, UPropertyViewModel* InViewModel);
+	void HandleOnPropertyValueRemoved(const FString& InName, UPropertyViewModel* InViewModel);
 
 protected:
 	UFUNCTION(BlueprintNativeEvent)
 	PROPERTYSYSTEM_API void OnAllowWrapChanged(bool IsAllowWrap);
 
 	UFUNCTION(BlueprintNativeEvent)
-	PROPERTYSYSTEM_API void OnPropertyValueAdded(USinglePropertyValueViewModel* ViewModel);
+	PROPERTYSYSTEM_API void OnPropertyValueAdded(const FString& InName, UPropertyViewModel* InViewModel);
 
 	UFUNCTION(BlueprintNativeEvent)
-	PROPERTYSYSTEM_API void OnPropertyValueRemoved(USinglePropertyValueViewModel* ViewModel);
+	PROPERTYSYSTEM_API void OnPropertyValueRemoved(const FString& InName, UPropertyViewModel* InViewModel);
 
 	UFUNCTION(BlueprintNativeEvent)
-	PROPERTYSYSTEM_API void OnSelectedValueIndexChanged(int32 SelectedValueIndex);
+	PROPERTYSYSTEM_API void OnSelectedValueChanged(const FString& InSelectedValue);
 
 protected:
 	UPROPERTY(BlueprintReadOnly)

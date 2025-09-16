@@ -15,6 +15,9 @@ class UGenericButtonWidget;
 class UGenericButtonGroup;
 class UGenericButtonBuilder;
 
+/**
+ * Event Name Collection Used For Generate Event In Blueprint
+ */
 class WIDGETGROUPGENERATION_API FButtonCollectionEvent
 {
 public:
@@ -29,6 +32,11 @@ public:
 	static FName GetEventNodeName(FName EventName, FGameplayTag ButtonTag);
 };
 
+/**
+ * Generate Buttons and Button Group Through Button Builder In Runtime.
+ * Generate Button Event And Call In Blueprint.
+ * Binding Custom Widget View Model.
+ */
 UCLASS(Abstract, MinimalAPI, Blueprintable)
 class UGenericButtonCollection : public UGenericObject, public IStateInterface
 {

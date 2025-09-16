@@ -7,7 +7,7 @@
 #include "PropertyValueSpawner.generated.h"
 
 class UPropertyValueWarning;
-class UPropertyValueViewModel;
+class UPropertyViewModel;
 class UPropertyValueBase;
 
 /**
@@ -25,23 +25,23 @@ public:
 
 public:
 	UFUNCTION(BlueprintCallable)
-	PROPERTYSYSTEM_API bool SpawnPropertyWidget(const TSubclassOf<UPropertyValueBase>& InClass, UPropertyValueViewModel* InViewModel);
- 
+	PROPERTYSYSTEM_API bool SpawnPropertyWidget(const TSubclassOf<UPropertyValueBase>& InClass, UPropertyViewModel* InViewModel);
+
 	UFUNCTION(BlueprintPure)
 	PROPERTYSYSTEM_API UPropertyValueBase* GetPropertyWidget();
 
 private:
 	void SpawnPropertyValueWarningWidget(const FText& InWarningText);
- 
+
 protected:
 #if WITH_EDITORONLY_DATA
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TSubclassOf<UPropertyValueBase> PropertyWidgetClass = nullptr;
+	TSubclassOf<UPropertyValueBase> PropertyValueWidgetClass = nullptr;
 #endif
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TSubclassOf<UPropertyValueWarning> PropertyWarningClass = nullptr;
 
 	UPROPERTY(Transient)
-	TObjectPtr<UPropertyValueBase> PropertyWidget = nullptr;
+	TObjectPtr<UPropertyValueBase> PropertyValueWidget = nullptr;
 };

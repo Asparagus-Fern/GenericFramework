@@ -243,7 +243,7 @@ public:
 	static UFastNoise2TerraceGenerator* Terrace(UFastNoise2GeneratorBase* Source = nullptr, float Multiplier = 1.0f, float Smoothness = 0.f);
 
 	UFUNCTION(BlueprintCallable, Category = "Fast Noise 2|Modifiers")
-	static UFastNoise2AddDimensionGenerator* AddDimensionWithPositionValue(UFastNoise2GeneratorBase* Source = nullptr, float DimensionPosition= 0.f);
+	static UFastNoise2AddDimensionGenerator* AddDimensionWithPositionValue(UFastNoise2GeneratorBase* Source = nullptr, float DimensionPosition = 0.f);
 
 	UFUNCTION(BlueprintCallable, Category = "Fast Noise 2|Modifiers")
 	static UFastNoise2AddDimensionGenerator* AddDimensionWithPositionSource(UFastNoise2GeneratorBase* Source = nullptr, UFastNoise2GeneratorBase* DimensionPositionSource = nullptr);

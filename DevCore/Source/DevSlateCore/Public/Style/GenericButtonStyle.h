@@ -49,4 +49,3 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FSlateSound PressedSlateSound;
 };
-

@@ -23,7 +23,7 @@ FReply SEditorWorldWidget::OnMouseButtonDown(const FGeometry& MyGeometry, const 
 	{
 		OnWorldWidgetMiddleClicked.ExecuteIfBound(SharedThis(this));
 	}
-	
+
 	return SCompoundWidget::OnMouseButtonDown(MyGeometry, MouseEvent);
 }
 

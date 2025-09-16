@@ -6,7 +6,7 @@ public class UnrealMisc : ModuleRules
 {
 	public UnrealMisc(ReadOnlyTargetRules Target) : base(Target)
 	{
-		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
+		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
 		PublicIncludePaths.AddRange(
 			new string[]
@@ -27,7 +27,7 @@ public class UnrealMisc : ModuleRules
 		PublicDependencyModuleNames.AddRange(
 			new string[]
 			{
-				"Core",
+				"Core"
 				// ... add other public dependencies that you statically link with here ...
 			}
 		);
@@ -45,7 +45,7 @@ public class UnrealMisc : ModuleRules
 				"AIModule",
 				"Projects",
 				"DesktopPlatform",
-				"GameplayTags",
+				"GameplayTags"
 				// ... add private dependencies that you statically link with here ...	
 			}
 		);
@@ -59,14 +59,12 @@ public class UnrealMisc : ModuleRules
 		);
 
 		if (Target.bBuildEditor)
-		{
 			PrivateDependencyModuleNames.AddRange(
 				new string[]
 				{
 					"UnrealEd"
 				}
 			);
-		}
 
 		if (Target.Platform == UnrealTargetPlatform.Win64)
 		{

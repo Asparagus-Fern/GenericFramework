@@ -3,20 +3,24 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "CommonRotator.h"
+#include "Blueprint/UserWidget.h"
 #include "GenericRotatorBox.generated.h"
 
+class UTextBlock;
 class UGenericButton;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnElementRotated, int32, SelectedIndex, const FText&, SelectedText);
 
 /**
  * 
  */
-UCLASS(Abstract)
-class DEVSLATECORE_API UGenericRotatorBox : public UCommonRotator
+UCLASS()
+class DEVSLATECORE_API UGenericRotatorBox : public UUserWidget
 {
 	GENERATED_BODY()
 
 public:
+	virtual void NativePreConstruct() override;
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
 
@@ -35,24 +39,36 @@ public:
 	void RotateRight();
 
 	UFUNCTION(BlueprintCallable)
-	void SetIsAllowWrap(bool InIsAllowWrap);
+	void AddTextLabel(const FText& InTextLabel);
 
 	UFUNCTION(BlueprintCallable)
-	void AddTextLabel(const FText& InTextLabel, int32 Index = -1);
+	void RemoveTextLabel(const FText& InTextLabel);
 
 	UFUNCTION(BlueprintCallable)
-	void RemoveTextLabel(FText InTextLabel);
+	void SetSelectedIndex(int32 Index);
+
+	UFUNCTION(BlueprintPure)
+	bool GetPreviousValidIndex(int32& OutIndex) const;
+
+	UFUNCTION(BlueprintPure)
+	bool GetNextValidIndex(int32& OutIndex) const;
 
 protected:
-	UFUNCTION(BlueprintImplementableEvent)
-	void OnOptionAdded(const FText& TextLabel);
+	UFUNCTION(BlueprintNativeEvent)
+	void OnSelectedIndexChanged(int32 Index);
 
-	UFUNCTION(BlueprintImplementableEvent)
-	void OnOptionRemoved(const FText& TextLabel);
+public:
+	UPROPERTY(BlueprintAssignable)
+	FOnElementRotated OnElementRotated;
 
-protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bAllowWrap = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 DefaultSelectedIndex = INDEX_NONE;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<FText> TextLabels;
 
 private:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget, BlueprintProtected = true, AllowPrivateAccess = true))
@@ -60,4 +76,9 @@ private:
 
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget, BlueprintProtected = true, AllowPrivateAccess = true))
 	TObjectPtr<UGenericButton> GenericButton_Right;
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget, BlueprintProtected = true, AllowPrivateAccess = true))
+	TObjectPtr<UTextBlock> TextBlock;
+
+	int32 SelectedIndex = INDEX_NONE;
 };

@@ -76,7 +76,6 @@ void UCameraManager::HandleSwitchToCameraFinish(UCameraSwitchMethod* InCameraHan
 	{
 		CurrentCameraMethods.Remove(InCameraHandle);
 	}
-	
 }
 
 bool UCameraManager::CanSwitchToCamera(const FGameplayTag InCameraTag) const

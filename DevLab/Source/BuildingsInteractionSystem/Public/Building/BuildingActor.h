@@ -29,7 +29,7 @@ protected:
 	virtual void HandleOnRefresh_Implementation() override;
 	virtual void HandleOnActived_Implementation() override;
 	virtual void HandleOnInactived_Implementation() override;
-	
+
 	/* ABuildingActor */
 public:
 	UPROPERTY(EditAnywhere)
@@ -78,7 +78,7 @@ public:
 	/* 获取指定楼层ChildActorComponent的FloorActor */
 	UFUNCTION(BlueprintPure)
 	AFloorActor* GetFloorActor(int32 InFloor);
-	
+
 	/* 后去当前选中楼层的ChildActorComponent */
 	UFUNCTION(BlueprintPure)
 	UChildActorComponent* GetSelectedFloorComponent() const;

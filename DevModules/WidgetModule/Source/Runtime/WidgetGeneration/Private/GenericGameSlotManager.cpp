@@ -211,13 +211,16 @@ TArray<UGenericWidget*> UGenericGameSlotManager::GetSlotWidgets() const
 
 bool UGenericGameSlotManager::AddSlotWidget(UGenericWidget* InWidget) const
 {
+	/* Check Is Valid Slot Tag */
 	if (InWidget->SlotTag.IsValid())
 	{
+		/* If Valid, Find The Valid GameplayTagSlot And Add Widget To It */
 		if (UGameplayTagSlot* Slot = GetSlot(InWidget->SlotTag))
 		{
 			Slot->AddChild(InWidget);
 			return true;
 		}
+		/* Otherwise Is Error */
 		else
 		{
 			GenericLOG(GenericLogUI, Warning, TEXT("Slot Is InValid"))
@@ -225,11 +228,13 @@ bool UGenericGameSlotManager::AddSlotWidget(UGenericWidget* InWidget) const
 	}
 	else
 	{
+		/* If Not Valid, Check Is a GameHUD Class, If True, Add Widget To Viewport */
 		if (UGenericGameHUD* GameHUD = Cast<UGenericGameHUD>(InWidget))
 		{
 			InWidget->AddToViewport(GameHUD->ViewportZOrder);
 			return true;
 		}
+		/* if Not Valid SlotTag And Also Not a GameHUD Class, Check The Widget Outer Is Also a Generic Widget, If True, Add Widget To Outer Widget */
 		else if (UWidgetTree* WidgetTree = Cast<UWidgetTree>(InWidget->GetOuter()))
 		{
 			if (UGenericWidget* Widget = Cast<UGenericWidget>(WidgetTree->GetOuter()))

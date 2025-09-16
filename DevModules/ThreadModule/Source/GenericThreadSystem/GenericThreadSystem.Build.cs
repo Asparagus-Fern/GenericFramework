@@ -4,13 +4,13 @@ public class GenericThreadSystem : ModuleRules
 {
 	public GenericThreadSystem(ReadOnlyTargetRules Target) : base(Target)
 	{
-		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
+		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
 		PublicDependencyModuleNames.AddRange(
 			new string[]
 			{
 				"Core",
-				"DevCore",
+				"DevCore"
 			}
 		);
 
@@ -20,13 +20,10 @@ public class GenericThreadSystem : ModuleRules
 				"CoreUObject",
 				"Engine",
 				"Slate",
-				"SlateCore",
+				"SlateCore"
 			}
 		);
 
-		if (Target.bBuildEditor)
-		{
-			PrivateDependencyModuleNames.Add("UnrealEd");
-		}
+		if (Target.bBuildEditor) PrivateDependencyModuleNames.Add("UnrealEd");
 	}
 }

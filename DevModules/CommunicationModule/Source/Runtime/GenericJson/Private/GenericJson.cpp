@@ -4,14 +4,12 @@
 
 void FGenericJsonModule::StartupModule()
 {
-    
 }
 
 void FGenericJsonModule::ShutdownModule()
 {
-    
 }
 
 #undef LOCTEXT_NAMESPACE
-    
+
 IMPLEMENT_MODULE(FGenericJsonModule, GenericJson)

@@ -10,7 +10,7 @@
 class UGenericButtonBuilderSetting;
 
 /**
- * 
+ * Determines Which Builder Class To Generate In Button Asset
  */
 UCLASS(MinimalAPI)
 class UGenericButtonBuilderSettingAsset : public UDataAsset

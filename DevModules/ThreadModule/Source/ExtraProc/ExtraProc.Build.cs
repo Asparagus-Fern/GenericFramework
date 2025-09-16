@@ -4,14 +4,14 @@ public class ExtraProc : ModuleRules
 {
 	public ExtraProc(ReadOnlyTargetRules Target) : base(Target)
 	{
-		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
+		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
 		PublicDependencyModuleNames.AddRange(
 			new string[]
 			{
 				"Core",
 				"UnrealMisc",
-				"DevCore",
+				"DevCore"
 			}
 		);
 
@@ -27,10 +27,7 @@ public class ExtraProc : ModuleRules
 			}
 		);
 
-		if (Target.bBuildEditor)
-		{
-			PrivateDependencyModuleNames.Add("UnrealEd");
-		}
+		if (Target.bBuildEditor) PrivateDependencyModuleNames.Add("UnrealEd");
 
 		RuntimeDependencies.Add("$(ProjectDir)/Extras/...", StagedFileType.NonUFS);
 	}

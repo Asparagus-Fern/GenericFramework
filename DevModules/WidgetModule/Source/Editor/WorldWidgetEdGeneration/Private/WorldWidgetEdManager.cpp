@@ -31,6 +31,7 @@ void UWorldWidgetEdManager::Initialize(FSubsystemCollectionBase& Collection)
 	LevelEditorCreatedHandle = LevelEditorModule.OnLevelEditorCreated().AddUObject(this, &UWorldWidgetEdManager::OnLevelEditorCreated);
 
 	LevelViewportClientListChangedHandle = GEditor->OnLevelViewportClientListChanged().AddUObject(this, &UWorldWidgetEdManager::OnLevelViewportClientListChanged);
+	OnBlueprintCompiledHandle = GEditor->OnBlueprintCompiled().AddUObject(this, &UWorldWidgetEdManager::OnBlueprintCompiled);
 
 	GenerateEditorWorldWidgets();
 	InitializeEditorWorldWidgets();
@@ -45,6 +46,7 @@ void UWorldWidgetEdManager::Deinitialize()
 
 	LevelEditorCreatedHandle.Reset();
 	LevelViewportClientListChangedHandle.Reset();
+	OnBlueprintCompiledHandle.Reset();
 }
 
 bool UWorldWidgetEdManager::DoesSupportWorldType(const EWorldType::Type WorldType) const
@@ -129,6 +131,17 @@ void UWorldWidgetEdManager::OnLevelViewportClientListChanged()
 	}
 
 	GenerateEditorWorldWidgets();
+}
+
+void UWorldWidgetEdManager::OnBlueprintCompiled()
+{
+	for (const auto& WorldWidgetComponent : WorldWidgetComponents)
+	{
+		if (WorldWidgetComponent)
+		{
+			WorldWidgetComponent->ReregisterComponent();
+		}
+	}
 }
 
 void UWorldWidgetEdManager::GenerateEditorWorldWidgets()

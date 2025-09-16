@@ -21,13 +21,13 @@ class UNativeAPIWorldSubsystem final : public UWorldSubsystem, public INativeAPI
 
 public:
 	static UNativeAPIWorldSubsystem* Get(const UWorld* World);
-	
+
 	// Begin USubsystem Interface.
 	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void Deinitialize() override;
 	// End USubsystem Interface.
-	
+
 	// Begin UWorldSubsystem Interface.
 protected:
 	virtual bool DoesSupportWorldType(const EWorldType::Type WorldType) const override;
@@ -36,11 +36,11 @@ protected:
 	// Begin NativeAPI Interface.
 	virtual void ProcessingNativeAPI(const FNativeAPIPayload& Payload) const override;
 	// End NativeAPI Interface.
-	
+
 private:
-	typedef TMap<UClass* , TArray<TObjectPtr<UNativeAPIProxyComponent>>> FNativeAPIProxyCollection;
+	using FNativeAPIProxyCollection = TMap<UClass*, TArray<TObjectPtr<UNativeAPIProxyComponent>>>;
 	FNativeAPIProxyCollection NativeAPIProxyCollection;
-	
+
 	void RegisterNativeAPI(UNativeAPIProxyComponent* InProxy);
 	void UnRegisterNativeAPI(UNativeAPIProxyComponent* InProxy);
 

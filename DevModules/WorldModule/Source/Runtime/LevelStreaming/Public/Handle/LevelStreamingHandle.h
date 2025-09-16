@@ -31,7 +31,7 @@ public:
 
 	UFUNCTION(BlueprintPure)
 	int32 GetIndexByLevel(const TSoftObjectPtr<UWorld>& InLevel);
-	
+
 	UFUNCTION(BlueprintCallable)
 	virtual void RemoveLevel(TSoftObjectPtr<UWorld> InLevel) PURE_VIRTUAL(, ;)
 
@@ -40,7 +40,7 @@ public:
 
 	UFUNCTION()
 	virtual void ExecuteHandle(int32 Index) PURE_VIRTUAL(,)
-	
+
 protected:
 	UFUNCTION()
 	virtual void OnOnceFinish();

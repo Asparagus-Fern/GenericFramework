@@ -4,14 +4,14 @@ public class PlayerInputUtilities : ModuleRules
 {
 	public PlayerInputUtilities(ReadOnlyTargetRules Target) : base(Target)
 	{
-		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
+		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
 		PublicDependencyModuleNames.AddRange(
 			new string[]
 			{
 				"Core",
 
-				"DevCore",
+				"DevCore"
 			}
 		);
 
@@ -22,9 +22,9 @@ public class PlayerInputUtilities : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
-				
+
 				"InputCore",
-				"EnhancedInput",
+				"EnhancedInput"
 			}
 		);
 	}

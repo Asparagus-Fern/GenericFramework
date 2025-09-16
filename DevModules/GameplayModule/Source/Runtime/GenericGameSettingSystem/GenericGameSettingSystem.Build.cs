@@ -10,7 +10,7 @@ public class GenericGameSettingSystem : ModuleRules
 			new string[]
 			{
 				"Core",
-				"DevCore", 
+				"DevCore",
 			}
 		);
 
@@ -27,7 +27,8 @@ public class GenericGameSettingSystem : ModuleRules
 				"WidgetGeneration",
 				"WidgetGroupGeneration",
 				"WidgetApplication",
-				"PropertySystem",
+				"PropertySystem", 
+				"GenericGameplaySystem",
 			}
 		);
 	}

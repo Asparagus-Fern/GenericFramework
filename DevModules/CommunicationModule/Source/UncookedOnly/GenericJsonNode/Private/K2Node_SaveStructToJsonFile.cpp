@@ -21,7 +21,7 @@ void UK2Node_SaveStructToJsonFile::GetMenuActions(FBlueprintActionDatabaseRegist
 			check(Function);
 			Node->SetFromFunction(Function);
 		};
-	
+
 		UBlueprintNodeSpawner* GetDataNodeSpawner = UBlueprintNodeSpawner::Create(GetClass());
 		check(GetDataNodeSpawner != nullptr);
 		GetDataNodeSpawner->CustomizeNodeDelegate = UBlueprintNodeSpawner::FCustomizeNodeDelegate::CreateStatic(CustomizeLambda, GET_FUNCTION_NAME_CHECKED(UBPFunctions_Json, SaveStructToJsonFile));
@@ -32,7 +32,7 @@ void UK2Node_SaveStructToJsonFile::GetMenuActions(FBlueprintActionDatabaseRegist
 bool UK2Node_SaveStructToJsonFile::IsConnectionDisallowed(const UEdGraphPin* MyPin, const UEdGraphPin* OtherPin, FString& OutReason) const
 {
 	const UEdGraphPin* ValuePin = FindPinChecked(FName("Value"));
-	
+
 	if (MyPin == ValuePin && MyPin->PinType.PinCategory == UEdGraphSchema_K2::PC_Wildcard)
 	{
 		if (OtherPin->PinType.PinCategory != UEdGraphSchema_K2::PC_Struct)

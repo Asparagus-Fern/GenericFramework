@@ -23,10 +23,12 @@ class NATIVEAPI_API INativeAPIInterface
 	GENERATED_BODY()
 
 public:
-	typedef UNativeAPIInterface UClassType;
+	using UClassType = UNativeAPIInterface;
 
-	virtual void ProcessingNativeAPI(const FNativeAPIPayload& Payload) const { };
-	
+	virtual void ProcessingNativeAPI(const FNativeAPIPayload& Payload) const
+	{
+	};
+
 	virtual void SendSimulationNativeAPIMessage_Internal(const TSharedPtr<FJsonObject>& InJson) const;
 	void SendSimulationNativeAPIMessage(const FString& JsonStr) const;
 };
@@ -42,10 +44,10 @@ class NATIVEAPI_API INativeAPIEntityInterface : public INativeAPIInterface
 	GENERATED_BODY()
 
 public:
-	typedef UNativeAPIEntityInterface UClassType;
-	
+	using UClassType = UNativeAPIEntityInterface;
+
 	virtual FString GetEntity() const { return TEXT(""); };
-	
+
 	virtual UClass* GetEntityClass() const;
 
 	FString GetEntityPath() const;

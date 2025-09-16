@@ -4,14 +4,14 @@ public class DevSlateCore : ModuleRules
 {
 	public DevSlateCore(ReadOnlyTargetRules Target) : base(Target)
 	{
-		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
+		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 		PrecompileForTargets = PrecompileTargetsType.Any;
 		bUsePrecompiled = false;
 
 		PublicDependencyModuleNames.AddRange(
 			new string[]
 			{
-				"Core", 
+				"Core"
 			}
 		);
 
@@ -25,13 +25,10 @@ public class DevSlateCore : ModuleRules
 				"Projects",
 				"UMG",
 				"CommonUI",
-				"GameplayTags",
+				"GameplayTags"
 			}
 		);
 
-		if (Target.bBuildEditor)
-		{
-			PrivateDependencyModuleNames.Add("UnrealEd");
-		}
+		if (Target.bBuildEditor) PrivateDependencyModuleNames.Add("UnrealEd");
 	}
 }

@@ -61,6 +61,9 @@ protected:
 	FDelegateHandle LevelViewportClientListChangedHandle;
 	void OnLevelViewportClientListChanged();
 
+	FDelegateHandle OnBlueprintCompiledHandle;
+	void OnBlueprintCompiled();
+
 	void GenerateEditorWorldWidgets();
 
 	void InitializeEditorWorldWidgets();

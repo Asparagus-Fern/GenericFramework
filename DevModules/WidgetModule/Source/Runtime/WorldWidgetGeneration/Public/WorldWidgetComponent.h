@@ -99,10 +99,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	EWorldWidgetPaintMethod WorldWidgetPaintMethod = EWorldWidgetPaintMethod::PaintInScreen;
 
-	/* If True, The Widget Will Always In The Front Of Other Actor In World */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(EditConditionHides, EditCondition = "WorldWidgetPaintMethod == EWorldWidgetPaintMethod::PaintInWorld"))
-	bool bAlwaysInFront = true;
-
 	/* Setting Decide How The Widget Look at Player */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(EditConditionHides, EditCondition = "WorldWidgetPaintMethod == EWorldWidgetPaintMethod::PaintInWorld"))
 	FWorldWidgetLookAtSetting WorldWidgetLookAtSetting;
@@ -117,9 +113,6 @@ public:
 public:
 	UFUNCTION(BlueprintCallable)
 	WORLDWIDGETGENERATION_API void SetWorldWidgetPaintMethod(EWorldWidgetPaintMethod InMethod);
-
-	UFUNCTION(BlueprintCallable)
-	WORLDWIDGETGENERATION_API void SetAlwaysInFront(bool AlwaysInFront);
 
 	UFUNCTION(BlueprintCallable)
 	WORLDWIDGETGENERATION_API void SetWorldWidgetLookAtSetting(const FWorldWidgetLookAtSetting& InSetting);

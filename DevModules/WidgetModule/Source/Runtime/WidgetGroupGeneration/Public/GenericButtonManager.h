@@ -11,7 +11,7 @@
 class UGenericButtonCollection;
 
 /**
- * 
+ * Manage Button Collection's Register/UnRegister
  */
 UCLASS(MinimalAPI)
 class UGenericButtonManager : public UWorldSubsystem, public FManagerInterface

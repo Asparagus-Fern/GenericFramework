@@ -3,7 +3,14 @@
 
 #include "UWidget/GenericRotatorBox.h"
 
+#include "Components/TextBlock.h"
 #include "UWidget/GenericButton.h"
+
+void UGenericRotatorBox::NativePreConstruct()
+{
+	Super::NativePreConstruct();
+	SetSelectedIndex(DefaultSelectedIndex);
+}
 
 void UGenericRotatorBox::NativeConstruct()
 {
@@ -33,54 +40,67 @@ void UGenericRotatorBox::OnButtonRightClicked()
 
 void UGenericRotatorBox::RotateLeft()
 {
-	if (!bAllowWrap && (GetSelectedIndex() - 1 < 0))
+	int32 Index;
+	if (GetPreviousValidIndex(Index))
 	{
-		return;
+		SetSelectedIndex(Index);
 	}
-
-	ShiftTextLeft();
 }
 
 void UGenericRotatorBox::RotateRight()
 {
-	if (!bAllowWrap && (GetSelectedIndex() + 1 >= TextLabels.Num()))
+	int32 Index;
+	if (GetNextValidIndex(Index))
 	{
-		return;
+		SetSelectedIndex(Index);
 	}
-
-	ShiftTextRight();
 }
 
-void UGenericRotatorBox::SetIsAllowWrap(bool InIsAllowWrap)
+void UGenericRotatorBox::AddTextLabel(const FText& InTextLabel)
 {
-	bAllowWrap = InIsAllowWrap;
+	TextLabels.Emplace(InTextLabel);
 }
 
-void UGenericRotatorBox::AddTextLabel(const FText& InTextLabel, int32 Index)
+void UGenericRotatorBox::RemoveTextLabel(const FText& InTextLabel)
 {
-	if (Index >= 0)
-	{
-		TextLabels.EmplaceAt(Index, InTextLabel);
-	}
-	else
-	{
-		TextLabels.Emplace(InTextLabel);
-	}
+	int32 PreviousIndex = INDEX_NONE;
+	GetPreviousValidIndex(PreviousIndex);
 
-	OnOptionAdded(InTextLabel);
-
-	SetSelectedItem(GetSelectedIndex());
-}
-
-void UGenericRotatorBox::RemoveTextLabel(FText InTextLabel)
-{
 	TextLabels.RemoveAll([InTextLabel](const FText& TextLabel)
 		{
 			return InTextLabel.EqualTo(TextLabel);
 		}
 	);
 
-	OnOptionRemoved(InTextLabel);
+	if (PreviousIndex != INDEX_NONE)
+	{
+		SetSelectedIndex(PreviousIndex);
+	}
+}
 
-	SetSelectedItem(GetSelectedIndex());
+void UGenericRotatorBox::SetSelectedIndex(int32 Index)
+{
+	if (TextLabels.IsValidIndex(Index))
+	{
+		SelectedIndex = Index;
+		OnSelectedIndexChanged(SelectedIndex);
+		OnElementRotated.Broadcast(Index, TextLabels[Index]);
+	}
+}
+
+bool UGenericRotatorBox::GetPreviousValidIndex(int32& OutIndex) const
+{
+	OutIndex = TextLabels.IsValidIndex(SelectedIndex - 1) ? (SelectedIndex - 1) : (bAllowWrap && !TextLabels.IsEmpty() ? TextLabels.Num() - 1 : INDEX_NONE);
+	return OutIndex != INDEX_NONE;
+}
+
+bool UGenericRotatorBox::GetNextValidIndex(int32& OutIndex) const
+{
+	OutIndex = TextLabels.IsValidIndex(SelectedIndex + 1) ? (SelectedIndex + 1) : (bAllowWrap && !TextLabels.IsEmpty() ? 0 : INDEX_NONE);
+	return OutIndex != INDEX_NONE;
+}
+
+void UGenericRotatorBox::OnSelectedIndexChanged_Implementation(int32 Index)
+{
+	TextBlock->SetText(TextLabels[Index]);
 }

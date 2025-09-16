@@ -3,8 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "PropertySingleValueBase.h"
-#include "MVVM/Scalar/ScalarPropertyValueViewModel.h"
+#include "PropertyValueBase.h"
 #include "PropertyScalarValueBase.generated.h"
 
 class UScalarPropertyValueViewModel;
@@ -13,22 +12,22 @@ class UScalarPropertyValueViewModel;
  * 
  */
 UCLASS(Abstract, MinimalAPI)
-class UPropertyScalarValueBase : public UPropertySingleValueBase
+class UPropertyScalarValueBase : public UPropertyValueBase
 {
 	GENERATED_BODY()
 
 public:
-	PROPERTYSYSTEM_API virtual TSubclassOf<UPropertyValueViewModel> GetSupportPropertyViewModelClass() override;
+	PROPERTYSYSTEM_API virtual TSubclassOf<UPropertyViewModel> GetSupportPropertyViewModelClass() override;
 	PROPERTYSYSTEM_API virtual void PostInitPropertyViewModel() override;
 	PROPERTYSYSTEM_API virtual void NativeOnViewModelInitialized() override;
 	PROPERTYSYSTEM_API virtual void NativeOnViewModelDeinitialized() override;
 
 protected:
 	UFUNCTION(BlueprintNativeEvent)
-	PROPERTYSYSTEM_API void OnDefaultValueChanged(double DefaultValue);
+	PROPERTYSYSTEM_API void OnInitialValueChanged(double DefaultValue);
 
 	UFUNCTION(BlueprintNativeEvent)
-	PROPERTYSYSTEM_API void OnNormalizedDefaultValueChanged(double NormalizedDefaultValue);
+	PROPERTYSYSTEM_API void OnNormalizedInitialValueChanged(double NormalizedDefaultValue);
 
 	UFUNCTION(BlueprintNativeEvent)
 	PROPERTYSYSTEM_API void OnCurrentValueChanged(double CurrentValue);

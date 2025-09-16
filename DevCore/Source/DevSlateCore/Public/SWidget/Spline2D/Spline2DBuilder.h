@@ -34,7 +34,7 @@ struct DEVSLATECORE_API FSpline2DBuilder
 
 private:
 	void AppendPoint(const FVector2D NewPoint, const FColor& InColor);
-	
+
 	/**
 	* Based on comp.graphics.algorithms: Adaptive Subdivision of Bezier Curves.
 	*

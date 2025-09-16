@@ -23,6 +23,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FString DevComment;
 
+	/* Giving a Builder Class To Generate Custom Data */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TSubclassOf<UGenericButtonBuilder> BuilderClass = UGenericButtonBuilder::StaticClass();
 };

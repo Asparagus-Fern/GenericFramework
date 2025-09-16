@@ -37,10 +37,10 @@ void UPropertyValueSpawner::SynchronizeProperties()
 	ClearChildren();
 	if (IsDesignTime())
 	{
-		if (PropertyWidgetClass)
+		if (PropertyValueWidgetClass)
 		{
-			PropertyWidget = CreateWidget<UPropertyValueBase>(this, PropertyWidgetClass);
-			AddChild(PropertyWidget);
+			PropertyValueWidget = CreateWidget<UPropertyValueBase>(this, PropertyValueWidgetClass);
+			AddChild(PropertyValueWidget);
 		}
 		else
 		{
@@ -56,10 +56,10 @@ void UPropertyValueSpawner::SynchronizeProperties()
 void UPropertyValueSpawner::ReleaseSlateResources(bool bReleaseChildren)
 {
 	Super::ReleaseSlateResources(bReleaseChildren);
-	PropertyWidget = nullptr;
+	PropertyValueWidget = nullptr;
 }
 
-bool UPropertyValueSpawner::SpawnPropertyWidget(const TSubclassOf<UPropertyValueBase>& InClass, UPropertyValueViewModel* InViewModel)
+bool UPropertyValueSpawner::SpawnPropertyWidget(const TSubclassOf<UPropertyValueBase>& InClass, UPropertyViewModel* InViewModel)
 {
 	if (!InClass)
 	{
@@ -83,11 +83,11 @@ bool UPropertyValueSpawner::SpawnPropertyWidget(const TSubclassOf<UPropertyValue
 
 	ClearChildren();
 
-	PropertyWidget = CreateWidget<UPropertyValueBase>(this, InClass);
+	PropertyValueWidget = CreateWidget<UPropertyValueBase>(this, InClass);
 
-	if (!PropertyWidget->GetSupportPropertyViewModelClass() || !InViewModel->GetClass()->IsChildOf(PropertyWidget->GetSupportPropertyViewModelClass()))
+	if (!PropertyValueWidget->GetSupportPropertyViewModelClass() || !InViewModel->GetClass()->IsChildOf(PropertyValueWidget->GetSupportPropertyViewModelClass()))
 	{
-		PropertyWidget->MarkAsGarbage();
+		PropertyValueWidget->MarkAsGarbage();
 
 		FFormatNamedArguments Arguments;
 		Arguments.Add(TEXT("PropertyWidgetClass"), FText::FromString(*InClass->GetName()));
@@ -97,15 +97,15 @@ bool UPropertyValueSpawner::SpawnPropertyWidget(const TSubclassOf<UPropertyValue
 		return false;
 	}
 
-	PropertyWidget->SetPropertyViewModel(InViewModel);
-	AddChild(PropertyWidget);
+	PropertyValueWidget->SetPropertyViewModel(InViewModel);
+	AddChild(PropertyValueWidget);
 
 	return true;
 }
 
 UPropertyValueBase* UPropertyValueSpawner::GetPropertyWidget()
 {
-	return PropertyWidget;
+	return PropertyValueWidget;
 }
 
 void UPropertyValueSpawner::SpawnPropertyValueWarningWidget(const FText& InWarningText)

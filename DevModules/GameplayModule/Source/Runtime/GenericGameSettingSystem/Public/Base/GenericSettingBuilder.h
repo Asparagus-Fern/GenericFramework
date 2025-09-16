@@ -6,7 +6,7 @@
 #include "GenericButtonBuilder.h"
 #include "GenericSettingBuilder.generated.h"
 
-class UPropertyProxy;
+class UPropertyCollectionViewModel;
 
 /**
  * 
@@ -17,6 +17,6 @@ class UGenericSettingBuilder : public UGenericButtonBuilder
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TSubclassOf<UPropertyProxy> SettingPropertyProxyClass = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced)
+	TObjectPtr<UPropertyCollectionViewModel> PropertyCollectionViewModel = nullptr;
 };

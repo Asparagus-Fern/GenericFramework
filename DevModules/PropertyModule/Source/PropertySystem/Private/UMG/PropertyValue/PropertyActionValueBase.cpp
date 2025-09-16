@@ -4,7 +4,7 @@
 
 #include "MVVM/Action/ActionPropertyValueViewModel.h"
 
-TSubclassOf<UPropertyValueViewModel> UPropertyActionValueBase::GetSupportPropertyViewModelClass()
+TSubclassOf<UPropertyViewModel> UPropertyActionValueBase::GetSupportPropertyViewModelClass()
 {
 	return UActionPropertyValueViewModel::StaticClass();
 }

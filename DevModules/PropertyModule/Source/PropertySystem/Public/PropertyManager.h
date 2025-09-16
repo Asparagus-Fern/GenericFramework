@@ -25,6 +25,7 @@ public:
 	PROPERTYSYSTEM_API UPropertyProxy* RegisterPropertyProxy(const TSubclassOf<UPropertyProxy>& InPropertyProxyClass);
 	PROPERTYSYSTEM_API void UnRegisterPropertyProxy(UPropertyProxy* InPropertyProxy);
 	PROPERTYSYSTEM_API bool ExistPropertyProxy(const TSubclassOf<UPropertyProxy>& InPropertyProxyClass);
+	PROPERTYSYSTEM_API bool ExistPropertyProxy(const UPropertyProxy* InPropertyProxy);
 	PROPERTYSYSTEM_API UPropertyProxy* GetPropertyProxy(const TSubclassOf<UPropertyProxy>& InPropertyProxyClass);
 
 private:

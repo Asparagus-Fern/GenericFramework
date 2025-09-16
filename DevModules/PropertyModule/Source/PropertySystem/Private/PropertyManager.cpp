@@ -38,6 +38,11 @@ UPropertyProxy* UPropertyManager::RegisterPropertyProxy(const TSubclassOf<UPrope
 
 void UPropertyManager::UnRegisterPropertyProxy(UPropertyProxy* InPropertyProxy)
 {
+	if (ExistPropertyProxy(InPropertyProxy))
+	{
+		return;
+	}
+
 	InPropertyProxy->NativeOnDestroy();
 	PropertyProxies.Remove(InPropertyProxy);
 }
@@ -47,6 +52,23 @@ bool UPropertyManager::ExistPropertyProxy(const TSubclassOf<UPropertyProxy>& InP
 	for (auto& PropertyProxy : PropertyProxies)
 	{
 		if (PropertyProxy->IsA(InPropertyProxyClass))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+bool UPropertyManager::ExistPropertyProxy(const UPropertyProxy* InPropertyProxy)
+{
+	if (!IsValid(InPropertyProxy))
+	{
+		return false;
+	}
+	
+	for (auto& PropertyProxy : PropertyProxies)
+	{
+		if (PropertyProxy->IsA(InPropertyProxy->GetClass()))
 		{
 			return true;
 		}

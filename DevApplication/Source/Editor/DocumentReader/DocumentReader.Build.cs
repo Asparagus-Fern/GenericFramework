@@ -4,7 +4,7 @@ public class DocumentReader : ModuleRules
 {
 	public DocumentReader(ReadOnlyTargetRules Target) : base(Target)
 	{
-		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
+		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
 		PublicDependencyModuleNames.AddRange(
 			new string[]
@@ -12,7 +12,7 @@ public class DocumentReader : ModuleRules
 				"Core",
 
 				"DevSlateCore",
-				"DevEdCore",
+				"DevEdCore"
 			}
 		);
 
@@ -26,7 +26,7 @@ public class DocumentReader : ModuleRules
 
 				"UnrealEd",
 				"EditorSubsystem",
-				"ToolMenus",
+				"ToolMenus"
 			}
 		);
 	}

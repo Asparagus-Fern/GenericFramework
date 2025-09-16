@@ -85,7 +85,7 @@ bool UExternalData::LoadData()
 		return false;
 	}
 
-	return FJsonConvert::JsonFileToStruct(GetJsonFilePath(GetName()),RowStruct.GetScriptStruct(), RowStruct.GetMutableMemory());
+	return FJsonConvert::JsonFileToStruct(GetJsonFilePath(GetName()), RowStruct.GetScriptStruct(), RowStruct.GetMutableMemory());
 }
 
 bool UExternalData::SaveData() const

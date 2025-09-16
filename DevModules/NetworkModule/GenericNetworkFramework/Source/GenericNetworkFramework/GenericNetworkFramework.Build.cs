@@ -6,7 +6,7 @@ public class GenericNetworkFramework : ModuleRules
 {
 	public GenericNetworkFramework(ReadOnlyTargetRules Target) : base(Target)
 	{
-		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
+		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
 		PublicIncludePaths.AddRange(
 			new string[]
@@ -28,7 +28,7 @@ public class GenericNetworkFramework : ModuleRules
 			new string[]
 			{
 				"Core",
-				"DevCore",
+				"DevCore"
 				// ... add other public dependencies that you statically link with here ...
 			}
 		);
@@ -41,7 +41,7 @@ public class GenericNetworkFramework : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
-				"OnlineSubsystem",
+				"OnlineSubsystem"
 				// ... add private dependencies that you statically link with here ...	
 			}
 		);

@@ -2,24 +2,48 @@
 
 #include "PropertyProxy.h"
 
-#include "PropertyListItemAsset.h"
-#include "MVVM/PropertyValueViewModel.h"
+#include "PropertyVisualData.h"
+#include "MVVM/PropertyViewModel.h"
 #include "UMG/PropertyListItem.h"
+#include "UMG/PropertyValue/PropertyValueBase.h"
+
+UPropertyProxy::UPropertyProxy(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
+{
+	UPropertyVisualData* DefaultVisualData = LoadObject<UPropertyVisualData>(nullptr, TEXT("/PropertyModule/DataAsset/DA_PropertyVisualData.DA_PropertyVisualData"));
+	if (IsValid(DefaultVisualData))
+	{
+		PropertyVisualData = DefaultVisualData;
+	}
+}
 
 void UPropertyProxy::NativeOnCreate()
 {
 	IStateInterface::NativeOnCreate();
 
-	/* todo:刪除PropertyListItemAsset，运行时初始化PropertyListItemObjects, 添加一个Asset用来Mapping所需生成的 PropertyValueClass */
-
-	if (PropertyListItemAsset)
+	if (!PropertyVisualData)
 	{
-		for (auto& ItemObject : PropertyListItemAsset->PropertyListItemObjects)
+		GenericLOG(GenericLogProperty, Error, TEXT("Missing Property Visual Data"))
+		return;
+	}
+
+	TArray<UPropertyViewModel*> PropertyViewModels;
+	GeneratePropertyListItemObjects(PropertyViewModels);
+
+	/* Initialize Property And Make List Item Object */
+	for (auto& PropertyViewModel : PropertyViewModels)
+	{
+		if (PropertyViewModel->Initialize(this))
 		{
-			if (ItemObject->PropertyValueViewModel)
-			{
-				ItemObject->PropertyValueViewModel->Initialize();
-			}
+			PropertyViewModel->GetOnPropertyApplyEvent().AddUFunction(this,GET_FUNCTION_NAME_CHECKED(ThisClass, OnPropertyApplied));
+			PropertyViewModel->GetOnPropertyReverseEvent().AddUFunction(this,GET_FUNCTION_NAME_CHECKED(ThisClass, OnPropertyReversed));
+			PropertyViewModel->GetOnPropertyResetEvent().AddUFunction(this,GET_FUNCTION_NAME_CHECKED(ThisClass, OnPropertyReset));
+			PropertyViewModel->GetOnPropertyChangedEvent().AddUFunction(this,GET_FUNCTION_NAME_CHECKED(ThisClass, OnPropertyChanged));
+
+			UPropertyListItemObject* NewItemObject = NewObject<UPropertyListItemObject>(this);
+			NewItemObject->PropertyValueClass = PropertyVisualData->GatherListItemForProperty(PropertyViewModel);
+			NewItemObject->PropertyViewModel = PropertyViewModel;
+			PropertyListItemObjects.Add(NewItemObject);
 		}
 	}
 }
@@ -28,91 +52,85 @@ void UPropertyProxy::NativeOnDestroy()
 {
 	IStateInterface::NativeOnDestroy();
 
-	if (PropertyListItemAsset)
+	for (auto& ItemObject : PropertyListItemObjects)
 	{
-		for (auto& ItemObject : PropertyListItemAsset->PropertyListItemObjects)
+		if (ItemObject->PropertyViewModel)
 		{
-			if (ItemObject->PropertyValueViewModel)
-			{
-				ItemObject->PropertyValueViewModel->Deinitialize();
-			}
+			ItemObject->PropertyViewModel->Deinitialize();
+
+			ItemObject->PropertyViewModel->GetOnPropertyApplyEvent().RemoveAll(this);
+			ItemObject->PropertyViewModel->GetOnPropertyReverseEvent().RemoveAll(this);
+			ItemObject->PropertyViewModel->GetOnPropertyResetEvent().RemoveAll(this);
+			ItemObject->PropertyViewModel->GetOnPropertyChangedEvent().RemoveAll(this);
 		}
 	}
 }
 
 TArray<UPropertyListItemObject*> UPropertyProxy::GetPropertyListItemObjects() const
 {
-	return IsValid(PropertyListItemAsset) ? PropertyListItemAsset->PropertyListItemObjects : TArray<UPropertyListItemObject*>();
+	return PropertyListItemObjects;
 }
 
-bool UPropertyProxy::ExistPropertyListItemObject(const FName PropertyName) const
+void UPropertyProxy::ApplyProperty()
 {
-	if (IsValid(PropertyListItemAsset))
+	for (auto& ItemObject : PropertyListItemObjects)
 	{
-		for (auto& ItemObject : PropertyListItemAsset->PropertyListItemObjects)
+		if (IsValid(ItemObject->PropertyViewModel))
 		{
-			if (ItemObject->PropertyName == PropertyName)
+			ItemObject->PropertyViewModel->Apply();
+		}
+	}
+}
+
+void UPropertyProxy::ReverseProperty()
+{
+	for (auto& ItemObject : PropertyListItemObjects)
+	{
+		if (IsValid(ItemObject->PropertyViewModel))
+		{
+			ItemObject->PropertyViewModel->Reverse();
+		}
+	}
+}
+
+void UPropertyProxy::ResetProperty()
+{
+	for (auto& ItemObject : PropertyListItemObjects)
+	{
+		if (IsValid(ItemObject->PropertyViewModel))
+		{
+			ItemObject->PropertyViewModel->Reset();
+		}
+	}
+}
+
+void UPropertyProxy::GeneratePropertyListItemObjects_Implementation(TArray<UPropertyViewModel*>& Result)
+{
+}
+
+void UPropertyProxy::OnPropertyApplied_Implementation(UPropertyViewModel* InPropertyViewModel)
+{
+}
+
+void UPropertyProxy::OnPropertyReversed_Implementation(UPropertyViewModel* InPropertyViewModel)
+{
+}
+
+void UPropertyProxy::OnPropertyReset_Implementation(UPropertyViewModel* InPropertyViewModel)
+{
+}
+
+void UPropertyProxy::OnPropertyChanged_Implementation(UPropertyViewModel* InPropertyViewModel, EPropertyChangedReason ChangedReason)
+{
+	/* When a Property Changed, If bIsDirtyProxy Is true, Update All Property In This Proxy except The Already Changed One */
+	if (InPropertyViewModel->GetIsDirtyProxy())
+	{
+		for (auto& ItemObject : PropertyListItemObjects)
+		{
+			if (ItemObject->PropertyViewModel != InPropertyViewModel)
 			{
-				return true;
+				ItemObject->PropertyViewModel->NotifyPropertyChanged(EPropertyChangedReason::Changed);
 			}
 		}
 	}
-
-	return false;
-}
-
-UPropertyListItemObject* UPropertyProxy::GetPropertyListItemObject(const FName PropertyName) const
-{
-	if (IsValid(PropertyListItemAsset))
-	{
-		for (auto& ItemObject : PropertyListItemAsset->PropertyListItemObjects)
-		{
-			if (ItemObject->PropertyName == PropertyName)
-			{
-				return ItemObject;
-			}
-		}
-	}
-
-	return nullptr;
-}
-
-void UPropertyProxy::ApplyPropertyChanged()
-{
-	if (PropertyListItemAsset)
-	{
-		for (auto& ItemObject : PropertyListItemAsset->PropertyListItemObjects)
-		{
-			if (IsValid(ItemObject->PropertyValueViewModel) && ItemObject->PropertyValueViewModel->GetIsPropertyDirty())
-			{
-				ItemObject->PropertyValueViewModel->Apply();
-			}
-		}
-
-		OnPropertyApplied();
-	}
-}
-
-void UPropertyProxy::ReversePropertyChanged()
-{
-	if (PropertyListItemAsset)
-	{
-		for (auto& ItemObject : PropertyListItemAsset->PropertyListItemObjects)
-		{
-			if (IsValid(ItemObject->PropertyValueViewModel) && ItemObject->PropertyValueViewModel->GetIsPropertyDirty())
-			{
-				ItemObject->PropertyValueViewModel->Reverse();
-			}
-		}
-
-		OnPropertyReversed();
-	}
-}
-
-void UPropertyProxy::OnPropertyApplied_Implementation()
-{
-}
-
-void UPropertyProxy::OnPropertyReversed_Implementation()
-{
 }

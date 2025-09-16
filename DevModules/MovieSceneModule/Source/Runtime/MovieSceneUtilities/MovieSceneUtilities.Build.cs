@@ -4,13 +4,13 @@ public class MovieSceneUtilities : ModuleRules
 {
 	public MovieSceneUtilities(ReadOnlyTargetRules Target) : base(Target)
 	{
-		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
+		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
 		PublicDependencyModuleNames.AddRange(
 			new string[]
 			{
 				"Core",
-				"DevCore",
+				"DevCore"
 			}
 		);
 
@@ -28,7 +28,7 @@ public class MovieSceneUtilities : ModuleRules
 				"LevelSequence",
 
 				"EventUtilities",
-				"WidgetGeneration",
+				"WidgetGeneration"
 			}
 		);
 	}

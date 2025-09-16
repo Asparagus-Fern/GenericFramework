@@ -4,14 +4,14 @@ public class WidgetGroupGeneration : ModuleRules
 {
 	public WidgetGroupGeneration(ReadOnlyTargetRules Target) : base(Target)
 	{
-		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
+		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
 		PublicDependencyModuleNames.AddRange(
 			new string[]
 			{
 				"Core",
 				"DevCore",
-				"DevSlateCore",
+				"DevSlateCore"
 			}
 		);
 
@@ -32,13 +32,10 @@ public class WidgetGroupGeneration : ModuleRules
 				"ModelViewViewModel",
 
 				"UnrealMisc",
-				"WidgetGeneration",
+				"WidgetGeneration"
 			}
 		);
 
-		if (Target.bBuildEditor)
-		{
-			PrivateDependencyModuleNames.Add("UnrealEd");
-		}
+		if (Target.bBuildEditor) PrivateDependencyModuleNames.Add("UnrealEd");
 	}
 }

@@ -94,17 +94,12 @@ void UWorldWidgetComponent::SetWorldWidgetPaintMethod(EWorldWidgetPaintMethod In
 	UpdateWorldWidget();
 }
 
-void UWorldWidgetComponent::SetAlwaysInFront(const bool AlwaysInFront)
-{
-	bAlwaysInFront = AlwaysInFront;
-}
-
 void UWorldWidgetComponent::SetWorldWidgetLookAtSetting(const FWorldWidgetLookAtSetting& InSetting)
 {
 	WorldWidgetLookAtSetting = InSetting;
 }
 
-auto UWorldWidgetComponent::SetWorldWidgetByClass(TSubclassOf<UGenericWidget> InWorldWidgetClass) -> void
+void UWorldWidgetComponent::SetWorldWidgetByClass(TSubclassOf<UGenericWidget> InWorldWidgetClass)
 {
 	if (!InWorldWidgetClass)
 	{

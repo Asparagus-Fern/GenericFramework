@@ -57,7 +57,7 @@ public:
 
 	UFUNCTION(BlueprintPure, Category="Directory")
 	static bool GetPluginExtraDir(const FString& InPluginName, FString& Directory);
-	
+
 	/* File */
 public:
 	UFUNCTION(BlueprintPure, Category="File")

@@ -4,7 +4,7 @@ public class WidgetGeneration : ModuleRules
 {
 	public WidgetGeneration(ReadOnlyTargetRules Target) : base(Target)
 	{
-		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
+		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
 		PublicDependencyModuleNames.AddRange(
 			new string[]
@@ -12,12 +12,12 @@ public class WidgetGeneration : ModuleRules
 				"Core",
 				"DevCore",
 				"DevSlateCore",
-				
+
 				"UMG",
 				"GameplayTags",
 				"CommonUI",
 				"CommonInput",
-				"InputCore",
+				"InputCore"
 			}
 		);
 

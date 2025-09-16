@@ -15,11 +15,11 @@ UCLASS()
 class UK2Node_ExternalData : public UK2Node_CallFunction
 {
 	GENERATED_BODY()
-	
+
 	//~ Begin UEdGraphNode Interface
-    virtual void GetMenuActions(FBlueprintActionDatabaseRegistrar& ActionRegistrar) const override;
-    //~ End UEdGraphNode Interface
-	
+	virtual void GetMenuActions(FBlueprintActionDatabaseRegistrar& ActionRegistrar) const override;
+	//~ End UEdGraphNode Interface
+
 	//~ Begin K2Node Interface
 	virtual bool IsConnectionDisallowed(const UEdGraphPin* MyPin, const UEdGraphPin* OtherPin, FString& OutReason) const override;
 	//~ End K2Node Interface

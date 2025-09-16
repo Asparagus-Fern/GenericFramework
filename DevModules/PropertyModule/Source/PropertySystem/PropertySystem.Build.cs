@@ -12,6 +12,7 @@ public class PropertySystem : ModuleRules
 				"Core",
 				"DevCore",
 				"DevSlateCore",
+				"UnrealMisc"
 			}
 		);
 
@@ -27,6 +28,7 @@ public class PropertySystem : ModuleRules
 				"CommonUI",
 				"ModelViewViewModel",
 				"PropertyPath",
+				"GameplayTags",
 
 				"WidgetGeneration",
 			}

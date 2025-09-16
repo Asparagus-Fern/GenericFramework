@@ -6,3 +6,14 @@
 // #include "PropertyType.generated.h"
 
 PROPERTYSYSTEM_API DECLARE_LOG_CATEGORY_EXTERN(GenericLogProperty, Log, All);
+
+UENUM(BlueprintType)
+enum class EPropertyChangedReason : uint8
+{
+	Initialized,
+	Changed,
+	UserInput,
+	DependencyChanged,
+	OnApply,
+	OnReset
+};

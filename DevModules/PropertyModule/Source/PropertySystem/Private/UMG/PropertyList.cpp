@@ -4,26 +4,35 @@
 
 #include "PropertyManager.h"
 #include "PropertyProxy.h"
+#include "WidgetType.h"
+#include "Components/TextBlock.h"
 #include "Manager/ManagerStatics.h"
+#include "MVVM/PropertyListViewModel.h"
 #include "UMG/PropertyListItem.h"
 #include "UWidget/GenericListView.h"
 
 void UPropertyList::NativePreConstruct()
 {
 	Super::NativePreConstruct();
-	SetPropertyProxyClass(PropertyProxyClass);
+
+	if (IsDesignTime())
+	{
+		OnPropertyCategoryChanged(IsValid(PropertyListViewModel) ? PropertyListViewModel->PropertyCategory : FText::FromString(TEXT("Property Category")));
+		OnPropertyProxyClassChanged(IsValid(PropertyListViewModel) ? PropertyListViewModel->PropertyProxyClass : nullptr);
+	}
 }
 
 void UPropertyList::NativeConstruct()
 {
 	Super::NativeConstruct();
+	SetPropertyListViewModel(PropertyListViewModel);
 }
 
 void UPropertyList::NativeDestruct()
 {
 	Super::NativeDestruct();
 
-	if (!IsDesignTime())
+	if (!IsDesignTime() && IsValid(PropertyProxy))
 	{
 		if (UPropertyManager* PropertyManager = GetManagerOwner<UPropertyManager>())
 		{
@@ -32,27 +41,65 @@ void UPropertyList::NativeDestruct()
 	}
 }
 
-void UPropertyList::SetPropertyProxyClass(TSubclassOf<UPropertyProxy> InClass)
+void UPropertyList::SetPropertyListViewModel(UPropertyListViewModel* InViewModel)
 {
-	GenericListView_Property->ClearListItems();
-	PropertyProxyClass = InClass;
-	PropertyProxy = nullptr;
-
-	if (PropertyProxyClass)
+	if (PropertyListViewModel)
 	{
-		if (IsDesignTime())
-		{
-			UPropertyProxy* NewPropertyProxy = NewObject<UPropertyProxy>();
-		}
-		else
+		PropertyListViewModel->RemoveAllFieldValueChangedDelegates(this);
+	}
+
+	PropertyListViewModel = InViewModel;
+
+	if (PropertyListViewModel)
+	{
+		REGISTER_MVVM_PROPERTY(PropertyListViewModel, PropertyCategory, OnPropertyCategoryChanged, true)
+		REGISTER_MVVM_PROPERTY(PropertyListViewModel, PropertyProxyClass, OnPropertyProxyClassChanged, true)
+	}
+	else
+	{
+		if (PropertyProxy)
 		{
 			if (UPropertyManager* PropertyManager = GetManagerOwner<UPropertyManager>())
 			{
-				PropertyProxy = PropertyManager->RegisterPropertyProxy(PropertyProxyClass);
+				PropertyManager->UnRegisterPropertyProxy(PropertyProxy);
+			}
+		}
+	}
+}
+
+void UPropertyList::OnPropertyCategoryChanged_Implementation(const FText& InCategory)
+{
+	if (Text_PropertyCategory)
+	{
+		Text_PropertyCategory->SetText(InCategory);
+	}
+}
+
+void UPropertyList::OnPropertyProxyClassChanged_Implementation(TSubclassOf<UPropertyProxy> InClass)
+{
+	PropertyProxy = nullptr;
+
+	if (GenericListView_Property)
+	{
+		GenericListView_Property->ClearListItems();
+
+		if (InClass)
+		{
+			if (IsDesignTime())
+			{
+				PropertyProxy = NewObject<UPropertyProxy>(this, InClass);
+				PropertyProxy->NativeOnCreate();
+			}
+			else
+			{
+				if (UPropertyManager* PropertyManager = GetManagerOwner<UPropertyManager>())
+				{
+					PropertyProxy = PropertyManager->RegisterPropertyProxy(InClass);
+				}
 			}
 		}
 
-		if (IsValid(PropertyProxy))
+		if (PropertyProxy)
 		{
 			TArray<UPropertyListItemObject*> PropertyListItemObjects;
 			for (auto& Object : PropertyProxy->GetPropertyListItemObjects())

@@ -711,7 +711,6 @@ void UFastNoise2OperatorSourceLHSGeneratorBase::InitOperatorSourceLHSGenerator(F
 {
 	OperatorSourceLHSGeneratorInst = InOperatorSourceLHSGeneratorInst;
 	SetRHSValue(RHSValue);
-
 }
 
 //////////////////////////////////////////////////////////////////////////

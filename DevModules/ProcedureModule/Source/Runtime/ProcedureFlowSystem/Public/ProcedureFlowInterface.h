@@ -35,7 +35,7 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, Category="Procedure Flow Interface")
 	void ReInitProcedureFlow();
-	
+
 	UFUNCTION(BlueprintNativeEvent, Category="Procedure Flow Interface")
 	void OnProcedureFlowExit();
 

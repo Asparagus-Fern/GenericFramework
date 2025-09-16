@@ -25,7 +25,8 @@ class EXTERNALDATA_API UBPFunctions_ExternalData : public UBlueprintFunctionLibr
 
 public:
 	UFUNCTION(BlueprintCallable, CustomThunk, Category = "Json Data", meta = (CustomStructureParam = "Value", ExpandEnumAsExecs = "ExecResult", BlueprintInternalUseOnly = "true"))
-	static void GetData(EExternalDataResult& ExecResult, UPARAM(ref) const UExternalData* Data, int32& Value);
+	static void GetData(EExternalDataResult& ExecResult, UPARAM(ref)
+	                    const UExternalData* Data, int32& Value);
 
 private:
 	DECLARE_FUNCTION(execGetData);

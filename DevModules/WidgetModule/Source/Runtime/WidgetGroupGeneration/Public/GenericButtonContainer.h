@@ -10,7 +10,7 @@ class UGenericButtonGroup;
 class UGenericButtonCollection;
 
 /**
- * 
+ * Determines How To Arrange Child Buttons
  */
 UCLASS(Abstract, MinimalAPI)
 class UGenericButtonContainer : public UGenericWidget
