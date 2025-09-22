@@ -302,7 +302,7 @@ void UGenericWidget::AddChild(UGenericWidget* InWidget)
 	if (IsValid(InWidget) && !Children.Contains(InWidget))
 	{
 		Children.Add(InWidget);
-		OnChildAdded(InWidget, Children.Num());
+		OnChildAdded(InWidget, Children.Find(InWidget));
 	}
 }
 
@@ -328,11 +328,11 @@ void UGenericWidget::ClearChildren()
 	Children.Reset();
 }
 
-void UGenericWidget::OnChildAdded_Implementation(UGenericWidget* InWidget, int32 NewChildrenCount)
+void UGenericWidget::OnChildAdded_Implementation(UGenericWidget* InWidget, int32 InIndex)
 {
 }
 
-void UGenericWidget::OnChildRemoved_Implementation(UGenericWidget* InWidget, int32 NewChildrenCount)
+void UGenericWidget::OnChildRemoved_Implementation(UGenericWidget* InWidget, int32 InIndex)
 {
 }
 

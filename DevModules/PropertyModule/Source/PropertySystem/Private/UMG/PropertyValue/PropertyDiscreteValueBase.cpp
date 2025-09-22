@@ -26,13 +26,13 @@ void UPropertyDiscreteValueBase::NativeOnViewModelInitialized()
 
 	if (MultiPropertyValueViewModel)
 	{
-		MultiPropertyValueViewModel->OnPropertyValueAddedEvent.AddUObject(this, &UPropertyDiscreteValueBase::HandleOnPropertyValueAdded);
-		MultiPropertyValueViewModel->OnPropertyValueRemovedEvent.AddUObject(this, &UPropertyDiscreteValueBase::HandleOnPropertyValueRemoved);
-
 		for (auto& Value : MultiPropertyValueViewModel->PropertyValues)
 		{
 			HandleOnPropertyValueAdded(Value.Key, Value.Value);
 		}
+
+		MultiPropertyValueViewModel->OnPropertyValueAddedEvent.AddUObject(this, &UPropertyDiscreteValueBase::HandleOnPropertyValueAdded);
+		MultiPropertyValueViewModel->OnPropertyValueRemovedEvent.AddUObject(this, &UPropertyDiscreteValueBase::HandleOnPropertyValueRemoved);
 
 		REGISTER_MVVM_PROPERTY(MultiPropertyValueViewModel, bAllowWrap, OnAllowWrapChanged, true)
 		REGISTER_MVVM_PROPERTY(MultiPropertyValueViewModel, SelectedValue, OnSelectedValueChanged, true)

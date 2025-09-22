@@ -19,7 +19,9 @@ class UMultiPropertyValueViewModel : public UDataPropertyViewModel
 	GENERATED_BODY()
 
 public:
-	PROPERTYSYSTEM_API virtual bool OnPropertyInitialized() override;
+	PROPERTYSYSTEM_API virtual bool Initialize(UPropertyProxy* InOwnerProxy) override;
+	PROPERTYSYSTEM_API virtual void Deinitialize() override;
+
 	PROPERTYSYSTEM_API virtual FString GetInitialValueAsString() override;
 	PROPERTYSYSTEM_API virtual void SetInitialValueFromString(const FString& InValue) override;
 	PROPERTYSYSTEM_API virtual FString GetCurrentValueAsString() override;

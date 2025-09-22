@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "Base/GenericWidget.h"
 #include "Type/DateTimeType.h"
-#include "DateTimeWidget.generated.h"
+#include "GenericDateTime.generated.h"
 
 class UTextBlock;
 
@@ -13,7 +13,7 @@ class UTextBlock;
  * 
  */
 UCLASS(MinimalAPI)
-class UDateTimeWidget : public UGenericWidget
+class UGenericDateTime : public UGenericWidget
 {
 	GENERATED_BODY()
 

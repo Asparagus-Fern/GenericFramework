@@ -1,11 +1,9 @@
 ﻿// Copyright ChenTaiye 2025. All Rights Reserved.
 
-
-#include "Loading/LoadingProgressBar.h"
+#include "UMG/Loading/LoadingProgressBar.h"
 
 #include "Blueprint/WidgetTree.h"
 #include "Components/Image.h"
-#include "Components/SizeBox.h"
 #include "Components/SpinBox.h"
 #include "Components/TextBlock.h"
 

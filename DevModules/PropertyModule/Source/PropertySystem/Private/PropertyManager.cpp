@@ -38,7 +38,7 @@ UPropertyProxy* UPropertyManager::RegisterPropertyProxy(const TSubclassOf<UPrope
 
 void UPropertyManager::UnRegisterPropertyProxy(UPropertyProxy* InPropertyProxy)
 {
-	if (ExistPropertyProxy(InPropertyProxy))
+	if (!ExistPropertyProxy(InPropertyProxy))
 	{
 		return;
 	}

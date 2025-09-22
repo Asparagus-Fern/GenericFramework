@@ -12,7 +12,7 @@ class UPropertyListViewModel;
 class UPropertyCollectionViewModel;
 
 /**
- * 
+ * Property Collection is a Container Has Multi Property List
  */
 UCLASS(Abstract, MinimalAPI)
 class UPropertyCollection : public UGenericWidget

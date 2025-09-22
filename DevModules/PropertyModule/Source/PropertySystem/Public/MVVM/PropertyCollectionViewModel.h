@@ -11,8 +11,8 @@ class UPropertyListViewModel;
 /**
  * 
  */
-UCLASS(EditInlineNew)
-class PROPERTYSYSTEM_API UPropertyCollectionViewModel : public UMVVMViewModelBase
+UCLASS(EditInlineNew, MinimalAPI)
+class UPropertyCollectionViewModel : public UMVVMViewModelBase
 {
 	GENERATED_BODY()
 

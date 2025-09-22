@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "MVVMViewModelBase.h"
 #include "PropertyType.h"
-#include "DataSource/PropertyDataSource.h"
 #include "PropertyViewModel.generated.h"
 
 class UPropertyProxy;
@@ -23,28 +22,38 @@ public:
 
 	DECLARE_EVENT_TwoParams(UPropertyViewModel, FOnPropertyChanged, UPropertyViewModel*, EPropertyChangedReason)
 
-	DECLARE_EVENT_OneParam(UPropertyViewModel, FOnPropertyDependencyChanged, UPropertyViewModel*)
+	DECLARE_EVENT_TwoParams(UPropertyViewModel, FOnPropertyTagChanged, UPropertyViewModel*, FGameplayTag)
 
-	PROPERTYSYSTEM_API bool Initialize(UPropertyProxy* InOwnerProxy);
-	PROPERTYSYSTEM_API void Deinitialize();
+	PROPERTYSYSTEM_API virtual bool Initialize(UPropertyProxy* InOwnerProxy);
+	PROPERTYSYSTEM_API virtual void Deinitialize();
 
 private:
 	void HandleOnPropertyDependencyValueChanged(UPropertyViewModel* InPropertyViewModel, EPropertyChangedReason ChangedReason);
 
 public:
+	PROPERTYSYSTEM_API virtual void Startup();
+	PROPERTYSYSTEM_API void StartupComplete();
+
 	PROPERTYSYSTEM_API virtual void Apply();
-	PROPERTYSYSTEM_API virtual void Reverse();
 	PROPERTYSYSTEM_API virtual void Reset();
+
+	PROPERTYSYSTEM_API void PrePropertyChanged();
+	PROPERTYSYSTEM_API void PostPropertyChanged();
 	PROPERTYSYSTEM_API void NotifyPropertyChanged(EPropertyChangedReason ChangedReason);
 
 protected:
 	PROPERTYSYSTEM_API virtual bool CanApply();
-	PROPERTYSYSTEM_API virtual bool CanReverse();
 	PROPERTYSYSTEM_API virtual bool CanReset();
 
 public:
 	UFUNCTION(BlueprintPure)
 	PROPERTYSYSTEM_API UPropertyProxy* GetOwnerProxy() const;
+
+	UFUNCTION(BlueprintPure)
+	PROPERTYSYSTEM_API bool GetIsInitialized() const;
+
+	UFUNCTION(BlueprintPure)
+	PROPERTYSYSTEM_API bool GetIsReady() const;
 
 	UFUNCTION(BlueprintPure)
 	PROPERTYSYSTEM_API bool GetIsPropertyValueDirty() const;
@@ -86,22 +95,36 @@ public:
 	UFUNCTION(BlueprintCallable)
 	PROPERTYSYSTEM_API void RemovePropertyDependency(UPropertyViewModel* InPropertyDependency);
 
+	UFUNCTION(BlueprintCallable, meta=(GameplayTagFilter="Property"))
+	PROPERTYSYSTEM_API void AddPropertyTag(FGameplayTag InPropertyTag);
+
+	UFUNCTION(BlueprintCallable, meta=(GameplayTagFilter="Property"))
+	PROPERTYSYSTEM_API void RemovePropertyTag(FGameplayTag InPropertyTag);
+
+	UFUNCTION(BlueprintPure, meta=(GameplayTagFilter="Property"))
+	PROPERTYSYSTEM_API bool HasPropertyTag(FGameplayTag InPropertyTag) const;
+
+	PROPERTYSYSTEM_API FPropertyDelegate& GetOnPropertyReadyEvent() { return OnPropertyReadyEvent; }
 	PROPERTYSYSTEM_API FPropertyDelegate& GetOnPropertyApplyEvent() { return OnPropertyApplyEvent; }
-	PROPERTYSYSTEM_API FPropertyDelegate& GetOnPropertyReverseEvent() { return OnPropertyReverseEvent; }
 	PROPERTYSYSTEM_API FPropertyDelegate& GetOnPropertyResetEvent() { return OnPropertyResetEvent; }
+	PROPERTYSYSTEM_API FPropertyDelegate& GetOnPropertyDependencyAddedEvent() { return OnPropertyDependencyAddedEvent; }
+	PROPERTYSYSTEM_API FPropertyDelegate& GetOnPropertyDependencyRemovedEvent() { return OnPropertyDependencyRemovedEvent; }
+	PROPERTYSYSTEM_API FOnPropertyTagChanged& GetOnPropertyTagAddedEvent() { return OnPropertyTagAddedEvent; }
+	PROPERTYSYSTEM_API FOnPropertyTagChanged& GetOnPropertyTagRemovedEvent() { return OnPropertyTagRemovedEvent; }
 	PROPERTYSYSTEM_API FOnPropertyChanged& GetOnPropertyChangedEvent() { return OnPropertyChangedEvent; }
-	PROPERTYSYSTEM_API FOnPropertyDependencyChanged& GetOnPropertyDependencyAddedEvent() { return OnPropertyDependencyAddedEvent; }
-	PROPERTYSYSTEM_API FOnPropertyDependencyChanged& GetOnPropertyDependencyRemovedEvent() { return OnPropertyDependencyRemovedEvent; }
 
 protected:
-	PROPERTYSYSTEM_API virtual bool OnPropertyInitialized();
+	PROPERTYSYSTEM_API virtual void OnPropertyInitialized();
 	PROPERTYSYSTEM_API virtual void OnPropertyDeinitialized();
 	PROPERTYSYSTEM_API virtual void OnPropertyApply();
-	PROPERTYSYSTEM_API virtual void OnPropertyReverse();
 	PROPERTYSYSTEM_API virtual void OnPropertyReset();
 	PROPERTYSYSTEM_API virtual void OnPropertyDependencyAdded(UPropertyViewModel* InPropertyDependency);
 	PROPERTYSYSTEM_API virtual void OnPropertyDependencyRemoved(UPropertyViewModel* InPropertyDependency);
 	PROPERTYSYSTEM_API virtual void OnPropertyDependencyValueChanged(UPropertyViewModel* InDependencyProperty, EPropertyChangedReason ChangedReason);
+	PROPERTYSYSTEM_API virtual void OnPropertyTagAdded(FGameplayTag InPropertyTag);
+	PROPERTYSYSTEM_API virtual void OnPropertyTagRemoved(FGameplayTag InPropertyTag);
+	PROPERTYSYSTEM_API virtual void PrePropertyValueChanged();
+	PROPERTYSYSTEM_API virtual void PostPropertyValueChanged();
 	PROPERTYSYSTEM_API virtual void OnPropertyValueChanged(EPropertyChangedReason ChangedReason);
 
 public:
@@ -123,18 +146,23 @@ public:
 	UPROPERTY(FieldNotify, EditAnywhere, BlueprintReadOnly, Instanced)
 	TArray<TObjectPtr<UPropertyViewModel>> PropertyDependencyList;
 
+	UPROPERTY(FieldNotify, EditAnywhere, BlueprintReadOnly, meta=(Categories="Property"))
+	TArray<FGameplayTag> PropertyTags;
+
 private:
 	bool bIsInitialized = false;
+	bool bIsReady = false;
 	bool bIsPropertyDirty = false;
-	bool bOnPropertyChangedEventGuard = false;
 
 	UPROPERTY()
 	TObjectPtr<UPropertyProxy> OwnerProxy = nullptr;
 
+	FPropertyDelegate OnPropertyReadyEvent;
 	FPropertyDelegate OnPropertyApplyEvent;
-	FPropertyDelegate OnPropertyReverseEvent;
 	FPropertyDelegate OnPropertyResetEvent;
+	FPropertyDelegate OnPropertyDependencyAddedEvent;
+	FPropertyDelegate OnPropertyDependencyRemovedEvent;
+	FOnPropertyTagChanged OnPropertyTagAddedEvent;
+	FOnPropertyTagChanged OnPropertyTagRemovedEvent;
 	FOnPropertyChanged OnPropertyChangedEvent;
-	FOnPropertyDependencyChanged OnPropertyDependencyAddedEvent;
-	FOnPropertyDependencyChanged OnPropertyDependencyRemovedEvent;
 };

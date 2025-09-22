@@ -8,6 +8,7 @@
 #include "Generic/GenericObject.h"
 #include "GenericButtonBuilder.generated.h"
 
+class UGenericButtonConfirm;
 class UButtonGroupViewModel;
 class UGenericButtonContainer;
 class UGenericButtonWidget;
@@ -30,15 +31,19 @@ public:
 
 	/* The Button Widget To Generate */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TSubclassOf<UGenericButtonWidget> ButtonClass;
+	TSubclassOf<UGenericButtonWidget> ButtonClass = nullptr;
 
 	/* The Button Container Widget To Generate */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TSubclassOf<UGenericButtonContainer> ButtonContainerClass;
+	TSubclassOf<UGenericButtonContainer> ButtonContainerClass = nullptr;
 
-	/* Custom Button Group Class */
+	/* Custom Button Group Class To Manager All Child Buttons if Exist */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TSubclassOf<UGenericButtonGroup> ButtonGroupClass;
+	TSubclassOf<UGenericButtonGroup> ButtonGroupClass = nullptr;
+
+	/* Confirm The Button Event Whether Continue Execute */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TSubclassOf<UGenericButtonConfirm> ButtonConfirmClass = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Instanced)
 	TObjectPtr<UWidgetDescriptionViewModel> WidgetDescriptionViewModel = nullptr;

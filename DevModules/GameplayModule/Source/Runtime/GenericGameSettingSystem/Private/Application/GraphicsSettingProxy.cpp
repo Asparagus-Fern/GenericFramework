@@ -2,6 +2,7 @@
 
 #include "Application/GraphicsSettingProxy.h"
 
+#include "DataSource/PropertyDataSource.h"
 #include "GameFramework/GameUserSettings.h"
 #include "LocalPlayer/GenericLocalPlayerSettings.h"
 #include "MVVM/PropertyViewModel.h"
@@ -14,7 +15,7 @@ void UGraphicsSettingProxy::GeneratePropertyListItemObjects_Implementation(TArra
 {
 	Super::GeneratePropertyListItemObjects_Implementation(Result);
 
-	{
+	/*{
 		UActionPropertyValueViewModel* ActionPropertyValueViewModel = NewObject<UActionPropertyValueViewModel>(this);
 		ActionPropertyValueViewModel->SetPropertyName(TEXT("AutoSetQuality"));
 		ActionPropertyValueViewModel->SetPropertyDisplayName(LOCTEXT("AutoSetQuality_DisplayName", "Auto-Set Quality"));
@@ -29,7 +30,7 @@ void UGraphicsSettingProxy::GeneratePropertyListItemObjects_Implementation(TArra
 		);
 
 		Result.Add(ActionPropertyValueViewModel);
-	}
+	}*/
 
 	{
 		UNumberPropertyValueViewModel* MultiPropertyValueViewModel = NewObject<UNumberPropertyValueViewModel>(this);
@@ -56,7 +57,6 @@ void UGraphicsSettingProxy::GeneratePropertyListItemObjects_Implementation(TArra
 		MultiPropertyValueViewModel->SetPropertyDisplayName(LOCTEXT("ViewDistanceQuality_DisplayName", "View Distance Quality"));
 		MultiPropertyValueViewModel->SetPropertyDescription(LOCTEXT("ViewDistanceQuality_Description", "View distance determines how far away objects are culled for performance."));
 		MultiPropertyValueViewModel->SetPropertyDataSource(GET_LOCAL_PLAYER_SETTINGS_DATA_SOURCE(GetViewDistanceQuality, SetViewDistanceQuality));
-		MultiPropertyValueViewModel->SetIsAutoApplyProperty(true);
 
 		MultiPropertyValueViewModel->AddNumberValue(0,LOCTEXT("ViewDistanceQualityLow", "Low"));
 		MultiPropertyValueViewModel->AddNumberValue(1,LOCTEXT("ViewDistanceQualityMedium", "Medium"));
@@ -73,7 +73,6 @@ void UGraphicsSettingProxy::GeneratePropertyListItemObjects_Implementation(TArra
 		MultiPropertyValueViewModel->SetPropertyDisplayName(LOCTEXT("ShadowQuality_DisplayName", "Shadow Quality"));
 		MultiPropertyValueViewModel->SetPropertyDescription(LOCTEXT("ShadowQuality_Description", "Shadow quality determines the resolution and view distance of dynamic shadows. Shadows improve visual quality and give better depth perception, but can reduce performance."));
 		MultiPropertyValueViewModel->SetPropertyDataSource(GET_LOCAL_PLAYER_SETTINGS_DATA_SOURCE(GetShadowQuality, SetShadowQuality));
-		MultiPropertyValueViewModel->SetIsAutoApplyProperty(true);
 
 		MultiPropertyValueViewModel->AddNumberValue(0,LOCTEXT("ShadowQualityLow", "Low"));
 		MultiPropertyValueViewModel->AddNumberValue(1,LOCTEXT("ShadowQualityMedium", "Medium"));
@@ -90,7 +89,6 @@ void UGraphicsSettingProxy::GeneratePropertyListItemObjects_Implementation(TArra
 		MultiPropertyValueViewModel->SetPropertyDisplayName(LOCTEXT("GlobalIlluminationQuality_DisplayName", "Global Illumination Quality"));
 		MultiPropertyValueViewModel->SetPropertyDescription(LOCTEXT("GlobalIlluminationQuality_Description", "Global Illumination controls the quality of dynamically calculated indirect lighting bounces, sky shadowing and Ambient Occlusion. Settings of 'High' and above use more accurate ray tracing methods to solve lighting, but can reduce performance."));
 		MultiPropertyValueViewModel->SetPropertyDataSource(GET_LOCAL_PLAYER_SETTINGS_DATA_SOURCE(GetGlobalIlluminationQuality, SetGlobalIlluminationQuality));
-		MultiPropertyValueViewModel->SetIsAutoApplyProperty(true);
 
 		MultiPropertyValueViewModel->AddNumberValue(0,LOCTEXT("GlobalIlluminationQualityLow", "Low"));
 		MultiPropertyValueViewModel->AddNumberValue(1,LOCTEXT("GlobalIlluminationQualityMedium", "Medium"));
@@ -107,7 +105,6 @@ void UGraphicsSettingProxy::GeneratePropertyListItemObjects_Implementation(TArra
 		MultiPropertyValueViewModel->SetPropertyDisplayName(LOCTEXT("ReflectionQuality_DisplayName", "Reflection Quality"));
 		MultiPropertyValueViewModel->SetPropertyDescription(LOCTEXT("ReflectionQuality_Description", "Reflection quality determines the resolution and accuracy of reflections.  Settings of 'High' and above use more accurate ray tracing methods to solve reflections, but can reduce performance."));
 		MultiPropertyValueViewModel->SetPropertyDataSource(GET_LOCAL_PLAYER_SETTINGS_DATA_SOURCE(GetReflectionQuality, SetReflectionQuality));
-		MultiPropertyValueViewModel->SetIsAutoApplyProperty(true);
 
 		MultiPropertyValueViewModel->AddNumberValue(0,LOCTEXT("ReflectionQualityLow", "Low"));
 		MultiPropertyValueViewModel->AddNumberValue(1,LOCTEXT("ReflectionQualityMedium", "Medium"));
@@ -124,7 +121,6 @@ void UGraphicsSettingProxy::GeneratePropertyListItemObjects_Implementation(TArra
 		MultiPropertyValueViewModel->SetPropertyDisplayName(LOCTEXT("AntiAliasingQuality_DisplayName", "AntiAliasing Quality"));
 		MultiPropertyValueViewModel->SetPropertyDescription(LOCTEXT("AntiAliasingQuality_Description", "Anti-Aliasing reduces jaggy artifacts along geometry edges. Increasing this setting will make edges look smoother, but can reduce performance. Higher settings mean more anti-aliasing."));
 		MultiPropertyValueViewModel->SetPropertyDataSource(GET_LOCAL_PLAYER_SETTINGS_DATA_SOURCE(GetAntiAliasingQuality, SetAntiAliasingQuality));
-		MultiPropertyValueViewModel->SetIsAutoApplyProperty(true);
 
 		MultiPropertyValueViewModel->AddNumberValue(0,LOCTEXT("AntiAliasingQualityLow", "Low"));
 		MultiPropertyValueViewModel->AddNumberValue(1,LOCTEXT("AntiAliasingQualityMedium", "Medium"));
@@ -141,7 +137,6 @@ void UGraphicsSettingProxy::GeneratePropertyListItemObjects_Implementation(TArra
 		MultiPropertyValueViewModel->SetPropertyDisplayName(LOCTEXT("TextureQuality_DisplayName", "Texture Quality"));
 		MultiPropertyValueViewModel->SetPropertyDescription(LOCTEXT("TextureQuality_Description", "Texture quality determines the resolution of textures in game. Increasing this setting will make objects more detailed, but can reduce performance."));
 		MultiPropertyValueViewModel->SetPropertyDataSource(GET_LOCAL_PLAYER_SETTINGS_DATA_SOURCE(GetTextureQuality, SetTextureQuality));
-		MultiPropertyValueViewModel->SetIsAutoApplyProperty(true);
 
 		MultiPropertyValueViewModel->AddNumberValue(0,LOCTEXT("TextureQualityLow", "Low"));
 		MultiPropertyValueViewModel->AddNumberValue(1,LOCTEXT("TextureQualityMedium", "Medium"));
@@ -158,7 +153,6 @@ void UGraphicsSettingProxy::GeneratePropertyListItemObjects_Implementation(TArra
 		MultiPropertyValueViewModel->SetPropertyDisplayName(LOCTEXT("VisualEffectQuality_DisplayName", "Visual Effect Quality"));
 		MultiPropertyValueViewModel->SetPropertyDescription(LOCTEXT("VisualEffectQuality_Description", "Effects determines the quality of visual effects and lighting in game. Increasing this setting will increase the quality of visual effects, but can reduce performance."));
 		MultiPropertyValueViewModel->SetPropertyDataSource(GET_LOCAL_PLAYER_SETTINGS_DATA_SOURCE(GetVisualEffectQuality, SetVisualEffectQuality));
-		MultiPropertyValueViewModel->SetIsAutoApplyProperty(true);
 
 		MultiPropertyValueViewModel->AddNumberValue(0,LOCTEXT("VisualEffectQualityLow", "Low"));
 		MultiPropertyValueViewModel->AddNumberValue(1,LOCTEXT("VisualEffectQualityMedium", "Medium"));
@@ -175,7 +169,6 @@ void UGraphicsSettingProxy::GeneratePropertyListItemObjects_Implementation(TArra
 		MultiPropertyValueViewModel->SetPropertyDisplayName(LOCTEXT("PostProcessingQuality_DisplayName", "Post Processing Quality"));
 		MultiPropertyValueViewModel->SetPropertyDescription(LOCTEXT("PostProcessingQuality_Description", "Post Processing effects include Motion Blur, Depth of Field and Bloom. Increasing this setting improves the quality of post process effects, but can reduce performance."));
 		MultiPropertyValueViewModel->SetPropertyDataSource(GET_LOCAL_PLAYER_SETTINGS_DATA_SOURCE(GetPostProcessingQuality, SetPostProcessingQuality));
-		MultiPropertyValueViewModel->SetIsAutoApplyProperty(true);
 
 		MultiPropertyValueViewModel->AddNumberValue(0,LOCTEXT("PostProcessingQualityLow", "Low"));
 		MultiPropertyValueViewModel->AddNumberValue(1,LOCTEXT("PostProcessingQualityMedium", "Medium"));
@@ -192,7 +185,6 @@ void UGraphicsSettingProxy::GeneratePropertyListItemObjects_Implementation(TArra
 		MultiPropertyValueViewModel->SetPropertyDisplayName(LOCTEXT("FoliageQuality_DisplayName", "Foliage Quality"));
 		MultiPropertyValueViewModel->SetPropertyDescription(LOCTEXT("FoliageQuality_Description", "Foliage quality determines the resolution of foliage in game."));
 		MultiPropertyValueViewModel->SetPropertyDataSource(GET_LOCAL_PLAYER_SETTINGS_DATA_SOURCE(GetFoliageQuality, SetFoliageQuality));
-		MultiPropertyValueViewModel->SetIsAutoApplyProperty(true);
 
 		MultiPropertyValueViewModel->AddNumberValue(0,LOCTEXT("FoliageQualityLow", "Low"));
 		MultiPropertyValueViewModel->AddNumberValue(1,LOCTEXT("FoliageQualityMedium", "Medium"));

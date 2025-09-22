@@ -22,16 +22,20 @@ bool UPropertyViewModel::Initialize(UPropertyProxy* InOwnerProxy)
 	for (const auto& PropertyDependency : PropertyDependencyList)
 	{
 		PropertyDependency->OnPropertyChangedEvent.AddUObject(this, &UPropertyViewModel::HandleOnPropertyDependencyValueChanged);
+
+		OnPropertyDependencyAdded(PropertyDependency);
+		OnPropertyDependencyAddedEvent.Broadcast(PropertyDependency);
+		UE_MVVM_BROADCAST_FIELD_VALUE_CHANGED(PropertyDependencyList);
 	}
 
-	if (OnPropertyInitialized())
+	for (const auto& PropertyTag : PropertyTags)
 	{
-		OnPropertyValueChanged(EPropertyChangedReason::Initialized);
-		GenericLOG(GenericLogProperty, Log, TEXT("Initialized Property Name : %s"), *GetPropertyName().ToString());
-		return true;
+		OnPropertyTagAdded(PropertyTag);
+		OnPropertyTagAddedEvent.Broadcast(this, PropertyTag);
+		UE_MVVM_BROADCAST_FIELD_VALUE_CHANGED(PropertyTags);
 	}
 
-	return false;
+	return true;
 }
 
 void UPropertyViewModel::Deinitialize()
@@ -48,7 +52,7 @@ void UPropertyViewModel::Deinitialize()
 void UPropertyViewModel::HandleOnPropertyDependencyValueChanged(UPropertyViewModel* InPropertyViewModel, EPropertyChangedReason ChangedReason)
 {
 	check(bIsInitialized)
-	
+
 	OnPropertyDependencyValueChanged(InPropertyViewModel, ChangedReason);
 	OnPropertyValueChanged(EPropertyChangedReason::DependencyChanged);
 	OnPropertyChangedEvent.Broadcast(this, EPropertyChangedReason::DependencyChanged);
@@ -59,53 +63,62 @@ void UPropertyViewModel::HandleOnPropertyDependencyValueChanged(UPropertyViewMod
 	}
 }
 
-void UPropertyViewModel::Apply()
+void UPropertyViewModel::Startup()
 {
-	check(bIsInitialized)
-	
-	if (CanApply())
+	StartupComplete();
+}
+
+void UPropertyViewModel::StartupComplete()
+{
+	if (!bIsReady)
 	{
-		NotifyPropertyChanged(EPropertyChangedReason::OnApply);
-		OnPropertyApply();
-		OnPropertyApplyEvent.Broadcast(this);
-		bIsPropertyDirty = false;
+		bIsReady = true;
+		OnPropertyInitialized();
+		OnPropertyReadyEvent.Broadcast(this);
 	}
 }
 
-void UPropertyViewModel::Reverse()
+void UPropertyViewModel::Apply()
 {
 	check(bIsInitialized)
-	
-	if (CanReverse())
+
+	if (CanApply())
 	{
-		OnPropertyReverse();
-		OnPropertyReverseEvent.Broadcast(this);
 		bIsPropertyDirty = false;
+		OnPropertyApply();
+		OnPropertyApplyEvent.Broadcast(this);
 	}
 }
 
 void UPropertyViewModel::Reset()
 {
 	check(bIsInitialized)
-	
+
 	if (CanReset())
 	{
-		NotifyPropertyChanged(EPropertyChangedReason::OnReset);
+		bIsPropertyDirty = false;
 		OnPropertyReset();
 		OnPropertyResetEvent.Broadcast(this);
-		bIsPropertyDirty = false;
 	}
+}
+
+void UPropertyViewModel::PrePropertyChanged()
+{
+	PrePropertyValueChanged();
+}
+
+void UPropertyViewModel::PostPropertyChanged()
+{
+	PostPropertyValueChanged();
 }
 
 void UPropertyViewModel::NotifyPropertyChanged(EPropertyChangedReason ChangedReason)
 {
 	check(bIsInitialized)
-	
-	OnPropertyValueChanged(ChangedReason);
 
 	if (!bIsPropertyDirty)
 	{
-		TGuardValue<bool> Guard(bIsPropertyDirty, true);
+		bIsPropertyDirty = true;
 
 		if (GetIsAutoApplyProperty())
 		{
@@ -114,14 +127,11 @@ void UPropertyViewModel::NotifyPropertyChanged(EPropertyChangedReason ChangedRea
 
 		OnPropertyChangedEvent.Broadcast(this, ChangedReason);
 	}
+
+	OnPropertyValueChanged(ChangedReason);
 }
 
 bool UPropertyViewModel::CanApply()
-{
-	return bIsPropertyDirty;
-}
-
-bool UPropertyViewModel::CanReverse()
 {
 	return bIsPropertyDirty;
 }
@@ -134,6 +144,16 @@ bool UPropertyViewModel::CanReset()
 UPropertyProxy* UPropertyViewModel::GetOwnerProxy() const
 {
 	return OwnerProxy;
+}
+
+bool UPropertyViewModel::GetIsInitialized() const
+{
+	return bIsInitialized;
+}
+
+bool UPropertyViewModel::GetIsReady() const
+{
+	return bIsReady;
 }
 
 bool UPropertyViewModel::GetIsPropertyValueDirty() const
@@ -213,15 +233,19 @@ void UPropertyViewModel::AddPropertyDependency(UPropertyViewModel* InPropertyDep
 		return;
 	}
 
-	if (PropertyDependencyList.Contains(InPropertyDependency))
+	if (!PropertyDependencyList.Contains(InPropertyDependency))
 	{
 		return;
 	}
 
 	PropertyDependencyList.Add(InPropertyDependency);
-	UE_MVVM_BROADCAST_FIELD_VALUE_CHANGED(PropertyDependencyList);
-	OnPropertyDependencyAdded(InPropertyDependency);
-	OnPropertyDependencyAddedEvent.Broadcast(InPropertyDependency);
+
+	if (bIsInitialized)
+	{
+		OnPropertyDependencyAdded(InPropertyDependency);
+		OnPropertyDependencyAddedEvent.Broadcast(InPropertyDependency);
+		UE_MVVM_BROADCAST_FIELD_VALUE_CHANGED(PropertyDependencyList);
+	}
 }
 
 void UPropertyViewModel::RemovePropertyDependency(UPropertyViewModel* InPropertyDependency)
@@ -238,14 +262,81 @@ void UPropertyViewModel::RemovePropertyDependency(UPropertyViewModel* InProperty
 	}
 
 	PropertyDependencyList.Remove(InPropertyDependency);
-	UE_MVVM_BROADCAST_FIELD_VALUE_CHANGED(PropertyDependencyList);
-	OnPropertyDependencyRemoved(InPropertyDependency);
-	OnPropertyDependencyRemovedEvent.Broadcast(InPropertyDependency);
+
+	if (bIsInitialized)
+	{
+		OnPropertyDependencyRemoved(InPropertyDependency);
+		OnPropertyDependencyRemovedEvent.Broadcast(InPropertyDependency);
+		UE_MVVM_BROADCAST_FIELD_VALUE_CHANGED(PropertyDependencyList);
+	}
 }
 
-bool UPropertyViewModel::OnPropertyInitialized()
+void UPropertyViewModel::AddPropertyTag(FGameplayTag InPropertyTag)
 {
-	return true;
+	if (!InPropertyTag.IsValid())
+	{
+		GenericLOG(GenericLogProperty, Error, TEXT("PropertyTag Is InValid"))
+		return;
+	}
+
+	if (!InPropertyTag.MatchesTag(TAG_Property))
+	{
+		GenericLOG(GenericLogProperty, Error, TEXT("This Tag Is Not a Property Tag"))
+		return;
+	}
+
+	if (HasPropertyTag(InPropertyTag))
+	{
+		return;
+	}
+
+	PropertyTags.Add(InPropertyTag);
+
+	if (bIsInitialized)
+	{
+		OnPropertyTagAdded(InPropertyTag);
+		OnPropertyTagAddedEvent.Broadcast(this, InPropertyTag);
+		UE_MVVM_BROADCAST_FIELD_VALUE_CHANGED(PropertyTags);
+	}
+}
+
+void UPropertyViewModel::RemovePropertyTag(FGameplayTag InPropertyTag)
+{
+	if (!InPropertyTag.IsValid())
+	{
+		GenericLOG(GenericLogProperty, Error, TEXT("PropertyTag Is InValid"))
+		return;
+	}
+
+	if (!InPropertyTag.MatchesTag(TAG_Property))
+	{
+		GenericLOG(GenericLogProperty, Error, TEXT("This Tag Is Not a Property Tag"))
+		return;
+	}
+
+	if (!HasPropertyTag(InPropertyTag))
+	{
+		return;
+	}
+
+	PropertyTags.Remove(InPropertyTag);
+
+	if (bIsInitialized)
+	{
+		OnPropertyTagRemoved(InPropertyTag);
+		OnPropertyTagRemovedEvent.Broadcast(this, InPropertyTag);
+		UE_MVVM_BROADCAST_FIELD_VALUE_CHANGED(PropertyTags);
+	}
+}
+
+bool UPropertyViewModel::HasPropertyTag(FGameplayTag InPropertyTag) const
+{
+	return PropertyTags.Contains(InPropertyTag);
+}
+
+void UPropertyViewModel::OnPropertyInitialized()
+{
+	GenericLOG(GenericLogProperty, Log, TEXT("Initialized Property Name : %s"), *GetPropertyName().ToString());
 }
 
 void UPropertyViewModel::OnPropertyDeinitialized()
@@ -253,10 +344,6 @@ void UPropertyViewModel::OnPropertyDeinitialized()
 }
 
 void UPropertyViewModel::OnPropertyApply()
-{
-}
-
-void UPropertyViewModel::OnPropertyReverse()
 {
 }
 
@@ -273,6 +360,22 @@ void UPropertyViewModel::OnPropertyDependencyRemoved(UPropertyViewModel* InPrope
 }
 
 void UPropertyViewModel::OnPropertyDependencyValueChanged(UPropertyViewModel* InDependencyProperty, EPropertyChangedReason ChangedReason)
+{
+}
+
+void UPropertyViewModel::OnPropertyTagAdded(FGameplayTag InPropertyTag)
+{
+}
+
+void UPropertyViewModel::OnPropertyTagRemoved(FGameplayTag InPropertyTag)
+{
+}
+
+void UPropertyViewModel::PrePropertyValueChanged()
+{
+}
+
+void UPropertyViewModel::PostPropertyValueChanged()
 {
 }
 

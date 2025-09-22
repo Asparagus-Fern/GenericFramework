@@ -1,24 +1,24 @@
 ﻿// Copyright ChenTaiye 2025. All Rights Reserved.
 
-#include "Common/DateTimeWidget.h"
+#include "UMG/Generic/GenericDateTime.h"
 
 #include "Components/TextBlock.h"
 
 #define LOCTEXT_NAMESPACE "FWidgetApplicationModule"
 
-void UDateTimeWidget::NativePreConstruct()
+void UGenericDateTime::NativePreConstruct()
 {
 	Super::NativePreConstruct();
 	UpdateDateTimeNow();
 }
 
-void UDateTimeWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+void UGenericDateTime::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
 	UpdateDateTimeNow();
 }
 
-void UDateTimeWidget::UpdateDateTimeNow()
+void UGenericDateTime::UpdateDateTimeNow()
 {
 	DateTimeNow = FDateTime::Now();
 
@@ -44,7 +44,7 @@ void UDateTimeWidget::UpdateDateTimeNow()
 	}
 }
 
-FText UDateTimeWidget::GetFormatDate_Implementation(int32 InYear, int32 InMouth, int32 InDay)
+FText UGenericDateTime::GetFormatDate_Implementation(int32 InYear, int32 InMouth, int32 InDay)
 {
 	FNumberFormattingOptions NumberFormattingOptions;
 	NumberFormattingOptions.SetUseGrouping(false);
@@ -58,7 +58,7 @@ FText UDateTimeWidget::GetFormatDate_Implementation(int32 InYear, int32 InMouth,
 	return FText::Format(LOCTEXT("DateNow", "{Year}.{Mouth}.{Day}"), Arguments);
 }
 
-FText UDateTimeWidget::GetFormatTime_Implementation(int32 InHour, int32 InMinute, int32 InSecond, int32 InMillisecond)
+FText UGenericDateTime::GetFormatTime_Implementation(int32 InHour, int32 InMinute, int32 InSecond, int32 InMillisecond)
 {
 	FNumberFormattingOptions NumberFormattingOptions;
 	NumberFormattingOptions.SetUseGrouping(false);
@@ -72,27 +72,27 @@ FText UDateTimeWidget::GetFormatTime_Implementation(int32 InHour, int32 InMinute
 	return FText::Format(LOCTEXT("TimeNow", "{Hour}:{Minute}:{Second}"), Arguments);
 }
 
-FText UDateTimeWidget::GetFormatDayOfWeek_Implementation(EDayInWeek DayInWeek)
+FText UGenericDateTime::GetFormatDayOfWeek_Implementation(EDayInWeek DayInWeek)
 {
 	return UEnum::GetDisplayValueAsText(DayInWeek);
 }
 
-FText UDateTimeWidget::GetFormatMonthOfYear_Implementation(EMonthInYear MonthInYear)
+FText UGenericDateTime::GetFormatMonthOfYear_Implementation(EMonthInYear MonthInYear)
 {
 	return UEnum::GetDisplayValueAsText(MonthInYear);
 }
 
-bool UDateTimeWidget::GetIsMorning() const
+bool UGenericDateTime::GetIsMorning() const
 {
 	return DateTimeNow.IsMorning();
 }
 
-bool UDateTimeWidget::GetIsAfternoon() const
+bool UGenericDateTime::GetIsAfternoon() const
 {
 	return DateTimeNow.IsAfternoon();
 }
 
-bool UDateTimeWidget::GetIsLeapYear() const
+bool UGenericDateTime::GetIsLeapYear() const
 {
 	return DateTimeNow.IsLeapYear(DateTimeNow.GetYear());
 }

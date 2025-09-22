@@ -12,8 +12,8 @@ class UPropertyProxy;
 /**
  * 
  */
-UCLASS(EditInlineNew)
-class PROPERTYSYSTEM_API UPropertyListViewModel : public UMVVMViewModelBase
+UCLASS(EditInlineNew, MinimalAPI)
+class UPropertyListViewModel : public UMVVMViewModelBase
 {
 	GENERATED_BODY()
 

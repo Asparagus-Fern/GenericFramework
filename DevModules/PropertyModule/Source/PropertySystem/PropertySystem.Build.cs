@@ -12,7 +12,7 @@ public class PropertySystem : ModuleRules
 				"Core",
 				"DevCore",
 				"DevSlateCore",
-				"UnrealMisc"
+				"UnrealMisc", 
 			}
 		);
 
@@ -25,12 +25,14 @@ public class PropertySystem : ModuleRules
 				"SlateCore",
 
 				"UMG",
+				"InputCore",
 				"CommonUI",
 				"ModelViewViewModel",
 				"PropertyPath",
 				"GameplayTags",
 
 				"WidgetGeneration",
+				"WidgetGroupGeneration"
 			}
 		);
 

@@ -3,11 +3,24 @@
 
 #include "GenericButtonGroup.h"
 
+#include "GenericButtonCollection.h"
 #include "GenericButtonContainer.h"
 #include "GenericButtonWidget.h"
 #include "WidgetType.h"
 #include "MVVM/ButtonGroupViewModel.h"
 #include "Type/DebugType.h"
+
+void UGenericButtonGroup::NativeOnCreate()
+{
+	IStateInterface::NativeOnCreate();
+
+	ButtonCollection = IsValid(GetOuter()) ? Cast<UGenericButtonCollection>(GetOuter()) : nullptr;
+}
+
+void UGenericButtonGroup::NativeOnDestroy()
+{
+	IStateInterface::NativeOnDestroy();
+}
 
 UGenericButtonContainer* UGenericButtonGroup::GetButtonGroupWidget()
 {
@@ -36,7 +49,7 @@ void UGenericButtonGroup::AddButton(UGenericButtonWidget* InButton)
 	}
 
 	ButtonWidgets.Add(InButton);
-
+	
 	InButton->OnButtonPressed.AddUniqueDynamic(this, &UGenericButtonGroup::HandleOnButtonPressed);
 	InButton->OnButtonReleased.AddUniqueDynamic(this, &UGenericButtonGroup::HandleOnButtonReleased);
 	InButton->OnButtonHovered.AddUniqueDynamic(this, &UGenericButtonGroup::HandleOnButtonHovered);
@@ -44,6 +57,7 @@ void UGenericButtonGroup::AddButton(UGenericButtonWidget* InButton)
 	InButton->OnButtonClicked.AddUniqueDynamic(this, &UGenericButtonGroup::HandleOnButtonClicked);
 	InButton->OnButtonDoubleClicked.AddUniqueDynamic(this, &UGenericButtonGroup::HandleOnButtonDoubleClicked);
 	InButton->OnButtonSelectionChanged.AddUniqueDynamic(this, &UGenericButtonGroup::HandleOnButtonSelectionChanged);
+
 
 	if (!HasSelectedButton() && InButton->bDefaultSelected)
 	{
@@ -315,11 +329,6 @@ void UGenericButtonGroup::HandleOnButtonSelectionChanged_Implementation(UGeneric
 UGenericButtonCollection* UGenericButtonGroup::GetButtonCollection() const
 {
 	return ButtonCollection.IsValid() ? ButtonCollection.Get() : nullptr;
-}
-
-void UGenericButtonGroup::SetButtonCollection(UGenericButtonCollection* InButtonCollection)
-{
-	ButtonCollection = InButtonCollection;
 }
 
 UButtonGroupViewModel* UGenericButtonGroup::GetButtonGroupViewModel()

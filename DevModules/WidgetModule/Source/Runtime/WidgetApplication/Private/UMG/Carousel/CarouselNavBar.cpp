@@ -1,10 +1,9 @@
 ﻿// Copyright ChenTaiye 2025. All Rights Reserved.
 
-
-#include "Carousel/CarouselNavBar.h"
+#include "UMG/Carousel/CarouselNavBar.h"
 
 #include "GenericButtonWidget.h"
-#include "Carousel/CarouselContent.h"
+#include "UMG/Carousel/CarouselContent.h"
 
 void UCarouselNavBar::NativePreConstruct()
 {

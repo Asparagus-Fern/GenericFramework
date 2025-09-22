@@ -6,6 +6,7 @@
 #include "GenericButtonContainer.h"
 #include "ButtonContainer_HorizontalBox.generated.h"
 
+class UHorizontalBoxSlot;
 class UHorizontalBox;
 
 /**
@@ -17,8 +18,8 @@ class UButtonContainer_HorizontalBox : public UGenericButtonContainer
 	GENERATED_BODY()
 
 protected:
-	WIDGETAPPLICATION_API virtual void OnChildAdded_Implementation(UGenericWidget* InWidget, int32 NewChildrenCount) override;
-	WIDGETAPPLICATION_API virtual void OnChildRemoved_Implementation(UGenericWidget* InWidget, int32 NewChildrenCount) override;
+	WIDGETAPPLICATION_API virtual void OnChildAdded_Implementation(UGenericWidget* InWidget, int32 InIndex) override;
+	WIDGETAPPLICATION_API virtual void OnChildRemoved_Implementation(UGenericWidget* InWidget, int32 InIndex) override;
 
 public:
 	UPROPERTY(EditAnywhere, Category="Generic Button Container")
@@ -29,6 +30,7 @@ public:
 
 protected:
 	WIDGETAPPLICATION_API virtual void UpdateHorizontalBoxSlotPadding();
+	WIDGETAPPLICATION_API virtual void UpdateHorizontalBoxSlotPadding(UHorizontalBoxSlot* InSlot,int32 InIndex);
 
 private:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget, BlueprintProtected = true, AllowPrivateAccess = true))

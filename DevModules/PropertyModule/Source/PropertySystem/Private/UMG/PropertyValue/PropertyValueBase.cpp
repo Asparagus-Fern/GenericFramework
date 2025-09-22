@@ -43,7 +43,6 @@ void UPropertyValueBase::NativeOnViewModelInitialized()
 {
 	if (UPropertyViewModel* ViewModel = GetPropertyViewModel<UPropertyViewModel>())
 	{
-		REGISTER_MVVM_PROPERTY(ViewModel, IsAutoApplyProperty, OnIsAutoApplyPropertyChanged, true)
 		REGISTER_MVVM_PROPERTY(ViewModel, IsDirtyProxy, OnIsDirtyProxyChanged, true)
 		REGISTER_MVVM_PROPERTY(ViewModel, PropertyName, OnPropertyNameChanged, true)
 		REGISTER_MVVM_PROPERTY(ViewModel, PropertyDisplayName, OnPropertyDisplayNameChanged, true)
@@ -52,10 +51,6 @@ void UPropertyValueBase::NativeOnViewModelInitialized()
 }
 
 void UPropertyValueBase::NativeOnViewModelDeinitialized()
-{
-}
-
-void UPropertyValueBase::OnIsAutoApplyPropertyChanged_Implementation(bool InIsAutoApplyProperty)
 {
 }
 

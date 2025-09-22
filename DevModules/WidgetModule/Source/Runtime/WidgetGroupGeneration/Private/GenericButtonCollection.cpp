@@ -6,6 +6,7 @@
 #include "GenericButtonAsset.h"
 #include "GenericButtonGroup.h"
 #include "GenericButtonBuilder.h"
+#include "GenericButtonConfirm.h"
 #include "GenericButtonContainer.h"
 #include "GenericWidgetManager.h"
 #include "BPFunctions/BPFunctions_GameplayTag.h"
@@ -98,8 +99,7 @@ void UGenericButtonCollection::BuildChildButtonGroup(const FGameplayTag InButton
 	if (UGenericButtonContainer* GroupWidget = BuildButtonGroupWidget(InButtonTag, ButtonWidget))
 	{
 		/* Generate Button Group And Open The Button Container Widget */
-		UGenericButtonGroup* ButtonGroup = NewObject<UGenericButtonGroup>(GetOuter(), ButtonBuilder->ButtonGroupClass);
-		ButtonGroup->SetButtonCollection(this);
+		UGenericButtonGroup* ButtonGroup = NewObject<UGenericButtonGroup>(this, ButtonBuilder->ButtonGroupClass);
 		ButtonGroup->SetButtonGroupWidget(GroupWidget);
 		ButtonGroup->SetButtonGroupViewModel(ButtonBuilder->ButtonGroupViewModel);
 
@@ -133,6 +133,14 @@ void UGenericButtonCollection::BuildChildButtonGroup(const FGameplayTag InButton
 				/* Add Widget To Button Group */
 				ChildButtonWidget->SelfTag = ChildTag;
 				ButtonGroup->AddButton(ChildButtonWidget);
+
+				/* Create Button Confirm If Exist */
+				UGenericButtonConfirm* NewButtonConfirm = ChildButtonWidget->SetButtonConfirmByClass(ButtonBuilder->ButtonConfirmClass);
+				if (IsValid(NewButtonConfirm))
+				{
+					NewButtonConfirm->SetButtonCollection(this);
+					NewButtonConfirm->SetButtonGroup(ButtonGroup);
+				}
 
 				/* Update Button Widget View Model */
 				ChildButtonWidget->SetWidgetDescriptionViewModel(GetButtonBuilder(ChildTag)->WidgetDescriptionViewModel);
@@ -307,6 +315,8 @@ bool UGenericButtonCollection::RegisterButtonGroup(const FGameplayTag InButtonTa
 	InButtonGroup->OnButtonDoubleClicked.AddUniqueDynamic(this, &UGenericButtonCollection::OnButtonDoubleClicked);
 	InButtonGroup->OnButtonSelectionChanged.AddUniqueDynamic(this, &UGenericButtonCollection::OnButtonSelectionChanged);
 
+	InButtonGroup->NativeOnCreate();
+
 	return true;
 }
 
@@ -324,15 +334,16 @@ bool UGenericButtonCollection::UnRegisterButtonGroup(const FGameplayTag InButton
 		return false;
 	}
 
-	TObjectPtr<UGenericButtonGroup> Group = ButtonGroups.FindRef(InButtonTag);
-	Group->OnButtonPressed.RemoveAll(this);
-	Group->OnButtonReleased.RemoveAll(this);
-	Group->OnButtonHovered.RemoveAll(this);
-	Group->OnButtonUnhovered.RemoveAll(this);
-	Group->OnButtonClicked.RemoveAll(this);
-	Group->OnButtonDoubleClicked.RemoveAll(this);
-	Group->OnButtonSelectionChanged.RemoveAll(this);
+	TObjectPtr<UGenericButtonGroup> ButtonGroup = ButtonGroups.FindRef(InButtonTag);
+	ButtonGroup->OnButtonPressed.RemoveAll(this);
+	ButtonGroup->OnButtonReleased.RemoveAll(this);
+	ButtonGroup->OnButtonHovered.RemoveAll(this);
+	ButtonGroup->OnButtonUnhovered.RemoveAll(this);
+	ButtonGroup->OnButtonClicked.RemoveAll(this);
+	ButtonGroup->OnButtonDoubleClicked.RemoveAll(this);
+	ButtonGroup->OnButtonSelectionChanged.RemoveAll(this);
 
+	ButtonGroup->NativeOnDestroy();
 	ButtonGroups.Remove(InButtonTag);
 
 	return true;

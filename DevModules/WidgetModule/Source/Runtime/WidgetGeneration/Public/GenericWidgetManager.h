@@ -139,72 +139,77 @@ private:
 	TArray<FCloseWidgetParameter> CloseWidgetParameters;
 };
 
-template <typename WidgetT = UGenericWidget, typename OwnerType = UObject>
-WidgetT* OpenGenericWidget(OwnerType OwningObject, TSubclassOf<UGenericWidget> InWidgetClass, const FOnWidgetActiveStateChanged& OnFinish = FOnWidgetActiveStateChanged())
-{
-	if (UGenericWidgetManager* GenericWidgetManager = GetManagerOwner<UGenericWidgetManager>())
-	{
-		return GenericWidgetManager->OpenGenericWidget<WidgetT>(OwningObject, InWidgetClass, OnFinish);
-	}
-	return nullptr;
-}
 
-template <typename WidgetT = UGenericWidget>
-WidgetT* OpenGenericWidget(TSubclassOf<UGenericWidget> InWidgetClass, const FOnWidgetActiveStateChanged& OnFinish = FOnWidgetActiveStateChanged())
+class WIDGETGENERATION_API FGenericWidgetHelper
 {
-	if (UGenericWidgetManager* GenericWidgetManager = GetManagerOwner<UGenericWidgetManager>())
+public:
+	template <typename WidgetT = UGenericWidget, typename OwnerType = UObject>
+	static WidgetT* OpenGenericWidget(OwnerType OwningObject, TSubclassOf<UGenericWidget> InWidgetClass, const FOnWidgetActiveStateChanged& OnFinish = FOnWidgetActiveStateChanged())
 	{
-		return GenericWidgetManager->OpenGenericWidget<WidgetT>(GenericWidgetManager->GetWorld(), InWidgetClass, OnFinish);
+		if (UGenericWidgetManager* GenericWidgetManager = GetManagerOwner<UGenericWidgetManager>())
+		{
+			return GenericWidgetManager->OpenGenericWidget<WidgetT>(OwningObject, InWidgetClass, OnFinish);
+		}
+		return nullptr;
 	}
-	return nullptr;
-}
 
-inline static UGenericWidget* OpenGenericWidget(const TSubclassOf<UGenericWidget>& InWidgetClass, const FOnWidgetActiveStateChanged& OnFinish = FOnWidgetActiveStateChanged())
-{
-	return OpenGenericWidget<UGenericWidget>(InWidgetClass, OnFinish);
-}
-
-inline static bool OpenGenericWidget(UGenericWidget* InWidget, const FOnWidgetActiveStateChanged& OnFinish = FOnWidgetActiveStateChanged())
-{
-	if (UGenericWidgetManager* GenericWidgetManager = GetManagerOwner<UGenericWidgetManager>())
+	template <typename WidgetT = UGenericWidget>
+	static WidgetT* OpenGenericWidget(TSubclassOf<UGenericWidget> InWidgetClass, const FOnWidgetActiveStateChanged& OnFinish = FOnWidgetActiveStateChanged())
 	{
-		return GenericWidgetManager->OpenGenericWidget(InWidget, OnFinish);
+		if (UGenericWidgetManager* GenericWidgetManager = GetManagerOwner<UGenericWidgetManager>())
+		{
+			return GenericWidgetManager->OpenGenericWidget<WidgetT>(GenericWidgetManager->GetWorld(), InWidgetClass, OnFinish);
+		}
+		return nullptr;
 	}
-	return false;
-}
 
-inline static bool OpenGenericWidget(FOpenWidgetParameter& OpenWidgetParameter)
-{
-	if (UGenericWidgetManager* GenericWidgetManager = GetManagerOwner<UGenericWidgetManager>())
+	static UGenericWidget* OpenGenericWidget(const TSubclassOf<UGenericWidget>& InWidgetClass, const FOnWidgetActiveStateChanged& OnFinish = FOnWidgetActiveStateChanged())
 	{
-		return GenericWidgetManager->OpenGenericWidget(OpenWidgetParameter);
+		return OpenGenericWidget<UGenericWidget>(InWidgetClass, OnFinish);
 	}
-	return false;
-}
 
-inline static bool CloseGenericWidget(FGameplayTag InSlotTag, bool MarkAsGarbage = true, const FOnWidgetActiveStateChanged& OnFinish = FOnWidgetActiveStateChanged())
-{
-	if (UGenericWidgetManager* GenericWidgetManager = GetManagerOwner<UGenericWidgetManager>())
+	static bool OpenGenericWidget(UGenericWidget* InWidget, const FOnWidgetActiveStateChanged& OnFinish = FOnWidgetActiveStateChanged())
 	{
-		return GenericWidgetManager->CloseGenericWidget(InSlotTag, MarkAsGarbage, OnFinish);
+		if (UGenericWidgetManager* GenericWidgetManager = GetManagerOwner<UGenericWidgetManager>())
+		{
+			return GenericWidgetManager->OpenGenericWidget(InWidget, OnFinish);
+		}
+		return false;
 	}
-	return false;
-}
 
-inline static bool CloseGenericWidget(UGenericWidget* InWidget, bool MarkAsGarbage = true, const FOnWidgetActiveStateChanged& OnFinish = FOnWidgetActiveStateChanged())
-{
-	if (UGenericWidgetManager* GenericWidgetManager = GetManagerOwner<UGenericWidgetManager>())
+	static bool OpenGenericWidget(FOpenWidgetParameter& OpenWidgetParameter)
 	{
-		return GenericWidgetManager->CloseGenericWidget(InWidget, MarkAsGarbage, OnFinish);
+		if (UGenericWidgetManager* GenericWidgetManager = GetManagerOwner<UGenericWidgetManager>())
+		{
+			return GenericWidgetManager->OpenGenericWidget(OpenWidgetParameter);
+		}
+		return false;
 	}
-	return false;
-}
 
-inline static bool CloseGenericWidget(FCloseWidgetParameter& CloseWidgetParameter)
-{
-	if (UGenericWidgetManager* GenericWidgetManager = GetManagerOwner<UGenericWidgetManager>())
+	static bool CloseGenericWidget(FGameplayTag InSlotTag, bool MarkAsGarbage = true, const FOnWidgetActiveStateChanged& OnFinish = FOnWidgetActiveStateChanged())
 	{
-		return GenericWidgetManager->CloseGenericWidget(CloseWidgetParameter);
+		if (UGenericWidgetManager* GenericWidgetManager = GetManagerOwner<UGenericWidgetManager>())
+		{
+			return GenericWidgetManager->CloseGenericWidget(InSlotTag, MarkAsGarbage, OnFinish);
+		}
+		return false;
 	}
-	return false;
-}
+
+	static bool CloseGenericWidget(UGenericWidget* InWidget, bool MarkAsGarbage = true, const FOnWidgetActiveStateChanged& OnFinish = FOnWidgetActiveStateChanged())
+	{
+		if (UGenericWidgetManager* GenericWidgetManager = GetManagerOwner<UGenericWidgetManager>())
+		{
+			return GenericWidgetManager->CloseGenericWidget(InWidget, MarkAsGarbage, OnFinish);
+		}
+		return false;
+	}
+
+	static bool CloseGenericWidget(FCloseWidgetParameter& CloseWidgetParameter)
+	{
+		if (UGenericWidgetManager* GenericWidgetManager = GetManagerOwner<UGenericWidgetManager>())
+		{
+			return GenericWidgetManager->CloseGenericWidget(CloseWidgetParameter);
+		}
+		return false;
+	}
+};

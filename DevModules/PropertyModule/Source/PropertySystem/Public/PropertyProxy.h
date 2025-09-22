@@ -33,9 +33,6 @@ public:
 	PROPERTYSYSTEM_API void ApplyProperty();
 
 	UFUNCTION(BlueprintCallable)
-	PROPERTYSYSTEM_API void ReverseProperty();
-
-	UFUNCTION(BlueprintCallable)
 	PROPERTYSYSTEM_API void ResetProperty();
 
 protected:
@@ -44,9 +41,6 @@ protected:
 
 	UFUNCTION(BlueprintNativeEvent)
 	PROPERTYSYSTEM_API void OnPropertyApplied(UPropertyViewModel* InPropertyViewModel);
-
-	UFUNCTION(BlueprintNativeEvent)
-	PROPERTYSYSTEM_API void OnPropertyReversed(UPropertyViewModel* InPropertyViewModel);
 
 	UFUNCTION(BlueprintNativeEvent)
 	PROPERTYSYSTEM_API void OnPropertyReset(UPropertyViewModel* InPropertyViewModel);

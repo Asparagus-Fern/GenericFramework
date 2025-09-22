@@ -1,9 +1,8 @@
 ﻿// Copyright ChenTaiye 2025. All Rights Reserved.
 
-#include "Loading/LoadingPanel.h"
+#include "UMG/Loading/LoadingPanel.h"
 
-#include "Loading/LoadingProgressBar.h"
-
+#include "UMG/Loading/LoadingProgressBar.h"
 
 void ULoadingPanel::NativeOnLoadingBegin(int32 Num)
 {

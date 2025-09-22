@@ -14,7 +14,7 @@ class UGenericButtonCollection;
  */
 UCLASS(Abstract, MinimalAPI)
 class UGenericButtonContainer : public UGenericWidget
-{
+{	
 	GENERATED_BODY()
 
 public:

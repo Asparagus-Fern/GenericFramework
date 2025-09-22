@@ -69,12 +69,13 @@ double UScalarPropertyValueViewModel::GetCurrentValue() const
 void UScalarPropertyValueViewModel::SetCurrentValue(double InValue)
 {
 	const FDoubleRange Range(ValueRange.X, ValueRange.Y);
-	if (Range.Contains(InValue))
+	if (Range.Contains(InValue) && CurrentValue != InValue)
 	{
-		if (UE_MVVM_SET_PROPERTY_VALUE_INLINE(CurrentValue, InValue))
-		{
-			SetNormalizedCurrentValue(GetNormalizedCurrentValue());
-		}
+		PrePropertyChanged();
+		CurrentValue = InValue;
+		UE_MVVM_BROADCAST_FIELD_VALUE_CHANGED(CurrentValue);
+		SetNormalizedCurrentValue(GetNormalizedCurrentValue());
+		PostPropertyChanged();
 	}
 }
 

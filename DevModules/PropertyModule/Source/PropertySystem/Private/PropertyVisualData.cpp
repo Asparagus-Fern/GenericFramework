@@ -4,7 +4,7 @@
 
 #include "MVVM/PropertyViewModel.h"
 
-TSubclassOf<UPropertyValueBase> UPropertyVisualData::GatherListItemForProperty(const UPropertyViewModel* InPropertyViewModel) const
+TSubclassOf<UPropertyValueBase> UPropertyVisualData::GatherPropertyValueWidgetClass(const UPropertyViewModel* InPropertyViewModel) const
 {
 	if (!IsValid(InPropertyViewModel))
 	{
@@ -22,4 +22,29 @@ TSubclassOf<UPropertyValueBase> UPropertyVisualData::GatherListItemForProperty(c
 	}
 
 	return nullptr;
+}
+
+TMap<FGameplayTag, TSubclassOf<UPropertyListItemOption>> UPropertyVisualData::GatherPropertyOptionClasses(const UPropertyViewModel* InPropertyViewModel) const
+{
+	TMap<FGameplayTag, TSubclassOf<UPropertyListItemOption>> OptionClasses;
+
+	if (IsValid(InPropertyViewModel))
+	{
+		for (auto& PropertyTag : InPropertyViewModel->PropertyTags)
+		{
+			if (PropertyListItemOptionForName.Contains(InPropertyViewModel->PropertyName))
+			{
+				OptionClasses.Emplace(PropertyTag, PropertyValueWidgetForName.FindRef(InPropertyViewModel->PropertyName));
+				continue;
+			}
+
+			if (PropertyListItemOptionForClass.Contains(PropertyTag))
+			{
+				OptionClasses.Emplace(PropertyTag, PropertyListItemOptionForClass.FindRef(PropertyTag));
+				continue;
+			}
+		}
+	}
+
+	return OptionClasses;
 }

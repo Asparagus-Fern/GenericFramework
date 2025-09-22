@@ -1,10 +1,9 @@
 ﻿// Copyright ChenTaiye 2025. All Rights Reserved.
 
-
-#include "Carousel/CarouselPanel.h"
+#include "UMG/Carousel/CarouselPanel.h"
 
 #include "CommonWidgetCarousel.h"
-#include "Carousel/CarouselNavBar.h"
+#include "UMG/Carousel/CarouselNavBar.h"
 
 void UCarouselPanel::NativePreConstruct()
 {

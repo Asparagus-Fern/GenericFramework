@@ -34,10 +34,7 @@ void UPropertyList::NativeDestruct()
 
 	if (!IsDesignTime() && IsValid(PropertyProxy))
 	{
-		if (UPropertyManager* PropertyManager = GetManagerOwner<UPropertyManager>())
-		{
-			PropertyManager->UnRegisterPropertyProxy(PropertyProxy);
-		}
+		FPropertyHelper::UnRegisterPropertyProxy(PropertyProxy);
 	}
 }
 
@@ -57,13 +54,7 @@ void UPropertyList::SetPropertyListViewModel(UPropertyListViewModel* InViewModel
 	}
 	else
 	{
-		if (PropertyProxy)
-		{
-			if (UPropertyManager* PropertyManager = GetManagerOwner<UPropertyManager>())
-			{
-				PropertyManager->UnRegisterPropertyProxy(PropertyProxy);
-			}
-		}
+		FPropertyHelper::UnRegisterPropertyProxy(PropertyProxy);
 	}
 }
 
@@ -92,10 +83,7 @@ void UPropertyList::OnPropertyProxyClassChanged_Implementation(TSubclassOf<UProp
 			}
 			else
 			{
-				if (UPropertyManager* PropertyManager = GetManagerOwner<UPropertyManager>())
-				{
-					PropertyProxy = PropertyManager->RegisterPropertyProxy(InClass);
-				}
+				PropertyProxy = FPropertyHelper::RegisterPropertyProxy(InClass);
 			}
 		}
 

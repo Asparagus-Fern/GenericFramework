@@ -4,10 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "Interface/ManagerInterface.h"
+#include "Manager/ManagerStatics.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "PropertyManager.generated.h"
 
 class UPropertyProxy;
+
 /**
  * 
  */
@@ -31,4 +33,56 @@ public:
 private:
 	UPROPERTY()
 	TArray<TObjectPtr<UPropertyProxy>> PropertyProxies;
+};
+
+
+/**
+ * 
+ */
+class PROPERTYSYSTEM_API FPropertyHelper
+{
+public:
+	static UPropertyProxy* RegisterPropertyProxy(const TSubclassOf<UPropertyProxy>& InPropertyProxyClass)
+	{
+		if (UPropertyManager* GenericWidgetManager = GetManagerOwner<UPropertyManager>())
+		{
+			return GenericWidgetManager->RegisterPropertyProxy(InPropertyProxyClass);
+		}
+		return nullptr;
+	}
+
+	static void UnRegisterPropertyProxy(UPropertyProxy* InPropertyProxy)
+	{
+		if (UPropertyManager* GenericWidgetManager = GetManagerOwner<UPropertyManager>())
+		{
+			GenericWidgetManager->UnRegisterPropertyProxy(InPropertyProxy);
+		}
+	}
+
+	static bool ExistPropertyProxy(const TSubclassOf<UPropertyProxy>& InPropertyProxyClass)
+	{
+		if (UPropertyManager* GenericWidgetManager = GetManagerOwner<UPropertyManager>())
+		{
+			return GenericWidgetManager->ExistPropertyProxy(InPropertyProxyClass);
+		}
+		return false;
+	}
+
+	static bool ExistPropertyProxy(const UPropertyProxy* InPropertyProxy)
+	{
+		if (UPropertyManager* GenericWidgetManager = GetManagerOwner<UPropertyManager>())
+		{
+			return GenericWidgetManager->ExistPropertyProxy(InPropertyProxy);
+		}
+		return false;
+	}
+
+	static UPropertyProxy* GetPropertyProxy(const TSubclassOf<UPropertyProxy>& InPropertyProxyClass)
+	{
+		if (UPropertyManager* GenericWidgetManager = GetManagerOwner<UPropertyManager>())
+		{
+			return GenericWidgetManager->GetPropertyProxy(InPropertyProxyClass);
+		}
+		return nullptr;
+	}
 };

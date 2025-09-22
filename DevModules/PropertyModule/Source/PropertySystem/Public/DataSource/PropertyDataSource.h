@@ -26,7 +26,9 @@ public:
 	PROPERTYSYSTEM_API FString GetValueAsString() const;
 	PROPERTYSYSTEM_API void SetValueFromString(const FString& InValue) const;
 
+	const FCachedPropertyPath& GetPropertyGetterPath();
 	void SetPropertyGetterPath(const FCachedPropertyPath& InGetterPath);
+	const FCachedPropertyPath& GetPropertySetterPath();
 	void SetPropertySetterPath(const FCachedPropertyPath& InSetterPath);
 
 	template <typename SourceType>

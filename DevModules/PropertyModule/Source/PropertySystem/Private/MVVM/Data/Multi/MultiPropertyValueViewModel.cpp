@@ -2,9 +2,9 @@
 
 #include "MVVM/Data/Multi/MultiPropertyValueViewModel.h"
 
-bool UMultiPropertyValueViewModel::OnPropertyInitialized()
+bool UMultiPropertyValueViewModel::Initialize(UPropertyProxy* InOwnerProxy)
 {
-	bool Result = Super::OnPropertyInitialized();
+	bool Result = Super::Initialize(InOwnerProxy);
 
 	if (Result)
 	{
@@ -15,6 +15,11 @@ bool UMultiPropertyValueViewModel::OnPropertyInitialized()
 	}
 
 	return Result;
+}
+
+void UMultiPropertyValueViewModel::Deinitialize()
+{
+	Super::Deinitialize();
 }
 
 FString UMultiPropertyValueViewModel::GetInitialValueAsString()
@@ -170,7 +175,7 @@ void UMultiPropertyValueViewModel::SetSelectedValueByIndex(int32 InIndex)
 
 	if (KeyNames.IsValidIndex(InIndex))
 	{
-		UE_MVVM_SET_PROPERTY_VALUE_INLINE(SelectedValue, KeyNames[InIndex]);
+		SetSelectedValue(KeyNames[InIndex]);
 	}
 }
 
@@ -181,5 +186,11 @@ FString UMultiPropertyValueViewModel::GetSelectedValue() const
 
 void UMultiPropertyValueViewModel::SetSelectedValue(FString InValue)
 {
-	UE_MVVM_SET_PROPERTY_VALUE_INLINE(SelectedValue, InValue);
+	if (SelectedValue != InValue)
+	{
+		PrePropertyChanged();
+		SelectedValue = InValue;
+		UE_MVVM_BROADCAST_FIELD_VALUE_CHANGED(SelectedValue);
+		PostPropertyChanged();
+	}
 }

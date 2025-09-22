@@ -4,17 +4,16 @@
 
 #include "CoreMinimal.h"
 
-#include "NativeGameplayTags.h"
+#include "GenericButtonType.h"
 #include "Base/GenericWidget.h"
 #include "GenericButtonWidget.generated.h"
 
+class UGenericButtonConfirm;
 class UButtonSoundViewModel;
 class UButtonInputViewModel;
 class UButtonSelectionViewModel;
 class UGenericButtonStyle;
 class UGenericButton;
-
-UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Button);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FInteractableWidgetEvent, UGenericButtonWidget*, Button);
 
@@ -73,36 +72,270 @@ public:
 	UFUNCTION(BlueprintCallable)
 	WIDGETGROUPGENERATION_API void SetButtonFocusable(bool bInIsFocusable);
 
-private:
-	virtual UGenericButton* ConstructInternalButton();
+protected:
+	WIDGETGROUPGENERATION_API virtual UGenericButton* ConstructInternalButton();
 	TWeakObjectPtr<class UGenericButton> RootButton;
+
+	/* ==================== Input ==================== */
+public:
+	/* The type of mouse action required by the user to trigger the button's 'Click' */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Generic Button Widget | Input")
+	TEnumAsByte<EButtonClickMethod::Type> ClickMethod;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Generic Button Widget | Input")
+	TEnumAsByte<EButtonTouchMethod::Type> TouchMethod;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Generic Button Widget | Input")
+	TEnumAsByte<EButtonPressMethod::Type> PressMethod;
+
+public:
+	/* Set the click method for mouse interaction */
+	UFUNCTION(BlueprintCallable)
+	WIDGETGROUPGENERATION_API void SetClickMethod(EButtonClickMethod::Type InClickMethod);
+
+	/* Set the click method for touch interaction */
+	UFUNCTION(BlueprintCallable)
+	WIDGETGROUPGENERATION_API void SetTouchMethod(EButtonTouchMethod::Type InTouchMethod);
+
+	/* Set the click method for keyboard/gamepad button press interaction */
+	UFUNCTION(BlueprintCallable)
+	WIDGETGROUPGENERATION_API void SetPressMethod(EButtonPressMethod::Type InPressMethod);
+
+public:
+	UFUNCTION(BlueprintPure)
+	UButtonInputViewModel* GetButtonInputViewModel() const;
+
+	UFUNCTION(BlueprintCallable)
+	void SetButtonInputViewModel(UButtonInputViewModel* InViewModel);
+
+protected:
+	UFUNCTION(BlueprintNativeEvent, Category="Button Input View Model")
+	WIDGETGROUPGENERATION_API void OnClickMethodChanged(EButtonClickMethod::Type InClickMethod);
+
+	UFUNCTION(BlueprintNativeEvent, Category="Button Input View Model")
+	WIDGETGROUPGENERATION_API void OnTouchMethodChanged(EButtonTouchMethod::Type InTouchMethod);
+
+	UFUNCTION(BlueprintNativeEvent, Category="Button Input View Model")
+	WIDGETGROUPGENERATION_API void OnPressMethodChanged(EButtonPressMethod::Type InPressMethod);
+
+	UPROPERTY(VisibleAnywhere, Getter, Setter, BlueprintGetter="GetButtonInputViewModel", BlueprintSetter="SetButtonInputViewModel", Category = "Generic Button Widget | ViewModel")
+	TObjectPtr<UButtonInputViewModel> ButtonInputViewModel = nullptr;
+
+	/* ==================== Interaction ==================== */
+public:
+	/* Is this button currently interactable? (use instead of GetIsEnabled) */
+	UFUNCTION(BlueprintCallable)
+	WIDGETGROUPGENERATION_API bool GetIsInteractionEnabled() const;
+
+	/* Change whether this widget is selectable at all. If false and currently selected, will deselect. */
+	UFUNCTION(BlueprintCallable)
+	WIDGETGROUPGENERATION_API void SetIsInteractionEnabled(bool bInIsInteractionEnabled);
+
+private:
+	/* True if this button is currently enabled */
+	uint8 bButtonEnabled : 1;
+
+	/* True if interaction with this button is currently enabled */
+	uint8 bInteractionEnabled : 1;
+
+	/* Enables this button (called in SetIsEnabled override) */
+	void EnableButton();
+
+	/* Disables this button (called in SetIsEnabled override) */
+	void DisableButton();
 
 	/* ==================== Event ==================== */
 protected:
 	/* Helper function registered to the underlying button when pressed */
 	UFUNCTION()
-	void HandleButtonPressed();
+	WIDGETGROUPGENERATION_API void HandleButtonPressed();
 
 	/* Helper function registered to the underlying button when released */
 	UFUNCTION()
-	void HandleButtonReleased();
+	WIDGETGROUPGENERATION_API void HandleButtonReleased();
 
 	/* Handler function registered to the underlying button's click. */
 	UFUNCTION()
-	void HandleButtonClicked();
+	WIDGETGROUPGENERATION_API void HandleButtonClicked();
 
 	/* Handler function registered to the underlying button's double click. */
 	UFUNCTION()
-	void HandleButtonDoubleClicked();
+	WIDGETGROUPGENERATION_API void HandleButtonDoubleClicked();
 
 	/* Helper function registered to the underlying button receiving focus */
 	UFUNCTION()
-	virtual void HandleFocusReceived();
+	WIDGETGROUPGENERATION_API virtual void HandleFocusReceived();
 
 	/* Helper function registered to the underlying button losing focus */
 	UFUNCTION()
-	virtual void HandleFocusLost();
+	WIDGETGROUPGENERATION_API virtual void HandleFocusLost();
 
+	/* ==================== Selection ==================== */
+public:
+	/**
+	 * True if this button is currently locked.
+	 * Locked button can be hovered, focused, and pressed, but the Click event will not go through.
+	 * Business logic behind it will not be executed. Designed for progressive disclosure
+	 */
+	UPROPERTY(EditAnywhere, Category = "Generic Button Widget | Selection")
+	uint8 bLocked : 1;
+
+	/* True if the button supports being in a "selected" state, which will update the style accordingly */
+	UPROPERTY(EditAnywhere, Category = "Generic Button Widget | Selection")
+	uint8 bSelectable : 1;
+
+	/* True if the button can be deselected by clicking it when selected */
+	UPROPERTY(EditAnywhere, Category = "Generic Button Widget | Selection", meta = (EditConditionHides, EditCondition = "bSelectable"))
+	uint8 bToggleable : 1;
+
+	/* If True, the button will be selected when it actived */
+	UPROPERTY(EditAnywhere, Category = "Generic Button Widget | Selection", meta=(EditConditionHides, EditCondition = "bSelectable"))
+	bool bDefaultSelected = false;
+
+	/* If true, the button will be selected when it receives focus. */
+	UPROPERTY(EditAnywhere, Category = "Generic Button Widget | Selection", meta = (EditConditionHides, EditCondition = "bSelectable"))
+	uint8 bSelectedWhenReceiveFocus : 1;
+
+	/* If true, the button may be clicked while selected. Otherwise, interaction is disabled in the selected state. */
+	UPROPERTY(EditAnywhere, Category = "Generic Button Widget | Selection", meta = (EditConditionHides, EditCondition = "bSelectable && !bToggleable"))
+	uint8 bInteractableWhenSelected : 1;
+
+	UPROPERTY(EditAnywhere, Category = "Generic Button Widget | Selection", meta = (EditConditionHides, EditCondition = "bSelectable"))
+	uint8 bTriggerClickedAfterSelection : 1;
+
+public:
+	UFUNCTION(BlueprintPure)
+	WIDGETGROUPGENERATION_API bool GetIsLocked() const;
+
+	/* Change whether this widget is locked. If locked, the button can be focusable and responsive to mouse input but will not broadcast OnClicked events. */
+	UFUNCTION(BlueprintCallable)
+	WIDGETGROUPGENERATION_API void SetIsLocked(bool bInIsLocked);
+
+	UFUNCTION(BlueprintPure)
+	WIDGETGROUPGENERATION_API bool GetIsSelectable() const;
+
+	/* Change whether this widget is selectable at all. If false and currently selected, will deselect. */
+	UFUNCTION(BlueprintCallable)
+	WIDGETGROUPGENERATION_API void SetIsSelectable(bool bInIsSelectable);
+
+	UFUNCTION(BlueprintPure)
+	WIDGETGROUPGENERATION_API bool GetIsToggleable() const;
+
+	/* Change whether this widget is toggleable. If toggleable, clicking when selected will deselect. */
+	UFUNCTION(BlueprintCallable)
+	WIDGETGROUPGENERATION_API void SetIsToggleable(bool bInIsToggleable);
+
+	UFUNCTION(BlueprintPure)
+	WIDGETGROUPGENERATION_API bool GetIsDefaultSelected() const;
+
+	/* Change whether this widget is Default Selected. */
+	UFUNCTION(BlueprintCallable)
+	WIDGETGROUPGENERATION_API void SetIsDefaultSelected(bool bInDefaultSelected);
+
+	UFUNCTION(BlueprintPure)
+	WIDGETGROUPGENERATION_API bool GetIsSelectedWhenReceiveFocus() const;
+
+	/* Set whether the button should become selected upon receiving focus or not; Only settable for buttons that are selectable */
+	UFUNCTION(BlueprintCallable)
+	WIDGETGROUPGENERATION_API void SetIsSelectedWhenReceiveFocus(bool bInSelectedWhenReceiveFocus);
+
+	UFUNCTION(BlueprintPure)
+	WIDGETGROUPGENERATION_API bool GetIsInteractableWhenSelected() const;
+
+	/* Change whether this widget is selectable when currently selected. */
+	UFUNCTION(BlueprintCallable)
+	WIDGETGROUPGENERATION_API void SetIsInteractableWhenSelected(bool bInInteractableWhenSelected);
+
+	UFUNCTION(BlueprintPure)
+	WIDGETGROUPGENERATION_API bool GetIsTriggerClickedAfterSelection() const;
+
+	/* Change whether the button click event call after selected event */
+	UFUNCTION(BlueprintCallable)
+	WIDGETGROUPGENERATION_API void SetIsTriggerClickedAfterSelection(bool bInTriggerClickedAfterSelection);
+
+	/* True if the button is currently in a selected state, False otherwise */
+	UFUNCTION(BlueprintPure)
+	WIDGETGROUPGENERATION_API bool GetIsSelected() const;
+
+	/* Change the selected state manually. */
+	UFUNCTION(BlueprintCallable)
+	WIDGETGROUPGENERATION_API void SetIsSelected(bool InSelected);
+
+public:
+	UFUNCTION(BlueprintPure)
+	WIDGETGROUPGENERATION_API UButtonSelectionViewModel* GetButtonSelectionViewModel() const;
+
+	UFUNCTION(BlueprintCallable)
+	WIDGETGROUPGENERATION_API void SetButtonSelectionViewModel(UButtonSelectionViewModel* InViewModel);
+
+protected:
+	UFUNCTION(BlueprintNativeEvent, Category="Button Selection View Model")
+	WIDGETGROUPGENERATION_API void OnSelectableChanged(bool IsSelectable);
+
+	UFUNCTION(BlueprintNativeEvent, Category="Button Selection View Model")
+	WIDGETGROUPGENERATION_API void OnToggleableChanged(bool IsToggleable);
+
+	UFUNCTION(BlueprintNativeEvent, Category="Button Selection View Model")
+	WIDGETGROUPGENERATION_API void OnDefaultSelectedChanged(bool IsDefaultSelected);
+
+	UFUNCTION(BlueprintNativeEvent, Category="Button Selection View Model")
+	WIDGETGROUPGENERATION_API void OnShouldSelectUponReceivingFocusChanged(bool IsShouldSelectUponReceivingFocus);
+
+	UFUNCTION(BlueprintNativeEvent, Category="Button Selection View Model")
+	WIDGETGROUPGENERATION_API void OnInteractableWhenSelectedChanged(bool IsInteractableWhenSelected);
+
+	UFUNCTION(BlueprintNativeEvent, Category="Button Selection View Model")
+	WIDGETGROUPGENERATION_API void OnTriggerClickedAfterSelectionChanged(bool IsTriggerClickedAfterSelection);
+
+	UPROPERTY(VisibleAnywhere, Instanced, Getter, Setter, BlueprintGetter="GetButtonSelectionViewModel", BlueprintSetter="SetButtonSelectionViewModel", Category = "Generic Button Widget | ViewModel")
+	TObjectPtr<UButtonSelectionViewModel> ButtonSelectionViewModel = nullptr;
+
+private:
+	/* True if this button is currently selected */
+	uint8 bSelected : 1;
+
+	/* ==================== Event Confirm ==================== */
+public:
+	UFUNCTION(BlueprintPure)
+	WIDGETGROUPGENERATION_API UGenericButtonConfirm* GetButtonConfirm();
+
+	UFUNCTION(BlueprintCallable)
+	WIDGETGROUPGENERATION_API UGenericButtonConfirm* SetButtonConfirmByClass(TSubclassOf<UGenericButtonConfirm> InButtonConfirmClass);
+	
+	UFUNCTION(BlueprintCallable)
+	WIDGETGROUPGENERATION_API void SetButtonConfirm(UGenericButtonConfirm* InButtonConfirm);
+
+	UFUNCTION(BlueprintCallable)
+	WIDGETGROUPGENERATION_API void ClearButtonConfirm();
+	
+protected:
+	WIDGETGROUPGENERATION_API void ConfirmButtonPressed();
+	WIDGETGROUPGENERATION_API virtual void OnButtonPressedConfirmed();
+
+	WIDGETGROUPGENERATION_API void ConfirmButtonReleased();
+	WIDGETGROUPGENERATION_API virtual void OnButtonReleasedConfirmed();
+
+	WIDGETGROUPGENERATION_API void ConfirmButtonHovered();
+	WIDGETGROUPGENERATION_API virtual void OnButtonHoveredConfirmed();
+
+	WIDGETGROUPGENERATION_API void ConfirmButtonUnhovered();
+	WIDGETGROUPGENERATION_API virtual void OnButtonUnhoveredConfirmed();
+
+	WIDGETGROUPGENERATION_API void ConfirmButtonClicked();
+	WIDGETGROUPGENERATION_API virtual void OnButtonClickedConfirmed();
+
+	WIDGETGROUPGENERATION_API void ConfirmButtonDoubleClicked();
+	WIDGETGROUPGENERATION_API virtual void OnButtonDoubleClickedConfirmed();
+
+	WIDGETGROUPGENERATION_API void SetSelectedInternal(bool bInSelected);
+	WIDGETGROUPGENERATION_API void ConfirmButtonSelection(bool bInSelected);
+	WIDGETGROUPGENERATION_API virtual void OnButtonSelectionConfirmed(bool bInSelected);
+
+private:
+	UPROPERTY()
+	TObjectPtr<UGenericButtonConfirm> ButtonConfirm = nullptr;
+
+	/* ==================== Event Handle ==================== */
 protected:
 	WIDGETGROUPGENERATION_API virtual void NativeOnEnabled();
 	WIDGETGROUPGENERATION_API virtual void NativeOnDisabled();
@@ -279,178 +512,6 @@ private:
 	UPROPERTY()
 	FButtonStyle InternalDisabledStyle;
 
-	/* ==================== Selection ==================== */
-public:
-	/**
-	 * True if this button is currently locked.
-	 * Locked button can be hovered, focused, and pressed, but the Click event will not go through.
-	 * Business logic behind it will not be executed. Designed for progressive disclosure
-	 */
-	UPROPERTY(EditAnywhere, Category = "Generic Button Widget | Selection")
-	uint8 bLocked : 1;
-
-	/* True if the button supports being in a "selected" state, which will update the style accordingly */
-	UPROPERTY(EditAnywhere, Category = "Generic Button Widget | Selection")
-	uint8 bSelectable : 1;
-
-	/* True if the button can be deselected by clicking it when selected */
-	UPROPERTY(EditAnywhere, Category = "Generic Button Widget | Selection", meta = (EditConditionHides, EditCondition = "bSelectable"))
-	uint8 bToggleable : 1;
-
-	/* If True, the button will be selected when it actived */
-	UPROPERTY(EditAnywhere, Category = "Generic Button Widget | Selection", meta=(EditConditionHides, EditCondition = "bSelectable"))
-	bool bDefaultSelected = false;
-
-	/* If true, the button will be selected when it receives focus. */
-	UPROPERTY(EditAnywhere, Category = "Generic Button Widget | Selection", meta = (EditConditionHides, EditCondition = "bSelectable"))
-	uint8 bSelectedWhenReceiveFocus : 1;
-
-	/* If true, the button may be clicked while selected. Otherwise, interaction is disabled in the selected state. */
-	UPROPERTY(EditAnywhere, Category = "Generic Button Widget | Selection", meta = (EditConditionHides, EditCondition = "bSelectable && !bToggleable"))
-	uint8 bInteractableWhenSelected : 1;
-
-	UPROPERTY(EditAnywhere, Category = "Generic Button Widget | Selection", meta = (EditConditionHides, EditCondition = "bSelectable"))
-	uint8 bTriggerClickedAfterSelection : 1;
-
-public:
-	UFUNCTION(BlueprintPure)
-	WIDGETGROUPGENERATION_API bool GetIsLocked() const;
-
-	/* Change whether this widget is locked. If locked, the button can be focusable and responsive to mouse input but will not broadcast OnClicked events. */
-	UFUNCTION(BlueprintCallable)
-	WIDGETGROUPGENERATION_API void SetIsLocked(bool bInIsLocked);
-
-	UFUNCTION(BlueprintPure)
-	WIDGETGROUPGENERATION_API bool GetIsSelectable() const;
-
-	/* Change whether this widget is selectable at all. If false and currently selected, will deselect. */
-	UFUNCTION(BlueprintCallable)
-	WIDGETGROUPGENERATION_API void SetIsSelectable(bool bInIsSelectable);
-
-	UFUNCTION(BlueprintPure)
-	WIDGETGROUPGENERATION_API bool GetIsToggleable() const;
-
-	/* Change whether this widget is toggleable. If toggleable, clicking when selected will deselect. */
-	UFUNCTION(BlueprintCallable)
-	WIDGETGROUPGENERATION_API void SetIsToggleable(bool bInIsToggleable);
-
-	UFUNCTION(BlueprintPure)
-	WIDGETGROUPGENERATION_API bool GetIsDefaultSelected() const;
-
-	/* Change whether this widget is Default Selected. */
-	UFUNCTION(BlueprintCallable)
-	WIDGETGROUPGENERATION_API void SetIsDefaultSelected(bool bInDefaultSelected);
-
-	UFUNCTION(BlueprintPure)
-	WIDGETGROUPGENERATION_API bool GetIsSelectedWhenReceiveFocus() const;
-
-	/* Set whether the button should become selected upon receiving focus or not; Only settable for buttons that are selectable */
-	UFUNCTION(BlueprintCallable)
-	WIDGETGROUPGENERATION_API void SetIsSelectedWhenReceiveFocus(bool bInSelectedWhenReceiveFocus);
-
-	UFUNCTION(BlueprintPure)
-	WIDGETGROUPGENERATION_API bool GetIsInteractableWhenSelected() const;
-
-	/* Change whether this widget is selectable when currently selected. */
-	UFUNCTION(BlueprintCallable)
-	WIDGETGROUPGENERATION_API void SetIsInteractableWhenSelected(bool bInInteractableWhenSelected);
-
-	UFUNCTION(BlueprintPure)
-	WIDGETGROUPGENERATION_API bool GetIsTriggerClickedAfterSelection() const;
-
-	/* Change whether the button click event call after selected event */
-	UFUNCTION(BlueprintCallable)
-	WIDGETGROUPGENERATION_API void SetIsTriggerClickedAfterSelection(bool bInTriggerClickedAfterSelection);
-
-	/* True if the button is currently in a selected state, False otherwise */
-	UFUNCTION(BlueprintPure)
-	WIDGETGROUPGENERATION_API bool GetIsSelected() const;
-
-	/* Change the selected state manually. */
-	UFUNCTION(BlueprintCallable)
-	WIDGETGROUPGENERATION_API void SetIsSelected(bool InSelected, bool bGiveClickFeedback = true);
-	
-protected:
-	WIDGETGROUPGENERATION_API void SetSelectedInternal(bool bInSelected, bool bGiveClickFeedback = true, bool bBroadcast = true);
-
-public:
-	UFUNCTION(BlueprintPure)
-	UButtonSelectionViewModel* GetButtonSelectionViewModel() const;
-
-	UFUNCTION(BlueprintCallable)
-	void SetButtonSelectionViewModel(UButtonSelectionViewModel* InViewModel);
-
-protected:
-	UFUNCTION(BlueprintNativeEvent, Category="Button Selection View Model")
-	WIDGETGROUPGENERATION_API void OnSelectableChanged(bool IsSelectable);
-
-	UFUNCTION(BlueprintNativeEvent, Category="Button Selection View Model")
-	WIDGETGROUPGENERATION_API void OnToggleableChanged(bool IsToggleable);
-
-	UFUNCTION(BlueprintNativeEvent, Category="Button Selection View Model")
-	WIDGETGROUPGENERATION_API void OnDefaultSelectedChanged(bool IsDefaultSelected);
-
-	UFUNCTION(BlueprintNativeEvent, Category="Button Selection View Model")
-	WIDGETGROUPGENERATION_API void OnShouldSelectUponReceivingFocusChanged(bool IsShouldSelectUponReceivingFocus);
-
-	UFUNCTION(BlueprintNativeEvent, Category="Button Selection View Model")
-	WIDGETGROUPGENERATION_API void OnInteractableWhenSelectedChanged(bool IsInteractableWhenSelected);
-
-	UFUNCTION(BlueprintNativeEvent, Category="Button Selection View Model")
-	WIDGETGROUPGENERATION_API void OnTriggerClickedAfterSelectionChanged(bool IsTriggerClickedAfterSelection);
-
-	UPROPERTY(VisibleAnywhere, Instanced, Getter, Setter, BlueprintGetter="GetButtonSelectionViewModel", BlueprintSetter="SetButtonSelectionViewModel", Category = "Generic Button Widget | ViewModel")
-	TObjectPtr<UButtonSelectionViewModel> ButtonSelectionViewModel = nullptr;
-
-private:
-	/* True if this button is currently selected */
-	uint8 bSelected : 1;
-
-	/* ==================== Input ==================== */
-public:
-	/* The type of mouse action required by the user to trigger the button's 'Click' */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Generic Button Widget | Input")
-	TEnumAsByte<EButtonClickMethod::Type> ClickMethod;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Generic Button Widget | Input")
-	TEnumAsByte<EButtonTouchMethod::Type> TouchMethod;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Generic Button Widget | Input")
-	TEnumAsByte<EButtonPressMethod::Type> PressMethod;
-
-public:
-	/* Set the click method for mouse interaction */
-	UFUNCTION(BlueprintCallable)
-	WIDGETGROUPGENERATION_API void SetClickMethod(EButtonClickMethod::Type InClickMethod);
-
-	/* Set the click method for touch interaction */
-	UFUNCTION(BlueprintCallable)
-	WIDGETGROUPGENERATION_API void SetTouchMethod(EButtonTouchMethod::Type InTouchMethod);
-
-	/* Set the click method for keyboard/gamepad button press interaction */
-	UFUNCTION(BlueprintCallable)
-	WIDGETGROUPGENERATION_API void SetPressMethod(EButtonPressMethod::Type InPressMethod);
-
-public:
-	UFUNCTION(BlueprintPure)
-	UButtonInputViewModel* GetButtonInputViewModel() const;
-
-	UFUNCTION(BlueprintCallable)
-	void SetButtonInputViewModel(UButtonInputViewModel* InViewModel);
-
-protected:
-	UFUNCTION(BlueprintNativeEvent, Category="Button Input View Model")
-	WIDGETGROUPGENERATION_API void OnClickMethodChanged(EButtonClickMethod::Type InClickMethod);
-
-	UFUNCTION(BlueprintNativeEvent, Category="Button Input View Model")
-	WIDGETGROUPGENERATION_API void OnTouchMethodChanged(EButtonTouchMethod::Type InTouchMethod);
-
-	UFUNCTION(BlueprintNativeEvent, Category="Button Input View Model")
-	WIDGETGROUPGENERATION_API void OnPressMethodChanged(EButtonPressMethod::Type InPressMethod);
-
-	UPROPERTY(VisibleAnywhere, Getter, Setter, BlueprintGetter="GetButtonInputViewModel", BlueprintSetter="SetButtonInputViewModel", Category = "Generic Button Widget | ViewModel")
-	TObjectPtr<UButtonInputViewModel> ButtonInputViewModel = nullptr;
-
 	/* ==================== Sound ==================== */
 public:
 	/* Optional override for the sound to play when this button is hovered. */
@@ -542,27 +603,4 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, Instanced, Getter, Setter, BlueprintGetter="GetButtonSoundViewModel", BlueprintSetter="SetButtonSoundViewModel", Category = "Generic Button Widget | ViewModel")
 	TObjectPtr<UButtonSoundViewModel> ButtonSoundViewModel = nullptr;
-
-	/* ==================== Interaction ==================== */
-public:
-	/* Is this button currently interactable? (use instead of GetIsEnabled) */
-	UFUNCTION(BlueprintCallable)
-	WIDGETGROUPGENERATION_API bool GetIsInteractionEnabled() const;
-
-	/* Change whether this widget is selectable at all. If false and currently selected, will deselect. */
-	UFUNCTION(BlueprintCallable)
-	WIDGETGROUPGENERATION_API void SetIsInteractionEnabled(bool bInIsInteractionEnabled);
-
-private:
-	/* True if this button is currently enabled */
-	uint8 bButtonEnabled : 1;
-
-	/* True if interaction with this button is currently enabled */
-	uint8 bInteractionEnabled : 1;
-
-	/* Enables this button (called in SetIsEnabled override) */
-	void EnableButton();
-
-	/* Disables this button (called in SetIsEnabled override) */
-	void DisableButton();
 };

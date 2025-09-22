@@ -6,6 +6,7 @@
 #include "GenericButtonContainer.h"
 #include "ButtonContainer_VerticalBox.generated.h"
 
+class UVerticalBoxSlot;
 class UVerticalBox;
 
 /**
@@ -17,8 +18,8 @@ class UButtonContainer_VerticalBox : public UGenericButtonContainer
 	GENERATED_BODY()
 
 protected:
-	WIDGETAPPLICATION_API virtual void OnChildAdded_Implementation(UGenericWidget* InWidget, int32 NewChildrenCount) override;
-	WIDGETAPPLICATION_API virtual void OnChildRemoved_Implementation(UGenericWidget* InWidget, int32 NewChildrenCount) override;
+	WIDGETAPPLICATION_API virtual void OnChildAdded_Implementation(UGenericWidget* InWidget, int32 InIndex) override;
+	WIDGETAPPLICATION_API virtual void OnChildRemoved_Implementation(UGenericWidget* InWidget, int32 InIndex) override;
 
 public:
 	UPROPERTY(EditAnywhere, Category="Generic Button Container")
@@ -29,6 +30,7 @@ public:
 
 protected:
 	WIDGETAPPLICATION_API virtual void UpdateVerticalBoxSlotPadding();
+	WIDGETAPPLICATION_API virtual void UpdateVerticalBoxSlotPadding(UVerticalBoxSlot* InSlot, int32 SlotIndex);
 
 private:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget, BlueprintProtected = true, AllowPrivateAccess = true))

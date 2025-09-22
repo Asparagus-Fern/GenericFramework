@@ -3,7 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GenericButtonType.h"
 #include "Generic/GenericObject.h"
+#include "Interface/StateInterface.h"
 #include "GenericButtonGroup.generated.h"
 
 class UGenericButtonCollection;
@@ -30,9 +32,14 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnButtonSelectionChanged, UGener
  * Determines How The Child Buttons Effect Each Other When Accept Input Event
  */
 UCLASS(MinimalAPI)
-class UGenericButtonGroup : public UGenericObject
+class UGenericButtonGroup : public UGenericObject, public IStateInterface
 {
 	GENERATED_BODY()
+
+	/* IStateInterface */
+public:
+	virtual void NativeOnCreate() override;
+	virtual void NativeOnDestroy() override;
 
 	/* UInteractableWidgetEntityGroup */
 public:
@@ -176,7 +183,6 @@ protected:
 public:
 	UFUNCTION(BlueprintPure)
 	WIDGETGROUPGENERATION_API virtual UGenericButtonCollection* GetButtonCollection() const;
-	WIDGETGROUPGENERATION_API virtual void SetButtonCollection(UGenericButtonCollection* InButtonCollection);
 
 	UFUNCTION(BlueprintPure)
 	WIDGETGROUPGENERATION_API UButtonGroupViewModel* GetButtonGroupViewModel();

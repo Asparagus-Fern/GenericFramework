@@ -12,22 +12,26 @@ DECLARE_DELEGATE_OneParam(FOnActionPropertyExecute, class UActionPropertyValueVi
 /**
  * Event Type Property
  */
-UCLASS()
-class PROPERTYSYSTEM_API UActionPropertyValueViewModel : public UPropertyViewModel
+UCLASS(MinimalAPI)
+class UActionPropertyValueViewModel : public UPropertyViewModel
 {
 	GENERATED_BODY()
 
-public:
-	void ExecuteAction(EPropertyChangedReason ChangedReason);
+protected:
+	PROPERTYSYSTEM_API virtual bool CanApply() override { return false; }
+	PROPERTYSYSTEM_API virtual bool CanReset() override { return false; }
 
-	void SetAction(const FOnActionPropertyExecute& InEvent);
-	void SetAction(TFunction<void(UActionPropertyValueViewModel*)> InEvent);
+public:
+	PROPERTYSYSTEM_API void ExecuteAction(EPropertyChangedReason ChangedReason);
+
+	PROPERTYSYSTEM_API void SetAction(const FOnActionPropertyExecute& InEvent);
+	PROPERTYSYSTEM_API void SetAction(TFunction<void(UActionPropertyValueViewModel*)> InEvent);
 
 	UFUNCTION(FieldNotify, BlueprintPure)
-	const FText& GetActionText() const;
+	PROPERTYSYSTEM_API const FText& GetActionText() const;
 
 	UFUNCTION(BlueprintCallable)
-	void SetActionText(const FText& InActionText);
+	PROPERTYSYSTEM_API void SetActionText(const FText& InActionText);
 
 private:
 	FOnActionPropertyExecute OnActionExecuteEvent;

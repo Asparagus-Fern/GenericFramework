@@ -4,11 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
+#include "GameplayTagContainer.h"
 #include "PropertyVisualData.generated.h"
 
+class UPropertyListItemOption;
 class UPropertyViewModel;
 class UPropertyValueBase;
-class UPropertyViewModel;
 
 /**
  * 
@@ -19,7 +20,8 @@ class PROPERTYSYSTEM_API UPropertyVisualData : public UDataAsset
 	GENERATED_BODY()
 
 public:
-	TSubclassOf<UPropertyValueBase> GatherListItemForProperty(const UPropertyViewModel* InPropertyViewModel) const;
+	virtual TSubclassOf<UPropertyValueBase> GatherPropertyValueWidgetClass(const UPropertyViewModel* InPropertyViewModel) const;
+	virtual TMap<FGameplayTag, TSubclassOf<UPropertyListItemOption>> GatherPropertyOptionClasses(const UPropertyViewModel* InPropertyViewModel) const;
 
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
@@ -27,4 +29,11 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TMap<FName, TSubclassOf<UPropertyValueBase>> PropertyValueWidgetForName;
+
+public:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(Categories="Property.Option"))
+	TMap<FGameplayTag, TSubclassOf<UPropertyListItemOption>> PropertyListItemOptionForClass;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TMap<FName, TSubclassOf<UPropertyValueBase>> PropertyListItemOptionForName;
 };

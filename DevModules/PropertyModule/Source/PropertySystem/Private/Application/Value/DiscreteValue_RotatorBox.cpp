@@ -27,7 +27,7 @@ void UDiscreteValue_RotatorBox::NativeDestruct()
 
 void UDiscreteValue_RotatorBox::OnElementRotated(int32 InIndex, const FText& InText)
 {
-	if (MultiPropertyValueViewModel)
+	if (MultiPropertyValueViewModel && MultiPropertyValueViewModel->GetSelectedValueIndex() != InIndex)
 	{
 		MultiPropertyValueViewModel->SetSelectedValueByIndex(InIndex);
 		MultiPropertyValueViewModel->NotifyPropertyChanged(EPropertyChangedReason::UserInput);

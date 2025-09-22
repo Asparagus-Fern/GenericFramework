@@ -64,9 +64,6 @@ protected:
 	PROPERTYSYSTEM_API void OnViewModelDeinitialized();
 
 	UFUNCTION(BlueprintNativeEvent)
-	PROPERTYSYSTEM_API void OnIsAutoApplyPropertyChanged(bool InIsAutoApplyProperty);
-
-	UFUNCTION(BlueprintNativeEvent)
 	PROPERTYSYSTEM_API void OnIsDirtyProxyChanged(bool InIsDirtyProxy);
 
 	UFUNCTION(BlueprintNativeEvent)

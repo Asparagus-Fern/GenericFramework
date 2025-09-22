@@ -1,6 +1,6 @@
 ﻿// Copyright ChenTaiye 2025. All Rights Reserved.
 
-#include "Carousel/CarouselContent.h"
+#include "UMG/Carousel/CarouselContent.h"
 
 void UCarouselContent::NativePreConstruct()
 {

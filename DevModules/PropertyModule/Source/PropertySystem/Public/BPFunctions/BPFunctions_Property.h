@@ -6,6 +6,7 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "BPFunctions_Property.generated.h"
 
+class UPropertyDataSource;
 class UPropertyProxy;
 
 /**
@@ -28,4 +29,11 @@ public:
 
 	UFUNCTION(BlueprintPure, meta=(DeterminesOutputType = "InPropertyProxyClass"))
 	static UPropertyProxy* GetPropertyProxy(const TSubclassOf<UPropertyProxy>& InPropertyProxyClass);
+
+public:
+	UFUNCTION(BlueprintPure)
+	static UPropertyDataSource* CreateDataSourceByStringPath(UObject* InContainer, const FString& InGetterPath, const FString& InSetterPath);
+
+	UFUNCTION(BlueprintPure)
+	static UPropertyDataSource* CreateDataSourceByStringArrayPath(UObject* InContainer, const TArray<FString>& InGetterPath, const TArray<FString>& InSetterPath);
 };

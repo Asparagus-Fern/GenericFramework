@@ -1,29 +1,29 @@
 ﻿{
-  "FileVersion": 3,
-  "Version": 1,
-  "VersionName": "1.0",
-  "FriendlyName": "EventModule",
-  "Description": "",
-  "Category": "Other",
-  "CreatedBy": "Chen",
-  "CreatedByURL": "",
-  "DocsURL": "",
-  "MarketplaceURL": "",
-  "CanContainContent": false,
-  "IsBetaVersion": false,
-  "IsExperimentalVersion": false,
-  "Installed": false,
-  "Plugins": [
-    {
-      "Name": "DevCore",
-      "Enabled": true
-    }
-  ],
-  "Modules": [
-    {
-      "Name": "EventUtilities",
-      "Type": "Runtime",
-      "LoadingPhase": "Default"
-    }
-  ]
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "EventModule",
+	"Description": "",
+	"Category": "Other",
+	"CreatedBy": "Chen",
+	"CreatedByURL": "",
+	"DocsURL": "",
+	"MarketplaceURL": "",
+	"CanContainContent": false,
+	"IsBetaVersion": false,
+	"IsExperimentalVersion": false,
+	"Installed": false,
+	"Plugins": [
+		{
+			"Name": "DevCore",
+			"Enabled": true
+		}
+	],
+	"Modules": [
+		{
+			"Name": "EventUtilities",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	]
 }

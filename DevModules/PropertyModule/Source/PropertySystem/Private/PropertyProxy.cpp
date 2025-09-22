@@ -35,15 +35,17 @@ void UPropertyProxy::NativeOnCreate()
 	{
 		if (PropertyViewModel->Initialize(this))
 		{
+			UPropertyListItemObject* NewItemObject = NewObject<UPropertyListItemObject>(this);
+			NewItemObject->PropertyViewModel = PropertyViewModel;
+			NewItemObject->PropertyValueClass = PropertyVisualData->GatherPropertyValueWidgetClass(PropertyViewModel);
+			NewItemObject->PropertyOptionClasses = PropertyVisualData->GatherPropertyOptionClasses(PropertyViewModel);
+			PropertyListItemObjects.Add(NewItemObject);
+
 			PropertyViewModel->GetOnPropertyApplyEvent().AddUFunction(this,GET_FUNCTION_NAME_CHECKED(ThisClass, OnPropertyApplied));
-			PropertyViewModel->GetOnPropertyReverseEvent().AddUFunction(this,GET_FUNCTION_NAME_CHECKED(ThisClass, OnPropertyReversed));
 			PropertyViewModel->GetOnPropertyResetEvent().AddUFunction(this,GET_FUNCTION_NAME_CHECKED(ThisClass, OnPropertyReset));
 			PropertyViewModel->GetOnPropertyChangedEvent().AddUFunction(this,GET_FUNCTION_NAME_CHECKED(ThisClass, OnPropertyChanged));
 
-			UPropertyListItemObject* NewItemObject = NewObject<UPropertyListItemObject>(this);
-			NewItemObject->PropertyValueClass = PropertyVisualData->GatherListItemForProperty(PropertyViewModel);
-			NewItemObject->PropertyViewModel = PropertyViewModel;
-			PropertyListItemObjects.Add(NewItemObject);
+			PropertyViewModel->Startup();
 		}
 	}
 }
@@ -59,7 +61,6 @@ void UPropertyProxy::NativeOnDestroy()
 			ItemObject->PropertyViewModel->Deinitialize();
 
 			ItemObject->PropertyViewModel->GetOnPropertyApplyEvent().RemoveAll(this);
-			ItemObject->PropertyViewModel->GetOnPropertyReverseEvent().RemoveAll(this);
 			ItemObject->PropertyViewModel->GetOnPropertyResetEvent().RemoveAll(this);
 			ItemObject->PropertyViewModel->GetOnPropertyChangedEvent().RemoveAll(this);
 		}
@@ -82,17 +83,6 @@ void UPropertyProxy::ApplyProperty()
 	}
 }
 
-void UPropertyProxy::ReverseProperty()
-{
-	for (auto& ItemObject : PropertyListItemObjects)
-	{
-		if (IsValid(ItemObject->PropertyViewModel))
-		{
-			ItemObject->PropertyViewModel->Reverse();
-		}
-	}
-}
-
 void UPropertyProxy::ResetProperty()
 {
 	for (auto& ItemObject : PropertyListItemObjects)
@@ -109,10 +99,6 @@ void UPropertyProxy::GeneratePropertyListItemObjects_Implementation(TArray<UProp
 }
 
 void UPropertyProxy::OnPropertyApplied_Implementation(UPropertyViewModel* InPropertyViewModel)
-{
-}
-
-void UPropertyProxy::OnPropertyReversed_Implementation(UPropertyViewModel* InPropertyViewModel)
 {
 }
 

@@ -80,7 +80,7 @@ void UGenericRotatorBox::RemoveTextLabel(const FText& InTextLabel)
 
 void UGenericRotatorBox::SetSelectedIndex(int32 Index)
 {
-	if (TextLabels.IsValidIndex(Index))
+	if (TextLabels.IsValidIndex(Index) && SelectedIndex != Index)
 	{
 		SelectedIndex = Index;
 		OnSelectedIndexChanged(SelectedIndex);

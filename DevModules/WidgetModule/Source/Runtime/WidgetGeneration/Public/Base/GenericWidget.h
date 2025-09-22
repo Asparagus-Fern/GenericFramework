@@ -13,7 +13,6 @@
 class UWidgetRenderViewModel;
 class UWidgetDescriptionViewModel;
 class UGenericGameHUD;
-class UCommonButton;
 class UWidgetAnimationEvent;
 
 /**
@@ -154,10 +153,10 @@ public:
 
 protected:
 	UFUNCTION(BlueprintNativeEvent)
-	WIDGETGENERATION_API void OnChildAdded(UGenericWidget* InWidget, int32 NewChildrenCount);
+	WIDGETGENERATION_API void OnChildAdded(UGenericWidget* InWidget, int32 InIndex);
 
 	UFUNCTION(BlueprintNativeEvent)
-	WIDGETGENERATION_API void OnChildRemoved(UGenericWidget* InWidget, int32 NewChildrenCount);
+	WIDGETGENERATION_API void OnChildRemoved(UGenericWidget* InWidget, int32 InIndex);
 
 protected:
 	UPROPERTY()

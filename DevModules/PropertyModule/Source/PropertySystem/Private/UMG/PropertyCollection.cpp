@@ -14,6 +14,17 @@ void UPropertyCollection::SetPropertyCollectionViewModel(UPropertyCollectionView
 {
 	if (PropertyCollectionViewModel)
 	{
+		if (ScrollBox_PropertyCollection)
+		{
+			ScrollBox_PropertyCollection->ClearChildren();
+		}
+		
+		for (auto& PropertyList : PropertyLists)
+		{
+			PropertyList->SetPropertyListViewModel(nullptr);
+		}
+		
+		PropertyLists.Reset();
 		PropertyCollectionViewModel->RemoveAllFieldValueChangedDelegates(this);
 	}
 

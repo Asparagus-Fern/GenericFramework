@@ -69,9 +69,19 @@ void UPropertyDataSource::SetValueFromString(const FString& InValue) const
 	PropertyPathHelpers::SetPropertyValueFromString(GetContainer(), PropertySetterPath, InValue);
 }
 
+const FCachedPropertyPath& UPropertyDataSource::GetPropertyGetterPath()
+{
+	return PropertyGetterPath;
+}
+
 void UPropertyDataSource::SetPropertyGetterPath(const FCachedPropertyPath& InGetterPath)
 {
 	PropertyGetterPath = InGetterPath;
+}
+
+const FCachedPropertyPath& UPropertyDataSource::GetPropertySetterPath()
+{
+	return PropertySetterPath;
 }
 
 void UPropertyDataSource::SetPropertySetterPath(const FCachedPropertyPath& InSetterPath)

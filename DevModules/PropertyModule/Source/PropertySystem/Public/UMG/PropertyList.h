@@ -14,7 +14,8 @@ class UPropertyListItemObject;
 
 
 /**
- * 
+ * Property List Contain a Property Category And a List Of Property
+ * One Property List Has a Standalone Property Proxy
  */
 UCLASS(Abstract, MinimalAPI)
 class UPropertyList : public UGenericWidget

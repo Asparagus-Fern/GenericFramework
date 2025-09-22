@@ -2,3 +2,4 @@
 
 #include "GenericButtonType.h"
 
+UE_DEFINE_GAMEPLAY_TAG(TAG_Button, "UI.Button");

@@ -3,6 +3,7 @@
 #include "GenericButtonWidget.h"
 
 #include "CommonButtonBase.h"
+#include "GenericButtonConfirm.h"
 #include "WidgetType.h"
 #include "Binding/States/WidgetStateRegistration.h"
 #include "Blueprint/WidgetTree.h"
@@ -14,22 +15,20 @@
 #include "Style/GenericButtonStyle.h"
 #include "UWidget/GenericButton.h"
 
-UE_DEFINE_GAMEPLAY_TAG(TAG_Button, "UI.Button");
-
 /* ==================== UInteractableWidgetBase ==================== */
 
 UGenericButtonWidget::UGenericButtonWidget(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
-	  , MinWidth(0)
-	  , MinHeight(0)
+	  , bButtonEnabled(true)
+	  , bInteractionEnabled(true)
 	  , bLocked(false)
 	  , bSelectable(true)
 	  , bToggleable(false)
 	  , bSelectedWhenReceiveFocus(false)
 	  , bTriggerClickedAfterSelection(false)
 	  , bSelected(false)
-	  , bButtonEnabled(true)
-	  , bInteractionEnabled(true)
+	  , MinWidth(0)
+	  , MinHeight(0)
 {
 	SetButtonFocusable(true);
 }
@@ -173,7 +172,7 @@ void UGenericButtonWidget::NativeOnMouseEnter(const FGeometry& InGeometry, const
 
 		if (GetIsEnabled() && bInteractionEnabled)
 		{
-			NativeOnHovered();
+			ConfirmButtonHovered();
 		}
 	}
 }
@@ -186,7 +185,7 @@ void UGenericButtonWidget::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
 
 		if (GetIsEnabled() && bInteractionEnabled)
 		{
-			NativeOnUnhovered();
+			ConfirmButtonUnhovered();
 		}
 	}
 }
@@ -211,6 +210,145 @@ UGenericButton* UGenericButtonWidget::ConstructInternalButton()
 	return WidgetTree->ConstructWidget<UGenericButton>(UGenericButton::StaticClass(), FName(TEXT("GenericButton")));
 }
 
+/* ==================== Input ==================== */
+
+void UGenericButtonWidget::SetClickMethod(EButtonClickMethod::Type InClickMethod)
+{
+	ClickMethod = InClickMethod;
+	if (RootButton.IsValid())
+	{
+		RootButton->SetClickMethod(ClickMethod);
+	}
+}
+
+void UGenericButtonWidget::SetTouchMethod(EButtonTouchMethod::Type InTouchMethod)
+{
+	TouchMethod = InTouchMethod;
+	if (RootButton.IsValid())
+	{
+		RootButton->SetTouchMethod(InTouchMethod);
+	}
+}
+
+void UGenericButtonWidget::SetPressMethod(EButtonPressMethod::Type InPressMethod)
+{
+	PressMethod = InPressMethod;
+	if (RootButton.IsValid())
+	{
+		RootButton->SetPressMethod(InPressMethod);
+	}
+}
+
+UButtonInputViewModel* UGenericButtonWidget::GetButtonInputViewModel() const
+{
+	return ButtonInputViewModel;
+}
+
+void UGenericButtonWidget::SetButtonInputViewModel(UButtonInputViewModel* InViewModel)
+{
+	if (ButtonInputViewModel)
+	{
+		ButtonInputViewModel->RemoveAllFieldValueChangedDelegates(this);
+	}
+
+	ButtonInputViewModel = InViewModel;
+
+	if (ButtonInputViewModel)
+	{
+		REGISTER_MVVM_PROPERTY(ButtonInputViewModel, ClickMethod, OnClickMethodChanged, true)
+		REGISTER_MVVM_PROPERTY(ButtonInputViewModel, TouchMethod, OnTouchMethodChanged, true)
+		REGISTER_MVVM_PROPERTY(ButtonInputViewModel, PressMethod, OnPressMethodChanged, true)
+	}
+}
+
+void UGenericButtonWidget::OnClickMethodChanged_Implementation(EButtonClickMethod::Type InClickMethod)
+{
+	SetClickMethod(InClickMethod);
+}
+
+void UGenericButtonWidget::OnTouchMethodChanged_Implementation(EButtonTouchMethod::Type InTouchMethod)
+{
+	SetTouchMethod(InTouchMethod);
+}
+
+void UGenericButtonWidget::OnPressMethodChanged_Implementation(EButtonPressMethod::Type InPressMethod)
+{
+	SetPressMethod(InPressMethod);
+}
+
+/* ==================== Interaction ==================== */
+
+bool UGenericButtonWidget::GetIsInteractionEnabled() const
+{
+	ESlateVisibility Vis = GetVisibility(); // hidden or collapsed should have 'bInteractionEnabled' set false, but sometimes they don't :(
+	return GetIsEnabled() && bButtonEnabled && bInteractionEnabled && (Vis != ESlateVisibility::Collapsed) && (Vis != ESlateVisibility::Hidden);
+}
+
+void UGenericButtonWidget::SetIsInteractionEnabled(bool bInIsInteractionEnabled)
+{
+	if (bInteractionEnabled == bInIsInteractionEnabled)
+	{
+		return;
+	}
+
+	const bool bWasHovered = IsHovered();
+
+	bInteractionEnabled = bInIsInteractionEnabled;
+
+	if (bInteractionEnabled)
+	{
+		// If this is a selected and not-toggleable button, don't enable root button interaction
+		if (!GetIsSelected() || bToggleable)
+		{
+			RootButton->SetInteractionEnabled(true);
+		}
+	}
+	else
+	{
+		RootButton->SetInteractionEnabled(false);
+	}
+
+	// If the hover state changed due to an interactability change, trigger internal logic accordingly.
+	const bool bIsHoveredNow = IsHovered();
+	if (bWasHovered != bIsHoveredNow)
+	{
+		if (bIsHoveredNow)
+		{
+			ConfirmButtonHovered();
+		}
+		else
+		{
+			ConfirmButtonUnhovered();
+		}
+	}
+}
+
+void UGenericButtonWidget::EnableButton()
+{
+	if (!bButtonEnabled)
+	{
+		bButtonEnabled = true;
+		RootButton->SetButtonEnabled(true);
+
+		SetButtonStyle();
+
+		NativeOnEnabled();
+	}
+}
+
+void UGenericButtonWidget::DisableButton()
+{
+	if (bButtonEnabled)
+	{
+		bButtonEnabled = false;
+		RootButton->SetButtonEnabled(false);
+
+		SetButtonStyle();
+
+		NativeOnDisabled();
+	}
+}
+
 /* ==================== Event ==================== */
 
 void UGenericButtonWidget::HandleButtonClicked()
@@ -221,27 +359,27 @@ void UGenericButtonWidget::HandleButtonClicked()
 	{
 		if (bTriggerClickedAfterSelection)
 		{
-			SetIsSelected(!bSelected, false);
-			NativeOnClicked();
+			SetIsSelected(!bSelected);
+			ConfirmButtonClicked();
 		}
 		else
 		{
-			NativeOnClicked();
-			SetIsSelected(!bSelected, false);
+			ConfirmButtonClicked();
+			SetIsSelected(!bSelected);
 		}
 	}
 }
 
 void UGenericButtonWidget::HandleButtonDoubleClicked()
 {
-	NativeOnDoubleClicked();
+	ConfirmButtonDoubleClicked();
 }
 
 void UGenericButtonWidget::HandleFocusReceived()
 {
 	if (bSelectedWhenReceiveFocus && !GetIsSelected())
 	{
-		SetIsSelected(true, false);
+		SetIsSelected(true);
 	}
 	NativeOnFocusReceived();
 }
@@ -253,13 +391,427 @@ void UGenericButtonWidget::HandleFocusLost()
 
 void UGenericButtonWidget::HandleButtonPressed()
 {
-	NativeOnPressed();
+	ConfirmButtonPressed();
 }
 
 void UGenericButtonWidget::HandleButtonReleased()
 {
+	ConfirmButtonReleased();
+}
+
+/* ==================== Selection ==================== */
+
+bool UGenericButtonWidget::GetIsLocked() const
+{
+	return bLocked;
+}
+
+void UGenericButtonWidget::SetIsLocked(bool bInIsLocked)
+{
+	if (bInIsLocked != bLocked)
+	{
+		bLocked = bInIsLocked;
+
+		SetButtonStyle();
+
+		NativeOnLockedChanged(bLocked);
+
+		BroadcastBinaryPostStateChange(UWidgetLockedStateRegistration::Bit, bLocked);
+	}
+}
+
+bool UGenericButtonWidget::GetIsSelectable() const
+{
+	return bSelectable;
+}
+
+void UGenericButtonWidget::SetIsSelectable(bool bInIsSelectable)
+{
+	if (bInIsSelectable != bSelectable)
+	{
+		bSelectable = bInIsSelectable;
+
+		if (bSelected && !bInIsSelectable)
+		{
+			SetSelectedInternal(false);
+		}
+	}
+}
+
+bool UGenericButtonWidget::GetIsToggleable() const
+{
+	return bToggleable;
+}
+
+void UGenericButtonWidget::SetIsToggleable(bool bInIsToggleable)
+{
+	bToggleable = bInIsToggleable;
+
+	if (!GetIsSelected() || bToggleable)
+	{
+		RootButton->SetInteractionEnabled(bInteractionEnabled);
+	}
+	else if (GetIsSelected() && !bToggleable)
+	{
+		RootButton->SetInteractionEnabled(bInteractableWhenSelected);
+	}
+}
+
+bool UGenericButtonWidget::GetIsDefaultSelected() const
+{
+	return bDefaultSelected;
+}
+
+void UGenericButtonWidget::SetIsDefaultSelected(bool bInDefaultSelected)
+{
+	if (bDefaultSelected != bInDefaultSelected)
+	{
+		bDefaultSelected = bInDefaultSelected;
+	}
+}
+
+bool UGenericButtonWidget::GetIsSelectedWhenReceiveFocus() const
+{
+	return bSelectedWhenReceiveFocus;
+}
+
+void UGenericButtonWidget::SetIsSelectedWhenReceiveFocus(bool bInSelectedWhenReceiveFocus)
+{
+	if (ensure(bSelectable || !bInSelectedWhenReceiveFocus))
+	{
+		bSelectedWhenReceiveFocus = bInSelectedWhenReceiveFocus;
+	}
+}
+
+bool UGenericButtonWidget::GetIsInteractableWhenSelected() const
+{
+	return bInteractableWhenSelected;
+}
+
+void UGenericButtonWidget::SetIsInteractableWhenSelected(bool bInInteractableWhenSelected)
+{
+	if (bInInteractableWhenSelected != bInteractableWhenSelected)
+	{
+		bInteractableWhenSelected = bInInteractableWhenSelected;
+		if (GetIsSelected() && !bToggleable)
+		{
+			SetIsInteractionEnabled(bInInteractableWhenSelected);
+		}
+	}
+}
+
+bool UGenericButtonWidget::GetIsTriggerClickedAfterSelection() const
+{
+	return bTriggerClickedAfterSelection;
+}
+
+void UGenericButtonWidget::SetIsTriggerClickedAfterSelection(bool bInTriggerClickedAfterSelection)
+{
+	if (bTriggerClickedAfterSelection != bInTriggerClickedAfterSelection)
+	{
+		bTriggerClickedAfterSelection = bInTriggerClickedAfterSelection;
+	}
+}
+
+bool UGenericButtonWidget::GetIsSelected() const
+{
+	return bSelected;
+}
+
+void UGenericButtonWidget::SetIsSelected(bool InSelected)
+{
+	const bool bWasHovered = IsHovered();
+
+	if (bSelectable && bSelected != InSelected)
+	{
+		if (!InSelected && bToggleable)
+		{
+			SetSelectedInternal(false);
+		}
+		else if (InSelected)
+		{
+			// Only allow a sound if we weren't just clicked
+			SetSelectedInternal(true);
+		}
+	}
+
+	// If the hover state changed due to a selection change, trigger internal logic accordingly.
+	const bool bIsHoveredNow = IsHovered();
+	if (bWasHovered != bIsHoveredNow)
+	{
+		if (bIsHoveredNow)
+		{
+			ConfirmButtonHovered();
+		}
+		else
+		{
+			ConfirmButtonUnhovered();
+		}
+	}
+}
+
+UButtonSelectionViewModel* UGenericButtonWidget::GetButtonSelectionViewModel() const
+{
+	return ButtonSelectionViewModel;
+}
+
+void UGenericButtonWidget::SetButtonSelectionViewModel(UButtonSelectionViewModel* InViewModel)
+{
+	if (ButtonSelectionViewModel)
+	{
+		ButtonSelectionViewModel->RemoveAllFieldValueChangedDelegates(this);
+	}
+
+	ButtonSelectionViewModel = InViewModel;
+
+	if (ButtonSelectionViewModel)
+	{
+		REGISTER_MVVM_PROPERTY(ButtonSelectionViewModel, bSelectable, OnSelectableChanged, true)
+		REGISTER_MVVM_PROPERTY(ButtonSelectionViewModel, bToggleable, OnToggleableChanged, true)
+		REGISTER_MVVM_PROPERTY(ButtonSelectionViewModel, bDefaultSelected, OnDefaultSelectedChanged, true)
+		REGISTER_MVVM_PROPERTY(ButtonSelectionViewModel, bShouldSelectUponReceivingFocus, OnShouldSelectUponReceivingFocusChanged, true)
+		REGISTER_MVVM_PROPERTY(ButtonSelectionViewModel, bInteractableWhenSelected, OnInteractableWhenSelectedChanged, true)
+		REGISTER_MVVM_PROPERTY(ButtonSelectionViewModel, bTriggerClickedAfterSelection, OnTriggerClickedAfterSelectionChanged, true)
+	}
+}
+
+void UGenericButtonWidget::OnSelectableChanged_Implementation(bool IsSelectable)
+{
+	SetIsSelectable(IsSelectable);
+}
+
+void UGenericButtonWidget::OnToggleableChanged_Implementation(bool IsToggleable)
+{
+	SetIsToggleable(IsToggleable);
+}
+
+void UGenericButtonWidget::OnDefaultSelectedChanged_Implementation(bool IsDefaultSelected)
+{
+	SetIsDefaultSelected(IsDefaultSelected);
+}
+
+void UGenericButtonWidget::OnShouldSelectUponReceivingFocusChanged_Implementation(bool IsShouldSelectUponReceivingFocus)
+{
+	SetIsSelectedWhenReceiveFocus(IsShouldSelectUponReceivingFocus);
+}
+
+void UGenericButtonWidget::OnInteractableWhenSelectedChanged_Implementation(bool IsInteractableWhenSelected)
+{
+	SetIsInteractableWhenSelected(IsInteractableWhenSelected);
+}
+
+void UGenericButtonWidget::OnTriggerClickedAfterSelectionChanged_Implementation(bool IsTriggerClickedAfterSelection)
+{
+	SetIsTriggerClickedAfterSelection(IsTriggerClickedAfterSelection);
+}
+
+/* ==================== Event Confirm ==================== */
+
+UGenericButtonConfirm* UGenericButtonWidget::GetButtonConfirm()
+{
+	return ButtonConfirm;
+}
+
+UGenericButtonConfirm* UGenericButtonWidget::SetButtonConfirmByClass(TSubclassOf<UGenericButtonConfirm> InButtonConfirmClass)
+{
+	if (!InButtonConfirmClass)
+	{
+		return nullptr;
+	}
+
+	UGenericButtonConfirm* NewButtonConfirm = NewObject<UGenericButtonConfirm>(this, InButtonConfirmClass);
+	SetButtonConfirm(NewButtonConfirm);
+
+	return NewButtonConfirm;
+}
+
+void UGenericButtonWidget::SetButtonConfirm(UGenericButtonConfirm* InButtonConfirm)
+{
+	ClearButtonConfirm();
+
+	if (IsValid(InButtonConfirm))
+	{
+		ButtonConfirm = InButtonConfirm;
+
+		ButtonConfirm->GetConfirmButtonPressedEvent().BindUObject(this, &ThisClass::OnButtonPressedConfirmed);
+		ButtonConfirm->GetConfirmButtonReleasedEvent().BindUObject(this, &ThisClass::OnButtonReleasedConfirmed);
+		ButtonConfirm->GetConfirmButtonHoveredEvent().BindUObject(this, &ThisClass::OnButtonHoveredConfirmed);
+		ButtonConfirm->GetConfirmButtonUnhoveredEvent().BindUObject(this, &ThisClass::OnButtonUnhoveredConfirmed);
+		ButtonConfirm->GetConfirmButtonClickedEvent().BindUObject(this, &ThisClass::OnButtonClickedConfirmed);
+		ButtonConfirm->GetConfirmButtonDoubleClickedEvent().BindUObject(this, &ThisClass::OnButtonDoubleClickedConfirmed);
+		ButtonConfirm->GetConfirmSelectionChangedEvent().BindUObject(this, &ThisClass::OnButtonSelectionConfirmed);
+	}
+}
+
+void UGenericButtonWidget::ClearButtonConfirm()
+{
+	if (ButtonConfirm)
+	{
+		ButtonConfirm->GetConfirmButtonPressedEvent().Unbind();
+		ButtonConfirm->GetConfirmButtonReleasedEvent().Unbind();
+		ButtonConfirm->GetConfirmButtonHoveredEvent().Unbind();
+		ButtonConfirm->GetConfirmButtonUnhoveredEvent().Unbind();
+		ButtonConfirm->GetConfirmButtonClickedEvent().Unbind();
+		ButtonConfirm->GetConfirmButtonDoubleClickedEvent().Unbind();
+		ButtonConfirm->GetConfirmSelectionChangedEvent().Unbind();
+	}
+
+	ButtonConfirm = nullptr;
+}
+
+void UGenericButtonWidget::ConfirmButtonPressed()
+{
+	if (ButtonConfirm)
+	{
+		ButtonConfirm->ConfirmButtonPressed();
+	}
+	else
+	{
+		OnButtonPressedConfirmed();
+	}
+}
+
+void UGenericButtonWidget::OnButtonPressedConfirmed()
+{
+	NativeOnPressed();
+}
+
+void UGenericButtonWidget::ConfirmButtonReleased()
+{
+	if (ButtonConfirm)
+	{
+		ButtonConfirm->ConfirmButtonReleased();
+	}
+	else
+	{
+		OnButtonReleasedConfirmed();
+	}
+}
+
+void UGenericButtonWidget::OnButtonReleasedConfirmed()
+{
 	NativeOnReleased();
 }
+
+void UGenericButtonWidget::ConfirmButtonHovered()
+{
+	if (ButtonConfirm)
+	{
+		ButtonConfirm->ConfirmButtonHovered();
+	}
+	else
+	{
+		OnButtonHoveredConfirmed();
+	}
+}
+
+void UGenericButtonWidget::OnButtonHoveredConfirmed()
+{
+	NativeOnHovered();
+}
+
+void UGenericButtonWidget::ConfirmButtonUnhovered()
+{
+	if (ButtonConfirm)
+	{
+		ButtonConfirm->ConfirmButtonUnhovered();
+	}
+	else
+	{
+		OnButtonUnhoveredConfirmed();
+	}
+}
+
+void UGenericButtonWidget::OnButtonUnhoveredConfirmed()
+{
+	NativeOnUnhovered();
+}
+
+void UGenericButtonWidget::ConfirmButtonClicked()
+{
+	if (ButtonConfirm)
+	{
+		ButtonConfirm->ConfirmButtonClicked();
+	}
+	else
+	{
+		OnButtonClickedConfirmed();
+	}
+}
+
+void UGenericButtonWidget::OnButtonClickedConfirmed()
+{
+	NativeOnClicked();
+}
+
+void UGenericButtonWidget::ConfirmButtonDoubleClicked()
+{
+	if (ButtonConfirm)
+	{
+		ButtonConfirm->ConfirmButtonDoubleClicked();
+	}
+	else
+	{
+		OnButtonDoubleClickedConfirmed();
+	}
+}
+
+void UGenericButtonWidget::OnButtonDoubleClickedConfirmed()
+{
+	NativeOnDoubleClicked();
+}
+
+void UGenericButtonWidget::SetSelectedInternal(bool bInSelected)
+{
+	ConfirmButtonSelection(bInSelected);
+}
+
+void UGenericButtonWidget::ConfirmButtonSelection(bool bInSelected)
+{
+	if (ButtonConfirm)
+	{
+		ButtonConfirm->ConfirmButtonSelection(bInSelected);
+	}
+	else
+	{
+		OnButtonSelectionConfirmed(bInSelected);
+	}
+}
+
+void UGenericButtonWidget::OnButtonSelectionConfirmed(bool bInSelected)
+{
+	const bool bValueChanged = bInSelected != bSelected;
+
+	bSelected = bInSelected;
+
+	SetButtonStyle();
+
+	if (bSelected)
+	{
+		NativeOnSelected();
+
+		if (!bToggleable && IsInteractable())
+		{
+			// If the button isn't toggleable, then disable interaction with the root button while selected
+			// The prevents us getting unnecessary click noises and events
+			RootButton->SetInteractionEnabled(bInteractableWhenSelected);
+		}
+	}
+	else
+	{
+		// Once deselected, restore the root button interactivity to the desired state
+		RootButton->SetInteractionEnabled(bInteractionEnabled);
+
+		NativeOnDeselected();
+	}
+
+	if (bValueChanged)
+	{
+		BroadcastBinaryPostStateChange(UWidgetSelectedStateRegistration::Bit, bSelected);
+	}
+}
+
+/* ==================== Event Handle ==================== */
 
 void UGenericButtonWidget::NativeOnEnabled()
 {
@@ -542,316 +1094,6 @@ void UGenericButtonWidget::SetButtonStyle()
 	}
 }
 
-/* ==================== Selection ==================== */
-
-bool UGenericButtonWidget::GetIsLocked() const
-{
-	return bLocked;
-}
-
-void UGenericButtonWidget::SetIsLocked(bool bInIsLocked)
-{
-	if (bInIsLocked != bLocked)
-	{
-		bLocked = bInIsLocked;
-
-		SetButtonStyle();
-
-		NativeOnLockedChanged(bLocked);
-
-		BroadcastBinaryPostStateChange(UWidgetLockedStateRegistration::Bit, bLocked);
-	}
-}
-
-bool UGenericButtonWidget::GetIsSelectable() const
-{
-	return bSelectable;
-}
-
-void UGenericButtonWidget::SetIsSelectable(bool bInIsSelectable)
-{
-	if (bInIsSelectable != bSelectable)
-	{
-		bSelectable = bInIsSelectable;
-
-		if (bSelected && !bInIsSelectable)
-		{
-			SetSelectedInternal(false);
-		}
-	}
-}
-
-bool UGenericButtonWidget::GetIsToggleable() const
-{
-	return bToggleable;
-}
-
-void UGenericButtonWidget::SetIsToggleable(bool bInIsToggleable)
-{
-	bToggleable = bInIsToggleable;
-
-	if (!GetIsSelected() || bToggleable)
-	{
-		RootButton->SetInteractionEnabled(bInteractionEnabled);
-	}
-	else if (GetIsSelected() && !bToggleable)
-	{
-		RootButton->SetInteractionEnabled(bInteractableWhenSelected);
-	}
-}
-
-bool UGenericButtonWidget::GetIsDefaultSelected() const
-{
-	return bDefaultSelected;
-}
-
-void UGenericButtonWidget::SetIsDefaultSelected(bool bInDefaultSelected)
-{
-	if (bDefaultSelected != bInDefaultSelected)
-	{
-		bDefaultSelected = bInDefaultSelected;
-	}
-}
-
-bool UGenericButtonWidget::GetIsSelectedWhenReceiveFocus() const
-{
-	return bSelectedWhenReceiveFocus;
-}
-
-void UGenericButtonWidget::SetIsSelectedWhenReceiveFocus(bool bInSelectedWhenReceiveFocus)
-{
-	if (ensure(bSelectable || !bInSelectedWhenReceiveFocus))
-	{
-		bSelectedWhenReceiveFocus = bInSelectedWhenReceiveFocus;
-	}
-}
-
-bool UGenericButtonWidget::GetIsInteractableWhenSelected() const
-{
-	return bInteractableWhenSelected;
-}
-
-void UGenericButtonWidget::SetIsInteractableWhenSelected(bool bInInteractableWhenSelected)
-{
-	if (bInInteractableWhenSelected != bInteractableWhenSelected)
-	{
-		bInteractableWhenSelected = bInInteractableWhenSelected;
-		if (GetIsSelected() && !bToggleable)
-		{
-			SetIsInteractionEnabled(bInInteractableWhenSelected);
-		}
-	}
-}
-
-bool UGenericButtonWidget::GetIsTriggerClickedAfterSelection() const
-{
-	return bTriggerClickedAfterSelection;
-}
-
-void UGenericButtonWidget::SetIsTriggerClickedAfterSelection(bool bInTriggerClickedAfterSelection)
-{
-	if (bTriggerClickedAfterSelection != bInTriggerClickedAfterSelection)
-	{
-		bTriggerClickedAfterSelection = bInTriggerClickedAfterSelection;
-	}
-}
-
-bool UGenericButtonWidget::GetIsSelected() const
-{
-	return bSelected;
-}
-
-void UGenericButtonWidget::SetIsSelected(bool InSelected, bool bGiveClickFeedback)
-{
-	const bool bWasHovered = IsHovered();
-
-	if (bSelectable && bSelected != InSelected)
-	{
-		if (!InSelected && bToggleable)
-		{
-			SetSelectedInternal(false);
-		}
-		else if (InSelected)
-		{
-			// Only allow a sound if we weren't just clicked
-			SetSelectedInternal(true, bGiveClickFeedback);
-		}
-	}
-
-	// If the hover state changed due to a selection change, trigger internal logic accordingly.
-	const bool bIsHoveredNow = IsHovered();
-	if (bWasHovered != bIsHoveredNow)
-	{
-		if (bIsHoveredNow)
-		{
-			NativeOnHovered();
-		}
-		else
-		{
-			NativeOnUnhovered();
-		}
-	}
-}
-
-void UGenericButtonWidget::SetSelectedInternal(bool bInSelected, bool bGiveClickFeedback /**= true*/, bool bBroadcast /**= true*/)
-{
-	const bool bValueChanged = bInSelected != bSelected;
-
-	bSelected = bInSelected;
-
-	SetButtonStyle();
-
-	if (bSelected)
-	{
-		NativeOnSelected();
-		if (!bToggleable && IsInteractable())
-		{
-			// If the button isn't toggleable, then disable interaction with the root button while selected
-			// The prevents us getting unnecessary click noises and events
-			RootButton->SetInteractionEnabled(bInteractableWhenSelected);
-		}
-
-		if (bGiveClickFeedback)
-		{
-			// Selection was not triggered by a button click, so play the click sound
-			FSlateApplication::Get().PlaySound(InternalNormalStyle.PressedSlateSound);
-		}
-	}
-	else
-	{
-		// Once deselected, restore the root button interactivity to the desired state
-		RootButton->SetInteractionEnabled(bInteractionEnabled);
-
-		NativeOnDeselected();
-	}
-
-	if (bValueChanged)
-	{
-		BroadcastBinaryPostStateChange(UWidgetSelectedStateRegistration::Bit, bSelected);
-	}
-}
-
-UButtonSelectionViewModel* UGenericButtonWidget::GetButtonSelectionViewModel() const
-{
-	return ButtonSelectionViewModel;
-}
-
-void UGenericButtonWidget::SetButtonSelectionViewModel(UButtonSelectionViewModel* InViewModel)
-{
-	if (ButtonSelectionViewModel)
-	{
-		ButtonSelectionViewModel->RemoveAllFieldValueChangedDelegates(this);
-	}
-
-	ButtonSelectionViewModel = InViewModel;
-
-	if (ButtonSelectionViewModel)
-	{
-		REGISTER_MVVM_PROPERTY(ButtonSelectionViewModel, bSelectable, OnSelectableChanged, true)
-		REGISTER_MVVM_PROPERTY(ButtonSelectionViewModel, bToggleable, OnToggleableChanged, true)
-		REGISTER_MVVM_PROPERTY(ButtonSelectionViewModel, bDefaultSelected, OnDefaultSelectedChanged, true)
-		REGISTER_MVVM_PROPERTY(ButtonSelectionViewModel, bShouldSelectUponReceivingFocus, OnShouldSelectUponReceivingFocusChanged, true)
-		REGISTER_MVVM_PROPERTY(ButtonSelectionViewModel, bInteractableWhenSelected, OnInteractableWhenSelectedChanged, true)
-		REGISTER_MVVM_PROPERTY(ButtonSelectionViewModel, bTriggerClickedAfterSelection, OnTriggerClickedAfterSelectionChanged, true)
-	}
-}
-
-void UGenericButtonWidget::OnSelectableChanged_Implementation(bool IsSelectable)
-{
-	SetIsSelectable(IsSelectable);
-}
-
-void UGenericButtonWidget::OnToggleableChanged_Implementation(bool IsToggleable)
-{
-	SetIsToggleable(IsToggleable);
-}
-
-void UGenericButtonWidget::OnDefaultSelectedChanged_Implementation(bool IsDefaultSelected)
-{
-	SetIsDefaultSelected(IsDefaultSelected);
-}
-
-void UGenericButtonWidget::OnShouldSelectUponReceivingFocusChanged_Implementation(bool IsShouldSelectUponReceivingFocus)
-{
-	SetIsSelectedWhenReceiveFocus(IsShouldSelectUponReceivingFocus);
-}
-
-void UGenericButtonWidget::OnInteractableWhenSelectedChanged_Implementation(bool IsInteractableWhenSelected)
-{
-	SetIsInteractableWhenSelected(IsInteractableWhenSelected);
-}
-
-void UGenericButtonWidget::OnTriggerClickedAfterSelectionChanged_Implementation(bool IsTriggerClickedAfterSelection)
-{
-	SetIsTriggerClickedAfterSelection(IsTriggerClickedAfterSelection);
-}
-
-/* ==================== Input ==================== */
-
-void UGenericButtonWidget::SetClickMethod(EButtonClickMethod::Type InClickMethod)
-{
-	ClickMethod = InClickMethod;
-	if (RootButton.IsValid())
-	{
-		RootButton->SetClickMethod(ClickMethod);
-	}
-}
-
-void UGenericButtonWidget::SetTouchMethod(EButtonTouchMethod::Type InTouchMethod)
-{
-	TouchMethod = InTouchMethod;
-	if (RootButton.IsValid())
-	{
-		RootButton->SetTouchMethod(InTouchMethod);
-	}
-}
-
-void UGenericButtonWidget::SetPressMethod(EButtonPressMethod::Type InPressMethod)
-{
-	PressMethod = InPressMethod;
-	if (RootButton.IsValid())
-	{
-		RootButton->SetPressMethod(InPressMethod);
-	}
-}
-
-UButtonInputViewModel* UGenericButtonWidget::GetButtonInputViewModel() const
-{
-	return ButtonInputViewModel;
-}
-
-void UGenericButtonWidget::SetButtonInputViewModel(UButtonInputViewModel* InViewModel)
-{
-	if (ButtonInputViewModel)
-	{
-		ButtonInputViewModel->RemoveAllFieldValueChangedDelegates(this);
-	}
-
-	ButtonInputViewModel = InViewModel;
-
-	if (ButtonInputViewModel)
-	{
-		REGISTER_MVVM_PROPERTY(ButtonInputViewModel, ClickMethod, OnClickMethodChanged, true)
-		REGISTER_MVVM_PROPERTY(ButtonInputViewModel, TouchMethod, OnTouchMethodChanged, true)
-		REGISTER_MVVM_PROPERTY(ButtonInputViewModel, PressMethod, OnPressMethodChanged, true)
-	}
-}
-
-void UGenericButtonWidget::OnClickMethodChanged_Implementation(EButtonClickMethod::Type InClickMethod)
-{
-	SetClickMethod(InClickMethod);
-}
-
-void UGenericButtonWidget::OnTouchMethodChanged_Implementation(EButtonTouchMethod::Type InTouchMethod)
-{
-	SetTouchMethod(InTouchMethod);
-}
-
-void UGenericButtonWidget::OnPressMethodChanged_Implementation(EButtonPressMethod::Type InPressMethod)
-{
-	SetPressMethod(InPressMethod);
-}
-
 /* ==================== Sound ==================== */
 
 void UGenericButtonWidget::SetHoveredSoundOverride(USoundBase* Sound)
@@ -1015,77 +1257,4 @@ void UGenericButtonWidget::OnLockedHoveredSlateSoundOverrideChanged_Implementati
 void UGenericButtonWidget::OnLockedPressedSlateSoundOverrideChanged_Implementation(FSlateSound InSlateSound)
 {
 	SetLockedPressedSlateSoundOverride(InSlateSound);
-}
-
-/* ==================== Interaction ==================== */
-
-bool UGenericButtonWidget::GetIsInteractionEnabled() const
-{
-	ESlateVisibility Vis = GetVisibility(); // hidden or collapsed should have 'bInteractionEnabled' set false, but sometimes they don't :(
-	return GetIsEnabled() && bButtonEnabled && bInteractionEnabled && (Vis != ESlateVisibility::Collapsed) && (Vis != ESlateVisibility::Hidden);
-}
-
-void UGenericButtonWidget::SetIsInteractionEnabled(bool bInIsInteractionEnabled)
-{
-	if (bInteractionEnabled == bInIsInteractionEnabled)
-	{
-		return;
-	}
-
-	const bool bWasHovered = IsHovered();
-
-	bInteractionEnabled = bInIsInteractionEnabled;
-
-	if (bInteractionEnabled)
-	{
-		// If this is a selected and not-toggleable button, don't enable root button interaction
-		if (!GetIsSelected() || bToggleable)
-		{
-			RootButton->SetInteractionEnabled(true);
-		}
-	}
-	else
-	{
-		RootButton->SetInteractionEnabled(false);
-	}
-
-	// If the hover state changed due to an interactability change, trigger internal logic accordingly.
-	const bool bIsHoveredNow = IsHovered();
-	if (bWasHovered != bIsHoveredNow)
-	{
-		if (bIsHoveredNow)
-		{
-			NativeOnHovered();
-		}
-		else
-		{
-			NativeOnUnhovered();
-		}
-	}
-}
-
-void UGenericButtonWidget::EnableButton()
-{
-	if (!bButtonEnabled)
-	{
-		bButtonEnabled = true;
-		RootButton->SetButtonEnabled(true);
-
-		SetButtonStyle();
-
-		NativeOnEnabled();
-	}
-}
-
-void UGenericButtonWidget::DisableButton()
-{
-	if (bButtonEnabled)
-	{
-		bButtonEnabled = false;
-		RootButton->SetButtonEnabled(false);
-
-		SetButtonStyle();
-
-		NativeOnDisabled();
-	}
 }
