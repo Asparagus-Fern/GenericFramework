@@ -28,8 +28,14 @@ public:
 	PROPERTYSYSTEM_API virtual void NativeDestruct() override;
 
 public:
+	UFUNCTION(BlueprintPure)
+	UPropertyListViewModel* GetPropertyListViewModel();
+
 	UFUNCTION(BlueprintCallable)
 	PROPERTYSYSTEM_API void SetPropertyListViewModel(UPropertyListViewModel* InViewModel);
+
+	UFUNCTION(BlueprintPure)
+	UPropertyProxy* GetPropertyProxy();
 
 protected:
 	UFUNCTION(BlueprintNativeEvent)

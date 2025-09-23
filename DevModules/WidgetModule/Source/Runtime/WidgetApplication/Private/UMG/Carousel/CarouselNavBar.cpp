@@ -2,7 +2,6 @@
 
 #include "UMG/Carousel/CarouselNavBar.h"
 
-#include "GenericButtonWidget.h"
 #include "UMG/Carousel/CarouselContent.h"
 
 void UCarouselNavBar::NativePreConstruct()

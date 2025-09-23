@@ -19,9 +19,9 @@ class ULoadingPanel : public UGenericWidget, public ILoadingInterface
 
 	/* ILoadingInterface */
 public:
-	virtual void NativeOnLoadingBegin(int32 Num) override;
-	virtual void NativeOnLoadingOnceFinish() override;
-	virtual void NativeOnLoadingEnd() override;
+	WIDGETAPPLICATION_API virtual void NativeOnLoadingBegin(int32 Num) override;
+	WIDGETAPPLICATION_API virtual void NativeOnLoadingOnceFinish() override;
+	WIDGETAPPLICATION_API virtual void NativeOnLoadingEnd() override;
 
 private:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget, BlueprintProtected = true, AllowPrivateAccess = true))

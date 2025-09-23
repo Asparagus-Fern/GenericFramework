@@ -27,6 +27,13 @@ protected:
 	UFUNCTION(BlueprintNativeEvent)
 	PROPERTYSYSTEM_API void OnPropertyListViewModelsChanged(const TArray<UPropertyListViewModel*>& InViewModels);
 
+public:
+	UFUNCTION(BlueprintCallable)
+	PROPERTYSYSTEM_API void ApplyPropertyChanged();
+
+	UFUNCTION(BlueprintCallable)
+	PROPERTYSYSTEM_API void ResetPropertyChanged();
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	float Spacing = 0.f;

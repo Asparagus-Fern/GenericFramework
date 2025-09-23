@@ -6,7 +6,6 @@
 #include "PropertyProxy.h"
 #include "WidgetType.h"
 #include "Components/TextBlock.h"
-#include "Manager/ManagerStatics.h"
 #include "MVVM/PropertyListViewModel.h"
 #include "UMG/PropertyListItem.h"
 #include "UWidget/GenericListView.h"
@@ -38,6 +37,11 @@ void UPropertyList::NativeDestruct()
 	}
 }
 
+UPropertyListViewModel* UPropertyList::GetPropertyListViewModel()
+{
+	return PropertyListViewModel;
+}
+
 void UPropertyList::SetPropertyListViewModel(UPropertyListViewModel* InViewModel)
 {
 	if (PropertyListViewModel)
@@ -56,6 +60,11 @@ void UPropertyList::SetPropertyListViewModel(UPropertyListViewModel* InViewModel
 	{
 		FPropertyHelper::UnRegisterPropertyProxy(PropertyProxy);
 	}
+}
+
+UPropertyProxy* UPropertyList::GetPropertyProxy()
+{
+	return PropertyProxy;
 }
 
 void UPropertyList::OnPropertyCategoryChanged_Implementation(const FText& InCategory)

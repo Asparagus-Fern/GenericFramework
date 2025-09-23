@@ -18,12 +18,12 @@ class UCarouselPanel : public UGenericWidget
 	GENERATED_BODY()
 
 public:
-	virtual void NativePreConstruct() override;
-	virtual void NativeConstruct() override;
-	virtual void NativeDestruct() override;
+	WIDGETAPPLICATION_API virtual void NativePreConstruct() override;
+	WIDGETAPPLICATION_API virtual void NativeConstruct() override;
+	WIDGETAPPLICATION_API virtual void NativeDestruct() override;
 
 protected:
-	void HandleCarouselIndexChanged(int32 Index);
+	WIDGETAPPLICATION_API void HandleCarouselIndexChanged(int32 Index);
 
 private:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget, BlueprintProtected = true, AllowPrivateAccess = true))

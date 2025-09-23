@@ -16,12 +16,6 @@ UGenericWidget::UGenericWidget(const FObjectInitializer& ObjectInitializer)
 {
 }
 
-void UGenericWidget::OnWidgetRebuilt()
-{
-	Super::OnWidgetRebuilt();
-	NativePreConstruct();
-}
-
 bool UGenericWidget::Initialize()
 {
 	const bool bInitializedThisCall = Super::Initialize();
@@ -44,11 +38,6 @@ bool UGenericWidget::Initialize()
 	}
 
 	return bInitializedThisCall;
-}
-
-void UGenericWidget::NativeOnInitialized()
-{
-	Super::NativeOnInitialized();
 }
 
 void UGenericWidget::NativePreConstruct()

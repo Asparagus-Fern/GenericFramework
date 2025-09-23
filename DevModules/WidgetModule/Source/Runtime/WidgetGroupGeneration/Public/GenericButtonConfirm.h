@@ -6,7 +6,6 @@
 #include "Generic/GenericObject.h"
 #include "GenericButtonConfirm.generated.h"
 
-class UGenericButtonWidget;
 class UGenericButtonGroup;
 class UGenericButtonCollection;
 
@@ -17,6 +16,8 @@ UCLASS(Abstract, MinimalAPI)
 class UGenericButtonConfirm : public UGenericObject
 {
 	GENERATED_BODY()
+
+	friend class UGenericButtonWidget;
 
 	/* UGenericButtonConfirm */
 public:
@@ -42,6 +43,7 @@ public:
 	WIDGETGROUPGENERATION_API FButtonConfirmEvent& GetConfirmButtonDoubleClickedEvent() { return ConfirmButtonDoubleClickedEvent; }
 	WIDGETGROUPGENERATION_API FButtonSelectionConfirmEvent& GetConfirmSelectionChangedEvent() { return ConfirmSelectionChangedEvent; }
 
+protected:
 	WIDGETGROUPGENERATION_API virtual void ConfirmButtonPressed();
 	WIDGETGROUPGENERATION_API virtual void ConfirmButtonReleased();
 	WIDGETGROUPGENERATION_API virtual void ConfirmButtonHovered();
@@ -49,28 +51,6 @@ public:
 	WIDGETGROUPGENERATION_API virtual void ConfirmButtonClicked();
 	WIDGETGROUPGENERATION_API virtual void ConfirmButtonDoubleClicked();
 	WIDGETGROUPGENERATION_API virtual void ConfirmButtonSelection(bool bInSelected);
-
-protected:
-	UFUNCTION(BlueprintNativeEvent)
-	WIDGETGROUPGENERATION_API void HandleConfirmButtonPressed();
-
-	UFUNCTION(BlueprintNativeEvent)
-	WIDGETGROUPGENERATION_API void HandleConfirmButtonReleased();
-
-	UFUNCTION(BlueprintNativeEvent)
-	WIDGETGROUPGENERATION_API void HandleConfirmButtonHovered();
-
-	UFUNCTION(BlueprintNativeEvent)
-	WIDGETGROUPGENERATION_API void HandleConfirmButtonUnhovered();
-
-	UFUNCTION(BlueprintNativeEvent)
-	WIDGETGROUPGENERATION_API void HandleConfirmButtonClicked();
-
-	UFUNCTION(BlueprintNativeEvent)
-	WIDGETGROUPGENERATION_API void HandleConfirmButtonDoubleClicked();
-
-	UFUNCTION(BlueprintNativeEvent)
-	WIDGETGROUPGENERATION_API void HandleConfirmButtonSelection(bool bInSelected);
 
 private:
 	UPROPERTY()

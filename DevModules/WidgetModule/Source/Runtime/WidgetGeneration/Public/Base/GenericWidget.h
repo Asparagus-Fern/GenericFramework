@@ -28,9 +28,7 @@ class UGenericWidget : public UUserWidget,
 
 protected:
 	WIDGETGENERATION_API UGenericWidget(const FObjectInitializer& ObjectInitializer);
-	WIDGETGENERATION_API virtual void OnWidgetRebuilt() override;
 	WIDGETGENERATION_API virtual bool Initialize() override;
-	WIDGETGENERATION_API virtual void NativeOnInitialized() override;
 	WIDGETGENERATION_API virtual void NativePreConstruct() override;
 	WIDGETGENERATION_API virtual void NativeConstruct() override;
 	WIDGETGENERATION_API virtual void NativeDestruct() override;

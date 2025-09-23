@@ -31,70 +31,35 @@ UGenericButtonWidget* UGenericButtonConfirm::GetButtonWidget() const
 
 void UGenericButtonConfirm::ConfirmButtonPressed()
 {
-	HandleConfirmButtonPressed();
 	ConfirmButtonPressedEvent.ExecuteIfBound();
 }
 
 void UGenericButtonConfirm::ConfirmButtonReleased()
 {
-	HandleConfirmButtonReleased();
 	ConfirmButtonReleasedEvent.ExecuteIfBound();
 }
 
 void UGenericButtonConfirm::ConfirmButtonHovered()
 {
-	HandleConfirmButtonHovered();
 	ConfirmButtonHoveredEvent.ExecuteIfBound();
 }
 
 void UGenericButtonConfirm::ConfirmButtonUnhovered()
 {
-	HandleConfirmButtonUnhovered();
 	ConfirmButtonUnhoveredEvent.ExecuteIfBound();
 }
 
 void UGenericButtonConfirm::ConfirmButtonClicked()
 {
-	HandleConfirmButtonClicked();
 	ConfirmButtonClickedEvent.ExecuteIfBound();
 }
 
 void UGenericButtonConfirm::ConfirmButtonDoubleClicked()
 {
-	HandleConfirmButtonDoubleClicked();
 	ConfirmButtonDoubleClickedEvent.ExecuteIfBound();
 }
 
 void UGenericButtonConfirm::ConfirmButtonSelection(bool bInSelected)
 {
-	HandleConfirmButtonSelection(bInSelected);
 	ConfirmSelectionChangedEvent.ExecuteIfBound(bInSelected);
-}
-
-void UGenericButtonConfirm::HandleConfirmButtonPressed_Implementation()
-{
-}
-
-void UGenericButtonConfirm::HandleConfirmButtonReleased_Implementation()
-{
-}
-
-void UGenericButtonConfirm::HandleConfirmButtonHovered_Implementation()
-{
-}
-
-void UGenericButtonConfirm::HandleConfirmButtonUnhovered_Implementation()
-{
-}
-
-void UGenericButtonConfirm::HandleConfirmButtonClicked_Implementation()
-{
-}
-
-void UGenericButtonConfirm::HandleConfirmButtonDoubleClicked_Implementation()
-{
-}
-
-void UGenericButtonConfirm::HandleConfirmButtonSelection_Implementation(bool bInSelected)
-{
 }

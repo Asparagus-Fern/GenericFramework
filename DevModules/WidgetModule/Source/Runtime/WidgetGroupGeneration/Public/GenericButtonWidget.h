@@ -103,10 +103,10 @@ public:
 
 public:
 	UFUNCTION(BlueprintPure)
-	UButtonInputViewModel* GetButtonInputViewModel() const;
+	WIDGETGROUPGENERATION_API UButtonInputViewModel* GetButtonInputViewModel() const;
 
 	UFUNCTION(BlueprintCallable)
-	void SetButtonInputViewModel(UButtonInputViewModel* InViewModel);
+	WIDGETGROUPGENERATION_API void SetButtonInputViewModel(UButtonInputViewModel* InViewModel);
 
 protected:
 	UFUNCTION(BlueprintNativeEvent, Category="Button Input View Model")
@@ -301,13 +301,13 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	WIDGETGROUPGENERATION_API UGenericButtonConfirm* SetButtonConfirmByClass(TSubclassOf<UGenericButtonConfirm> InButtonConfirmClass);
-	
+
 	UFUNCTION(BlueprintCallable)
 	WIDGETGROUPGENERATION_API void SetButtonConfirm(UGenericButtonConfirm* InButtonConfirm);
 
 	UFUNCTION(BlueprintCallable)
 	WIDGETGROUPGENERATION_API void ClearButtonConfirm();
-	
+
 protected:
 	WIDGETGROUPGENERATION_API void ConfirmButtonPressed();
 	WIDGETGROUPGENERATION_API virtual void OnButtonPressedConfirmed();
@@ -540,47 +540,47 @@ public:
 
 public:
 	UFUNCTION(BlueprintCallable)
-	void SetHoveredSoundOverride(USoundBase* Sound);
+	WIDGETGROUPGENERATION_API void SetHoveredSoundOverride(USoundBase* Sound);
 
 	UFUNCTION(BlueprintCallable)
-	void SetHoveredSlateSoundOverride(const FSlateSound& Sound);
+	WIDGETGROUPGENERATION_API void SetHoveredSlateSoundOverride(const FSlateSound& Sound);
 
 	UFUNCTION(BlueprintCallable)
-	void SetPressedSoundOverride(USoundBase* Sound);
+	WIDGETGROUPGENERATION_API void SetPressedSoundOverride(USoundBase* Sound);
 
 	UFUNCTION(BlueprintCallable)
-	void SetPressedSlateSoundOverride(const FSlateSound& Sound);
+	WIDGETGROUPGENERATION_API void SetPressedSlateSoundOverride(const FSlateSound& Sound);
 
 	UFUNCTION(BlueprintCallable)
-	void SetSelectedHoveredSoundOverride(USoundBase* Sound);
+	WIDGETGROUPGENERATION_API void SetSelectedHoveredSoundOverride(USoundBase* Sound);
 
 	UFUNCTION(BlueprintCallable)
-	void SetSelectedHoveredSlateSoundOverride(const FSlateSound& Sound);
+	WIDGETGROUPGENERATION_API void SetSelectedHoveredSlateSoundOverride(const FSlateSound& Sound);
 
 	UFUNCTION(BlueprintCallable)
-	void SetSelectedPressedSoundOverride(USoundBase* Sound);
+	WIDGETGROUPGENERATION_API void SetSelectedPressedSoundOverride(USoundBase* Sound);
 
 	UFUNCTION(BlueprintCallable)
-	void SetSelectedPressedSlateSoundOverride(const FSlateSound& Sound);
+	WIDGETGROUPGENERATION_API void SetSelectedPressedSlateSoundOverride(const FSlateSound& Sound);
 
 	UFUNCTION(BlueprintCallable)
-	void SetLockedHoveredSoundOverride(USoundBase* Sound);
+	WIDGETGROUPGENERATION_API void SetLockedHoveredSoundOverride(USoundBase* Sound);
 
 	UFUNCTION(BlueprintCallable)
-	void SetLockedHoveredSlateSoundOverride(const FSlateSound& Sound);
+	WIDGETGROUPGENERATION_API void SetLockedHoveredSlateSoundOverride(const FSlateSound& Sound);
 
 	UFUNCTION(BlueprintCallable)
-	void SetLockedPressedSoundOverride(USoundBase* Sound);
+	WIDGETGROUPGENERATION_API void SetLockedPressedSoundOverride(USoundBase* Sound);
 
 	UFUNCTION(BlueprintCallable)
-	void SetLockedPressedSlateSoundOverride(const FSlateSound& Sound);
+	WIDGETGROUPGENERATION_API void SetLockedPressedSlateSoundOverride(const FSlateSound& Sound);
 
 public:
 	UFUNCTION(BlueprintPure)
-	UButtonSoundViewModel* GetButtonSoundViewModel() const;
+	WIDGETGROUPGENERATION_API UButtonSoundViewModel* GetButtonSoundViewModel() const;
 
 	UFUNCTION(BlueprintCallable)
-	void SetButtonSoundViewModel(UButtonSoundViewModel* InViewModel);
+	WIDGETGROUPGENERATION_API void SetButtonSoundViewModel(UButtonSoundViewModel* InViewModel);
 
 protected:
 	UFUNCTION(BlueprintNativeEvent, Category="Button Sound View Model")

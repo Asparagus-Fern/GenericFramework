@@ -21,14 +21,14 @@ class ULoadingProgressBar : public UGenericWidget, public ILoadingInterface
 	GENERATED_BODY()
 
 public:
-	virtual void NativePreConstruct() override;
-	virtual void NativeConstruct() override;
+	WIDGETAPPLICATION_API virtual void NativePreConstruct() override;
+	WIDGETAPPLICATION_API virtual void NativeConstruct() override;
 
 	/* ILoadingInterface */
 public:
-	virtual void NativeOnLoadingBegin(int32 Num) override;
-	virtual void NativeOnLoadingOnceFinish() override;
-	virtual void NativeOnLoadingEnd() override;
+	WIDGETAPPLICATION_API virtual void NativeOnLoadingBegin(int32 Num) override;
+	WIDGETAPPLICATION_API virtual void NativeOnLoadingOnceFinish() override;
+	WIDGETAPPLICATION_API virtual void NativeOnLoadingEnd() override;
 
 protected:
 	/* 当前以加载个数 */
@@ -49,19 +49,19 @@ protected:
 
 public:
 	UFUNCTION(BlueprintCallable)
-	void Update(float InValue);
+	WIDGETAPPLICATION_API void Update(float InValue);
 
 	/* 更新滑块位置 */
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	void UpdateThumbPosition(float InValue);
+	WIDGETAPPLICATION_API void UpdateThumbPosition(float InValue);
 
 	/* 更新文本 */
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	void UpdateText(float InValue);
+	WIDGETAPPLICATION_API void UpdateText(float InValue);
 
 	/* 更新文本位置 */
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	void UpdateTextPosition(float InValue);
+	WIDGETAPPLICATION_API void UpdateTextPosition(float InValue);
 
 private:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget, BlueprintProtected = true, AllowPrivateAccess = true))

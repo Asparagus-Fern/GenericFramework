@@ -12,6 +12,7 @@ public class WidgetGeneration : ModuleRules
 				"Core",
 				"DevCore",
 				"DevSlateCore",
+				"UnrealMisc",
 
 				"UMG",
 				"GameplayTags",

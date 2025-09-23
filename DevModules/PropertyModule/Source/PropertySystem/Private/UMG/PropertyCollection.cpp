@@ -2,6 +2,7 @@
 
 #include "UMG/PropertyCollection.h"
 
+#include "PropertyProxy.h"
 #include "WidgetType.h"
 #include "Components/ScrollBox.h"
 #include "Components/ScrollBoxSlot.h"
@@ -18,12 +19,12 @@ void UPropertyCollection::SetPropertyCollectionViewModel(UPropertyCollectionView
 		{
 			ScrollBox_PropertyCollection->ClearChildren();
 		}
-		
+
 		for (auto& PropertyList : PropertyLists)
 		{
 			PropertyList->SetPropertyListViewModel(nullptr);
 		}
-		
+
 		PropertyLists.Reset();
 		PropertyCollectionViewModel->RemoveAllFieldValueChangedDelegates(this);
 	}
@@ -33,6 +34,28 @@ void UPropertyCollection::SetPropertyCollectionViewModel(UPropertyCollectionView
 	if (PropertyCollectionViewModel)
 	{
 		REGISTER_MVVM_PROPERTY(PropertyCollectionViewModel, PropertyListViewModels, OnPropertyListViewModelsChanged, true)
+	}
+}
+
+void UPropertyCollection::ApplyPropertyChanged()
+{
+	for (auto& PropertyList : PropertyLists)
+	{
+		if (UPropertyProxy* PropertyProxy = PropertyList->GetPropertyProxy())
+		{
+			PropertyProxy->ApplyProperty();
+		}
+	}
+}
+
+void UPropertyCollection::ResetPropertyChanged()
+{
+	for (auto& PropertyList : PropertyLists)
+	{
+		if (UPropertyProxy* PropertyProxy = PropertyList->GetPropertyProxy())
+		{
+			PropertyProxy->ResetProperty();
+		}
 	}
 }
 

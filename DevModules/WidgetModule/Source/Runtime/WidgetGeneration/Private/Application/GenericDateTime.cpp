@@ -1,6 +1,6 @@
 ﻿// Copyright ChenTaiye 2025. All Rights Reserved.
 
-#include "UMG/Generic/GenericDateTime.h"
+#include "Application/GenericDateTime.h"
 
 #include "Components/TextBlock.h"
 
@@ -12,10 +12,10 @@ void UGenericDateTime::NativePreConstruct()
 	UpdateDateTimeNow();
 }
 
-void UGenericDateTime::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+void UGenericDateTime::NativeConstruct()
 {
-	Super::NativeTick(MyGeometry, InDeltaTime);
-	UpdateDateTimeNow();
+	Super::NativeConstruct();
+	GetWorld()->GetTimerManager().SetTimer(UpdateTimer, FTimerDelegate::CreateUObject(this, &UGenericDateTime::UpdateDateTimeNow), UpdateDuration, true);
 }
 
 void UGenericDateTime::UpdateDateTimeNow()
@@ -24,24 +24,36 @@ void UGenericDateTime::UpdateDateTimeNow()
 
 	if (Text_Date)
 	{
-		Text_Date.Get()->SetText(GetFormatDate(DateTimeNow.GetYear(), DateTimeNow.GetMonth(), DateTimeNow.GetDay()));
+		Text_Date->SetText(GetFormatDate(DateTimeNow.GetYear(), DateTimeNow.GetMonth(), DateTimeNow.GetDay()));
 	}
 
 	if (Text_Time)
 	{
-		Text_Time.Get()->SetText(GetFormatTime(bUseHour12 ? DateTimeNow.GetHour12() : DateTimeNow.GetHour(), DateTimeNow.GetMinute(), DateTimeNow.GetSecond(), DateTimeNow.GetMillisecond()));
+		Text_Time->SetText(GetFormatTime(bUseHour12 ? DateTimeNow.GetHour12() : DateTimeNow.GetHour(), DateTimeNow.GetMinute(), DateTimeNow.GetSecond(), DateTimeNow.GetMillisecond()));
 	}
-
 
 	if (Text_DayOfWeek)
 	{
-		Text_DayOfWeek.Get()->SetText(GetFormatDayOfWeek(ConvToDayInWeek(DateTimeNow.GetDayOfWeek())));
+		Text_DayOfWeek->SetText(GetFormatDayOfWeek(ConvToDayInWeek(DateTimeNow.GetDayOfWeek())));
 	}
 
 	if (Text_MonthOfYear)
 	{
-		Text_MonthOfYear.Get()->SetText(GetFormatMonthOfYear(ConvToMonthInYear(DateTimeNow.GetMonthOfYear())));
+		Text_MonthOfYear->SetText(GetFormatMonthOfYear(ConvToMonthInYear(DateTimeNow.GetMonthOfYear())));
 	}
+}
+
+void UGenericDateTime::SetIsUseHour12(bool IsUseHour12)
+{
+	bUseHour12 = IsUseHour12;
+	UpdateDateTimeNow();
+}
+
+void UGenericDateTime::SetUpdateDuration(float InUpdateDuration)
+{
+	UpdateTimer.Invalidate();
+	UpdateDuration = InUpdateDuration;
+	GetWorld()->GetTimerManager().SetTimer(UpdateTimer, FTimerDelegate::CreateUObject(this, &UGenericDateTime::UpdateDateTimeNow), UpdateDuration, true);
 }
 
 FText UGenericDateTime::GetFormatDate_Implementation(int32 InYear, int32 InMouth, int32 InDay)

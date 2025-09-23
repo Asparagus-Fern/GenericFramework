@@ -15,6 +15,16 @@ void UGenericSettingButtonContainer::NativeOnActived()
 	{
 		ButtonGroupRef->OnButtonSelectionChanged.AddUniqueDynamic(this, &UGenericSettingButtonContainer::OnButtonSelectionChanged);
 	}
+
+	if (Button_Apply)
+	{
+		Button_Apply->OnButtonClicked.AddUniqueDynamic(this, &UGenericSettingButtonContainer::OnApplyButtonClicked);
+	}
+
+	if (Button_Reset)
+	{
+		Button_Reset->OnButtonClicked.AddUniqueDynamic(this, &UGenericSettingButtonContainer::OnResetButtonClicked);
+	}
 }
 
 void UGenericSettingButtonContainer::NativeOnInactived()
@@ -24,6 +34,16 @@ void UGenericSettingButtonContainer::NativeOnInactived()
 	if (UGenericButtonGroup* ButtonGroupRef = GetButtonGroup())
 	{
 		ButtonGroupRef->OnButtonSelectionChanged.RemoveAll(this);
+	}
+
+	if (Button_Apply)
+	{
+		Button_Apply->OnButtonClicked.RemoveAll(this);
+	}
+
+	if (Button_Reset)
+	{
+		Button_Reset->OnButtonClicked.RemoveAll(this);
 	}
 }
 
@@ -38,12 +58,27 @@ void UGenericSettingButtonContainer::OnButtonSelectionChanged_Implementation(UGe
 				if (UGenericSettingBuilder* ButtonBuilder = Cast<UGenericSettingBuilder>(ButtonCollectionRef->GetButtonBuilder(InButton->SelfTag)))
 				{
 					PropertyCollection_Setting->SetPropertyCollectionViewModel(ButtonBuilder->PropertyCollectionViewModel);
+					return;
 				}
 			}
 		}
-		else
-		{
-			PropertyCollection_Setting->SetPropertyCollectionViewModel(nullptr);
-		}
+
+		PropertyCollection_Setting->SetPropertyCollectionViewModel(nullptr);
+	}
+}
+
+void UGenericSettingButtonContainer::OnApplyButtonClicked(UGenericButtonWidget* InButton)
+{
+	if (PropertyCollection_Setting)
+	{
+		PropertyCollection_Setting->ApplyPropertyChanged();
+	}
+}
+
+void UGenericSettingButtonContainer::OnResetButtonClicked(UGenericButtonWidget* InButton)
+{
+	if (PropertyCollection_Setting)
+	{
+		PropertyCollection_Setting->ResetPropertyChanged();
 	}
 }

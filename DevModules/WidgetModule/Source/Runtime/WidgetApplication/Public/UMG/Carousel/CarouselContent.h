@@ -17,16 +17,16 @@ class UCarouselContent : public UGenericWidget
 	GENERATED_BODY()
 
 public:
-	virtual void NativePreConstruct() override;
-	virtual void NativeConstruct() override;
-	virtual void NativeDestruct() override;
+	WIDGETAPPLICATION_API virtual void NativePreConstruct() override;
+	WIDGETAPPLICATION_API virtual void NativeConstruct() override;
+	WIDGETAPPLICATION_API virtual void NativeDestruct() override;
 
 public:
 	UFUNCTION(BlueprintCallable)
-	void SetNum(int32 InNum);
+	WIDGETAPPLICATION_API void SetNum(int32 InNum);
 
 	UFUNCTION(BlueprintCallable)
-	void SetIndex(int32 InIndex);
+	WIDGETAPPLICATION_API void SetIndex(int32 InIndex);
 
 public:
 	DECLARE_EVENT_TwoParams(UCarouselContent, FOnCarouselChanged, int32, int32);

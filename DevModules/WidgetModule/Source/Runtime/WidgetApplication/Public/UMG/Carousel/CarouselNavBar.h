@@ -18,16 +18,16 @@ class UCarouselNavBar : public UGenericWidget
 	GENERATED_BODY()
 
 public:
-	virtual void NativePreConstruct() override;
-	virtual void NativeConstruct() override;
-	virtual void NativeDestruct() override;
+	WIDGETAPPLICATION_API virtual void NativePreConstruct() override;
+	WIDGETAPPLICATION_API virtual void NativeConstruct() override;
+	WIDGETAPPLICATION_API virtual void NativeDestruct() override;
 
 public:
 	UFUNCTION(BlueprintCallable)
-	void SetNum(int32 InNum);
+	WIDGETAPPLICATION_API void SetNum(int32 InNum);
 
 	UFUNCTION(BlueprintCallable)
-	void SetIndex(int32 InIndex);
+	WIDGETAPPLICATION_API void SetIndex(int32 InIndex);
 
 public:
 	DECLARE_EVENT_OneParam(UCarouselNavBar, FOnCarouselIndexChanged, int32);
@@ -49,12 +49,12 @@ protected:
 
 protected:
 	UFUNCTION()
-	void OnPreviewButtonClicked(UGenericButtonWidget* InWidget);
+	WIDGETAPPLICATION_API void OnPreviewButtonClicked(UGenericButtonWidget* InWidget);
 
 	UFUNCTION()
-	void OnNextButtonClicked(UGenericButtonWidget* InWidget);
+	WIDGETAPPLICATION_API void OnNextButtonClicked(UGenericButtonWidget* InWidget);
 
-	void HandleCarouselChanged(int32 InNum, int32 InIndex);
+	WIDGETAPPLICATION_API void HandleCarouselChanged(int32 InNum, int32 InIndex);
 
 private:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidgetOptional, BlueprintProtected = true, AllowPrivateAccess = true))
