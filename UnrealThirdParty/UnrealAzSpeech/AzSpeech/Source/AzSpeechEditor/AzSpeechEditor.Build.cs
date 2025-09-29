@@ -15,7 +15,7 @@ public class AzSpeechEditor : ModuleRules
 		PublicDependencyModuleNames.AddRange(new[]
 		{
 			"Core",
-			"AzSpeech", 
+			"AzSpeech"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new[]
