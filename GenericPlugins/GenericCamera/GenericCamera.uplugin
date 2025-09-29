@@ -1,0 +1,40 @@
+﻿{
+  "FileVersion": 3,
+  "Version": 1,
+  "VersionName": "1.0",
+  "FriendlyName": "GenericCamera",
+  "Description": "",
+  "Category": "GenericPlugin",
+  "CreatedBy": "Chen",
+  "CreatedByURL": "",
+  "DocsURL": "",
+  "MarketplaceURL": "",
+  "CanContainContent": true,
+  "IsBetaVersion": false,
+  "IsExperimentalVersion": false,
+  "Installed": false,
+  "Plugins": [
+    {
+      "Name": "DevCore",
+      "Enabled": true
+    },
+    {
+      "Name": "GenericWidget",
+      "Enabled": true
+    },
+    {
+      "Name": "GenericInput",
+      "Enabled": true
+    }
+  ],
+  "Modules": [
+    {
+      "Name": "CameraSystem",
+      "Type": "Runtime",
+      "LoadingPhase": "Default",
+      "WhitelistPlatforms": [
+        "Win64"
+      ]
+    }
+  ]
+}

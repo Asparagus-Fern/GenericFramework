@@ -6,6 +6,8 @@
 #include "UObject/Interface.h"
 #include "StateInterface.generated.h"
 
+DECLARE_LOG_CATEGORY_EXTERN(GenericLogState, Log, All);
+
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnActivedFinish, UObject*)
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnInactivedFinish, UObject*)
 

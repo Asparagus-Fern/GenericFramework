@@ -4,14 +4,14 @@
   "VersionName": "1.0",
   "FriendlyName": "DevLab",
   "Description": "",
-  "Category": "Other",
+  "Category": "GenericPluginLab",
   "CreatedBy": "Chen",
   "CreatedByURL": "",
   "DocsURL": "",
   "MarketplaceURL": "",
   "CanContainContent": true,
-  "IsBetaVersion": false,
-  "IsExperimentalVersion": false,
+  "IsBetaVersion": true,
+  "IsExperimentalVersion": true,
   "Installed": false,
   "Plugins": [
     {
@@ -19,7 +19,7 @@
       "Enabled": true
     },
     {
-      "Name": "WidgetModule",
+      "Name": "GenericWidget",
       "Enabled": true
     },
     {

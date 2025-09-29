@@ -1,0 +1,29 @@
+﻿{
+  "FileVersion": 3,
+  "Version": 1,
+  "VersionName": "1.0",
+  "FriendlyName": "GenericInput",
+  "Description": "",
+  "Category": "GenericPlugin",
+  "CreatedBy": "Chen",
+  "CreatedByURL": "",
+  "DocsURL": "",
+  "MarketplaceURL": "",
+  "CanContainContent": false,
+  "IsBetaVersion": false,
+  "IsExperimentalVersion": false,
+  "Installed": false,
+  "Plugins": [
+    {
+      "Name": "DevCore",
+      "Enabled": true
+    }
+  ],
+  "Modules": [
+    {
+      "Name": "PlayerInputUtilities",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
+    }
+  ]
+}

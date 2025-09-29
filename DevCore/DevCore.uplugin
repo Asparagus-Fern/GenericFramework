@@ -4,7 +4,7 @@
   "VersionName": "1.0",
   "FriendlyName": "DevCore",
   "Description": "",
-  "Category": "Other",
+  "Category": "GenericPluginCore",
   "CreatedBy": "Chen",
   "CreatedByURL": "",
   "DocsURL": "",
@@ -19,36 +19,28 @@
     {
       "Name": "CommonUI",
       "Enabled": true
-    },
-    {
-      "Name": "UnrealMisc",
-      "Enabled": true
     }
   ],
   "Modules": [
     {
+      "Name": "UnrealMisc",
+      "Type": "Runtime",
+      "LoadingPhase": "PreDefault"
+    },
+    {
       "Name": "DevSlateCore",
       "Type": "Runtime",
-      "LoadingPhase": "PreDefault",
-      "WhitelistPlatforms": [
-        "Win64"
-      ]
+      "LoadingPhase": "PreDefault"
     },
     {
       "Name": "DevCore",
       "Type": "Runtime",
-      "LoadingPhase": "PreDefault",
-      "WhitelistPlatforms": [
-        "Win64"
-      ]
+      "LoadingPhase": "PreDefault"
     },
     {
       "Name": "DevEdCore",
       "Type": "Editor",
-      "LoadingPhase": "PreDefault",
-      "WhitelistPlatforms": [
-        "Win64"
-      ]
+      "LoadingPhase": "PreDefault"
     }
   ]
 }

@@ -485,7 +485,7 @@ EVerticalAlignment USimpleTextBox::GetImageVerticalAlignment() const
 
 void USimpleTextBox::SetImageVerticalAlignment(EVerticalAlignment InImageVerticalAlignment)
 {
-	InImageVerticalAlignment = InImageVerticalAlignment;
+	ImageVerticalAlignment = InImageVerticalAlignment;
 	if (MySimpleTextBox.IsValid())
 	{
 		MySimpleTextBox->SetImageVerticalAlignment(InImageVerticalAlignment);

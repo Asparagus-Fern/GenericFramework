@@ -1,0 +1,47 @@
+﻿{
+  "FileVersion": 3,
+  "Version": 1,
+  "VersionName": "1.0",
+  "FriendlyName": "GenericWorld",
+  "Description": "",
+  "Category": "GenericPlugin",
+  "CreatedBy": "Chen",
+  "CreatedByURL": "",
+  "DocsURL": "",
+  "MarketplaceURL": "",
+  "CanContainContent": false,
+  "IsBetaVersion": false,
+  "IsExperimentalVersion": false,
+  "Installed": false,
+  "Plugins": [
+    {
+      "Name": "DevCore",
+      "Enabled": true
+    },
+    {
+      "Name": "GenericWidget",
+      "Enabled": true
+    },
+    {
+      "Name": "GenericEvent",
+      "Enabled": true
+    }
+  ],
+  "Modules": [
+    {
+      "Name": "WorldUtilities",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
+    },
+    {
+      "Name": "LevelStreaming",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
+    },
+    {
+      "Name": "WorldPartition",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
+    }
+  ]
+}

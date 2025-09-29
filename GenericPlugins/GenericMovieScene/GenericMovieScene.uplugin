@@ -1,0 +1,52 @@
+﻿{
+  "FileVersion": 3,
+  "Version": 1,
+  "VersionName": "1.0",
+  "FriendlyName": "GenericMovieScene",
+  "Description": "",
+  "Category": "GenericPlugin",
+  "CreatedBy": "Chen",
+  "CreatedByURL": "",
+  "DocsURL": "",
+  "MarketplaceURL": "",
+  "CanContainContent": true,
+  "IsBetaVersion": false,
+  "IsExperimentalVersion": false,
+  "Installed": false,
+  "Plugins": [
+    {
+      "Name": "DevCore",
+      "Enabled": true
+    },
+    {
+      "Name": "GenericWidget",
+      "Enabled": true
+    },
+    {
+      "Name": "GenericEvent",
+      "Enabled": true
+    }
+  ],
+  "Modules": [
+    {
+      "Name": "MovieSceneUtilities",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
+    },
+    {
+      "Name": "LevelSequenceSystem",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
+    },
+    {
+      "Name": "MediaSystem",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
+    },
+    {
+      "Name": "MovieSceneExtend",
+      "Type": "Editor",
+      "LoadingPhase": "Default"
+    }
+  ]
+}

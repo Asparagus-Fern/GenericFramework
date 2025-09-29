@@ -1,16 +1,17 @@
 // Copyright ChenTaiye 2025. All Rights Reserved.
 
-
 #include "Interface/StateInterface.h"
 
 #include "Type/DebugType.h"
+
+DEFINE_LOG_CATEGORY(GenericLogState);
 
 void IStateInterface::NativeOnCreate()
 {
 	if (UObject* Object = Cast<UObject>(this))
 	{
 		IStateInterface::Execute_HandleOnCreate(Object);
-		GenericLOG(GenericLogDefault, Log, TEXT("On Created : %s"), *Object->GetName());
+		GenericLOG(GenericLogState, Log, TEXT("On Created : %s"), *Object->GetName());
 	}
 }
 
@@ -21,7 +22,7 @@ void IStateInterface::NativeOnActived()
 	if (UObject* Object = Cast<UObject>(this))
 	{
 		IStateInterface::Execute_HandleOnActived(Object);
-		GenericLOG(GenericLogDefault, Log, TEXT("On Actived : %s"), *Object->GetName());
+		GenericLOG(GenericLogState, Log, TEXT("On Actived : %s"), *Object->GetName());
 	}
 }
 
@@ -31,7 +32,7 @@ void IStateInterface::NativeOnActivedFinish()
 	{
 		OnActivedFinishDelegate.Broadcast(Object);
 		IStateInterface::Execute_HandleOnActivedFinish(Object);
-		GenericLOG(GenericLogDefault, Log, TEXT("On Actived Finish : %s"), *Object->GetName());
+		GenericLOG(GenericLogState, Log, TEXT("On Actived Finish : %s"), *Object->GetName());
 	}
 }
 
@@ -51,7 +52,7 @@ void IStateInterface::NativeOnInactived()
 	{
 		OnInactivedFinishDelegate.Broadcast(Object);
 		IStateInterface::Execute_HandleOnInactived(Object);
-		GenericLOG(GenericLogDefault, Log, TEXT("On Inactived : %s"), *Object->GetName());
+		GenericLOG(GenericLogState, Log, TEXT("On Inactived : %s"), *Object->GetName());
 	}
 }
 
@@ -60,7 +61,7 @@ void IStateInterface::NativeOnInactivedFinish()
 	if (UObject* Object = Cast<UObject>(this))
 	{
 		IStateInterface::Execute_HandleOnInactivedFinish(Object);
-		GenericLOG(GenericLogDefault, Log, TEXT("On Inactived Finish : %s"), *Object->GetName());
+		GenericLOG(GenericLogState, Log, TEXT("On Inactived Finish : %s"), *Object->GetName());
 	}
 }
 
@@ -69,7 +70,7 @@ void IStateInterface::NativeOnDestroy()
 	if (UObject* Object = Cast<UObject>(this))
 	{
 		IStateInterface::Execute_HandleOnDestroy(Object);
-		GenericLOG(GenericLogDefault, Log, TEXT("On Destroy : %s"), *Object->GetName());
+		GenericLOG(GenericLogState, Log, TEXT("On Destroy : %s"), *Object->GetName());
 	}
 }
 

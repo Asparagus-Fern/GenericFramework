@@ -10,6 +10,7 @@ public class ApplicationRuntime : ModuleRules
 			new string[]
 			{
 				"Core",
+				"UnrealMisc",
 				"DevCore"
 			}
 		);
@@ -29,10 +30,7 @@ public class ApplicationRuntime : ModuleRules
 				"LevelSequence",
 				"MovieScene",
 				"MediaAssets",
-
-				/* Dev Misc */
-				"UnrealMisc",
-
+				
 				/* Dev Module */
 				"CameraSystem",
 				"GenericJson",

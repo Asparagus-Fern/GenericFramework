@@ -1,0 +1,63 @@
+﻿{
+  "FileVersion": 3,
+  "Version": 1,
+  "VersionName": "1.0",
+  "FriendlyName": "GenericGameplay",
+  "Description": "",
+  "Category": "GenericPlugin",
+  "CreatedBy": "Chen",
+  "CreatedByURL": "",
+  "DocsURL": "",
+  "MarketplaceURL": "",
+  "CanContainContent": true,
+  "IsBetaVersion": false,
+  "IsExperimentalVersion": false,
+  "Installed": false,
+  "Plugins": [
+    {
+      "Name": "DevCore",
+      "Enabled": true
+    },
+    {
+      "Name": "GenericInput",
+      "Enabled": true
+    },
+    {
+      "Name": "GenericCamera",
+      "Enabled": true
+    },
+    {
+      "Name": "GenericWidget",
+      "Enabled": true
+    },
+    {
+      "Name": "GenericProperty",
+      "Enabled": true
+    },
+    {
+      "Name": "ModelViewViewModel",
+      "Enabled": true
+    },
+    {
+      "Name": "GameplayCameras",
+      "Enabled": true
+    }
+  ],
+  "Modules": [
+    {
+      "Name": "GenericGameplaySystem",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
+    },
+    {
+      "Name": "GenericSaveGameSystem",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
+    },
+    {
+      "Name": "GenericGameSettingSystem",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
+    }
+  ]
+}

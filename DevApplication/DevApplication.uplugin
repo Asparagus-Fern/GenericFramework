@@ -4,7 +4,7 @@
   "VersionName": "1.0",
   "FriendlyName": "DevApplication",
   "Description": "",
-  "Category": "Other",
+  "Category": "GenericPluginApplication",
   "CreatedBy": "Chen",
   "CreatedByURL": "",
   "DocsURL": "",
@@ -19,23 +19,23 @@
       "Enabled": true
     },
     {
-      "Name": "CameraModule",
+      "Name": "GenericCamera",
       "Enabled": true
     },
     {
-      "Name": "EventModule",
+      "Name": "GenericEvent",
       "Enabled": true
     },
     {
-      "Name": "GameplayModule",
+      "Name": "GenericGameplay",
       "Enabled": true
     },
     {
-      "Name": "GuideModule",
+      "Name": "GenericGuide",
       "Enabled": true
     },
     {
-      "Name": "InputModule",
+      "Name": "GenericInput",
       "Enabled": true
     },
     {
@@ -47,27 +47,27 @@
       "Enabled": true
     },
     {
-      "Name": "MovieSceneModule",
+      "Name": "GenericMovieScene",
       "Enabled": true
     },
     {
-      "Name": "ProcedureModule",
+      "Name": "GenericProcedure",
       "Enabled": true
     },
     {
-      "Name": "PropertyModule",
+      "Name": "GenericProperty",
       "Enabled": true
     },
     {
-      "Name": "ThreadModule",
+      "Name": "GenericThread",
       "Enabled": true
     },
     {
-      "Name": "WidgetModule",
+      "Name": "GenericWidget",
       "Enabled": true
     },
     {
-      "Name": "WorldModule",
+      "Name": "GenericWorld",
       "Enabled": true
     },
     {
