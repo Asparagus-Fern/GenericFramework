@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "PropertyProxy.h"
+#include "GameSettingProxy.h"
 #include "VideoSettingProxy.generated.h"
 
 class USinglePropertyValueViewModel;
@@ -12,7 +12,7 @@ class USinglePropertyValueViewModel;
  * 
  */
 UCLASS(MinimalAPI)
-class UVideoSettingProxy : public UPropertyProxy
+class UVideoSettingProxy : public UGameSettingProxy
 {
 	GENERATED_BODY()
 

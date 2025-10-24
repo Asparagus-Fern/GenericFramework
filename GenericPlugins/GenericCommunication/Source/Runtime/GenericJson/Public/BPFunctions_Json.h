@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Generic/GenericType.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "BPFunctions_Json.generated.h"
 
@@ -31,12 +30,12 @@ public:
 public:
 	/* 将结构体保存为 json 文本 */
 	UFUNCTION(BlueprintCallable, CustomThunk, BlueprintInternalUseOnly, Category="Json", meta = (CustomStructureParam = "Value", ExpandEnumAsExecs = "Result"))
-	static void SaveStructToJsonFile(EGenericResult& Result, const FString& FilePath, const int32& Value);
+	static void SaveStructToJsonFile(bool& Result, const FString& FilePath, const int32& Value);
 	DECLARE_FUNCTION(execSaveStructToJsonFile);
 
 	/* 将 json 文本转化为结构体 */
 	UFUNCTION(BlueprintCallable, CustomThunk, BlueprintInternalUseOnly, Category="Json", meta = (CustomStructureParam = "Value", ExpandEnumAsExecs = "Result"))
-	static void LoadJsonFileToStruct(EGenericResult& Result, const FString& FilePath, int32& Value);
+	static void LoadJsonFileToStruct(bool& Result, const FString& FilePath, int32& Value);
 	DECLARE_FUNCTION(execLoadJsonFileToStruct);
 
 private:

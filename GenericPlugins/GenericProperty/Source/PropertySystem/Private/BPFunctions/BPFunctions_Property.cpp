@@ -7,9 +7,14 @@
 #include "DataSource/PropertyDataSource.h"
 #include "Manager/ManagerStatics.h"
 
-UPropertyProxy* UBPFunctions_Property::RegisterPropertyProxy(const TSubclassOf<UPropertyProxy>& InPropertyProxyClass)
+UPropertyProxy* UBPFunctions_Property::RegisterPropertyProxy(FGameplayTag InPropertyProxyTag, const TSubclassOf<UPropertyProxy>& InPropertyProxyClass)
 {
-	return FPropertyHelper::RegisterPropertyProxy(InPropertyProxyClass);
+	return FPropertyHelper::RegisterPropertyProxy(InPropertyProxyTag, InPropertyProxyClass);
+}
+
+void UBPFunctions_Property::UnRegisterPropertyProxyByTag(FGameplayTag InPropertyProxyTag)
+{
+	FPropertyHelper::UnRegisterPropertyProxy(InPropertyProxyTag);
 }
 
 void UBPFunctions_Property::UnRegisterPropertyProxy(UPropertyProxy* InPropertyProxy)
@@ -17,14 +22,14 @@ void UBPFunctions_Property::UnRegisterPropertyProxy(UPropertyProxy* InPropertyPr
 	FPropertyHelper::UnRegisterPropertyProxy(InPropertyProxy);
 }
 
-bool UBPFunctions_Property::ExistPropertyProxy(const TSubclassOf<UPropertyProxy>& InPropertyProxyClass)
+bool UBPFunctions_Property::ExistPropertyProxy(FGameplayTag InPropertyProxyTag)
 {
-	return FPropertyHelper::ExistPropertyProxy(InPropertyProxyClass);
+	return FPropertyHelper::ExistPropertyProxy(InPropertyProxyTag);;
 }
 
-UPropertyProxy* UBPFunctions_Property::GetPropertyProxy(const TSubclassOf<UPropertyProxy>& InPropertyProxyClass)
+UPropertyProxy* UBPFunctions_Property::GetPropertyProxy(FGameplayTag InPropertyProxyTag, const TSubclassOf<UPropertyProxy>& InPropertyProxyClass)
 {
-	return FPropertyHelper::GetPropertyProxy(InPropertyProxyClass);
+	return FPropertyHelper::GetPropertyProxy(InPropertyProxyTag);
 }
 
 UPropertyDataSource* UBPFunctions_Property::CreateDataSourceByStringPath(UObject* InContainer, const FString& InGetterPath, const FString& InSetterPath)

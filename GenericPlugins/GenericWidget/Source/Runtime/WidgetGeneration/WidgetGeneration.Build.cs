@@ -18,7 +18,8 @@ public class WidgetGeneration : ModuleRules
 				"GameplayTags",
 				"CommonUI",
 				"CommonInput",
-				"InputCore"
+				"InputCore",
+				"ModelViewViewModel",
 			}
 		);
 
@@ -29,8 +30,7 @@ public class WidgetGeneration : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
-
-				"ModelViewViewModel",
+				
 				"DeveloperSettings"
 			}
 		);

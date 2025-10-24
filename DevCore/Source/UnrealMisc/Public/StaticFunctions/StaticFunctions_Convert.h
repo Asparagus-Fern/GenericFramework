@@ -72,6 +72,7 @@ public:
 
 	/* To String */
 public:
+	static FString ToString(FString Var);
 	static FString ToString(char* Var);
 	static FString ToString(unsigned char* Var);
 	static FString ToString(bool Var);
@@ -79,6 +80,7 @@ public:
 	static FString ToString(int32 Var);
 	static FString ToString(int64 Var);
 	static FString ToString(float Var);
+	static FString ToString(double Var);
 	static FString ToString(FName Var);
 	static FString ToString(FText Var);
 	static FString ToString(FVector Var);

@@ -113,6 +113,11 @@ float FStaticFunctions_Convert::ToFloat(FText Var)
 	return FCString::Atof(*Var.ToString());
 }
 
+FString FStaticFunctions_Convert::ToString(FString Var)
+{
+	return Var;
+}
+
 FString FStaticFunctions_Convert::ToString(char* Var)
 {
 	return ANSI_TO_TCHAR(reinterpret_cast<const char*>(Var));
@@ -144,6 +149,11 @@ FString FStaticFunctions_Convert::ToString(int64 Var)
 }
 
 FString FStaticFunctions_Convert::ToString(float Var)
+{
+	return LexToString(Var);
+}
+
+FString FStaticFunctions_Convert::ToString(double Var)
 {
 	return LexToString(Var);
 }

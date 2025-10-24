@@ -18,6 +18,9 @@ class UPropertyListViewModel : public UMVVMViewModelBase
 	GENERATED_BODY()
 
 public:
+	UPROPERTY(FieldNotify, EditAnywhere, BlueprintReadWrite, meta=(Categories="Property.Proxy"))
+	FGameplayTag PropertyProxyTag;
+
 	UPROPERTY(FieldNotify, EditAnywhere, BlueprintReadWrite)
 	FText PropertyCategory;
 

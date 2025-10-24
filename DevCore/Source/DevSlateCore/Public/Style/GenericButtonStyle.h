@@ -16,6 +16,9 @@ class UGenericButtonStyle : public UObject
 	GENERATED_BODY()
 
 public:
+	DEVSLATECORE_API void GetButtonStyle(FButtonStyle& OutStyle) const;
+	
+public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FSlateBrush Normal;
 

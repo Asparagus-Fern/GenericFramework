@@ -23,14 +23,14 @@ class WIDGETGENERATION_API IWidgetChildrenInterface
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
-	virtual UGenericWidget* GetChildByIndex(int32 InIndex) = 0;
-	virtual void AddChild(UGenericWidget* InWidget) = 0;
+	virtual UUserWidget* GetChildByIndex(int32 InIndex) = 0;
+	virtual void AddChild(UUserWidget* InWidget) = 0;
 	virtual void RemoveChild(int32 InIndex) = 0;
-	virtual void RemoveChild(UGenericWidget* InWidget) = 0;
+	virtual void RemoveChild(UUserWidget* InWidget) = 0;
 	virtual void ClearChildren() = 0;
 
 	template <typename T>
-	T* GetChildByIndex(int32 InIndex)
+	T* GetChildByIndex(const int32 InIndex)
 	{
 		return Cast<T>(GetChildByIndex(InIndex));
 	}

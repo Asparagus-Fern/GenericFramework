@@ -2,11 +2,9 @@
 
 #include "Pawn/GenericPawn.h"
 
-#include "AIController.h"
 #include "Component/PawnInputMovementComponent.h"
 #include "Component/PawnLockStateComponent.h"
 #include "GameFramework/FloatingPawnMovement.h"
-#include "GameFramework/PlayerState.h"
 
 AGenericPawn::AGenericPawn(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -23,26 +21,6 @@ AGenericPawn::AGenericPawn(const FObjectInitializer& ObjectInitializer)
 	FloatingPawnMovement = CreateDefaultSubobject<UFloatingPawnMovement>("MovementComponent");
 	LockStateComponent = CreateDefaultSubobject<UPawnLockStateComponent>("LockStateComponent");
 	InputMovementComponent = CreateDefaultSubobject<UPawnInputMovementComponent>("InputMovementComponent");
-}
-
-bool AGenericPawn::IsPlayer()
-{
-	return IsValid(Cast<APlayerController>(GetController()));
-}
-
-bool AGenericPawn::IsAI()
-{
-	return IsValid(Cast<AAIController>(GetController()));
-}
-
-APlayerController* AGenericPawn::GetPlayerController()
-{
-	return Cast<APlayerController>(GetController());
-}
-
-AAIController* AGenericPawn::GetAIController()
-{
-	return Cast<AAIController>(GetController());
 }
 
 void AGenericPawn::AddLocation_Implementation(const FVector2D InValue)

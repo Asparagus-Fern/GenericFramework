@@ -50,6 +50,11 @@
       "LoadingPhase": "Default"
     },
     {
+      "Name": "GenericAssetLoadSystem",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
+    },
+    {
       "Name": "GenericSaveGameSystem",
       "Type": "Runtime",
       "LoadingPhase": "Default"
@@ -57,7 +62,8 @@
     {
       "Name": "GenericGameSettingSystem",
       "Type": "Runtime",
-      "LoadingPhase": "Default"
+      "LoadingPhase": "Default",
+      "Enabled": false
     }
   ]
 }

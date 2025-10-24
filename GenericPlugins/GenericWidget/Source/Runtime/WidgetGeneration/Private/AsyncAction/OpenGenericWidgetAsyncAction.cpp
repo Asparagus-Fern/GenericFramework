@@ -16,7 +16,7 @@ void UOpenGenericWidgetAsyncAction::Activate()
 	}
 
 	Widget->GetOnWidgetActiveAnimationPlayFinish().AddUObject(this, &UOpenGenericWidgetAsyncAction::OnWidgetActivedAnimationFinish);
-	FGenericWidgetHelper::OpenGenericWidget(Widget, FOnWidgetActiveStateChanged::CreateUObject(this, &UOpenGenericWidgetAsyncAction::OnWidgetActived));
+	FWidgetHelper::OpenGenericWidget(Widget, FOnWidgetActiveStateChanged::CreateUObject(this, &UOpenGenericWidgetAsyncAction::OnWidgetActived));
 }
 
 UOpenGenericWidgetAsyncAction* UOpenGenericWidgetAsyncAction::AsyncOpenGenericWidget(UGenericWidget* InWidget)

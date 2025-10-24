@@ -27,13 +27,23 @@ public:
 
 public:
 	UFUNCTION(BlueprintPure)
+	PROPERTYSYSTEM_API TArray<UPropertyViewModel*> GetPropertyViewModels() const;
+
+	UFUNCTION(BlueprintPure)
 	PROPERTYSYSTEM_API TArray<UPropertyListItemObject*> GetPropertyListItemObjects() const;
+
+	UFUNCTION(BlueprintPure)
+	PROPERTYSYSTEM_API FGameplayTag GetPropertyProxyTag() const;
+	PROPERTYSYSTEM_API void SetPropertyProxyTag(FGameplayTag InProxyTag);
 
 	UFUNCTION(BlueprintCallable)
 	PROPERTYSYSTEM_API void ApplyProperty();
 
 	UFUNCTION(BlueprintCallable)
 	PROPERTYSYSTEM_API void ResetProperty();
+
+	UFUNCTION(BlueprintPure)
+	PROPERTYSYSTEM_API bool IsAnyPropertyValueDirty() const;
 
 protected:
 	UFUNCTION(BlueprintNativeEvent)
@@ -47,11 +57,20 @@ protected:
 
 	UFUNCTION(BlueprintNativeEvent)
 	PROPERTYSYSTEM_API void OnPropertyChanged(UPropertyViewModel* InPropertyViewModel, EPropertyChangedReason ChangedReason);
-	
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TObjectPtr<UPropertyVisualData> PropertyVisualData = nullptr;
 
 	UPROPERTY(Transient)
+	TArray<UPropertyViewModel*> PropertyViewModels;
+
+	UPROPERTY(Transient)
 	TArray<TObjectPtr<UPropertyListItemObject>> PropertyListItemObjects;
+
+	UPROPERTY(Transient)
+	TArray<UPropertyViewModel*> DirtyPropertyViewModels;
+
+	UPROPERTY()
+	FGameplayTag ProxyTag;
 };

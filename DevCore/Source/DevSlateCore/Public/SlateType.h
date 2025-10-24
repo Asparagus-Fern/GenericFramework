@@ -11,6 +11,7 @@
 #include "Engine/Texture2DDynamic.h"
 #include "SlateType.generated.h"
 
+DEVSLATECORE_API DECLARE_LOG_CATEGORY_EXTERN(GenericLogSlate, Log, All);
 
 class ISlateTextureAtlasInterface;
 class USlateBrushAsset;

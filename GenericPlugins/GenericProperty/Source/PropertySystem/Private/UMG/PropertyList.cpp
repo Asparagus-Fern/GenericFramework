@@ -44,10 +44,7 @@ UPropertyListViewModel* UPropertyList::GetPropertyListViewModel()
 
 void UPropertyList::SetPropertyListViewModel(UPropertyListViewModel* InViewModel)
 {
-	if (PropertyListViewModel)
-	{
-		PropertyListViewModel->RemoveAllFieldValueChangedDelegates(this);
-	}
+	UNREGISTER_MVVM_PROPERTY(PropertyListViewModel)
 
 	PropertyListViewModel = InViewModel;
 
@@ -77,12 +74,27 @@ void UPropertyList::OnPropertyCategoryChanged_Implementation(const FText& InCate
 
 void UPropertyList::OnPropertyProxyClassChanged_Implementation(TSubclassOf<UPropertyProxy> InClass)
 {
-	PropertyProxy = nullptr;
+	/* Clear Property Proxy */
+	if (PropertyProxy)
+	{
+		if (IsDesignTime())
+		{
+			PropertyProxy->NativeOnDestroy();
+		}
+		else
+		{
+			FPropertyHelper::UnRegisterPropertyProxy(PropertyProxy);
+		}
 
+		PropertyProxy = nullptr;
+	}
+
+	/* Clear List View Items */
 	if (GenericListView_Property)
 	{
 		GenericListView_Property->ClearListItems();
 
+		/* Generate New Property Proxy */
 		if (InClass)
 		{
 			if (IsDesignTime())
@@ -92,10 +104,11 @@ void UPropertyList::OnPropertyProxyClassChanged_Implementation(TSubclassOf<UProp
 			}
 			else
 			{
-				PropertyProxy = FPropertyHelper::RegisterPropertyProxy(InClass);
+				PropertyProxy = FPropertyHelper::RegisterPropertyProxy(PropertyListViewModel->PropertyProxyTag, InClass);
 			}
 		}
 
+		/* Generate New List View Items */
 		if (PropertyProxy)
 		{
 			TArray<UPropertyListItemObject*> PropertyListItemObjects;

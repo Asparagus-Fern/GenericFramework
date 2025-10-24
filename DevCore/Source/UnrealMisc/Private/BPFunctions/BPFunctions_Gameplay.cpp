@@ -55,7 +55,6 @@ AGameStateBase* UBPFunctions_Gameplay::GetGameStateByClass(const UObject* WorldC
 APlayerController* UBPFunctions_Gameplay::GetPlayerControllerByClass(const UObject* WorldContextObject, const TSubclassOf<APlayerController> InClass, int32 InIndex)
 {
 	ensure(InClass);
-
 	return UGameplayStatics::GetPlayerController(WorldContextObject, InIndex);
 }
 
@@ -95,42 +94,89 @@ APawn* UBPFunctions_Gameplay::GetPawnByClass(const UObject* WorldContextObject, 
 	return nullptr;
 }
 
-int32 UBPFunctions_Gameplay::GetPlayerID(const APlayerController* InPlayer)
+bool UBPFunctions_Gameplay::GetPlayerID(const APlayerController* InPlayer, int32& Result)
 {
-	return InPlayer->GetPlayerState<APlayerState>()->GetPlayerId();
+	if (APlayerState* PlayerState = InPlayer->GetPlayerState<APlayerState>())
+	{
+		Result = PlayerState->GetPlayerId();
+		return true;
+	}
+	return false;
 }
 
-int32 UBPFunctions_Gameplay::GetPlayerIDByPlayerState(const APlayerState* InPlayerState)
+bool UBPFunctions_Gameplay::GetPlayerIDByPlayerState(const APlayerState* InPlayerState, int32& Result)
 {
-	return InPlayerState->GetPlayerId();
+	Result = InPlayerState->GetPlayerId();
+	return true;
 }
 
-int32 UBPFunctions_Gameplay::GetPlayerIDByPawn(const APawn* InPawn)
+bool UBPFunctions_Gameplay::GetPlayerIDByPawn(const APawn* InPawn, int32& Result)
 {
-	return InPawn->GetPlayerState()->GetPlayerId();
+	if (APlayerState* PlayerState = InPawn->GetPlayerState<APlayerState>())
+	{
+		Result = PlayerState->GetPlayerId();
+		return true;
+	}
+	return false;
 }
 
-const FUniqueNetIdRepl& UBPFunctions_Gameplay::GetPlayerUniqueNetID(const APlayerController* InPlayer)
+bool UBPFunctions_Gameplay::GetPlayerUniqueNetID(const APlayerController* InPlayer, FUniqueNetIdRepl& Result)
 {
-	check(InPlayer);
-	return InPlayer->GetPlayerState<APlayerState>()->GetUniqueId();
+	if (APlayerState* PlayerState = InPlayer->GetPlayerState<APlayerState>())
+	{
+		Result = PlayerState->GetUniqueId();
+		return true;
+	}
+	return false;
 }
 
-const FUniqueNetIdRepl& UBPFunctions_Gameplay::GetPlayerUniqueNetIDByPlayerIndex(const UObject* WorldContextObject, int32 InPlayerIndex)
+bool UBPFunctions_Gameplay::GetPlayerUniqueNetIDByPlayerState(const APlayerState* InPlayerState, FUniqueNetIdRepl& Result)
 {
-	return GetPlayerUniqueNetID(GetPlayerControllerByClass(WorldContextObject, APlayerController::StaticClass(), InPlayerIndex));
+	Result = InPlayerState->GetUniqueId();
+	return true;
 }
 
-const FUniqueNetIdRepl& UBPFunctions_Gameplay::GetPlayerUniqueNetIDByPlayerState(const APlayerState* InPlayerState)
+bool UBPFunctions_Gameplay::GetPlayerUniqueNetIDByPawn(const APawn* InPawn, FUniqueNetIdRepl& Result)
 {
-	check(InPlayerState);
-	return InPlayerState->GetUniqueId();
+	if (APlayerState* PlayerState = InPawn->GetPlayerState())
+	{
+		Result = PlayerState->GetUniqueId();
+		return true;
+	}
+	return false;
 }
 
-const FUniqueNetIdRepl& UBPFunctions_Gameplay::GetPlayerUniqueNetIDByPawn(const APawn* InPawn)
+bool UBPFunctions_Gameplay::GetPlayerUniqueNetIDByPlayerIndex(const UObject* WorldContextObject, int32 InPlayerIndex, FUniqueNetIdRepl& Result)
 {
-	check(InPawn);
-	return InPawn->GetPlayerState()->GetUniqueId();
+	if (APlayerState* PlayerState = GetPlayerStateByClass(WorldContextObject, APlayerState::StaticClass(), InPlayerIndex))
+	{
+		Result = PlayerState->GetUniqueId();
+		return true;
+	}
+	return false;
+}
+
+APlayerController* UBPFunctions_Gameplay::GetPlayerControllerByUniqueNetID(const UObject* WorldContextObject, const TSubclassOf<APlayerController> InClass, const FUniqueNetIdRepl& InNetID)
+{
+	if (APlayerState* PlayerState = UGameplayStatics::GetPlayerStateFromUniqueNetId(WorldContextObject, InNetID))
+	{
+		return PlayerState->GetPlayerController();
+	}
+	return nullptr;
+}
+
+APlayerState* UBPFunctions_Gameplay::GetPlayerStateByUniqueNetID(const UObject* WorldContextObject, const TSubclassOf<APlayerState> InClass, const FUniqueNetIdRepl& InNetID)
+{
+	return UGameplayStatics::GetPlayerStateFromUniqueNetId(WorldContextObject, InNetID);
+}
+
+APawn* UBPFunctions_Gameplay::GetPlayerPawnByUniqueNetID(const UObject* WorldContextObject, const TSubclassOf<APawn> InClass, const FUniqueNetIdRepl& InNetID)
+{
+	if (APlayerState* PlayerState = UGameplayStatics::GetPlayerStateFromUniqueNetId(WorldContextObject, InNetID))
+	{
+		return PlayerState->GetPawn<APawn>();
+	}
+	return nullptr;
 }
 
 bool UBPFunctions_Gameplay::GetIsPlayerPossessPawn(const APawn* InPawn)

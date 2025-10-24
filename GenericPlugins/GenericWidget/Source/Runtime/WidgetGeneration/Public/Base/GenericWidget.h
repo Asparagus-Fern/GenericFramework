@@ -143,22 +143,22 @@ protected:
 
 	/* ==================== IWidgetChildrenInterface ==================== */
 public:
-	WIDGETGENERATION_API virtual UGenericWidget* GetChildByIndex(int32 InIndex) override;
-	WIDGETGENERATION_API virtual void AddChild(UGenericWidget* InWidget) override;
+	WIDGETGENERATION_API virtual UUserWidget* GetChildByIndex(int32 InIndex) override;
+	WIDGETGENERATION_API virtual void AddChild(UUserWidget* InWidget) override;
 	WIDGETGENERATION_API virtual void RemoveChild(int32 InIndex) override;
-	WIDGETGENERATION_API virtual void RemoveChild(UGenericWidget* InWidget) override;
+	WIDGETGENERATION_API virtual void RemoveChild(UUserWidget* InWidget) override;
 	WIDGETGENERATION_API virtual void ClearChildren() override;
 
 protected:
 	UFUNCTION(BlueprintNativeEvent)
-	WIDGETGENERATION_API void OnChildAdded(UGenericWidget* InWidget, int32 InIndex);
+	WIDGETGENERATION_API void OnChildAdded(UUserWidget* InWidget, int32 InIndex);
 
 	UFUNCTION(BlueprintNativeEvent)
-	WIDGETGENERATION_API void OnChildRemoved(UGenericWidget* InWidget, int32 InIndex);
+	WIDGETGENERATION_API void OnChildRemoved(UUserWidget* InWidget, int32 InIndex);
 
 protected:
 	UPROPERTY()
-	TArray<TWeakObjectPtr<UGenericWidget>> Children;
+	TArray<TWeakObjectPtr<UUserWidget>> Children;
 
 	/* ==================== IWidgetAnimationInterface ==================== */
 public:

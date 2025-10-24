@@ -30,18 +30,19 @@ public class ApplicationRuntime : ModuleRules
 				"LevelSequence",
 				"MovieScene",
 				"MediaAssets",
-				
+
 				/* Dev Module */
 				"CameraSystem",
 				"GenericJson",
 				"GenericProtocol",
+				"NativeAPI",
+				"ExternalData",
 				"EventUtilities",
 				"GenericGameplaySystem",
 				"GenericGameSettingSystem",
 				"GenericSaveGameSystem",
 				"PlayerInputUtilities",
 				"ExternalData",
-				"NativeAPI",
 				"MovieSceneUtilities",
 				"LevelSequenceSystem",
 				"MediaSystem",

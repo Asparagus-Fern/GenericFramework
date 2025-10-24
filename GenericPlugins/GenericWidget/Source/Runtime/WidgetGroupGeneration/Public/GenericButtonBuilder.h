@@ -12,7 +12,6 @@ class UButtonInputViewModel;
 class UButtonSelectionViewModel;
 class UWidgetRenderViewModel;
 class UWidgetDescriptionViewModel;
-class UGenericButtonConfirm;
 class UButtonGroupViewModel;
 class UGenericButtonContainer;
 class UGenericButtonWidget;
@@ -45,11 +44,7 @@ public:
 	/* Custom Button Group Class To Manager All Child Buttons if Exist */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<UGenericButtonGroup> ButtonGroupClass = nullptr;
-
-	/* Confirm The Button Event Whether Continue Execute */
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TSubclassOf<UGenericButtonConfirm> ButtonConfirmClass = nullptr;
-
+	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Instanced)
 	TObjectPtr<UWidgetDescriptionViewModel> WidgetDescriptionViewModel = nullptr;
 

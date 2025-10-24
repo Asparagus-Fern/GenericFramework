@@ -8,6 +8,7 @@
 #include "Interface/StateInterface.h"
 #include "GenericButtonCollection.generated.h"
 
+class UButtonGroupViewModel;
 class UGenericButtonContainer;
 class UGenericButtonAsset;
 class UGenericWidgetDecorator;
@@ -31,6 +32,50 @@ public:
 
 	static FName GetEventNodeName(FName EventName, FGameplayTag ButtonTag);
 };
+
+
+/**
+ * 
+ */
+USTRUCT(BlueprintType)
+struct FButtonGroupBuildParameter
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	FGameplayTag ButtonTag;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TObjectPtr<UGenericButtonBuilder> ButtonBuilder = nullptr;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TObjectPtr<UGenericButtonGroup> ButtonGroup = nullptr;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TObjectPtr<UGenericButtonContainer> ButtonContainer = nullptr;
+};
+
+
+/**
+ * 
+ */
+USTRUCT(BlueprintType)
+struct FButtonBuildParameter
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	FGameplayTag ChildButtonTag;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TObjectPtr<UGenericButtonBuilder> ChildButtonBuilder = nullptr;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TObjectPtr<UGenericButtonWidget> ChildButtonWidget = nullptr;
+};
+
 
 /**
  * Generate Buttons and Button Group Through Button Builder In Runtime.
@@ -62,11 +107,11 @@ protected:
 
 	WIDGETGROUPGENERATION_API UGenericButtonContainer* BuildButtonGroupWidget(FGameplayTag InButtonTag, UGenericButtonWidget* ButtonWidget) const;
 	UFUNCTION(BlueprintNativeEvent)
-	WIDGETGROUPGENERATION_API void OnButtonGroupBuilt(FGameplayTag InButtonTag, UGenericButtonGroup* InButtonGroup, UGenericButtonBuilder* InBuilder);
+	WIDGETGROUPGENERATION_API void OnButtonGroupBuilt(const FButtonGroupBuildParameter& ButtonGroupBuildParameter);
 
 	WIDGETGROUPGENERATION_API UGenericButtonWidget* BuildButtonWidget(FGameplayTag InButtonTag, UGenericButtonContainer* GroupWidget) const;
 	UFUNCTION(BlueprintNativeEvent)
-	WIDGETGROUPGENERATION_API void OnButtonBuilt(FGameplayTag InButtonTag, UGenericButtonWidget* InButtonWidget, UGenericButtonBuilder* InBuilder);
+	WIDGETGROUPGENERATION_API void OnButtonBuilt(const FButtonBuildParameter& ButtonBuildParameter);
 
 	UFUNCTION(BlueprintNativeEvent)
 	WIDGETGROUPGENERATION_API void OnButtonGroupDestroy(FGameplayTag InButtonTag);

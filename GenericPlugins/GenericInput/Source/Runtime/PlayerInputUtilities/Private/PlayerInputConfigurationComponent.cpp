@@ -3,24 +3,24 @@
 
 #include "PlayerInputConfigurationComponent.h"
 
-#include "PlayerInputManager.h"
+#include "EnhancedInputSubsystems.h"
 
 UPlayerInputConfigurationComponent::UPlayerInputConfigurationComponent()
 {
 	PrimaryComponentTick.bCanEverTick = false;
 
-#if WITH_EDITOR
-	if (UInputMappingContext* BasicMappingContext = LoadObject<UInputMappingContext>(nullptr,TEXT("/Script/EnhancedInput.InputMappingContext'/DevCore/Input/IMC_Basic.IMC_Basic'")))
-	{
-		if (!EnhancedInputMappingContexts.Contains(BasicMappingContext))
-		{
-			FEnhancedInputMappingContext BasicControlInputMappingContext;
-			BasicControlInputMappingContext.InputMappingContext = BasicMappingContext;
-
-			EnhancedInputMappingContexts.Add(BasicControlInputMappingContext);
-		}
-	}
-#endif
+// #if WITH_EDITOR
+// 	if (UInputMappingContext* BasicMappingContext = LoadObject<UInputMappingContext>(nullptr,TEXT("/Script/EnhancedInput.InputMappingContext'/DevCore/Input/IMC_Basic.IMC_Basic'")))
+// 	{
+// 		if (!EnhancedInputMappingContexts.Contains(BasicMappingContext))
+// 		{
+// 			FEnhancedInputMappingContext BasicControlInputMappingContext;
+// 			BasicControlInputMappingContext.InputMappingContext = BasicMappingContext;
+//
+// 			EnhancedInputMappingContexts.Add(BasicControlInputMappingContext);
+// 		}
+// 	}
+// #endif
 }
 
 void UPlayerInputConfigurationComponent::BeginPlay()
@@ -37,39 +37,46 @@ void UPlayerInputConfigurationComponent::EndPlay(const EEndPlayReason::Type EndP
 
 void UPlayerInputConfigurationComponent::SetupPlayerInput_Implementation()
 {
-	if (UPlayerInputManager* PlayerInputManager = GetOwnerPlayerInputManager())
+	if (UEnhancedInputLocalPlayerSubsystem* EnhancedInputLocalPlayerSubsystem = GetEnhancedInputLocalPlayerSubsystem())
 	{
 		for (auto& EnhanceInputMappingContext : EnhancedInputMappingContexts)
 		{
-			PlayerInputManager->AddMappingContext(EnhanceInputMappingContext.InputMappingContext, EnhanceInputMappingContext.Priority, EnhanceInputMappingContext.ModifyContextOptions);
+			EnhancedInputLocalPlayerSubsystem->AddMappingContext(EnhanceInputMappingContext.InputMappingContext, EnhanceInputMappingContext.Priority, EnhanceInputMappingContext.ModifyContextOptions);
 		}
 	}
 }
 
 void UPlayerInputConfigurationComponent::RemovePlayerInput_Implementation()
 {
-	if (UPlayerInputManager* PlayerInputManager = GetOwnerPlayerInputManager())
+	if (UEnhancedInputLocalPlayerSubsystem* EnhancedInputLocalPlayerSubsystem = GetEnhancedInputLocalPlayerSubsystem())
 	{
 		for (const auto& EnhanceInputMappingContext : EnhancedInputMappingContexts)
 		{
-			PlayerInputManager->RemoveMappingContext(EnhanceInputMappingContext.InputMappingContext);
+			EnhancedInputLocalPlayerSubsystem->RemoveMappingContext(EnhanceInputMappingContext.InputMappingContext);
 		}
 	}
 }
 
-UPlayerInputManager* UPlayerInputConfigurationComponent::GetOwnerPlayerInputManager() const
+UEnhancedInputLocalPlayerSubsystem* UPlayerInputConfigurationComponent::GetEnhancedInputLocalPlayerSubsystem()
 {
-	if (const APawn* Pawn = Cast<APawn>(GetOwner()))
+	const ULocalPlayer* LocalPlayer = nullptr;
+
+	if (const APlayerController* PC = Cast<APlayerController>(GetOwner()))
 	{
-		const APlayerController* PC = Cast<APlayerController>(Pawn->Controller);
-		if (IsValid(PC))
+		LocalPlayer = PC->GetLocalPlayer();
+	}
+	else if (const APawn* Pawn = Cast<APawn>(GetOwner()))
+	{
+		if (const APlayerController* PawnController = Cast<APlayerController>(Pawn->GetController()))
 		{
-			if (UPlayerInputManager* PlayerInputManager = PC->GetLocalPlayer()->GetSubsystem<UPlayerInputManager>())
-			{
-				return PlayerInputManager;
-			}
+			LocalPlayer = PawnController->GetLocalPlayer();
 		}
 	}
 
-	return nullptr;
+	if (!IsValid(LocalPlayer))
+	{
+		return nullptr;
+	}
+
+	return LocalPlayer->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
 }

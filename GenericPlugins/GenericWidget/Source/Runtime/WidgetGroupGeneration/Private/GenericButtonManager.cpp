@@ -4,9 +4,7 @@
 
 #include "GenericButtonCollection.h"
 #include "GenericButtonGroup.h"
-#include "GenericButtonWidget.h"
 #include "GenericWidgetManager.h"
-#include "Manager/ManagerStatics.h"
 
 bool UGenericButtonManager::ShouldCreateSubsystem(UObject* Outer) const
 {

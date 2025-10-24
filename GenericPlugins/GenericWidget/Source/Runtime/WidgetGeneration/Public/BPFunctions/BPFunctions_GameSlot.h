@@ -19,9 +19,9 @@ class WIDGETGENERATION_API UBPFunctions_GameSlot : public UBlueprintFunctionLibr
 
 	/* UGameplayTagSlot */
 public:
-	UFUNCTION(BlueprintCallable, category="GameSlot")
+	UFUNCTION(BlueprintCallable, Category="GameSlot")
 	static void RegisterSlot(UGameplayTagSlot* InSlot);
 
-	UFUNCTION(BlueprintCallable, category="GameSlot")
+	UFUNCTION(BlueprintCallable, Category="GameSlot")
 	static void UnRegisterSlot(UGameplayTagSlot* InSlot);
 };

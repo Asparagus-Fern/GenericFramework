@@ -14,14 +14,14 @@ DECLARE_MULTICAST_DELEGATE_OneParam(FOnPlayerLogout, APlayerController*);
  * 
  */
 UCLASS(MinimalAPI)
-class AGenericGameMode : public AGameMode
+class AGenericGameMode : public AGameModeBase
 {
 	GENERATED_UCLASS_BODY()
 
 public:
-	GENERICGAMEPLAYSYSTEM_API virtual void PostLogin(APlayerController* NewPlayer) override;
+	GENERICGAMEPLAYSYSTEM_API virtual APlayerController* Login(UPlayer* NewPlayer, ENetRole InRemoteRole, const FString& Portal, const FString& Options, const FUniqueNetIdRepl& UniqueId, FString& ErrorMessage) override;
 	GENERICGAMEPLAYSYSTEM_API virtual void Logout(AController* Exiting) override;
-
+	
 public:
 	GENERICGAMEPLAYSYSTEM_API TArray<APlayerController*> GetPlayers() { return Players; }
 	GENERICGAMEPLAYSYSTEM_API static FOnPlayerLogin& GetOnPlayerLogin() { return OnPlayerLoginEvent; }

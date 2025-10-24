@@ -2,8 +2,6 @@
 
 #include "GenericGameSlotManager.h"
 
-#include "GenericGameHUDManager.h"
-
 #include "GenericWidgetManager.h"
 #include "Base/GenericGameHUD.h"
 #include "Base/GenericWidget.h"
@@ -80,7 +78,7 @@ void UGenericGameSlotManager::PreWidgetClosed(FCloseWidgetParameter& Parameter)
 
 void UGenericGameSlotManager::PostWidgetClosed(UGenericWidget* InWidget)
 {
-	InWidget->RemoveFromParent();
+	RemoveSlotWidget(InWidget);
 }
 
 /* ==================== UGameplayTagSlot ==================== */
@@ -248,12 +246,71 @@ bool UGenericGameSlotManager::AddSlotWidget(UGenericWidget* InWidget) const
 	return false;
 }
 
-bool UGenericGameSlotManager::RemoveSlotWidget(UGenericWidget* InWidget) const
+void UGenericGameSlotManager::RemoveSlotWidget(UGenericWidget* InWidget) const
 {
-	if (UGameplayTagSlot* Slot = GetSlot(InWidget->SlotTag))
+	if (IsValid(InWidget))
 	{
-		return Slot->RemoveChild(InWidget);
+		InWidget->RemoveFromParent();
 	}
+}
 
-	return false;
+void FGameSlotHelper::RegisterSlot(UGameplayTagSlot* InSlot)
+{
+	if (UGenericGameSlotManager* GameSlotManager = GetManagerOwner<UGenericGameSlotManager>())
+	{
+		GameSlotManager->RegisterSlot(InSlot);
+	}
+}
+
+void FGameSlotHelper::UnRegisterSlot(UGameplayTagSlot* InSlot)
+{
+	if (UGenericGameSlotManager* GameSlotManager = GetManagerOwner<UGenericGameSlotManager>())
+	{
+		GameSlotManager->UnRegisterSlot(InSlot);
+	}
+}
+
+UGameplayTagSlot* FGameSlotHelper::GetSlot(const UGenericWidget* InWidget)
+{
+	if (UGenericGameSlotManager* GameSlotManager = GetManagerOwner<UGenericGameSlotManager>())
+	{
+		return GameSlotManager->GetSlot(InWidget);
+	}
+	return nullptr;
+}
+
+UGameplayTagSlot* FGameSlotHelper::GetSlot(FGameplayTag InSlotTag)
+{
+	if (UGenericGameSlotManager* GameSlotManager = GetManagerOwner<UGenericGameSlotManager>())
+	{
+		return GameSlotManager->GetSlot(InSlotTag);
+	}
+	return nullptr;
+}
+
+TArray<UGameplayTagSlot*> FGameSlotHelper::GetSlots()
+{
+	if (UGenericGameSlotManager* GameSlotManager = GetManagerOwner<UGenericGameSlotManager>())
+	{
+		return GameSlotManager->GetSlots();
+	}
+	return {};
+}
+
+UGenericWidget* FGameSlotHelper::GetSlotWidget(FGameplayTag InSlotTag)
+{
+	if (UGenericGameSlotManager* GameSlotManager = GetManagerOwner<UGenericGameSlotManager>())
+	{
+		return GameSlotManager->GetSlotWidget(InSlotTag);
+	}
+	return nullptr;
+}
+
+TArray<UGenericWidget*> FGameSlotHelper::GetSlotWidgets()
+{
+	if (UGenericGameSlotManager* GameSlotManager = GetManagerOwner<UGenericGameSlotManager>())
+	{
+		return GameSlotManager->GetSlotWidgets();
+	}
+	return {};
 }

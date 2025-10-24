@@ -31,15 +31,15 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnButtonSelectionChanged, UGener
 /**
  * Determines How The Child Buttons Effect Each Other When Accept Input Event
  */
-UCLASS(MinimalAPI)
+UCLASS(MinimalAPI, Blueprintable)
 class UGenericButtonGroup : public UGenericObject, public IStateInterface
 {
 	GENERATED_BODY()
 
 	/* IStateInterface */
 public:
-	virtual void NativeOnCreate() override;
-	virtual void NativeOnDestroy() override;
+	WIDGETGROUPGENERATION_API virtual void NativeOnCreate() override;
+	WIDGETGROUPGENERATION_API virtual void NativeOnDestroy() override;
 
 	/* UInteractableWidgetEntityGroup */
 public:
@@ -124,6 +124,14 @@ public:
 
 	/* Binding From Widget (If Exist) */
 protected:
+	WIDGETGROUPGENERATION_API virtual bool HandleOnButtonPressedConfirmed(UGenericButtonWidget* InButton);
+	WIDGETGROUPGENERATION_API virtual bool HandleOnButtonReleasedConfirmed(UGenericButtonWidget* InButton);
+	WIDGETGROUPGENERATION_API virtual bool HandleOnButtonHoveredConfirmed(UGenericButtonWidget* InButton);
+	WIDGETGROUPGENERATION_API virtual bool HandleOnButtonUnhoveredConfirmed(UGenericButtonWidget* InButton);
+	WIDGETGROUPGENERATION_API virtual bool HandleOnButtonClickedConfirmed(UGenericButtonWidget* InButton);
+	WIDGETGROUPGENERATION_API virtual bool HandleOnButtonDoubleClickedConfirmed(UGenericButtonWidget* InButton);
+	WIDGETGROUPGENERATION_API virtual bool HandleOnButtonSelectionConfirmed(UGenericButtonWidget* InButton, bool InSelection);
+
 	UFUNCTION(BlueprintNativeEvent)
 	WIDGETGROUPGENERATION_API void HandleOnButtonPressed(UGenericButtonWidget* Button);
 

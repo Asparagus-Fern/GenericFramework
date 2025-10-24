@@ -16,19 +16,18 @@ class UProcedureFlowComponent : public USceneComponent, public IProcedureFlowInt
 	GENERATED_BODY()
 
 public:
-	UProcedureFlowComponent();
-	virtual void BeginPlay() override;
-	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+	PROCEDUREFLOWSYSTEM_API virtual void BeginPlay() override;
+	PROCEDUREFLOWSYSTEM_API virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 	/* IProcedureFlowInterface */
 public:
-	virtual void OnProcedureFlowRegister_Implementation() override;
-	virtual void OnProcedureFlowInitialized_Implementation() override;
-	virtual void OnProcedureFlowEnter_Implementation() override;
-	virtual void ReInitProcedureFlow_Implementation() override;
-	virtual void OnProcedureFlowExit_Implementation() override;
-	virtual void OnProcedureFlowDeinitialize_Implementation() override;
-	virtual void OnProcedureFlowUnRegister_Implementation() override;
+	PROCEDUREFLOWSYSTEM_API virtual void OnProcedureFlowRegister_Implementation() override;
+	PROCEDUREFLOWSYSTEM_API virtual void OnProcedureFlowInitialized_Implementation() override;
+	PROCEDUREFLOWSYSTEM_API virtual void OnProcedureFlowEnter_Implementation() override;
+	PROCEDUREFLOWSYSTEM_API virtual void ReInitProcedureFlow_Implementation() override;
+	PROCEDUREFLOWSYSTEM_API virtual void OnProcedureFlowExit_Implementation() override;
+	PROCEDUREFLOWSYSTEM_API virtual void OnProcedureFlowDeinitialize_Implementation() override;
+	PROCEDUREFLOWSYSTEM_API virtual void OnProcedureFlowUnRegister_Implementation() override;
 
 public:
 	/* 是否手动注册 */
@@ -47,4 +46,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	int32 ProcedureFlowDeinitializeOrder = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced)
+	TArray<TObjectPtr<class UProcedureFlowExecute>> ProcedureFlowExecutes;
 };

@@ -28,13 +28,9 @@ public:
 	UFUNCTION(BlueprintPure, Category="Directory")
 	static bool DeleteDirectoryRecursively(const FString& Directory);
 
-	/**
-	 * 
-	 * @param DirectoryPath 文件夹绝对路径
-	 * @return 
-	 */
+	/* Opens the desktop folder picker and return the selected folder path as string */
 	UFUNCTION(BlueprintCallable, Category="Directory")
-	static bool OpenDirectoryDialog(FString& DirectoryPath);
+	static bool OpenDirectoryDialog(FString& AbsoluteDirectoryPath);
 
 public:
 	UFUNCTION(BlueprintPure, Category="Directory")
@@ -61,10 +57,13 @@ public:
 	/* File */
 public:
 	UFUNCTION(BlueprintPure, Category="File")
-	static TArray<FString> FindFiles(const FString& Path, const FString& Extension);
+	static TArray<FString> FindFiles(const FString& AbsoluteDirectoryPath, const FString& Extension);
 
 	UFUNCTION(BlueprintPure, Category="File")
-	static TArray<FString> FindFilesRecursive(const FString& Path, const FString& Extension, bool Files, bool Directories, bool bClearFileNames = true);
+	static TArray<FString> FindFilesRecursive(const FString& AbsoluteDirectoryPath, const FString& Extension, bool Files, bool Directories, bool bClearFileNames = true);
+
+	UFUNCTION(BlueprintCallable, Category = "File")
+	static bool ExistFile(const FString& FileName);
 
 	UFUNCTION(BlueprintCallable, Category="File")
 	static bool CopyFile(FString FileSource, FString FileDest, bool Replace = true, bool EvenIfReadOnly = false);
@@ -78,8 +77,13 @@ public:
 	UFUNCTION(BlueprintPure, Category="File")
 	static bool IsFileReadOnly(const FString& FileName);
 
+	UFUNCTION(BlueprintPure, Category="File", meta = (DisplayName = "To Relative", CompactNodeTitle = "->"))
+	static FString ConvertToRelativePath(const FString& Filename);
+
+	UFUNCTION(BlueprintPure, Category="File")
+	static int64 FileSize(const FString& Filename);
+
 	/**
-	 * 
 	 * @param FileType 筛选文件格式
 	 * @param FilePaths 文件绝对路径
 	 * @return 
@@ -88,7 +92,6 @@ public:
 	static bool OpenFileDialog(FString FileType, TArray<FString>& FilePaths);
 
 	/**
-	 * 
 	 * @param FileName 文件名
 	 * @param FileType 文件后缀
 	 * @param FilePaths 文件保存绝对路径

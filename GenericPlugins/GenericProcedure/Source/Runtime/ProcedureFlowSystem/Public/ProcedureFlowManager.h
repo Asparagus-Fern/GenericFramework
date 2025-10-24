@@ -39,7 +39,6 @@ public:
 
 	/* IManagerInterface */
 protected:
-	virtual void HandleOnWorldMatchStarting(UWorld* InWorld) override;
 	virtual void HandleOnWorldBeginPlay(UWorld* InWorld) override;
 	virtual void HandleOnWorldEndPlay(UWorld* InWorld) override;
 

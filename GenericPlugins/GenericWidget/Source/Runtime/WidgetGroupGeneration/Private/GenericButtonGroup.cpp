@@ -49,7 +49,15 @@ void UGenericButtonGroup::AddButton(UGenericButtonWidget* InButton)
 	}
 
 	ButtonWidgets.Add(InButton);
-	
+
+	InButton->GetOnButtonPressedConfirmedEvent().BindUObject(this, &UGenericButtonGroup::HandleOnButtonPressedConfirmed);
+	InButton->GetOnButtonReleasedConfirmedEvent().BindUObject(this, &UGenericButtonGroup::HandleOnButtonReleasedConfirmed);
+	InButton->GetOnButtonHoveredConfirmedEvent().BindUObject(this, &UGenericButtonGroup::HandleOnButtonHoveredConfirmed);
+	InButton->GetOnButtonUnhoveredConfirmedEvent().BindUObject(this, &UGenericButtonGroup::HandleOnButtonUnhoveredConfirmed);
+	InButton->GetOnButtonClickedConfirmedEvent().BindUObject(this, &UGenericButtonGroup::HandleOnButtonClickedConfirmed);
+	InButton->GetOnButtonDoubleClickedConfirmedEvent().BindUObject(this, &UGenericButtonGroup::HandleOnButtonDoubleClickedConfirmed);
+	InButton->GetOnButtonSelectionConfirmedEvent().BindUObject(this, &UGenericButtonGroup::HandleOnButtonSelectionConfirmed);
+
 	InButton->OnButtonPressed.AddUniqueDynamic(this, &UGenericButtonGroup::HandleOnButtonPressed);
 	InButton->OnButtonReleased.AddUniqueDynamic(this, &UGenericButtonGroup::HandleOnButtonReleased);
 	InButton->OnButtonHovered.AddUniqueDynamic(this, &UGenericButtonGroup::HandleOnButtonHovered);
@@ -57,7 +65,6 @@ void UGenericButtonGroup::AddButton(UGenericButtonWidget* InButton)
 	InButton->OnButtonClicked.AddUniqueDynamic(this, &UGenericButtonGroup::HandleOnButtonClicked);
 	InButton->OnButtonDoubleClicked.AddUniqueDynamic(this, &UGenericButtonGroup::HandleOnButtonDoubleClicked);
 	InButton->OnButtonSelectionChanged.AddUniqueDynamic(this, &UGenericButtonGroup::HandleOnButtonSelectionChanged);
-
 
 	if (!HasSelectedButton() && InButton->bDefaultSelected)
 	{
@@ -105,6 +112,22 @@ void UGenericButtonGroup::RemoveButton(UGenericButtonWidget* InButton)
 	}
 
 	ButtonWidgets.Remove(InButton);
+
+	InButton->OnButtonPressed.RemoveAll(this);
+	InButton->OnButtonReleased.RemoveAll(this);
+	InButton->OnButtonHovered.RemoveAll(this);
+	InButton->OnButtonUnhovered.RemoveAll(this);
+	InButton->OnButtonClicked.RemoveAll(this);
+	InButton->OnButtonDoubleClicked.RemoveAll(this);
+	InButton->OnButtonSelectionChanged.RemoveAll(this);
+
+	InButton->GetOnButtonPressedConfirmedEvent().Unbind();
+	InButton->GetOnButtonReleasedConfirmedEvent().Unbind();
+	InButton->GetOnButtonHoveredConfirmedEvent().Unbind();
+	InButton->GetOnButtonUnhoveredConfirmedEvent().Unbind();
+	InButton->GetOnButtonClickedConfirmedEvent().Unbind();
+	InButton->GetOnButtonDoubleClickedConfirmedEvent().Unbind();
+	InButton->GetOnButtonSelectionConfirmedEvent().Unbind();
 }
 
 void UGenericButtonGroup::ClearAllButton()
@@ -193,7 +216,7 @@ void UGenericButtonGroup::SetSelectedButton(UGenericButtonWidget* InButton)
 		return;
 	}
 
-	HandleOnButtonSelectionChanged(InButton, true);
+	InButton->SetSelectedInternal(true);
 }
 
 int32 UGenericButtonGroup::GetSelectedButtonIndex() const
@@ -269,6 +292,97 @@ void UGenericButtonGroup::DeselectAll()
 		LastSelectedButton = SelectedButton;
 		SelectedButton = nullptr;
 	}
+}
+
+bool UGenericButtonGroup::HandleOnButtonPressedConfirmed(UGenericButtonWidget* InButton)
+{
+	bool Result = true;
+
+	Result &= InButton->CanButtonPressedInternal();
+	if (SelectedButton && SelectedButton != InButton)
+	{
+		Result &= SelectedButton->CanButtonPressedInternal();
+	}
+
+	return Result;
+}
+
+bool UGenericButtonGroup::HandleOnButtonReleasedConfirmed(UGenericButtonWidget* InButton)
+{
+	bool Result = true;
+
+	Result &= InButton->CanButtonReleasedInternal();
+	if (SelectedButton && SelectedButton != InButton)
+	{
+		Result &= SelectedButton->CanButtonReleasedInternal();
+	}
+
+	return Result;
+}
+
+bool UGenericButtonGroup::HandleOnButtonHoveredConfirmed(UGenericButtonWidget* InButton)
+{
+	bool Result = true;
+
+	Result &= InButton->CanButtonHoveredInternal();
+	if (SelectedButton && SelectedButton != InButton)
+	{
+		Result &= SelectedButton->CanButtonHoveredInternal();
+	}
+
+	return Result;
+}
+
+bool UGenericButtonGroup::HandleOnButtonUnhoveredConfirmed(UGenericButtonWidget* InButton)
+{
+	bool Result = true;
+
+	Result &= InButton->CanButtonUnhoveredInternal();
+	if (SelectedButton && SelectedButton != InButton)
+	{
+		Result &= SelectedButton->CanButtonUnhoveredInternal();
+	}
+
+	return Result;
+}
+
+bool UGenericButtonGroup::HandleOnButtonClickedConfirmed(UGenericButtonWidget* InButton)
+{
+	bool Result = true;
+
+	Result &= InButton->CanButtonClickedInternal();
+	if (SelectedButton && SelectedButton != InButton)
+	{
+		Result &= SelectedButton->CanButtonClickedInternal();
+	}
+
+	return Result;
+}
+
+bool UGenericButtonGroup::HandleOnButtonDoubleClickedConfirmed(UGenericButtonWidget* InButton)
+{
+	bool Result = true;
+
+	Result &= InButton->CanButtonDoubleClickedInternal();
+	if (SelectedButton && SelectedButton != InButton)
+	{
+		Result &= SelectedButton->CanButtonDoubleClickedInternal();
+	}
+
+	return Result;
+}
+
+bool UGenericButtonGroup::HandleOnButtonSelectionConfirmed(UGenericButtonWidget* InButton, bool InSelection)
+{
+	bool Result = true;
+
+	Result &= InButton->CanButtonSelectionInternal(InSelection);
+	if (SelectedButton && SelectedButton != InButton)
+	{
+		Result &= SelectedButton->CanButtonSelectionInternal(false);
+	}
+
+	return Result;
 }
 
 void UGenericButtonGroup::HandleOnButtonPressed_Implementation(UGenericButtonWidget* InButton)

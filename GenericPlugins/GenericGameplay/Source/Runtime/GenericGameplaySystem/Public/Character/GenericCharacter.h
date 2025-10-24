@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "Interface/PawnInterface.h"
 #include "Interface/PawnInputMovementInterface.h"
 #include "Interface/PawnLockStateInterface.h"
 #include "GenericCharacter.generated.h"
@@ -13,7 +12,7 @@ class UPawnLockStateComponent;
 class UPawnInputMovementComponent;
 
 UCLASS(MinimalAPI)
-class  AGenericCharacter : public ACharacter, public IPawnInterface, public IPawnInputMovementInterface, public IPawnLockStateInterface
+class AGenericCharacter : public ACharacter, public IPawnInputMovementInterface, public IPawnLockStateInterface
 {
 	GENERATED_BODY()
 

@@ -23,11 +23,23 @@
       "Enabled": true
     },
     {
-      "Name": "OnlineSubsystem",
+      "Name": "GenericWidget",
+      "Enabled": true
+    },
+    {
+      "Name": "GenericProperty",
       "Enabled": true
     },
     {
       "Name": "ModelViewViewModel",
+      "Enabled": true
+    },
+    {
+      "Name": "OnlineSubsystem",
+      "Enabled": true
+    },
+    {
+      "Name": "OnlineSubsystemUtils",
       "Enabled": true
     }
   ],
@@ -38,7 +50,12 @@
       "LoadingPhase": "Default"
     },
     {
-      "Name": "OnlineSessionFramework",
+      "Name": "NetworkUserSystem",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
+    },
+    {
+      "Name": "NetworkApplication",
       "Type": "Runtime",
       "LoadingPhase": "Default"
     }

@@ -16,9 +16,6 @@ class UGenericGameHUD : public UGenericWidget
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="UI.HUD"))
-	FGameplayTag HUDTag;
-
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	int32 ViewportZOrder = 0;
 };

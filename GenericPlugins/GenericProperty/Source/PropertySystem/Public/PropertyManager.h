@@ -3,12 +3,19 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "Interface/ManagerInterface.h"
 #include "Manager/ManagerStatics.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "PropertyManager.generated.h"
 
 class UPropertyProxy;
+
+DECLARE_MULTICAST_DELEGATE_TwoParams(FDelegate_OnPropertyProxyRegister, FGameplayTag, UPropertyProxy*);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FBPDelegate_OnPropertyProxyRegister, FGameplayTag, InPropertyProxyTag, UPropertyProxy*, InPropertyProxy);
+
+DECLARE_MULTICAST_DELEGATE_TwoParams(FDelegate_OnPropertyProxyUnRegister, FGameplayTag, UPropertyProxy*);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FBPDelegate_OnPropertyProxyUnRegister, FGameplayTag, InPropertyProxyTag, UPropertyProxy*, InPropertyProxy);
 
 /**
  * 
@@ -24,15 +31,24 @@ public:
 	virtual void Deinitialize() override;
 
 public:
-	PROPERTYSYSTEM_API UPropertyProxy* RegisterPropertyProxy(const TSubclassOf<UPropertyProxy>& InPropertyProxyClass);
+	PROPERTYSYSTEM_API UPropertyProxy* RegisterPropertyProxy(FGameplayTag InPropertyProxyTag, const TSubclassOf<UPropertyProxy>& InPropertyProxyClass);
+	PROPERTYSYSTEM_API void UnRegisterPropertyProxy(FGameplayTag InPropertyProxyTag);
 	PROPERTYSYSTEM_API void UnRegisterPropertyProxy(UPropertyProxy* InPropertyProxy);
-	PROPERTYSYSTEM_API bool ExistPropertyProxy(const TSubclassOf<UPropertyProxy>& InPropertyProxyClass);
-	PROPERTYSYSTEM_API bool ExistPropertyProxy(const UPropertyProxy* InPropertyProxy);
-	PROPERTYSYSTEM_API UPropertyProxy* GetPropertyProxy(const TSubclassOf<UPropertyProxy>& InPropertyProxyClass);
+	PROPERTYSYSTEM_API bool ExistPropertyProxy(FGameplayTag InPropertyProxyTag) const;
+	PROPERTYSYSTEM_API UPropertyProxy* GetPropertyProxy(FGameplayTag InPropertyProxyTag) const;
+
+public:
+	PROPERTYSYSTEM_API inline static FDelegate_OnPropertyProxyRegister Delegate_OnPropertyProxyRegister;
+	UPROPERTY(BlueprintAssignable)
+	FBPDelegate_OnPropertyProxyRegister BPDelegate_OnPropertyProxyRegister;
+
+	PROPERTYSYSTEM_API inline static FDelegate_OnPropertyProxyUnRegister Delegate_OnPropertyProxyUnRegister;
+	UPROPERTY(BlueprintAssignable)
+	FBPDelegate_OnPropertyProxyUnRegister BPDelegate_OnPropertyProxyUnRegister;
 
 private:
 	UPROPERTY()
-	TArray<TObjectPtr<UPropertyProxy>> PropertyProxies;
+	TMap<FGameplayTag, TObjectPtr<UPropertyProxy>> PropertyProxyMapping;
 };
 
 
@@ -42,13 +58,21 @@ private:
 class PROPERTYSYSTEM_API FPropertyHelper
 {
 public:
-	static UPropertyProxy* RegisterPropertyProxy(const TSubclassOf<UPropertyProxy>& InPropertyProxyClass)
+	static UPropertyProxy* RegisterPropertyProxy(FGameplayTag InPropertyProxyTag, const TSubclassOf<UPropertyProxy>& InPropertyProxyClass)
 	{
 		if (UPropertyManager* GenericWidgetManager = GetManagerOwner<UPropertyManager>())
 		{
-			return GenericWidgetManager->RegisterPropertyProxy(InPropertyProxyClass);
+			return GenericWidgetManager->RegisterPropertyProxy(InPropertyProxyTag, InPropertyProxyClass);
 		}
 		return nullptr;
+	}
+
+	static void UnRegisterPropertyProxy(FGameplayTag InPropertyProxyTag)
+	{
+		if (UPropertyManager* GenericWidgetManager = GetManagerOwner<UPropertyManager>())
+		{
+			GenericWidgetManager->UnRegisterPropertyProxy(InPropertyProxyTag);
+		}
 	}
 
 	static void UnRegisterPropertyProxy(UPropertyProxy* InPropertyProxy)
@@ -59,29 +83,20 @@ public:
 		}
 	}
 
-	static bool ExistPropertyProxy(const TSubclassOf<UPropertyProxy>& InPropertyProxyClass)
+	static bool ExistPropertyProxy(FGameplayTag InPropertyProxyTag)
 	{
 		if (UPropertyManager* GenericWidgetManager = GetManagerOwner<UPropertyManager>())
 		{
-			return GenericWidgetManager->ExistPropertyProxy(InPropertyProxyClass);
+			return GenericWidgetManager->ExistPropertyProxy(InPropertyProxyTag);
 		}
 		return false;
 	}
 
-	static bool ExistPropertyProxy(const UPropertyProxy* InPropertyProxy)
+	static UPropertyProxy* GetPropertyProxy(FGameplayTag InPropertyProxyTag)
 	{
 		if (UPropertyManager* GenericWidgetManager = GetManagerOwner<UPropertyManager>())
 		{
-			return GenericWidgetManager->ExistPropertyProxy(InPropertyProxy);
-		}
-		return false;
-	}
-
-	static UPropertyProxy* GetPropertyProxy(const TSubclassOf<UPropertyProxy>& InPropertyProxyClass)
-	{
-		if (UPropertyManager* GenericWidgetManager = GetManagerOwner<UPropertyManager>())
-		{
-			return GenericWidgetManager->GetPropertyProxy(InPropertyProxyClass);
+			return GenericWidgetManager->GetPropertyProxy(InPropertyProxyTag);
 		}
 		return nullptr;
 	}

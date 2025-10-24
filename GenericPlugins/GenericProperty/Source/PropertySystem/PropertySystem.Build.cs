@@ -11,7 +11,7 @@ public class PropertySystem : ModuleRules
 			{
 				"Core",
 				"DevCore",
-				"DevSlateCore",
+				"DevSlateCore", 
 			}
 		);
 

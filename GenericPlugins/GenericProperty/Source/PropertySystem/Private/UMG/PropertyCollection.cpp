@@ -11,6 +11,16 @@
 #include "MVVM/PropertyListViewModel.h"
 #include "UMG/PropertyList.h"
 
+void UPropertyCollection::NativeConstruct()
+{
+	Super::NativeConstruct();
+
+	if (PropertyCollectionViewModel)
+	{
+		SetPropertyCollectionViewModel(PropertyCollectionViewModel);
+	}
+}
+
 void UPropertyCollection::SetPropertyCollectionViewModel(UPropertyCollectionViewModel* InViewModel)
 {
 	if (PropertyCollectionViewModel)

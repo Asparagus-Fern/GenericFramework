@@ -23,6 +23,10 @@
       "Enabled": true
     },
     {
+      "Name": "GenericCommunication",
+      "Enabled": true
+    },
+    {
       "Name": "GenericEvent",
       "Enabled": true
     },
@@ -36,14 +40,6 @@
     },
     {
       "Name": "GenericInput",
-      "Enabled": true
-    },
-    {
-      "Name": "ExternalData",
-      "Enabled": true
-    },
-    {
-      "Name": "NativeAPI",
       "Enabled": true
     },
     {

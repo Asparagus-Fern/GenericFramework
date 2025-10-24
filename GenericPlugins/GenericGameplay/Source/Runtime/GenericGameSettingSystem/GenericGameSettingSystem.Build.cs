@@ -11,6 +11,7 @@ public class GenericGameSettingSystem : ModuleRules
 			{
 				"Core",
 				"DevCore",
+				"UnrealMisc",
 			}
 		);
 
@@ -22,14 +23,22 @@ public class GenericGameSettingSystem : ModuleRules
 				"Slate",
 				"SlateCore",
 
+				"GameplayTags",
 				"UMG",
 				"ModelViewViewModel",
+
+				"PropertySystem",
+				"GenericGameplaySystem",
 				"WidgetGeneration",
 				"WidgetGroupGeneration",
 				"WidgetApplication",
-				"PropertySystem", 
-				"GenericGameplaySystem",
+				"WindowGeneration",
 			}
 		);
+		
+		if (Target.bBuildEditor)
+		{
+			PrivateDependencyModuleNames.Add("UnrealEd");
+		}
 	}
 }

@@ -13,13 +13,3 @@ AProcedureFlowActor::AProcedureFlowActor()
 	ProcedureFlowComponent = CreateDefaultSubobject<UProcedureFlowComponent>("Procedure Flow Component");
 	RootComponent = ProcedureFlowComponent;
 }
-
-void AProcedureFlowActor::BeginPlay()
-{
-	Super::BeginPlay();
-}
-
-void AProcedureFlowActor::EndPlay(const EEndPlayReason::Type EndPlayReason)
-{
-	Super::EndPlay(EndPlayReason);
-}

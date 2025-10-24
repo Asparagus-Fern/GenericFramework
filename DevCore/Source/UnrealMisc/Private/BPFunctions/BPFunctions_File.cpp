@@ -41,7 +41,7 @@ bool UBPFunctions_File::DeleteDirectoryRecursively(const FString& Directory)
 	return PlatformFile.DeleteDirectoryRecursively(*Directory);
 }
 
-bool UBPFunctions_File::OpenDirectoryDialog(FString& DirectoryPath)
+bool UBPFunctions_File::OpenDirectoryDialog(FString& AbsoluteDirectoryPath)
 {
 	IDesktopPlatform* DesktopPlatform = FDesktopPlatformModule::Get();
 	if (DesktopPlatform != nullptr)
@@ -57,7 +57,7 @@ bool UBPFunctions_File::OpenDirectoryDialog(FString& DirectoryPath)
 			FSlateApplication::Get().FindBestParentWindowHandleForDialogs(nullptr),
 			LOCTEXT("OpenDirectoryDialogTitle", "Choose a Directory").ToString(),
 			DefaultPath,
-			DirectoryPath
+			AbsoluteDirectoryPath
 		))
 		{
 			return true;
@@ -137,46 +137,57 @@ bool UBPFunctions_File::GetPluginExtraDir(const FString& InPluginName, FString& 
 	return false;
 }
 
-TArray<FString> UBPFunctions_File::FindFiles(const FString& Path, const FString& Extension)
+TArray<FString> UBPFunctions_File::FindFiles(const FString& AbsoluteDirectoryPath, const FString& Extension)
 {
 	TArray<FString> Result;
-	IFileManager::Get().FindFiles(Result, *Path, *Extension);
+	IFileManager::Get().FindFiles(Result, *AbsoluteDirectoryPath, *Extension);
 	return Result;
 }
 
-TArray<FString> UBPFunctions_File::FindFilesRecursive(const FString& Path, const FString& Extension, const bool Files, const bool Directories, const bool bClearFileNames)
+TArray<FString> UBPFunctions_File::FindFilesRecursive(const FString& AbsoluteDirectoryPath, const FString& Extension, const bool Files, const bool Directories, const bool bClearFileNames)
 {
 	TArray<FString> Result;
 	IFileManager& FileManager = IFileManager::Get();
-	if (FileManager.DirectoryExists(*Path))
+	if (FileManager.DirectoryExists(*AbsoluteDirectoryPath))
 	{
-		FileManager.FindFilesRecursive(Result, *Path, *Extension, Files, Directories, bClearFileNames);
+		FileManager.FindFilesRecursive(Result, *AbsoluteDirectoryPath, *Extension, Files, Directories, bClearFileNames);
 	}
 	return Result;
 }
 
+bool UBPFunctions_File::ExistFile(const FString& FileName)
+{
+	return IFileManager::Get().FileExists(*FileName);
+}
+
 bool UBPFunctions_File::CopyFile(const FString FileSource, const FString FileDest, const bool Replace, const bool EvenIfReadOnly)
 {
-	IFileManager& FileManager = IFileManager::Get();
-	return FileManager.Copy(*FileDest, *FileSource, Replace, EvenIfReadOnly) == COPY_OK;
+	return IFileManager::Get().Copy(*FileDest, *FileSource, Replace, EvenIfReadOnly) == COPY_OK;
 }
 
 bool UBPFunctions_File::MoveFile(const FString FileSource, const FString FileDest, const bool Replace, const bool EvenIfReadOnly)
 {
-	IFileManager& FileManager = IFileManager::Get();
-	return FileManager.Move(*FileDest, *FileSource, Replace, EvenIfReadOnly);
+	return IFileManager::Get().Move(*FileDest, *FileSource, Replace, EvenIfReadOnly);
 }
 
 bool UBPFunctions_File::DeleteFile(const FString FileName, const bool RequireExists, const bool EvenReadOnly)
 {
-	IFileManager& FileManager = IFileManager::Get();
-	return FileManager.Delete(*FileName, RequireExists, EvenReadOnly);
+	return IFileManager::Get().Delete(*FileName, RequireExists, EvenReadOnly);
 }
 
 bool UBPFunctions_File::IsFileReadOnly(const FString& FileName)
 {
-	IFileManager& FileManager = IFileManager::Get();
-	return FileManager.IsReadOnly(*FileName);
+	return IFileManager::Get().IsReadOnly(*FileName);
+}
+
+FString UBPFunctions_File::ConvertToRelativePath(const FString& Filename)
+{
+	return IFileManager::Get().ConvertToRelativePath(*Filename);
+}
+
+int64 UBPFunctions_File::FileSize(const FString& Filename)
+{
+	return IFileManager::Get().FileSize(*Filename);
 }
 
 bool UBPFunctions_File::OpenFileDialog(FString FileType, TArray<FString>& FilePaths)

@@ -9,24 +9,13 @@
 
 UManagerProxy* UManagerProxy::Instance = nullptr;
 
-UManagerProxy::UManagerProxy(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
-{
-}
-
-void UManagerProxy::BeginDestroy()
-{
-	Super::BeginDestroy();
-	DeinitializeInternal();
-}
-
 UManagerProxy* UManagerProxy::GetManagerProxy()
 {
 	if (!Instance)
 	{
 		Instance = NewObject<UManagerProxy>();
 		Instance->AddToRoot();
-		Instance->InitializeInternal();
+		Instance->Initialize();
 	}
 
 	return Instance;
@@ -245,7 +234,7 @@ bool UManagerProxy::UnRegisterManager(FGuid InManagerID)
 	return false;
 }
 
-void UManagerProxy::InitializeInternal()
+void UManagerProxy::Initialize()
 {
 	if (bIsInitialize)
 	{
@@ -257,7 +246,7 @@ void UManagerProxy::InitializeInternal()
 	FWorldDelegates::OnWorldBeginTearDown.AddUObject(this, &UManagerProxy::HandleOnWorldBeginTearDownInternal);
 }
 
-void UManagerProxy::DeinitializeInternal()
+void UManagerProxy::Deinitialize()
 {
 	FWorldDelegates::OnPostWorldCreation.RemoveAll(this);
 	FWorldDelegates::OnWorldBeginTearDown.RemoveAll(this);

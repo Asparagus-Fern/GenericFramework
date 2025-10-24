@@ -10,7 +10,7 @@
  * 
  */
 UCLASS(MinimalAPI)
-class AGenericGameState : public AGameState
+class AGenericGameState : public AGameStateBase
 {
 	GENERATED_BODY()
 };

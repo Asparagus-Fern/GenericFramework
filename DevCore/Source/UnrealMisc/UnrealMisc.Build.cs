@@ -45,7 +45,8 @@ public class UnrealMisc : ModuleRules
 				"AIModule",
 				"Projects",
 				"DesktopPlatform",
-				"GameplayTags"
+				"GameplayTags",
+				"Launch",
 				// ... add private dependencies that you statically link with here ...	
 			}
 		);
@@ -59,17 +60,19 @@ public class UnrealMisc : ModuleRules
 		);
 
 		if (Target.bBuildEditor)
-			PrivateDependencyModuleNames.AddRange(
-				new string[]
-				{
-					"UnrealEd"
-				}
-			);
+		{
+			PrivateDependencyModuleNames.Add("UnrealEd");
+		}
 
 		if (Target.Platform == UnrealTargetPlatform.Win64)
 		{
 			PublicAdditionalLibraries.Add("pdh.lib");
 			PublicAdditionalLibraries.Add("kernel32.lib");
+		}
+		else if (Target.Platform == UnrealTargetPlatform.Android)
+		{
+			PrivateDependencyModuleNames.Add("Launch");
+			PrivateDependencyModuleNames.Add("AndroidPermission");
 		}
 	}
 }

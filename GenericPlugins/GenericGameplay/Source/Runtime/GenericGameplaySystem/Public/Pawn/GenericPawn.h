@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
-#include "Interface/PawnInterface.h"
 #include "Interface/PawnInputMovementInterface.h"
 #include "Interface/PawnLockStateInterface.h"
 #include "GenericPawn.generated.h"
@@ -17,26 +16,12 @@ class UFloatingPawnMovement;
  * 
  */
 UCLASS(MinimalAPI)
-class AGenericPawn : public APawn, public IPawnInterface, public IPawnInputMovementInterface, public IPawnLockStateInterface
+class AGenericPawn : public APawn, public IPawnInputMovementInterface, public IPawnLockStateInterface
 {
 	GENERATED_BODY()
 
 public:
 	GENERICGAMEPLAYSYSTEM_API AGenericPawn(const FObjectInitializer& ObjectInitializer);
-
-	/* IPawnInterface */
-public:
-	UFUNCTION(BlueprintPure, Category="Pawn Basic")
-	GENERICGAMEPLAYSYSTEM_API virtual bool IsPlayer() override;
-
-	UFUNCTION(BlueprintPure, Category="Pawn Basic")
-	GENERICGAMEPLAYSYSTEM_API virtual bool IsAI() override;
-
-	UFUNCTION(BlueprintPure, Category="Pawn Basic")
-	GENERICGAMEPLAYSYSTEM_API virtual APlayerController* GetPlayerController() override;
-
-	UFUNCTION(BlueprintPure, Category="Pawn Basic")
-	GENERICGAMEPLAYSYSTEM_API virtual AAIController* GetAIController() override;
 
 	/* IPawnInputMovementInterface */
 public:

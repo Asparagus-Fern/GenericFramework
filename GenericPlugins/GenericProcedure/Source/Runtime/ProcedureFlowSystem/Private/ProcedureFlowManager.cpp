@@ -30,10 +30,6 @@ bool UProcedureFlowManager::DoesSupportWorldType(const EWorldType::Type WorldTyp
 	return WorldType == EWorldType::Game || WorldType == EWorldType::PIE;
 }
 
-void UProcedureFlowManager::HandleOnWorldMatchStarting(UWorld* InWorld)
-{
-	FManagerInterface::HandleOnWorldMatchStarting(InWorld);
-}
 
 void UProcedureFlowManager::HandleOnWorldBeginPlay(UWorld* InWorld)
 {

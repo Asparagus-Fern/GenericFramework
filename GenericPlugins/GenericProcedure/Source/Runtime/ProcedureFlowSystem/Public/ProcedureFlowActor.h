@@ -16,8 +16,6 @@ class AProcedureFlowActor : public AActor, public IProcedureFlowInterface
 
 public:
 	PROCEDUREFLOWSYSTEM_API AProcedureFlowActor();
-	PROCEDUREFLOWSYSTEM_API virtual void BeginPlay() override;
-	PROCEDUREFLOWSYSTEM_API virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)

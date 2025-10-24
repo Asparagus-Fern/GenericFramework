@@ -169,7 +169,11 @@ void AThirdPersonPawn::OnSwitchCameraFinish(UCameraSwitchMethod* InCameraHandle)
 	CameraComponent->SetActive(false);
 	DuplicateCameraComponent->SetActive(true);
 
-	GetPlayerController()->PlayerCameraManager->SetViewTarget(this);
+	if (APlayerController* Player = Cast<APlayerController>(GetController()))
+	{
+		Player->PlayerCameraManager->SetViewTarget(this);
+	}
+	
 	Execute_SetPawnLockState(this, PreviewLockState);
 }
 

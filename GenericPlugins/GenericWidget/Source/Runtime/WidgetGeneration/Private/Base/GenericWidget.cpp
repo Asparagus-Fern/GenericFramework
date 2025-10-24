@@ -100,10 +100,7 @@ UWidgetDescriptionViewModel* UGenericWidget::GetWidgetDescriptionViewModel() con
 
 void UGenericWidget::SetWidgetDescriptionViewModel(UWidgetDescriptionViewModel* InViewModel)
 {
-	if (WidgetDescriptionViewModel)
-	{
-		WidgetDescriptionViewModel->RemoveAllFieldValueChangedDelegates(this);
-	}
+	UNREGISTER_MVVM_PROPERTY(WidgetDescriptionViewModel)
 
 	WidgetDescriptionViewModel = InViewModel;
 
@@ -140,10 +137,7 @@ UWidgetRenderViewModel* UGenericWidget::GetWidgetRenderViewModel() const
 
 void UGenericWidget::SetWidgetRenderViewModel(UWidgetRenderViewModel* InViewModel)
 {
-	if (WidgetRenderViewModel)
-	{
-		WidgetRenderViewModel->RemoveAllFieldValueChangedDelegates(this);
-	}
+	UNREGISTER_MVVM_PROPERTY(WidgetRenderViewModel)
 
 	WidgetRenderViewModel = InViewModel;
 
@@ -277,7 +271,7 @@ void UGenericWidget::OnActiveStateChanged()
 
 /* ==================== IWidgetChildrenInterface ==================== */
 
-UGenericWidget* UGenericWidget::GetChildByIndex(int32 InIndex)
+UUserWidget* UGenericWidget::GetChildByIndex(int32 InIndex)
 {
 	if (!Children.IsValidIndex(InIndex))
 	{
@@ -286,7 +280,7 @@ UGenericWidget* UGenericWidget::GetChildByIndex(int32 InIndex)
 	return nullptr;
 }
 
-void UGenericWidget::AddChild(UGenericWidget* InWidget)
+void UGenericWidget::AddChild(UUserWidget* InWidget)
 {
 	if (IsValid(InWidget) && !Children.Contains(InWidget))
 	{
@@ -303,7 +297,7 @@ void UGenericWidget::RemoveChild(int32 InIndex)
 	}
 }
 
-void UGenericWidget::RemoveChild(UGenericWidget* InWidget)
+void UGenericWidget::RemoveChild(UUserWidget* InWidget)
 {
 	if (IsValid(InWidget) && Children.Contains(InWidget))
 	{
@@ -317,11 +311,11 @@ void UGenericWidget::ClearChildren()
 	Children.Reset();
 }
 
-void UGenericWidget::OnChildAdded_Implementation(UGenericWidget* InWidget, int32 InIndex)
+void UGenericWidget::OnChildAdded_Implementation(UUserWidget* InWidget, int32 InIndex)
 {
 }
 
-void UGenericWidget::OnChildRemoved_Implementation(UGenericWidget* InWidget, int32 InIndex)
+void UGenericWidget::OnChildRemoved_Implementation(UUserWidget* InWidget, int32 InIndex)
 {
 }
 

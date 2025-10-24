@@ -12,6 +12,7 @@ public class WidgetApplication : ModuleRules
 				"Core",
 				"DevCore",
 				"DevSlateCore",
+				"UnrealMisc"
 			}
 		);
 

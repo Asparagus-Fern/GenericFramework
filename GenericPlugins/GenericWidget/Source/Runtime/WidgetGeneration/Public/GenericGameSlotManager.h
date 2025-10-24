@@ -51,8 +51,9 @@ public:
 	WIDGETGENERATION_API UGenericWidget* GetSlotWidget(FGameplayTag InSlotTag) const;
 	WIDGETGENERATION_API TArray<UGenericWidget*> GetSlotWidgets() const;
 
+protected:
 	WIDGETGENERATION_API bool AddSlotWidget(UGenericWidget* InWidget) const;
-	WIDGETGENERATION_API bool RemoveSlotWidget(UGenericWidget* InWidget) const;
+	WIDGETGENERATION_API void RemoveSlotWidget(UGenericWidget* InWidget) const;
 
 public:
 	WIDGETGENERATION_API inline static FDelegate_OnSlotRegister Delegate_OnSlotRegister;
@@ -67,4 +68,19 @@ protected:
 	/* 当前视口所有已注册的插槽 */
 	UPROPERTY(BlueprintReadOnly, Transient)
 	TArray<TObjectPtr<UGameplayTagSlot>> Slots;
+};
+
+
+class WIDGETGENERATION_API FGameSlotHelper
+{
+public:
+	static void RegisterSlot(UGameplayTagSlot* InSlot);
+	static void UnRegisterSlot(UGameplayTagSlot* InSlot);
+
+	static UGameplayTagSlot* GetSlot(const UGenericWidget* InWidget);
+	static UGameplayTagSlot* GetSlot(FGameplayTag InSlotTag);
+	static TArray<UGameplayTagSlot*> GetSlots();
+
+	static UGenericWidget* GetSlotWidget(FGameplayTag InSlotTag);
+	static TArray<UGenericWidget*> GetSlotWidgets();
 };

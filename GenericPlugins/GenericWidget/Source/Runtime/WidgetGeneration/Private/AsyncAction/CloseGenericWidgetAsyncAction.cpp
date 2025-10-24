@@ -17,7 +17,7 @@ void UCloseGenericWidgetAsyncAction::Activate()
 	}
 
 	Widget->GetOnWidgetInactiveAnimationPlayFinish().AddUObject(this, &UCloseGenericWidgetAsyncAction::OnWidgetInactivedAnimationFinish);
-	FGenericWidgetHelper::CloseGenericWidget(Widget, bMarkAsGarbage, FOnWidgetActiveStateChanged::CreateUObject(this, &UCloseGenericWidgetAsyncAction::OnWidgetInactived));
+	FWidgetHelper::CloseGenericWidget(Widget, bMarkAsGarbage, FOnWidgetActiveStateChanged::CreateUObject(this, &UCloseGenericWidgetAsyncAction::OnWidgetInactived));
 }
 
 UCloseGenericWidgetAsyncAction* UCloseGenericWidgetAsyncAction::AsyncCloseGenericWidget(UGenericWidget* InWidget, const bool MarkAsGarbage)

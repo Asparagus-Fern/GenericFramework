@@ -8,7 +8,9 @@
 #include "Components/ActorComponent.h"
 #include "PlayerInputConfigurationComponent.generated.h"
 
+class UEnhancedInputLocalPlayerSubsystem;
 class UPlayerInputManager;
+
 /**
  * 
  */
@@ -46,14 +48,14 @@ public:
 	PLAYERINPUTUTILITIES_API virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 public:
-	UFUNCTION(BlueprintNativeEvent)
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	PLAYERINPUTUTILITIES_API void SetupPlayerInput();
 
-	UFUNCTION(BlueprintNativeEvent)
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	PLAYERINPUTUTILITIES_API void RemovePlayerInput();
 
 protected:
-	UPlayerInputManager* GetOwnerPlayerInputManager() const;
+	virtual UEnhancedInputLocalPlayerSubsystem* GetEnhancedInputLocalPlayerSubsystem();
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)

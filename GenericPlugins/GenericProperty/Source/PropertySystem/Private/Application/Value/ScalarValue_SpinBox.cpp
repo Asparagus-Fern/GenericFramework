@@ -3,6 +3,7 @@
 #include "Application/Value/ScalarValue_SpinBox.h"
 
 #include "Components/SpinBox.h"
+#include "MVVM/Data/Scalar/ScalarPropertyValueViewModel.h"
 
 void UScalarValue_SpinBox::NativeConstruct()
 {

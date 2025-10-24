@@ -9,7 +9,6 @@
 
 void FDevCoreModule::StartupModule()
 {
-	UManagerProxy::GetManagerProxy();
 }
 
 void FDevCoreModule::ShutdownModule()

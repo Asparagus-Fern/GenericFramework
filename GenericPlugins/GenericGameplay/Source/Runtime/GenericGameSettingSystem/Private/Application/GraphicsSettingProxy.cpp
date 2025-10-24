@@ -39,7 +39,6 @@ void UGraphicsSettingProxy::GeneratePropertyListItemObjects_Implementation(TArra
 		MultiPropertyValueViewModel->SetPropertyDescription(LOCTEXT("GraphicsQualityPresets_Description", "Quality Preset allows you to adjust multiple video options at once. Try a few options to see what fits your preference and device's performance."));
 		MultiPropertyValueViewModel->SetPropertyDataSource(GET_LOCAL_PLAYER_SETTINGS_DATA_SOURCE(GetOverallScalabilityLevel, SetOverallScalabilityLevel));
 		MultiPropertyValueViewModel->SetIsDirtyProxy(true);
-		MultiPropertyValueViewModel->SetIsAutoApplyProperty(true);
 
 		MultiPropertyValueViewModel->AddNumberValue(-1,LOCTEXT("GraphicsQualityPresetsCustom", "Custom"));
 		MultiPropertyValueViewModel->AddNumberValue(0,LOCTEXT("GraphicsQualityPresetsLow", "Low"));

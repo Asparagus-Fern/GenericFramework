@@ -27,7 +27,6 @@ void UPropertyProxy::NativeOnCreate()
 		return;
 	}
 
-	TArray<UPropertyViewModel*> PropertyViewModels;
 	GeneratePropertyListItemObjects(PropertyViewModels);
 
 	/* Initialize Property And Make List Item Object */
@@ -67,9 +66,24 @@ void UPropertyProxy::NativeOnDestroy()
 	}
 }
 
+TArray<UPropertyViewModel*> UPropertyProxy::GetPropertyViewModels() const
+{
+	return PropertyViewModels;
+}
+
 TArray<UPropertyListItemObject*> UPropertyProxy::GetPropertyListItemObjects() const
 {
 	return PropertyListItemObjects;
+}
+
+FGameplayTag UPropertyProxy::GetPropertyProxyTag() const
+{
+	return ProxyTag;
+}
+
+void UPropertyProxy::SetPropertyProxyTag(FGameplayTag InProxyTag)
+{
+	ProxyTag = InProxyTag;
 }
 
 void UPropertyProxy::ApplyProperty()
@@ -94,23 +108,43 @@ void UPropertyProxy::ResetProperty()
 	}
 }
 
+bool UPropertyProxy::IsAnyPropertyValueDirty() const
+{
+	return !DirtyPropertyViewModels.IsEmpty();
+}
+
 void UPropertyProxy::GeneratePropertyListItemObjects_Implementation(TArray<UPropertyViewModel*>& Result)
 {
 }
 
 void UPropertyProxy::OnPropertyApplied_Implementation(UPropertyViewModel* InPropertyViewModel)
 {
+	if (DirtyPropertyViewModels.Contains(InPropertyViewModel))
+	{
+		DirtyPropertyViewModels.Remove(InPropertyViewModel);
+	}
 }
 
 void UPropertyProxy::OnPropertyReset_Implementation(UPropertyViewModel* InPropertyViewModel)
 {
+	if (DirtyPropertyViewModels.Contains(InPropertyViewModel))
+	{
+		DirtyPropertyViewModels.Remove(InPropertyViewModel);
+	}
 }
 
 void UPropertyProxy::OnPropertyChanged_Implementation(UPropertyViewModel* InPropertyViewModel, EPropertyChangedReason ChangedReason)
 {
+	if (!DirtyPropertyViewModels.Contains(InPropertyViewModel))
+	{
+		DirtyPropertyViewModels.Add(InPropertyViewModel);
+	}
+
 	/* When a Property Changed, If bIsDirtyProxy Is true, Update All Property In This Proxy except The Already Changed One */
 	if (InPropertyViewModel->GetIsDirtyProxy())
 	{
+		InPropertyViewModel->Apply();
+
 		for (auto& ItemObject : PropertyListItemObjects)
 		{
 			if (ItemObject->PropertyViewModel != InPropertyViewModel)

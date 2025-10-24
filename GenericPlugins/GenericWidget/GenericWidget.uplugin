@@ -40,6 +40,11 @@
       "LoadingPhase": "Default"
     },
     {
+      "Name": "WindowGeneration",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
+    },
+    {
       "Name": "WorldWidgetGeneration",
       "Type": "Runtime",
       "LoadingPhase": "Default"

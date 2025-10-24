@@ -21,11 +21,24 @@
     {
       "Name": "ModularGameplay",
       "Enabled": true
+    },
+    {
+      "Name": "GenericWorld",
+      "Enabled": true
+    },
+    {
+      "Name": "GenericCamera",
+      "Enabled": true
     }
   ],
   "Modules": [
     {
       "Name": "ProcedureFlowSystem",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
+    },
+    {
+      "Name": "ProcedureFlowApplication",
       "Type": "Runtime",
       "LoadingPhase": "Default"
     }

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "BPFunctions_Property.generated.h"
 
@@ -18,17 +19,20 @@ class PROPERTYSYSTEM_API UBPFunctions_Property : public UBlueprintFunctionLibrar
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintCallable, meta=(DeterminesOutputType = "InPropertyProxyClass"))
-	static UPropertyProxy* RegisterPropertyProxy(const TSubclassOf<UPropertyProxy>& InPropertyProxyClass);
+	UFUNCTION(BlueprintCallable, meta=(GameplayTagFilter="Property.Proxy", DeterminesOutputType = "InPropertyProxyClass"))
+	static UPropertyProxy* RegisterPropertyProxy(FGameplayTag InPropertyProxyTag, const TSubclassOf<UPropertyProxy>& InPropertyProxyClass);
+
+	UFUNCTION(BlueprintCallable, meta=(GameplayTagFilter="Property.Proxy"))
+	static void UnRegisterPropertyProxyByTag(FGameplayTag InPropertyProxyTag);
 
 	UFUNCTION(BlueprintCallable)
 	static void UnRegisterPropertyProxy(UPropertyProxy* InPropertyProxy);
 
-	UFUNCTION(BlueprintPure)
-	static bool ExistPropertyProxy(const TSubclassOf<UPropertyProxy>& InPropertyProxyClass);
+	UFUNCTION(BlueprintPure, meta=(GameplayTagFilter="Property.Proxy"))
+	static bool ExistPropertyProxy(FGameplayTag InPropertyProxyTag);
 
-	UFUNCTION(BlueprintPure, meta=(DeterminesOutputType = "InPropertyProxyClass"))
-	static UPropertyProxy* GetPropertyProxy(const TSubclassOf<UPropertyProxy>& InPropertyProxyClass);
+	UFUNCTION(BlueprintPure, meta=(GameplayTagFilter="Property.Proxy", DeterminesOutputType = "InPropertyProxyClass"))
+	static UPropertyProxy* GetPropertyProxy(FGameplayTag InPropertyProxyTag, const TSubclassOf<UPropertyProxy>& InPropertyProxyClass);
 
 public:
 	UFUNCTION(BlueprintPure)

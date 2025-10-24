@@ -109,12 +109,6 @@ void UGenericGameHUDManager::CreateGameHUD(UGenericGameHUD* InGameHUD)
 		return;
 	}
 
-	if (!InGameHUD->HUDTag.IsValid())
-	{
-		GenericLOG(GenericLogUI, Error, TEXT("HUD Tag Is Invalid"))
-		return;
-	}
-
 	if (GameHUDs.Contains(InGameHUD))
 	{
 		GenericLOG(GenericLogUI, Warning, TEXT("InGameHUD Is Already Add To Viewport"))
@@ -139,13 +133,7 @@ void UGenericGameHUDManager::RemoveGameHUD(UGenericGameHUD* InGameHUD)
 		GenericLOG(GenericLogUI, Error, TEXT("InGameHUD Is Invalid"))
 		return;
 	}
-
-	if (!InGameHUD->HUDTag.IsValid())
-	{
-		GenericLOG(GenericLogUI, Error, TEXT("HUD Tag Is Invalid"))
-		return;
-	}
-
+	
 	if (!GameHUDs.Contains(InGameHUD))
 	{
 		GenericLOG(GenericLogUI, Warning, TEXT("InGameHUD Is Already Remove From Viewport"))

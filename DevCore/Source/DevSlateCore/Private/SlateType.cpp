@@ -9,6 +9,8 @@
 #include "Materials/MaterialInterface.h"
 #include "Engine/Texture2D.h"
 
+DEFINE_LOG_CATEGORY(GenericLogSlate);
+
 /* ==================== FImageBrush ==================== */
 
 FImageBrush::FImageBrush()

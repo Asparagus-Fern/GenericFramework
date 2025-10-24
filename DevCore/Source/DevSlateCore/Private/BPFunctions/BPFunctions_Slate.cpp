@@ -1,6 +1,5 @@
 ﻿// Copyright ChenTaiye 2025. All Rights Reserved.
 
-
 #include "BPFunctions/BPFunctions_Slate.h"
 
 #include "Components/BackgroundBlurSlot.h"
@@ -10,6 +9,7 @@
 #include "Components/StackBoxSlot.h"
 #include "Engine/Texture2DDynamic.h"
 #include "Slate/SlateBrushAsset.h"
+#include "Type/DebugType.h"
 #include "UWidget/Spline2DSlot.h"
 
 UStackBoxSlot* UBPFunctions_Slate::SlotAsStackBoxSlot(const UWidget* Widget)

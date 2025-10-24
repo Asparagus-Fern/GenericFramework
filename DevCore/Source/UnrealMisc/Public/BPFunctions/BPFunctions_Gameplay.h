@@ -47,25 +47,36 @@ public:
 
 public:
 	UFUNCTION(BlueprintPure, Category="Gameplay", DisplayName="GetPlayerID (PlayerController)")
-	static int32 GetPlayerID(const APlayerController* InPlayer);
+	static bool GetPlayerID(const APlayerController* InPlayer, int32& Result);
 
 	UFUNCTION(BlueprintPure, Category="Gameplay", DisplayName="GetPlayerID (PlayerState)")
-	static int32 GetPlayerIDByPlayerState(const APlayerState* InPlayerState);
+	static bool GetPlayerIDByPlayerState(const APlayerState* InPlayerState, int32& Result);
 
 	UFUNCTION(BlueprintPure, Category="Gameplay", DisplayName="GetPlayerID (Pawn)")
-	static int32 GetPlayerIDByPawn(const APawn* InPawn);
+	static bool GetPlayerIDByPawn(const APawn* InPawn, int32& Result);
 
+public:
 	UFUNCTION(BlueprintPure, Category="Gameplay", DisplayName="GetPlayerUniqueNetID (PlayerController)")
-	static const FUniqueNetIdRepl& GetPlayerUniqueNetID(const APlayerController* InPlayer);
-
-	UFUNCTION(BlueprintPure, Category="Gameplay", DisplayName="GetPlayerUniqueNetID (PlayerIndex)", meta=(WorldContext = "WorldContextObject"))
-	static const FUniqueNetIdRepl& GetPlayerUniqueNetIDByPlayerIndex(const UObject* WorldContextObject, int32 InPlayerIndex);
+	static bool GetPlayerUniqueNetID(const APlayerController* InPlayer, FUniqueNetIdRepl& Result);
 
 	UFUNCTION(BlueprintPure, Category="Gameplay", DisplayName="GetPlayerUniqueNetID (PlayerState)")
-	static const FUniqueNetIdRepl& GetPlayerUniqueNetIDByPlayerState(const APlayerState* InPlayerState);
+	static bool GetPlayerUniqueNetIDByPlayerState(const APlayerState* InPlayerState, FUniqueNetIdRepl& Result);
 
 	UFUNCTION(BlueprintPure, Category="Gameplay", DisplayName="GetPlayerUniqueNetID (Pawn)")
-	static const FUniqueNetIdRepl& GetPlayerUniqueNetIDByPawn(const APawn* InPawn);
+	static bool GetPlayerUniqueNetIDByPawn(const APawn* InPawn, FUniqueNetIdRepl& Result);
+
+	UFUNCTION(BlueprintPure, Category="Gameplay", DisplayName="GetPlayerUniqueNetID (PlayerIndex)", meta=(WorldContext = "WorldContextObject"))
+	static bool GetPlayerUniqueNetIDByPlayerIndex(const UObject* WorldContextObject, int32 InPlayerIndex, FUniqueNetIdRepl& Result);
+
+public:
+	UFUNCTION(BlueprintPure, Category="Gameplay", meta=(WorldContext = "WorldContextObject", DeterminesOutputType = "InClass"))
+	static APlayerController* GetPlayerControllerByUniqueNetID(const UObject* WorldContextObject, const TSubclassOf<APlayerController> InClass, const FUniqueNetIdRepl& InNetID);
+
+	UFUNCTION(BlueprintPure, Category="Gameplay", meta=(WorldContext = "WorldContextObject", DeterminesOutputType = "InClass"))
+	static APlayerState* GetPlayerStateByUniqueNetID(const UObject* WorldContextObject, const TSubclassOf<APlayerState> InClass, const FUniqueNetIdRepl& InNetID);
+
+	UFUNCTION(BlueprintPure, Category="Gameplay", meta=(WorldContext = "WorldContextObject", DeterminesOutputType = "InClass"))
+	static APawn* GetPlayerPawnByUniqueNetID(const UObject* WorldContextObject, const TSubclassOf<APawn> InClass, const FUniqueNetIdRepl& InNetID);
 
 	/* Pawn */
 public:

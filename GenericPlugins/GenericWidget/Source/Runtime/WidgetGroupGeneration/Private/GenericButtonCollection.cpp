@@ -6,8 +6,8 @@
 #include "GenericButtonAsset.h"
 #include "GenericButtonGroup.h"
 #include "GenericButtonBuilder.h"
-#include "GenericButtonConfirm.h"
 #include "GenericButtonContainer.h"
+#include "GenericButtonWidget.h"
 #include "GenericWidgetManager.h"
 #include "BPFunctions/BPFunctions_GameplayTag.h"
 #include "Manager/ManagerStatics.h"
@@ -96,22 +96,22 @@ void UGenericButtonCollection::BuildChildButtonGroup(const FGameplayTag InButton
 	UGenericButtonWidget* ButtonWidget = GenericWidgetManager->GetActiveWidget<UGenericButtonWidget>(InButtonTag);
 
 	/* Button Container Is a Container To Accept Multi Buttons Widget */
-	if (UGenericButtonContainer* GroupWidget = BuildButtonGroupWidget(InButtonTag, ButtonWidget))
+	if (UGenericButtonContainer* ButtonContainer = BuildButtonGroupWidget(InButtonTag, ButtonWidget))
 	{
 		/* Generate Button Group And Open The Button Container Widget */
 		UGenericButtonGroup* ButtonGroup = NewObject<UGenericButtonGroup>(this, ButtonBuilder->ButtonGroupClass);
-		ButtonGroup->SetButtonGroupWidget(GroupWidget);
+		ButtonGroup->SetButtonGroupWidget(ButtonContainer);
 		ButtonGroup->SetButtonGroupViewModel(ButtonBuilder->ButtonGroupViewModel);
 
-		GroupWidget->SetButtonCollection(this);
-		GroupWidget->SetButtonGroup(ButtonGroup);
+		ButtonContainer->SetButtonCollection(this);
+		ButtonContainer->SetButtonGroup(ButtonGroup);
 
-		/* Try To Open This Container Widget,It Will Added To GameplaySlot Through Widget Slot Tag */
-		if (!GenericWidgetManager->OpenGenericWidget(GroupWidget))
+		/* Try To Open This Container Widget,It Will Add To GameplaySlot Through Widget Slot Tag */
+		if (!GenericWidgetManager->OpenGenericWidget(ButtonContainer))
 		{
 			GenericLOG(GenericLogUI, Error, TEXT("Open Button Container Fail"))
 			ButtonGroup->MarkAsGarbage();
-			GroupWidget->MarkAsGarbage();
+			ButtonContainer->MarkAsGarbage();
 			return;
 		}
 
@@ -120,10 +120,10 @@ void UGenericButtonCollection::BuildChildButtonGroup(const FGameplayTag InButton
 		for (int32 It = 0; It < ChildrenTagContainer.Num(); It++)
 		{
 			/* Get The Child Tag And Build Child Button Widget */
-			FGameplayTag ChildTag = ChildrenTagContainer.GetByIndex(It);
-			if (UGenericButtonWidget* ChildButtonWidget = BuildButtonWidget(ChildTag, GroupWidget))
+			FGameplayTag ChildButtonTag = ChildrenTagContainer.GetByIndex(It);
+			if (UGenericButtonWidget* ChildButtonWidget = BuildButtonWidget(ChildButtonTag, ButtonContainer))
 			{
-				/* Try To Open Child Widget, It Will Added To Container Through a Valid Container Widget, See More In UGenericGameSlotManager::AddSlotWidget */
+				/* Try To Open Child Widget, It Will Add To Container Through a Valid Container Widget, See More In UGenericGameSlotManager::AddSlotWidget */
 				if (!GenericWidgetManager->OpenGenericWidget(ChildButtonWidget))
 				{
 					GenericLOG(GenericLogUI, Error, TEXT("Open Button Widget Fail"))
@@ -131,33 +131,37 @@ void UGenericButtonCollection::BuildChildButtonGroup(const FGameplayTag InButton
 				}
 
 				/* Add Widget To Button Group */
-				ChildButtonWidget->SelfTag = ChildTag;
+				ChildButtonWidget->SelfTag = ChildButtonTag;
 				ButtonGroup->AddButton(ChildButtonWidget);
 
-				/* Create Button Confirm If Exist */
-				UGenericButtonConfirm* NewButtonConfirm = ChildButtonWidget->SetButtonConfirmByClass(ButtonBuilder->ButtonConfirmClass);
-				if (IsValid(NewButtonConfirm))
+				if (UGenericButtonBuilder* ChildButtonBuilder = GetButtonBuilder(ChildButtonTag))
 				{
-					NewButtonConfirm->SetButtonCollection(this);
-					NewButtonConfirm->SetButtonGroup(ButtonGroup);
+					/* Update Button Widget View Model */
+					ChildButtonWidget->SetWidgetDescriptionViewModel(ChildButtonBuilder->WidgetDescriptionViewModel);
+					ChildButtonWidget->SetWidgetRenderViewModel(ChildButtonBuilder->WidgetRenderViewModel);
+
+					ChildButtonWidget->SetButtonSelectionViewModel(ChildButtonBuilder->ButtonSelectionViewModel);
+					ChildButtonWidget->SetButtonInputViewModel(ChildButtonBuilder->ButtonInputViewModel);
+					ChildButtonWidget->SetButtonSoundViewModel(ChildButtonBuilder->ButtonSoundViewModel);
+
+					FButtonBuildParameter ButtonBuildParameter;
+					ButtonBuildParameter.ChildButtonTag = ChildButtonTag;
+					ButtonBuildParameter.ChildButtonBuilder = ChildButtonBuilder;
+					ButtonBuildParameter.ChildButtonWidget = ChildButtonWidget;
+					OnButtonBuilt(ButtonBuildParameter);
 				}
-
-				/* Update Button Widget View Model */
-				ChildButtonWidget->SetWidgetDescriptionViewModel(GetButtonBuilder(ChildTag)->WidgetDescriptionViewModel);
-				ChildButtonWidget->SetWidgetRenderViewModel(GetButtonBuilder(ChildTag)->WidgetRenderViewModel);
-
-				ChildButtonWidget->SetButtonSelectionViewModel(GetButtonBuilder(ChildTag)->ButtonSelectionViewModel);
-				ChildButtonWidget->SetButtonInputViewModel(GetButtonBuilder(ChildTag)->ButtonInputViewModel);
-				ChildButtonWidget->SetButtonSoundViewModel(GetButtonBuilder(ChildTag)->ButtonSoundViewModel);
-
-				OnButtonBuilt(ChildTag, ChildButtonWidget, ButtonBuilder);
 			}
 		}
 
 		/* Binding Delegate From This New Button Group */
 		if (RegisterButtonGroup(InButtonTag, ButtonGroup))
 		{
-			OnButtonGroupBuilt(InButtonTag, ButtonGroup, ButtonBuilder);
+			FButtonGroupBuildParameter ButtonGroupBuildParameter;
+			ButtonGroupBuildParameter.ButtonTag = InButtonTag;
+			ButtonGroupBuildParameter.ButtonBuilder = ButtonBuilder;
+			ButtonGroupBuildParameter.ButtonGroup = ButtonGroup;
+			ButtonGroupBuildParameter.ButtonContainer = ButtonContainer;
+			OnButtonGroupBuilt(ButtonGroupBuildParameter);
 		}
 	}
 }
@@ -236,13 +240,13 @@ UGenericButtonContainer* UGenericButtonCollection::BuildButtonGroupWidget(const 
 	return ButtonContainer;
 }
 
-void UGenericButtonCollection::OnButtonGroupBuilt_Implementation(FGameplayTag InButtonTag, UGenericButtonGroup* InButtonGroup, UGenericButtonBuilder* InBuilder)
+void UGenericButtonCollection::OnButtonGroupBuilt_Implementation(const FButtonGroupBuildParameter& ButtonGroupBuildParameter)
 {
-	if (UButtonGroupViewModel* ButtonGroupViewModel = InBuilder->ButtonGroupViewModel)
+	if (UButtonGroupViewModel* ButtonGroupViewModel = ButtonGroupBuildParameter.ButtonBuilder->ButtonGroupViewModel)
 	{
 		if (ButtonGroupViewModel->bShouldHiddenParentContainer)
 		{
-			FGameplayTag ParentGameplayTag = UBPFunctions_GameplayTag::GetDirectGameplayTagParent(InButtonTag);
+			FGameplayTag ParentGameplayTag = UBPFunctions_GameplayTag::GetDirectGameplayTagParent(ButtonGroupBuildParameter.ButtonTag);
 			if (UGenericButtonGroup* ParentButtonGroup = GetButtonGroup(ParentGameplayTag))
 			{
 				ParentButtonGroup->GetButtonGroupWidget()->SetVisibility(ESlateVisibility::Collapsed);
@@ -265,7 +269,7 @@ UGenericButtonWidget* UGenericButtonCollection::BuildButtonWidget(const FGamepla
 	return Button;
 }
 
-void UGenericButtonCollection::OnButtonBuilt_Implementation(FGameplayTag InButtonTag, UGenericButtonWidget* InButtonWidget, UGenericButtonBuilder* InBuilder)
+void UGenericButtonCollection::OnButtonBuilt_Implementation(const FButtonBuildParameter& ButtonBuildParameter)
 {
 }
 

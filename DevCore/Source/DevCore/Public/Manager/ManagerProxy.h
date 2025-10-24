@@ -22,10 +22,9 @@ class UManagerProxy final : public UGenericObject, public IWorldInterface
 	GENERATED_BODY()
 
 public:
-	UManagerProxy(const FObjectInitializer& ObjectInitializer);
-	virtual void BeginDestroy() override;
-	
-public:
+	void Initialize();
+	void Deinitialize();
+
 	UFUNCTION(BlueprintPure, Category="Manager")
 	static DEVCORE_API UManagerProxy* GetManagerProxy();
 
@@ -95,9 +94,6 @@ public:
 	DEVCORE_API bool UnRegisterManager(FGuid InManagerID);
 
 private:
-	void InitializeInternal();
-	void DeinitializeInternal();
-
 	static UManagerProxy* Instance;
 	bool bIsInitialize = false;
 

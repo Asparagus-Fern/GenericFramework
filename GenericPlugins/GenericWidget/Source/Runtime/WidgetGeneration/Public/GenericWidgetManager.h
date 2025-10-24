@@ -140,7 +140,7 @@ private:
 };
 
 
-class WIDGETGENERATION_API FGenericWidgetHelper
+class WIDGETGENERATION_API FWidgetHelper
 {
 public:
 	template <typename WidgetT = UGenericWidget, typename OwnerType = UObject>

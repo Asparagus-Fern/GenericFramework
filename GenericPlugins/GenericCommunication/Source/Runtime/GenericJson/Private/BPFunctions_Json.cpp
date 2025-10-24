@@ -87,7 +87,6 @@ bool UBPFunctions_Json::SetJsonField(UGenericJsonObject* JsonObject, const FStri
 
 DEFINE_FUNCTION(UBPFunctions_Json::execSetJsonField)
 {
-	P_GET_ENUM_REF(EGenericResult, Result);
 	P_GET_OBJECT_REF(UGenericJsonObject, JsonObject);
 	P_GET_PROPERTY(FStrProperty, FieldName);
 
@@ -144,13 +143,13 @@ DEFINE_FUNCTION(UBPFunctions_Json::execSetJsonField)
 	*StaticCast<bool*>(RESULT_PARAM) = bResult;
 }
 
-void UBPFunctions_Json::SaveStructToJsonFile(EGenericResult& Result, const FString& FilePath, const int32& Value)
+void UBPFunctions_Json::SaveStructToJsonFile(bool& Result, const FString& FilePath, const int32& Value)
 {
 }
 
 DEFINE_FUNCTION(UBPFunctions_Json::execSaveStructToJsonFile)
 {
-	P_GET_ENUM_REF(EGenericResult, Result);
+	P_GET_UBOOL_REF(Result);
 	P_GET_PROPERTY(FStrProperty, FilePath);
 
 	Stack.StepCompiledIn<FStructProperty>(nullptr);
@@ -159,7 +158,7 @@ DEFINE_FUNCTION(UBPFunctions_Json::execSaveStructToJsonFile)
 
 	P_FINISH;
 
-	Result = EGenericResult::InValid;
+	Result = false;
 
 	if (!Property || !ValuePtr)
 	{
@@ -180,22 +179,22 @@ DEFINE_FUNCTION(UBPFunctions_Json::execSaveStructToJsonFile)
 	P_NATIVE_BEGIN;
 		if (FJsonConvert::StructToJsonFile(FilePath, StructProperty->Struct, ValuePtr))
 		{
-			Result = EGenericResult::Valid;
+			Result = true;
 		}
 		else
 		{
-			Result = EGenericResult::InValid;
+			Result = false;
 		}
 	P_NATIVE_END;
 }
 
-void UBPFunctions_Json::LoadJsonFileToStruct(EGenericResult& Result, const FString& FilePath, int32& Value)
+void UBPFunctions_Json::LoadJsonFileToStruct(bool& Result, const FString& FilePath, int32& Value)
 {
 }
 
 DEFINE_FUNCTION(UBPFunctions_Json::execLoadJsonFileToStruct)
 {
-	P_GET_ENUM_REF(EGenericResult, Result);
+	P_GET_UBOOL_REF(Result);
 	P_GET_PROPERTY(FStrProperty, FilePath);
 
 	Stack.StepCompiledIn<FStructProperty>(nullptr);
@@ -204,7 +203,7 @@ DEFINE_FUNCTION(UBPFunctions_Json::execLoadJsonFileToStruct)
 
 	P_FINISH;
 
-	Result = EGenericResult::InValid;
+	Result = false;
 
 	if (!Property || !ValuePtr)
 	{
@@ -225,11 +224,11 @@ DEFINE_FUNCTION(UBPFunctions_Json::execLoadJsonFileToStruct)
 	P_NATIVE_BEGIN;
 		if (FJsonConvert::JsonFileToStruct(FilePath, StructProperty->Struct, ValuePtr))
 		{
-			Result = EGenericResult::Valid;
+			Result = true;
 		}
 		else
 		{
-			Result = EGenericResult::InValid;
+			Result = false;
 		}
 	P_NATIVE_END;
 }

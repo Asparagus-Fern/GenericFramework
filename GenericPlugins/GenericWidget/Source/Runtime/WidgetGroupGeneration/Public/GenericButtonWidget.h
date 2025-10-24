@@ -8,7 +8,6 @@
 #include "Base/GenericWidget.h"
 #include "GenericButtonWidget.generated.h"
 
-class UGenericButtonConfirm;
 class UButtonSoundViewModel;
 class UButtonInputViewModel;
 class UButtonSelectionViewModel;
@@ -296,44 +295,54 @@ private:
 
 	/* ==================== Event Confirm ==================== */
 public:
-	UFUNCTION(BlueprintPure)
-	WIDGETGROUPGENERATION_API UGenericButtonConfirm* GetButtonConfirm();
+	DECLARE_DELEGATE_RetVal_OneParam(bool, FButtonConfirmEvent, UGenericButtonWidget*);
+	DECLARE_DELEGATE_RetVal_TwoParams(bool, FButtonSelectionConfirmEvent, UGenericButtonWidget*, bool NewSelection);
 
-	UFUNCTION(BlueprintCallable)
-	WIDGETGROUPGENERATION_API UGenericButtonConfirm* SetButtonConfirmByClass(TSubclassOf<UGenericButtonConfirm> InButtonConfirmClass);
-
-	UFUNCTION(BlueprintCallable)
-	WIDGETGROUPGENERATION_API void SetButtonConfirm(UGenericButtonConfirm* InButtonConfirm);
-
-	UFUNCTION(BlueprintCallable)
-	WIDGETGROUPGENERATION_API void ClearButtonConfirm();
+	WIDGETGROUPGENERATION_API FButtonConfirmEvent& GetOnButtonPressedConfirmedEvent() { return OnButtonPressedConfirmedEvent; }
+	WIDGETGROUPGENERATION_API FButtonConfirmEvent& GetOnButtonReleasedConfirmedEvent() { return OnButtonReleasedConfirmedEvent; }
+	WIDGETGROUPGENERATION_API FButtonConfirmEvent& GetOnButtonHoveredConfirmedEvent() { return OnButtonHoveredConfirmedEvent; }
+	WIDGETGROUPGENERATION_API FButtonConfirmEvent& GetOnButtonUnhoveredConfirmedEvent() { return OnButtonUnhoveredConfirmedEvent; }
+	WIDGETGROUPGENERATION_API FButtonConfirmEvent& GetOnButtonClickedConfirmedEvent() { return OnButtonClickedConfirmedEvent; }
+	WIDGETGROUPGENERATION_API FButtonConfirmEvent& GetOnButtonDoubleClickedConfirmedEvent() { return OnButtonDoubleClickedConfirmedEvent; }
+	WIDGETGROUPGENERATION_API FButtonSelectionConfirmEvent& GetOnButtonSelectionConfirmedEvent() { return OnButtonSelectionConfirmedEvent; }
 
 protected:
-	WIDGETGROUPGENERATION_API void ConfirmButtonPressed();
-	WIDGETGROUPGENERATION_API virtual void OnButtonPressedConfirmed();
+	WIDGETGROUPGENERATION_API void SetButtonPressedInternal();
+	WIDGETGROUPGENERATION_API virtual bool CanButtonPressedInternal();
+	WIDGETGROUPGENERATION_API virtual void OnButtonPressedInternal();
 
-	WIDGETGROUPGENERATION_API void ConfirmButtonReleased();
-	WIDGETGROUPGENERATION_API virtual void OnButtonReleasedConfirmed();
+	WIDGETGROUPGENERATION_API void SetButtonReleasedInternal();
+	WIDGETGROUPGENERATION_API virtual bool CanButtonReleasedInternal();
+	WIDGETGROUPGENERATION_API virtual void OnButtonReleasedInternal();
 
-	WIDGETGROUPGENERATION_API void ConfirmButtonHovered();
-	WIDGETGROUPGENERATION_API virtual void OnButtonHoveredConfirmed();
+	WIDGETGROUPGENERATION_API void SetButtonHoveredInternal();
+	WIDGETGROUPGENERATION_API virtual bool CanButtonHoveredInternal();
+	WIDGETGROUPGENERATION_API virtual void OnButtonHoveredInternal();
 
-	WIDGETGROUPGENERATION_API void ConfirmButtonUnhovered();
-	WIDGETGROUPGENERATION_API virtual void OnButtonUnhoveredConfirmed();
+	WIDGETGROUPGENERATION_API void SetButtonUnhoveredInternal();
+	WIDGETGROUPGENERATION_API virtual bool CanButtonUnhoveredInternal();
+	WIDGETGROUPGENERATION_API virtual void OnButtonUnhoveredInternal();
 
-	WIDGETGROUPGENERATION_API void ConfirmButtonClicked();
-	WIDGETGROUPGENERATION_API virtual void OnButtonClickedConfirmed();
+	WIDGETGROUPGENERATION_API void SetButtonClickedInternal();
+	WIDGETGROUPGENERATION_API virtual bool CanButtonClickedInternal();
+	WIDGETGROUPGENERATION_API virtual void OnButtonClickedInternal();
 
-	WIDGETGROUPGENERATION_API void ConfirmButtonDoubleClicked();
-	WIDGETGROUPGENERATION_API virtual void OnButtonDoubleClickedConfirmed();
+	WIDGETGROUPGENERATION_API void SetButtonDoubleClickedInternal();
+	WIDGETGROUPGENERATION_API virtual bool CanButtonDoubleClickedInternal();
+	WIDGETGROUPGENERATION_API virtual void OnButtonDoubleClickedInternal();
 
 	WIDGETGROUPGENERATION_API void SetSelectedInternal(bool bInSelected);
-	WIDGETGROUPGENERATION_API void ConfirmButtonSelection(bool bInSelected);
-	WIDGETGROUPGENERATION_API virtual void OnButtonSelectionConfirmed(bool bInSelected);
+	WIDGETGROUPGENERATION_API virtual bool CanButtonSelectionInternal(bool bInSelected);
+	WIDGETGROUPGENERATION_API virtual void OnButtonSelectionInternal(bool bInSelected);
 
 private:
-	UPROPERTY()
-	TObjectPtr<UGenericButtonConfirm> ButtonConfirm = nullptr;
+	FButtonConfirmEvent OnButtonPressedConfirmedEvent;
+	FButtonConfirmEvent OnButtonReleasedConfirmedEvent;
+	FButtonConfirmEvent OnButtonHoveredConfirmedEvent;
+	FButtonConfirmEvent OnButtonUnhoveredConfirmedEvent;
+	FButtonConfirmEvent OnButtonClickedConfirmedEvent;
+	FButtonConfirmEvent OnButtonDoubleClickedConfirmedEvent;
+	FButtonSelectionConfirmEvent OnButtonSelectionConfirmedEvent;
 
 	/* ==================== Event Handle ==================== */
 protected:

@@ -2,8 +2,6 @@
 
 #include "GenericButtonWidget.h"
 
-#include "CommonButtonBase.h"
-#include "GenericButtonConfirm.h"
 #include "WidgetType.h"
 #include "Binding/States/WidgetStateRegistration.h"
 #include "Blueprint/WidgetTree.h"
@@ -125,20 +123,9 @@ void UGenericButtonWidget::NativeDestruct()
 {
 	Super::NativeDestruct();
 
-	if (ButtonSelectionViewModel)
-	{
-		ButtonSelectionViewModel->RemoveAllFieldValueChangedDelegates(this);
-	}
-
-	if (ButtonInputViewModel)
-	{
-		ButtonInputViewModel->RemoveAllFieldValueChangedDelegates(this);
-	}
-
-	if (ButtonSoundViewModel)
-	{
-		ButtonSoundViewModel->RemoveAllFieldValueChangedDelegates(this);
-	}
+	UNREGISTER_MVVM_PROPERTY(ButtonSelectionViewModel)
+	UNREGISTER_MVVM_PROPERTY(ButtonInputViewModel)
+	UNREGISTER_MVVM_PROPERTY(ButtonSoundViewModel)
 }
 
 bool UGenericButtonWidget::NativeIsInteractable() const
@@ -172,7 +159,7 @@ void UGenericButtonWidget::NativeOnMouseEnter(const FGeometry& InGeometry, const
 
 		if (GetIsEnabled() && bInteractionEnabled)
 		{
-			ConfirmButtonHovered();
+			SetButtonHoveredInternal();
 		}
 	}
 }
@@ -185,7 +172,7 @@ void UGenericButtonWidget::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
 
 		if (GetIsEnabled() && bInteractionEnabled)
 		{
-			ConfirmButtonUnhovered();
+			SetButtonUnhoveredInternal();
 		}
 	}
 }
@@ -246,10 +233,7 @@ UButtonInputViewModel* UGenericButtonWidget::GetButtonInputViewModel() const
 
 void UGenericButtonWidget::SetButtonInputViewModel(UButtonInputViewModel* InViewModel)
 {
-	if (ButtonInputViewModel)
-	{
-		ButtonInputViewModel->RemoveAllFieldValueChangedDelegates(this);
-	}
+	UNREGISTER_MVVM_PROPERTY(ButtonInputViewModel)
 
 	ButtonInputViewModel = InViewModel;
 
@@ -314,11 +298,11 @@ void UGenericButtonWidget::SetIsInteractionEnabled(bool bInIsInteractionEnabled)
 	{
 		if (bIsHoveredNow)
 		{
-			ConfirmButtonHovered();
+			SetButtonHoveredInternal();;
 		}
 		else
 		{
-			ConfirmButtonUnhovered();
+			SetButtonUnhoveredInternal();
 		}
 	}
 }
@@ -360,11 +344,11 @@ void UGenericButtonWidget::HandleButtonClicked()
 		if (bTriggerClickedAfterSelection)
 		{
 			SetIsSelected(!bSelected);
-			ConfirmButtonClicked();
+			SetButtonClickedInternal();
 		}
 		else
 		{
-			ConfirmButtonClicked();
+			SetButtonClickedInternal();
 			SetIsSelected(!bSelected);
 		}
 	}
@@ -372,7 +356,7 @@ void UGenericButtonWidget::HandleButtonClicked()
 
 void UGenericButtonWidget::HandleButtonDoubleClicked()
 {
-	ConfirmButtonDoubleClicked();
+	SetButtonDoubleClickedInternal();
 }
 
 void UGenericButtonWidget::HandleFocusReceived()
@@ -391,12 +375,12 @@ void UGenericButtonWidget::HandleFocusLost()
 
 void UGenericButtonWidget::HandleButtonPressed()
 {
-	ConfirmButtonPressed();
+	SetButtonPressedInternal();
 }
 
 void UGenericButtonWidget::HandleButtonReleased()
 {
-	ConfirmButtonReleased();
+	SetButtonReleasedInternal();
 }
 
 /* ==================== Selection ==================== */
@@ -415,8 +399,6 @@ void UGenericButtonWidget::SetIsLocked(bool bInIsLocked)
 		SetButtonStyle();
 
 		NativeOnLockedChanged(bLocked);
-
-		BroadcastBinaryPostStateChange(UWidgetLockedStateRegistration::Bit, bLocked);
 	}
 }
 
@@ -541,11 +523,11 @@ void UGenericButtonWidget::SetIsSelected(bool InSelected)
 	{
 		if (bIsHoveredNow)
 		{
-			ConfirmButtonHovered();
+			SetButtonHoveredInternal();;
 		}
 		else
 		{
-			ConfirmButtonUnhovered();
+			SetButtonUnhoveredInternal();
 		}
 	}
 }
@@ -557,10 +539,7 @@ UButtonSelectionViewModel* UGenericButtonWidget::GetButtonSelectionViewModel() c
 
 void UGenericButtonWidget::SetButtonSelectionViewModel(UButtonSelectionViewModel* InViewModel)
 {
-	if (ButtonSelectionViewModel)
-	{
-		ButtonSelectionViewModel->RemoveAllFieldValueChangedDelegates(this);
-	}
+	UNREGISTER_MVVM_PROPERTY(ButtonSelectionViewModel)
 
 	ButtonSelectionViewModel = InViewModel;
 
@@ -607,178 +586,198 @@ void UGenericButtonWidget::OnTriggerClickedAfterSelectionChanged_Implementation(
 
 /* ==================== Event Confirm ==================== */
 
-UGenericButtonConfirm* UGenericButtonWidget::GetButtonConfirm()
+void UGenericButtonWidget::SetButtonPressedInternal()
 {
-	return ButtonConfirm;
-}
-
-UGenericButtonConfirm* UGenericButtonWidget::SetButtonConfirmByClass(TSubclassOf<UGenericButtonConfirm> InButtonConfirmClass)
-{
-	if (!InButtonConfirmClass)
+	if (OnButtonPressedConfirmedEvent.IsBound())
 	{
-		return nullptr;
-	}
-
-	UGenericButtonConfirm* NewButtonConfirm = NewObject<UGenericButtonConfirm>(this, InButtonConfirmClass);
-	SetButtonConfirm(NewButtonConfirm);
-
-	return NewButtonConfirm;
-}
-
-void UGenericButtonWidget::SetButtonConfirm(UGenericButtonConfirm* InButtonConfirm)
-{
-	ClearButtonConfirm();
-
-	if (IsValid(InButtonConfirm))
-	{
-		ButtonConfirm = InButtonConfirm;
-
-		ButtonConfirm->GetConfirmButtonPressedEvent().BindUObject(this, &ThisClass::OnButtonPressedConfirmed);
-		ButtonConfirm->GetConfirmButtonReleasedEvent().BindUObject(this, &ThisClass::OnButtonReleasedConfirmed);
-		ButtonConfirm->GetConfirmButtonHoveredEvent().BindUObject(this, &ThisClass::OnButtonHoveredConfirmed);
-		ButtonConfirm->GetConfirmButtonUnhoveredEvent().BindUObject(this, &ThisClass::OnButtonUnhoveredConfirmed);
-		ButtonConfirm->GetConfirmButtonClickedEvent().BindUObject(this, &ThisClass::OnButtonClickedConfirmed);
-		ButtonConfirm->GetConfirmButtonDoubleClickedEvent().BindUObject(this, &ThisClass::OnButtonDoubleClickedConfirmed);
-		ButtonConfirm->GetConfirmSelectionChangedEvent().BindUObject(this, &ThisClass::OnButtonSelectionConfirmed);
-	}
-}
-
-void UGenericButtonWidget::ClearButtonConfirm()
-{
-	if (ButtonConfirm)
-	{
-		ButtonConfirm->GetConfirmButtonPressedEvent().Unbind();
-		ButtonConfirm->GetConfirmButtonReleasedEvent().Unbind();
-		ButtonConfirm->GetConfirmButtonHoveredEvent().Unbind();
-		ButtonConfirm->GetConfirmButtonUnhoveredEvent().Unbind();
-		ButtonConfirm->GetConfirmButtonClickedEvent().Unbind();
-		ButtonConfirm->GetConfirmButtonDoubleClickedEvent().Unbind();
-		ButtonConfirm->GetConfirmSelectionChangedEvent().Unbind();
-	}
-
-	ButtonConfirm = nullptr;
-}
-
-void UGenericButtonWidget::ConfirmButtonPressed()
-{
-	if (ButtonConfirm)
-	{
-		ButtonConfirm->ConfirmButtonPressed();
+		if (OnButtonPressedConfirmedEvent.Execute(this))
+		{
+			OnButtonPressedInternal();
+		}
 	}
 	else
 	{
-		OnButtonPressedConfirmed();
+		if (CanButtonPressedInternal())
+		{
+			OnButtonPressedInternal();
+		}
 	}
 }
 
-void UGenericButtonWidget::OnButtonPressedConfirmed()
+bool UGenericButtonWidget::CanButtonPressedInternal()
+{
+	return true;
+}
+
+void UGenericButtonWidget::OnButtonPressedInternal()
 {
 	NativeOnPressed();
 }
 
-void UGenericButtonWidget::ConfirmButtonReleased()
+void UGenericButtonWidget::SetButtonReleasedInternal()
 {
-	if (ButtonConfirm)
+	if (OnButtonReleasedConfirmedEvent.IsBound())
 	{
-		ButtonConfirm->ConfirmButtonReleased();
+		if (OnButtonReleasedConfirmedEvent.Execute(this))
+		{
+			OnButtonReleasedInternal();
+		}
 	}
 	else
 	{
-		OnButtonReleasedConfirmed();
+		if (CanButtonReleasedInternal())
+		{
+			OnButtonReleasedInternal();
+		}
 	}
 }
 
-void UGenericButtonWidget::OnButtonReleasedConfirmed()
+bool UGenericButtonWidget::CanButtonReleasedInternal()
+{
+	return true;
+}
+
+void UGenericButtonWidget::OnButtonReleasedInternal()
 {
 	NativeOnReleased();
 }
 
-void UGenericButtonWidget::ConfirmButtonHovered()
+void UGenericButtonWidget::SetButtonHoveredInternal()
 {
-	if (ButtonConfirm)
+	if (OnButtonHoveredConfirmedEvent.IsBound())
 	{
-		ButtonConfirm->ConfirmButtonHovered();
+		if (OnButtonHoveredConfirmedEvent.Execute(this))
+		{
+			OnButtonHoveredInternal();
+		}
 	}
 	else
 	{
-		OnButtonHoveredConfirmed();
+		if (CanButtonHoveredInternal())
+		{
+			OnButtonHoveredInternal();
+		}
 	}
 }
 
-void UGenericButtonWidget::OnButtonHoveredConfirmed()
+bool UGenericButtonWidget::CanButtonHoveredInternal()
+{
+	return true;
+}
+
+void UGenericButtonWidget::OnButtonHoveredInternal()
 {
 	NativeOnHovered();
 }
 
-void UGenericButtonWidget::ConfirmButtonUnhovered()
+void UGenericButtonWidget::SetButtonUnhoveredInternal()
 {
-	if (ButtonConfirm)
+	if (OnButtonUnhoveredConfirmedEvent.IsBound())
 	{
-		ButtonConfirm->ConfirmButtonUnhovered();
+		if (OnButtonUnhoveredConfirmedEvent.Execute(this))
+		{
+			OnButtonUnhoveredInternal();
+		}
 	}
 	else
 	{
-		OnButtonUnhoveredConfirmed();
+		if (CanButtonUnhoveredInternal())
+		{
+			OnButtonUnhoveredInternal();
+		}
 	}
 }
 
-void UGenericButtonWidget::OnButtonUnhoveredConfirmed()
+bool UGenericButtonWidget::CanButtonUnhoveredInternal()
+{
+	return true;
+}
+
+void UGenericButtonWidget::OnButtonUnhoveredInternal()
 {
 	NativeOnUnhovered();
 }
 
-void UGenericButtonWidget::ConfirmButtonClicked()
+void UGenericButtonWidget::SetButtonClickedInternal()
 {
-	if (ButtonConfirm)
+	if (OnButtonClickedConfirmedEvent.IsBound())
 	{
-		ButtonConfirm->ConfirmButtonClicked();
+		if (OnButtonClickedConfirmedEvent.Execute(this))
+		{
+			OnButtonClickedInternal();
+		}
 	}
 	else
 	{
-		OnButtonClickedConfirmed();
+		if (CanButtonClickedInternal())
+		{
+			OnButtonClickedInternal();
+		}
 	}
 }
 
-void UGenericButtonWidget::OnButtonClickedConfirmed()
+bool UGenericButtonWidget::CanButtonClickedInternal()
+{
+	return true;
+}
+
+void UGenericButtonWidget::OnButtonClickedInternal()
 {
 	NativeOnClicked();
 }
 
-void UGenericButtonWidget::ConfirmButtonDoubleClicked()
+void UGenericButtonWidget::SetButtonDoubleClickedInternal()
 {
-	if (ButtonConfirm)
+	if (OnButtonDoubleClickedConfirmedEvent.IsBound())
 	{
-		ButtonConfirm->ConfirmButtonDoubleClicked();
+		if (OnButtonDoubleClickedConfirmedEvent.Execute(this))
+		{
+			OnButtonDoubleClickedInternal();
+		}
 	}
 	else
 	{
-		OnButtonDoubleClickedConfirmed();
+		if (CanButtonDoubleClickedInternal())
+		{
+			OnButtonDoubleClickedInternal();
+		}
 	}
 }
 
-void UGenericButtonWidget::OnButtonDoubleClickedConfirmed()
+bool UGenericButtonWidget::CanButtonDoubleClickedInternal()
+{
+	return true;
+}
+
+void UGenericButtonWidget::OnButtonDoubleClickedInternal()
 {
 	NativeOnDoubleClicked();
 }
 
 void UGenericButtonWidget::SetSelectedInternal(bool bInSelected)
 {
-	ConfirmButtonSelection(bInSelected);
-}
-
-void UGenericButtonWidget::ConfirmButtonSelection(bool bInSelected)
-{
-	if (ButtonConfirm)
+	if (OnButtonSelectionConfirmedEvent.IsBound())
 	{
-		ButtonConfirm->ConfirmButtonSelection(bInSelected);
+		if (OnButtonSelectionConfirmedEvent.Execute(this, bInSelected))
+		{
+			OnButtonSelectionInternal(bInSelected);
+		}
 	}
 	else
 	{
-		OnButtonSelectionConfirmed(bInSelected);
+		if (CanButtonSelectionInternal(bInSelected))
+		{
+			OnButtonSelectionInternal(bInSelected);
+		}
 	}
 }
 
-void UGenericButtonWidget::OnButtonSelectionConfirmed(bool bInSelected)
+bool UGenericButtonWidget::CanButtonSelectionInternal(bool bInSelected)
+{
+	return true;
+}
+
+void UGenericButtonWidget::OnButtonSelectionInternal(bool bInSelected)
 {
 	const bool bValueChanged = bInSelected != bSelected;
 
@@ -1002,17 +1001,7 @@ void UGenericButtonWidget::UpdateInternalStyle(const TSubclassOf<UGenericButtonS
 {
 	if (const UGenericButtonStyle* StyleCDO = GetStyleCDO(InClass))
 	{
-		OutStyle.Normal = StyleCDO->Normal;
-		OutStyle.Hovered = StyleCDO->Hovered;
-		OutStyle.Pressed = StyleCDO->Pressed;
-		OutStyle.NormalForeground = StyleCDO->NormalForeground;
-		OutStyle.HoveredForeground = StyleCDO->HoveredForeground;
-		OutStyle.PressedForeground = StyleCDO->PressedForeground;
-		OutStyle.DisabledForeground = StyleCDO->DisabledForeground;
-		OutStyle.HoveredSlateSound = StyleCDO->HoveredSlateSound;
-		OutStyle.PressedSlateSound = StyleCDO->PressedSlateSound;
-		OutStyle.NormalPadding = StyleCDO->NormalPadding;
-		OutStyle.PressedPadding = StyleCDO->PressedPadding;
+		StyleCDO->GetButtonStyle(OutStyle);
 	}
 }
 
@@ -1211,10 +1200,7 @@ UButtonSoundViewModel* UGenericButtonWidget::GetButtonSoundViewModel() const
 
 void UGenericButtonWidget::SetButtonSoundViewModel(UButtonSoundViewModel* InViewModel)
 {
-	if (ButtonSoundViewModel)
-	{
-		ButtonSoundViewModel->RemoveAllFieldValueChangedDelegates(this);
-	}
+	UNREGISTER_MVVM_PROPERTY(ButtonSoundViewModel)
 
 	ButtonSoundViewModel = InViewModel;
 

@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "PlayerInputConfigurationComponent.h"
 #include "Components/ActorComponent.h"
 #include "Interface/PawnInputMovementInterface.h"
 #include "PawnInputMovementComponent.generated.h"
@@ -26,7 +25,7 @@ enum class ECameraRig : uint8
  * 对接增强输入，提供简单运动接口
  */
 UCLASS(ClassGroup=(Developer), meta=(BlueprintSpawnableComponent), MinimalAPI)
-class UPawnInputMovementComponent : public UPlayerInputConfigurationComponent, public IPawnInputMovementInterface
+class UPawnInputMovementComponent : public UActorComponent, public IPawnInputMovementInterface
 {
 	GENERATED_BODY()
 

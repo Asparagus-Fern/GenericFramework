@@ -5,5 +5,8 @@
 DEFINE_LOG_CATEGORY(GenericLogProperty);
 
 UE_DEFINE_GAMEPLAY_TAG(TAG_Property, "Property");
+
 UE_DEFINE_GAMEPLAY_TAG(TAG_PropertyOption, "Property.Option");
 UE_DEFINE_GAMEPLAY_TAG(TAG_PropertyOption_Reset, "Property.Option.Reset");
+
+UE_DEFINE_GAMEPLAY_TAG(TAG_PropertyProxy, "Property.Proxy");

@@ -22,68 +22,70 @@ void UPropertyManager::Deinitialize()
 	UnRegisterManager();
 }
 
-UPropertyProxy* UPropertyManager::RegisterPropertyProxy(const TSubclassOf<UPropertyProxy>& InPropertyProxyClass)
+UPropertyProxy* UPropertyManager::RegisterPropertyProxy(FGameplayTag InPropertyProxyTag, const TSubclassOf<UPropertyProxy>& InPropertyProxyClass)
 {
-	if (ExistPropertyProxy(InPropertyProxyClass))
+	if (!InPropertyProxyTag.IsValid())
 	{
-		return GetPropertyProxy(InPropertyProxyClass);
+		GenericLOG(GenericLogProperty, Error, TEXT("PropertyProxyTag Is InValid"))
+		return nullptr;
+	}
+
+	if (!InPropertyProxyTag.MatchesAny(TAG_PropertyProxy.GetTag().GetSingleTagContainer()))
+	{
+		GenericLOG(GenericLogProperty, Error, TEXT("PropertyProxyTag Is Not Under Property.Proxy"))
+		return nullptr;
+	}
+
+	if (ExistPropertyProxy(InPropertyProxyTag))
+	{
+		return GetPropertyProxy(InPropertyProxyTag);
 	}
 
 	UPropertyProxy* NewPropertyProxy = NewObject<UPropertyProxy>(this, InPropertyProxyClass);
+	NewPropertyProxy->SetPropertyProxyTag(InPropertyProxyTag);
 	NewPropertyProxy->NativeOnCreate();
-	PropertyProxies.Add(NewPropertyProxy);
+
+	PropertyProxyMapping.Emplace(InPropertyProxyTag, NewPropertyProxy);
+	BROADCAST_UNIFIED_DELEGATE(Delegate_OnPropertyProxyRegister, BPDelegate_OnPropertyProxyRegister, InPropertyProxyTag, NewPropertyProxy);
 
 	return NewPropertyProxy;
 }
 
+void UPropertyManager::UnRegisterPropertyProxy(FGameplayTag InPropertyProxyTag)
+{
+	UnRegisterPropertyProxy(GetPropertyProxy(InPropertyProxyTag));
+}
+
 void UPropertyManager::UnRegisterPropertyProxy(UPropertyProxy* InPropertyProxy)
 {
-	if (!ExistPropertyProxy(InPropertyProxy))
+	if (!IsValid(InPropertyProxy))
 	{
+		GenericLOG(GenericLogProperty, Error, TEXT("PropertyProxy Is InValid"))
+		return;
+	}
+
+	FGameplayTag PropertyProxyTag = InPropertyProxy->GetPropertyProxyTag();
+	if (!ExistPropertyProxy(PropertyProxyTag))
+	{
+		GenericLOG(GenericLogProperty, Error, TEXT("PropertyProxy Is Already UnRegistered"))
 		return;
 	}
 
 	InPropertyProxy->NativeOnDestroy();
-	PropertyProxies.Remove(InPropertyProxy);
+	PropertyProxyMapping.Remove(PropertyProxyTag);
+	BROADCAST_UNIFIED_DELEGATE(Delegate_OnPropertyProxyUnRegister, BPDelegate_OnPropertyProxyUnRegister, PropertyProxyTag, InPropertyProxy);
 }
 
-bool UPropertyManager::ExistPropertyProxy(const TSubclassOf<UPropertyProxy>& InPropertyProxyClass)
+bool UPropertyManager::ExistPropertyProxy(FGameplayTag InPropertyProxyTag) const
 {
-	for (auto& PropertyProxy : PropertyProxies)
-	{
-		if (PropertyProxy->IsA(InPropertyProxyClass))
-		{
-			return true;
-		}
-	}
-	return false;
+	return PropertyProxyMapping.Contains(InPropertyProxyTag);
 }
 
-bool UPropertyManager::ExistPropertyProxy(const UPropertyProxy* InPropertyProxy)
+UPropertyProxy* UPropertyManager::GetPropertyProxy(FGameplayTag InPropertyProxyTag) const
 {
-	if (!IsValid(InPropertyProxy))
+	if (PropertyProxyMapping.Contains(InPropertyProxyTag))
 	{
-		return false;
-	}
-	
-	for (auto& PropertyProxy : PropertyProxies)
-	{
-		if (PropertyProxy->IsA(InPropertyProxy->GetClass()))
-		{
-			return true;
-		}
-	}
-	return false;
-}
-
-UPropertyProxy* UPropertyManager::GetPropertyProxy(const TSubclassOf<UPropertyProxy>& InPropertyProxyClass)
-{
-	for (auto& PropertyProxy : PropertyProxies)
-	{
-		if (PropertyProxy->IsA(InPropertyProxyClass))
-		{
-			return PropertyProxy;
-		}
+		return PropertyProxyMapping.FindRef(InPropertyProxyTag);
 	}
 	return nullptr;
 }
