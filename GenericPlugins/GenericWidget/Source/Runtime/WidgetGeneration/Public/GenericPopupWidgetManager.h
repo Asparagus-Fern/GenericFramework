@@ -23,6 +23,7 @@ public:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void Deinitialize() override;
 	virtual bool DoesSupportWorldType(const EWorldType::Type WorldType) const override;
+	static UGenericPopupWidgetManager* Get(const UObject* WorldContextObject);
 
 	/* Delegate From UWidgetManager */
 private:

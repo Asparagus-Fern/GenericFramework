@@ -31,7 +31,7 @@ enum class EIdleActionMethod : uint8
 /**
  * 
  */
-UCLASS(ClassGroup=(Developer), meta=(BlueprintSpawnableComponent), MinimalAPI)
+UCLASS(ClassGroup=(GenericFreamwork), meta=(BlueprintSpawnableComponent), MinimalAPI)
 class UPlayerInputIdleActionComponent : public UActorComponent
 {
 	GENERATED_BODY()

@@ -31,11 +31,6 @@ bool UGenericWidgetManager::DoesSupportWorldType(const EWorldType::Type WorldTyp
 	return WorldType == EWorldType::Game || WorldType == EWorldType::PIE;
 }
 
-void UGenericWidgetManager::HandleOnWorldMatchStarting(UWorld* InWorld)
-{
-	FManagerInterface::HandleOnWorldMatchStarting(InWorld);
-}
-
 void UGenericWidgetManager::HandleOnWorldEndPlay(UWorld* InWorld)
 {
 	FManagerInterface::HandleOnWorldEndPlay(InWorld);

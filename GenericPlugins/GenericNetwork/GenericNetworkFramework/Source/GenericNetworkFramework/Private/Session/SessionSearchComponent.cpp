@@ -23,42 +23,18 @@ void USessionSearchComponent::GetLifetimeReplicatedProps(TArray<class FLifetimeP
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 }
 
-void USessionSearchComponent::OpenSessionSearchPanel()
-{
-	// if (SessionSearchPanelClass && !SessionSearchPanel)
-	// {
-	// 	if (APlayerController* Player = UBPFunctions_Gameplay::GetPlayerControllerByUniqueNetID(this, APlayerController::StaticClass(), HostingPlayerId))
-	// 	{
-	// 		SessionSearchPanel = CreateWidget<USessionSearchPanel>(Player, SessionSearchPanelClass);
-	// 	}
-	// }
-	//
-	// if (SessionSearchPanel)
-	// {
-	// 	FGenericWidgetHelper::OpenGenericWidget(SessionSearchPanel);
-	// }
-}
-
-void USessionSearchComponent::CloseSessionSearchPanel()
-{
-	if (SessionSearchPanel)
-	{
-		FWidgetHelper::CloseGenericWidget(SessionSearchPanel);
-	}
-}
-
-bool USessionSearchComponent::FindSessionsByID(int32 HostingPlayerNum, UOnlineSessionSearchSettingsViewModel* InSettings)
+bool USessionSearchComponent::FindSessionsByID(int32 HostingPlayerNum)
 {
 	FUniqueNetIdRepl UniqueNetID;
 	if (UBPFunctions_Gameplay::GetPlayerUniqueNetIDByPlayerIndex(this, HostingPlayerNum, UniqueNetID))
 	{
-		FindSessionsByNetID(UniqueNetID, InSettings);
+		FindSessionsByNetID(UniqueNetID);
 	}
 
 	return false;
 }
 
-bool USessionSearchComponent::FindSessionsByNetID(const FUniqueNetIdRepl& HostingPlayerId, UOnlineSessionSearchSettingsViewModel* InSettings)
+bool USessionSearchComponent::FindSessionsByNetID(const FUniqueNetIdRepl& HostingPlayerId)
 {
 	UWorld* World = GetWorld();
 	if (!IsValid(World))
@@ -80,50 +56,58 @@ bool USessionSearchComponent::FindSessionsByNetID(const FUniqueNetIdRepl& Hostin
 		return false;
 	}
 
-
 	if (OnlineSessionSearchSettingsClass && !OnlineSessionSearchSettings)
 	{
 		OnlineSessionSearchSettings = NewObject<UOnlineSessionSearchSettingsViewModel>(this, OnlineSessionSearchSettingsClass);
 	}
 
-	if (SessionSearchPanel && FWidgetHelper::OpenGenericWidget(SessionSearchPanel))
+	if (!OnlineSessionSearchSettings)
 	{
+		GenericLOG(GenericLogNetwork, Error, TEXT("No Authority"))
 		return false;
 	}
-	else
+
+	if (!OnlineSessionSearchSettings->GetOnlineSessionSearchSettings(Settings))
 	{
-		UOnlineSessionSearchSettingsViewModel* UseSettings = IsValid(InSettings) ? InSettings : OnlineSessionSearchSettings.Get();
-
-		if (!UseSettings->GetOnlineSessionSearchSettings(Settings))
-		{
-			GenericLOG(GenericLogNetwork, Error, TEXT("Fail To Get Online Session Settings"))
-			return false;
-		}
-
-		FOnFindSessionsCompleteDelegate OnFindSessionsCompleteDelegate;
-		OnFindSessionsCompleteDelegate.BindUObject(this, &USessionSearchComponent::OnFindSessionsComplete);
-		OnlineSessionPtr->AddOnFindSessionsCompleteDelegate_Handle(OnFindSessionsCompleteDelegate);
-
-		FOnCancelFindSessionsCompleteDelegate OnCancelFindSessionsCompleteDelegate;
-		OnCancelFindSessionsCompleteDelegate.BindUObject(this, &USessionSearchComponent::OnCancelFindSessionsComplete);
-		OnlineSessionPtr->AddOnCancelFindSessionsCompleteDelegate_Handle(OnCancelFindSessionsCompleteDelegate);
-
-		if (!OnlineSessionPtr->FindSessions(*HostingPlayerId.GetUniqueNetId(), Settings.ToSharedRef()))
-		{
-			OnlineSessionPtr->ClearOnFindSessionsCompleteDelegates(this);
-			OnlineSessionPtr->ClearOnCancelFindSessionsCompleteDelegates(this);
-			return false;
-		}
-
-		FindSessionsInternal();
-		return true;
+		GenericLOG(GenericLogNetwork, Error, TEXT("Fail To Get Online Session Settings"))
+		return false;
 	}
+
+	FOnFindSessionsCompleteDelegate OnFindSessionsCompleteDelegate;
+	OnFindSessionsCompleteDelegate.BindUObject(this, &USessionSearchComponent::OnFindSessionsComplete);
+	OnlineSessionPtr->AddOnFindSessionsCompleteDelegate_Handle(OnFindSessionsCompleteDelegate);
+
+	FOnCancelFindSessionsCompleteDelegate OnCancelFindSessionsCompleteDelegate;
+	OnCancelFindSessionsCompleteDelegate.BindUObject(this, &USessionSearchComponent::OnCancelFindSessionsComplete);
+	OnlineSessionPtr->AddOnCancelFindSessionsCompleteDelegate_Handle(OnCancelFindSessionsCompleteDelegate);
+
+	if (!OnlineSessionPtr->FindSessions(*HostingPlayerId.GetUniqueNetId(), Settings.ToSharedRef()))
+	{
+		OnlineSessionPtr->ClearOnFindSessionsCompleteDelegates(this);
+		OnlineSessionPtr->ClearOnCancelFindSessionsCompleteDelegates(this);
+		return false;
+	}
+
+	GenericLOG(GenericLogNetwork, Display, TEXT("Find Sessions Start"))
+	OnFindSessionStart.Broadcast();
+
+	return true;
 }
 
-void USessionSearchComponent::FindSessionsInternal()
+UOnlineSessionSearchSettingsViewModel* USessionSearchComponent::GetOnlineSessionSearchSettings()
 {
-	OnFindSessionStart.Broadcast();
-	GenericLOG(GenericLogNetwork, Display, TEXT("Find Sessions Start"))
+	return OnlineSessionSearchSettings;
+}
+
+void USessionSearchComponent::SetOnlineSessionSearchSettings(UOnlineSessionSearchSettingsViewModel* InViewModel)
+{
+	UNREGISTER_MVVM_PROPERTY(OnlineSessionSearchSettings)
+
+	OnlineSessionSearchSettings = InViewModel;
+
+	if (OnlineSessionSearchSettings)
+	{
+	}
 }
 
 void USessionSearchComponent::OnFindSessionsComplete(bool bWasSuccessful)

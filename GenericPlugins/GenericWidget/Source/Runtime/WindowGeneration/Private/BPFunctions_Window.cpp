@@ -23,13 +23,3 @@ void UBPFunctions_Window::UnRegisterAllWindowWrapper()
 {
 	FWindowHelper::UnRegisterAllWindowWrapper();
 }
-
-FGameplayTag UBPFunctions_Window::OpenMessageDialogByClass(APlayerController* InPlayer, const TSubclassOf<UGenericMessageDialog>& MessageDialogClass, bool& Result)
-{
-	return FWindowHelper::OpenMessageDialog(InPlayer, MessageDialogClass, Result);
-}
-
-FGameplayTag UBPFunctions_Window::OpenMessageDialog(APlayerController* InPlayer, UGenericMessageDialog* MessageDialog, bool& Result)
-{
-	return FWindowHelper::OpenMessageDialog(InPlayer, MessageDialog, Result);
-}

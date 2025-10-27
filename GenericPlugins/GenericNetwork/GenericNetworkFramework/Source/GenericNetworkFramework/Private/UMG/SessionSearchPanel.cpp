@@ -16,4 +16,9 @@ void USessionSearchPanel::SetOnlineSessionSearchSettingsViewModel(UOnlineSession
 	UNREGISTER_MVVM_PROPERTY(OnlineSessionSearchSettingsViewModel);
 
 	OnlineSessionSearchSettingsViewModel = InViewModel;
+
+	if (OnlineSessionSearchSettingsViewModel)
+	{
+		
+	}
 }

@@ -20,7 +20,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnFindSessionCancel);
 /**
  * 
  */
-UCLASS(ClassGroup=(Developer), meta=(BlueprintSpawnableComponent), MinimalAPI)
+UCLASS(ClassGroup=(GenericFreamwork), meta=(BlueprintSpawnableComponent), MinimalAPI)
 class USessionSearchComponent : public UActorComponent
 {
 	GENERATED_BODY()
@@ -31,16 +31,16 @@ public:
 
 public:
 	UFUNCTION(BlueprintCallable)
-	void OpenSessionSearchPanel();
+	GENERICNETWORKFRAMEWORK_API bool FindSessionsByID(int32 HostingPlayerNum);
 
 	UFUNCTION(BlueprintCallable)
-	void CloseSessionSearchPanel();
+	GENERICNETWORKFRAMEWORK_API bool FindSessionsByNetID(const FUniqueNetIdRepl& HostingPlayerId);
+
+	UFUNCTION(BlueprintPure)
+	GENERICNETWORKFRAMEWORK_API UOnlineSessionSearchSettingsViewModel* GetOnlineSessionSearchSettings();
 
 	UFUNCTION(BlueprintCallable)
-	GENERICNETWORKFRAMEWORK_API bool FindSessionsByID(int32 HostingPlayerNum, UOnlineSessionSearchSettingsViewModel* InSettings = nullptr);
-
-	UFUNCTION(BlueprintCallable)
-	GENERICNETWORKFRAMEWORK_API bool FindSessionsByNetID(const FUniqueNetIdRepl& HostingPlayerId, UOnlineSessionSearchSettingsViewModel* InSettings = nullptr);
+	GENERICNETWORKFRAMEWORK_API void SetOnlineSessionSearchSettings(UOnlineSessionSearchSettingsViewModel* InViewModel);
 
 public:
 	UPROPERTY(BlueprintAssignable)
@@ -56,16 +56,8 @@ public:
 	FOnFindSessionCancel OnFindSessionCancel;
 
 protected:
-	GENERICNETWORKFRAMEWORK_API virtual void FindSessionsInternal();
 	GENERICNETWORKFRAMEWORK_API virtual void OnFindSessionsComplete(bool bWasSuccessful);
 	GENERICNETWORKFRAMEWORK_API virtual void OnCancelFindSessionsComplete(bool bWasSuccessful);
-
-protected:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TSubclassOf<USessionSearchPanel> SessionSearchPanelClass = nullptr;
-
-	UPROPERTY()
-	TObjectPtr<USessionSearchPanel> SessionSearchPanel = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<UOnlineSessionSearchSettingsViewModel> OnlineSessionSearchSettingsClass = nullptr;

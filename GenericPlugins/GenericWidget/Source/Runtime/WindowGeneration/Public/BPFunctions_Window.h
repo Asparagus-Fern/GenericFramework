@@ -7,7 +7,6 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "BPFunctions_Window.generated.h"
 
-class UGenericMessageDialog;
 class UGenericWindowViewModel;
 class UGenericWindowWrapper;
 
@@ -31,10 +30,4 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Window", DisplayName="UnRegister All Window Wrapper")
 	static void UnRegisterAllWindowWrapper();
-
-	UFUNCTION(BlueprintCallable, Category = "Window")
-	static FGameplayTag OpenMessageDialogByClass(APlayerController* InPlayer, const TSubclassOf<UGenericMessageDialog>& MessageDialogClass, bool& Result);
-
-	UFUNCTION(BlueprintCallable, Category = "Window")
-	static FGameplayTag OpenMessageDialog(APlayerController* InPlayer, UGenericMessageDialog* MessageDialog, bool& Result);
 };

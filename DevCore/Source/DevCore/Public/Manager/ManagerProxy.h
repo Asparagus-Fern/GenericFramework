@@ -22,36 +22,20 @@ class UManagerProxy final : public UGenericObject, public IWorldInterface
 	GENERATED_BODY()
 
 public:
+	UFUNCTION(BlueprintPure, Category="Manager")
+	static DEVCORE_API UManagerProxy* GetManagerProxy();
+	
 	void Initialize();
 	void Deinitialize();
 
-	UFUNCTION(BlueprintPure, Category="Manager")
-	static DEVCORE_API UManagerProxy* GetManagerProxy();
-
-public:
 	DEVCORE_API bool ExistManager(FGuid InManagerID) const;
 	DEVCORE_API bool ExistManager(const UObject* InManagerOwner) const;
-	DEVCORE_API bool ExistManager(const TSubclassOf<UObject>& InManagerOwnerClass) const;
 	DEVCORE_API bool GetManagerHandle(FGuid InManagerID, FManagerHandle& OutManagerHandle) const;
 	DEVCORE_API bool GetManagerOwner(FGuid InManagerID, UObject*& OutManagerOwner) const;
 	DEVCORE_API bool GetManager(FGuid InManagerID, FManagerInterface*& OutManager) const;
 	DEVCORE_API TArray<FManagerHandle> GetAllManagerHandles() const;
 
 public:
-	/* Is Specific Class Of Manager Object Exist */
-	template <typename T>
-	bool ExistManagerOwner()
-	{
-		for (const auto& Manager : ManagerList)
-		{
-			if (Manager.Value.GetManagerOwner()->GetClass() == T::StaticClass())
-			{
-				return true;
-			}
-		}
-		return false;
-	}
-
 	/* Get Specific Manager Object By Class */
 	template <typename T>
 	T* GetManagerOwner()

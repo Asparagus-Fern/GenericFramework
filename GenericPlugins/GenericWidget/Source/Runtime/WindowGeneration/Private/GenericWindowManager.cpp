@@ -2,13 +2,9 @@
 
 #include "GenericWindowManager.h"
 
-#include "GenericMessageDialog.h"
 #include "GenericWindowType.h"
 #include "GenericWindowViewModel.h"
 #include "GenericWindowWrapper.h"
-#include "MessageDialogSettings.h"
-#include "Blueprint/UserWidget.h"
-#include "StaticFunctions/StaticFunctions_Object.h"
 
 bool UGenericWindowManager::ShouldCreateSubsystem(UObject* Outer) const
 {
@@ -106,69 +102,37 @@ void UGenericWindowManager::UnRegisterAllWindowWrapper()
 	}
 }
 
-FGameplayTag UGenericWindowManager::OpenMessageDialog(APlayerController* InPlayer, const TSubclassOf<UGenericMessageDialog>& MessageDialogClass, bool& Result)
+UGenericWindowWrapper* FWindowHelper::RegisterWindowWrapper(APlayerController* InPlayer, const TSubclassOf<UGenericWindowViewModel>& WindowViewModelClass, bool& Result)
 {
-	if (!IsValid(InPlayer))
+	if (UGenericWindowManager* GenericWindowManager = GetManagerOwner<UGenericWindowManager>())
 	{
-		GenericLOG(GenericLogWindow, Error, TEXT("Player Is InValid"))
-		return FGameplayTag::EmptyTag;
+		return GenericWindowManager->RegisterWindowWrapper(InPlayer, WindowViewModelClass, Result);
 	}
-
-	if (!MessageDialogClass)
-	{
-		GenericLOG(GenericLogWindow, Error, TEXT("MessageDialogClass Is InValid"))
-		return FGameplayTag::EmptyTag;
-	}
-
-	UGenericMessageDialog* NewMessageDialog = CreateWidget<UGenericMessageDialog>(InPlayer, MessageDialogClass);
-	FGameplayTag ResultDialogType = OpenMessageDialog(InPlayer, NewMessageDialog, Result);
-
-	if (!Result)
-	{
-		NewMessageDialog->MarkAsGarbage();
-		return FGameplayTag::EmptyTag;
-	}
-
-	return ResultDialogType;
+	return nullptr;
 }
 
-FGameplayTag UGenericWindowManager::OpenMessageDialog(APlayerController* InPlayer, UGenericMessageDialog* MessageDialog, bool& Result)
+UGenericWindowWrapper* FWindowHelper::RegisterWindowWrapper(APlayerController* InPlayer, UGenericWindowViewModel* WindowViewModel, bool& Result)
 {
-	FGameplayTag ResultDialogType;
-
-	if (!IsValid(InPlayer))
+	if (UGenericWindowManager* GenericWindowManager = GetManagerOwner<UGenericWindowManager>())
 	{
-		GenericLOG(GenericLogWindow, Error, TEXT("Player Is InValid"))
-		return ResultDialogType;
+		return GenericWindowManager->RegisterWindowWrapper(InPlayer, WindowViewModel, Result);
 	}
+	return nullptr;
+}
 
-	if (!UMessageDialogSettings::Get()->MessageDialogWindowClass)
+bool FWindowHelper::UnRegisterWindowWrapper(UGenericWindowWrapper* InWrapper)
+{
+	if (UGenericWindowManager* GenericWindowManager = GetManagerOwner<UGenericWindowManager>())
 	{
-		GenericLOG(GenericLogWindow, Error, TEXT("MessageDialogWindowClass Is InValid"))
-		return ResultDialogType;
+		return GenericWindowManager->UnRegisterWindowWrapper(InWrapper);
 	}
+	return false;
+}
 
-	TSubclassOf<UGenericWindowViewModel> WindowClass = FStaticFunctions_Object::LoadClass<UGenericWindowViewModel>(UMessageDialogSettings::Get()->MessageDialogWindowClass);
-	UGenericWindowViewModel* MessageDialogWindowViewModel = NewObject<UGenericWindowViewModel>(InPlayer, WindowClass);
-
-	/* Register Window Wrapper */
-	UGenericWindowWrapper* Wrapper = RegisterWindowWrapper(InPlayer, MessageDialogWindowViewModel, Result);
-	if (Result)
+void FWindowHelper::UnRegisterAllWindowWrapper()
+{
+	if (UGenericWindowManager* GenericWindowManager = GetManagerOwner<UGenericWindowManager>())
 	{
-		Wrapper->SetWindowContentObject(MessageDialog);
-
-		/* If This Window Is a Modal Window, Will Break Game Thread Here */
-		Wrapper->OpenWindow();
-
-		/* Return The Result And Unregister It */
-		ResultDialogType = MessageDialog->GetResultDialogType();
-		UnRegisterWindowWrapper(Wrapper);
+		return GenericWindowManager->UnRegisterAllWindowWrapper();
 	}
-	else
-	{
-		GenericLOG(GenericLogWindow, Error, TEXT("Fail To Open Message Dialog"))
-		MessageDialogWindowViewModel->MarkAsGarbage();
-	}
-
-	return ResultDialogType;
 }

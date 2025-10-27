@@ -66,7 +66,7 @@ public:
 /**
  * 
  */
-UCLASS(ClassGroup=(Developer), meta=(BlueprintSpawnableComponent), ShowCategories=(Activation), HideCategories=(UserInterface), MinimalAPI)
+UCLASS(ClassGroup=(GenericFreamwork), meta=(BlueprintSpawnableComponent), ShowCategories=(Activation), HideCategories=(UserInterface), MinimalAPI)
 class UWorldWidgetComponent : public UWidgetComponent
 {
 	GENERATED_BODY()

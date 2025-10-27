@@ -17,7 +17,7 @@ void UUniqueNetworkIDComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (GetOwnerRole() == ROLE_Authority || GetOwnerRole() == ROLE_None)
+	if (GetOwnerRole() == ROLE_Authority)
 	{
 		RefreshUniqueNetworkID();
 	}

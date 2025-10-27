@@ -21,6 +21,25 @@ UManagerProxy* UManagerProxy::GetManagerProxy()
 	return Instance;
 }
 
+void UManagerProxy::Initialize()
+{
+	if (bIsInitialize)
+	{
+		return;
+	}
+
+	bIsInitialize = true;
+	FWorldDelegates::OnPostWorldCreation.AddUObject(this, &UManagerProxy::HandleOnWorldCreationInternal);
+	FWorldDelegates::OnWorldBeginTearDown.AddUObject(this, &UManagerProxy::HandleOnWorldBeginTearDownInternal);
+}
+
+void UManagerProxy::Deinitialize()
+{
+	FWorldDelegates::OnPostWorldCreation.RemoveAll(this);
+	FWorldDelegates::OnWorldBeginTearDown.RemoveAll(this);
+	ManagerList.Reset();
+}
+
 bool UManagerProxy::ExistManager(const FGuid InManagerID) const
 {
 	return ManagerList.Contains(InManagerID);
@@ -34,22 +53,6 @@ bool UManagerProxy::ExistManager(const UObject* InManagerOwner) const
 	for (auto& ManagerHandle : ManagerHandles)
 	{
 		if (ManagerHandle.GetManagerOwner() == InManagerOwner)
-		{
-			return true;
-		}
-	}
-
-	return false;
-}
-
-bool UManagerProxy::ExistManager(const TSubclassOf<UObject>& InManagerOwnerClass) const
-{
-	TArray<FManagerHandle> ManagerHandles;
-	ManagerList.GenerateValueArray(ManagerHandles);
-
-	for (auto& ManagerHandle : ManagerHandles)
-	{
-		if (ManagerHandle.GetManagerOwner()->GetClass() == InManagerOwnerClass)
 		{
 			return true;
 		}
@@ -185,7 +188,7 @@ bool UManagerProxy::RegisterManager(const FManagerHandle& InManagerHandle, FGuid
 		return false;
 	}
 
-	if (ExistManager(InManagerHandle.GetManagerID()) || ExistManager(InManagerHandle.GetManagerOwner()->GetClass()))
+	if (ExistManager(InManagerHandle.GetManagerID()))
 	{
 		GenericLOG(GenericLogManager, Warning, TEXT("InManager Is Already Register"))
 		return false;
@@ -234,21 +237,4 @@ bool UManagerProxy::UnRegisterManager(FGuid InManagerID)
 	return false;
 }
 
-void UManagerProxy::Initialize()
-{
-	if (bIsInitialize)
-	{
-		return;
-	}
 
-	bIsInitialize = true;
-	FWorldDelegates::OnPostWorldCreation.AddUObject(this, &UManagerProxy::HandleOnWorldCreationInternal);
-	FWorldDelegates::OnWorldBeginTearDown.AddUObject(this, &UManagerProxy::HandleOnWorldBeginTearDownInternal);
-}
-
-void UManagerProxy::Deinitialize()
-{
-	FWorldDelegates::OnPostWorldCreation.RemoveAll(this);
-	FWorldDelegates::OnWorldBeginTearDown.RemoveAll(this);
-	ManagerList.Reset();
-}

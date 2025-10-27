@@ -30,13 +30,6 @@ public:
 	DEVCORE_API FGuid GetManagerID() const;
 	DEVCORE_API FManagerInterface* GetManager() const;
 
-public:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	FName ManagerName = NAME_None;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	int32 ManagerOrder = INDEX_NONE;
-
 private:
 	UPROPERTY()
 	TObjectPtr<UObject> ManagerOwner = nullptr;

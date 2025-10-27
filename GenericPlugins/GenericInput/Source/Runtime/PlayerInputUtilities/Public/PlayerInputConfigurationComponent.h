@@ -37,7 +37,7 @@ public:
 /**
  * 
  */
-UCLASS(ClassGroup=(Developer), meta=(BlueprintSpawnableComponent), MinimalAPI)
+UCLASS(ClassGroup=(GenericFreamwork), meta=(BlueprintSpawnableComponent), MinimalAPI)
 class UPlayerInputConfigurationComponent : public UActorComponent
 {
 	GENERATED_BODY()

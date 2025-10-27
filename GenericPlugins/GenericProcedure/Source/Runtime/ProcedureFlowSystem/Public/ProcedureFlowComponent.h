@@ -10,7 +10,7 @@
 
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_ProcedureFlow);
 
-UCLASS(ClassGroup=(Developer), meta=(BlueprintSpawnableComponent), MinimalAPI)
+UCLASS(ClassGroup=(GenericFreamwork), meta=(BlueprintSpawnableComponent), MinimalAPI)
 class UProcedureFlowComponent : public USceneComponent, public IProcedureFlowInterface
 {
 	GENERATED_BODY()

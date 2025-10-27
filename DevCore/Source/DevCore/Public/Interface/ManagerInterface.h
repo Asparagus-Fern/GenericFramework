@@ -12,6 +12,8 @@
 	DelegateName.Broadcast(__VA_ARGS__); \
 	BPDelegateName.Broadcast(__VA_ARGS__);
 
+#define REGISTER_MANAGER(ManagerName) \
+
 /**
  * 
  */
@@ -27,9 +29,21 @@ protected:
 	virtual void HandleOnWorldEndPlay(UWorld* InWorld) override { return; }
 	virtual void HandleOnWorldBeginTearDown(UWorld* InWorld) override { return; }
 
-	/* FCoreInternalManager */
+	/* FManagerInterface */
 public:
 	virtual bool GetManagerHandle(FManagerHandle& OutManagerHandle);
+
+	template <typename T, typename... ArgTypes>
+	static T* GetManager(ArgTypes&&... Args)
+	{
+		// GEngine->GetEngineSubsystem<USubsystem>();
+		// GEditor->GetEditorSubsystem<USubsystem>();
+		// UGameplayStatics::GetGameInstance(WorldContextObject)->GetSubsystem<USubsystem>();
+		// GEngine->GetWorldFromContextObjectChecked(WorldContextObject)->GetSubsystem<USubsystem>();
+		// UGameplayStatics::GetPlayerController(WorldContextObject,0)->GetLocalPlayer()->GetSubsystem<USubsystem>();
+
+		return T::Get(Forward<ArgTypes>(Args)...);
+	}
 
 protected:
 	void RegisterManager(UObject* InOwner);

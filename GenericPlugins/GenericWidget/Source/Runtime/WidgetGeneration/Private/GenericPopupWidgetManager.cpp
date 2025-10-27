@@ -6,6 +6,7 @@
 #include "GenericGameSlotManager.h"
 #include "GenericWidgetManager.h"
 #include "Base/GenericPopupWidget.h"
+#include "Kismet/GameplayStatics.h"
 #include "UWidget/GameplayTagSlot.h"
 
 bool UGenericPopupWidgetManager::ShouldCreateSubsystem(UObject* Outer) const
@@ -26,15 +27,22 @@ void UGenericPopupWidgetManager::Initialize(FSubsystemCollectionBase& Collection
 void UGenericPopupWidgetManager::Deinitialize()
 {
 	Super::Deinitialize();
-	UnRegisterManager();
-
+	
 	UGenericWidgetManager::Delegate_PostWidgetOpened.RemoveAll(this);
 	UGenericWidgetManager::Delegate_PostWidgetClosed.RemoveAll(this);
+
+	UnRegisterManager();
 }
 
 bool UGenericPopupWidgetManager::DoesSupportWorldType(const EWorldType::Type WorldType) const
 {
 	return WorldType == EWorldType::Game || WorldType == EWorldType::PIE;
+}
+
+UGenericPopupWidgetManager* UGenericPopupWidgetManager::Get(const UObject* WorldContextObject)
+{
+	// return GEngine->GetWorldFromContextObjectChecked(WorldContextObject)->GetSubsystem<UGenericPopupWidgetManager>();
+	return nullptr;
 }
 
 void UGenericPopupWidgetManager::PostWidgetOpened(UGenericWidget* InWidget)

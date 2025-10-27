@@ -12,8 +12,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUniqueNetworkIDChanged, const FUn
 /**
  * 
  */
-UCLASS(ClassGroup=(Developer), meta=(BlueprintSpawnableComponent))
-class GENERICNETWORKFRAMEWORK_API UUniqueNetworkIDComponent : public UActorComponent
+UCLASS(ClassGroup=(GenericFreamwork), meta=(BlueprintSpawnableComponent), MinimalAPI)
+class UUniqueNetworkIDComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
@@ -24,17 +24,17 @@ public:
 
 public:
 	UFUNCTION(BlueprintPure)
-	bool GetUniqueNetworkID(FUniqueNetworkID& OutUniqueNetworkID) const;
+	GENERICNETWORKFRAMEWORK_API bool GetUniqueNetworkID(FUniqueNetworkID& OutUniqueNetworkID) const;
 
 	UFUNCTION(BlueprintCallable)
-	void RefreshUniqueNetworkID();
+	GENERICNETWORKFRAMEWORK_API void RefreshUniqueNetworkID();
 
 	UPROPERTY(BlueprintAssignable)
 	FOnUniqueNetworkIDChanged OnUniqueNetworkIDChangedEvent;
 
 protected:
 	UFUNCTION(BlueprintImplementableEvent)
-	void OnUniqueNetworkIDChanged(const FUniqueNetworkID& InUniqueNetworkID);
+	GENERICNETWORKFRAMEWORK_API void OnUniqueNetworkIDChanged(const FUniqueNetworkID& InUniqueNetworkID);
 
 private:
 	UFUNCTION(Server, Reliable)
