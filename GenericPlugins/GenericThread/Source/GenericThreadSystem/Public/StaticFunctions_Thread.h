@@ -6,7 +6,7 @@
 #include "GenericThread.h"
 // #include "StaticFunctions_Thread.generated.h"
 
-template <typename T, typename... ArgTypes>
+template <typename T = FGenericThread, typename... ArgTypes>
 static TSharedPtr<T> NewGenericThread(ArgTypes&&... Args)
 {
 	TSharedPtr<T> Result = T::CreateThread(Forward<ArgTypes>(Args)...);

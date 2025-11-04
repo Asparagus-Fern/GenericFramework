@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
-#include "Generic/GenericObject.h"
+#include "Obect/GenericObject.h"
 #include "GenericButtonBuilder.generated.h"
 
 class UButtonSoundViewModel;

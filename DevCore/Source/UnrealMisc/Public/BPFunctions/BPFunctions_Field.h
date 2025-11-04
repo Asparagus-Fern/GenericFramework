@@ -5,10 +5,9 @@
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "Type/DebugType.h"
+#include "Type/FieldType.h"
 #include "UObject/PropertyAccessUtil.h"
 #include "BPFunctions_Field.generated.h"
-
-DECLARE_LOG_CATEGORY_EXTERN(GenericLogField, Log, All);
 
 /**
  * 

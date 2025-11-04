@@ -11,7 +11,9 @@ public class PropertySystem : ModuleRules
 			{
 				"Core",
 				"DevCore",
-				"DevSlateCore", 
+				"DevSlateCore",
+				"WidgetGeneration",
+				"WidgetGroupGeneration"
 			}
 		);
 
@@ -29,9 +31,6 @@ public class PropertySystem : ModuleRules
 				"ModelViewViewModel",
 				"PropertyPath",
 				"GameplayTags",
-
-				"WidgetGeneration",
-				"WidgetGroupGeneration"
 			}
 		);
 

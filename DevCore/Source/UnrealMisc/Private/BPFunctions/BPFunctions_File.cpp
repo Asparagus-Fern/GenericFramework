@@ -1,6 +1,5 @@
 ﻿// Copyright ChenTaiye 2025. All Rights Reserved.
 
-
 #include "BPFunctions/BPFunctions_File.h"
 
 #include "HAL/PlatformFileManager.h"
@@ -283,6 +282,15 @@ bool UBPFunctions_File::SaveFileDialog(FString FileName, FString FileType, TArra
 	}
 
 	return false;
+}
+
+FString UBPFunctions_File::GetAndroidRootDir()
+{
+#if PLATFORM_ANDROID
+	return TEXT("/sdcard");
+#else
+	return TEXT("");
+#endif
 }
 
 #undef LOCTEXT_NAMESPACE

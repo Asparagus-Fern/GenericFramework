@@ -1,6 +1,5 @@
 ﻿// Copyright ChenTaiye 2025. All Rights Reserved.
 
-
 #include "BPFunctions/BPFunctions_Math.h"
 
 FVector UBPFunctions_Math::Vector_MiddleDegrees(const FVector& V1, const FVector& V2, const float Alpha, const float Degrees)

@@ -1,6 +1,6 @@
 ﻿#include "LevelStreaming.h"
 
-#include "LevelStreamingManager.h"
+#include "LevelStreamingSubsystem.h"
 
 #define LOCTEXT_NAMESPACE "FLevelStreamingModule"
 

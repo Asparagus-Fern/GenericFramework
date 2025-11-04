@@ -1,16 +1,15 @@
 ﻿// Copyright ChenTaiye 2025. All Rights Reserved.
 
-
 #include "Tools/OpenDeveloperSetting.h"
 
 #include "DevCoreStyle.h"
-#include "DevFrameworkEdSubsystem.h"
 #include "ISettingsCategory.h"
 #include "ISettingsContainer.h"
 #include "ISettingsEditorModel.h"
 #include "ISettingsEditorModule.h"
 #include "ISettingsModule.h"
-#include "Manager/ManagerSettings.h"
+#include "Settings/GenericGlobalSettings.h"
+#include "Subsystem/GenericFrameworkEdSubsystem.h"
 
 #define LOCTEXT_NAMESPACE "FApplicationEditorModule"
 
@@ -18,7 +17,7 @@ void UOpenDeveloperSetting::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
 
-	FDevFrameworkDelegate::OnToolBarSectionExtend.AddUObject(this, &UOpenDeveloperSetting::RegisterToolBarDeveloperSetting);
+	UGenericFrameworkEdSubsystem::OnToolBarSectionExtend.AddUObject(this, &UOpenDeveloperSetting::RegisterToolBarDeveloperSetting);
 
 	/* Create Developer Settings */
 	{
@@ -28,10 +27,10 @@ void UOpenDeveloperSetting::Initialize(FSubsystemCollectionBase& Collection)
 		{
 			SettingsModule->RegisterSettings
 			(
-				"Developer", "Global", "Global",
+				"GenericFramework", "Global", "Global",
 				LOCTEXT("ManagerGlobalSettingsSettingsName", "Manager"),
 				LOCTEXT("ManagerGlobalSettingsDescription", "Manager Settings"),
-				GetMutableDefault<UManagerSettings>()
+				GetMutableDefault<UGenericGlobalSettings>()
 			);
 
 			SettingsModule->RegisterViewer("Developer", *this);
@@ -48,7 +47,7 @@ void UOpenDeveloperSetting::Deinitialize()
 {
 	Super::Deinitialize();
 
-	FDevFrameworkDelegate::OnToolBarSectionExtend.RemoveAll(this);
+	UGenericFrameworkEdSubsystem::OnToolBarSectionExtend.RemoveAll(this);
 
 	ISettingsModule* SettingsModule = FModuleManager::GetModulePtr<ISettingsModule>("Settings");
 
@@ -108,7 +107,7 @@ void UOpenDeveloperSetting::RegisterToolBarDeveloperSetting(FToolMenuSection& To
 		FToolMenuEntry::InitToolBarButton
 		(
 			"OpenDeveloperSetting",
-			FUIAction(FExecuteAction::CreateUObject(this, &UOpenDeveloperSetting::OpenToolBarManagerSetting)),
+			FUIAction(FExecuteAction::CreateUObject(this, &UOpenDeveloperSetting::OpenToolBarDeveloperSetting)),
 			TAttribute<FText>(),
 			LOCTEXT("OpenDeveloperSetting_ToolTip", "Click To Open Developer Settings"),
 			FSlateIcon(FDevCoreStyle::GetStyleSetName(), "Developer.DeveloperSetting", "Developer.DeveloperSetting.Small")
@@ -116,7 +115,7 @@ void UOpenDeveloperSetting::RegisterToolBarDeveloperSetting(FToolMenuSection& To
 	);
 }
 
-void UOpenDeveloperSetting::OpenToolBarManagerSetting()
+void UOpenDeveloperSetting::OpenToolBarDeveloperSetting()
 {
 	ISettingsModule& SettingsModule = FModuleManager::LoadModuleChecked<ISettingsModule>("Settings");
 	SettingsModule.ShowViewer("Developer", "Global", "Global");

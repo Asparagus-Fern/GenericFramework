@@ -11,6 +11,7 @@ public class ProcedureFlowApplication : ModuleRules
 			{
 				"Core",
 				"DevCore",
+				"GenericCameraSystem",
 				"ProcedureFlowSystem",
 			}
 		);
@@ -23,9 +24,8 @@ public class ProcedureFlowApplication : ModuleRules
 				"Slate",
 				"SlateCore",
 
-				"GameplayTags", 
-				"LevelStreaming", 
-				"CameraSystem"
+				"GameplayTags",
+				"LevelStreaming",
 			}
 		);
 	}

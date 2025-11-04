@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "ExtraProcType.h"
-#include "Generic/GenericSettings.h"
+#include "Settings/GenericSettings.h"
 #include "ExtraProcSettings.generated.h"
 
 /**

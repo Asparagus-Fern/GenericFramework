@@ -19,66 +19,66 @@ class PROCEDUREFLOWSYSTEM_API UBPFunctions_ProcedureFlow : public UBlueprintFunc
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintCallable)
-	static void RegisterProcedureFlowByActor(AProcedureFlowActor* InActor);
+	UFUNCTION(BlueprintCallable, meta=(WorldContext = "WorldContextObject"))
+	static void RegisterProcedureFlowByActor(const UObject* WorldContextObject, AProcedureFlowActor* InActor);
 
-	UFUNCTION(BlueprintCallable)
-	static void RegisterProcedureFlowByComponent(UProcedureFlowComponent* InComponent);
+	UFUNCTION(BlueprintCallable, meta=(WorldContext = "WorldContextObject"))
+	static void RegisterProcedureFlowByComponent(const UObject* WorldContextObject, UProcedureFlowComponent* InComponent);
 
-	UFUNCTION(BlueprintCallable)
-	static void EnterProcedureFlowByActor(AProcedureFlowActor* InActor);
+	UFUNCTION(BlueprintCallable, meta=(WorldContext = "WorldContextObject"))
+	static void EnterProcedureFlowByActor(const UObject* WorldContextObject, AProcedureFlowActor* InActor);
 
-	UFUNCTION(BlueprintCallable)
-	static void EnterProcedureFlowByComponent(UProcedureFlowComponent* InComponent);
+	UFUNCTION(BlueprintCallable, meta=(WorldContext = "WorldContextObject"))
+	static void EnterProcedureFlowByComponent(const UObject* WorldContextObject, UProcedureFlowComponent* InComponent);
 
-	UFUNCTION(BlueprintCallable, meta=(GameplayTagFilter="Procedure.Flow"))
-	static void EnterProcedureFlowByTag(FGameplayTag InProcedureFlowTag);
+	UFUNCTION(BlueprintCallable, meta=(WorldContext = "WorldContextObject", GameplayTagFilter="ProcedureFlow"))
+	static void EnterProcedureFlowByTag(const UObject* WorldContextObject, FGameplayTag InProcedureFlowTag);
 
-	UFUNCTION(BlueprintCallable)
-	static void RefreshCurrentProcedureFlow();
+	UFUNCTION(BlueprintCallable, meta=(WorldContext = "WorldContextObject"))
+	static void RefreshCurrentProcedureFlow(const UObject* WorldContextObject);
 
-	UFUNCTION(BlueprintCallable)
-	static void ReEnterCurrentProcedureFlow();
+	UFUNCTION(BlueprintCallable, meta=(WorldContext = "WorldContextObject"))
+	static void ReEnterCurrentProcedureFlow(const UObject* WorldContextObject);
 
-	UFUNCTION(BlueprintCallable)
-	static void ExitProcedureFlowByActor(AProcedureFlowActor* InActor);
+	UFUNCTION(BlueprintCallable, meta=(WorldContext = "WorldContextObject"))
+	static void ExitProcedureFlowByActor(const UObject* WorldContextObject, AProcedureFlowActor* InActor);
 
-	UFUNCTION(BlueprintCallable)
-	static void ExitProcedureFlowByComponent(UProcedureFlowComponent* InComponent);
+	UFUNCTION(BlueprintCallable, meta=(WorldContext = "WorldContextObject"))
+	static void ExitProcedureFlowByComponent(const UObject* WorldContextObject, UProcedureFlowComponent* InComponent);
 
-	UFUNCTION(BlueprintCallable, meta=(GameplayTagFilter="Procedure.Flow"))
-	static void ExitProcedureFlowByTag(FGameplayTag InProcedureFlowTag);
+	UFUNCTION(BlueprintCallable, meta=(WorldContext = "WorldContextObject", GameplayTagFilter="ProcedureFlow"))
+	static void ExitProcedureFlowByTag(const UObject* WorldContextObject, FGameplayTag InProcedureFlowTag);
 
-	UFUNCTION(BlueprintCallable)
-	static void UnRegisterProcedureFlowByActor(AProcedureFlowActor* InActor);
+	UFUNCTION(BlueprintCallable, meta=(WorldContext = "WorldContextObject"))
+	static void UnRegisterProcedureFlowByActor(const UObject* WorldContextObject, AProcedureFlowActor* InActor);
 
-	UFUNCTION(BlueprintCallable)
-	static void UnRegisterProcedureFlowByComponent(UProcedureFlowComponent* InComponent);
+	UFUNCTION(BlueprintCallable, meta=(WorldContext = "WorldContextObject"))
+	static void UnRegisterProcedureFlowByComponent(const UObject* WorldContextObject, UProcedureFlowComponent* InComponent);
 
-	UFUNCTION(BlueprintPure)
-	static bool IsProcedureFlowActorActived(const AProcedureFlowActor* InActor);
+	UFUNCTION(BlueprintPure, meta=(WorldContext = "WorldContextObject"))
+	static bool IsProcedureFlowActorActived(const UObject* WorldContextObject, const AProcedureFlowActor* InActor);
 
-	UFUNCTION(BlueprintPure)
-	static bool IsProcedureFlowComponentActived(const UProcedureFlowComponent* InComponent);
+	UFUNCTION(BlueprintPure, meta=(WorldContext = "WorldContextObject"))
+	static bool IsProcedureFlowComponentActived(const UObject* WorldContextObject, const UProcedureFlowComponent* InComponent);
 
-	UFUNCTION(BlueprintPure, meta=(GameplayTagFilter="Procedure.Flow"))
-	static bool IsProcedureFlowActived(FGameplayTag InProcedureFlowTag);
+	UFUNCTION(BlueprintPure, meta=(WorldContext = "WorldContextObject", GameplayTagFilter="ProcedureFlow"))
+	static bool IsProcedureFlowActived(const UObject* WorldContextObject, FGameplayTag InProcedureFlowTag);
 
-	UFUNCTION(BlueprintPure)
-	static FGameplayTag GetCurrentProcedureFlowTag();
+	UFUNCTION(BlueprintPure, meta=(WorldContext = "WorldContextObject"))
+	static FGameplayTag GetCurrentProcedureFlowTag(const UObject* WorldContextObject);
 
-	UFUNCTION(BlueprintPure)
-	static UProcedureFlowComponent* GetCurrentProcedureFlowComponent();
+	UFUNCTION(BlueprintPure, meta=(WorldContext = "WorldContextObject"))
+	static UProcedureFlowComponent* GetCurrentProcedureFlowComponent(const UObject* WorldContextObject);
 
-	UFUNCTION(BlueprintPure, meta = (DeterminesOutputType = "InClass"))
-	static UProcedureFlowComponent* GetCurrentProcedureFlowComponentByClass(const TSubclassOf<UProcedureFlowComponent> InClass);
+	UFUNCTION(BlueprintPure, meta = (WorldContext = "WorldContextObject", DeterminesOutputType = "InClass"))
+	static UProcedureFlowComponent* GetCurrentProcedureFlowComponentByClass(const UObject* WorldContextObject, const TSubclassOf<UProcedureFlowComponent> InClass);
 
-	UFUNCTION(BlueprintPure, meta=(GameplayTagFilter="Procedure.Flow"))
-	static UProcedureFlowComponent* GetProcedureFlowComponent(FGameplayTag InProcedureFlowTag);
+	UFUNCTION(BlueprintPure, meta=(WorldContext = "WorldContextObject", GameplayTagFilter="ProcedureFlow"))
+	static UProcedureFlowComponent* GetProcedureFlowComponent(const UObject* WorldContextObject, FGameplayTag InProcedureFlowTag);
 
-	UFUNCTION(BlueprintPure, meta=(GameplayTagFilter="Procedure.Flow", DeterminesOutputType = "InClass"))
-	static UProcedureFlowComponent* GetProcedureFlowComponentByClass(FGameplayTag InProcedureFlowTag, const TSubclassOf<UProcedureFlowComponent> InClass);
+	UFUNCTION(BlueprintPure, meta=(WorldContext = "WorldContextObject", GameplayTagFilter="ProcedureFlow", DeterminesOutputType = "InClass"))
+	static UProcedureFlowComponent* GetProcedureFlowComponentByClass(const UObject* WorldContextObject, FGameplayTag InProcedureFlowTag, const TSubclassOf<UProcedureFlowComponent> InClass);
 
-	UFUNCTION(BlueprintPure)
-	static TArray<UProcedureFlowComponent*> GetProcedureFlowComponents();
+	UFUNCTION(BlueprintPure, meta=(WorldContext = "WorldContextObject"))
+	static TArray<UProcedureFlowComponent*> GetProcedureFlowComponents(const UObject* WorldContextObject);
 };

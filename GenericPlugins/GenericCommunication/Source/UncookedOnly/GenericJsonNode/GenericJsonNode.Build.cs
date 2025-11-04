@@ -10,7 +10,8 @@ public class GenericJsonNode : ModuleRules
 			new string[]
 			{
 				"Core",
-				"DevCore"
+				"DevCore",
+				"GenericJson"
 			}
 		);
 
@@ -25,8 +26,6 @@ public class GenericJsonNode : ModuleRules
 				"UnrealEd",
 				"BlueprintGraph",
 				"GraphEditor",
-
-				"GenericJson"
 			}
 		);
 	}

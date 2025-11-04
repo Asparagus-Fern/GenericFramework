@@ -1,6 +1,5 @@
 ﻿// Copyright ChenTaiye 2025. All Rights Reserved. 
 
-
 #include "Style/GenericTextBlockStyle.h"
 
 void UGenericTextBlockStyle::GetTextBlockStyle(FTextBlockStyle& OutTextBlockStyle) const

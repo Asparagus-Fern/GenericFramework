@@ -5,8 +5,6 @@
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
 #include "NativeGameplayTags.h"
-#include "Components/SlateWrapperTypes.h"
-#include "Slate/WidgetTransform.h"
 #include "WidgetType.generated.h"
 
 class UGameplayTagSlot;

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "MVVMViewModelBase.h"
 #include "PropertyListViewModel.generated.h"
 

@@ -8,7 +8,7 @@
 
 class UCameraComponent;
 class UPawnSpringArmComponent;
-class UCameraSwitchMethod;
+class UGenericCameraSwitchMethod;
 
 UCLASS(MinimalAPI)
 class AThirdPersonPawn : public AGenericPawn
@@ -45,8 +45,8 @@ public:
 
 	/* AThirdPersonPawn */
 protected:
-	GENERICGAMEPLAYSYSTEM_API virtual void OnSwitchCameraBegin(UCameraSwitchMethod* InCameraHandle);
-	GENERICGAMEPLAYSYSTEM_API virtual void OnSwitchCameraFinish(UCameraSwitchMethod* InCameraHandle);
+	GENERICGAMEPLAYSYSTEM_API virtual void OnSwitchCameraBegin(UGenericCameraSwitchMethod* InCameraHandle);
+	GENERICGAMEPLAYSYSTEM_API virtual void OnSwitchCameraFinish(UGenericCameraSwitchMethod* InCameraHandle);
 
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)

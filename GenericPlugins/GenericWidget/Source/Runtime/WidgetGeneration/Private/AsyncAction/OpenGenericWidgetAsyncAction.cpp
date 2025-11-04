@@ -1,9 +1,8 @@
 ﻿// Copyright ChenTaiye 2025. All Rights Reserved.
 
-
 #include "AsyncAction/OpenGenericWidgetAsyncAction.h"
 
-#include "GenericWidgetManager.h"
+#include "GenericWidgetSubsystem.h"
 
 void UOpenGenericWidgetAsyncAction::Activate()
 {
@@ -16,14 +15,18 @@ void UOpenGenericWidgetAsyncAction::Activate()
 	}
 
 	Widget->GetOnWidgetActiveAnimationPlayFinish().AddUObject(this, &UOpenGenericWidgetAsyncAction::OnWidgetActivedAnimationFinish);
-	FWidgetHelper::OpenGenericWidget(Widget, FOnWidgetActiveStateChanged::CreateUObject(this, &UOpenGenericWidgetAsyncAction::OnWidgetActived));
+	if (UGenericWidgetSubsystem* GenericWidgetManager = UGenericWidgetSubsystem::Get(WorldContextObject))
+	{
+		GenericWidgetManager->OpenGenericWidget(Widget, FOnWidgetActiveStateChanged::CreateUObject(this, &UOpenGenericWidgetAsyncAction::OnWidgetActived));
+	}
 }
 
-UOpenGenericWidgetAsyncAction* UOpenGenericWidgetAsyncAction::AsyncOpenGenericWidget(UGenericWidget* InWidget)
+UOpenGenericWidgetAsyncAction* UOpenGenericWidgetAsyncAction::AsyncOpenGenericWidget(UObject* InWorldContextObject, UGenericWidget* InWidget)
 {
 	check(InWidget);
 
 	UOpenGenericWidgetAsyncAction* NewAction = NewObject<UOpenGenericWidgetAsyncAction>();
+	NewAction->WorldContextObject = InWorldContextObject;
 	NewAction->Widget = InWidget;
 
 	return NewAction;

@@ -4,9 +4,9 @@
 
 #include "ExtraProcThread.h"
 #include "StaticFunctions_Thread.h"
-#include "ThreadManager.h"
+#include "GenericThreadSubsystem.h"
 #include "Type/DebugType.h"
-#include "Manager/ManagerStatics.h"
+
 
 bool FStaticFunctions_ExtraProc::LaunchExtraProc(const FProcStartUpInfo& Info, FGuid& ProcId)
 {
@@ -80,7 +80,7 @@ bool FStaticFunctions_ExtraProc::LaunchExtraProc(const FString& Urls, const FStr
 
 void FStaticFunctions_ExtraProc::TerminationExtraProc(FGuid ProcId, bool bKillTree)
 {
-	if (UThreadManager* ThreadManager = GetManagerOwner<UThreadManager>())
+	if (UGenericThreadSubsystem* ThreadManager = UGenericThreadSubsystem::Get())
 	{
 		TSharedPtr<FExtraProcThread> ExtraProcThread = ThreadManager->GetThread<FExtraProcThread>(ProcId);
 		if (ExtraProcThread.IsValid())

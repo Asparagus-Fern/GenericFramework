@@ -1,6 +1,5 @@
 ﻿// Copyright ChenTaiye 2025. All Rights Reserved. 
 
-
 #include "AsyncFunctions/Android/AcquireAndroidPermissionAsyncAction.h"
 
 #if PLATFORM_ANDROID

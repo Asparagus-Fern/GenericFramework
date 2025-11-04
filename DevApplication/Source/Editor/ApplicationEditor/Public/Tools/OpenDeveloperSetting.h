@@ -34,5 +34,5 @@ protected:
 	
 private:
 	virtual void RegisterToolBarDeveloperSetting(FToolMenuSection& ToolMenuSection);
-	virtual void OpenToolBarManagerSetting();
+	virtual void OpenToolBarDeveloperSetting();
 };

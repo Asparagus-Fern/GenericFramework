@@ -2,9 +2,7 @@
 
 #include "Interface/StateInterface.h"
 
-#include "Type/DebugType.h"
-
-DEFINE_LOG_CATEGORY(GenericLogState);
+#include "CoreType.h"
 
 void IStateInterface::NativeOnCreate()
 {
@@ -30,7 +28,7 @@ void IStateInterface::NativeOnActivedFinish()
 {
 	if (UObject* Object = Cast<UObject>(this))
 	{
-		OnActivedFinishDelegate.Broadcast(Object);
+		OnActivedFinishEvent.Broadcast(Object);
 		IStateInterface::Execute_HandleOnActivedFinish(Object);
 		GenericLOG(GenericLogState, Log, TEXT("On Actived Finish : %s"), *Object->GetName());
 	}
@@ -50,7 +48,7 @@ void IStateInterface::NativeOnInactived()
 
 	if (UObject* Object = Cast<UObject>(this))
 	{
-		OnInactivedFinishDelegate.Broadcast(Object);
+		OnInactivedFinishEvent.Broadcast(Object);
 		IStateInterface::Execute_HandleOnInactived(Object);
 		GenericLOG(GenericLogState, Log, TEXT("On Inactived : %s"), *Object->GetName());
 	}
@@ -90,12 +88,4 @@ void IStateInterface::SetIsActived(const bool InActived)
 
 void IStateInterface::OnActiveStateChanged()
 {
-	if (bIsActived)
-	{
-		NativeOnActived();
-	}
-	else
-	{
-		NativeOnInactived();
-	}
 }

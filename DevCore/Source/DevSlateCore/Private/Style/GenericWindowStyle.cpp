@@ -1,6 +1,5 @@
 ﻿// Copyright ChenTaiye 2025. All Rights Reserved. 
 
-
 #include "Style/GenericWindowStyle.h"
 
 #include "Style/GenericButtonStyle.h"

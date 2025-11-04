@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Common/UdpSocketReceiver.h"
-#include "Generic/GenericObject.h"
+#include "Obect/GenericObject.h"
 #include "GenericUdpSocket.generated.h"
 
 class FUdpSocketReceiver;

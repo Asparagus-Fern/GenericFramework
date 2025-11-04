@@ -9,7 +9,6 @@
 #include "Components/StackBoxSlot.h"
 #include "Engine/Texture2DDynamic.h"
 #include "Slate/SlateBrushAsset.h"
-#include "Type/DebugType.h"
 #include "UWidget/Spline2DSlot.h"
 
 UStackBoxSlot* UBPFunctions_Slate::SlotAsStackBoxSlot(const UWidget* Widget)

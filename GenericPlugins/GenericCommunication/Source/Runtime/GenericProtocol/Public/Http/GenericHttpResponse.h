@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Generic/GenericObject.h"
+#include "Obect/GenericObject.h"
 #include "GenericHttpResponse.generated.h"
 
 class UGenericJsonObject;

@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "NativeAPITypes.h"
 #include "Engine/DeveloperSettings.h"
-#include "Generic/GenericSettings.h"
+#include "Settings/GenericSettings.h"
 #include "WebSocket/WebSocketType.h"
 #include "NativeAPISettings.generated.h"
 

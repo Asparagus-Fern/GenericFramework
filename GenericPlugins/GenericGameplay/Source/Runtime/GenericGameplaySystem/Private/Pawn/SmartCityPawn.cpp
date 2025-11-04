@@ -1,12 +1,11 @@
 ﻿// Copyright ChenTaiye 2025. All Rights Reserved.
 
-
 #include "Pawn/SmartCityPawn.h"
 
+#include "PlayerInputIdleActionComponent.h"
 #include "BPFunctions/BPFunctions_Gameplay.h"
 #include "Camera/CameraComponent.h"
 #include "Component/PawnSpringArmComponent.h"
-#include "InputIdleAction/PlayerInputIdleActionComponent.h"
 
 ASmartCityPawn::ASmartCityPawn(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)

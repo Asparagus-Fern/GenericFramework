@@ -1,9 +1,10 @@
 ﻿// Copyright ChenTaiye 2025. All Rights Reserved.
 
-
 #include "SaveGameType.h"
 
 #include "GenericSaveGame.h"
+
+DEFINE_LOG_CATEGORY(GenericLogSaveGame);
 
 FSaveGameParameter::FSaveGameParameter()
 {

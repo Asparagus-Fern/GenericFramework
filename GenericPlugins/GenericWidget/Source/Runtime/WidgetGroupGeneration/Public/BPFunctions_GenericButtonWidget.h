@@ -18,12 +18,12 @@ class WIDGETGROUPGENERATION_API UBPFunctions_GenericButtonWidget : public UBluep
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintCallable, meta = (DeterminesOutputType = "InCollectionClass"))
-	static UGenericButtonCollection* RegisterButtonCollectionByClass(APlayerController* Player, TSubclassOf<UGenericButtonCollection> InCollectionClass, bool InActived = true);
+	UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject", DeterminesOutputType = "InCollectionClass"))
+	static UGenericButtonCollection* RegisterButtonCollectionByClass(const UObject* WorldContextObject, APlayerController* Player, TSubclassOf<UGenericButtonCollection> InCollectionClass, bool InActived = true);
 
-	UFUNCTION(BlueprintCallable)
-	static bool UnRegisterButtonCollection(UGenericButtonCollection* InCollection);
+	UFUNCTION(BlueprintCallable, meta=(WorldContext = "WorldContextObject"))
+	static bool UnRegisterButtonCollection(const UObject* WorldContextObject, UGenericButtonCollection* InCollection);
 
-	UFUNCTION(BlueprintPure, meta=(DeterminesOutputType = "InCollectionClass", GameplayTagFilter="UI.Button"))
-	static UGenericButtonCollection* GetButtonCollectionByTag(TSubclassOf<UGenericButtonCollection> InCollectionClass, FGameplayTag InRootButtonTag);
+	UFUNCTION(BlueprintPure, meta=(WorldContext = "WorldContextObject", DeterminesOutputType = "InCollectionClass", GameplayTagFilter="UI.Button"))
+	static UGenericButtonCollection* GetButtonCollectionByTag(const UObject* WorldContextObject,TSubclassOf<UGenericButtonCollection> InCollectionClass, FGameplayTag InRootButtonTag);
 };

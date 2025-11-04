@@ -1,6 +1,5 @@
 ﻿// Copyright ChenTaiye 2025. All Rights Reserved.
 
-
 #include "WebSocket/AsyncAction/SendWebSocketMessageAsyncAction.h"
 
 USendWebSocketMessageAsyncAction* USendWebSocketMessageAsyncAction::SendWebSocketMessage(UGenericWebSocket* WebSocket, const FString& Message)

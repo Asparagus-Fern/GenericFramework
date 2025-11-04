@@ -6,8 +6,6 @@
 #include "UObject/Interface.h"
 #include "StateInterface.generated.h"
 
-DECLARE_LOG_CATEGORY_EXTERN(GenericLogState, Log, All);
-
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnActivedFinish, UObject*)
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnInactivedFinish, UObject*)
 
@@ -41,7 +39,7 @@ public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="State Interface")
 	void HandleOnRefresh();
 	virtual void NativeOnRefresh();
-	
+
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="State Interface")
 	void HandleOnInactived();
 	virtual void NativeOnInactived();
@@ -53,18 +51,17 @@ public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="State Interface")
 	void HandleOnDestroy();
 	virtual void NativeOnDestroy();
-
-public:
+	
 	virtual bool GetIsActived() const;
 	virtual void SetIsActived(const bool InActived);
 
-	FOnActivedFinish GetOnActivedFinishDelegate() { return OnActivedFinishDelegate; }
-	FOnInactivedFinish GetOnInactivedFinishDelegate() { return OnInactivedFinishDelegate; }
+	FOnActivedFinish& GetOnActivedFinishEvent() { return OnActivedFinishEvent; }
+	FOnInactivedFinish& GetOnInactivedFinishEvent() { return OnInactivedFinishEvent; }
 
 protected:
-	bool bIsActived = false;
-	FOnActivedFinish OnActivedFinishDelegate;
-	FOnInactivedFinish OnInactivedFinishDelegate;
-
 	virtual void OnActiveStateChanged();
+	
+	bool bIsActived = false;
+	FOnActivedFinish OnActivedFinishEvent;
+	FOnInactivedFinish OnInactivedFinishEvent;
 };

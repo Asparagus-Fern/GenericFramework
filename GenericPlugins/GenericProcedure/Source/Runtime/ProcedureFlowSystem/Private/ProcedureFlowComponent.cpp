@@ -1,13 +1,9 @@
 // Copyright ChenTaiye 2025. All Rights Reserved.
 
-
 #include "ProcedureFlowComponent.h"
 
 #include "ProcedureFlowExecute.h"
-#include "ProcedureFlowManager.h"
-#include "Manager/ManagerStatics.h"
-
-UE_DEFINE_GAMEPLAY_TAG(TAG_ProcedureFlow, "Procedure.Flow");
+#include "ProcedureFlowSubsystem.h"
 
 void UProcedureFlowComponent::BeginPlay()
 {
@@ -15,24 +11,18 @@ void UProcedureFlowComponent::BeginPlay()
 
 	if (ProcedureFlowTag.IsValid() && !bManualRegister && (bRegisterEvenIsHidden || (!bRegisterEvenIsHidden && !GetOwner()->IsHidden())))
 	{
-		if (UProcedureFlowManager* ProcedureFlowManager = GetManagerOwner<UProcedureFlowManager>())
-		{
-			ProcedureFlowManager->RegisterProcedureFlow(this);
-		}
+		OnRegister.Broadcast(this);
 	}
 }
 
 void UProcedureFlowComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
+	Super::EndPlay(EndPlayReason);
+
 	if (ProcedureFlowTag.IsValid())
 	{
-		if (UProcedureFlowManager* ProcedureFlowManager = GetManagerOwner<UProcedureFlowManager>())
-		{
-			ProcedureFlowManager->UnRegisterProcedureFlow(this);
-		}
+		OnUnRegister.Broadcast(this);
 	}
-
-	Super::EndPlay(EndPlayReason);
 }
 
 void UProcedureFlowComponent::OnProcedureFlowRegister_Implementation()

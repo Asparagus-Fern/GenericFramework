@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "PropertyPathHelpers.h"
-#include "Generic/GenericObject.h"
+#include "Obect/GenericObject.h"
 #include "PropertyDataSource.generated.h"
 
 

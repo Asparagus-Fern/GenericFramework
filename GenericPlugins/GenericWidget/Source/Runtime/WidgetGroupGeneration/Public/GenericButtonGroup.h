@@ -4,8 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GenericButtonType.h"
-#include "Generic/GenericObject.h"
 #include "Interface/StateInterface.h"
+#include "Obect/GenericObject.h"
 #include "GenericButtonGroup.generated.h"
 
 class UGenericButtonCollection;

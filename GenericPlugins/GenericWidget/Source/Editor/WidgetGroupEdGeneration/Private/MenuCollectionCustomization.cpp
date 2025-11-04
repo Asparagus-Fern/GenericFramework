@@ -1,6 +1,5 @@
 // Copyright ChenTaiye 2025. All Rights Reserved.
 
-
 #include "BlueprintEventNodeSpawner.h"
 #include "GenericButtonCollectionCustomization.h"
 
@@ -9,9 +8,8 @@
 #include "DetailWidgetRow.h"
 #include "K2Node_CustomEvent.h"
 #include "Kismet2/BlueprintEditorUtils.h"
-#include "Manager/BlueprintEditorManager.h"
-#include "Manager/ManagerStatics.h"
-#include "Runtime/WidgetGroupGeneration/Public/GenericButtonCollection.h"
+#include "GenericButtonCollection.h"
+#include "Subsystem/BlueprintEditorSubsystem.h"
 
 #define LOCTEXT_NAMESPACE "FWidgetGroupEdGenerationModule"
 
@@ -234,7 +232,7 @@ TArray<UK2Node_CustomEvent*> FGenericButtonCollectionCustomization::GenerateEven
 
 	/* Get Collection Blueprint */
 	UBlueprint* Blueprint = nullptr;
-	if (UBlueprintEditorManager* BlueprintEditorManager = GetManagerOwner<UBlueprintEditorManager>())
+	if (UBlueprintEditorSubsystem* BlueprintEditorManager = UBlueprintEditorSubsystem::Get())
 	{
 		Blueprint = BlueprintEditorManager->FindOpenedBlueprintByCDO(Collection);
 	}

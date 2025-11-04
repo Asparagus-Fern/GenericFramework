@@ -4,8 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
-#include "Generic/GenericObject.h"
 #include "Interface/StateInterface.h"
+#include "Obect/GenericObject.h"
 #include "GenericButtonCollection.generated.h"
 
 class UButtonGroupViewModel;

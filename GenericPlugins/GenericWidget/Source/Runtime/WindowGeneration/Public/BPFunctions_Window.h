@@ -19,15 +19,15 @@ class WINDOWGENERATION_API UBPFunctions_Window : public UBlueprintFunctionLibrar
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintCallable, Category = "Window", DisplayName="Register Window Wrapper (Class)")
-	static UGenericWindowWrapper* RegisterWindowWrapperByClass(APlayerController* InPlayer, const TSubclassOf<UGenericWindowViewModel>& WindowViewModelClass, bool& Result);
+	UFUNCTION(BlueprintCallable, meta=(WorldContext = "WorldContextObject"), Category = "Window", DisplayName="Register Window Wrapper (Class)")
+	static UGenericWindowWrapper* RegisterWindowWrapperByClass(const UObject* WorldContextObject, APlayerController* InPlayer, const TSubclassOf<UGenericWindowViewModel>& WindowViewModelClass, bool& Result);
 
-	UFUNCTION(BlueprintCallable, Category = "Window", DisplayName="Register Window Wrapper (Object)")
-	static UGenericWindowWrapper* RegisterWindowWrapper(APlayerController* InPlayer, UGenericWindowViewModel* WindowViewModel, bool& Result);
+	UFUNCTION(BlueprintCallable, meta=(WorldContext = "WorldContextObject"), Category = "Window", DisplayName="Register Window Wrapper (Object)")
+	static UGenericWindowWrapper* RegisterWindowWrapper(const UObject* WorldContextObject, APlayerController* InPlayer, UGenericWindowViewModel* WindowViewModel, bool& Result);
 
-	UFUNCTION(BlueprintCallable, Category = "Window", DisplayName="UnRegister Window Wrapper")
-	static bool UnRegisterWindowWrapper(UGenericWindowWrapper* InWrapper);
+	UFUNCTION(BlueprintCallable, meta=(WorldContext = "WorldContextObject"), Category = "Window", DisplayName="UnRegister Window Wrapper")
+	static bool UnRegisterWindowWrapper(const UObject* WorldContextObject, UGenericWindowWrapper* InWrapper);
 
-	UFUNCTION(BlueprintCallable, Category = "Window", DisplayName="UnRegister All Window Wrapper")
-	static void UnRegisterAllWindowWrapper();
+	UFUNCTION(BlueprintCallable, meta=(WorldContext = "WorldContextObject"), Category = "Window", DisplayName="UnRegister All Window Wrapper")
+	static void UnRegisterAllWindowWrapper(const UObject* WorldContextObject);
 };

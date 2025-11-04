@@ -6,7 +6,7 @@
 #include "ProcedureFlowExecute.h"
 #include "ProcedureFlowPlay.generated.h"
 
-class UCameraSwitchMethod;
+class UGenericCameraSwitchMethod;
 
 UCLASS(MinimalAPI)
 class UProcedureFlowPlay : public UProcedureFlowExecute
@@ -23,5 +23,5 @@ public:
 	FGameplayTag DefaultCameraTag = FGameplayTag::EmptyTag;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Instanced, Category="Camera")
-	UCameraSwitchMethod* CameraHandle = nullptr;
+	UGenericCameraSwitchMethod* CameraHandle = nullptr;
 };

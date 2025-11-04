@@ -2,14 +2,13 @@
 
 #include "Session/SessionSearchComponent.h"
 
-#include "GenericWidgetManager.h"
+#include "GenericWidgetSubsystem.h"
 #include "NetworkType.h"
 #include "OnlineSessionSettings.h"
 #include "OnlineSubsystemUtils.h"
 #include "BPFunctions/BPFunctions_Gameplay.h"
 #include "Interfaces/OnlineSessionInterface.h"
 #include "Type/DebugType.h"
-#include "UMG/SessionSearchPanel.h"
 #include "ViewModel/OnlineSessionSearchSettingsViewModel.h"
 
 USessionSearchComponent::USessionSearchComponent()

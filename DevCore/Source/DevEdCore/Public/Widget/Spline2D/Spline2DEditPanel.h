@@ -2,7 +2,6 @@
 
 #pragma once
 
-// Core Include
 #include "CoreMinimal.h"
 #include "Widgets/SCompoundWidget.h"
 #include "Misc/Attribute.h"

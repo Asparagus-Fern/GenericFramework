@@ -10,7 +10,7 @@
 /**
  * 提供对Pawn的移动旋转等限制锁定操作
  */
-UCLASS(ClassGroup=(GenericFreamwork), meta=(BlueprintSpawnableComponent), MinimalAPI)
+UCLASS(ClassGroup=(GenericFramework), meta=(BlueprintSpawnableComponent), MinimalAPI)
 class UPawnLockStateComponent : public UActorComponent, public IPawnLockStateInterface
 {
 	GENERATED_BODY()

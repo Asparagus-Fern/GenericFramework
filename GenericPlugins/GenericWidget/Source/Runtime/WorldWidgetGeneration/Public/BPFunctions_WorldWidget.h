@@ -21,22 +21,22 @@ class WORLDWIDGETGENERATION_API UBPFunctions_WorldWidget : public UBlueprintFunc
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintPure)
-	static TArray<UWorldWidgetComponent*> GetWorldWidgetComponents();
+	UFUNCTION(BlueprintPure, meta=(WorldContext = "WorldContextObject"))
+	static TArray<UWorldWidgetComponent*> GetWorldWidgetComponents(const UObject* WorldContextObject);
 
-	UFUNCTION(BlueprintPure)
-	static TArray<UWorldWidgetComponent*> GetWorldWidgetComponents2D();
+	UFUNCTION(BlueprintPure, meta=(WorldContext = "WorldContextObject"))
+	static TArray<UWorldWidgetComponent*> GetWorldWidgetComponents2D(const UObject* WorldContextObject);
 
-	UFUNCTION(BlueprintPure)
-	static TArray<UWorldWidgetComponent*> GetWorldWidgetComponents3D();
+	UFUNCTION(BlueprintPure, meta=(WorldContext = "WorldContextObject"))
+	static TArray<UWorldWidgetComponent*> GetWorldWidgetComponents3D(const UObject* WorldContextObject);
 
-	UFUNCTION(BlueprintPure, meta=(GameplayTagFilter="UI.WorldWidget"))
-	static UWorldWidgetComponent* FindWorldWidgetComponent(FGameplayTag WorldWidgetTag);
+	UFUNCTION(BlueprintPure, meta=(WorldContext = "WorldContextObject", GameplayTagFilter="UI.WorldWidget"))
+	static UWorldWidgetComponent* FindWorldWidgetComponent(const UObject* WorldContextObject, FGameplayTag WorldWidgetTag);
 
-	UFUNCTION(BlueprintPure, meta=(GameplayTagFilter="UI.WorldWidget"))
-	static TArray<UWorldWidgetComponent*> FindWorldWidgetComponents(FGameplayTag WorldWidgetTag);
-	
+	UFUNCTION(BlueprintPure, meta=(WorldContext = "WorldContextObject", GameplayTagFilter="UI.WorldWidget"))
+	static TArray<UWorldWidgetComponent*> FindWorldWidgetComponents(const UObject* WorldContextObject, FGameplayTag WorldWidgetTag);
+
 public:
-	UFUNCTION(BlueprintPure, meta=(GameplayTagFilter="UI.WorldWidget"))
-	static UGenericButtonGroup* GetWorldWidgetGroup(FGameplayTag InGroupTag);
+	UFUNCTION(BlueprintPure, meta=(WorldContext = "WorldContextObject", GameplayTagFilter="UI.WorldWidget"))
+	static UGenericButtonGroup* GetWorldWidgetGroup(const UObject* WorldContextObject, FGameplayTag InGroupTag);
 };

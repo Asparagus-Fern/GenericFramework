@@ -1,6 +1,5 @@
 ﻿// Copyright ChenTaiye 2025. All Rights Reserved.
 
-
 #include "Handle/LoadLevelStreamingHandle.h"
 
 #include "BPFunctions_LevelStreaming.h"
@@ -48,7 +47,7 @@ TArray<TSoftObjectPtr<UWorld>> ULoadLevelStreamingHandle::GetLevels()
 
 void ULoadLevelStreamingHandle::ExecuteHandle(int32 Index)
 {
-	if (UBPFunctions_LevelStreaming::IsLevelLoaded(LoadLevelStreamingSettings[Index].Level))
+	if (UBPFunctions_LevelStreaming::IsLevelLoaded(this, LoadLevelStreamingSettings[Index].Level))
 	{
 		OnOnceFinish();
 		return;

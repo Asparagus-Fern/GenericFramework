@@ -10,7 +10,8 @@ public class MediaSystem : ModuleRules
 			new string[]
 			{
 				"Core",
-				"DevCore"
+				"DevCore",
+				"GenericMovieSceneSystem",
 			}
 		);
 
@@ -25,9 +26,6 @@ public class MediaSystem : ModuleRules
 				"UMG",
 				"MediaAssets",
 				"MediaUtils",
-
-				"EventUtilities",
-				"MovieSceneUtilities"
 			}
 		);
 	}

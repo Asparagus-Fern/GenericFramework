@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Handle/HandleBase.h"
+#include "Obect/GenericObject.h"
 #include "LevelStreamingHandle.generated.h"
 
 class ULevelStreamingHandle;
@@ -15,7 +15,7 @@ DECLARE_MULTICAST_DELEGATE_OneParam(FOnLevelStreamingHandleFinish, ULevelStreami
  * 
  */
 UCLASS(Abstract, MinimalAPI)
-class ULevelStreamingHandle : public UHandleBase
+class ULevelStreamingHandle : public UGenericObject
 {
 	GENERATED_BODY()
 

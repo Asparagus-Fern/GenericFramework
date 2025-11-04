@@ -1,6 +1,5 @@
 // Copyright ChenTaiye 2025. All Rights Reserved.
 
-
 #include "SWidget/SGenericButton.h"
 
 #include "SlateOptMacros.h"

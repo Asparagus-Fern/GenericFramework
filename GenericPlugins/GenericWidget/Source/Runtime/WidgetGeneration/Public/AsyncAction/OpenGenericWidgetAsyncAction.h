@@ -22,10 +22,10 @@ class WIDGETGENERATION_API UOpenGenericWidgetAsyncAction : public UBlueprintAsyn
 
 public:
 	virtual void Activate() override;
-	
+
 public:
-	UFUNCTION(BlueprintCallable, DisplayName="Open Generic Widget", meta = (BlueprintInternalUseOnly = "true"))
-	static UOpenGenericWidgetAsyncAction* AsyncOpenGenericWidget( UGenericWidget* InWidget);
+	UFUNCTION(BlueprintCallable, DisplayName="Open Generic Widget", meta = (WorldContext = "InWorldContextObject", BlueprintInternalUseOnly = "true"))
+	static UOpenGenericWidgetAsyncAction* AsyncOpenGenericWidget(UObject* InWorldContextObject, UGenericWidget* InWidget);
 
 public:
 	UPROPERTY(BlueprintAssignable)
@@ -37,6 +37,9 @@ public:
 private:
 	virtual void OnWidgetActived(UGenericWidget* InWidget);
 	virtual void OnWidgetActivedAnimationFinish(UGenericWidget* InWidget);
+
+	UPROPERTY()
+	UObject* WorldContextObject = nullptr;
 
 	UPROPERTY()
 	TObjectPtr<UGenericWidget> Widget;

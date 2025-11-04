@@ -33,7 +33,8 @@ public class NativeAPI : ModuleRules
 				"Json",
 				"JsonUtilities",
 
-				"DevCore"
+				"DevCore",
+				"GenericProtocol"
 			}
 		);
 
@@ -50,7 +51,6 @@ public class NativeAPI : ModuleRules
 				"DeveloperSettings",
 				"WebSockets",
 				"HTTPServer",
-				"GenericProtocol"
 			}
 		);
 

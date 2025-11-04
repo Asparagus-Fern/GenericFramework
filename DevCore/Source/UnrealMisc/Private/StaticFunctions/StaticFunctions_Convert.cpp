@@ -1,8 +1,6 @@
 ﻿// Copyright ChenTaiye 2025. All Rights Reserved.
 
-
 #include "StaticFunctions/StaticFunctions_Convert.h"
-
 
 bool FStaticFunctions_Convert::ToBool(unsigned int Var)
 {

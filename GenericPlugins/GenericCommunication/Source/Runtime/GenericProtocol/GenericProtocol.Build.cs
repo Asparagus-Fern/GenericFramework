@@ -12,6 +12,7 @@ public class GenericProtocol : ModuleRules
 				"Core",
 				"UnrealMisc",
 				"DevCore",
+				"GenericJson",
 			}
 		);
 
@@ -29,8 +30,6 @@ public class GenericProtocol : ModuleRules
 				"Sockets",
 				"WebSockets",
 				"Networking",
-
-				"GenericJson",
 			}
 		);
 

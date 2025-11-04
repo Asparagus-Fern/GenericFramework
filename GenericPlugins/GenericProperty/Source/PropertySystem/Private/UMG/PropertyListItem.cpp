@@ -2,7 +2,7 @@
 
 #include "UMG/PropertyListItem.h"
 
-#include "GenericWidgetManager.h"
+#include "GenericWidgetSubsystem.h"
 #include "PropertyType.h"
 #include "WidgetType.h"
 #include "Components/TextBlock.h"
@@ -102,15 +102,18 @@ void UPropertyListItem::AddPropertyOption(FGameplayTag InPropertyTag, TSubclassO
 		return;
 	}
 
-	UPropertyListItemOption* NewPropertyOption = FWidgetHelper::OpenGenericWidget<UPropertyListItemOption>(this, InClass);
-	if (IsValid(NewPropertyOption))
+	if (UGenericWidgetSubsystem* GenericWidgetManager = UGenericWidgetSubsystem::Get(this))
 	{
-		NewPropertyOption->SetPropertyViewModel(PropertyViewModel);
-		PropertyOptions.Add(InPropertyTag, NewPropertyOption);
-
-		if (Panel_PropertyOption)
+		UPropertyListItemOption* NewPropertyOption = GenericWidgetManager->OpenGenericWidget<UPropertyListItemOption>(this, InClass);
+		if (IsValid(NewPropertyOption))
 		{
-			Panel_PropertyOption->AddChild(NewPropertyOption);
+			NewPropertyOption->SetPropertyViewModel(PropertyViewModel);
+			PropertyOptions.Add(InPropertyTag, NewPropertyOption);
+
+			if (Panel_PropertyOption)
+			{
+				Panel_PropertyOption->AddChild(NewPropertyOption);
+			}
 		}
 	}
 }

@@ -2,15 +2,14 @@
 
 #include "ProcedureFlowPlay.h"
 
-#include "CameraManager.h"
-#include "CameraSwitch/CameraSwitchMethod.h"
-#include "Manager/ManagerStatics.h"
+#include "GenericCameraSubsystem.h"
+#include "CameraSwitch/GenericCameraSwitchMethod.h"
 
 void UProcedureFlowPlay::OnProcedureFlowEnter_Implementation()
 {
 	Super::OnProcedureFlowEnter_Implementation();
 
-	if (UCameraManager* CameraManager = GetManagerOwner<UCameraManager>())
+	if (UGenericCameraSubsystem* CameraManager = UGenericCameraSubsystem::Get(this))
 	{
 		if (DefaultCameraTag.IsValid() && IsValid(CameraHandle))
 		{

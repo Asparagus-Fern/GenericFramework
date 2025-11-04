@@ -9,6 +9,7 @@
 #include "Engine/World.h"
 #include "Engine/GameInstance.h"
 #include "GameFramework/GameModeBase.h"
+#include "GameFramework/GameSession.h"
 #include "GameFramework/GameState.h"
 #include "GameFramework/HUD.h"
 #include "GameFramework/Pawn.h"
@@ -40,6 +41,21 @@ AGameModeBase* UBPFunctions_Gameplay::GetGameModeByClass(const UObject* WorldCon
 	return nullptr;
 }
 
+AGameSession* UBPFunctions_Gameplay::GetGameSessionByClass(const UObject* WorldContextObject, const TSubclassOf<AGameSession> InClass)
+{
+	ensure(InClass);
+
+	if (const UWorld* World = GEngine->GetWorldFromContextObjectChecked(WorldContextObject))
+	{
+		if (AGameModeBase* GameModeBase = World->GetAuthGameMode<AGameModeBase>())
+		{
+			return GameModeBase->GameSession;
+		}
+	}
+
+	return nullptr;
+}
+
 AGameStateBase* UBPFunctions_Gameplay::GetGameStateByClass(const UObject* WorldContextObject, const TSubclassOf<AGameStateBase> InClass)
 {
 	ensure(InClass);
@@ -52,17 +68,29 @@ AGameStateBase* UBPFunctions_Gameplay::GetGameStateByClass(const UObject* WorldC
 	return nullptr;
 }
 
-APlayerController* UBPFunctions_Gameplay::GetPlayerControllerByClass(const UObject* WorldContextObject, const TSubclassOf<APlayerController> InClass, int32 InIndex)
+APlayerController* UBPFunctions_Gameplay::GetPlayerControllerByIndex(const UObject* WorldContextObject, const TSubclassOf<APlayerController> InClass, int32 InIndex)
 {
 	ensure(InClass);
 	return UGameplayStatics::GetPlayerController(WorldContextObject, InIndex);
 }
 
-APlayerState* UBPFunctions_Gameplay::GetPlayerStateByClass(const UObject* WorldContextObject, const TSubclassOf<APlayerState> InClass, int32 InIndex)
+ULocalPlayer* UBPFunctions_Gameplay::GetLocalPlayerByIndex(const UObject* WorldContextObject, const TSubclassOf<ULocalPlayer> InClass, int32 InIndex)
 {
 	ensure(InClass);
 
-	if (const APlayerController* PC = GetPlayerControllerByClass(WorldContextObject, APlayerController::StaticClass(), InIndex))
+	if (APlayerController* PC = GetPlayerControllerByIndex(WorldContextObject, APlayerController::StaticClass(), InIndex))
+	{
+		return PC->GetLocalPlayer();
+	}
+
+	return nullptr;
+}
+
+APlayerState* UBPFunctions_Gameplay::GetPlayerStateByIndex(const UObject* WorldContextObject, const TSubclassOf<APlayerState> InClass, int32 InIndex)
+{
+	ensure(InClass);
+
+	if (const APlayerController* PC = GetPlayerControllerByIndex(WorldContextObject, APlayerController::StaticClass(), InIndex))
 	{
 		return PC->GetPlayerState<APlayerState>();
 	}
@@ -70,11 +98,11 @@ APlayerState* UBPFunctions_Gameplay::GetPlayerStateByClass(const UObject* WorldC
 	return nullptr;
 }
 
-AHUD* UBPFunctions_Gameplay::GetHUDByClass(const UObject* WorldContextObject, const TSubclassOf<AHUD> InClass, int32 InIndex)
+AHUD* UBPFunctions_Gameplay::GetHUDByIndex(const UObject* WorldContextObject, const TSubclassOf<AHUD> InClass, int32 InIndex)
 {
 	ensure(InClass);
 
-	if (const APlayerController* PC = GetPlayerControllerByClass(WorldContextObject, APlayerController::StaticClass(), InIndex))
+	if (const APlayerController* PC = GetPlayerControllerByIndex(WorldContextObject, APlayerController::StaticClass(), InIndex))
 	{
 		return PC->GetHUD<AHUD>();
 	}
@@ -82,13 +110,67 @@ AHUD* UBPFunctions_Gameplay::GetHUDByClass(const UObject* WorldContextObject, co
 	return nullptr;
 }
 
-APawn* UBPFunctions_Gameplay::GetPawnByClass(const UObject* WorldContextObject, const TSubclassOf<APawn> InClass, int32 InIndex)
+APawn* UBPFunctions_Gameplay::GetPawnByIndex(const UObject* WorldContextObject, const TSubclassOf<APawn> InClass, int32 InIndex)
 {
 	ensure(InClass);
 
-	if (const APlayerController* PC = GetPlayerControllerByClass(WorldContextObject, APlayerController::StaticClass(), InIndex))
+	if (const APlayerController* PC = GetPlayerControllerByIndex(WorldContextObject, APlayerController::StaticClass(), InIndex))
 	{
 		return PC->GetPawn<APawn>();
+	}
+
+	return nullptr;
+}
+
+APlayerController* UBPFunctions_Gameplay::GetPlayerControllerByUniqueNetID(const UObject* WorldContextObject, const TSubclassOf<APlayerController> InClass, const FUniqueNetIdRepl& InNetID)
+{
+	ensure(InClass);
+
+	if (APlayerState* PlayerState = GetPlayerStateByUniqueNetID(WorldContextObject, APlayerState::StaticClass(), InNetID))
+	{
+		return PlayerState->GetPlayerController();
+	}
+
+	return nullptr;
+}
+
+ULocalPlayer* UBPFunctions_Gameplay::GetLocalPlayerByUniqueNetID(const UObject* WorldContextObject, const TSubclassOf<ULocalPlayer> InClass, const FUniqueNetIdRepl& InNetID)
+{
+	ensure(InClass);
+
+	if (APlayerController* PC = GetPlayerControllerByUniqueNetID(WorldContextObject, APlayerController::StaticClass(), InNetID))
+	{
+		return PC->GetLocalPlayer();
+	}
+
+	return nullptr;
+}
+
+APlayerState* UBPFunctions_Gameplay::GetPlayerStateByUniqueNetID(const UObject* WorldContextObject, const TSubclassOf<APlayerState> InClass, const FUniqueNetIdRepl& InNetID)
+{
+	ensure(InClass);
+	return UGameplayStatics::GetPlayerStateFromUniqueNetId(WorldContextObject, InNetID);
+}
+
+AHUD* UBPFunctions_Gameplay::GetHUDByUniqueNetID(const UObject* WorldContextObject, const TSubclassOf<AHUD> InClass, const FUniqueNetIdRepl& InNetID)
+{
+	ensure(InClass);
+
+	if (APlayerController* PC = GetPlayerControllerByUniqueNetID(WorldContextObject, APlayerController::StaticClass(), InNetID))
+	{
+		return PC->GetHUD();
+	}
+
+	return nullptr;
+}
+
+APawn* UBPFunctions_Gameplay::GetPawnByUniqueNetID(const UObject* WorldContextObject, const TSubclassOf<APawn> InClass, const FUniqueNetIdRepl& InNetID)
+{
+	ensure(InClass);
+
+	if (APlayerState* PlayerState = GetPlayerStateByUniqueNetID(WorldContextObject, APlayerState::StaticClass(), InNetID))
+	{
+		return PlayerState->GetPawn();
 	}
 
 	return nullptr;
@@ -148,35 +230,12 @@ bool UBPFunctions_Gameplay::GetPlayerUniqueNetIDByPawn(const APawn* InPawn, FUni
 
 bool UBPFunctions_Gameplay::GetPlayerUniqueNetIDByPlayerIndex(const UObject* WorldContextObject, int32 InPlayerIndex, FUniqueNetIdRepl& Result)
 {
-	if (APlayerState* PlayerState = GetPlayerStateByClass(WorldContextObject, APlayerState::StaticClass(), InPlayerIndex))
+	if (APlayerState* PlayerState = GetPlayerStateByIndex(WorldContextObject, APlayerState::StaticClass(), InPlayerIndex))
 	{
 		Result = PlayerState->GetUniqueId();
 		return true;
 	}
 	return false;
-}
-
-APlayerController* UBPFunctions_Gameplay::GetPlayerControllerByUniqueNetID(const UObject* WorldContextObject, const TSubclassOf<APlayerController> InClass, const FUniqueNetIdRepl& InNetID)
-{
-	if (APlayerState* PlayerState = UGameplayStatics::GetPlayerStateFromUniqueNetId(WorldContextObject, InNetID))
-	{
-		return PlayerState->GetPlayerController();
-	}
-	return nullptr;
-}
-
-APlayerState* UBPFunctions_Gameplay::GetPlayerStateByUniqueNetID(const UObject* WorldContextObject, const TSubclassOf<APlayerState> InClass, const FUniqueNetIdRepl& InNetID)
-{
-	return UGameplayStatics::GetPlayerStateFromUniqueNetId(WorldContextObject, InNetID);
-}
-
-APawn* UBPFunctions_Gameplay::GetPlayerPawnByUniqueNetID(const UObject* WorldContextObject, const TSubclassOf<APawn> InClass, const FUniqueNetIdRepl& InNetID)
-{
-	if (APlayerState* PlayerState = UGameplayStatics::GetPlayerStateFromUniqueNetId(WorldContextObject, InNetID))
-	{
-		return PlayerState->GetPawn<APawn>();
-	}
-	return nullptr;
 }
 
 bool UBPFunctions_Gameplay::GetIsPlayerPossessPawn(const APawn* InPawn)

@@ -4,8 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "PropertyType.h"
-#include "Generic/GenericObject.h"
 #include "Interface/StateInterface.h"
+#include "Obect/GenericObject.h"
 #include "PropertyProxy.generated.h"
 
 class UPropertyViewModel;

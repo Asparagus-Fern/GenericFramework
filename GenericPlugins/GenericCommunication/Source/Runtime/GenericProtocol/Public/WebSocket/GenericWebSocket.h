@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "WebSocketType.h"
-#include "Generic/GenericObject.h"
+#include "Obect/GenericObject.h"
 #include "GenericWebSocket.generated.h"
 
 class UGenericJsonObject;

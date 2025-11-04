@@ -21,15 +21,11 @@
     {
       "Name": "GenericWidget",
       "Enabled": true
-    },
-    {
-      "Name": "GenericEvent",
-      "Enabled": true
     }
   ],
   "Modules": [
     {
-      "Name": "MovieSceneUtilities",
+      "Name": "GenericMovieSceneSystem",
       "Type": "Runtime",
       "LoadingPhase": "Default"
     },
@@ -41,11 +37,6 @@
     {
       "Name": "MediaSystem",
       "Type": "Runtime",
-      "LoadingPhase": "Default"
-    },
-    {
-      "Name": "MovieSceneExtend",
-      "Type": "Editor",
       "LoadingPhase": "Default"
     }
   ]

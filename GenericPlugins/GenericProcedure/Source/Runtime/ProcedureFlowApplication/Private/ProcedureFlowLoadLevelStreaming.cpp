@@ -2,8 +2,7 @@
 
 #include "ProcedureFlowLoadLevelStreaming.h"
 
-#include "LevelStreamingManager.h"
-#include "Manager/ManagerStatics.h"
+#include "LevelStreamingSubsystem.h"
 
 void UProcedureFlowLoadLevelStreaming::OnProcedureFlowEnter_Implementation()
 {
@@ -11,15 +10,15 @@ void UProcedureFlowLoadLevelStreaming::OnProcedureFlowEnter_Implementation()
 
 	if (!GetWorld()->IsPartitionedWorld())
 	{
-		if (ULevelStreamingManager* LevelStreamingManager = GetManagerOwner<ULevelStreamingManager>())
+		if (ULevelStreamingSubsystem* LevelStreamingSubsystem = ULevelStreamingSubsystem::Get(this))
 		{
 			if (bLoadCurrentWorldLevels)
 			{
-				LevelStreamingManager->LoadCurrentWorldLevelStreaming(FOnHandleLevelStreamingOnceFinish::CreateUObject(this, &UProcedureFlowLoadLevelStreaming::OnLoadCurrentWorldLevelStreamingOnceFinish), FOnHandleLevelStreamingFinish::CreateUObject(this, &UProcedureFlowLoadLevelStreaming::OnLoadCurrentWorldLevelStreamingFinish));
+				LevelStreamingSubsystem->LoadCurrentWorldLevelStreaming(FOnHandleLevelStreamingOnceFinish::CreateUObject(this, &UProcedureFlowLoadLevelStreaming::OnLoadCurrentWorldLevelStreamingOnceFinish), FOnHandleLevelStreamingFinish::CreateUObject(this, &UProcedureFlowLoadLevelStreaming::OnLoadCurrentWorldLevelStreamingFinish));
 			}
 			else
 			{
-				LevelStreamingManager->LoadLevels(VisibleLevels, true, false, FOnHandleLevelStreamingOnceFinish::CreateUObject(this, &UProcedureFlowLoadLevelStreaming::OnLoadVisibleLevelsOnceFinish), FOnHandleLevelStreamingFinish::CreateUObject(this, &UProcedureFlowLoadLevelStreaming::OnLoadVisibleLevelsFinish));
+				LevelStreamingSubsystem->LoadLevels(VisibleLevels, true, false, FOnHandleLevelStreamingOnceFinish::CreateUObject(this, &UProcedureFlowLoadLevelStreaming::OnLoadVisibleLevelsOnceFinish), FOnHandleLevelStreamingFinish::CreateUObject(this, &UProcedureFlowLoadLevelStreaming::OnLoadVisibleLevelsFinish));
 			}
 		}
 	}
@@ -36,9 +35,9 @@ void UProcedureFlowLoadLevelStreaming::OnLoadCurrentWorldLevelStreamingOnceFinis
 
 void UProcedureFlowLoadLevelStreaming::OnLoadCurrentWorldLevelStreamingFinish()
 {
-	if (ULevelStreamingManager* LevelStreamingManager = GetManagerOwner<ULevelStreamingManager>())
+	if (ULevelStreamingSubsystem* LevelStreamingSubsystem = ULevelStreamingSubsystem::Get(this))
 	{
-		LevelStreamingManager->LoadLevels(VisibleLevels, true, false, FOnHandleLevelStreamingOnceFinish::CreateUObject(this, &UProcedureFlowLoadLevelStreaming::OnLoadVisibleLevelsOnceFinish), FOnHandleLevelStreamingFinish::CreateUObject(this, &UProcedureFlowLoadLevelStreaming::OnLoadVisibleLevelsFinish));
+		LevelStreamingSubsystem->LoadLevels(VisibleLevels, true, false, FOnHandleLevelStreamingOnceFinish::CreateUObject(this, &UProcedureFlowLoadLevelStreaming::OnLoadVisibleLevelsOnceFinish), FOnHandleLevelStreamingFinish::CreateUObject(this, &UProcedureFlowLoadLevelStreaming::OnLoadVisibleLevelsFinish));
 	}
 }
 

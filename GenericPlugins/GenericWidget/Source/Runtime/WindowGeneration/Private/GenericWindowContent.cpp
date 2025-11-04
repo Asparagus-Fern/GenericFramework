@@ -2,7 +2,7 @@
 
 #include "GenericWindowContent.h"
 
-#include "GenericWindowManager.h"
+#include "GenericWindowSubsystem.h"
 
 UGenericWindowWrapper* UGenericWindowContent::GetWindowWrapper() const
 {

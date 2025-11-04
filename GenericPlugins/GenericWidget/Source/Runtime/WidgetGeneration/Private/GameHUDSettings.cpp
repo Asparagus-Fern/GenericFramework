@@ -1,6 +1,5 @@
 ﻿// Copyright ChenTaiye 2025. All Rights Reserved.
 
-
 #include "GameHUDSettings.h"
 
 #include "GameplayTagsSettings.h"

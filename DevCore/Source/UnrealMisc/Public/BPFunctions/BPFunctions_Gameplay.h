@@ -31,19 +31,42 @@ public:
 	static AGameModeBase* GetGameModeByClass(const UObject* WorldContextObject, const TSubclassOf<AGameModeBase> InClass);
 
 	UFUNCTION(BlueprintPure, meta = (WorldContext = "WorldContextObject", DeterminesOutputType = "InClass"), Category="Gameplay")
+	static AGameSession* GetGameSessionByClass(const UObject* WorldContextObject, const TSubclassOf<AGameSession> InClass);
+
+	UFUNCTION(BlueprintPure, meta = (WorldContext = "WorldContextObject", DeterminesOutputType = "InClass"), Category="Gameplay")
 	static AGameStateBase* GetGameStateByClass(const UObject* WorldContextObject, const TSubclassOf<AGameStateBase> InClass);
 
+public:
 	UFUNCTION(BlueprintPure, meta = (WorldContext = "WorldContextObject", DeterminesOutputType = "InClass"), Category="Gameplay")
-	static APlayerController* GetPlayerControllerByClass(const UObject* WorldContextObject, const TSubclassOf<APlayerController> InClass, int32 InIndex);
+	static APlayerController* GetPlayerControllerByIndex(const UObject* WorldContextObject, const TSubclassOf<APlayerController> InClass, int32 InIndex);
 
 	UFUNCTION(BlueprintPure, meta = (WorldContext = "WorldContextObject", DeterminesOutputType = "InClass"), Category="Gameplay")
-	static APlayerState* GetPlayerStateByClass(const UObject* WorldContextObject, const TSubclassOf<APlayerState> InClass, int32 InIndex);
+	static ULocalPlayer* GetLocalPlayerByIndex(const UObject* WorldContextObject, const TSubclassOf<ULocalPlayer> InClass, int32 InIndex);
 
 	UFUNCTION(BlueprintPure, meta = (WorldContext = "WorldContextObject", DeterminesOutputType = "InClass"), Category="Gameplay")
-	static AHUD* GetHUDByClass(const UObject* WorldContextObject, const TSubclassOf<AHUD> InClass, int32 InIndex);
+	static APlayerState* GetPlayerStateByIndex(const UObject* WorldContextObject, const TSubclassOf<APlayerState> InClass, int32 InIndex);
 
 	UFUNCTION(BlueprintPure, meta = (WorldContext = "WorldContextObject", DeterminesOutputType = "InClass"), Category="Gameplay")
-	static APawn* GetPawnByClass(const UObject* WorldContextObject, const TSubclassOf<APawn> InClass, int32 InIndex);
+	static AHUD* GetHUDByIndex(const UObject* WorldContextObject, const TSubclassOf<AHUD> InClass, int32 InIndex);
+
+	UFUNCTION(BlueprintPure, meta = (WorldContext = "WorldContextObject", DeterminesOutputType = "InClass"), Category="Gameplay")
+	static APawn* GetPawnByIndex(const UObject* WorldContextObject, const TSubclassOf<APawn> InClass, int32 InIndex);
+
+public:
+	UFUNCTION(BlueprintPure, meta = (WorldContext = "WorldContextObject", DeterminesOutputType = "InClass"), Category="Gameplay")
+	static APlayerController* GetPlayerControllerByUniqueNetID(const UObject* WorldContextObject, const TSubclassOf<APlayerController> InClass, const FUniqueNetIdRepl& InNetID);
+
+	UFUNCTION(BlueprintPure, meta = (WorldContext = "WorldContextObject", DeterminesOutputType = "InClass"), Category="Gameplay")
+	static ULocalPlayer* GetLocalPlayerByUniqueNetID(const UObject* WorldContextObject, const TSubclassOf<ULocalPlayer> InClass, const FUniqueNetIdRepl& InNetID);
+
+	UFUNCTION(BlueprintPure, meta = (WorldContext = "WorldContextObject", DeterminesOutputType = "InClass"), Category="Gameplay")
+	static APlayerState* GetPlayerStateByUniqueNetID(const UObject* WorldContextObject, const TSubclassOf<APlayerState> InClass, const FUniqueNetIdRepl& InNetID);
+
+	UFUNCTION(BlueprintPure, meta = (WorldContext = "WorldContextObject", DeterminesOutputType = "InClass"), Category="Gameplay")
+	static AHUD* GetHUDByUniqueNetID(const UObject* WorldContextObject, const TSubclassOf<AHUD> InClass, const FUniqueNetIdRepl& InNetID);
+
+	UFUNCTION(BlueprintPure, meta = (WorldContext = "WorldContextObject", DeterminesOutputType = "InClass"), Category="Gameplay")
+	static APawn* GetPawnByUniqueNetID(const UObject* WorldContextObject, const TSubclassOf<APawn> InClass, const FUniqueNetIdRepl& InNetID);
 
 public:
 	UFUNCTION(BlueprintPure, Category="Gameplay", DisplayName="GetPlayerID (PlayerController)")
@@ -67,17 +90,7 @@ public:
 
 	UFUNCTION(BlueprintPure, Category="Gameplay", DisplayName="GetPlayerUniqueNetID (PlayerIndex)", meta=(WorldContext = "WorldContextObject"))
 	static bool GetPlayerUniqueNetIDByPlayerIndex(const UObject* WorldContextObject, int32 InPlayerIndex, FUniqueNetIdRepl& Result);
-
-public:
-	UFUNCTION(BlueprintPure, Category="Gameplay", meta=(WorldContext = "WorldContextObject", DeterminesOutputType = "InClass"))
-	static APlayerController* GetPlayerControllerByUniqueNetID(const UObject* WorldContextObject, const TSubclassOf<APlayerController> InClass, const FUniqueNetIdRepl& InNetID);
-
-	UFUNCTION(BlueprintPure, Category="Gameplay", meta=(WorldContext = "WorldContextObject", DeterminesOutputType = "InClass"))
-	static APlayerState* GetPlayerStateByUniqueNetID(const UObject* WorldContextObject, const TSubclassOf<APlayerState> InClass, const FUniqueNetIdRepl& InNetID);
-
-	UFUNCTION(BlueprintPure, Category="Gameplay", meta=(WorldContext = "WorldContextObject", DeterminesOutputType = "InClass"))
-	static APawn* GetPlayerPawnByUniqueNetID(const UObject* WorldContextObject, const TSubclassOf<APawn> InClass, const FUniqueNetIdRepl& InNetID);
-
+	
 	/* Pawn */
 public:
 	UFUNCTION(BlueprintPure, Category="Pawn")
@@ -88,16 +101,16 @@ public:
 
 	/* Actor */
 public:
-	UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject"), Category="Actor")
+	UFUNCTION(BlueprintCallable, meta=(WorldContext = "WorldContextObject"), Category="Actor")
 	static void SetAllActorsVisibility(const UObject* WorldContextObject, TSubclassOf<AActor> InClass, bool bIsHiddenInGame);
 
-	UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject"), Category="Actor")
+	UFUNCTION(BlueprintCallable, meta=(WorldContext = "WorldContextObject"), Category="Actor")
 	static void SetAllActorsVisibilityWithInterface(const UObject* WorldContextObject, TSubclassOf<UInterface> Interface, bool bIsHiddenInGame);
 
-	UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject"), DisplayName="SetAllActorsVisibilityWithTag(Class)", Category="Actor")
+	UFUNCTION(BlueprintCallable, meta=(WorldContext = "WorldContextObject"), DisplayName="SetAllActorsVisibilityWithTag(Class)", Category="Actor")
 	static void SetAllActorsVisibilityWithTag_Class(const UObject* WorldContextObject, TSubclassOf<AActor> InClass, FName InTag, bool bIsHiddenInGame);
 
-	UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject"), DisplayName="SetAllActorsVisibilityWithTag(Interface)", Category="Actor")
+	UFUNCTION(BlueprintCallable, meta=(WorldContext = "WorldContextObject"), DisplayName="SetAllActorsVisibilityWithTag(Interface)", Category="Actor")
 	static void SetAllActorsVisibilityWithTag_Interface(const UObject* WorldContextObject, TSubclassOf<UInterface> Interface, FName InTag, bool bIsHiddenInGame);
 
 public:

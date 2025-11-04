@@ -25,11 +25,11 @@ public:
 	virtual void Activate() override;
 
 public:
-	UFUNCTION(BlueprintCallable, DisplayName="Close Generic Widget", meta = (BlueprintInternalUseOnly = "true", AdvancedDisplay = 1))
-	static UCloseGenericWidgetAsyncAction* AsyncCloseGenericWidget(UGenericWidget* InWidget, bool MarkAsGarbage = true);
+	UFUNCTION(BlueprintCallable, DisplayName="Close Generic Widget By Tag", meta = (WorldContext = "InWorldContextObject", GameplayTagFilter="UI.HUD", BlueprintInternalUseOnly = "true", AdvancedDisplay = 1))
+	static UCloseGenericWidgetAsyncAction* AsyncCloseGenericWidgetByTag(UObject* InWorldContextObject, FGameplayTag InSlotTag, bool MarkAsGarbage = true);
 
-	UFUNCTION(BlueprintCallable, DisplayName="Close Generic Widget By Tag", meta = (GameplayTagFilter="UI.HUD", BlueprintInternalUseOnly = "true", AdvancedDisplay = 1))
-	static UCloseGenericWidgetAsyncAction* AsyncCloseGenericWidgetByTag(FGameplayTag InSlotTag, bool MarkAsGarbage = true);
+	UFUNCTION(BlueprintCallable, DisplayName="Close Generic Widget", meta = (WorldContext = "InWorldContextObject", BlueprintInternalUseOnly = "true", AdvancedDisplay = 1))
+	static UCloseGenericWidgetAsyncAction* AsyncCloseGenericWidget(UObject* InWorldContextObject, UGenericWidget* InWidget, bool MarkAsGarbage = true);
 
 public:
 	UPROPERTY(BlueprintAssignable)
@@ -41,6 +41,9 @@ public:
 private:
 	virtual void OnWidgetInactived(UGenericWidget* InWidget);
 	virtual void OnWidgetInactivedAnimationFinish(UGenericWidget* InWidget);
+
+	UPROPERTY()
+	UObject* WorldContextObject = nullptr;
 
 	UPROPERTY()
 	TObjectPtr<UGenericWidget> Widget;

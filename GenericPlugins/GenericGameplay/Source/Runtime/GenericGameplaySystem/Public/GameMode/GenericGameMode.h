@@ -7,6 +7,7 @@
 #include "GenericGameMode.generated.h"
 
 class IPlayerIdentityInterface;
+
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnPlayerLogin, APlayerController*);
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnPlayerLogout, APlayerController*);
 

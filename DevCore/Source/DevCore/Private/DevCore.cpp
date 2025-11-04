@@ -2,7 +2,6 @@
 
 #include "DevCore.h"
 
-#include "Manager/ManagerProxy.h"
 #include "Modules/ModuleManager.h"
 
 #define LOCTEXT_NAMESPACE "FDevCoreModule"

@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "Base/GenericWidget.h"
 #include "Blueprint/IUserObjectListEntry.h"
-#include "Generic/GenericObject.h"
+#include "Obect/GenericObject.h"
 #include "PropertyListItem.generated.h"
 
 class UPropertyListItemOption;

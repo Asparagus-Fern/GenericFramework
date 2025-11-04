@@ -1,25 +1,24 @@
 ﻿// Copyright ChenTaiye 2025. All Rights Reserved.
 
-
 #include "Tools/FastSwitchLanguage.h"
 
 #include "DevCoreStyle.h"
-#include "DevFrameworkEdSubsystem.h"
 #include "Internationalization/Culture.h"
 #include "Kismet2/BlueprintEditorUtils.h"
+#include "Subsystem/GenericFrameworkEdSubsystem.h"
 
 #define LOCTEXT_NAMESPACE "FApplicationEditorModule"
 
 void UFastSwitchLanguage::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
-	FDevFrameworkDelegate::OnToolBarSectionExtend.AddUObject(this, &UFastSwitchLanguage::OnToolBarSectionExtend);
+	UGenericFrameworkEdSubsystem::OnToolBarSectionExtend.AddUObject(this, &UFastSwitchLanguage::OnToolBarSectionExtend);
 }
 
 void UFastSwitchLanguage::Deinitialize()
 {
 	Super::Deinitialize();
-	FDevFrameworkDelegate::OnToolBarSectionExtend.RemoveAll(this);
+	UGenericFrameworkEdSubsystem::OnToolBarSectionExtend.RemoveAll(this);
 }
 
 void UFastSwitchLanguage::OnToolBarSectionExtend(FToolMenuSection& InToolMenuSection)

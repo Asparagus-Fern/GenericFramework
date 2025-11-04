@@ -11,6 +11,7 @@ public class GenericAssetLoadSystem : ModuleRules
 			{
 				"Core",
 				"DevCore",
+				"WidgetGeneration"
 			}
 		);
 
@@ -23,7 +24,6 @@ public class GenericAssetLoadSystem : ModuleRules
 				"SlateCore",
 				"UMG",
 				"ModelViewViewModel",
-				"WidgetGeneration"
 			}
 		);
 	}

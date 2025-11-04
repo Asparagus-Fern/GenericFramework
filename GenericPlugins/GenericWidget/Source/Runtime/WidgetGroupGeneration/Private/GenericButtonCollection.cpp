@@ -8,9 +8,9 @@
 #include "GenericButtonBuilder.h"
 #include "GenericButtonContainer.h"
 #include "GenericButtonWidget.h"
-#include "GenericWidgetManager.h"
+#include "GenericWidgetSubsystem.h"
 #include "BPFunctions/BPFunctions_GameplayTag.h"
-#include "Manager/ManagerStatics.h"
+
 #include "MVVM/ButtonGroupViewModel.h"
 
 FName FButtonCollectionEvent::OnPressedEventName = FName(TEXT("OnPressed"));
@@ -72,7 +72,7 @@ void UGenericButtonCollection::BuildChildButtonGroup(const FGameplayTag InButton
 		return;
 	}
 
-	UGenericWidgetManager* GenericWidgetManager = GetManagerOwner<UGenericWidgetManager>();
+	UGenericWidgetSubsystem* GenericWidgetManager = UGenericWidgetSubsystem::Get(this);
 	if (!IsValid(GenericWidgetManager))
 	{
 		GenericLOG(GenericLogUI, Warning, TEXT("GenericWidgetManager Is InValid"))
@@ -123,7 +123,7 @@ void UGenericButtonCollection::BuildChildButtonGroup(const FGameplayTag InButton
 			FGameplayTag ChildButtonTag = ChildrenTagContainer.GetByIndex(It);
 			if (UGenericButtonWidget* ChildButtonWidget = BuildButtonWidget(ChildButtonTag, ButtonContainer))
 			{
-				/* Try To Open Child Widget, It Will Add To Container Through a Valid Container Widget, See More In UGenericGameSlotManager::AddSlotWidget */
+				/* Try To Open Child Widget, It Will Add To Container Through a Valid Container Widget, See More In UGenericGameSlotSubsystem::AddSlotWidget */
 				if (!GenericWidgetManager->OpenGenericWidget(ChildButtonWidget))
 				{
 					GenericLOG(GenericLogUI, Error, TEXT("Open Button Widget Fail"))
@@ -180,7 +180,7 @@ void UGenericButtonCollection::DestroyChildButtonGroup(const FGameplayTag InButt
 		return;
 	}
 
-	UGenericWidgetManager* GenericWidgetManager = GetManagerOwner<UGenericWidgetManager>();
+	UGenericWidgetSubsystem* GenericWidgetManager = UGenericWidgetSubsystem::Get(this);
 	TObjectPtr<UGenericButtonGroup> ButtonGroup = ButtonGroups.FindRef(InButtonTag);
 
 	OnButtonGroupDestroy(InButtonTag);

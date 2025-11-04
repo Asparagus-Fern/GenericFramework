@@ -1,11 +1,10 @@
 ﻿// Copyright ChenTaiye 2025. All Rights Reserved.
 
-
 #include "Pawn/ThirdPersonPawn.h"
 
 #include "CameraType.h"
 #include "Camera/CameraComponent.h"
-#include "CameraSwitch/CameraSwitchMethod.h"
+#include "CameraSwitch/GenericCameraSwitchMethod.h"
 #include "CameraPoint/CameraPointBase.h"
 #include "Component/PawnLockStateComponent.h"
 #include "Component/PawnSpringArmComponent.h"
@@ -26,14 +25,14 @@ void AThirdPersonPawn::BeginPlay()
 {
 	Super::BeginPlay();
 
-	UCameraSwitchMethod::OnSwitchCameraBegin.AddUObject(this, &AThirdPersonPawn::OnSwitchCameraBegin);
-	UCameraSwitchMethod::OnSwitchCameraFinish.AddUObject(this, &AThirdPersonPawn::OnSwitchCameraFinish);
+	UGenericCameraSwitchMethod::OnSwitchCameraBegin.AddUObject(this, &AThirdPersonPawn::OnSwitchCameraBegin);
+	UGenericCameraSwitchMethod::OnSwitchCameraFinish.AddUObject(this, &AThirdPersonPawn::OnSwitchCameraFinish);
 }
 
 void AThirdPersonPawn::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-	UCameraSwitchMethod::OnSwitchCameraBegin.RemoveAll(this);
-	UCameraSwitchMethod::OnSwitchCameraFinish.RemoveAll(this);
+	UGenericCameraSwitchMethod::OnSwitchCameraBegin.RemoveAll(this);
+	UGenericCameraSwitchMethod::OnSwitchCameraFinish.RemoveAll(this);
 
 	Super::EndPlay(EndPlayReason);
 }
@@ -135,11 +134,11 @@ float AThirdPersonPawn::GetZoom()
 	return SpringArmComponent->TargetArmLength;
 }
 
-void AThirdPersonPawn::OnSwitchCameraBegin(UCameraSwitchMethod* InCameraHandle)
+void AThirdPersonPawn::OnSwitchCameraBegin(UGenericCameraSwitchMethod* InCameraHandle)
 {
 }
 
-void AThirdPersonPawn::OnSwitchCameraFinish(UCameraSwitchMethod* InCameraHandle)
+void AThirdPersonPawn::OnSwitchCameraFinish(UGenericCameraSwitchMethod* InCameraHandle)
 {
 	if (!IsValid(InCameraHandle) || !IsValid(InCameraHandle->TargetCameraPoint) || !IsValid(InCameraHandle->TargetCameraPoint->GetCameraComponent()))
 	{

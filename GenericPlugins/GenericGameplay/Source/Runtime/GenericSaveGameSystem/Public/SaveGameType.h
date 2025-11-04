@@ -7,6 +7,7 @@
 
 class UGenericSaveGame;
 
+GENERICSAVEGAMESYSTEM_API DECLARE_LOG_CATEGORY_EXTERN(GenericLogSaveGame, Log, All);
 
 /**
  * 

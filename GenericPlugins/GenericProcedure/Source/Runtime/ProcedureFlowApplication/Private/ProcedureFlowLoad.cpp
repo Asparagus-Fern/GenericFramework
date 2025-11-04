@@ -2,13 +2,12 @@
 
 #include "ProcedureFlowLoad.h"
 
-#include "ProcedureFlowManager.h"
-#include "Manager/ManagerStatics.h"
+#include "ProcedureFlowSubsystem.h"
 
 void UProcedureFlowLoad::SwitchToNextProcedureFlow() const
 {
-	if (UProcedureFlowManager* ProcedureFlowManager = GetManagerOwner<UProcedureFlowManager>())
+	if (UProcedureFlowSubsystem* ProcedureFlowSubsystem = UProcedureFlowSubsystem::Get(this))
 	{
-		ProcedureFlowManager->EnterProcedureFlow(NextProcedureFlowTag);
+		ProcedureFlowSubsystem->EnterProcedureFlow(NextProcedureFlowTag);
 	}
 }

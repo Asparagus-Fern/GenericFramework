@@ -19,20 +19,20 @@ class PROPERTYSYSTEM_API UBPFunctions_Property : public UBlueprintFunctionLibrar
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintCallable, meta=(GameplayTagFilter="Property.Proxy", DeterminesOutputType = "InPropertyProxyClass"))
-	static UPropertyProxy* RegisterPropertyProxy(FGameplayTag InPropertyProxyTag, const TSubclassOf<UPropertyProxy>& InPropertyProxyClass);
+	UFUNCTION(BlueprintCallable, meta=(WorldContext = "WorldContextObject", GameplayTagFilter="Property.Proxy", DeterminesOutputType = "InPropertyProxyClass"))
+	static UPropertyProxy* RegisterPropertyProxy(const UObject* WorldContextObject, FGameplayTag InPropertyProxyTag, const TSubclassOf<UPropertyProxy>& InPropertyProxyClass);
 
-	UFUNCTION(BlueprintCallable, meta=(GameplayTagFilter="Property.Proxy"))
-	static void UnRegisterPropertyProxyByTag(FGameplayTag InPropertyProxyTag);
+	UFUNCTION(BlueprintCallable, meta=(WorldContext = "WorldContextObject", GameplayTagFilter="Property.Proxy"))
+	static void UnRegisterPropertyProxyByTag(const UObject* WorldContextObject, FGameplayTag InPropertyProxyTag);
 
-	UFUNCTION(BlueprintCallable)
-	static void UnRegisterPropertyProxy(UPropertyProxy* InPropertyProxy);
+	UFUNCTION(BlueprintCallable, meta=(WorldContext = "WorldContextObject"))
+	static void UnRegisterPropertyProxy(const UObject* WorldContextObject, UPropertyProxy* InPropertyProxy);
 
-	UFUNCTION(BlueprintPure, meta=(GameplayTagFilter="Property.Proxy"))
-	static bool ExistPropertyProxy(FGameplayTag InPropertyProxyTag);
+	UFUNCTION(BlueprintPure, meta=(WorldContext = "WorldContextObject", GameplayTagFilter="Property.Proxy"))
+	static bool ExistPropertyProxy(const UObject* WorldContextObject, FGameplayTag InPropertyProxyTag);
 
-	UFUNCTION(BlueprintPure, meta=(GameplayTagFilter="Property.Proxy", DeterminesOutputType = "InPropertyProxyClass"))
-	static UPropertyProxy* GetPropertyProxy(FGameplayTag InPropertyProxyTag, const TSubclassOf<UPropertyProxy>& InPropertyProxyClass);
+	UFUNCTION(BlueprintPure, meta=(WorldContext = "WorldContextObject", GameplayTagFilter="Property.Proxy", DeterminesOutputType = "InPropertyProxyClass"))
+	static UPropertyProxy* GetPropertyProxy(const UObject* WorldContextObject, FGameplayTag InPropertyProxyTag, const TSubclassOf<UPropertyProxy>& InPropertyProxyClass);
 
 public:
 	UFUNCTION(BlueprintPure)

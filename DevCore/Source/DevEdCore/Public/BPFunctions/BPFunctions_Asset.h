@@ -18,11 +18,11 @@ class DEVEDCORE_API UBPFunctions_Asset : public UBlueprintFunctionLibrary
 public:
 	static FAssetData GetAssetData(const UObject* InAsset);
 	static TArray<FAssetData> GetAssetsDataByPath(const FString& InAssetPackagePath);
-	
+
 	static FName GetAssetPackagePath(const UObject* InAsset); /*  /LayerWidget/MenuInfo  */
 	static FPackagePath GetAssetPackageName(const UObject* InAsset); /*  /LayerWidget/MenuInfo/ccc  */
-	static FString GetAssetLocalFullPath(const UObject* InAsset); /*  ../../../../../UEProject/DevProject/Plugins/DevPlugin/Runtime/LayerWidget/Content/MenuInfo/cccd.uasset  */
-	static FString GetAssetFullPath(const UObject* InAsset); /*  C:/UEProject/DevProject/Plugins/DevPlugin/Runtime/LayerWidget/Content/MenuInfo/cccd.uasset"  */
+	static FString GetAssetLocalFullPath(const UObject* InAsset); /*  ../../../../../UEProject/DevProject/Plugins/DevPlugin/Runtime/LayerWidget/Content/MenuInfo/Test.uasset  */
+	static FString GetAssetFullPath(const UObject* InAsset); /*  C:/UEProject/DevProject/Plugins/DevPlugin/Runtime/LayerWidget/Content/MenuInfo/Test.uasset"  */
 	static FString GetAssetFullDirectoryPath(const UObject* InAsset); /*  "C:/UEProject/DevProject/Plugins/DevPlugin/Runtime/LayerWidget/Content/MenuInfo"  */
 
 	static FString GetAssetExtension(const UObject* InAsset);

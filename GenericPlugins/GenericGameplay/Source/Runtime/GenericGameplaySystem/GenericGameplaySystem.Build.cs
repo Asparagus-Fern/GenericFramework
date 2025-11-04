@@ -12,6 +12,8 @@ public class GenericGameplaySystem : ModuleRules
 				"Core",
 				"UnrealMisc",
 				"DevCore",
+				"GenericCameraSystem",
+				"WidgetGeneration",
 			}
 		);
 
@@ -28,10 +30,7 @@ public class GenericGameplaySystem : ModuleRules
 				"EnhancedInput",
 				"AIModule",
 				"GameplayCameras",
-				"PlayerInputUtilities",
-
-				"CameraSystem",
-				"WidgetGeneration",
+				"GenericInputSystem",
 			}
 		);
 	}

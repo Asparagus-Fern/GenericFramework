@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
-#include "GenericWidgetManager.h"
+#include "GenericWidgetSubsystem.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "BPFunctions_Widget.generated.h"
 
@@ -21,6 +21,6 @@ class WIDGETGENERATION_API UBPFunctions_Widget : public UBlueprintFunctionLibrar
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintPure)
-	static TArray<UGenericWidget*> GetActivedWidgets();
+	UFUNCTION(BlueprintPure, meta=(WorldContext = "WorldContextObject"))
+	static TArray<UGenericWidget*> GetActivedWidgets(const UObject* WorldContextObject);
 };

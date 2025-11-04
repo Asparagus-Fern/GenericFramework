@@ -1,12 +1,11 @@
 ﻿// Copyright ChenTaiye 2025. All Rights Reserved.
 
-
 #include "Handle/SetLevelStreamingVisibilityHandle.h"
 
 #include "BPFunctions_LevelStreaming.h"
-#include "LevelStreamingManager.h"
+#include "LevelStreamingSubsystem.h"
 #include "Handle/UnLoadLevelStreamingHandle.h"
-#include "Manager/ManagerStatics.h"
+
 
 void USetLevelStreamingVisibilityHandle::Initialize(const FSetLevelStreamingVisibilitySetting& InSetting)
 {
@@ -53,7 +52,7 @@ void USetLevelStreamingVisibilityHandle::ExecuteHandle(int32 Index)
 	TArray<FLoadLevelStreamingSetting> LoadLevelSettings;
 	for (auto& Level : GetLevels())
 	{
-		if (!UBPFunctions_LevelStreaming::IsLevelLoaded(Level))
+		if (!UBPFunctions_LevelStreaming::IsLevelLoaded(this, Level))
 		{
 			LoadLevelSettings.Add(FLoadLevelStreamingSetting(Level, false, false));
 		}
@@ -61,7 +60,7 @@ void USetLevelStreamingVisibilityHandle::ExecuteHandle(int32 Index)
 
 	if (!LoadLevelSettings.IsEmpty())
 	{
-		GetManagerOwner<ULevelStreamingManager>()->LoadLevelsBySetting(LoadLevelSettings, nullptr, FOnHandleLevelStreamingFinish::CreateUObject(this, &USetLevelStreamingVisibilityHandle::LoadLevelsBeforeSetVisibility));
+		ULevelStreamingSubsystem::Get(this)->LoadLevelsBySetting(LoadLevelSettings, nullptr, FOnHandleLevelStreamingFinish::CreateUObject(this, &USetLevelStreamingVisibilityHandle::LoadLevelsBeforeSetVisibility));
 		return;
 	}
 
@@ -76,7 +75,7 @@ void USetLevelStreamingVisibilityHandle::LoadLevelsBeforeSetVisibility()
 
 void USetLevelStreamingVisibilityHandle::SetLevelVisibility(const TSoftObjectPtr<UWorld>& Level, const bool bVisible)
 {
-	if (ULevelStreaming* LevelStreaming = UBPFunctions_LevelStreaming::GetLevelStreaming(Level))
+	if (ULevelStreaming* LevelStreaming = UBPFunctions_LevelStreaming::GetLevelStreaming(this, Level))
 	{
 		if (LevelStreaming->ShouldBeVisible() != bVisible)
 		{
@@ -93,7 +92,7 @@ void USetLevelStreamingVisibilityHandle::SetLevelVisibility(const TSoftObjectPtr
 
 void USetLevelStreamingVisibilityHandle::OnLevelVisibilityChanged()
 {
-	if (ULevelStreaming* LevelStreaming = UBPFunctions_LevelStreaming::GetLevelStreaming(SetLevelStreamingVisibilitySettings[GetLevelIndex()].Level))
+	if (ULevelStreaming* LevelStreaming = UBPFunctions_LevelStreaming::GetLevelStreaming(this, SetLevelStreamingVisibilitySettings[GetLevelIndex()].Level))
 	{
 		LevelStreaming->OnLevelShown.RemoveAll(this);
 		LevelStreaming->OnLevelHidden.RemoveAll(this);

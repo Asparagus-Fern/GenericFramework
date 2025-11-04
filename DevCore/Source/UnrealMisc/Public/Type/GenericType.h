@@ -4,7 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "NativeGameplayTags.h"
+#include "Kismet/GameplayStatics.h"
 // #include "GenericType.generated.h"
+
+#define BROADCAST_UNIFIED_DELEGATE(DelegateName, BPDelegateName, ...) \
+	DelegateName.Broadcast(__VA_ARGS__); \
+	BPDelegateName.Broadcast(__VA_ARGS__);
 
 UNREALMISC_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Result);
 

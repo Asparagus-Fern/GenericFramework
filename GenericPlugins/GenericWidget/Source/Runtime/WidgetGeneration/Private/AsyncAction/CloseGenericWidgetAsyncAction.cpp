@@ -2,9 +2,9 @@
 
 #include "AsyncAction/CloseGenericWidgetAsyncAction.h"
 
-#include "GenericGameSlotManager.h"
-#include "GenericWidgetManager.h"
-#include "Manager/ManagerStatics.h"
+#include "GenericGameSlotSubsystem.h"
+#include "GenericWidgetSubsystem.h"
+
 
 void UCloseGenericWidgetAsyncAction::Activate()
 {
@@ -17,33 +17,37 @@ void UCloseGenericWidgetAsyncAction::Activate()
 	}
 
 	Widget->GetOnWidgetInactiveAnimationPlayFinish().AddUObject(this, &UCloseGenericWidgetAsyncAction::OnWidgetInactivedAnimationFinish);
-	FWidgetHelper::CloseGenericWidget(Widget, bMarkAsGarbage, FOnWidgetActiveStateChanged::CreateUObject(this, &UCloseGenericWidgetAsyncAction::OnWidgetInactived));
+	if (UGenericWidgetSubsystem* GenericWidgetManager = UGenericWidgetSubsystem::Get(WorldContextObject))
+	{
+		GenericWidgetManager->CloseGenericWidget(Widget, bMarkAsGarbage, FOnWidgetActiveStateChanged::CreateUObject(this, &UCloseGenericWidgetAsyncAction::OnWidgetInactived));
+	}
 }
 
-UCloseGenericWidgetAsyncAction* UCloseGenericWidgetAsyncAction::AsyncCloseGenericWidget(UGenericWidget* InWidget, const bool MarkAsGarbage)
-{
-	check(InWidget)
-
-	UCloseGenericWidgetAsyncAction* NewAction = NewObject<UCloseGenericWidgetAsyncAction>();
-	NewAction->Widget = InWidget;
-	NewAction->bMarkAsGarbage = MarkAsGarbage;
-
-	return NewAction;
-}
-
-UCloseGenericWidgetAsyncAction* UCloseGenericWidgetAsyncAction::AsyncCloseGenericWidgetByTag(const FGameplayTag InSlotTag, const bool MarkAsGarbage)
+UCloseGenericWidgetAsyncAction* UCloseGenericWidgetAsyncAction::AsyncCloseGenericWidgetByTag(UObject* InWorldContextObject, const FGameplayTag InSlotTag, const bool MarkAsGarbage)
 {
 	check(InSlotTag.IsValid())
 
-	if (UGenericGameSlotManager* GameSlotManager = GetManagerOwner<UGenericGameSlotManager>())
+	if (UGenericGameSlotSubsystem* GameSlotSubsystem = UGenericGameSlotSubsystem::Get(InWorldContextObject))
 	{
-		if (UGenericWidget* GameSlotWidget = GameSlotManager->GetSlotWidget(InSlotTag))
+		if (UGenericWidget* GameSlotWidget = GameSlotSubsystem->GetSlotWidget(InSlotTag))
 		{
-			return AsyncCloseGenericWidget(GameSlotWidget, MarkAsGarbage);
+			return AsyncCloseGenericWidget(InWorldContextObject, GameSlotWidget, MarkAsGarbage);
 		}
 	}
 
 	return nullptr;
+}
+
+UCloseGenericWidgetAsyncAction* UCloseGenericWidgetAsyncAction::AsyncCloseGenericWidget(UObject* InWorldContextObject, UGenericWidget* InWidget, const bool MarkAsGarbage)
+{
+	check(InWidget)
+
+	UCloseGenericWidgetAsyncAction* NewAction = NewObject<UCloseGenericWidgetAsyncAction>();
+	NewAction->WorldContextObject = InWorldContextObject;
+	NewAction->Widget = InWidget;
+	NewAction->bMarkAsGarbage = MarkAsGarbage;
+
+	return NewAction;
 }
 
 void UCloseGenericWidgetAsyncAction::OnWidgetInactived(UGenericWidget* InWidget)

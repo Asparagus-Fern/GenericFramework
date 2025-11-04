@@ -3,14 +3,18 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "NativeGameplayTags.h"
+
 #include "ProcedureFlowInterface.h"
 #include "Components/ActorComponent.h"
 #include "ProcedureFlowComponent.generated.h"
 
-UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_ProcedureFlow);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnProcedureFlowRegister, UProcedureFlowComponent*)
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnProcedureFlowUnRegister, UProcedureFlowComponent*)
 
-UCLASS(ClassGroup=(GenericFreamwork), meta=(BlueprintSpawnableComponent), MinimalAPI)
+/**
+ * 
+ */
+UCLASS(ClassGroup=(GenericFramework), meta=(BlueprintSpawnableComponent), MinimalAPI)
 class UProcedureFlowComponent : public USceneComponent, public IProcedureFlowInterface
 {
 	GENERATED_BODY()
@@ -19,6 +23,9 @@ public:
 	PROCEDUREFLOWSYSTEM_API virtual void BeginPlay() override;
 	PROCEDUREFLOWSYSTEM_API virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
+	inline static FOnProcedureFlowRegister OnRegister;
+	inline static FOnProcedureFlowUnRegister OnUnRegister;
+	
 	/* IProcedureFlowInterface */
 public:
 	PROCEDUREFLOWSYSTEM_API virtual void OnProcedureFlowRegister_Implementation() override;
@@ -38,7 +45,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	bool bRegisterEvenIsHidden = false;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="Procedure.Flow"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="ProcedureFlow"))
 	FGameplayTag ProcedureFlowTag = FGameplayTag::EmptyTag;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)

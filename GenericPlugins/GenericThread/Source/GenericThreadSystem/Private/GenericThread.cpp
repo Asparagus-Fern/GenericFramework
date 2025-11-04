@@ -1,6 +1,5 @@
 ﻿// Copyright ChenTaiye 2025. All Rights Reserved.
 
-
 #include "GenericThread.h"
 
 FGenericThread::FGenericThread(const FString& InThreadName, const uint32 InThreadSize, const EThreadPriority InThreadPriority)

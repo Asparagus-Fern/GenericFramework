@@ -10,7 +10,8 @@ public class LevelStreaming : ModuleRules
 			new string[]
 			{
 				"Core",
-				"DevCore"
+				"DevCore",
+				"WorldUtilities",
 			}
 		);
 
@@ -21,9 +22,6 @@ public class LevelStreaming : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
-
-				"EventUtilities",
-				"WorldUtilities"
 			}
 		);
 	}

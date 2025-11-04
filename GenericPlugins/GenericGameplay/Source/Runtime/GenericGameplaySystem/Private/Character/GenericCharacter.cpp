@@ -2,11 +2,8 @@
 
 #include "Character/GenericCharacter.h"
 
-#include "AIController.h"
 #include "Component/PawnInputMovementComponent.h"
 #include "Component/PawnLockStateComponent.h"
-#include "GameFramework/PlayerState.h"
-#include "Kismet/KismetMathLibrary.h"
 
 AGenericCharacter::AGenericCharacter()
 {

@@ -12,6 +12,7 @@ public class ExternalData : ModuleRules
 			new string[]
 			{
 				"Core",
+				"GenericJson",
 				// ... add other public dependencies that you statically link with here ...
 			});
 
@@ -22,7 +23,6 @@ public class ExternalData : ModuleRules
 				"Engine",
 				"Json",
 				"JsonUtilities",
-				"GenericJson",
 				// ... add private dependencies that you statically link with here ...	
 			});
 

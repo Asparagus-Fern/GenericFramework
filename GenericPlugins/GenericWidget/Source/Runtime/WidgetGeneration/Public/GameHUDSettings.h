@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Generic/GenericSettings.h"
+#include "Settings/GenericSettings.h"
 #include "GameHUDSettings.generated.h"
 
 class UGenericGameHUD;

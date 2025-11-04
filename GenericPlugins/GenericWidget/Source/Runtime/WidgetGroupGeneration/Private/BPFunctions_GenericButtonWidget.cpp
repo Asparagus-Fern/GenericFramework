@@ -1,13 +1,12 @@
 // Copyright ChenTaiye 2025. All Rights Reserved.
 
-
 #include "BPFunctions_GenericButtonWidget.h"
 
 #include "GenericButtonCollection.h"
-#include "GenericButtonManager.h"
-#include "Manager/ManagerStatics.h"
+#include "GenericButtonSubsystem.h"
 
-UGenericButtonCollection* UBPFunctions_GenericButtonWidget::RegisterButtonCollectionByClass(APlayerController* Player, TSubclassOf<UGenericButtonCollection> InCollectionClass, bool InActived)
+
+UGenericButtonCollection* UBPFunctions_GenericButtonWidget::RegisterButtonCollectionByClass(const UObject* WorldContextObject, APlayerController* Player, TSubclassOf<UGenericButtonCollection> InCollectionClass, bool InActived)
 {
 	ensureAlways(InCollectionClass);
 	ensureAlways(Player);
@@ -24,10 +23,16 @@ UGenericButtonCollection* UBPFunctions_GenericButtonWidget::RegisterButtonCollec
 		return nullptr;
 	}
 
-	return Cast<UGenericButtonCollection>(GetManagerOwner<UGenericButtonManager>()->RegisterButtonCollection(Player, InCollectionClass, InActived));
+
+	if (UGenericButtonSubsystem* GenericButtonSubsystem = UGenericButtonSubsystem::Get(WorldContextObject))
+	{
+		return Cast<UGenericButtonCollection>(GenericButtonSubsystem->RegisterButtonCollection(Player, InCollectionClass, InActived));
+	}
+
+	return nullptr;
 }
 
-bool UBPFunctions_GenericButtonWidget::UnRegisterButtonCollection(UGenericButtonCollection* InCollection)
+bool UBPFunctions_GenericButtonWidget::UnRegisterButtonCollection(const UObject* WorldContextObject, UGenericButtonCollection* InCollection)
 {
 	ensureAlways(InCollection);
 
@@ -37,10 +42,15 @@ bool UBPFunctions_GenericButtonWidget::UnRegisterButtonCollection(UGenericButton
 		return false;
 	}
 
-	return GetManagerOwner<UGenericButtonManager>()->UnRegisterButtonCollection(InCollection);
+	if (UGenericButtonSubsystem* GenericButtonSubsystem = UGenericButtonSubsystem::Get(WorldContextObject))
+	{
+		return GenericButtonSubsystem->UnRegisterButtonCollection(InCollection);
+	}
+
+	return false;
 }
 
-UGenericButtonCollection* UBPFunctions_GenericButtonWidget::GetButtonCollectionByTag(TSubclassOf<UGenericButtonCollection> InCollectionClass, FGameplayTag InRootButtonTag)
+UGenericButtonCollection* UBPFunctions_GenericButtonWidget::GetButtonCollectionByTag(const UObject* WorldContextObject, TSubclassOf<UGenericButtonCollection> InCollectionClass, FGameplayTag InRootButtonTag)
 {
 	ensureAlways(InCollectionClass);
 
@@ -50,5 +60,10 @@ UGenericButtonCollection* UBPFunctions_GenericButtonWidget::GetButtonCollectionB
 		return nullptr;
 	}
 
-	return Cast<UGenericButtonCollection>(GetManagerOwner<UGenericButtonManager>()->GetButtonCollection(InRootButtonTag));
+	if (UGenericButtonSubsystem* GenericButtonSubsystem = UGenericButtonSubsystem::Get(WorldContextObject))
+	{
+		return Cast<UGenericButtonCollection>(GenericButtonSubsystem->GetButtonCollection(InRootButtonTag));
+	}
+
+	return nullptr;
 }

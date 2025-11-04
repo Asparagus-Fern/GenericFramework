@@ -2,9 +2,8 @@
 
 #include "PlayerController/GenericPlayerController.h"
 
-#include "GenericGameHUDManager.h"
-#include "GameFramework/PlayerState.h"
-#include "Manager/ManagerStatics.h"
+#include "GenericGameHUDSubsystem.h"
+
 #include "PlayerController/GenericPlayerCameraManager.h"
 
 AGenericPlayerController::AGenericPlayerController()
@@ -18,7 +17,7 @@ void AGenericPlayerController::BeginPlay()
 
 	if (IsLocalController())
 	{
-		UGenericGameHUDManager::Delegate_PostHUDCreated.AddUObject(this, &AGenericPlayerController::NativeOnPlayerGameHUDCreated);
+		UGenericGameHUDSubsystem::Delegate_PostHUDCreated.AddUObject(this, &AGenericPlayerController::NativeOnPlayerGameHUDCreated);
 	}
 }
 
@@ -29,6 +28,6 @@ void AGenericPlayerController::EndPlay(const EEndPlayReason::Type EndPlayReason)
 
 void AGenericPlayerController::NativeOnPlayerGameHUDCreated()
 {
-	UGenericGameHUDManager::Delegate_PostHUDCreated.RemoveAll(this);
+	UGenericGameHUDSubsystem::Delegate_PostHUDCreated.RemoveAll(this);
 	OnPlayerGameHUDCreated();
 }

@@ -12,7 +12,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUniqueNetworkIDChanged, const FUn
 /**
  * 
  */
-UCLASS(ClassGroup=(GenericFreamwork), meta=(BlueprintSpawnableComponent), MinimalAPI)
+UCLASS(ClassGroup=(GenericFramework), meta=(BlueprintSpawnableComponent), MinimalAPI)
 class UUniqueNetworkIDComponent : public UActorComponent
 {
 	GENERATED_BODY()

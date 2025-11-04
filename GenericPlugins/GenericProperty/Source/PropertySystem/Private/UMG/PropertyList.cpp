@@ -2,7 +2,7 @@
 
 #include "UMG/PropertyList.h"
 
-#include "PropertyManager.h"
+#include "PropertySubsystem.h"
 #include "PropertyProxy.h"
 #include "WidgetType.h"
 #include "Components/TextBlock.h"
@@ -33,7 +33,10 @@ void UPropertyList::NativeDestruct()
 
 	if (!IsDesignTime() && IsValid(PropertyProxy))
 	{
-		FPropertyHelper::UnRegisterPropertyProxy(PropertyProxy);
+		if (UPropertySubsystem* PropertySubsystem = UPropertySubsystem::Get(this))
+		{
+			PropertySubsystem->UnRegisterPropertyProxy(PropertyProxy);
+		}
 	}
 }
 
@@ -55,7 +58,10 @@ void UPropertyList::SetPropertyListViewModel(UPropertyListViewModel* InViewModel
 	}
 	else
 	{
-		FPropertyHelper::UnRegisterPropertyProxy(PropertyProxy);
+		if (UPropertySubsystem* PropertySubsystem = UPropertySubsystem::Get(this))
+		{
+			PropertySubsystem->UnRegisterPropertyProxy(PropertyProxy);
+		}
 	}
 }
 
@@ -83,7 +89,10 @@ void UPropertyList::OnPropertyProxyClassChanged_Implementation(TSubclassOf<UProp
 		}
 		else
 		{
-			FPropertyHelper::UnRegisterPropertyProxy(PropertyProxy);
+			if (UPropertySubsystem* PropertySubsystem = UPropertySubsystem::Get(this))
+			{
+				PropertySubsystem->UnRegisterPropertyProxy(PropertyProxy);
+			}
 		}
 
 		PropertyProxy = nullptr;
@@ -102,9 +111,9 @@ void UPropertyList::OnPropertyProxyClassChanged_Implementation(TSubclassOf<UProp
 				PropertyProxy = NewObject<UPropertyProxy>(this, InClass);
 				PropertyProxy->NativeOnCreate();
 			}
-			else
+			else if (UPropertySubsystem* PropertySubsystem = UPropertySubsystem::Get(this))
 			{
-				PropertyProxy = FPropertyHelper::RegisterPropertyProxy(PropertyListViewModel->PropertyProxyTag, InClass);
+				PropertyProxy = PropertySubsystem->RegisterPropertyProxy(PropertyListViewModel->PropertyProxyTag, InClass);
 			}
 		}
 

@@ -2,22 +2,21 @@
 
 #include "BPFunctions/BPFunctions_GameSlot.h"
 
-#include "GenericGameSlotManager.h"
-#include "Manager/ManagerStatics.h"
+#include "GenericGameSlotSubsystem.h"
 
 /* ==================== UGameplayTagSlot ==================== */
 
-void UBPFunctions_GameSlot::RegisterSlot(UGameplayTagSlot* InSlot)
+void UBPFunctions_GameSlot::RegisterSlot(const UObject* WorldContextObject, UGameplayTagSlot* InSlot)
 {
-	if (UGenericGameSlotManager* GameHUDManager = GetManagerOwner<UGenericGameSlotManager>())
+	if (UGenericGameSlotSubsystem* GameHUDManager = UGenericGameSlotSubsystem::Get(WorldContextObject))
 	{
 		GameHUDManager->RegisterSlot(InSlot);
 	}
 }
 
-void UBPFunctions_GameSlot::UnRegisterSlot(UGameplayTagSlot* InSlot)
+void UBPFunctions_GameSlot::UnRegisterSlot(const UObject* WorldContextObject, UGameplayTagSlot* InSlot)
 {
-	if (UGenericGameSlotManager* GameHUDManager = GetManagerOwner<UGenericGameSlotManager>())
+	if (UGenericGameSlotSubsystem* GameHUDManager = UGenericGameSlotSubsystem::Get(WorldContextObject))
 	{
 		GameHUDManager->UnRegisterSlot(InSlot);
 	}

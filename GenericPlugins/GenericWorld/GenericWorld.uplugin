@@ -21,10 +21,6 @@
     {
       "Name": "GenericWidget",
       "Enabled": true
-    },
-    {
-      "Name": "GenericEvent",
-      "Enabled": true
     }
   ],
   "Modules": [

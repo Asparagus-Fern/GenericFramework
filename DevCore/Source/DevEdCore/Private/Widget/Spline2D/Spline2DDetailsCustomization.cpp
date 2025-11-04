@@ -5,11 +5,9 @@
 #include "DetailCategoryBuilder.h"
 #include "DetailLayoutBuilder.h"
 #include "DetailWidgetRow.h"
+#include "Settings/Spline2DEdSettings.h"
 #include "UWidget/Spline2D.h"
 #include "Widget/Spline2D/Spline2DEditPanel.h"
-#include "Widget/UMGEdSetting.h"
-
-#define LOCTEXT_NAMESPACE "FDevEdCoreModule"
 
 TSharedRef<IDetailCustomization> FSpline2DDetailsCustomization::MakeInstance()
 {
@@ -44,10 +42,10 @@ void FSpline2DDetailsCustomization::CustomizeDetails(IDetailLayoutBuilder& Detai
 
 	PropertySplineInfo = DetailLayout.GetProperty(GET_MEMBER_NAME_CHECKED(USpline2D, SplineInfo), USpline2D::StaticClass());
 	check(PropertySplineInfo->IsValidHandle());
-	 
+
 	IDetailCategoryBuilder& EditSplineCategory = DetailLayout.EditCategory("EditSpline", FText::GetEmpty(), ECategoryPriority::TypeSpecific);
 
-	FText SplineEditText = LOCTEXT("UMGSplineEditPanel", "Spline Edit Panel");
+	FText SplineEditText = NSLOCTEXT("FDevEdCoreModule", "UMGSplineEditPanel", "Spline Edit Panel");
 	EditSplineCategory.AddCustomRow(SplineEditText)
 	[
 		SNew(SVerticalBox)
@@ -80,7 +78,7 @@ void FSpline2DDetailsCustomization::OnSplineInfoValueChanged(const FSpline2DInfo
 
 FOptionalSize FSpline2DDetailsCustomization::GetSplineEditPanelHeight() const
 {
-	return UUMGEdSetting::Get()->PanelHeight;
+	return USpline2DEdSettings::Get()->PanelHeight;
 }
 
 

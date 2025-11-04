@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Generic/GenericObject.h"
+#include "Obect/GenericObject.h"
 #include "SceneType.generated.h"
 
 WORLDUTILITIES_API DECLARE_LOG_CATEGORY_EXTERN(GenericLogWorld, Log, All);

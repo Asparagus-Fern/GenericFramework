@@ -24,7 +24,7 @@ enum class ECameraRig : uint8
 /**
  * 对接增强输入，提供简单运动接口
  */
-UCLASS(ClassGroup=(GenericFreamwork), meta=(BlueprintSpawnableComponent), MinimalAPI)
+UCLASS(ClassGroup=(GenericFramework), meta=(BlueprintSpawnableComponent), MinimalAPI)
 class UPawnInputMovementComponent : public UActorComponent, public IPawnInputMovementInterface
 {
 	GENERATED_BODY()

@@ -16,24 +16,18 @@ class WIDGETGENERATION_API UBPFunctions_GameHUD : public UBlueprintFunctionLibra
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintCallable, Category="GameHUD")
-	static void CreateGameHUDListBySoftClass(const TArray<TSoftClassPtr<UGenericGameHUD>>& InGameHUDClasses);
+	UFUNCTION(BlueprintCallable, meta=(WorldContext = "WorldContextObject"), Category="GameHUD")
+	static void CreateGameHUDList(const UObject* WorldContextObject, TArray<UGenericGameHUD*> InGameHUDs);
 
-	UFUNCTION(BlueprintCallable, Category="GameHUD")
-	static void CreateGameHUDListByClass(TArray<TSubclassOf<UGenericGameHUD>> InGameHUDClasses);
+	UFUNCTION(BlueprintCallable, meta=(WorldContext = "WorldContextObject"), Category="GameHUD")
+	static void CreateGameHUD(const UObject* WorldContextObject, UGenericGameHUD* InGameHUD);
 
-	UFUNCTION(BlueprintCallable, Category="GameHUD")
-	static void CreateGameHUDList(TArray<UGenericGameHUD*> InGameHUDs);
+	UFUNCTION(BlueprintCallable, meta=(WorldContext = "WorldContextObject"), Category="GameHUD")
+	static void RemoveGameHUDList(const UObject* WorldContextObject, TArray<UGenericGameHUD*> InGameHUDs);
 
-	UFUNCTION(BlueprintCallable, Category="GameHUD")
-	static void CreateGameHUD(UGenericGameHUD* InGameHUD);
+	UFUNCTION(BlueprintCallable, meta=(WorldContext = "WorldContextObject"), Category="GameHUD")
+	static void RemoveGameHUD(const UObject* WorldContextObject, UGenericGameHUD* InGameHUD);
 
-	UFUNCTION(BlueprintCallable, Category="GameHUD")
-	static void RemoveGameHUDList(TArray<UGenericGameHUD*> InGameHUDs);
-
-	UFUNCTION(BlueprintCallable, Category="GameHUD")
-	static void RemoveGameHUD(UGenericGameHUD* InGameHUD);
-
-	UFUNCTION(BlueprintCallable, Category="GameHUD")
-	static void ClearAllGameHUD();
+	UFUNCTION(BlueprintCallable, meta=(WorldContext = "WorldContextObject"), Category="GameHUD")
+	static void ClearAllGameHUD(const UObject* WorldContextObject);
 };

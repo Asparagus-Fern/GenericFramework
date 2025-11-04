@@ -7,6 +7,10 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "BPFunctions_LevelStreaming.generated.h"
 
+DECLARE_DYNAMIC_DELEGATE(FHandleLevelStreamingOnceFinish);
+
+DECLARE_DYNAMIC_DELEGATE(FHandleLevelStreamingFinish);
+
 /**
  * 
  */
@@ -15,49 +19,45 @@ class LEVELSTREAMING_API UBPFunctions_LevelStreaming : public UBlueprintFunction
 {
 	GENERATED_BODY()
 
-	DECLARE_DYNAMIC_DELEGATE(FHandleLevelStreamingOnceFinish);
+public:
+	UFUNCTION(BlueprintCallable, meta=(WorldContext = "WorldContextObject"))
+	static void LoadLevel(const UObject* WorldContextObject, TSoftObjectPtr<UWorld> Level, bool bMakeVisibleAfterLoad, bool bShouldBlockOnLoad, FHandleLevelStreamingFinish OnFinish);
 
-	DECLARE_DYNAMIC_DELEGATE(FHandleLevelStreamingFinish);
+	UFUNCTION(BlueprintCallable, meta=(WorldContext = "WorldContextObject"))
+	static void LoadLevels(const UObject* WorldContextObject, TArray<TSoftObjectPtr<UWorld>> Levels, bool bMakeVisibleAfterLoad, bool bShouldBlockOnLoad, FHandleLevelStreamingOnceFinish OnOnceFinish, FHandleLevelStreamingFinish OnFinish);
+
+	UFUNCTION(BlueprintCallable, meta=(WorldContext = "WorldContextObject"))
+	static void LoadLevelsBySetting(const UObject* WorldContextObject, TArray<FLoadLevelStreamingSetting> LoadLevelStreamingSettings, FHandleLevelStreamingOnceFinish OnOnceFinish, FHandleLevelStreamingFinish OnFinish);
+
+	UFUNCTION(BlueprintCallable, meta=(WorldContext = "WorldContextObject"))
+	static void UnloadLevel(const UObject* WorldContextObject, TSoftObjectPtr<UWorld> Level, bool bShouldBlockOnUnload, FHandleLevelStreamingFinish OnFinish);
+
+	UFUNCTION(BlueprintCallable, meta=(WorldContext = "WorldContextObject"))
+	static void UnloadLevels(const UObject* WorldContextObject, TArray<TSoftObjectPtr<UWorld>> Levels, bool bShouldBlockOnUnload, FHandleLevelStreamingOnceFinish OnOnceFinish, FHandleLevelStreamingFinish OnFinish);
+
+	UFUNCTION(BlueprintCallable, meta=(WorldContext = "WorldContextObject"))
+	static void UnloadLevelsBySetting(const UObject* WorldContextObject, TArray<FUnloadLevelStreamingSetting> UnloadLevelStreamingSettings, FHandleLevelStreamingOnceFinish OnOnceFinish, FHandleLevelStreamingFinish OnFinish);
+
+	UFUNCTION(BlueprintCallable, meta=(WorldContext = "WorldContextObject"))
+	static void SetLevelVisibility(const UObject* WorldContextObject, TSoftObjectPtr<UWorld> Level, bool bVisible, FHandleLevelStreamingFinish OnFinish);
+
+	UFUNCTION(BlueprintCallable, meta=(WorldContext = "WorldContextObject"))
+	static void SetLevelsVisibility(const UObject* WorldContextObject, TArray<TSoftObjectPtr<UWorld>> Levels, bool bVisible, FHandleLevelStreamingOnceFinish OnOnceFinish, FHandleLevelStreamingFinish OnFinish);
 
 public:
-	UFUNCTION(BlueprintCallable)
-	static void LoadLevel(TSoftObjectPtr<UWorld> Level, bool bMakeVisibleAfterLoad, bool bShouldBlockOnLoad, FHandleLevelStreamingFinish OnFinish);
+	UFUNCTION(BlueprintCallable, meta=(WorldContext = "WorldContextObject"))
+	static void LoadCurrentWorldLevelStreaming(const UObject* WorldContextObject, FHandleLevelStreamingOnceFinish OnOnceFinish, FHandleLevelStreamingFinish OnFinish);
 
-	UFUNCTION(BlueprintCallable)
-	static void LoadLevels(TArray<TSoftObjectPtr<UWorld>> Levels, bool bMakeVisibleAfterLoad, bool bShouldBlockOnLoad, FHandleLevelStreamingOnceFinish OnOnceFinish, FHandleLevelStreamingFinish OnFinish);
-
-	UFUNCTION(BlueprintCallable)
-	static void LoadLevelsBySetting(TArray<FLoadLevelStreamingSetting> LoadLevelStreamingSettings, FHandleLevelStreamingOnceFinish OnOnceFinish, FHandleLevelStreamingFinish OnFinish);
-
-	UFUNCTION(BlueprintCallable)
-	static void UnloadLevel(TSoftObjectPtr<UWorld> Level, bool bShouldBlockOnUnload, FHandleLevelStreamingFinish OnFinish);
-
-	UFUNCTION(BlueprintCallable)
-	static void UnloadLevels(TArray<TSoftObjectPtr<UWorld>> Levels, bool bShouldBlockOnUnload, FHandleLevelStreamingOnceFinish OnOnceFinish, FHandleLevelStreamingFinish OnFinish);
-
-	UFUNCTION(BlueprintCallable)
-	static void UnloadLevelsBySetting(TArray<FUnloadLevelStreamingSetting> UnloadLevelStreamingSettings, FHandleLevelStreamingOnceFinish OnOnceFinish, FHandleLevelStreamingFinish OnFinish);
-
-	UFUNCTION(BlueprintCallable)
-	static void SetLevelVisibility(TSoftObjectPtr<UWorld> Level, bool bVisible, FHandleLevelStreamingFinish OnFinish);
-
-	UFUNCTION(BlueprintCallable)
-	static void SetLevelsVisibility(TArray<TSoftObjectPtr<UWorld>> Levels, bool bVisible, FHandleLevelStreamingOnceFinish OnOnceFinish, FHandleLevelStreamingFinish OnFinish);
+	UFUNCTION(BlueprintCallable, meta=(WorldContext = "WorldContextObject"))
+	static void UnLoadCurrentWorldLevelStreaming(const UObject* WorldContextObject, FHandleLevelStreamingOnceFinish OnOnceFinish, FHandleLevelStreamingFinish OnFinish);
 
 public:
-	UFUNCTION(BlueprintCallable)
-	static void LoadCurrentWorldLevelStreaming(FHandleLevelStreamingOnceFinish OnOnceFinish, FHandleLevelStreamingFinish OnFinish);
+	UFUNCTION(BlueprintPure, meta=(WorldContext = "WorldContextObject"))
+	static ULevelStreaming* GetLevelStreaming(const UObject* WorldContextObject, TSoftObjectPtr<UWorld> Level);
 
-	UFUNCTION(BlueprintCallable)
-	static void UnLoadCurrentWorldLevelStreaming(FHandleLevelStreamingOnceFinish OnOnceFinish, FHandleLevelStreamingFinish OnFinish);
+	UFUNCTION(BlueprintPure, meta=(WorldContext = "WorldContextObject"))
+	static bool IsLevelLoaded(const UObject* WorldContextObject, TSoftObjectPtr<UWorld> Level);
 
-public:
-	UFUNCTION(BlueprintPure)
-	static ULevelStreaming* GetLevelStreaming(TSoftObjectPtr<UWorld> Level);
-
-	UFUNCTION(BlueprintPure)
-	static bool IsLevelLoaded(TSoftObjectPtr<UWorld> Level);
-
-	UFUNCTION(BlueprintPure)
-	static bool IsCurrentWorldContainLevel(TSoftObjectPtr<UWorld> Level, bool& Contain);
+	UFUNCTION(BlueprintPure, meta=(WorldContext = "WorldContextObject"))
+	static bool IsCurrentWorldContainLevel(const UObject* WorldContextObject, TSoftObjectPtr<UWorld> Level, bool& Contain);
 };

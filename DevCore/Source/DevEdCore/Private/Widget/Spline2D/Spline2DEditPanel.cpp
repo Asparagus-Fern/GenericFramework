@@ -1,15 +1,12 @@
 // Copyright ChenTaiye 2025. All Rights Reserved.
 
-
 #include "Widget/Spline2D/Spline2DEditPanel.h"
 
+#include "Settings/Spline2DEdSettings.h"
 #include "Widgets/Input/SSlider.h"
 #include "Styling/ToolBarStyle.h"
 #include "SWidget/Spline2D/Spline2DBuilder.h"
 #include "SWidget/Spline2D/Spline2DRenderBatch.h"
-#include "Widget/UMGEdSetting.h"
-
-#define LOCTEXT_NAMESPACE "FDevEdCoreModule"
 
 const static FVector2D CONST_KeySize = FVector2D(11, 11);
 const static FVector2D CONST_TangentSize = FVector2D(7, 7);
@@ -103,7 +100,7 @@ void SSpline2DEditPanel::Construct(const FArguments& InArgs)
 							.ButtonContent()
 							[
 								SNew(STextBlock)
-								.Text(LOCTEXT("AdjustPanelHeight", "Panel Height"))
+								.Text(NSLOCTEXT("FDevEdCoreModule", "AdjustPanelHeight", "Panel Height"))
 								.TextStyle(&ToolBarStyle.LabelStyle)
 								.ColorAndOpacity(FSlateColor::UseForeground())
 							]
@@ -114,7 +111,7 @@ void SSpline2DEditPanel::Construct(const FArguments& InArgs)
 						[
 							SNew(SButton)
 							.ButtonStyle(&ToolBarStyle.ButtonStyle)
-							.ToolTipText(LOCTEXT("ZoomToFit", "Zoom To Fit"))
+							.ToolTipText(NSLOCTEXT("FDevEdCoreModule", "ZoomToFit", "Zoom To Fit"))
 							.OnClicked(this, &SSpline2DEditPanel::ZoomToFitClicked)
 							.ContentPadding(ToolBarStyle.ButtonPadding)
 							.ContentPadding(1)
@@ -137,7 +134,7 @@ void SSpline2DEditPanel::Construct(const FArguments& InArgs)
 							.ButtonContent()
 							[
 								SNew(STextBlock)
-								.Text(LOCTEXT("Thickness", "Thickness"))
+								.Text(NSLOCTEXT("FDevEdCoreModule", "Thickness", "Thickness"))
 								.TextStyle(&ToolBarStyle.LabelStyle)
 								.ColorAndOpacity(FSlateColor::UseForeground())
 							]
@@ -906,12 +903,12 @@ void SSpline2DEditPanel::CreateContextMenu(const FGeometry& InMyGeometry, const 
 	const bool CloseAfterSelection = true;
 	FMenuBuilder MenuBuilder(CloseAfterSelection, NULL);
 
-	MenuBuilder.BeginSection("EditUMGSplineActions", LOCTEXT("Actions", "Actions"));
+	MenuBuilder.BeginSection("EditUMGSplineActions", NSLOCTEXT("FDevEdCoreModule", "Actions", "Actions"));
 	{
 		if (bShowAddNewSplinePoint)
 		{
-			FText MenuItemLabel = LOCTEXT("AddPointToSplineLabel", "Add point to spline");
-			FText MenuItemToolTip = LOCTEXT("AddPointToSplineToolTip", "Add a new spline point at the hovered place to the spline.");
+			FText MenuItemLabel = NSLOCTEXT("FDevEdCoreModule", "AddPointToSplineLabel", "Add point to spline");
+			FText MenuItemToolTip = NSLOCTEXT("FDevEdCoreModule", "AddPointToSplineToolTip", "Add a new spline point at the hovered place to the spline.");
 
 			FVector2D Position = InMouseEvent.GetScreenSpacePosition();
 
@@ -921,8 +918,8 @@ void SSpline2DEditPanel::CreateContextMenu(const FGeometry& InMyGeometry, const 
 
 		if (SelectedPointIndex != -1)
 		{
-			FText MenuItemLabel = LOCTEXT("DeleteSelectedPointFromSplineLabel", "Delete selected point from spline");
-			FText MenuItemToolTip = LOCTEXT("DeleteSelectedPointFromSplineToolTip", "Delete selected point from the spline.");
+			FText MenuItemLabel = NSLOCTEXT("FDevEdCoreModule", "DeleteSelectedPointFromSplineLabel", "Delete selected point from spline");
+			FText MenuItemToolTip = NSLOCTEXT("FDevEdCoreModule", "DeleteSelectedPointFromSplineToolTip", "Delete selected point from the spline.");
 
 			FVector2D Position = InMouseEvent.GetScreenSpacePosition();
 
@@ -938,7 +935,7 @@ void SSpline2DEditPanel::CreateContextMenu(const FGeometry& InMyGeometry, const 
 
 void SSpline2DEditPanel::AddNewSplinePoint(FGeometry InMyGeometry, FVector2D ScreenPosition)
 {
-	const FScopedTransaction Transaction(LOCTEXT("EditUMGSpline_AddNewSplinePoint", "Add New Spline Point"));
+	const FScopedTransaction Transaction(NSLOCTEXT("FDevEdCoreModule", "EditUMGSpline_AddNewSplinePoint", "Add New Spline Point"));
 
 	const FVector2D MousePosition = InMyGeometry.AbsoluteToLocal(ScreenPosition);
 
@@ -955,7 +952,7 @@ void SSpline2DEditPanel::AddNewSplinePoint(FGeometry InMyGeometry, FVector2D Scr
 
 void SSpline2DEditPanel::DeleteSelectedSplinePoint()
 {
-	const FScopedTransaction Transaction(LOCTEXT("EditUMGSpline_RemoveSplinePoint", "Delete Spline Point"));
+	const FScopedTransaction Transaction(NSLOCTEXT("FDevEdCoreModule", "EditUMGSpline_RemoveSplinePoint", "Delete Spline Point"));
 
 	if (SelectedPointIndex != -1 && SplineInfo.Get().Points.Num() > SelectedPointIndex)
 	{
@@ -1121,7 +1118,7 @@ TSharedRef<SWidget> SSpline2DEditPanel::GetPanelHeightMenu()
 			.HAlign(HAlign_Left)
 			[
 				SNew(STextBlock)
-				.Text(LOCTEXT("UMGSplineEditPanelHeight", "Panel Height"))
+				.Text(NSLOCTEXT("FDevEdCoreModule", "UMGSplineEditPanelHeight", "Panel Height"))
 				.Font(FAppStyle::Get().GetFontStyle(TEXT("MenuItem.Font")))
 			]
 			+ SVerticalBox::Slot()
@@ -1156,18 +1153,18 @@ FText SSpline2DEditPanel::GetPanelHeightLabel() const
 {
 	FNumberFormattingOptions Options;
 	Options.SetMaximumFractionalDigits(0);
-	return FText::AsNumber(UUMGEdSetting::Get()->PanelHeight, &Options);
+	return FText::AsNumber(USpline2DEdSettings::Get()->PanelHeight, &Options);
 }
 
 float SSpline2DEditPanel::GetPanelHeightSliderPosition() const
 {
-	return (UUMGEdSetting::Get()->PanelHeight - CONST_PanelHeightMin) / (CONST_PanelHeightMax - CONST_PanelHeightMin);
+	return (USpline2DEdSettings::Get()->PanelHeight - CONST_PanelHeightMin) / (CONST_PanelHeightMax - CONST_PanelHeightMin);
 }
 
 void SSpline2DEditPanel::OnSetPanelHeight(float NewValue)
 {
 	float DesiredHeight = FMath::Lerp(CONST_PanelHeightMin, CONST_PanelHeightMax, NewValue);
-	UUMGEdSetting::Get()->PanelHeight = DesiredHeight;
+	USpline2DEdSettings::Get()->PanelHeight = DesiredHeight;
 }
 
 TSharedRef<SWidget> SSpline2DEditPanel::GetThicknessFillMenu()
@@ -1182,7 +1179,7 @@ TSharedRef<SWidget> SSpline2DEditPanel::GetThicknessFillMenu()
 			.HAlign(HAlign_Left)
 			[
 				SNew(STextBlock)
-				.Text(LOCTEXT("SplineEditSplineThickness", "Spline Thickness"))
+				.Text(NSLOCTEXT("FDevEdCoreModule", "SplineEditSplineThickness", "Spline Thickness"))
 				.Font(FAppStyle::Get().GetFontStyle(TEXT("MenuItem.Font")))
 			]
 			+ SVerticalBox::Slot()
@@ -1237,7 +1234,10 @@ void SSpline2DEditPanel::OnSetSplineThickness(float NewValue)
 
 FText SSpline2DEditPanel::GetHelpText() const
 {
-	FText HelpText = LOCTEXT("SplineEditHelpText", "\n\
+	FText HelpText = NSLOCTEXT
+	(
+		"FDevEdCoreModule", "SplineEditHelpText",
+		"\n\
 		How to edit a spline?\n\
 		Left mouse click: Pick a spline point or tangent.\n\
 		Right mouse click: Add a spline point at mouse location or delete selected spline point.\n\
@@ -1248,5 +1248,3 @@ FText SSpline2DEditPanel::GetHelpText() const
 
 	return HelpText;
 }
-
-#undef LOCTEXT_NAMESPACE

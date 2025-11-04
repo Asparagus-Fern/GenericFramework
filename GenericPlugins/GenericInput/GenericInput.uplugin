@@ -21,7 +21,7 @@
   ],
   "Modules": [
     {
-      "Name": "PlayerInputUtilities",
+      "Name": "GenericInputSystem",
       "Type": "Runtime",
       "LoadingPhase": "Default"
     }

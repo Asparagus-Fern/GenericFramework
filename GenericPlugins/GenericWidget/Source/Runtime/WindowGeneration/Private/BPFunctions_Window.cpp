@@ -2,24 +2,39 @@
 
 #include "BPFunctions_Window.h"
 
-#include "GenericWindowManager.h"
+#include "GenericWindowSubsystem.h"
 
-UGenericWindowWrapper* UBPFunctions_Window::RegisterWindowWrapperByClass(APlayerController* InPlayer, const TSubclassOf<UGenericWindowViewModel>& WindowViewModelClass, bool& Result)
+UGenericWindowWrapper* UBPFunctions_Window::RegisterWindowWrapperByClass(const UObject* WorldContextObject, APlayerController* InPlayer, const TSubclassOf<UGenericWindowViewModel>& WindowViewModelClass, bool& Result)
 {
-	return FWindowHelper::RegisterWindowWrapper(InPlayer, WindowViewModelClass, Result);
+	if (UGenericWindowSubsystem* GenericWindowSubsystem = UGenericWindowSubsystem::Get(WorldContextObject))
+	{
+		return GenericWindowSubsystem->RegisterWindowWrapper(InPlayer, WindowViewModelClass, Result);
+	}
+	return nullptr;
 }
 
-UGenericWindowWrapper* UBPFunctions_Window::RegisterWindowWrapper(APlayerController* InPlayer, UGenericWindowViewModel* WindowViewModel, bool& Result)
+UGenericWindowWrapper* UBPFunctions_Window::RegisterWindowWrapper(const UObject* WorldContextObject, APlayerController* InPlayer, UGenericWindowViewModel* WindowViewModel, bool& Result)
 {
-	return FWindowHelper::RegisterWindowWrapper(InPlayer, WindowViewModel, Result);
+	if (UGenericWindowSubsystem* GenericWindowSubsystem = UGenericWindowSubsystem::Get(WorldContextObject))
+	{
+		return GenericWindowSubsystem->RegisterWindowWrapper(InPlayer, WindowViewModel, Result);
+	}
+	return nullptr;
 }
 
-bool UBPFunctions_Window::UnRegisterWindowWrapper(UGenericWindowWrapper* InWrapper)
+bool UBPFunctions_Window::UnRegisterWindowWrapper(const UObject* WorldContextObject, UGenericWindowWrapper* InWrapper)
 {
-	return FWindowHelper::UnRegisterWindowWrapper(InWrapper);
+	if (UGenericWindowSubsystem* GenericWindowSubsystem = UGenericWindowSubsystem::Get(WorldContextObject))
+	{
+		return GenericWindowSubsystem->UnRegisterWindowWrapper(InWrapper);
+	}
+	return false;
 }
 
-void UBPFunctions_Window::UnRegisterAllWindowWrapper()
+void UBPFunctions_Window::UnRegisterAllWindowWrapper(const UObject* WorldContextObject)
 {
-	FWindowHelper::UnRegisterAllWindowWrapper();
+	if (UGenericWindowSubsystem* GenericWindowSubsystem = UGenericWindowSubsystem::Get(WorldContextObject))
+	{
+		GenericWindowSubsystem->UnRegisterAllWindowWrapper();
+	}
 }

@@ -27,15 +27,7 @@
       "Enabled": true
     },
     {
-      "Name": "GenericEvent",
-      "Enabled": true
-    },
-    {
       "Name": "GenericGameplay",
-      "Enabled": true
-    },
-    {
-      "Name": "GenericGuide",
       "Enabled": true
     },
     {

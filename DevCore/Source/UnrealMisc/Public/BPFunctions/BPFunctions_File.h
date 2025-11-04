@@ -99,4 +99,8 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable, Category="File")
 	static bool SaveFileDialog(FString FileName, FString FileType, TArray<FString>& FilePaths);
+
+public:
+	UFUNCTION(BlueprintPure, Category="Path")
+	static FString GetAndroidRootDir();
 };

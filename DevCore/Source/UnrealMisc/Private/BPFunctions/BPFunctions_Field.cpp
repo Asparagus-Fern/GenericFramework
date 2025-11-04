@@ -4,7 +4,6 @@
 
 #include "Blueprint/BlueprintExceptionInfo.h"
 
-DEFINE_LOG_CATEGORY(GenericLogField);
 
 #define LOCTEXT_NAMESPACE "FPropertyUtilitiesModule"
 

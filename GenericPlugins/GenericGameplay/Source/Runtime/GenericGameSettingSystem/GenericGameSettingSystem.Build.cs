@@ -10,8 +10,13 @@ public class GenericGameSettingSystem : ModuleRules
 			new string[]
 			{
 				"Core",
-				"DevCore",
 				"UnrealMisc",
+				"DevCore",
+				"PropertySystem",
+				"GenericGameplaySystem",
+				"WidgetGeneration",
+				"WidgetGroupGeneration",
+				"WidgetApplication",
 			}
 		);
 
@@ -26,16 +31,9 @@ public class GenericGameSettingSystem : ModuleRules
 				"GameplayTags",
 				"UMG",
 				"ModelViewViewModel",
-
-				"PropertySystem",
-				"GenericGameplaySystem",
-				"WidgetGeneration",
-				"WidgetGroupGeneration",
-				"WidgetApplication",
-				"WindowGeneration",
 			}
 		);
-		
+
 		if (Target.bBuildEditor)
 		{
 			PrivateDependencyModuleNames.Add("UnrealEd");

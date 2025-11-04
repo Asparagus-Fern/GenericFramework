@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
-#include "Generic/GenericSettings.h"
+#include "Settings/GenericSettings.h"
 #include "ProcedureFlowSettings.generated.h"
 
 /**
@@ -23,6 +23,6 @@ public:
 	UPROPERTY(Config, EditAnywhere)
 	bool AutoEnterDefaultProcedureFlow = true;
 
-	UPROPERTY(Config, EditAnywhere, meta=(Categories="Procedure.Flow"))
+	UPROPERTY(Config, EditAnywhere, meta=(Categories="ProcedureFlow"))
 	FGameplayTag DefaultProcedureFlowTag = FGameplayTag::EmptyTag;
 };

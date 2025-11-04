@@ -13,7 +13,6 @@ public class NetworkApplication : ModuleRules
 				"DevCore",
 				"GenericGameplaySystem",
 				"GenericNetworkFramework",
-				"NetworkUserSystem",
 			}
 		);
 

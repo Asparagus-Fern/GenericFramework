@@ -1,9 +1,8 @@
 ﻿// Copyright ChenTaiye 2025. All Rights Reserved. 
 
-
 #include "Base/GenericPopupWidget.h"
 
-#include "GenericWidgetManager.h"
+#include "GenericWidgetSubsystem.h"
 #include "WidgetType.h"
 #include "Type/DebugType.h"
 #include "Type/GenericType.h"
@@ -34,7 +33,10 @@ void UGenericPopupWidget::SubmitPopupResult(FGameplayTag InPopupResult)
 	BROADCAST_UNIFIED_DELEGATE(Delegate_OnPopupResultSubmitted, BPDelegate_OnPopupResultSubmitted, PopupResult);
 
 	/* On Result Submitted,It Will Auto Close To Enable Input In Game Slot */
-	FWidgetHelper::CloseGenericWidget(this);
+	if (UGenericWidgetSubsystem* GenericWidgetManager = UGenericWidgetSubsystem::Get(this))
+	{
+		GenericWidgetManager->CloseGenericWidget(this);
+	}
 }
 
 void UGenericPopupWidget::OnErrorPopupResultSubmitted_Implementation(FGameplayTag InPopupResult)

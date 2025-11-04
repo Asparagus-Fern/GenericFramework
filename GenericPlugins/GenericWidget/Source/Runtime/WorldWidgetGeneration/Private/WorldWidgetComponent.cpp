@@ -1,6 +1,5 @@
 ﻿// Copyright ChenTaiye 2025. All Rights Reserved.
 
-
 #include "WorldWidgetComponent.h"
 
 #include "WidgetType.h"
@@ -107,7 +106,7 @@ void UWorldWidgetComponent::SetWorldWidgetByClass(TSubclassOf<UGenericWidget> In
 		return;
 	}
 
-	WorldWidget = CreateWidget<UGenericWidget>(UBPFunctions_Gameplay::GetPlayerControllerByClass(this, APlayerController::StaticClass(), 0), InWorldWidgetClass);
+	WorldWidget = CreateWidget<UGenericWidget>(UBPFunctions_Gameplay::GetPlayerControllerByIndex(this, APlayerController::StaticClass(), 0), InWorldWidgetClass);
 	UpdateWorldWidget();
 }
 
@@ -211,7 +210,7 @@ void UWorldWidgetComponent::UpdateWorldWidgetLookAtRotation()
 		return;
 	}
 
-	APlayerController* PC = UBPFunctions_Gameplay::GetPlayerControllerByClass(World, APlayerController::StaticClass(), WorldWidgetLookAtSetting.LookAtPlayerIndex);
+	APlayerController* PC = UBPFunctions_Gameplay::GetPlayerControllerByIndex(World, APlayerController::StaticClass(), WorldWidgetLookAtSetting.LookAtPlayerIndex);
 	if (!IsValid(PC))
 	{
 		/* Can Not Find PlayerController */

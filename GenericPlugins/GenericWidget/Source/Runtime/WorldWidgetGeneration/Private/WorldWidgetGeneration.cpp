@@ -1,6 +1,6 @@
 ﻿#include "WorldWidgetGeneration.h"
 
-#include "WorldWidgetManager.h"
+#include "WorldWidgetSubsystem.h"
 
 #define LOCTEXT_NAMESPACE "FWorldWidgetGenerationModule"
 

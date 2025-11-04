@@ -1,42 +1,41 @@
 ﻿// Copyright ChenTaiye 2025. All Rights Reserved.
 
-
 #include "HandleLevelAsyncAction.h"
 
-#include "LevelStreamingManager.h"
-#include "Manager/ManagerStatics.h"
+#include "LevelStreamingSubsystem.h"
 
-UHandleLevelAsyncAction* UHandleLevelAsyncAction::LoadLevel(const TSoftObjectPtr<UWorld> Level, const bool bMakeVisibleAfterLoad, const bool bShouldBlockOnLoad)
+
+UHandleLevelAsyncAction* UHandleLevelAsyncAction::LoadLevel(const UObject* WorldContextObject, const TSoftObjectPtr<UWorld> Level, const bool bMakeVisibleAfterLoad, const bool bShouldBlockOnLoad)
 {
 	UHandleLevelAsyncAction* NewAction = NewObject<UHandleLevelAsyncAction>();
 
-	if (ULevelStreamingManager* LevelStreamingManager = GetManagerOwner<ULevelStreamingManager>())
+	if (ULevelStreamingSubsystem* LevelStreamingSubsystem = ULevelStreamingSubsystem::Get(WorldContextObject))
 	{
-		LevelStreamingManager->LoadLevel(Level, bMakeVisibleAfterLoad, bShouldBlockOnLoad, FOnHandleLevelStreamingFinish::CreateUObject(NewAction, &UHandleLevelAsyncAction::OnHandleFinish));
+		LevelStreamingSubsystem->LoadLevel(Level, bMakeVisibleAfterLoad, bShouldBlockOnLoad, FOnHandleLevelStreamingFinish::CreateUObject(NewAction, &UHandleLevelAsyncAction::OnHandleFinish));
 	}
 
 	return NewAction;
 }
 
-UHandleLevelAsyncAction* UHandleLevelAsyncAction::UnloadLevel(const TSoftObjectPtr<UWorld> Level, const bool bShouldBlockOnUnload)
+UHandleLevelAsyncAction* UHandleLevelAsyncAction::UnloadLevel(const UObject* WorldContextObject, const TSoftObjectPtr<UWorld> Level, const bool bShouldBlockOnUnload)
 {
 	UHandleLevelAsyncAction* NewAction = NewObject<UHandleLevelAsyncAction>();
 
-	if (ULevelStreamingManager* LevelStreamingManager = GetManagerOwner<ULevelStreamingManager>())
+	if (ULevelStreamingSubsystem* LevelStreamingSubsystem = ULevelStreamingSubsystem::Get(WorldContextObject))
 	{
-		LevelStreamingManager->UnloadLevel(Level, bShouldBlockOnUnload, FOnHandleLevelStreamingFinish::CreateUObject(NewAction, &UHandleLevelAsyncAction::OnHandleFinish));
+		LevelStreamingSubsystem->UnloadLevel(Level, bShouldBlockOnUnload, FOnHandleLevelStreamingFinish::CreateUObject(NewAction, &UHandleLevelAsyncAction::OnHandleFinish));
 	}
 
 	return NewAction;
 }
 
-UHandleLevelAsyncAction* UHandleLevelAsyncAction::SetLevelVisibility(const TSoftObjectPtr<UWorld> Level, const bool bVisible)
+UHandleLevelAsyncAction* UHandleLevelAsyncAction::SetLevelVisibility(const UObject* WorldContextObject, const TSoftObjectPtr<UWorld> Level, const bool bVisible)
 {
 	UHandleLevelAsyncAction* NewAction = NewObject<UHandleLevelAsyncAction>();
 
-	if (ULevelStreamingManager* LevelStreamingManager = GetManagerOwner<ULevelStreamingManager>())
+	if (ULevelStreamingSubsystem* LevelStreamingSubsystem = ULevelStreamingSubsystem::Get(WorldContextObject))
 	{
-		LevelStreamingManager->SetLevelVisibility(Level, bVisible, FOnHandleLevelStreamingFinish::CreateUObject(NewAction, &UHandleLevelAsyncAction::OnHandleFinish));
+		LevelStreamingSubsystem->SetLevelVisibility(Level, bVisible, FOnHandleLevelStreamingFinish::CreateUObject(NewAction, &UHandleLevelAsyncAction::OnHandleFinish));
 	}
 
 	return NewAction;

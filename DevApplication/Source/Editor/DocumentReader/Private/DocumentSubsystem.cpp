@@ -1,17 +1,16 @@
 ﻿// Copyright ChenTaiye 2025. All Rights Reserved.
 
-
 #include "DocumentSubsystem.h"
 
 #include "DevCoreStyle.h"
-#include "DevFrameworkEdSubsystem.h"
+#include "Subsystem/GenericFrameworkEdSubsystem.h"
 
 #define LOCTEXT_NAMESPACE "FApplicationEditorModule"
 
 void UDocumentSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
-	FDevFrameworkDelegate::OnToolBarSectionExtend.AddUObject(this, &UDocumentSubsystem::OnToolBarSectionExtend);
+	UGenericFrameworkEdSubsystem::OnToolBarSectionExtend.AddUObject(this, &UDocumentSubsystem::OnToolBarSectionExtend);
 
 	FGlobalTabmanager::Get()->RegisterNomadTabSpawner(DocumentTabName, FOnSpawnTab::CreateUObject(this, &UDocumentSubsystem::HandleSpawnDocumentTab))
 		.SetDisplayName(LOCTEXT("DocumentTabTitle", "Developer Document"))
@@ -22,7 +21,7 @@ void UDocumentSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 void UDocumentSubsystem::Deinitialize()
 {
 	Super::Deinitialize();
-	FDevFrameworkDelegate::OnToolBarSectionExtend.RemoveAll(this);
+	UGenericFrameworkEdSubsystem::OnToolBarSectionExtend.RemoveAll(this);
 }
 
 void UDocumentSubsystem::OnToolBarSectionExtend(FToolMenuSection& InToolMenuSection)

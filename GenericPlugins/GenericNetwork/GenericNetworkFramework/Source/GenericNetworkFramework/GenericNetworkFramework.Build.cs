@@ -29,15 +29,13 @@ public class GenericNetworkFramework : ModuleRules
 			{
 				"Core",
 
+				"UnrealMisc",
 				"DevCore",
 				"DevSlateCore",
-				"UnrealMisc",
 				"PropertySystem",
 				"WidgetGeneration",
 				
-				"UMG",
-				"OnlineSubsystem",
-				"ModelViewViewModel",
+				
 				// ... add other public dependencies that you statically link with here ...
 			}
 		);
@@ -50,7 +48,11 @@ public class GenericNetworkFramework : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
+				"UMG",
+				"ModelViewViewModel",
+				"OnlineSubsystem",
 				"OnlineSubsystemUtils",
+				
 				// ... add private dependencies that you statically link with here ...	
 			}
 		);

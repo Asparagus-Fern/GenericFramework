@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "SlateType.h"
 #include "Components/DynamicEntryBox.h"
 #include "GenericDynamicEntryBox.generated.h"
 
@@ -77,7 +76,7 @@ class DEVSLATECORE_API UGenericDynamicEntryBox : public UDynamicEntryBox
 
 protected:
 #if WITH_EDITOR
-	virtual const FText GetPaletteCategory() override { return NSLOCTEXT("GenericWidget", "Generic", "Generic Widget"); }
+	virtual const FText GetPaletteCategory() override { return NSLOCTEXT("GenericFramework", "WidgetPaletteCategory", "Generic"); }
 	virtual void ValidateCompiledDefaults(class IWidgetCompilerLog& CompileLog) const override;
 #endif
 

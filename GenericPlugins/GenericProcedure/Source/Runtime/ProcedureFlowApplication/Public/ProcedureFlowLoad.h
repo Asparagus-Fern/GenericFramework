@@ -17,7 +17,7 @@ class UProcedureFlowLoad : public UProcedureFlowExecute
 
 public:
 	/* Enter Next Procedure Flow */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (Categories = "Procedure.Flow"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (Categories = "ProcedureFlow"))
 	FGameplayTag NextProcedureFlowTag = FGameplayTag::EmptyTag;
 
 public:

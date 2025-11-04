@@ -10,7 +10,8 @@ public class LevelSequenceSystem : ModuleRules
 			new string[]
 			{
 				"Core",
-				"DevCore"
+				"DevCore",
+				"GenericMovieSceneSystem"
 			}
 		);
 
@@ -24,9 +25,6 @@ public class LevelSequenceSystem : ModuleRules
 
 				"LevelSequence",
 				"MovieScene",
-
-				"EventUtilities",
-				"MovieSceneUtilities"
 			}
 		);
 	}

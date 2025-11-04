@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "HTTPType.h"
-#include "Generic/GenericObject.h"
+#include "Obect/GenericObject.h"
 #include "Interfaces/IHttpRequest.h"
 #include "GenericHttpRequest.generated.h"
 

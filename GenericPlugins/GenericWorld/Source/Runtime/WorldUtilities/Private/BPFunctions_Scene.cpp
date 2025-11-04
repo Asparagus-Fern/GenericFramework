@@ -1,10 +1,8 @@
 ﻿// Copyright ChenTaiye 2025. All Rights Reserved.
 
-
 #include "BPFunctions_Scene.h"
 
-#include "SceneManager.h"
-#include "Manager/ManagerStatics.h"
+#include "SceneSubsystem.h"
 
 bool UBPFunctions_Scene::IsPartitionedWorld(const UObject* WorldContextObject)
 {
@@ -26,9 +24,9 @@ ESceneWorldType UBPFunctions_Scene::GetWorldType(const UObject* WorldContextObje
 	return ESceneWorldType::None;
 }
 
-float UBPFunctions_Scene::GetPlayerForwardAngle(const int32 PlayerIndex)
+float UBPFunctions_Scene::GetPlayerForwardAngle(const UObject* WorldContextObject,const int32 PlayerIndex)
 {
-	if (const USceneManager* SceneManager = GetManagerOwner<USceneManager>())
+	if (const USceneSubsystem* SceneManager = USceneSubsystem::Get(WorldContextObject))
 	{
 		return SceneManager->GetPlayerPointToNorthAngle(PlayerIndex);
 	}
