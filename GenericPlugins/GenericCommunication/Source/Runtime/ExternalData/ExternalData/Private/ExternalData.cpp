@@ -3,14 +3,17 @@
 #include "ExternalData.h"
 
 #include "JsonConvert.h"
-#include "JsonConvert.h"
+#include "BPFunctions/BPFunctions_File.h"
 #include "Dom/JsonObject.h"
-#include "JsonObjectConverter.h"
 #include "Serialization/JsonReader.h"
 #include "Serialization/JsonWriter.h"
 #include "Misc/DataValidation.h"
 #include "Misc/Paths.h"
 #include "UObject/ObjectSaveContext.h"
+
+#if PLATFORM_ANDROID
+#include "BPFunctions/BPFunctions_Android.h"
+#endif
 
 #define LOCTEXT_NAMESPACE "FExternalDataModule"
 
@@ -59,22 +62,20 @@ EDataValidationResult UExternalData::IsDataValid(FDataValidationContext& Context
 }
 #endif
 
-FString UExternalData::GetJsonFilePath(const FString& InName)
+FString UExternalData::GetJsonFilePath()
 {
 	static FString ExternalData(TEXT("ExternalData"));
 	static FString Extension(TEXT(".json"));
 
 #if PLATFORM_WINDOWS
-
-	return FPaths::Combine(FPaths::ProjectConfigDir(), ExternalData, InName + Extension);
-
+	return FPaths::Combine(FPaths::ProjectConfigDir(), ExternalData, GetName() + Extension);
 #elif PLATFORM_ANDROID
-	
-	static FString AndroidBasePath(TEXT("/sdcard"));
-	static FString AndroidConfigPath(TEXT("/Config"));
-	
-	return FPaths::Combine(AndroidBasePath, TEXT("/"), FApp::GetProjectName(), AndroidConfigPath, ExternalData, InName + Extension);
-	
+	FString AndroidExternalStorageJsonFilePath = FPaths::Combine(UBPFunctions_Android::GetAndroidConfigDir(true), ExternalData, GetName() + Extension);
+	if (UBPFunctions_File::ExistFile(AndroidExternalStorageJsonFilePath))
+	{
+		return AndroidExternalStorageJsonFilePath;
+	}
+	return FPaths::Combine(UBPFunctions_Android::GetAndroidConfigDir(false), ExternalData, GetName() + Extension);
 #endif
 }
 
@@ -85,17 +86,19 @@ bool UExternalData::LoadData()
 		return false;
 	}
 
-	return FJsonConvert::JsonFileToStruct(GetJsonFilePath(GetName()), RowStruct.GetScriptStruct(), RowStruct.GetMutableMemory());
+	bool bResult = FJsonConvert::JsonFileToStruct(GetJsonFilePath(), RowStruct.GetScriptStruct(), RowStruct.GetMutableMemory());
+	return bResult;
 }
 
-bool UExternalData::SaveData() const
+bool UExternalData::SaveData()
 {
 	if (!RowStruct.IsValid())
 	{
 		return false;
 	}
 
-	return FJsonConvert::StructToJsonFile(GetJsonFilePath(GetName()), RowStruct.GetScriptStruct(), RowStruct.GetMemory());
+	bool bResult = FJsonConvert::StructToJsonFile(GetJsonFilePath(), RowStruct.GetScriptStruct(), RowStruct.GetMemory());
+	return bResult;
 }
 
 #undef LOCTEXT_NAMESPACE

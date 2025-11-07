@@ -46,7 +46,7 @@ void ABuildingActor::NativeOnActived()
 
 	for (const auto& ChildActorComponent : FloorComponents)
 	{
-		Cast<AFloorActor>(ChildActorComponent->GetChildActor())->NativeOnActived();
+		Cast<AFloorActor>(ChildActorComponent->GetChildActor())->SetIsActived(true);
 	}
 }
 
@@ -56,7 +56,7 @@ void ABuildingActor::NativeOnInactived()
 
 	for (const auto& ChildActorComponent : FloorComponents)
 	{
-		Cast<AFloorActor>(ChildActorComponent->GetChildActor())->NativeOnInactived();
+		Cast<AFloorActor>(ChildActorComponent->GetChildActor())->SetIsActived(false);
 	}
 
 	UFloorBodyComponent::OnBodyClicked.RemoveAll(this);
@@ -129,11 +129,11 @@ void ABuildingActor::HandleBuildingActiveStateChanged(ABuildingActor* InBuilding
 {
 	if (InBuildingActor == this && !GetIsActived())
 	{
-		NativeOnActived();
+		SetIsActived(true);
 	}
 	else if (InBuildingActor != this && GetIsActived())
 	{
-		NativeOnInactived();
+		SetIsActived(false);
 	}
 }
 

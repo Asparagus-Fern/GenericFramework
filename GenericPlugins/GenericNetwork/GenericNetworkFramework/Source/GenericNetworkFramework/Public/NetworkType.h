@@ -7,6 +7,9 @@
 
 GENERICNETWORKFRAMEWORK_API DECLARE_LOG_CATEGORY_EXTERN(GenericLogNetwork, Log, All);
 
+/**
+ * 
+ */
 USTRUCT(BlueprintType)
 struct GENERICNETWORKFRAMEWORK_API FUniqueNetworkID
 {
@@ -29,4 +32,17 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	FUniqueNetIdRepl UniqueIdRepl;
+};
+
+/**
+ * 
+ */
+UENUM(BlueprintType)
+enum class ESessionState : uint8
+{
+	InValid,
+	InProgress,
+	Done,
+	Failed,
+	Cancel
 };

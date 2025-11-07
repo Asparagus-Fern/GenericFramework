@@ -144,6 +144,25 @@ private:
 	void DisableButton();
 
 	/* ==================== Event ==================== */
+public:
+	UFUNCTION(BlueprintCallable)
+	WIDGETGROUPGENERATION_API void SimulateButtonPressed();
+
+	UFUNCTION(BlueprintCallable)
+	WIDGETGROUPGENERATION_API void SimulateButtonReleased();
+
+	UFUNCTION(BlueprintCallable)
+	WIDGETGROUPGENERATION_API void SimulateButtonClicked();
+	
+	UFUNCTION(BlueprintCallable)
+	WIDGETGROUPGENERATION_API void SimulateButtonDoubleClicked();
+
+	UFUNCTION(BlueprintCallable)
+	WIDGETGROUPGENERATION_API void SimulateButtonFocusReceived();
+
+	UFUNCTION(BlueprintCallable)
+	WIDGETGROUPGENERATION_API void SimulateButtonFocusLost();
+
 protected:
 	/* Helper function registered to the underlying button when pressed */
 	UFUNCTION()

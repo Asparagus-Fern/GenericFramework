@@ -13,4 +13,8 @@ UCLASS()
 class NETWORKAPPLICATION_API ANetworkPlayerState : public AGenericPlayerState
 {
 	GENERATED_BODY()
+
+public:
+	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 };

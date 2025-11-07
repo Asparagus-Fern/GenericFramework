@@ -6,10 +6,10 @@
 #include "Base/GenericWidget.h"
 #include "PropertyList.generated.h"
 
-class UPropertyListViewModel;
+class UListView;
 class UTextBlock;
 class UPropertyProxy;
-class UGenericListView;
+class UPropertyListViewModel;
 class UPropertyListItemObject;
 
 
@@ -55,5 +55,5 @@ private:
 	TObjectPtr<UTextBlock> Text_PropertyCategory;
 
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget, BlueprintProtected = true, AllowPrivateAccess = true))
-	TObjectPtr<UGenericListView> GenericListView_Property;
+	TObjectPtr<UListView> ListView_Property;
 };

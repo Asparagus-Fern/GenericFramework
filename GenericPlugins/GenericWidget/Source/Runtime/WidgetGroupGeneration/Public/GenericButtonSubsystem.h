@@ -24,9 +24,12 @@ public:
 	WIDGETGROUPGENERATION_API UGenericButtonCollection* RegisterButtonCollection(APlayerController* Player, TSubclassOf<UGenericButtonCollection> InCollectionClass, bool InActived = true);
 	WIDGETGROUPGENERATION_API bool UnRegisterButtonCollection(UGenericButtonCollection* InCollection);
 
-	WIDGETGROUPGENERATION_API TArray<TObjectPtr<UGenericButtonCollection>> GetAllCollection() { return Collections; }
+	WIDGETGROUPGENERATION_API bool IsButtonCollectionRegistered(UGenericButtonCollection* InCollection) const;
+
+	WIDGETGROUPGENERATION_API TArray<UGenericButtonCollection*> GetAllButtonCollection() { return Collections; }
 	WIDGETGROUPGENERATION_API UGenericButtonCollection* GetButtonCollection(FGameplayTag InRootButtonTag);
 
 private:
+	UPROPERTY()
 	TArray<TObjectPtr<UGenericButtonCollection>> Collections;
 };

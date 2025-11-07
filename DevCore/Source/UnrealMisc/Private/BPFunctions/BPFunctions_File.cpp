@@ -9,6 +9,8 @@
 #include "Interfaces/IPluginManager.h"
 #include "Framework/Application/SlateApplication.h"
 #include "Misc/Paths.h"
+#include "Type/AndroidType.h"
+#include "Type/GenericType.h"
 
 #if WITH_EDITOR
 #include "EditorDirectories.h"
@@ -161,6 +163,12 @@ bool UBPFunctions_File::ExistFile(const FString& FileName)
 
 bool UBPFunctions_File::CopyFile(const FString FileSource, const FString FileDest, const bool Replace, const bool EvenIfReadOnly)
 {
+#if PLATFORM_ANDROID
+	if (!UAndroidPermissionFunctionLibrary::CheckPermission(TEXT("android.permission.WRITE_EXTERNAL_STORAGE")))
+	{
+		UAndroidPermissionFunctionLibrary::AcquirePermissions({TEXT("android.permission.WRITE_EXTERNAL_STORAGE")});
+	}
+#endif
 	return IFileManager::Get().Copy(*FileDest, *FileSource, Replace, EvenIfReadOnly) == COPY_OK;
 }
 
@@ -282,15 +290,6 @@ bool UBPFunctions_File::SaveFileDialog(FString FileName, FString FileType, TArra
 	}
 
 	return false;
-}
-
-FString UBPFunctions_File::GetAndroidRootDir()
-{
-#if PLATFORM_ANDROID
-	return TEXT("/sdcard");
-#else
-	return TEXT("");
-#endif
 }
 
 #undef LOCTEXT_NAMESPACE

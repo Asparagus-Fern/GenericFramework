@@ -9,7 +9,7 @@
 #include "BPFunctions/BPFunctions_Gameplay.h"
 #include "Interfaces/OnlineSessionInterface.h"
 #include "Type/DebugType.h"
-#include "ViewModel/OnlineSessionSearchSettingsViewModel.h"
+#include "ViewModel/SessionSearchSettingsViewModel.h"
 
 USessionSearchComponent::USessionSearchComponent()
 {
@@ -57,7 +57,7 @@ bool USessionSearchComponent::FindSessionsByNetID(const FUniqueNetIdRepl& Hostin
 
 	if (OnlineSessionSearchSettingsClass && !OnlineSessionSearchSettings)
 	{
-		OnlineSessionSearchSettings = NewObject<UOnlineSessionSearchSettingsViewModel>(this, OnlineSessionSearchSettingsClass);
+		OnlineSessionSearchSettings = NewObject<USessionSearchSettingsViewModel>(this, OnlineSessionSearchSettingsClass);
 	}
 
 	if (!OnlineSessionSearchSettings)
@@ -66,11 +66,11 @@ bool USessionSearchComponent::FindSessionsByNetID(const FUniqueNetIdRepl& Hostin
 		return false;
 	}
 
-	if (!OnlineSessionSearchSettings->GetOnlineSessionSearchSettings(Settings))
-	{
-		GenericLOG(GenericLogNetwork, Error, TEXT("Fail To Get Online Session Settings"))
-		return false;
-	}
+	// if (!OnlineSessionSearchSettings->GetOnlineSessionSearchSettings(Settings))
+	// {
+	// 	GenericLOG(GenericLogNetwork, Error, TEXT("Fail To Get Online Session Settings"))
+	// 	return false;
+	// }
 
 	FOnFindSessionsCompleteDelegate OnFindSessionsCompleteDelegate;
 	OnFindSessionsCompleteDelegate.BindUObject(this, &USessionSearchComponent::OnFindSessionsComplete);
@@ -93,12 +93,12 @@ bool USessionSearchComponent::FindSessionsByNetID(const FUniqueNetIdRepl& Hostin
 	return true;
 }
 
-UOnlineSessionSearchSettingsViewModel* USessionSearchComponent::GetOnlineSessionSearchSettings()
+USessionSearchSettingsViewModel* USessionSearchComponent::GetOnlineSessionSearchSettings()
 {
 	return OnlineSessionSearchSettings;
 }
 
-void USessionSearchComponent::SetOnlineSessionSearchSettings(UOnlineSessionSearchSettingsViewModel* InViewModel)
+void USessionSearchComponent::SetOnlineSessionSearchSettings(USessionSearchSettingsViewModel* InViewModel)
 {
 	UNREGISTER_MVVM_PROPERTY(OnlineSessionSearchSettings)
 

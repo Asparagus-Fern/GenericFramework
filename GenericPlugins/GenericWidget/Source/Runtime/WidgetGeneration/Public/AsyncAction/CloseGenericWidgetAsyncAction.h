@@ -28,7 +28,7 @@ public:
 	UFUNCTION(BlueprintCallable, DisplayName="Close Generic Widget By Tag", meta = (WorldContext = "InWorldContextObject", GameplayTagFilter="UI.HUD", BlueprintInternalUseOnly = "true", AdvancedDisplay = 1))
 	static UCloseGenericWidgetAsyncAction* AsyncCloseGenericWidgetByTag(UObject* InWorldContextObject, FGameplayTag InSlotTag, bool MarkAsGarbage = true);
 
-	UFUNCTION(BlueprintCallable, DisplayName="Close Generic Widget", meta = (WorldContext = "InWorldContextObject", BlueprintInternalUseOnly = "true", AdvancedDisplay = 1))
+	UFUNCTION(BlueprintCallable, DisplayName="Close Generic Widget", meta = (WorldContext = "InWorldContextObject", BlueprintInternalUseOnly = "true", AdvancedDisplay = 2))
 	static UCloseGenericWidgetAsyncAction* AsyncCloseGenericWidget(UObject* InWorldContextObject, UGenericWidget* InWidget, bool MarkAsGarbage = true);
 
 public:

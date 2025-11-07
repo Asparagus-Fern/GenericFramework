@@ -7,7 +7,7 @@
 #include "SessionSearchComponent.generated.h"
 
 class USessionSearchPanel;
-class UOnlineSessionSearchSettingsViewModel;
+class USessionSearchSettingsViewModel;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnFindSessionStart);
 
@@ -37,10 +37,10 @@ public:
 	GENERICNETWORKFRAMEWORK_API bool FindSessionsByNetID(const FUniqueNetIdRepl& HostingPlayerId);
 
 	UFUNCTION(BlueprintPure)
-	GENERICNETWORKFRAMEWORK_API UOnlineSessionSearchSettingsViewModel* GetOnlineSessionSearchSettings();
+	GENERICNETWORKFRAMEWORK_API USessionSearchSettingsViewModel* GetOnlineSessionSearchSettings();
 
 	UFUNCTION(BlueprintCallable)
-	GENERICNETWORKFRAMEWORK_API void SetOnlineSessionSearchSettings(UOnlineSessionSearchSettingsViewModel* InViewModel);
+	GENERICNETWORKFRAMEWORK_API void SetOnlineSessionSearchSettings(USessionSearchSettingsViewModel* InViewModel);
 
 public:
 	UPROPERTY(BlueprintAssignable)
@@ -60,10 +60,10 @@ protected:
 	GENERICNETWORKFRAMEWORK_API virtual void OnCancelFindSessionsComplete(bool bWasSuccessful);
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TSubclassOf<UOnlineSessionSearchSettingsViewModel> OnlineSessionSearchSettingsClass = nullptr;
+	TSubclassOf<USessionSearchSettingsViewModel> OnlineSessionSearchSettingsClass = nullptr;
 
 	UPROPERTY()
-	TObjectPtr<UOnlineSessionSearchSettingsViewModel> OnlineSessionSearchSettings = nullptr;
+	TObjectPtr<USessionSearchSettingsViewModel> OnlineSessionSearchSettings = nullptr;
 
 private:
 	TSharedPtr<class FOnlineSessionSearch> Settings;

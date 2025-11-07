@@ -29,6 +29,7 @@ FName FButtonCollectionEvent::GetEventNodeName(const FName EventName, const FGam
 void UGenericButtonCollection::NativeOnCreate()
 {
 	IStateInterface::NativeOnCreate();
+	OnButtonCollectionRegister.Broadcast();
 }
 
 void UGenericButtonCollection::NativeOnActived()
@@ -46,6 +47,7 @@ void UGenericButtonCollection::NativeOnInactived()
 void UGenericButtonCollection::NativeOnDestroy()
 {
 	IStateInterface::NativeOnDestroy();
+	OnButtonCollectionUnRegister.Broadcast();
 }
 
 bool UGenericButtonCollection::GetIsActived() const
@@ -72,10 +74,10 @@ void UGenericButtonCollection::BuildChildButtonGroup(const FGameplayTag InButton
 		return;
 	}
 
-	UGenericWidgetSubsystem* GenericWidgetManager = UGenericWidgetSubsystem::Get(this);
-	if (!IsValid(GenericWidgetManager))
+	UGenericWidgetSubsystem* GenericWidgetSubsystem = UGenericWidgetSubsystem::Get(this);
+	if (!IsValid(GenericWidgetSubsystem))
 	{
-		GenericLOG(GenericLogUI, Warning, TEXT("GenericWidgetManager Is InValid"))
+		GenericLOG(GenericLogUI, Warning, TEXT("GenericWidgetSubsystem Is InValid"))
 		return;
 	}
 
@@ -93,7 +95,7 @@ void UGenericButtonCollection::BuildChildButtonGroup(const FGameplayTag InButton
 	}
 
 	/* Get This Actived Button Widget */
-	UGenericButtonWidget* ButtonWidget = GenericWidgetManager->GetActiveWidget<UGenericButtonWidget>(InButtonTag);
+	UGenericButtonWidget* ButtonWidget = GenericWidgetSubsystem->GetActiveWidget<UGenericButtonWidget>(InButtonTag);
 
 	/* Button Container Is a Container To Accept Multi Buttons Widget */
 	if (UGenericButtonContainer* ButtonContainer = BuildButtonGroupWidget(InButtonTag, ButtonWidget))
@@ -107,7 +109,7 @@ void UGenericButtonCollection::BuildChildButtonGroup(const FGameplayTag InButton
 		ButtonContainer->SetButtonGroup(ButtonGroup);
 
 		/* Try To Open This Container Widget,It Will Add To GameplaySlot Through Widget Slot Tag */
-		if (!GenericWidgetManager->OpenGenericWidget(ButtonContainer))
+		if (!GenericWidgetSubsystem->OpenGenericWidget(ButtonContainer))
 		{
 			GenericLOG(GenericLogUI, Error, TEXT("Open Button Container Fail"))
 			ButtonGroup->MarkAsGarbage();
@@ -124,7 +126,7 @@ void UGenericButtonCollection::BuildChildButtonGroup(const FGameplayTag InButton
 			if (UGenericButtonWidget* ChildButtonWidget = BuildButtonWidget(ChildButtonTag, ButtonContainer))
 			{
 				/* Try To Open Child Widget, It Will Add To Container Through a Valid Container Widget, See More In UGenericGameSlotSubsystem::AddSlotWidget */
-				if (!GenericWidgetManager->OpenGenericWidget(ChildButtonWidget))
+				if (!GenericWidgetSubsystem->OpenGenericWidget(ChildButtonWidget))
 				{
 					GenericLOG(GenericLogUI, Error, TEXT("Open Button Widget Fail"))
 					continue;
@@ -180,12 +182,12 @@ void UGenericButtonCollection::DestroyChildButtonGroup(const FGameplayTag InButt
 		return;
 	}
 
-	UGenericWidgetSubsystem* GenericWidgetManager = UGenericWidgetSubsystem::Get(this);
+	UGenericWidgetSubsystem* GenericWidgetSubsystem = UGenericWidgetSubsystem::Get(this);
 	TObjectPtr<UGenericButtonGroup> ButtonGroup = ButtonGroups.FindRef(InButtonTag);
 
 	OnButtonGroupDestroy(InButtonTag);
 
-	if (IsValid(GenericWidgetManager))
+	if (IsValid(GenericWidgetSubsystem))
 	{
 		UGenericButtonContainer* ButtonContainer = ButtonGroup->GetButtonGroupWidget();
 		TArray<UGenericButtonWidget*> ButtonWidgets = ButtonGroup->GetAllButton();
@@ -197,11 +199,11 @@ void UGenericButtonCollection::DestroyChildButtonGroup(const FGameplayTag InButt
 
 			ButtonGroup->RemoveButton(ButtonWidget);
 			ButtonContainer->RemoveChild(ButtonWidget);
-			GenericWidgetManager->CloseGenericWidget(ButtonWidget);
+			GenericWidgetSubsystem->CloseGenericWidget(ButtonWidget);
 		}
 
 		/* Close The Container Widget */
-		GenericWidgetManager->CloseGenericWidget(ButtonContainer);
+		GenericWidgetSubsystem->CloseGenericWidget(ButtonContainer);
 		ButtonGroup->SetButtonGroupWidget(nullptr);
 	}
 

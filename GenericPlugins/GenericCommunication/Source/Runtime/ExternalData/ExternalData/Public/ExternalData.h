@@ -19,7 +19,6 @@ class UExternalData : public UDataAsset
 	GENERATED_BODY()
 
 public:
-	// todo : 资产移除需移除对应的 .json 文件. 扩展该类资源对象, 我们需要提供一些快捷工作, 比如在编辑器刷新.
 	UExternalData();
 
 	// Begin UObject Interface.
@@ -45,12 +44,12 @@ public:
 		return RowStruct.Get<T>();
 	}
 
-	EXTERNALDATA_API static FString GetJsonFilePath(const FString& InName);
+	EXTERNALDATA_API FString GetJsonFilePath();
 	EXTERNALDATA_API bool LoadData();
-	EXTERNALDATA_API bool SaveData() const;
+	EXTERNALDATA_API bool SaveData();
 
-private:
-	UPROPERTY(EditAnywhere, meta=(AllowPrivateAccess = "true"), Category = Data)
+protected:
+	UPROPERTY(EditAnywhere)
 	FInstancedStruct RowStruct;
 
 	friend class UBPFunctions_ExternalData;

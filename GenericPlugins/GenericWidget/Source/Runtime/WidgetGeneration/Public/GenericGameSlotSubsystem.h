@@ -30,7 +30,7 @@ public:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void Deinitialize() override;
 
-	/* Delegate From UWidgetManager */
+	/* Delegate From UGenericWidgetSubsystem */
 protected:
 	virtual void PreWidgetOpened(FOpenWidgetParameter& Parameter);
 	virtual void OnWidgetOpened(FOpenWidgetParameter& Parameter);

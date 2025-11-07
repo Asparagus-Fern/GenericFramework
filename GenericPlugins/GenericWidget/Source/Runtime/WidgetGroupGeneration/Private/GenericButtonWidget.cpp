@@ -335,6 +335,46 @@ void UGenericButtonWidget::DisableButton()
 
 /* ==================== Event ==================== */
 
+void UGenericButtonWidget::SimulateButtonPressed()
+{
+	HandleButtonPressed();
+}
+
+void UGenericButtonWidget::SimulateButtonReleased()
+{
+	HandleButtonReleased();
+}
+
+void UGenericButtonWidget::SimulateButtonClicked()
+{
+	HandleButtonClicked();
+}
+
+void UGenericButtonWidget::SimulateButtonDoubleClicked()
+{
+	HandleButtonClicked();
+}
+
+void UGenericButtonWidget::SimulateButtonFocusReceived()
+{
+	HandleFocusReceived();
+}
+
+void UGenericButtonWidget::SimulateButtonFocusLost()
+{
+	HandleFocusLost();
+}
+
+void UGenericButtonWidget::HandleButtonPressed()
+{
+	SetButtonPressedInternal();
+}
+
+void UGenericButtonWidget::HandleButtonReleased()
+{
+	SetButtonReleasedInternal();
+}
+
 void UGenericButtonWidget::HandleButtonClicked()
 {
 	// Since the button enabled state is part of UInteractableWidgetBase, UButton::OnClicked can be fired while this button is not interactable.
@@ -371,16 +411,6 @@ void UGenericButtonWidget::HandleFocusReceived()
 void UGenericButtonWidget::HandleFocusLost()
 {
 	NativeOnFocusLost();
-}
-
-void UGenericButtonWidget::HandleButtonPressed()
-{
-	SetButtonPressedInternal();
-}
-
-void UGenericButtonWidget::HandleButtonReleased()
-{
-	SetButtonReleasedInternal();
 }
 
 /* ==================== Selection ==================== */

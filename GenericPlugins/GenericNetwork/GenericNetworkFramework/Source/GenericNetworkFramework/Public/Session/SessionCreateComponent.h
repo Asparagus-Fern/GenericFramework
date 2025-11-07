@@ -6,7 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "SessionCreateComponent.generated.h"
 
-class UOnlineSessionCreateSettingsViewModel;
+class USessionSettingsViewModel;
 class FOnlineSessionSettings;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSessionCreateCompleted, FName, SessionName, bool, bWasSuccessful);
@@ -24,10 +24,10 @@ public:
 
 public:
 	UFUNCTION(BlueprintCallable)
-	GENERICNETWORKFRAMEWORK_API bool CreateSessionByID(int32 HostingPlayerNum, FName SessionName, UOnlineSessionCreateSettingsViewModel* InSettings = nullptr);
+	GENERICNETWORKFRAMEWORK_API bool CreateSessionByID(int32 InPlayerIndex, FName SessionName, USessionSettingsViewModel* InSettings = nullptr);
 
 	UFUNCTION(BlueprintCallable)
-	GENERICNETWORKFRAMEWORK_API bool CreateSessionByNetID(const FUniqueNetIdRepl& HostingPlayerId, FName SessionName, UOnlineSessionCreateSettingsViewModel* InSettings = nullptr);
+	GENERICNETWORKFRAMEWORK_API bool CreateSessionByNetID(const FUniqueNetIdRepl& InPlayerNetID, FName SessionName, USessionSettingsViewModel* InSettings = nullptr);
 
 	UPROPERTY(BlueprintAssignable)
 	FOnSessionCreateCompleted OnSessionCreateCompleted;
@@ -37,10 +37,10 @@ protected:
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TSubclassOf<UOnlineSessionCreateSettingsViewModel> OnlineSessionCreateSettingsClass = nullptr;
+	TSubclassOf<USessionSettingsViewModel> OnlineSessionCreateSettingsClass = nullptr;
 
 	UPROPERTY()
-	TObjectPtr<UOnlineSessionCreateSettingsViewModel> OnlineSessionCreateSettings = nullptr;
+	TObjectPtr<USessionSettingsViewModel> OnlineSessionCreateSettings = nullptr;
 
 private:
 	FName CreateSessionName = NAME_None;

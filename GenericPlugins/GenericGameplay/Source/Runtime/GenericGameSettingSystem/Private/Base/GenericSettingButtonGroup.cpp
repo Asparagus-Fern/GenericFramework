@@ -59,9 +59,9 @@ bool UGenericSettingButtonGroup::HandleOnButtonSelectionConfirmed(UGenericButton
 	/* If Dirty, Try To Make Popup Widget To Remind The Player */
 	if (NeedConfirm && PopupWidgetClass)
 	{
-		if (UGenericWidgetSubsystem* GenericWidgetManager = UGenericWidgetSubsystem::Get(this))
+		if (UGenericWidgetSubsystem* GenericWidgetSubsystem = UGenericWidgetSubsystem::Get(this))
 		{
-			UGenericPopupWidget* PopupWidget = GenericWidgetManager->OpenGenericWidget<UGenericPopupWidget>(GetWorld(), PopupWidgetClass);
+			UGenericPopupWidget* PopupWidget = GenericWidgetSubsystem->OpenGenericWidget<UGenericPopupWidget>(GetWorld(), PopupWidgetClass);
 			if (IsValid(PopupWidget))
 			{
 				PopupWidget->Delegate_OnPopupResultSubmitted.AddLambda([this, InButton](FGameplayTag InPopupResult)

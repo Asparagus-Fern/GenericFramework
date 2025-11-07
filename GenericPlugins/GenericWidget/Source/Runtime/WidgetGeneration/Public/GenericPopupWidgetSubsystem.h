@@ -22,7 +22,7 @@ public:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void Deinitialize() override;
 
-	/* Delegate From UWidgetManager */
+	/* Delegate From UGenericWidgetSubsystem */
 protected:
 	virtual void PostWidgetOpened(UGenericWidget* InWidget);
 	virtual void PostWidgetClosed(UGenericWidget* InWidget);

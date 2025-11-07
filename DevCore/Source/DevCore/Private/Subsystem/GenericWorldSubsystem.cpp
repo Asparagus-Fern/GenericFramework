@@ -11,43 +11,11 @@ void UGenericWorldSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
 
-	FWorldDelegates::OnPreWorldInitialization.AddLambda([this](UWorld* InWorld, const UWorld::InitializationValues IVS)
-		{
-			FWorldDelegates::OnPreWorldInitialization.RemoveAll(this);
-			this->OnPreWorldInitialization(InWorld, IVS);
-		}
-	);
-
-	FWorldDelegates::OnPostWorldInitialization.AddLambda([this](UWorld* InWorld, const UWorld::InitializationValues IVS)
-		{
-			FWorldDelegates::OnPostWorldInitialization.RemoveAll(this);
-			this->OnPostWorldInitialization(InWorld, IVS);
-		}
-	);
-
-	FWorldDelegates::OnWorldBeginTearDown.AddLambda([this](UWorld* InWorld)
-		{
-			InWorld->OnWorldPreBeginPlay.RemoveAll(this);
-			InWorld->OnWorldMatchStarting.RemoveAll(this);
-			InWorld->OnWorldBeginPlay.RemoveAll(this);
-			FWorldDelegates::OnWorldBeginTearDown.RemoveAll(this);
-			this->OnWorldBeginTearDown(InWorld);
-		}
-	);
-
-	FWorldDelegates::OnWorldCleanup.AddLambda([this](UWorld* InWorld, bool bSessionEnded, bool bCleanupResources)
-		{
-			FWorldDelegates::OnWorldCleanup.RemoveAll(this);
-			this->OnWorldCleanup(InWorld, bSessionEnded, bCleanupResources);
-		}
-	);
-
-	FWorldDelegates::OnPostWorldCleanup.AddLambda([this](UWorld* InWorld, bool bSessionEnded, bool bCleanupResources)
-		{
-			FWorldDelegates::OnPostWorldCleanup.RemoveAll(this);
-			this->OnPostWorldCleanup(InWorld, bSessionEnded, bCleanupResources);
-		}
-	);
+	FWorldDelegates::OnPreWorldInitialization.AddUObject(this, &UGenericWorldSubsystem::OnPreWorldInitialization);
+	FWorldDelegates::OnPostWorldInitialization.AddUObject(this, &UGenericWorldSubsystem::OnPostWorldInitialization);
+	FWorldDelegates::OnWorldBeginTearDown.AddUObject(this, &UGenericWorldSubsystem::OnWorldBeginTearDown);
+	FWorldDelegates::OnWorldCleanup.AddUObject(this, &UGenericWorldSubsystem::OnWorldCleanup);
+	FWorldDelegates::OnPostWorldCleanup.AddUObject(this, &UGenericWorldSubsystem::OnPostWorldCleanup);
 }
 
 void UGenericWorldSubsystem::OnPreWorldInitialization(UWorld* InWorld, const UWorld::InitializationValues IVS)
@@ -103,6 +71,9 @@ void UGenericWorldSubsystem::OnWorldPostBeginPlay()
 
 void UGenericWorldSubsystem::OnWorldBeginTearDown(UWorld* InWorld)
 {
+	InWorld->OnWorldPreBeginPlay.RemoveAll(this);
+	InWorld->OnWorldMatchStarting.RemoveAll(this);
+	InWorld->OnWorldBeginPlay.RemoveAll(this);
 }
 
 void UGenericWorldSubsystem::OnWorldCleanup(UWorld* InWorld, bool bSessionEnded, bool bCleanupResources)

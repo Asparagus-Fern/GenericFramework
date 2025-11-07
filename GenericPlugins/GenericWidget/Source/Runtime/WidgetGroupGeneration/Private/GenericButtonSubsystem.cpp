@@ -24,10 +24,15 @@ UGenericButtonCollection* UGenericButtonSubsystem::RegisterButtonCollection(APla
 
 	if (InActived)
 	{
-		NewCollection->NativeOnActived();
+		NewCollection->SetIsActived(true);
 	}
 
 	return NewCollection;
+}
+
+bool UGenericButtonSubsystem::IsButtonCollectionRegistered(UGenericButtonCollection* InCollection) const
+{
+	return Collections.Contains(InCollection);
 }
 
 bool UGenericButtonSubsystem::UnRegisterButtonCollection(UGenericButtonCollection* InCollection)
@@ -46,7 +51,7 @@ bool UGenericButtonSubsystem::UnRegisterButtonCollection(UGenericButtonCollectio
 
 	if (InCollection->GetIsActived())
 	{
-		InCollection->NativeOnInactived();
+		InCollection->SetIsActived(false);
 	}
 
 	InCollection->NativeOnDestroy();
@@ -66,3 +71,5 @@ UGenericButtonCollection* UGenericButtonSubsystem::GetButtonCollection(FGameplay
 	}
 	return nullptr;
 }
+
+

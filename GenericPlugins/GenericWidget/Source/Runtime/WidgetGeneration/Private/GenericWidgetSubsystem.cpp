@@ -8,7 +8,7 @@
 
 #include "Type/GenericType.h"
 
-/* ==================== UWidgetManager ==================== */
+/* ==================== UGenericWidgetSubsystem ==================== */
 
 UGenericWidgetSubsystem* UGenericWidgetSubsystem::Get(const UObject* WorldContextObject)
 {
@@ -30,6 +30,18 @@ void UGenericWidgetSubsystem::OnWorldBeginTearDown(UWorld* InWorld)
 	}
 
 	Widgets.Reset();
+}
+
+UGenericWidget* UGenericWidgetSubsystem::GetActivedWidget(FGameplayTag InTag) const
+{
+	for (auto& ActivedWidget : Widgets)
+	{
+		if (ActivedWidget->SelfTag == InTag)
+		{
+			return ActivedWidget;
+		}
+	}
+	return nullptr;
 }
 
 TArray<UGenericWidget*> UGenericWidgetSubsystem::GetActivedWidgets() const
@@ -131,6 +143,7 @@ bool UGenericWidgetSubsystem::CloseGenericWidget(FCloseWidgetParameter& CloseWid
 	if (CloseWidgetParameter.IsValid())
 	{
 		InactiveWidget(CloseWidgetParameter);
+		return true;
 	}
 
 	GenericLOG(GenericLogUI, Error, TEXT("Close Widget Fail!"))
@@ -153,7 +166,7 @@ void UGenericWidgetSubsystem::ActiveWidget(FOpenWidgetParameter& OpenWidgetParam
 		OpenWidgetParameters.Add(OpenWidgetParameter);
 
 		OpenWidgetParameter.WidgetToHandle->GetOnWidgetActiveAnimationPlayFinish().AddUObject(this, &UGenericWidgetSubsystem::OnActiveAnimationPlayFinish);
-		OpenWidgetParameter.WidgetToHandle->NativeOnActived();
+		OpenWidgetParameter.WidgetToHandle->SetIsActived(true);
 	}
 	else
 	{
@@ -175,7 +188,7 @@ void UGenericWidgetSubsystem::InactiveWidget(FCloseWidgetParameter& CloseWidgetP
 	BROADCAST_UNIFIED_DELEGATE(Delegate_OnWidgetClosed, BPDelegate_OnWidgetClosed, CloseWidgetParameter);
 
 	CloseWidgetParameter.WidgetToHandle->GetOnWidgetInactiveAnimationPlayFinish().AddUObject(this, &UGenericWidgetSubsystem::OnInactiveAnimationPlayFinish);
-	CloseWidgetParameter.WidgetToHandle->NativeOnInactived();
+	CloseWidgetParameter.WidgetToHandle->SetIsActived(false);
 }
 
 void UGenericWidgetSubsystem::OnActiveAnimationPlayFinish(UGenericWidget* InWidget)

@@ -16,6 +16,10 @@ class UGenericButtonWidget;
 class UGenericButtonGroup;
 class UGenericButtonBuilder;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnButtonCollectionRegister);
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnButtonCollectionUnRegister);
+
 /**
  * Event Name Collection Used For Generate Event In Blueprint
  */
@@ -121,6 +125,12 @@ protected:
 
 	UFUNCTION(BlueprintNativeEvent)
 	WIDGETGROUPGENERATION_API void OnButtonDestroy(FGameplayTag InButtonTag);
+
+	UPROPERTY(BlueprintAssignable)
+	FOnButtonCollectionRegister OnButtonCollectionRegister;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnButtonCollectionUnRegister OnButtonCollectionUnRegister;
 
 private:
 	bool RegisterButtonGroup(FGameplayTag InButtonTag, UGenericButtonGroup* InButtonGroup);

@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UMG/ButtonContainer_VerticalBox.h"
+#include "GenericButtonContainer.h"
 #include "GenericSettingButtonContainer.generated.h"
 
 class UPropertyCollection;
@@ -13,7 +13,7 @@ class UGenericButtonWidget;
  * 
  */
 UCLASS(Abstract, MinimalAPI)
-class UGenericSettingButtonContainer : public UButtonContainer_VerticalBox
+class UGenericSettingButtonContainer : public UGenericButtonContainer
 {
 	GENERATED_BODY()
 

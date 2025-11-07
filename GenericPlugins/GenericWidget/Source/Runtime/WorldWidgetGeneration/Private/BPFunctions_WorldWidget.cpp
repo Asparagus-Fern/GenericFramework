@@ -8,9 +8,9 @@
 
 TArray<UWorldWidgetComponent*> UBPFunctions_WorldWidget::GetWorldWidgetComponents(const UObject* WorldContextObject)
 {
-	if (UWorldWidgetSubsystem* WorldWidgetManager = UWorldWidgetSubsystem::Get(WorldContextObject))
+	if (UWorldWidgetSubsystem* WorldGenericWidgetSubsystem = UWorldWidgetSubsystem::Get(WorldContextObject))
 	{
-		return WorldWidgetManager->GetWorldWidgetComponents();
+		return WorldGenericWidgetSubsystem->GetWorldWidgetComponents();
 	}
 
 	return TArray<UWorldWidgetComponent*>{};
@@ -18,9 +18,9 @@ TArray<UWorldWidgetComponent*> UBPFunctions_WorldWidget::GetWorldWidgetComponent
 
 TArray<UWorldWidgetComponent*> UBPFunctions_WorldWidget::GetWorldWidgetComponents2D(const UObject* WorldContextObject)
 {
-	if (UWorldWidgetSubsystem* WorldWidgetManager = UWorldWidgetSubsystem::Get(WorldContextObject))
+	if (UWorldWidgetSubsystem* WorldGenericWidgetSubsystem = UWorldWidgetSubsystem::Get(WorldContextObject))
 	{
-		return WorldWidgetManager->GetWorldWidgetComponents2D();
+		return WorldGenericWidgetSubsystem->GetWorldWidgetComponents2D();
 	}
 
 	return TArray<UWorldWidgetComponent*>{};
@@ -28,9 +28,9 @@ TArray<UWorldWidgetComponent*> UBPFunctions_WorldWidget::GetWorldWidgetComponent
 
 TArray<UWorldWidgetComponent*> UBPFunctions_WorldWidget::GetWorldWidgetComponents3D(const UObject* WorldContextObject)
 {
-	if (UWorldWidgetSubsystem* WorldWidgetManager = UWorldWidgetSubsystem::Get(WorldContextObject))
+	if (UWorldWidgetSubsystem* WorldGenericWidgetSubsystem = UWorldWidgetSubsystem::Get(WorldContextObject))
 	{
-		return WorldWidgetManager->GetWorldWidgetComponents3D();
+		return WorldGenericWidgetSubsystem->GetWorldWidgetComponents3D();
 	}
 
 	return TArray<UWorldWidgetComponent*>{};
@@ -38,9 +38,9 @@ TArray<UWorldWidgetComponent*> UBPFunctions_WorldWidget::GetWorldWidgetComponent
 
 UWorldWidgetComponent* UBPFunctions_WorldWidget::FindWorldWidgetComponent(const UObject* WorldContextObject,FGameplayTag WorldWidgetTag)
 {
-	if (UWorldWidgetSubsystem* WorldWidgetManager = UWorldWidgetSubsystem::Get(WorldContextObject))
+	if (UWorldWidgetSubsystem* WorldGenericWidgetSubsystem = UWorldWidgetSubsystem::Get(WorldContextObject))
 	{
-		return WorldWidgetManager->FindWorldWidgetComponent(WorldWidgetTag);
+		return WorldGenericWidgetSubsystem->FindWorldWidgetComponent(WorldWidgetTag);
 	}
 
 	return nullptr;
@@ -48,9 +48,9 @@ UWorldWidgetComponent* UBPFunctions_WorldWidget::FindWorldWidgetComponent(const 
 
 TArray<UWorldWidgetComponent*> UBPFunctions_WorldWidget::FindWorldWidgetComponents(const UObject* WorldContextObject,FGameplayTag WorldWidgetTag)
 {
-	if (UWorldWidgetSubsystem* WorldWidgetManager = UWorldWidgetSubsystem::Get(WorldContextObject))
+	if (UWorldWidgetSubsystem* WorldGenericWidgetSubsystem = UWorldWidgetSubsystem::Get(WorldContextObject))
 	{
-		return WorldWidgetManager->FindWorldWidgetComponents(WorldWidgetTag);
+		return WorldGenericWidgetSubsystem->FindWorldWidgetComponents(WorldWidgetTag);
 	}
 
 	return TArray<UWorldWidgetComponent*>{};

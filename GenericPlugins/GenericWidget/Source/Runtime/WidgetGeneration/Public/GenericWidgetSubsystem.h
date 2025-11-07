@@ -42,8 +42,9 @@ public:
 	static WIDGETGENERATION_API UGenericWidgetSubsystem* Get(const UObject* WorldContextObject);
 	virtual void OnWorldBeginTearDown(UWorld* InWorld) override;
 
-	/* UWidgetManager */
+	/* UGenericWidgetSubsystem */
 public:
+	UGenericWidget* GetActivedWidget(FGameplayTag InTag) const;
 	TArray<UGenericWidget*> GetActivedWidgets() const;
 
 	template <typename T>

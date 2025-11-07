@@ -1,0 +1,61 @@
+﻿// Copyright ChenTaiye 2025. All Rights Reserved.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "GenericMovieSceneInterface.generated.h"
+
+class UGenericWidget;
+
+UINTERFACE(MinimalAPI)
+class UGenericMovieSceneInterface : public UInterface
+{
+	GENERATED_BODY()
+};
+
+/**
+ * 
+ */
+class GENERICMOVIESCENESYSTEM_API IGenericMovieSceneInterface
+{
+	GENERATED_BODY()
+
+public:
+	virtual void OpenMovieScene();
+	virtual void CloseMovieScene();
+
+	virtual bool PlayMovieScene();
+	virtual bool PlayMovieSceneFromStart();
+	virtual bool PlayLoopingMovieScene(int32 NumLoops = -1);
+	virtual bool PlayReverseMovieScene();
+	virtual bool PauseMovieScene();
+	virtual bool StopMovieScene();
+	virtual bool SeekMovieScene(FTimecode SeekTime);
+
+	virtual void ChangeMovieSceneDirection() { return; }
+
+	virtual bool IsPlaying() { return false; }
+	virtual bool IsLooping() { return false; }
+	virtual bool IsPaused() { return false; }
+	virtual bool IsReversed() { return false; }
+
+	virtual FTimecode GetCurrentTime() { return FTimecode(); }
+	virtual FTimecode GetDuration() { return FTimecode(); }
+
+	virtual FFrameRate GetFrameRate() { return FFrameRate(); }
+	virtual void SetFrameRate(FFrameRate FrameRate) { return; }
+
+	virtual float GetPlayRate() { return 1.f; }
+	virtual void SetPlayRate(float InPlayRate) { return; }
+
+protected:
+	virtual void OnMovieSceneOpened() { return; }
+	virtual void OnMovieSceneClosed() { return; }
+
+	virtual void OnMovieScenePlay() { return; }
+	virtual void OnMovieScenePlayReverse() { return; }
+	virtual void OnMovieScenePause() { return; }
+	virtual void OnMovieSceneStop() { return; }
+	virtual void OnMovieSceneSeek() { return; }
+	virtual void OnMovieScenePlayFinish() { return; }
+};

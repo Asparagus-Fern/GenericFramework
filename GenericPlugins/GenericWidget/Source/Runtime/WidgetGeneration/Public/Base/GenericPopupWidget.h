@@ -26,7 +26,7 @@ public:
 	WIDGETGENERATION_API void SubmitPopupResult(FGameplayTag InPopupResult);
 
 	FDelegate_OnPopupResultSubmitted Delegate_OnPopupResultSubmitted;
-	UPROPERTY(BlueprintAssignable)
+	UPROPERTY(BlueprintAssignable, meta=(Categories="Result"))
 	FBPDelegate_OnPopupResultSubmitted BPDelegate_OnPopupResultSubmitted;
 
 protected:

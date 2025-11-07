@@ -50,11 +50,6 @@
       "LoadingPhase": "Default"
     },
     {
-      "Name": "NetworkUserSystem",
-      "Type": "Runtime",
-      "LoadingPhase": "Default"
-    },
-    {
       "Name": "NetworkApplication",
       "Type": "Runtime",
       "LoadingPhase": "Default"

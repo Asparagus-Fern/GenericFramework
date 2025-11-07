@@ -15,13 +15,6 @@ void IStateInterface::NativeOnCreate()
 
 void IStateInterface::NativeOnActived()
 {
-	SetIsActived(true);
-
-	if (UObject* Object = Cast<UObject>(this))
-	{
-		IStateInterface::Execute_HandleOnActived(Object);
-		GenericLOG(GenericLogState, Log, TEXT("On Actived : %s"), *Object->GetName());
-	}
 }
 
 void IStateInterface::NativeOnActivedFinish()
@@ -44,14 +37,6 @@ void IStateInterface::NativeOnRefresh()
 
 void IStateInterface::NativeOnInactived()
 {
-	SetIsActived(false);
-
-	if (UObject* Object = Cast<UObject>(this))
-	{
-		OnInactivedFinishEvent.Broadcast(Object);
-		IStateInterface::Execute_HandleOnInactived(Object);
-		GenericLOG(GenericLogState, Log, TEXT("On Inactived : %s"), *Object->GetName());
-	}
 }
 
 void IStateInterface::NativeOnInactivedFinish()
@@ -83,6 +68,23 @@ void IStateInterface::SetIsActived(const bool InActived)
 	{
 		bIsActived = InActived;
 		OnActiveStateChanged();
+
+		if (UObject* Object = Cast<UObject>(this))
+		{
+			if (bIsActived)
+			{
+				NativeOnActived();
+				IStateInterface::Execute_HandleOnActived(Object);
+				GenericLOG(GenericLogState, Log, TEXT("On Actived : %s"), *Object->GetName());
+			}
+			else
+			{
+				NativeOnInactived();
+				OnInactivedFinishEvent.Broadcast(Object);
+				IStateInterface::Execute_HandleOnInactived(Object);
+				GenericLOG(GenericLogState, Log, TEXT("On Inactived : %s"), *Object->GetName());
+			}
+		}
 	}
 }
 

@@ -2,6 +2,20 @@
 
 #include "GenericButtonContainer.h"
 
+#include "Components/PanelWidget.h"
+
+void UGenericButtonContainer::OnChildAdded_Implementation(UUserWidget* InWidget, int32 InIndex)
+{
+	Super::OnChildAdded_Implementation(InWidget, InIndex);
+	Panel_Container->AddChild(InWidget);
+}
+
+void UGenericButtonContainer::OnChildRemoved_Implementation(UUserWidget* InWidget, int32 InIndex)
+{
+	Super::OnChildRemoved_Implementation(InWidget, InIndex);
+	Panel_Container->RemoveChild(InWidget);
+}
+
 UGenericButtonCollection* UGenericButtonContainer::GetButtonCollection() const
 {
 	return ButtonCollection.IsValid() ? ButtonCollection.Get() : nullptr;

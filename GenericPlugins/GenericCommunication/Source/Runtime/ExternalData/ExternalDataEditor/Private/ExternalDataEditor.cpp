@@ -33,20 +33,23 @@ void FExternalDataEditorModule::RenameExternalData(FAssetData InAsset, const FSt
 	FString AssetName;
 	OldPath.Split(".", nullptr, &AssetName, ESearchCase::IgnoreCase, ESearchDir::FromEnd);
 
-	DeleteExternalData(AssetName);
+	if (UExternalData* ExternalData = Cast<UExternalData>(InAsset.GetAsset()))
+	{
+		DeleteExternalData(ExternalData);
+	}
 }
 
 void FExternalDataEditorModule::DeleteExternalData(FAssetData InAsset)
 {
-	if (InAsset.GetAsset())
+	if (UExternalData* ExternalData = Cast<UExternalData>(InAsset.GetAsset()))
 	{
-		DeleteExternalData(InAsset.GetAsset()->GetName());
+		DeleteExternalData(ExternalData);
 	}
 }
 
-void FExternalDataEditorModule::DeleteExternalData(const FString& InAssetName)
+void FExternalDataEditorModule::DeleteExternalData(UExternalData* InExternalData)
 {
-	const FString FilePath = UExternalData::GetJsonFilePath(InAssetName);
+	const FString FilePath = InExternalData->GetJsonFilePath();
 	IPlatformFile& PlatformFile = FPlatformFileManager::Get().GetPlatformFile();
 	if (PlatformFile.FileExists(*FilePath))
 	{

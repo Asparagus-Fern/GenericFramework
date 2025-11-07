@@ -5,10 +5,10 @@
 #include "PropertySubsystem.h"
 #include "PropertyProxy.h"
 #include "WidgetType.h"
+#include "Components/ListView.h"
 #include "Components/TextBlock.h"
 #include "MVVM/PropertyListViewModel.h"
 #include "UMG/PropertyListItem.h"
-#include "UWidget/GenericListView.h"
 
 void UPropertyList::NativePreConstruct()
 {
@@ -99,9 +99,9 @@ void UPropertyList::OnPropertyProxyClassChanged_Implementation(TSubclassOf<UProp
 	}
 
 	/* Clear List View Items */
-	if (GenericListView_Property)
+	if (ListView_Property)
 	{
-		GenericListView_Property->ClearListItems();
+		ListView_Property->ClearListItems();
 
 		/* Generate New Property Proxy */
 		if (InClass)
@@ -123,7 +123,7 @@ void UPropertyList::OnPropertyProxyClassChanged_Implementation(TSubclassOf<UProp
 			TArray<UPropertyListItemObject*> PropertyListItemObjects;
 			for (auto& Object : PropertyProxy->GetPropertyListItemObjects())
 			{
-				GenericListView_Property->AddItem(Object);
+				ListView_Property->AddItem(Object);
 			}
 		}
 	}

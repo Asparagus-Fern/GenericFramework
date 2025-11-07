@@ -102,9 +102,9 @@ void UPropertyListItem::AddPropertyOption(FGameplayTag InPropertyTag, TSubclassO
 		return;
 	}
 
-	if (UGenericWidgetSubsystem* GenericWidgetManager = UGenericWidgetSubsystem::Get(this))
+	if (UGenericWidgetSubsystem* GenericWidgetSubsystem = UGenericWidgetSubsystem::Get(this))
 	{
-		UPropertyListItemOption* NewPropertyOption = GenericWidgetManager->OpenGenericWidget<UPropertyListItemOption>(this, InClass);
+		UPropertyListItemOption* NewPropertyOption = GenericWidgetSubsystem->OpenGenericWidget<UPropertyListItemOption>(this, InClass);
 		if (IsValid(NewPropertyOption))
 		{
 			NewPropertyOption->SetPropertyViewModel(PropertyViewModel);

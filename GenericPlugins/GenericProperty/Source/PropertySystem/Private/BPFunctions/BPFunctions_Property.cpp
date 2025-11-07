@@ -41,9 +41,9 @@ bool UBPFunctions_Property::ExistPropertyProxy(const UObject* WorldContextObject
 
 UPropertyProxy* UBPFunctions_Property::GetPropertyProxy(const UObject* WorldContextObject, FGameplayTag InPropertyProxyTag, const TSubclassOf<UPropertyProxy>& InPropertyProxyClass)
 {
-	if (UPropertySubsystem* GenericWidgetManager = UPropertySubsystem::Get(WorldContextObject))
+	if (UPropertySubsystem* GenericWidgetSubsystem = UPropertySubsystem::Get(WorldContextObject))
 	{
-		return GenericWidgetManager->GetPropertyProxy(InPropertyProxyTag);
+		return GenericWidgetSubsystem->GetPropertyProxy(InPropertyProxyTag);
 	}
 	return nullptr;
 }

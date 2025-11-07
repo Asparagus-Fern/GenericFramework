@@ -7,9 +7,19 @@
 
 TArray<UGenericWidget*> UBPFunctions_Widget::GetActivedWidgets(const UObject* WorldContextObject)
 {
-	if (UGenericWidgetSubsystem* WidgetManager = UGenericWidgetSubsystem::Get(WorldContextObject))
+	if (const UGenericWidgetSubsystem* GenericWidgetSubsystem = UGenericWidgetSubsystem::Get(WorldContextObject))
 	{
-		return WidgetManager->GetActivedWidgets();
+		return GenericWidgetSubsystem->GetActivedWidgets();
 	}
 	return TArray<UGenericWidget*>{};
+}
+
+UGenericWidget* UBPFunctions_Widget::GetActivedWidget(const UObject* WorldContextObject, TSubclassOf<UGenericWidget> InClass, FGameplayTag InTag)
+{
+	ensureAlways(InClass);
+	if (const UGenericWidgetSubsystem* GenericWidgetSubsystem = UGenericWidgetSubsystem::Get(WorldContextObject))
+	{
+		return GenericWidgetSubsystem->GetActivedWidget(InTag);
+	}
+	return nullptr;
 }

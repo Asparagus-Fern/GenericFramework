@@ -15,7 +15,7 @@ public:
 private:
 	void RenameExternalData(FAssetData InAsset, const FString& OldPath);
 	void DeleteExternalData(FAssetData InAsset);
-	void DeleteExternalData(const FString& InAssetName);
+	void DeleteExternalData(UExternalData* InExternalData);
 
 	void OnAssetsAdded(TConstArrayView<FAssetData> Assets);
 	void OnAssetsRemoved(TConstArrayView<FAssetData> Assets);

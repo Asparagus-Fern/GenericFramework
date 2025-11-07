@@ -36,6 +36,21 @@
       "LoadingPhase": "Default"
     },
     {
+      "Name": "ExternalData",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
+    },
+    {
+      "Name": "ExternalDataEditor",
+      "Type": "Editor",
+      "LoadingPhase": "Default"
+    },
+    {
+      "Name": "ExternalDataNode",
+      "Type": "UncookedOnly",
+      "LoadingPhase": "Default"
+    },
+    {
       "Name": "NativeAPI",
       "Type": "Runtime",
       "LoadingPhase": "Default",

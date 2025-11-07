@@ -30,7 +30,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	WIDGETAPPLICATION_API void SetUpdateDuration(float InUpdateDuration);
-	
+
 	UFUNCTION(BlueprintNativeEvent, BlueprintPure)
 	WIDGETAPPLICATION_API FText GetFormatDate(int32 InYear, int32 InMouth, int32 InDay);
 
@@ -58,7 +58,7 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	float UpdateDuration = 0.1f;
-	
+
 private:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget, BlueprintProtected = true, AllowPrivateAccess = true))
 	TObjectPtr<UTextBlock> Text_Date;

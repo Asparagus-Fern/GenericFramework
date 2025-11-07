@@ -33,9 +33,9 @@ void UGenericPopupWidget::SubmitPopupResult(FGameplayTag InPopupResult)
 	BROADCAST_UNIFIED_DELEGATE(Delegate_OnPopupResultSubmitted, BPDelegate_OnPopupResultSubmitted, PopupResult);
 
 	/* On Result Submitted,It Will Auto Close To Enable Input In Game Slot */
-	if (UGenericWidgetSubsystem* GenericWidgetManager = UGenericWidgetSubsystem::Get(this))
+	if (UGenericWidgetSubsystem* GenericWidgetSubsystem = UGenericWidgetSubsystem::Get(this))
 	{
-		GenericWidgetManager->CloseGenericWidget(this);
+		GenericWidgetSubsystem->CloseGenericWidget(this);
 	}
 }
 

@@ -188,7 +188,7 @@ void UGenericWidget::NativeOnActived()
 		{
 			if (IStateInterface* StateInterface = Cast<IStateInterface>(Widget))
 			{
-				StateInterface->NativeOnActived();
+				StateInterface->SetIsActived(true);
 			}
 		}
 	);
@@ -207,7 +207,7 @@ void UGenericWidget::NativeOnInactived()
 		{
 			if (IStateInterface* StateInterface = Cast<IStateInterface>(Widget))
 			{
-				StateInterface->NativeOnInactived();
+				StateInterface->SetIsActived(false);
 			}
 		}
 	);
@@ -230,27 +230,20 @@ bool UGenericWidget::GetIsActived() const
 
 void UGenericWidget::SetIsActived(const bool InActived)
 {
-	// IStateInterface::SetIsActived(InActived);
-
-	if (InActived != GetIsActived())
-	{
-		bIsActived = InActived;
-
-		if (!bHasInitialized)
-		{
-			Initialize();
-			bHasInitialized = true;
-		}
-
-		OnActiveStateChanged();
-	}
+	IStateInterface::SetIsActived(InActived);
 }
 
 void UGenericWidget::OnActiveStateChanged()
 {
+	if (!bHasInitialized)
+	{
+		Initialize();
+		bHasInitialized = true;
+	}
+
 	if (const UWorld* World = GetWorld())
 	{
-		/* Check Is Game World */
+		/* Not In Game World, Just Update Widget Visibility, Not Play Widget Animation */
 		if (!World->IsGameWorld())
 		{
 			if (GetIsActived())

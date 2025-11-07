@@ -15,9 +15,9 @@ void UOpenGenericWidgetAsyncAction::Activate()
 	}
 
 	Widget->GetOnWidgetActiveAnimationPlayFinish().AddUObject(this, &UOpenGenericWidgetAsyncAction::OnWidgetActivedAnimationFinish);
-	if (UGenericWidgetSubsystem* GenericWidgetManager = UGenericWidgetSubsystem::Get(WorldContextObject))
+	if (UGenericWidgetSubsystem* GenericWidgetSubsystem = UGenericWidgetSubsystem::Get(WorldContextObject))
 	{
-		GenericWidgetManager->OpenGenericWidget(Widget, FOnWidgetActiveStateChanged::CreateUObject(this, &UOpenGenericWidgetAsyncAction::OnWidgetActived));
+		GenericWidgetSubsystem->OpenGenericWidget(Widget, FOnWidgetActiveStateChanged::CreateUObject(this, &UOpenGenericWidgetAsyncAction::OnWidgetActived));
 	}
 }
 

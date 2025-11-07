@@ -6,7 +6,7 @@
 #include "GameSession/GenericGameSession.h"
 #include "NetworkGameSession.generated.h"
 
-class UOnlineSessionCreateSettingsViewModel;
+class USessionSettingsViewModel;
 class USessionCreateComponent;
 
 UCLASS(Blueprintable)
@@ -16,13 +16,12 @@ class NETWORKAPPLICATION_API ANetworkGameSession : public AGenericGameSession
 
 public:
 	ANetworkGameSession();
-	virtual void RegisterServer() override;
-	virtual void RegisterServerFailed() override;
-
-protected:
-	virtual UOnlineSessionCreateSettingsViewModel* GetOnlineSessionCreateSettingsViewModel();
-
-protected:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TObjectPtr<USessionCreateComponent> SessionCreateComponent = nullptr;
+// 	virtual void RegisterServer() override;
+// 	virtual void RegisterServerFailed() override;
+//
+// protected:
+// 	virtual UOnlineSessionCreateSettingsViewModel* GetOnlineSessionCreateSettingsViewModel();
+//
+// 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+// 	TObjectPtr<USessionCreateComponent> SessionCreateComponent = nullptr;
 };

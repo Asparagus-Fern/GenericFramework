@@ -37,7 +37,7 @@ public:
 	virtual void OnWorldBeginPlay(UWorld& InWorld) override;
 	virtual void Deinitialize() override;
 
-	/* Delegate From UWidgetManager */
+	/* Delegate From UGenericWidgetSubsystem */
 private:
 	void OnWidgetOpened(FOpenWidgetParameter& Parameter);
 	void PostWidgetClosed(UGenericWidget* InWidget);

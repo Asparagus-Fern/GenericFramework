@@ -4,14 +4,14 @@
 
 #include "Interfaces/OnlineSessionInterface.h"
 #include "Session/SessionCreateComponent.h"
-#include "ViewModel/OnlineSessionCreateSettingsViewModel.h"
+#include "ViewModel/SessionSettingsViewModel.h"
 
 ANetworkGameSession::ANetworkGameSession()
 {
-	SessionCreateComponent = CreateDefaultSubobject<USessionCreateComponent>(TEXT("SessionCreateComponent"));
+	// SessionCreateComponent = CreateDefaultSubobject<USessionCreateComponent>(TEXT("SessionCreateComponent"));
 }
 
-void ANetworkGameSession::RegisterServer()
+/*void ANetworkGameSession::RegisterServer()
 {
 	Super::RegisterServer();
 
@@ -29,10 +29,10 @@ void ANetworkGameSession::RegisterServerFailed()
 
 UOnlineSessionCreateSettingsViewModel* ANetworkGameSession::GetOnlineSessionCreateSettingsViewModel()
 {
-	UOnlineSessionCreateSettingsViewModel* Settings = NewObject<UOnlineSessionCreateSettingsViewModel>();
+	UOnlineSessionCreateSettingsViewModel* Settings = NewObject<UOnlineSessionCreateSettingsViewModel>(this);
 	Settings->NumPublicConnections = MaxPlayers + MaxSpectators;
 	Settings->NumPrivateConnections = MaxPlayers + MaxSpectators;
 	Settings->bUseCustomGameModeDescription = true;
 	Settings->GameModeDescriptionOverride = SessionName.ToString();
 	return Settings;
-}
+}*/

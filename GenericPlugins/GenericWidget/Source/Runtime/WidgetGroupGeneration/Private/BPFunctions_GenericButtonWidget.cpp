@@ -8,9 +8,6 @@
 
 UGenericButtonCollection* UBPFunctions_GenericButtonWidget::RegisterButtonCollectionByClass(const UObject* WorldContextObject, APlayerController* Player, TSubclassOf<UGenericButtonCollection> InCollectionClass, bool InActived)
 {
-	ensureAlways(InCollectionClass);
-	ensureAlways(Player);
-
 	if (!IsValid(Player))
 	{
 		GenericLOG(GenericLogUI, Error, TEXT("Player Is InValid"))
@@ -34,8 +31,6 @@ UGenericButtonCollection* UBPFunctions_GenericButtonWidget::RegisterButtonCollec
 
 bool UBPFunctions_GenericButtonWidget::UnRegisterButtonCollection(const UObject* WorldContextObject, UGenericButtonCollection* InCollection)
 {
-	ensureAlways(InCollection);
-
 	if (!IsValid(InCollection))
 	{
 		GenericLOG(GenericLogUI, Error, TEXT("Collection Is InValid"))
@@ -50,10 +45,28 @@ bool UBPFunctions_GenericButtonWidget::UnRegisterButtonCollection(const UObject*
 	return false;
 }
 
+bool UBPFunctions_GenericButtonWidget::IsButtonCollectionRegistered(const UObject* WorldContextObject, UGenericButtonCollection* InCollection, bool& IsRegistered)
+{
+	if (UGenericButtonSubsystem* GenericButtonSubsystem = UGenericButtonSubsystem::Get(WorldContextObject))
+	{
+		IsRegistered = GenericButtonSubsystem->IsButtonCollectionRegistered(InCollection);
+		return true;
+	}
+	return false;
+}
+
+bool UBPFunctions_GenericButtonWidget::GetAllButtonCollection(const UObject* WorldContextObject, TArray<UGenericButtonCollection*>& Collections)
+{
+	if (UGenericButtonSubsystem* GenericButtonSubsystem = UGenericButtonSubsystem::Get(WorldContextObject))
+	{
+		Collections = GenericButtonSubsystem->GetAllButtonCollection();
+		return true;
+	}
+	return false;
+}
+
 UGenericButtonCollection* UBPFunctions_GenericButtonWidget::GetButtonCollectionByTag(const UObject* WorldContextObject, TSubclassOf<UGenericButtonCollection> InCollectionClass, FGameplayTag InRootButtonTag)
 {
-	ensureAlways(InCollectionClass);
-
 	if (!InCollectionClass)
 	{
 		GenericLOG(GenericLogUI, Error, TEXT("CollectionClass Is InValid"))

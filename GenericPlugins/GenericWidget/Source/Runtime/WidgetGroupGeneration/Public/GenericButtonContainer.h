@@ -14,8 +14,12 @@ class UGenericButtonCollection;
  */
 UCLASS(Abstract, MinimalAPI)
 class UGenericButtonContainer : public UGenericWidget
-{	
+{
 	GENERATED_BODY()
+
+public:
+	WIDGETGROUPGENERATION_API virtual void OnChildAdded_Implementation(UUserWidget* InWidget, int32 InIndex) override;
+	WIDGETGROUPGENERATION_API virtual void OnChildRemoved_Implementation(UUserWidget* InWidget, int32 InIndex) override;
 
 public:
 	UFUNCTION(BlueprintPure)
@@ -32,4 +36,7 @@ private:
 
 	UPROPERTY()
 	TWeakObjectPtr<UGenericButtonGroup> ButtonGroup = nullptr;
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget, BlueprintProtected = true, AllowPrivateAccess = true))
+	TObjectPtr<UPanelWidget> Panel_Container;
 };

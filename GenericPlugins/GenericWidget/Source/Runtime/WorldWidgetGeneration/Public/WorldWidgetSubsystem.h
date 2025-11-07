@@ -31,7 +31,7 @@ public:
 	WORLDWIDGETGENERATION_API virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	WORLDWIDGETGENERATION_API virtual void Deinitialize() override;
 
-	/* UWorldWidgetManager */
+	/* UWorldGenericWidgetSubsystem */
 protected:
 	WORLDWIDGETGENERATION_API virtual void RegisterWorldWidgetComponent(UWorldWidgetComponent* InWorldWidgetComponent);
 	WORLDWIDGETGENERATION_API virtual void UnRegisterWorldWidgetComponent(UWorldWidgetComponent* InWorldWidgetComponent);

@@ -23,4 +23,7 @@ class WIDGETGENERATION_API UBPFunctions_Widget : public UBlueprintFunctionLibrar
 public:
 	UFUNCTION(BlueprintPure, meta=(WorldContext = "WorldContextObject"))
 	static TArray<UGenericWidget*> GetActivedWidgets(const UObject* WorldContextObject);
+
+	UFUNCTION(BlueprintPure, meta=(WorldContext = "WorldContextObject", DeterminesOutputType = "InClass", Categories="UI"))
+	static UGenericWidget* GetActivedWidget(const UObject* WorldContextObject, TSubclassOf<UGenericWidget> InClass, FGameplayTag InTag);
 };

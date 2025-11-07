@@ -12,6 +12,7 @@ public class ExternalData : ModuleRules
 			new string[]
 			{
 				"Core",
+				"UnrealMisc",
 				"GenericJson",
 				// ... add other public dependencies that you statically link with here ...
 			});
