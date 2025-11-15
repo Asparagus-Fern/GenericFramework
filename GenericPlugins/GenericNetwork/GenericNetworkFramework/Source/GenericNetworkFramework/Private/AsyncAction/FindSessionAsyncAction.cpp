@@ -45,20 +45,20 @@ void UFindSessionAsyncAction::OnFindSessionComplete(bool bWasSuccessful)
 {
 	// TSharedRef<FOnlineSessionSearch> Search = ViewModel->GetSessionSettings();
 	
-	if (Search->SearchState == EOnlineAsyncTaskState::Done || Search->SearchState == EOnlineAsyncTaskState::Failed)
-	{
-		if (IOnlineSessionPtr OnlineSessionPtr = GetOnlineSessionPtr())
-		{
-			OnlineSessionPtr->ClearOnFindSessionsCompleteDelegates(this);
-		}
-
-		if (bWasSuccessful)
-		{
-			OnSuccess.Broadcast(ViewModel);
-		}
-		else
-		{
-			OnFail.Broadcast();
-		}
-	}
+	// if (Search->SearchState == EOnlineAsyncTaskState::Done || Search->SearchState == EOnlineAsyncTaskState::Failed)
+	// {
+	// 	if (IOnlineSessionPtr OnlineSessionPtr = GetOnlineSessionPtr())
+	// 	{
+	// 		OnlineSessionPtr->ClearOnFindSessionsCompleteDelegates(this);
+	// 	}
+	//
+	// 	if (bWasSuccessful)
+	// 	{
+	// 		OnSuccess.Broadcast(ViewModel);
+	// 	}
+	// 	else
+	// 	{
+	// 		OnFail.Broadcast();
+	// 	}
+	// }
 }

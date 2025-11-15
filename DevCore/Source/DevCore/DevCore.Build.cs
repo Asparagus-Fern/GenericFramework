@@ -6,10 +6,6 @@ public class DevCore : ModuleRules
 {
 	public DevCore(ReadOnlyTargetRules Target) : base(Target)
 	{
-		PCHUsage = ModuleRules.PCHUsageMode.UseSharedPCHs;
-		SharedPCHHeaderFile = "Public/SharedPCHHeader.h";	
-		PrivatePCHHeaderFile = "Public/PrivatePCHHeader.h";
-		
 		PrecompileForTargets = PrecompileTargetsType.Any;
 		bUsePrecompiled = false;
 
