@@ -3,13 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "OnlineSessionSettings.h"
 #include "Blueprint/IUserObjectListEntry.h"
 #include "Obect/GenericObject.h"
 #include "Base/GenericWidget.h"
 #include "SessionSearchListItem.generated.h"
 
-class USessionSettingsViewModel;
+class USessionSettingViewModel;
 class USessionSearchResultViewModel;
 
 /**
@@ -40,34 +39,13 @@ protected:
 	virtual void NativeOnEntryReleased() override;
 
 public:
-	UFUNCTION(BlueprintPure)
-	USessionSearchResultViewModel* GetSessionSearchResultViewModel();
-
 	UFUNCTION(BlueprintCallable)
 	void SetSessionSearchResultViewModel(USessionSearchResultViewModel* InViewModel);
 
 protected:
 	UFUNCTION(BlueprintNativeEvent)
-	void OnPingInMsChanged(int32 InPingInMs);
-	
-	UFUNCTION(BlueprintNativeEvent)
-	void OnUniqueIdReplChanged(FUniqueNetIdRepl InUniqueIdRepl);
+	void OnSessionSearchResultViewModelSet(USessionSearchResultViewModel* InViewModel);
 
-	UFUNCTION(BlueprintNativeEvent)
-	void OnOwningUserNameChanged(const FString& InOwningUserName);
-
-	UFUNCTION(BlueprintNativeEvent)
-	void OnSessionSettingsChanged(USessionSettingsViewModel* InSessionSettings);
-
-	UFUNCTION(BlueprintNativeEvent)
-	void OnNumOpenPrivateConnectionsChanged(int32 InNumOpenPrivateConnections);
-
-	UFUNCTION(BlueprintNativeEvent)
-	void OnNumOpenPublicConnectionsChanged(int32 InNumOpenPublicConnections);
-	
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly)
 	TObjectPtr<USessionSearchResultViewModel> SessionSearchResultViewModel = nullptr;
-
-	UPROPERTY()
-	TObjectPtr<USessionSettingsViewModel> SessionSettingsViewModel = nullptr;
 };

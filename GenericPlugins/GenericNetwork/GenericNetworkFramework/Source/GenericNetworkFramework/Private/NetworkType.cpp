@@ -12,16 +12,6 @@ FUniqueNetworkID::FUniqueNetworkID()
 	UniqueID = UBPFunctions_Device::GetDeviceID();
 }
 
-FUniqueNetworkID::FUniqueNetworkID(const ULocalPlayer* InLocalPlayer)
-{
-	UniqueID = UBPFunctions_Device::GetDeviceID();
-
-	if (IsValid(InLocalPlayer))
-	{
-		UniqueIdRepl = InLocalPlayer->GetPreferredUniqueNetId();
-	}
-}
-
 FUniqueNetworkID::FUniqueNetworkID(const APlayerController* InPlayer)
 {
 	UniqueID = UBPFunctions_Device::GetDeviceID();

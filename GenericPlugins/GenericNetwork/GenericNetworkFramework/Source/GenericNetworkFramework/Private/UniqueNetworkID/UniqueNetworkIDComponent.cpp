@@ -32,7 +32,7 @@ void UUniqueNetworkIDComponent::GetLifetimeReplicatedProps(TArray<class FLifetim
 
 bool UUniqueNetworkIDComponent::GetUniqueNetworkID(FUniqueNetworkID& OutUniqueNetworkID) const
 {
-	if (UniqueNetworkID.IsNetworkIDValid())
+	if (UniqueNetworkID.CheckIsValid())
 	{
 		OutUniqueNetworkID = UniqueNetworkID;
 		return true;
@@ -72,7 +72,7 @@ void UUniqueNetworkIDComponent::RefreshUniqueNetworkID()
 			}
 		}
 
-		if (NewUniqueNetworkID.IsNetworkIDValid() && NewUniqueNetworkID != UniqueNetworkID)
+		if (NewUniqueNetworkID.CheckIsValid() && NewUniqueNetworkID != UniqueNetworkID)
 		{
 			UniqueNetworkID = NewUniqueNetworkID;
 			OnRep_UniqueNetworkID();

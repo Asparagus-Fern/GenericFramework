@@ -20,5 +20,5 @@ public:
 
 public:
 	UPROPERTY(EditAnywhere, Category="Generic Button Container")
-	float ButtonSpacing = 0.f;
+	float Spacing = 0.f;
 };

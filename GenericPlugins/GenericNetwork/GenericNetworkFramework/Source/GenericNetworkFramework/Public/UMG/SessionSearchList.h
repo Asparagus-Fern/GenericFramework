@@ -3,14 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "NetworkType.h"
 #include "Base/GenericWidget.h"
 #include "SessionSearchList.generated.h"
 
-class USessionSearchListViewModel;
-class USessionSearchSettingsViewModel;
+class USessionSearchListItemObject;
+class USessionSearchResultViewModel;
 class UListView;
-class FOnlineSessionSearch;
 
 /**
  * 
@@ -25,31 +23,19 @@ protected:
 	virtual void NativeDestruct() override;
 
 public:
-	UFUNCTION(BlueprintPure)
-	USessionSearchListViewModel* GetSessionSearchListViewModel();
-
 	UFUNCTION(BlueprintCallable)
-	void SetSessionSearchListViewModel(USessionSearchListViewModel* InViewModel);
-
-protected:
-	UFUNCTION(BlueprintNativeEvent)
-	void OnSessionStateChanged(ESessionState InSessionState);
+	void SetSessionSearchResult(const TArray<USessionSearchResultViewModel*>& InViewModels);
 
 	UFUNCTION(BlueprintNativeEvent)
-	void OnItemsPerPageChanged(int32 InItemsPerPage);
+	void OnFindSessionsStart();
 
 	UFUNCTION(BlueprintNativeEvent)
-	void OnPageIndexChanged(int32 InPageIndex);
-
-	virtual void OnGetSessionSearchResult(const TArray<FOnlineSessionSearchResult>& InResults);
-	virtual void OnGetPageSessionSearchResult(const TArray<FOnlineSessionSearchResult>& InResults);
-
-	UPROPERTY()
-	TObjectPtr<USessionSearchListViewModel> SessionSearchListViewModel = nullptr;
+	void OnFindSessionsComplete();
 
 private:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget, BlueprintProtected = true, AllowPrivateAccess = true))
 	TObjectPtr<UListView> ListView_SessionSearch;
 
-	TSharedPtr<FOnlineSessionSearch> Settings;
+	UPROPERTY()
+	TArray<TObjectPtr<USessionSearchListItemObject>> SessionSearchListItemObjects;
 };

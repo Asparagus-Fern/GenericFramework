@@ -12,7 +12,7 @@ void UGenericHorizontalBox::OnSlotAdded(UPanelSlot* InSlot)
 	if (UHorizontalBoxSlot* HorizontalBoxSlot = Cast<UHorizontalBoxSlot>(InSlot))
 	{
 		FMargin SlotPadding = HorizontalBoxSlot->GetPadding();
-		SlotPadding.Left = (GetSlots().Num() == 1) ? 0.f : SlotPadding.Left + ButtonSpacing;
+		SlotPadding.Left = (GetSlots().Num() == 1) ? 0.f : SlotPadding.Left + Spacing;
 		HorizontalBoxSlot->SetPadding(SlotPadding);
 	}
 }

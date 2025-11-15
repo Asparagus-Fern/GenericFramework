@@ -4,10 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "MVVMViewModelBase.h"
+#include "NetworkType.h"
 #include "OnlineSessionSettings.h"
 #include "SessionSearchResultViewModel.generated.h"
 
-class USessionSettingsViewModel;
+class USessionSettingViewModel;
 
 /**
  * 
@@ -18,64 +19,35 @@ class GENERICNETWORKFRAMEWORK_API USessionSearchResultViewModel : public UMVVMVi
 	GENERATED_BODY()
 
 public:
-	void Initialize(const FOnlineSessionSearchResult& InResult);
-	const FOnlineSessionSearchResult& GetSessionSearchResult() const { return Result; }
+	const FOnlineSessionSearchResult& GetSessionSearchResult();
+	void SetSessionSearchResult(const FOnlineSessionSearchResult& InResult);
 
+	UFUNCTION(BlueprintPure)
+	FName GetSessionName() const;
+	
 public:
-	UFUNCTION(FieldNotify, BlueprintPure)
-	int32 GetPingInMs() const;
-
-	UFUNCTION(BlueprintCallable)
-	void SetPingInMs(int32 InValue);
-
-	UFUNCTION(FieldNotify, BlueprintPure)
-	const FUniqueNetIdRepl& GetUniqueIdRepl() const;
-
-	UFUNCTION(BlueprintCallable)
-	void SetUniqueIdRepl(const FUniqueNetIdRepl& InValue);
-
-	UFUNCTION(FieldNotify, BlueprintPure)
-	FString GetOwningUserName() const;
-
-	UFUNCTION(BlueprintCallable)
-	void SetOwningUserName(FString InValue);
-
-	UFUNCTION(FieldNotify, BlueprintPure)
-	USessionSettingsViewModel* GetSessionSettings() const;
-
-	UFUNCTION(BlueprintCallable)
-	void SetSessionSettings(USessionSettingsViewModel* InValue);
-
-	UFUNCTION(FieldNotify, BlueprintPure)
-	int32 GetNumOpenPrivateConnections() const;
-
-	UFUNCTION(BlueprintCallable)
-	void SetNumOpenPrivateConnections(int32 InValue);
-
-	UFUNCTION(FieldNotify, BlueprintPure)
-	int32 GetNumOpenPublicConnections() const;
-
-	UFUNCTION(BlueprintCallable)
-	void SetNumOpenPublicConnections(int32 InValue);
-
-public:
-	UPROPERTY(FieldNotify, EditDefaultsOnly, Getter, Setter, BlueprintGetter="GetPingInMs", BlueprintSetter="SetPingInMs")
+	UPROPERTY(FieldNotify, VisibleAnywhere, BlueprintReadOnly)
 	int32 PingInMs;
 
-	UPROPERTY(FieldNotify, EditDefaultsOnly, Getter, Setter, BlueprintGetter="GetUniqueIdRepl", BlueprintSetter="SetUniqueIdRepl")
-	FUniqueNetIdRepl UniqueIdRepl;
+	/* 创建该会话的玩家ID */
+	UPROPERTY(FieldNotify, VisibleAnywhere, BlueprintReadOnly)
+	FUniqueNetIdRepl OwnerPlayerID;
 
-	UPROPERTY(FieldNotify, EditDefaultsOnly, Getter, Setter, BlueprintGetter="GetOwningUserName", BlueprintSetter="SetOwningUserName")
-	FString OwningUserName;
+	/* 创建该会话的玩家名 */
+	UPROPERTY(FieldNotify, VisibleAnywhere, BlueprintReadOnly)
+	FString OwningPlayerName;
 
-	UPROPERTY(FieldNotify, EditDefaultsOnly, Getter, Setter, BlueprintGetter="GetSessionSettings", BlueprintSetter="SetSessionSettings")
-	TObjectPtr<USessionSettingsViewModel> SessionSettings;
+	/* 当前会话内人数 */
+	UPROPERTY(FieldNotify, VisibleAnywhere, BlueprintReadOnly)
+	int32 CurrentPlayers = 0;
 
-	UPROPERTY(FieldNotify, EditDefaultsOnly, Getter, Setter, BlueprintGetter="GetNumOpenPrivateConnections", BlueprintSetter="SetNumOpenPrivateConnections")
-	int32 NumOpenPrivateConnections;
+	/* 会话最大人数 */
+	UPROPERTY(FieldNotify, VisibleAnywhere, BlueprintReadOnly)
+	int32 MaxPlayers = 0;
 
-	UPROPERTY(FieldNotify, EditDefaultsOnly, Getter, Setter, BlueprintGetter="GetNumOpenPublicConnections", BlueprintSetter="SetNumOpenPublicConnections")
-	int32 NumOpenPublicConnections;
+	/* 该会话的设置 */
+	UPROPERTY(FieldNotify, VisibleAnywhere, BlueprintReadOnly)
+	TObjectPtr<USessionSettingViewModel> SessionSettings;
 
 private:
 	FOnlineSessionSearchResult Result;

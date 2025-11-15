@@ -32,11 +32,6 @@ void USessionSearchListItem::NativeOnEntryReleased()
 	SetSessionSearchResultViewModel(nullptr);
 }
 
-USessionSearchResultViewModel* USessionSearchListItem::GetSessionSearchResultViewModel()
-{
-	return SessionSearchResultViewModel;
-}
-
 void USessionSearchListItem::SetSessionSearchResultViewModel(USessionSearchResultViewModel* InViewModel)
 {
 	UNREGISTER_MVVM_PROPERTY(SessionSearchResultViewModel);
@@ -45,36 +40,10 @@ void USessionSearchListItem::SetSessionSearchResultViewModel(USessionSearchResul
 
 	if (SessionSearchResultViewModel)
 	{
-		REGISTER_MVVM_PROPERTY(SessionSearchResultViewModel, PingInMs, OnPingInMsChanged, true)
-		REGISTER_MVVM_PROPERTY(SessionSearchResultViewModel, UniqueIdRepl, OnUniqueIdReplChanged, true)
-		REGISTER_MVVM_PROPERTY(SessionSearchResultViewModel, OwningUserName, OnOwningUserNameChanged, true)
-		REGISTER_MVVM_PROPERTY(SessionSearchResultViewModel, SessionSettings, OnSessionSettingsChanged, true)
-		REGISTER_MVVM_PROPERTY(SessionSearchResultViewModel, NumOpenPrivateConnections, OnNumOpenPrivateConnectionsChanged, true)
-		REGISTER_MVVM_PROPERTY(SessionSearchResultViewModel, NumOpenPublicConnections, OnNumOpenPublicConnectionsChanged, true)
+		OnSessionSearchResultViewModelSet(SessionSearchResultViewModel);
 	}
 }
 
-void USessionSearchListItem::OnPingInMsChanged_Implementation(int32 InPingInMs)
-{
-}
-
-void USessionSearchListItem::OnUniqueIdReplChanged_Implementation(FUniqueNetIdRepl InUniqueIdRepl)
-{
-}
-
-void USessionSearchListItem::OnOwningUserNameChanged_Implementation(const FString& InOwningUserName)
-{
-}
-
-void USessionSearchListItem::OnSessionSettingsChanged_Implementation(USessionSettingsViewModel* InSessionSettings)
-{
-	SessionSettingsViewModel = InSessionSettings;
-}
-
-void USessionSearchListItem::OnNumOpenPrivateConnectionsChanged_Implementation(int32 InNumOpenPrivateConnections)
-{
-}
-
-void USessionSearchListItem::OnNumOpenPublicConnectionsChanged_Implementation(int32 InNumOpenPublicConnections)
+void USessionSearchListItem::OnSessionSearchResultViewModelSet_Implementation(USessionSearchResultViewModel* InViewModel)
 {
 }

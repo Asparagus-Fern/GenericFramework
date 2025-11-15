@@ -6,11 +6,6 @@
 #include "PlayerController/GenericPlayerController.h"
 #include "NetworkPlayerController.generated.h"
 
-class USessionSettingsViewModel;
-class USessionCreateComponent;
-class USessionSearchComponent;
-class UUniqueNetworkIDComponent;
-
 /**
  * 
  */
@@ -21,14 +16,4 @@ class NETWORKAPPLICATION_API ANetworkPlayerController : public AGenericPlayerCon
 
 public:
 	ANetworkPlayerController();
-
-// protected:
-// 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-// 	TObjectPtr<UUniqueNetworkIDComponent> UniqueNetworkIDComponent = nullptr;
-//
-// 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-// 	TObjectPtr<USessionCreateComponent> SessionCreateComponent = nullptr;
-//
-// 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-// 	TObjectPtr<USessionSearchComponent> SessionSearchComponent = nullptr;
 };
