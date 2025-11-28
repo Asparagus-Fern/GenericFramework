@@ -17,4 +17,7 @@ class NETWORKAPPLICATION_API ANetworkPlayerState : public AGenericPlayerState
 public:
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
+	virtual void RegisterPlayerWithSession(bool bWasFromInvite) override;
+	virtual void UnregisterPlayerWithSession() override;
 };

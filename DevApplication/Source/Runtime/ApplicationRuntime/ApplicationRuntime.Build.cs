@@ -11,7 +11,9 @@ public class ApplicationRuntime : ModuleRules
 			{
 				"Core",
 				"UnrealMisc",
-				"DevCore"
+				"DevCore",
+
+				"Niagara",
 			}
 		);
 
@@ -30,6 +32,9 @@ public class ApplicationRuntime : ModuleRules
 				"LevelSequence",
 				"MovieScene",
 				"MediaAssets",
+
+				"NiagaraCore",
+
 
 				/* Dev Module */
 				"GenericCameraSystem",
@@ -62,5 +67,10 @@ public class ApplicationRuntime : ModuleRules
 				"UltraDynamicSkyUtilities"
 			}
 		);
+
+		if (Target.bBuildEditor)
+		{
+			PrivateDependencyModuleNames.Add("UnrealEd");
+		}
 	}
 }

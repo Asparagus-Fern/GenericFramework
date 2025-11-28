@@ -28,6 +28,7 @@ class UWorldWidgetSubsystem : public UGenericWorldSubsystem
 
 public:
 	static WORLDWIDGETGENERATION_API UWorldWidgetSubsystem* Get(const UObject* WorldContextObject);
+	WORLDWIDGETGENERATION_API virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
 	WORLDWIDGETGENERATION_API virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	WORLDWIDGETGENERATION_API virtual void Deinitialize() override;
 

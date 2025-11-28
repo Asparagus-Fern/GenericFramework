@@ -2,6 +2,8 @@
 
 #include "MVVM/Data/Multi/BoolPropertyValueViewModel.h"
 
+#include "StaticFunctions/StaticFunctions_Convert.h"
+
 #define LOCTEXT_NAMESPACE "FPropertySystemModel"
 
 static FString TrueStringValue = TEXT("true");

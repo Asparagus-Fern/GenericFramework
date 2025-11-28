@@ -13,7 +13,8 @@ public class ApplicationEditor : ModuleRules
 
 				"DevSlateCore",
 				"DevEdCore",
-				"DevCore"
+				"DevCore",
+				"ApplicationRuntime"
 			}
 		);
 
@@ -30,7 +31,8 @@ public class ApplicationEditor : ModuleRules
 				"ToolMenus",
 				"Settings",
 				"SettingsEditor",
-				"InternationalizationSettings"
+				"InternationalizationSettings",
+				"PropertyEditor",
 			}
 		);
 	}

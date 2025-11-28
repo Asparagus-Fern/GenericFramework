@@ -6,6 +6,8 @@
 #include "Base/GenericWidget.h"
 #include "PropertyCollection.generated.h"
 
+class UPropertyProxy;
+class UPropertyCollectionAsset;
 class UScrollBox;
 class UPropertyList;
 class UPropertyListViewModel;
@@ -20,11 +22,21 @@ class UPropertyCollection : public UGenericWidget
 	GENERATED_BODY()
 
 public:
+	virtual void NativePreConstruct() override;
 	virtual void NativeConstruct() override;
-	
+
 public:
 	UFUNCTION(BlueprintCallable)
+	PROPERTYSYSTEM_API void SetPropertyCollectionAsset(UPropertyCollectionAsset* InPropertyCollectionAsset);
+
+	UFUNCTION(BlueprintCallable)
 	PROPERTYSYSTEM_API void SetPropertyCollectionViewModel(UPropertyCollectionViewModel* InViewModel);
+
+	UFUNCTION(BlueprintCallable)
+	PROPERTYSYSTEM_API void ClearPropertyCollectionViewModel();
+
+	UFUNCTION(BlueprintPure)
+	PROPERTYSYSTEM_API void GetAllPropertyProxy(TArray<UPropertyProxy*>& Result) const;
 
 	UFUNCTION(BlueprintCallable)
 	PROPERTYSYSTEM_API void ApplyPropertyChanged();
@@ -40,11 +52,20 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	float Spacing = 0.f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	bool bIsEditable = true;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TObjectPtr<UPropertyCollectionAsset> PropertyDataCollection = nullptr;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UPropertyCollectionViewModel> PropertyCollectionViewModel = nullptr;
 
 	UPROPERTY(Transient, BlueprintReadOnly)
-	TArray<TObjectPtr<UPropertyList>> PropertyLists;
+	TArray<TObjectPtr<UPropertyList>> PropertyListArray;
+
+	UPROPERTY(Transient)
+	TArray<TObjectPtr<UPropertyProxy>> PropertyProxyArray;
 
 private:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget, BlueprintProtected = true, AllowPrivateAccess = true))

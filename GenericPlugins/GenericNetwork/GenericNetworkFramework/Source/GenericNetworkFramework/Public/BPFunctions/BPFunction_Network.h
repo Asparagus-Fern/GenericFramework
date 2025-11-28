@@ -16,9 +16,22 @@ class GENERICNETWORKFRAMEWORK_API UBPFunction_Network : public UBlueprintFunctio
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintPure, meta = (DisplayName = "To Unique Network ID(Player Controller)", CompactNodeTitle = "->", BlueprintAutocast))
+	UFUNCTION(BlueprintPure, meta = (DisplayName = "To Unique Network ID (PlayerController)", CompactNodeTitle = "->", BlueprintAutocast))
 	static FUniqueNetworkID Conv_PlayerControllerToUniqueNetworkID(APlayerController* InPlayerController);
 
-	UFUNCTION(BlueprintPure, meta = (DisplayName = "To Unique Network ID(Player State)", CompactNodeTitle = "->", BlueprintAutocast))
+	UFUNCTION(BlueprintPure, meta = (DisplayName = "To Unique Network ID (PlayerState)", CompactNodeTitle = "->", BlueprintAutocast))
 	static FUniqueNetworkID Conv_PlayerStateToUniqueNetworkID(APlayerState* InPlayerState);
+
+	UFUNCTION(BlueprintPure, meta = (DisplayName = "To Unique Network ID (UniqueNetIdRepl)", CompactNodeTitle = "->", BlueprintAutocast))
+	static FUniqueNetworkID Conv_UniqueNetIdReplToUniqueNetworkID(const FUniqueNetIdRepl& InUniqueNetIDRepl);
+
+public:
+	UFUNCTION(BlueprintPure, meta=(WorldContext = "WorldContextObject"))
+	static bool GetSessionHandleByUniqueNetID(const UObject* WorldContextObject, const FUniqueNetworkID& UniqueNetworkID, FGenericSessionHandle& OutHandle);
+
+	UFUNCTION(BlueprintPure, meta=(WorldContext = "WorldContextObject"))
+	static bool GetSessionHandleByNetID(const UObject* WorldContextObject, const FUniqueNetIdRepl& UniqueNetIDRepl, FGenericSessionHandle& OutHandle);
+
+	UFUNCTION(BlueprintPure, meta=(WorldContext = "WorldContextObject"))
+	static bool GetSessionHandleByName(const UObject* WorldContextObject, FName InSessionName, FGenericSessionHandle& OutHandle);
 };

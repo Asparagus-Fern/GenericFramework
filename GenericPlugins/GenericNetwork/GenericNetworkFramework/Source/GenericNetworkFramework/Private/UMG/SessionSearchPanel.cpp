@@ -5,6 +5,7 @@
 #include "GenericSessionSubsystem.h"
 #include "WidgetType.h"
 #include "UMG/SessionSearchList.h"
+#include "ViewModel/SessionSearchResultViewModel.h"
 #include "ViewModel/SessionSearchSettingViewModel.h"
 
 #if WITH_EDITOR
@@ -54,7 +55,8 @@ void USessionSearchPanel::RefreshSessionSearchList()
 
 	if (UGenericSessionSubsystem* GenericSessionSubsystem = UGenericSessionSubsystem::Get(this))
 	{
-		GenericSessionSubsystem->FindSessions(FUniqueNetworkID(GetOwningPlayer()), SessionSearchSettingsViewModel->GetSessionSettings(), FOnFindSessionsCompleteDelegate::CreateUFunction(this,GET_FUNCTION_NAME_CHECKED(USessionSearchPanel, OnFindSessionsComplete)));
+		SessionSearchSettingsViewModel->SessionSearchSettings.EncodeSessionSearchSettings();
+		GenericSessionSubsystem->FindSessions(FUniqueNetworkID(GetOwningPlayer()), SessionSearchSettingsViewModel->GetSessionSearchSettings(), FOnFindSessionsCompleteDelegate::CreateUFunction(this,GET_FUNCTION_NAME_CHECKED(USessionSearchPanel, OnFindSessionsComplete)));
 	}
 }
 
@@ -70,11 +72,17 @@ void USessionSearchPanel::OnFindSessionsComplete_Implementation(bool bWasSuccess
 {
 	if (SessionSearchList)
 	{
-		TArray<USessionSearchResultViewModel*> Results;
-		SessionSearchSettingsViewModel->RefreshSessionSearchResults();
-		SessionSearchSettingsViewModel->GetSessionSearchResults(Results);
+		TSharedRef<FOnlineSessionSearch> SessionSearchSettings = SessionSearchSettingsViewModel->GetSessionSearchSettings();
 
-		SessionSearchList->SetSessionSearchResult(Results);
+		SessionSearchResultViewModels.Reset();
+		for (auto& SearchResult : SessionSearchSettings->SearchResults)
+		{
+			USessionSearchResultViewModel* NewViewModel = NewObject<USessionSearchResultViewModel>(this);
+			NewViewModel->SetSessionSearchResult(SearchResult);
+			SessionSearchResultViewModels.Add(NewViewModel);
+		}
+
+		SessionSearchList->SetSessionSearchResult(SessionSearchResultViewModels);
 		SessionSearchList->OnFindSessionsComplete();
 	}
 }

@@ -27,6 +27,7 @@ class UGenericGameSlotSubsystem : public UGenericWorldSubsystem
 
 public:
 	static WIDGETGENERATION_API UGenericGameSlotSubsystem* Get(const UObject* WorldContextObject);
+	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void Deinitialize() override;
 

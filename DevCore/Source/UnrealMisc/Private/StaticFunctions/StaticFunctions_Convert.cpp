@@ -7,6 +7,13 @@ bool FStaticFunctions_Convert::ToBool(unsigned int Var)
 	return static_cast<bool>(Var);;
 }
 
+bool FStaticFunctions_Convert::ToBool(FString Var)
+{
+	bool Value;
+	LexFromString(Value, *Var);
+	return Value;
+}
+
 int32 FStaticFunctions_Convert::ToInt32(bool Var)
 {
 	return Var ? 1 : 0;

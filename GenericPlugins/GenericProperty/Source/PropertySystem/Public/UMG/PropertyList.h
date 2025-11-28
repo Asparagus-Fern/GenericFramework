@@ -6,12 +6,13 @@
 #include "Base/GenericWidget.h"
 #include "PropertyList.generated.h"
 
+class UPropertyDataSourceCollection;
+class UPropertyVisualData;
 class UListView;
 class UTextBlock;
 class UPropertyProxy;
 class UPropertyListViewModel;
 class UPropertyListItemObject;
-
 
 /**
  * Property List Contain a Property Category And a List Of Property
@@ -20,35 +21,43 @@ class UPropertyListItemObject;
 UCLASS(Abstract, MinimalAPI)
 class UPropertyList : public UGenericWidget
 {
-	GENERATED_BODY()
+	GENERATED_UCLASS_BODY()
 
 public:
-	PROPERTYSYSTEM_API virtual void NativePreConstruct() override;
 	PROPERTYSYSTEM_API virtual void NativeConstruct() override;
 	PROPERTYSYSTEM_API virtual void NativeDestruct() override;
 
 public:
 	UFUNCTION(BlueprintPure)
-	UPropertyListViewModel* GetPropertyListViewModel();
+	PROPERTYSYSTEM_API UPropertyListViewModel* GetPropertyListViewModel();
 
 	UFUNCTION(BlueprintCallable)
 	PROPERTYSYSTEM_API void SetPropertyListViewModel(UPropertyListViewModel* InViewModel);
 
 	UFUNCTION(BlueprintPure)
-	UPropertyProxy* GetPropertyProxy();
+	PROPERTYSYSTEM_API UPropertyProxy* GetPropertyProxy();
+
+	UFUNCTION(BlueprintCallable)
+	PROPERTYSYSTEM_API void RefreshPropertyList();
 
 protected:
 	UFUNCTION(BlueprintNativeEvent)
 	PROPERTYSYSTEM_API void OnPropertyCategoryChanged(const FText& InCategory);
 
 	UFUNCTION(BlueprintNativeEvent)
-	PROPERTYSYSTEM_API void OnPropertyProxyClassChanged(TSubclassOf<UPropertyProxy> InClass);
+	PROPERTYSYSTEM_API void OnPropertyDataSourceCollectionClassChanged(TSubclassOf<UPropertyDataSourceCollection> InClass);
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TObjectPtr<UPropertyVisualData> PropertyVisualData = nullptr;
+
+	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UPropertyListViewModel> PropertyListViewModel = nullptr;
 
 	UPROPERTY(Transient)
 	TObjectPtr<UPropertyProxy> PropertyProxy = nullptr;
+
+	UPROPERTY(Transient)
+	TArray<TObjectPtr<UPropertyListItemObject>> PropertyListItemObjects;
 
 private:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget, BlueprintProtected = true, AllowPrivateAccess = true))

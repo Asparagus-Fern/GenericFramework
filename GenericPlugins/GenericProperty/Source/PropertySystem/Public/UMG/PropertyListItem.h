@@ -53,10 +53,10 @@ protected:
 	PROPERTYSYSTEM_API void OnPropertyDisplayNameChanged(const FText& InDisplayName);
 
 	UFUNCTION(BlueprintNativeEvent)
-	PROPERTYSYSTEM_API void OnPropertyTagAdded(FGameplayTag InPropertyTag);
+	PROPERTYSYSTEM_API void OnPropertyOptionTagAdded(FGameplayTag InPropertyTag);
 
 	UFUNCTION(BlueprintNativeEvent)
-	PROPERTYSYSTEM_API void OnPropertyTagRemoved(FGameplayTag InPropertyTag);
+	PROPERTYSYSTEM_API void OnPropertyOptionTagRemoved(FGameplayTag InPropertyTag);
 
 	UFUNCTION(BlueprintCallable)
 	PROPERTYSYSTEM_API void AddPropertyOption(FGameplayTag InPropertyTag, TSubclassOf<UPropertyListItemOption> InClass);

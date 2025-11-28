@@ -4,7 +4,12 @@
 
 #include "GenericSessionSubsystem.h"
 #include "AsyncAction/CreateSessionAsyncAction.h"
-#include "ViewModel/SessionSearchSettingViewModel.h"
+
+UFindSessionAsyncAction::UFindSessionAsyncAction(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
+	  , OnFindSessionsCompleteDelegate(FOnFindSessionsCompleteDelegate::CreateUObject(this, &ThisClass::OnFindSessionsComplete))
+{
+}
 
 void UFindSessionAsyncAction::Activate()
 {
@@ -12,53 +17,51 @@ void UFindSessionAsyncAction::Activate()
 
 	if (UGenericSessionSubsystem* GenericSessionSubsystem = UGenericSessionSubsystem::Get(WorldContextObject))
 	{
-		if (ViewModelClass)
+		SessionSearchSettings.EncodeSessionSearchSettings();
+		if (!GenericSessionSubsystem->FindSessions(UniqueNetID, SessionSearchSettings, OnFindSessionsCompleteDelegate))
 		{
-			GenericSessionSubsystem->FindSessions(UniqueNetID, ViewModelClass, FOnFindSessionsCompleteDelegate::CreateUObject(this, &UFindSessionAsyncAction::OnFindSessionComplete));
+			OnFail.Broadcast();
 		}
-		else if (ViewModel)
+		return;
+	}
+	OnFail.Broadcast();
+}
+
+UFindSessionAsyncAction* UFindSessionAsyncAction::FindSessions(UObject* InWorldContextObject, const FUniqueNetworkID& InPlayerNetID, const FGenericSessionSearchSettings& InSessionSearchSettings)
+{
+	UFindSessionAsyncAction* NewAction = NewObject<UFindSessionAsyncAction>();
+	NewAction->WorldContextObject = InWorldContextObject;
+	NewAction->UniqueNetID = InPlayerNetID;
+	NewAction->SessionSearchSettings = InSessionSearchSettings;
+	return NewAction;
+}
+
+void UFindSessionAsyncAction::OnFindSessionsComplete(bool bWasSuccessful)
+{
+	const TSharedRef<FOnlineSessionSearch> Search = SessionSearchSettings.GetSessionSearchSettings();
+
+	if (Search->SearchState == EOnlineAsyncTaskState::Done || Search->SearchState == EOnlineAsyncTaskState::Failed)
+	{
+		if (IOnlineSessionPtr OnlineSessionPtr = GetOnlineSessionPtr())
 		{
-			GenericSessionSubsystem->FindSessions(UniqueNetID, ViewModel, FOnFindSessionsCompleteDelegate::CreateUObject(this, &UFindSessionAsyncAction::OnFindSessionComplete));
+			OnlineSessionPtr->ClearOnFindSessionsCompleteDelegates(this);
+		}
+
+		SessionSearchSettings.DecodeSessionSearchSettings();
+
+		SessionSearchResults.Reset();
+		for (auto& Result : SessionSearchSettings.GetSessionSearchSettings()->SearchResults)
+		{
+			SessionSearchResults.Add(Result);
+		}
+
+		if (bWasSuccessful)
+		{
+			OnSuccess.Broadcast(SessionSearchResults);
+		}
+		else
+		{
+			OnFail.Broadcast();
 		}
 	}
-}
-
-UFindSessionAsyncAction* UFindSessionAsyncAction::FindSessionsByClass(UObject* InWorldContextObject, const FUniqueNetworkID& InPlayerNetID, TSubclassOf<USessionSearchSettingViewModel> InViewModelClass)
-{
-	UFindSessionAsyncAction* NewAction = NewObject<UFindSessionAsyncAction>();
-	NewAction->WorldContextObject = InWorldContextObject;
-	NewAction->UniqueNetID = InPlayerNetID;
-	NewAction->ViewModelClass = InViewModelClass;
-	return NewAction;
-}
-
-UFindSessionAsyncAction* UFindSessionAsyncAction::FindSessions(UObject* InWorldContextObject, const FUniqueNetworkID& InPlayerNetID, USessionSearchSettingViewModel* InViewModel)
-{
-	UFindSessionAsyncAction* NewAction = NewObject<UFindSessionAsyncAction>();
-	NewAction->WorldContextObject = InWorldContextObject;
-	NewAction->UniqueNetID = InPlayerNetID;
-	NewAction->ViewModel = InViewModel;
-	return NewAction;
-}
-
-void UFindSessionAsyncAction::OnFindSessionComplete(bool bWasSuccessful)
-{
-	// TSharedRef<FOnlineSessionSearch> Search = ViewModel->GetSessionSettings();
-	
-	// if (Search->SearchState == EOnlineAsyncTaskState::Done || Search->SearchState == EOnlineAsyncTaskState::Failed)
-	// {
-	// 	if (IOnlineSessionPtr OnlineSessionPtr = GetOnlineSessionPtr())
-	// 	{
-	// 		OnlineSessionPtr->ClearOnFindSessionsCompleteDelegates(this);
-	// 	}
-	//
-	// 	if (bWasSuccessful)
-	// 	{
-	// 		OnSuccess.Broadcast(ViewModel);
-	// 	}
-	// 	else
-	// 	{
-	// 		OnFail.Broadcast();
-	// 	}
-	// }
 }

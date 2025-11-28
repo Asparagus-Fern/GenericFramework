@@ -28,14 +28,15 @@ protected:
 	PROPERTYSYSTEM_API virtual void OnCurrentValueChanged_Implementation(double CurrentValue) override;
 	PROPERTYSYSTEM_API virtual void OnNormalizedCurrentValueChanged_Implementation(double NormalizedCurrentValue) override;
 	PROPERTYSYSTEM_API virtual void OnValueStepChanged_Implementation(double ValueStep) override;
+	PROPERTYSYSTEM_API virtual void OnIsClampValueRangeChanged_Implementation(bool IsClampValueRange) override;
 	PROPERTYSYSTEM_API virtual void OnValueRangeChanged_Implementation(FVector2D ValueRange) override;
 	PROPERTYSYSTEM_API virtual void OnNormalizedValueRangeChanged_Implementation(FVector2D NormalizedValueRange) override;
+	PROPERTYSYSTEM_API virtual void OnIsClampInteractionRangeChanged_Implementation(bool IsClampInteractionRange) override;
 	PROPERTYSYSTEM_API virtual void OnValueInteractionRangeChanged_Implementation(FVector2D ValueInteractionRange) override;
 	PROPERTYSYSTEM_API virtual void OnNormalizedValueInteractionRangeChanged_Implementation(FVector2D NormalizedValueInteractionRange) override;
 	PROPERTYSYSTEM_API virtual void OnDisplayFormatChanged_Implementation(EScalarPropertyValueDisplayFormat DisplayFormat) override;
 
 protected:
-	virtual void RefreshSpinBox();
 	UFUNCTION(BlueprintNativeEvent)
 	void RefreshSpinBoxCustom();
 

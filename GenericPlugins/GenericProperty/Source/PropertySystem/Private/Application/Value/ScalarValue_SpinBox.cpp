@@ -64,11 +64,22 @@ void UScalarValue_SpinBox::OnValueStepChanged_Implementation(double ValueStep)
 	}
 }
 
+void UScalarValue_SpinBox::OnIsClampValueRangeChanged_Implementation(bool IsClampValueRange)
+{
+	Super::OnIsClampValueRangeChanged_Implementation(IsClampValueRange);
+
+	if (SpinBox_PropertyValue && !IsClampValueRange)
+	{
+		SpinBox_PropertyValue->ClearMinValue();
+		SpinBox_PropertyValue->ClearMaxValue();
+	}
+}
+
 void UScalarValue_SpinBox::OnValueRangeChanged_Implementation(FVector2D ValueRange)
 {
 	Super::OnValueRangeChanged_Implementation(ValueRange);
 
-	if (SpinBox_PropertyValue && ScalarPropertyValueViewModel->DisplayFormat == EScalarPropertyValueDisplayFormat::DisplayAsRawValue)
+	if (SpinBox_PropertyValue && ScalarPropertyValueViewModel->IsClampValueRange && ScalarPropertyValueViewModel->DisplayFormat == EScalarPropertyValueDisplayFormat::DisplayAsRawValue)
 	{
 		SpinBox_PropertyValue->SetMinValue(ValueRange.X);
 		SpinBox_PropertyValue->SetMaxValue(ValueRange.Y);
@@ -79,10 +90,21 @@ void UScalarValue_SpinBox::OnNormalizedValueRangeChanged_Implementation(FVector2
 {
 	Super::OnNormalizedValueRangeChanged_Implementation(NormalizedValueRange);
 
-	if (SpinBox_PropertyValue && ScalarPropertyValueViewModel->DisplayFormat == EScalarPropertyValueDisplayFormat::DisplayAsNormalizedValue)
+	if (SpinBox_PropertyValue && ScalarPropertyValueViewModel->IsClampValueRange && ScalarPropertyValueViewModel->DisplayFormat == EScalarPropertyValueDisplayFormat::DisplayAsNormalizedValue)
 	{
 		SpinBox_PropertyValue->SetMinValue(NormalizedValueRange.X);
 		SpinBox_PropertyValue->SetMaxValue(NormalizedValueRange.Y);
+	}
+}
+
+void UScalarValue_SpinBox::OnIsClampInteractionRangeChanged_Implementation(bool IsClampInteractionRange)
+{
+	Super::OnIsClampInteractionRangeChanged_Implementation(IsClampInteractionRange);
+
+	if (SpinBox_PropertyValue && !IsClampInteractionRange)
+	{
+		SpinBox_PropertyValue->ClearMinSliderValue();
+		SpinBox_PropertyValue->ClearMaxSliderValue();
 	}
 }
 
@@ -90,7 +112,7 @@ void UScalarValue_SpinBox::OnValueInteractionRangeChanged_Implementation(FVector
 {
 	Super::OnValueInteractionRangeChanged_Implementation(ValueInteractionRange);
 
-	if (SpinBox_PropertyValue && ScalarPropertyValueViewModel->DisplayFormat == EScalarPropertyValueDisplayFormat::DisplayAsRawValue)
+	if (SpinBox_PropertyValue && ScalarPropertyValueViewModel->IsClampInteractionRange && ScalarPropertyValueViewModel->DisplayFormat == EScalarPropertyValueDisplayFormat::DisplayAsRawValue)
 	{
 		SpinBox_PropertyValue->SetMinSliderValue(ValueInteractionRange.X);
 		SpinBox_PropertyValue->SetMaxSliderValue(ValueInteractionRange.Y);
@@ -101,7 +123,7 @@ void UScalarValue_SpinBox::OnNormalizedValueInteractionRangeChanged_Implementati
 {
 	Super::OnNormalizedValueInteractionRangeChanged_Implementation(NormalizedValueInteractionRange);
 
-	if (SpinBox_PropertyValue && ScalarPropertyValueViewModel->DisplayFormat == EScalarPropertyValueDisplayFormat::DisplayAsNormalizedValue)
+	if (SpinBox_PropertyValue && ScalarPropertyValueViewModel->IsClampInteractionRange && ScalarPropertyValueViewModel->DisplayFormat == EScalarPropertyValueDisplayFormat::DisplayAsNormalizedValue)
 	{
 		SpinBox_PropertyValue->SetMinSliderValue(NormalizedValueInteractionRange.X);
 		SpinBox_PropertyValue->SetMaxSliderValue(NormalizedValueInteractionRange.Y);
@@ -111,35 +133,10 @@ void UScalarValue_SpinBox::OnNormalizedValueInteractionRangeChanged_Implementati
 void UScalarValue_SpinBox::OnDisplayFormatChanged_Implementation(EScalarPropertyValueDisplayFormat DisplayFormat)
 {
 	Super::OnDisplayFormatChanged_Implementation(DisplayFormat);
-	RefreshSpinBox();
-}
 
-void UScalarValue_SpinBox::RefreshSpinBox()
-{
-	if (SpinBox_PropertyValue && ScalarPropertyValueViewModel)
+	if (ScalarPropertyValueViewModel->DisplayFormat == EScalarPropertyValueDisplayFormat::DisplayAsCustom)
 	{
-		switch (ScalarPropertyValueViewModel->DisplayFormat)
-		{
-		case EScalarPropertyValueDisplayFormat::DisplayAsRawValue:
-			SpinBox_PropertyValue->SetValue(ScalarPropertyValueViewModel->CurrentValue);
-			SpinBox_PropertyValue->SetMinValue(ScalarPropertyValueViewModel->ValueRange.X);
-			SpinBox_PropertyValue->SetMaxValue(ScalarPropertyValueViewModel->ValueRange.Y);
-			SpinBox_PropertyValue->SetMinSliderValue(ScalarPropertyValueViewModel->ValueInteractionRange.X);
-			SpinBox_PropertyValue->SetMaxSliderValue(ScalarPropertyValueViewModel->ValueInteractionRange.Y);
-			break;
-
-		case EScalarPropertyValueDisplayFormat::DisplayAsNormalizedValue:
-			SpinBox_PropertyValue->SetValue(ScalarPropertyValueViewModel->NormalizedCurrentValue);
-			SpinBox_PropertyValue->SetMinValue(ScalarPropertyValueViewModel->NormalizedValueRange.X);
-			SpinBox_PropertyValue->SetMaxValue(ScalarPropertyValueViewModel->NormalizedValueRange.Y);
-			SpinBox_PropertyValue->SetMinSliderValue(ScalarPropertyValueViewModel->NormalizedValueInteractionRange.X);
-			SpinBox_PropertyValue->SetMaxSliderValue(ScalarPropertyValueViewModel->NormalizedValueInteractionRange.Y);
-			break;
-
-		case EScalarPropertyValueDisplayFormat::DisplayAsCustom:
-			RefreshSpinBoxCustom();
-			break;
-		}
+		RefreshSpinBoxCustom();
 	}
 }
 

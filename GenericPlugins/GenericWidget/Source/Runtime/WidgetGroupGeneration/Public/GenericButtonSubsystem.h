@@ -19,6 +19,7 @@ class UGenericButtonSubsystem : public UGenericWorldSubsystem
 
 public:
 	static WIDGETGROUPGENERATION_API UGenericButtonSubsystem* Get(const UObject* WorldContextObject);
+	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
 
 public:
 	WIDGETGROUPGENERATION_API UGenericButtonCollection* RegisterButtonCollection(APlayerController* Player, TSubclassOf<UGenericButtonCollection> InCollectionClass, bool InActived = true);

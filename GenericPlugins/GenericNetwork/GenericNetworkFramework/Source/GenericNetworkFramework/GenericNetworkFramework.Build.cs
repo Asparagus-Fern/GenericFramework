@@ -34,9 +34,7 @@ public class GenericNetworkFramework : ModuleRules
 				"DevSlateCore",
 				"PropertySystem",
 				"WidgetGeneration",
-
-
-				// ... add other public dependencies that you statically link with here ...
+				"WidgetGroupGeneration",
 			}
 		);
 
@@ -52,8 +50,6 @@ public class GenericNetworkFramework : ModuleRules
 				"ModelViewViewModel",
 				"OnlineSubsystem",
 				"OnlineSubsystemUtils",
-
-				// ... add private dependencies that you statically link with here ...	
 			}
 		);
 

@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Components/Widget.h"
 #include "Framework/Text/TextLayout.h"
+#include "SWidget/SSimpleTextBox.h"
 #include "SimpleTextBox.generated.h"
 
 class SSimpleTextBox;
@@ -138,25 +139,25 @@ public:
 	/* Text */
 public:
 	UFUNCTION(BlueprintPure, Category="SimpleTextBox|Text")
-	FText GetText() const;
+	const FText& GetText() const;
 
 	UFUNCTION(BlueprintCallable, Category="SimpleTextBox|Text")
-	void SetText(FText InText);
+	void SetText(const FText& InText);
 
 	UFUNCTION(BlueprintPure, Category="SimpleTextBox|Text")
-	FSlateColor GetTextColor() const;
+	const FSlateColor& GetTextColor() const;
 
 	UFUNCTION(BlueprintCallable, Category="SimpleTextBox|Text")
-	void SetTextColor(FSlateColor InTextColor);
+	void SetTextColor(const FSlateColor& InTextColor);
 
 	UFUNCTION(BlueprintPure, Category="SimpleTextBox|Text")
-	FSlateFontInfo GetTextFont() const;
+	const FSlateFontInfo& GetTextFont() const;
 
 	UFUNCTION(BlueprintCallable, Category="SimpleTextBox|Text")
-	void SetTextFont(FSlateFontInfo InTextFont);
+	void SetTextFont(const FSlateFontInfo& InTextFont);
 
 	UFUNCTION(BlueprintPure, Category="SimpleTextBox|Text")
-	FSlateBrush GetTextStrikeBrush() const;
+	const FSlateBrush& GetTextStrikeBrush() const;
 
 	UFUNCTION(BlueprintCallable, Category="SimpleTextBox|Text")
 	void SetTextStrikeBrush(const FSlateBrush& InTextStrikeBrush);
@@ -174,13 +175,13 @@ public:
 	void SetTextShadowColor(FLinearColor InTextShadowColor);
 
 	UFUNCTION(BlueprintPure, Category="SimpleTextBox|Text")
-	FText GetHighlightText() const;
+	const FText& GetHighlightText() const;
 
 	UFUNCTION(BlueprintCallable, Category="SimpleTextBox|Text")
-	void SetHighlightText(FText InHighlightText);
+	void SetHighlightText(const FText& InHighlightText);
 
 	UFUNCTION(BlueprintPure, Category="SimpleTextBox|Text")
-	FSlateBrush GetTextHighlightShape() const;
+	const FSlateBrush& GetTextHighlightShape() const;
 
 	UFUNCTION(BlueprintCallable, Category="SimpleTextBox|Text")
 	void SetTextHighlightShape(const FSlateBrush& InTextHighlightShape);
@@ -250,13 +251,13 @@ public:
 	/* Image */
 public:
 	UFUNCTION(BlueprintPure, Category="SimpleTextBox|Image")
-	FSlateBrush GetImage() const;
+	const FSlateBrush& GetImage() const;
 
 	UFUNCTION(BlueprintCallable, Category="SimpleTextBox|Image")
 	void SetImage(const FSlateBrush& InImage);
 
 	UFUNCTION(BlueprintPure, Category="SimpleTextBox|Image")
-	FSlateColor GetImageColor() const;
+	const FSlateColor& GetImageColor() const;
 
 	UFUNCTION(BlueprintCallable, Category="SimpleTextBox|Image")
 	void SetImageColor(const FSlateColor& InImageColor);
@@ -274,6 +275,7 @@ public:
 	void SetImageVisibility(ESlateVisibility InImageVisibility);
 
 	/* Layout */
+public:
 	UFUNCTION(BlueprintPure, Category="SimpleTextBox|Layout")
 	ESimpleTextBoxType GetSimpleTextBoxType() const;
 

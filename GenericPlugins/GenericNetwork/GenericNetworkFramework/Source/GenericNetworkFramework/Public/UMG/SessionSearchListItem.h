@@ -8,6 +8,7 @@
 #include "Base/GenericWidget.h"
 #include "SessionSearchListItem.generated.h"
 
+class UGenericButtonWidget;
 class USessionSettingViewModel;
 class USessionSearchResultViewModel;
 
@@ -27,10 +28,16 @@ public:
 /**
  * 
  */
-UCLASS()
-class GENERICNETWORKFRAMEWORK_API USessionSearchListItem : public UGenericWidget, public IUserObjectListEntry
+UCLASS(MinimalAPI)
+class USessionSearchListItem : public UGenericWidget, public IUserObjectListEntry
 {
 	GENERATED_BODY()
+
+	friend class USessionSearchList;
+
+public:
+	virtual void NativeConstruct() override;
+	virtual void NativeDestruct() override;
 
 protected:
 	virtual void NativeOnListItemObjectSet(UObject* ListItemObject) override;
@@ -40,12 +47,24 @@ protected:
 
 public:
 	UFUNCTION(BlueprintCallable)
-	void SetSessionSearchResultViewModel(USessionSearchResultViewModel* InViewModel);
+	GENERICNETWORKFRAMEWORK_API void SetSessionSearchResultViewModel(USessionSearchResultViewModel* InViewModel);
+
+	UFUNCTION(BlueprintCallable)
+	GENERICNETWORKFRAMEWORK_API void RefreshSelectedSession();
+	GENERICNETWORKFRAMEWORK_API virtual void OnRefreshSelectedSessionComplete(int32 InPlayerIndex, bool bWasSuccessful, const FOnlineSessionSearchResult& InResult);
+
+protected:
+	UFUNCTION()
+	void OnJoinButtonClicked(UGenericButtonWidget* InButton);
 
 protected:
 	UFUNCTION(BlueprintNativeEvent)
-	void OnSessionSearchResultViewModelSet(USessionSearchResultViewModel* InViewModel);
+	GENERICNETWORKFRAMEWORK_API void OnSessionSearchResultViewModelSet(USessionSearchResultViewModel* InViewModel);
 
 	UPROPERTY(BlueprintReadOnly)
 	TObjectPtr<USessionSearchResultViewModel> SessionSearchResultViewModel = nullptr;
+
+private:
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget, BlueprintProtected = true, AllowPrivateAccess = true))
+	TObjectPtr<UGenericButtonWidget> GenericButtonWidget_Join;
 };

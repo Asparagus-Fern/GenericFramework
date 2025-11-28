@@ -13,12 +13,7 @@ public class WidgetGroupGeneration : ModuleRules
 				"UnrealMisc",
 				"DevCore",
 				"DevSlateCore",
-
-				"InputCore",
-				"EnhancedInput",
-				"GameplayTags",
-				"UMG",
-				"ModelViewViewModel",
+				"WidgetGeneration",
 			}
 		);
 
@@ -29,8 +24,11 @@ public class WidgetGroupGeneration : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
-
-				"WidgetGeneration",
+				"InputCore",
+				"EnhancedInput",
+				"GameplayTags",
+				"UMG",
+				"ModelViewViewModel",
 			}
 		);
 

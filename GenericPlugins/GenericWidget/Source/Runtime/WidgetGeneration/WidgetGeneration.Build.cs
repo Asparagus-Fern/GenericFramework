@@ -10,16 +10,16 @@ public class WidgetGeneration : ModuleRules
 			new string[]
 			{
 				"Core",
-				"UnrealMisc",
-				"DevCore",
-				"DevSlateCore",
-
 				"UMG",
 				"GameplayTags",
 				"CommonUI",
 				"CommonInput",
 				"InputCore",
 				"ModelViewViewModel",
+				
+				"UnrealMisc",
+				"DevCore",
+				"DevSlateCore",
 			}
 		);
 
@@ -30,8 +30,8 @@ public class WidgetGeneration : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
-				
-				"DeveloperSettings"
+				"DeveloperSettings",
+				"MoviePlayer"
 			}
 		);
 

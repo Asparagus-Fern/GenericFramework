@@ -14,6 +14,11 @@ UGenericButtonSubsystem* UGenericButtonSubsystem::Get(const UObject* WorldContex
 	return nullptr;
 }
 
+bool UGenericButtonSubsystem::ShouldCreateSubsystem(UObject* Outer) const
+{
+	return Super::ShouldCreateSubsystem(Outer) && !IsRunningDedicatedServer();
+}
+
 UGenericButtonCollection* UGenericButtonSubsystem::RegisterButtonCollection(APlayerController* Player, TSubclassOf<UGenericButtonCollection> InCollectionClass, bool InActived)
 {
 	check(Player)
@@ -71,5 +76,3 @@ UGenericButtonCollection* UGenericButtonSubsystem::GetButtonCollection(FGameplay
 	}
 	return nullptr;
 }
-
-

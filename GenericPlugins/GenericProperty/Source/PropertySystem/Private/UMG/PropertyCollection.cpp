@@ -2,6 +2,7 @@
 
 #include "UMG/PropertyCollection.h"
 
+#include "PropertyCollectionAsset.h"
 #include "PropertyProxy.h"
 #include "WidgetType.h"
 #include "Components/ScrollBox.h"
@@ -11,72 +12,102 @@
 #include "MVVM/PropertyListViewModel.h"
 #include "UMG/PropertyList.h"
 
-void UPropertyCollection::NativeConstruct()
+void UPropertyCollection::NativePreConstruct()
 {
-	Super::NativeConstruct();
+	Super::NativePreConstruct();
 
-	if (PropertyCollectionViewModel)
+	if (PropertyDataCollection)
 	{
-		SetPropertyCollectionViewModel(PropertyCollectionViewModel);
+		SetPropertyCollectionAsset(PropertyDataCollection);
 	}
-}
-
-void UPropertyCollection::SetPropertyCollectionViewModel(UPropertyCollectionViewModel* InViewModel)
-{
-	if (PropertyCollectionViewModel)
+	else
 	{
 		if (ScrollBox_PropertyCollection)
 		{
 			ScrollBox_PropertyCollection->ClearChildren();
 		}
+	}
+}
 
-		for (auto& PropertyList : PropertyLists)
-		{
-			PropertyList->SetPropertyListViewModel(nullptr);
-		}
+void UPropertyCollection::NativeConstruct()
+{
+	Super::NativeConstruct();
+}
 
-		PropertyLists.Reset();
-		PropertyCollectionViewModel->RemoveAllFieldValueChangedDelegates(this);
+void UPropertyCollection::SetPropertyCollectionAsset(UPropertyCollectionAsset* InPropertyCollectionAsset)
+{
+	if (!IsValid(InPropertyCollectionAsset))
+	{
+		GenericLOG(GenericLogProperty, Error, TEXT("PropertyDataCollection Is InValid"));
+		return;
 	}
 
-	PropertyCollectionViewModel = InViewModel;
-	REGISTER_MVVM_PROPERTY(PropertyCollectionViewModel, PropertyListViewModels, OnPropertyListViewModelsChanged, true)
+	SetPropertyCollectionViewModel(InPropertyCollectionAsset->PropertyCollectionViewModel);
+}
+
+void UPropertyCollection::SetPropertyCollectionViewModel(UPropertyCollectionViewModel* InViewModel)
+{
+	if (ScrollBox_PropertyCollection)
+	{
+		ScrollBox_PropertyCollection->ClearChildren();
+	}
+
+	if (IsDesignTime())
+	{
+		if (IsValid(InViewModel))
+		{
+			OnPropertyListViewModelsChanged(InViewModel->PropertyListViewModels);
+		}
+	}
+	else
+	{
+		UNREGISTER_MVVM_PROPERTY(PropertyCollectionViewModel)
+		PropertyCollectionViewModel = InViewModel;
+		REGISTER_MVVM_PROPERTY(PropertyCollectionViewModel, PropertyListViewModels, OnPropertyListViewModelsChanged, true)
+	}
+}
+
+void UPropertyCollection::ClearPropertyCollectionViewModel()
+{
+	SetPropertyCollectionViewModel(nullptr);
+}
+
+void UPropertyCollection::GetAllPropertyProxy(TArray<UPropertyProxy*>& Result) const
+{
+	for (auto& PropertyList : PropertyListArray)
+	{
+		Result.Add(PropertyList->GetPropertyProxy());
+	}
 }
 
 void UPropertyCollection::ApplyPropertyChanged()
 {
-	for (auto& PropertyList : PropertyLists)
+	TArray<UPropertyProxy*> AllPropertyProxy;
+	GetAllPropertyProxy(AllPropertyProxy);
+
+	for (auto& PropertyProxy : AllPropertyProxy)
 	{
-		if (UPropertyProxy* PropertyProxy = PropertyList->GetPropertyProxy())
-		{
-			PropertyProxy->ApplyProperty();
-		}
+		PropertyProxy->ApplyProperty();
 	}
 }
 
 void UPropertyCollection::ResetPropertyChanged()
 {
-	for (auto& PropertyList : PropertyLists)
+	TArray<UPropertyProxy*> AllPropertyProxy;
+	GetAllPropertyProxy(AllPropertyProxy);
+
+	for (auto& PropertyProxy : AllPropertyProxy)
 	{
-		if (UPropertyProxy* PropertyProxy = PropertyList->GetPropertyProxy())
-		{
-			PropertyProxy->ResetProperty();
-		}
+		PropertyProxy->ResetProperty();
 	}
 }
 
 void UPropertyCollection::OnPropertyListViewModelsChanged_Implementation(const TArray<UPropertyListViewModel*>& InViewModels)
 {
-	for (auto& PropertyList : PropertyLists)
-	{
-		PropertyList->SetPropertyListViewModel(nullptr);
-	}
-
-	PropertyLists.Reset();
-
 	if (ScrollBox_PropertyCollection)
 	{
 		ScrollBox_PropertyCollection->ClearChildren();
+		PropertyListArray.Reset();
 
 		for (int32 i = 0; i < InViewModels.Num(); i++)
 		{
@@ -85,8 +116,18 @@ void UPropertyCollection::OnPropertyListViewModelsChanged_Implementation(const T
 			if (ViewModel->PropertyListClass)
 			{
 				UPropertyList* NewPropertyList = CreateWidget<UPropertyList>(this, ViewModel->PropertyListClass);
-				NewPropertyList->SetPropertyListViewModel(ViewModel);
-				PropertyLists.Add(NewPropertyList);
+
+				if (!IsDesignTime())
+				{
+					NewPropertyList->SetPropertyListViewModel(ViewModel);
+					
+					if (UPropertyProxy* PropertyProxy = NewPropertyList->GetPropertyProxy())
+					{
+						PropertyProxy->SetIsPropertyEditable(bIsEditable);
+					}
+
+					PropertyListArray.Add(NewPropertyList);
+				}
 
 				UScrollBoxSlot* ScrollBoxSlot = Cast<UScrollBoxSlot>(ScrollBox_PropertyCollection->AddChild(NewPropertyList));
 

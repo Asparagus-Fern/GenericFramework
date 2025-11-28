@@ -24,6 +24,7 @@ public:
 	virtual void OnWorldPreBeginPlay(); //Before Actor Begin Play
 	virtual void OnWorldMatchStarting(); //After Actor Begin Play
 	virtual void OnWorldPostBeginPlay(); //Delegate Broadcast From UWorld::OnWorldBeginPlay
+	virtual void PostLoadMapWithWorld(UWorld* InWorld); //Delegate Broadcast From FCoreUObjectDelegates::PostLoadMapWithWorld
 	virtual void OnWorldBeginTearDown(UWorld* InWorld); //Before Actor End Play, Delegate Broadcast From FWorldDelegates::OnWorldBeginTearDown
 	virtual void OnWorldCleanup(UWorld* InWorld, bool bSessionEnded, bool bCleanupResources); //After Actor End Play, Delegate Broadcast From FWorldDelegates::OnWorldCleanup
 	virtual void OnPostWorldCleanup(UWorld* InWorld, bool bSessionEnded, bool bCleanupResources); //Delegate Broadcast From FWorldDelegates::OnPostWorldCleanup

@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Kismet/BlueprintAsyncActionBase.h"
+#include "SessionAsyncActionBase.h"
 #include "StartSessionAsyncAction.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FStartSessionSuccess);
@@ -14,9 +14,9 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FStartSessionFail);
  * 
  */
 UCLASS()
-class GENERICNETWORKFRAMEWORK_API UStartSessionAsyncAction : public UBlueprintAsyncActionBase
+class GENERICNETWORKFRAMEWORK_API UStartSessionAsyncAction : public USessionAsyncActionBase
 {
-	GENERATED_BODY()
+	GENERATED_UCLASS_BODY()
 
 public:
 	virtual void Activate() override;
@@ -33,10 +33,8 @@ public:
 	FStartSessionFail OnFail;
 
 private:
+	FOnStartSessionCompleteDelegate OnStartCompleteDelegate;
 	void OnStartSessionComplete(FName InSessionName, bool bWasSuccessful);
-
-	UPROPERTY()
-	UObject* WorldContextObject = nullptr;
 
 	UPROPERTY()
 	FName SessionName = NAME_None;

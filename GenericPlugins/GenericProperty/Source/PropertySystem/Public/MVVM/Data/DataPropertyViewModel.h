@@ -54,17 +54,17 @@ protected:
 	/*
 	 * Property Path To Get Property Value, Container Is Self
 	 * Ex: GetOwnerProxy.GetPropertyVisualData
-	 * The Property Must Has UPROPERTY Macro
+	 * The Property Must Have UPROPERTY Macro
 	 */
-	UPROPERTY(FieldNotify, EditAnywhere, Getter, Setter, BlueprintGetter="GetPropertyGetterPath", BlueprintSetter="SetPropertyGetterPath")
+	UPROPERTY(FieldNotify, VisibleAnywhere, Getter, Setter, BlueprintGetter="GetPropertyGetterPath", BlueprintSetter="SetPropertyGetterPath")
 	FString PropertyGetterPath;
 
 	/*
 	 * Property Path To Set Property Value, Container Is Self
 	 * Ex: GetOwnerProxy.SetPropertyVisualData
-	 * The Property Must Has UPROPERTY Macro
+	 * The Property Must Have UPROPERTY Macro
 	 */
-	UPROPERTY(FieldNotify, EditAnywhere, Getter, Setter, BlueprintGetter="GetPropertySetterPath", BlueprintSetter="SetPropertySetterPath")
+	UPROPERTY(FieldNotify, VisibleAnywhere, Getter, Setter, BlueprintGetter="GetPropertySetterPath", BlueprintSetter="SetPropertySetterPath")
 	FString PropertySetterPath;
 
 private:

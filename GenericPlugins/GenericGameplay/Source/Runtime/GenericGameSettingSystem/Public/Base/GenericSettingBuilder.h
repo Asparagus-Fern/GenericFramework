@@ -6,7 +6,7 @@
 #include "GenericButtonBuilder.h"
 #include "GenericSettingBuilder.generated.h"
 
-class UPropertyCollectionViewModel;
+class UPropertyCollectionAsset;
 
 /**
  * 
@@ -17,6 +17,6 @@ class UGenericSettingBuilder : public UGenericButtonBuilder
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced)
-	TObjectPtr<UPropertyCollectionViewModel> PropertyCollectionViewModel = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TObjectPtr<UPropertyCollectionAsset> GameSettingDataCollection = nullptr;
 };

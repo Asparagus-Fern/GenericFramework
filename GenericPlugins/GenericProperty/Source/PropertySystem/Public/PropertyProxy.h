@@ -8,6 +8,7 @@
 #include "Obect/GenericObject.h"
 #include "PropertyProxy.generated.h"
 
+class UPropertyDataSourceCollection;
 class UPropertyViewModel;
 class UPropertyVisualData;
 class UPropertyListItemObject;
@@ -15,26 +16,33 @@ class UPropertyListItemObject;
 /**
  * 
  */
-UCLASS(Abstract, MinimalAPI, Blueprintable, EditInlineNew)
-class UPropertyProxy : public UGenericObject, public IStateInterface
+UCLASS(MinimalAPI)
+class UPropertyProxy : public UGenericObject
 {
 	GENERATED_BODY()
 
 public:
-	PROPERTYSYSTEM_API UPropertyProxy(const FObjectInitializer& ObjectInitializer);
-	PROPERTYSYSTEM_API virtual void NativeOnCreate() override;
-	PROPERTYSYSTEM_API virtual void NativeOnDestroy() override;
+	PROPERTYSYSTEM_API virtual bool Initialize();
+	PROPERTYSYSTEM_API virtual void Deinitialize();
 
 public:
 	UFUNCTION(BlueprintPure)
-	PROPERTYSYSTEM_API TArray<UPropertyViewModel*> GetPropertyViewModels() const;
-
-	UFUNCTION(BlueprintPure)
-	PROPERTYSYSTEM_API TArray<UPropertyListItemObject*> GetPropertyListItemObjects() const;
+	PROPERTYSYSTEM_API const TArray<UPropertyViewModel*>& GetPropertyViewModels() const;
 
 	UFUNCTION(BlueprintPure)
 	PROPERTYSYSTEM_API FGameplayTag GetPropertyProxyTag() const;
 	PROPERTYSYSTEM_API void SetPropertyProxyTag(FGameplayTag InProxyTag);
+
+	UFUNCTION(BlueprintPure)
+	PROPERTYSYSTEM_API UPropertyDataSourceCollection* GetPropertyDataSourceCollection();
+	PROPERTYSYSTEM_API UPropertyDataSourceCollection* SetPropertyDataSourceCollection(const TSubclassOf<UPropertyDataSourceCollection>& InPropertyDataSourceCollectionClass);
+	PROPERTYSYSTEM_API void SetPropertyDataSourceCollection(UPropertyDataSourceCollection* InPropertyDataSourceCollection);
+
+	template <typename T>
+	T* GetPropertyDataSourceCollection()
+	{
+		return Cast<T>(PropertyDataSourceCollection);
+	}
 
 	UFUNCTION(BlueprintCallable)
 	PROPERTYSYSTEM_API void ApplyProperty();
@@ -42,35 +50,27 @@ public:
 	UFUNCTION(BlueprintCallable)
 	PROPERTYSYSTEM_API void ResetProperty();
 
+	UFUNCTION(BlueprintCallable)
+	PROPERTYSYSTEM_API void SetIsPropertyEditable(bool InIsEditable);
+
 	UFUNCTION(BlueprintPure)
 	PROPERTYSYSTEM_API bool IsAnyPropertyValueDirty() const;
 
 protected:
-	UFUNCTION(BlueprintNativeEvent)
-	PROPERTYSYSTEM_API void GeneratePropertyListItemObjects(TArray<UPropertyViewModel*>& Result);
-
-	UFUNCTION(BlueprintNativeEvent)
 	PROPERTYSYSTEM_API void OnPropertyApplied(UPropertyViewModel* InPropertyViewModel);
-
-	UFUNCTION(BlueprintNativeEvent)
 	PROPERTYSYSTEM_API void OnPropertyReset(UPropertyViewModel* InPropertyViewModel);
-
-	UFUNCTION(BlueprintNativeEvent)
 	PROPERTYSYSTEM_API void OnPropertyChanged(UPropertyViewModel* InPropertyViewModel, EPropertyChangedReason ChangedReason);
 
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TObjectPtr<UPropertyVisualData> PropertyVisualData = nullptr;
+	UPROPERTY()
+	FGameplayTag ProxyTag;
+
+	UPROPERTY(Transient)
+	TObjectPtr<UPropertyDataSourceCollection> PropertyDataSourceCollection = nullptr;
 
 	UPROPERTY(Transient)
 	TArray<UPropertyViewModel*> PropertyViewModels;
 
 	UPROPERTY(Transient)
-	TArray<TObjectPtr<UPropertyListItemObject>> PropertyListItemObjects;
-
-	UPROPERTY(Transient)
 	TArray<UPropertyViewModel*> DirtyPropertyViewModels;
-
-	UPROPERTY()
-	FGameplayTag ProxyTag;
 };

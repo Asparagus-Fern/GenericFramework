@@ -13,10 +13,8 @@ public class WindowGeneration : ModuleRules
 				"DevCore",
 				"DevSlateCore",
 				"UnrealMisc",
-
-				"UMG",
-				"ModelViewViewModel",
-				"GameplayTags",
+				"WidgetGeneration",
+				"WidgetGroupGeneration",
 			}
 		);
 
@@ -27,10 +25,10 @@ public class WindowGeneration : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
-
 				"DeveloperSettings",
-				"WidgetGeneration",
-				"WidgetGroupGeneration",
+				"UMG",
+				"ModelViewViewModel",
+				"GameplayTags",
 			}
 		);
 

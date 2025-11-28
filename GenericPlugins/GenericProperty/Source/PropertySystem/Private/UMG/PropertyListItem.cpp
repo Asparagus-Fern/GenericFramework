@@ -19,10 +19,11 @@ void UPropertyListItem::NativeOnListItemObjectSet(UObject* ListItemObject)
 		PropertyViewModel = PropertyListItemObject->PropertyViewModel;
 
 		REGISTER_MVVM_PROPERTY(PropertyViewModel, PropertyDisplayName, OnPropertyDisplayNameChanged, true)
-		PropertyViewModel->GetOnPropertyTagAddedEvent().AddUFunction(this,GET_FUNCTION_NAME_CHECKED(UPropertyListItem, OnPropertyTagAdded));
-		PropertyViewModel->GetOnPropertyTagRemovedEvent().AddUFunction(this,GET_FUNCTION_NAME_CHECKED(UPropertyListItem, OnPropertyTagRemoved));
+		PropertyViewModel->GetOnPropertyTagOptionAddedEvent().AddUFunction(this,GET_FUNCTION_NAME_CHECKED(UPropertyListItem, OnPropertyOptionTagAdded));
+		PropertyViewModel->GetOnPropertyTagOptionRemovedEvent().AddUFunction(this,GET_FUNCTION_NAME_CHECKED(UPropertyListItem, OnPropertyOptionTagRemoved));
 
-		for (auto& PropertyTag : PropertyViewModel->PropertyTags)
+
+		for (auto& PropertyTag : PropertyViewModel->PropertyOptionTags)
 		{
 			if (PropertyListItemObject->PropertyOptionClasses.Contains(PropertyTag))
 			{
@@ -54,8 +55,8 @@ void UPropertyListItem::NativeOnEntryReleased()
 	if (PropertyViewModel)
 	{
 		PropertyViewModel->RemoveAllFieldValueChangedDelegates(this);
-		PropertyViewModel->GetOnPropertyTagAddedEvent().RemoveAll(this);
-		PropertyViewModel->GetOnPropertyTagRemovedEvent().RemoveAll(this);
+		PropertyViewModel->GetOnPropertyTagOptionAddedEvent().RemoveAll(this);
+		PropertyViewModel->GetOnPropertyTagOptionRemovedEvent().RemoveAll(this);
 	}
 }
 
@@ -67,7 +68,7 @@ void UPropertyListItem::OnPropertyDisplayNameChanged_Implementation(const FText&
 	}
 }
 
-void UPropertyListItem::OnPropertyTagAdded_Implementation(FGameplayTag InPropertyTag)
+void UPropertyListItem::OnPropertyOptionTagAdded_Implementation(FGameplayTag InPropertyTag)
 {
 	if (UPropertyListItemObject* PropertyListItemObject = GetListItem<UPropertyListItemObject>())
 	{
@@ -78,7 +79,7 @@ void UPropertyListItem::OnPropertyTagAdded_Implementation(FGameplayTag InPropert
 	}
 }
 
-void UPropertyListItem::OnPropertyTagRemoved_Implementation(FGameplayTag InPropertyTag)
+void UPropertyListItem::OnPropertyOptionTagRemoved_Implementation(FGameplayTag InPropertyTag)
 {
 	RemovePropertyOption(InPropertyTag);
 }

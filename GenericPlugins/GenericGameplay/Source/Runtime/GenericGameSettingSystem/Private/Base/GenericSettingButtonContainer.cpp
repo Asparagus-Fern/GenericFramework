@@ -58,13 +58,13 @@ void UGenericSettingButtonContainer::OnButtonSelectionChanged_Implementation(UGe
 			{
 				if (UGenericSettingBuilder* ButtonBuilder = Cast<UGenericSettingBuilder>(ButtonCollectionRef->GetButtonBuilder(InButton->SelfTag)))
 				{
-					PropertyCollection_Setting->SetPropertyCollectionViewModel(ButtonBuilder->PropertyCollectionViewModel);
+					PropertyCollection_Setting->SetPropertyCollectionAsset(ButtonBuilder->GameSettingDataCollection);
 					return;
 				}
 			}
 		}
 
-		PropertyCollection_Setting->SetPropertyCollectionViewModel(nullptr);
+		PropertyCollection_Setting->ClearPropertyCollectionViewModel();
 	}
 }
 

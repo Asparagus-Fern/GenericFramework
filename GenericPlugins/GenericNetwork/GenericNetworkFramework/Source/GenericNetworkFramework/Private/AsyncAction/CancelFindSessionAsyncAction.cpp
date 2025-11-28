@@ -5,14 +5,26 @@
 #include "GenericSessionSubsystem.h"
 #include "Interfaces/OnlineSessionInterface.h"
 
+UCancelFindSessionAsyncAction::UCancelFindSessionAsyncAction(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
+	  , OnCancelFindSessionsCompleteDelegate(FOnCancelFindSessionsCompleteDelegate::CreateUObject(this, &ThisClass::OnCancelFindSessionsComplete))
+{
+}
+
 void UCancelFindSessionAsyncAction::Activate()
 {
 	Super::Activate();
 
 	if (UGenericSessionSubsystem* GenericSessionSubsystem = UGenericSessionSubsystem::Get(WorldContextObject))
 	{
-		GenericSessionSubsystem->CancelFindSessions(FOnCancelFindSessionsCompleteDelegate::CreateUObject(this, &UCancelFindSessionAsyncAction::OnCancelFindSessionsComplete));
+		if (!GenericSessionSubsystem->CancelFindSessions(OnCancelFindSessionsCompleteDelegate))
+		{
+			OnFail.Broadcast();
+		}
+		return;
 	}
+
+	OnFail.Broadcast();
 }
 
 UCancelFindSessionAsyncAction* UCancelFindSessionAsyncAction::CancelFindSession(UObject* InWorldContextObject)
@@ -24,6 +36,11 @@ UCancelFindSessionAsyncAction* UCancelFindSessionAsyncAction::CancelFindSession(
 
 void UCancelFindSessionAsyncAction::OnCancelFindSessionsComplete(bool bWasSuccessful)
 {
+	if (IOnlineSessionPtr OnlineSessionPtr = GetOnlineSessionPtr())
+	{
+		OnlineSessionPtr->ClearOnCancelFindSessionsCompleteDelegates(this);
+	}
+
 	if (bWasSuccessful)
 	{
 		OnSuccess.Broadcast();

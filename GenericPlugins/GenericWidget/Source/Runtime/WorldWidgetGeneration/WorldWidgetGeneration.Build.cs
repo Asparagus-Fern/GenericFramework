@@ -12,6 +12,8 @@ public class WorldWidgetGeneration : ModuleRules
 				"Core",
 				"UnrealMisc",
 				"DevCore",
+				"WidgetGeneration",
+				"WidgetGroupGeneration",
 			}
 		);
 
@@ -22,15 +24,11 @@ public class WorldWidgetGeneration : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
-
 				"UMG",
 				"GameplayTags",
 				"CommonUI",
 				"InputCore",
 				"DeveloperSettings",
-
-				"WidgetGeneration",
-				"WidgetGroupGeneration",
 			}
 		);
 

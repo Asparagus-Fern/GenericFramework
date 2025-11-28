@@ -10,9 +10,12 @@ void SEditorWorldWidget::Construct(const FArguments& InArgs)
 {
 	OnWorldWidgetMiddleClicked = InArgs._OnWorldWidgetMiddleClicked;
 
+	TSharedRef<SWidget> ContentWidget = InArgs._Content.Widget;
+	ContentWidget->SetToolTipText(GetWorldWidgetTooltipText());
+
 	ChildSlot
 	[
-		InArgs._Content.Widget
+		ContentWidget
 	];
 }
 
@@ -24,6 +27,11 @@ FReply SEditorWorldWidget::OnMouseButtonDown(const FGeometry& MyGeometry, const 
 	}
 
 	return SCompoundWidget::OnMouseButtonDown(MyGeometry, MouseEvent);
+}
+
+FText SEditorWorldWidget::GetWorldWidgetTooltipText()
+{
+	return FText::FromString("Middle Click To Select This Actor.");
 }
 
 END_SLATE_FUNCTION_BUILD_OPTIMIZATION

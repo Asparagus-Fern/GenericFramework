@@ -26,16 +26,23 @@ void UPropertyScalarValueBase::NativeOnViewModelInitialized()
 
 	if (ScalarPropertyValueViewModel)
 	{
-		REGISTER_MVVM_PROPERTY(ScalarPropertyValueViewModel, InitialValue, OnInitialValueChanged, false)
-		REGISTER_MVVM_PROPERTY(ScalarPropertyValueViewModel, NormalizedInitialValue, OnNormalizedInitialValueChanged, false)
-		REGISTER_MVVM_PROPERTY(ScalarPropertyValueViewModel, CurrentValue, OnCurrentValueChanged, false)
-		REGISTER_MVVM_PROPERTY(ScalarPropertyValueViewModel, NormalizedCurrentValue, OnNormalizedCurrentValueChanged, false)
-		REGISTER_MVVM_PROPERTY(ScalarPropertyValueViewModel, ValueStep, OnValueStepChanged, false)
-		REGISTER_MVVM_PROPERTY(ScalarPropertyValueViewModel, ValueRange, OnValueRangeChanged, false)
-		REGISTER_MVVM_PROPERTY(ScalarPropertyValueViewModel, NormalizedValueRange, OnNormalizedValueRangeChanged, false)
-		REGISTER_MVVM_PROPERTY(ScalarPropertyValueViewModel, ValueInteractionRange, OnValueInteractionRangeChanged, false)
-		REGISTER_MVVM_PROPERTY(ScalarPropertyValueViewModel, NormalizedValueInteractionRange, OnNormalizedValueInteractionRangeChanged, false)
 		REGISTER_MVVM_PROPERTY(ScalarPropertyValueViewModel, DisplayFormat, OnDisplayFormatChanged, true)
+
+		REGISTER_MVVM_PROPERTY(ScalarPropertyValueViewModel, InitialValue, OnInitialValueChanged, true)
+		REGISTER_MVVM_PROPERTY(ScalarPropertyValueViewModel, NormalizedInitialValue, OnNormalizedInitialValueChanged, true)
+
+		REGISTER_MVVM_PROPERTY(ScalarPropertyValueViewModel, CurrentValue, OnCurrentValueChanged, true)
+		REGISTER_MVVM_PROPERTY(ScalarPropertyValueViewModel, NormalizedCurrentValue, OnNormalizedCurrentValueChanged, true)
+
+		REGISTER_MVVM_PROPERTY(ScalarPropertyValueViewModel, ValueStep, OnValueStepChanged, true)
+
+		REGISTER_MVVM_PROPERTY(ScalarPropertyValueViewModel, IsClampValueRange, OnIsClampValueRangeChanged, true)
+		REGISTER_MVVM_PROPERTY(ScalarPropertyValueViewModel, ValueRange, OnValueRangeChanged, true)
+		REGISTER_MVVM_PROPERTY(ScalarPropertyValueViewModel, NormalizedValueRange, OnNormalizedValueRangeChanged, true)
+
+		REGISTER_MVVM_PROPERTY(ScalarPropertyValueViewModel, IsClampInteractionRange, OnIsClampInteractionRangeChanged, true)
+		REGISTER_MVVM_PROPERTY(ScalarPropertyValueViewModel, ValueInteractionRange, OnValueInteractionRangeChanged, true)
+		REGISTER_MVVM_PROPERTY(ScalarPropertyValueViewModel, NormalizedValueInteractionRange, OnNormalizedValueInteractionRangeChanged, true)
 	}
 }
 
@@ -68,7 +75,15 @@ void UPropertyScalarValueBase::OnValueRangeChanged_Implementation(FVector2D Valu
 {
 }
 
+void UPropertyScalarValueBase::OnIsClampValueRangeChanged_Implementation(bool IsClampValueRange)
+{
+}
+
 void UPropertyScalarValueBase::OnNormalizedValueRangeChanged_Implementation(FVector2D NormalizedValueRange)
+{
+}
+
+void UPropertyScalarValueBase::OnIsClampInteractionRangeChanged_Implementation(bool IsIsClampInteractionRange)
 {
 }
 

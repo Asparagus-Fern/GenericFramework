@@ -44,6 +44,8 @@ void UPropertyValueBase::NativeOnViewModelInitialized()
 	if (UPropertyViewModel* ViewModel = GetPropertyViewModel<UPropertyViewModel>())
 	{
 		REGISTER_MVVM_PROPERTY(ViewModel, IsDirtyProxy, OnIsDirtyProxyChanged, true)
+		REGISTER_MVVM_PROPERTY(ViewModel, IsVisible, OnIsVisibleChanged, true)
+		REGISTER_MVVM_PROPERTY(ViewModel, IsEditable, OnIsEditableChanged, true)
 		REGISTER_MVVM_PROPERTY(ViewModel, PropertyName, OnPropertyNameChanged, true)
 		REGISTER_MVVM_PROPERTY(ViewModel, PropertyDisplayName, OnPropertyDisplayNameChanged, true)
 		REGISTER_MVVM_PROPERTY(ViewModel, PropertyDescription, OnPropertyDescriptionChanged, true)
@@ -52,6 +54,20 @@ void UPropertyValueBase::NativeOnViewModelInitialized()
 
 void UPropertyValueBase::NativeOnViewModelDeinitialized()
 {
+	if (UPropertyViewModel* ViewModel = GetPropertyViewModel<UPropertyViewModel>())
+	{
+		UNREGISTER_MVVM_PROPERTY(ViewModel);
+	}
+}
+
+void UPropertyValueBase::OnIsVisibleChanged_Implementation(bool InIsVisible)
+{
+	SetVisibility(InIsVisible ? ESlateVisibility::SelfHitTestInvisible : ESlateVisibility::Collapsed);
+}
+
+void UPropertyValueBase::OnIsEditableChanged_Implementation(bool InIsEditable)
+{
+	SetIsEnabled(InIsEditable);
 }
 
 void UPropertyValueBase::OnIsDirtyProxyChanged_Implementation(bool InIsDirtyProxy)

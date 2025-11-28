@@ -9,10 +9,12 @@
 
 class UPropertyProxy;
 
+static FName DefaultPropertyName = FName("GenerateChildProperty");
+
 /**
  * 
  */
-UCLASS(MinimalAPI)
+UCLASS(MinimalAPI, EditInlineNew)
 class UPropertyViewModel : public UMVVMViewModelBase
 {
 	GENERATED_UCLASS_BODY()
@@ -22,7 +24,7 @@ public:
 
 	DECLARE_EVENT_TwoParams(UPropertyViewModel, FOnPropertyChanged, UPropertyViewModel*, EPropertyChangedReason)
 
-	DECLARE_EVENT_TwoParams(UPropertyViewModel, FOnPropertyTagChanged, UPropertyViewModel*, FGameplayTag)
+	DECLARE_EVENT_TwoParams(UPropertyViewModel, FOnPropertyOptionTagChanged, UPropertyViewModel*, FGameplayTag)
 
 	PROPERTYSYSTEM_API virtual bool Initialize(UPropertyProxy* InOwnerProxy);
 	PROPERTYSYSTEM_API virtual void Deinitialize();
@@ -58,6 +60,9 @@ public:
 	UFUNCTION(BlueprintPure)
 	PROPERTYSYSTEM_API bool GetIsPropertyValueDirty() const;
 
+	UFUNCTION(BlueprintCallable)
+	PROPERTYSYSTEM_API void SetIsEnableEdit(bool IsEnableEdit);
+	
 public:
 	UFUNCTION(FieldNotify, BlueprintPure)
 	PROPERTYSYSTEM_API bool GetIsAutoApplyProperty() const;
@@ -70,6 +75,18 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	PROPERTYSYSTEM_API void SetIsDirtyProxy(bool InIsDirtyProxy);
+
+	UFUNCTION(FieldNotify, BlueprintPure)
+	PROPERTYSYSTEM_API bool GetIsEditable() const;
+
+	UFUNCTION(BlueprintCallable)
+	PROPERTYSYSTEM_API void SetIsEditable(bool InIsEditable);
+
+	UFUNCTION(FieldNotify, BlueprintPure)
+	PROPERTYSYSTEM_API bool GetIsVisible() const;
+
+	UFUNCTION(BlueprintCallable)
+	PROPERTYSYSTEM_API void SetIsVisible(bool InIsVisible);
 
 	UFUNCTION(FieldNotify, BlueprintPure)
 	PROPERTYSYSTEM_API FName GetPropertyName() const;
@@ -109,8 +126,8 @@ public:
 	PROPERTYSYSTEM_API FPropertyDelegate& GetOnPropertyResetEvent() { return OnPropertyResetEvent; }
 	PROPERTYSYSTEM_API FPropertyDelegate& GetOnPropertyDependencyAddedEvent() { return OnPropertyDependencyAddedEvent; }
 	PROPERTYSYSTEM_API FPropertyDelegate& GetOnPropertyDependencyRemovedEvent() { return OnPropertyDependencyRemovedEvent; }
-	PROPERTYSYSTEM_API FOnPropertyTagChanged& GetOnPropertyTagAddedEvent() { return OnPropertyTagAddedEvent; }
-	PROPERTYSYSTEM_API FOnPropertyTagChanged& GetOnPropertyTagRemovedEvent() { return OnPropertyTagRemovedEvent; }
+	PROPERTYSYSTEM_API FOnPropertyOptionTagChanged& GetOnPropertyTagOptionAddedEvent() { return OnPropertyOptionTagAddedEvent; }
+	PROPERTYSYSTEM_API FOnPropertyOptionTagChanged& GetOnPropertyTagOptionRemovedEvent() { return OnPropertyOptionTagRemovedEvent; }
 	PROPERTYSYSTEM_API FOnPropertyChanged& GetOnPropertyChangedEvent() { return OnPropertyChangedEvent; }
 
 protected:
@@ -120,7 +137,7 @@ protected:
 	PROPERTYSYSTEM_API virtual void OnPropertyReset();
 	PROPERTYSYSTEM_API virtual void OnPropertyDependencyAdded(UPropertyViewModel* InPropertyDependency);
 	PROPERTYSYSTEM_API virtual void OnPropertyDependencyRemoved(UPropertyViewModel* InPropertyDependency);
-	PROPERTYSYSTEM_API virtual void OnPropertyDependencyValueChanged(UPropertyViewModel* InDependencyProperty, EPropertyChangedReason ChangedReason);
+	PROPERTYSYSTEM_API virtual void OnPropertyDependencyValueChanged(UPropertyViewModel* InPropertyDependency, EPropertyChangedReason ChangedReason);
 	PROPERTYSYSTEM_API virtual void OnPropertyTagAdded(FGameplayTag InPropertyTag);
 	PROPERTYSYSTEM_API virtual void OnPropertyTagRemoved(FGameplayTag InPropertyTag);
 	PROPERTYSYSTEM_API virtual void PrePropertyValueChanged();
@@ -128,31 +145,50 @@ protected:
 	PROPERTYSYSTEM_API virtual void OnPropertyValueChanged(EPropertyChangedReason ChangedReason);
 
 public:
+	/* If True, When This Property Changed, Will Immediately Apply The Changed*/
 	UPROPERTY(FieldNotify, EditAnywhere, Getter, Setter, BlueprintGetter="GetIsAutoApplyProperty", BlueprintSetter="SetIsAutoApplyProperty")
 	bool IsAutoApplyProperty = false;
 
+	/* If True, When This Property Changed, Will Update All Property In The Same Collection */
 	UPROPERTY(FieldNotify, EditAnywhere, Getter, Setter, BlueprintGetter="GetIsDirtyProxy", BlueprintSetter="SetIsDirtyProxy")
 	bool IsDirtyProxy = false;
 
-	UPROPERTY(FieldNotify, EditAnywhere, Getter, Setter, BlueprintGetter="GetPropertyName", BlueprintSetter="SetPropertyName")
-	FName PropertyName = NAME_None;
+	/* True If This Property Can Be Visible */
+	UPROPERTY(FieldNotify, EditAnywhere, Getter, Setter, BlueprintGetter="GetIsVisible", BlueprintSetter="SetIsVisible")
+	bool IsVisible = true;
 
+	/* True If This Property Can Be Edit */
+	UPROPERTY(FieldNotify, EditAnywhere, Getter, Setter, BlueprintGetter="GetIsEditable", BlueprintSetter="SetIsEditable")
+	bool IsEditable = true;
+
+	/* Help To Get This Property */
+	UPROPERTY(FieldNotify, EditAnywhere, Getter, Setter, BlueprintGetter="GetPropertyName", BlueprintSetter="SetPropertyName")
+	FName PropertyName = DefaultPropertyName;
+
+	/* Display Name */
 	UPROPERTY(FieldNotify, EditAnywhere, Getter, Setter, BlueprintGetter="GetPropertyDisplayName", BlueprintSetter="SetPropertyDisplayName")
 	FText PropertyDisplayName;
 
+	/* Description */
 	UPROPERTY(FieldNotify, EditAnywhere, Getter, Setter, BlueprintGetter="GetPropertyDescription", BlueprintSetter="SetPropertyDescription")
 	FText PropertyDescription;
 
-	UPROPERTY(FieldNotify, EditAnywhere, BlueprintReadOnly, Instanced)
+	/* If Dependency Property Changed, Will Update Self */
+	UPROPERTY(FieldNotify, EditAnywhere, BlueprintReadOnly)
 	TArray<TObjectPtr<UPropertyViewModel>> PropertyDependencyList;
 
+	/* If Edit Condition Property Changed, Will Update Self Editable State */
+	UPROPERTY(FieldNotify, EditAnywhere, BlueprintReadOnly)
+	TArray<TObjectPtr<UPropertyViewModel>> PropertyEditConditionList;
+
 	UPROPERTY(FieldNotify, EditAnywhere, BlueprintReadOnly, meta=(Categories="Property"))
-	TArray<FGameplayTag> PropertyTags;
+	TArray<FGameplayTag> PropertyOptionTags;
 
 private:
 	bool bIsInitialized = false;
 	bool bIsReady = false;
 	bool bIsPropertyDirty = false;
+	bool bIsEnableEdit = true;
 
 	UPROPERTY()
 	TObjectPtr<UPropertyProxy> OwnerProxy = nullptr;
@@ -162,7 +198,7 @@ private:
 	FPropertyDelegate OnPropertyResetEvent;
 	FPropertyDelegate OnPropertyDependencyAddedEvent;
 	FPropertyDelegate OnPropertyDependencyRemovedEvent;
-	FOnPropertyTagChanged OnPropertyTagAddedEvent;
-	FOnPropertyTagChanged OnPropertyTagRemovedEvent;
+	FOnPropertyOptionTagChanged OnPropertyOptionTagAddedEvent;
+	FOnPropertyOptionTagChanged OnPropertyOptionTagRemovedEvent;
 	FOnPropertyChanged OnPropertyChangedEvent;
 };

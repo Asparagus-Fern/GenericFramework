@@ -31,6 +31,7 @@ public class GenericGameSettingSystem : ModuleRules
 				"GameplayTags",
 				"UMG",
 				"ModelViewViewModel",
+				"PropertyPath",
 			}
 		);
 

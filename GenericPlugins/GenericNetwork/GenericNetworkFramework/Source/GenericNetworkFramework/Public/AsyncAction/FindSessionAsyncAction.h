@@ -7,9 +7,7 @@
 #include "SessionAsyncActionBase.h"
 #include "FindSessionAsyncAction.generated.h"
 
-class USessionSearchSettingViewModel;
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FFindSessionSuccess, USessionSearchSettingViewModel*, SearchSettingViewModel);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FFindSessionSuccess, const TArray<FGenericSessionSearchResult>&, SessionSearchResults);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FFindSessionFail);
 
@@ -19,17 +17,14 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FFindSessionFail);
 UCLASS()
 class GENERICNETWORKFRAMEWORK_API UFindSessionAsyncAction : public USessionAsyncActionBase
 {
-	GENERATED_BODY()
+	GENERATED_UCLASS_BODY()
 
 public:
 	virtual void Activate() override;
 
 public:
 	UFUNCTION(BlueprintCallable, Category="Generic Session", meta = (WorldContext = "InWorldContextObject", BlueprintInternalUseOnly = "true"))
-	static UFindSessionAsyncAction* FindSessionsByClass(UObject* InWorldContextObject, const FUniqueNetworkID& InPlayerNetID, TSubclassOf<USessionSearchSettingViewModel> InViewModelClass);
-
-	UFUNCTION(BlueprintCallable, Category="Generic Session", meta = (WorldContext = "InWorldContextObject", BlueprintInternalUseOnly = "true"))
-	static UFindSessionAsyncAction* FindSessions(UObject* InWorldContextObject, const FUniqueNetworkID& InPlayerNetID, USessionSearchSettingViewModel* InViewModel);
+	static UFindSessionAsyncAction* FindSessions(UObject* InWorldContextObject, const FUniqueNetworkID& InPlayerNetID, const FGenericSessionSearchSettings& InSessionSearchSettings);
 
 public:
 	UPROPERTY(BlueprintAssignable)
@@ -39,14 +34,15 @@ public:
 	FFindSessionFail OnFail;
 
 private:
-	void OnFindSessionComplete(bool bWasSuccessful);
+	FOnFindSessionsCompleteDelegate OnFindSessionsCompleteDelegate;
+	void OnFindSessionsComplete(bool bWasSuccessful);
 
 	UPROPERTY()
 	FUniqueNetworkID UniqueNetID;
 
 	UPROPERTY()
-	TSubclassOf<USessionSearchSettingViewModel> ViewModelClass = nullptr;
+	FGenericSessionSearchSettings SessionSearchSettings;
 
 	UPROPERTY()
-	TObjectPtr<USessionSearchSettingViewModel> ViewModel = nullptr;
+	TArray<FGenericSessionSearchResult> SessionSearchResults;
 };

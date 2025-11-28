@@ -51,8 +51,8 @@ protected:
 protected:
 	TArray<FEditorWorldWidget> EditorWorldWidgets;
 
-	void OnPIEStarted(UGameInstance* GameInstance);
-	void OnPIEEnded(UGameInstance* GameInstance);
+	virtual void OnWorldBeginPlay(UWorld& InWorld) override;
+	virtual void OnWorldBeginTearDown(UWorld* InWorld) override;
 
 	FDelegateHandle LevelEditorCreatedHandle;
 	void OnLevelEditorCreated(TSharedPtr<ILevelEditor> LevelEditor);
@@ -73,4 +73,6 @@ protected:
 
 	virtual void AddWorldWidgetToScreen(UWorldWidgetComponent* InWorldWidgetComponent);
 	virtual void RemoveWorldWidgetFromScreen(UWorldWidgetComponent* InWorldWidgetComponent);
+
+	virtual void OnWorldWidgetClicked(TSharedPtr<SEditorWorldWidget> ClickedWorldWidget);
 };

@@ -4,8 +4,9 @@
 
 #include "GameSettingType.h"
 #include "GenericWidgetSubsystem.h"
+#include "PropertyProxy.h"
 #include "PropertySubsystem.h"
-#include "Application/GameSettingProxy.h"
+#include "Application/GameSettingDataSourceCollection.h"
 #include "Base/GenericPopupWidget.h"
 #include "Type/GenericType.h"
 
@@ -27,19 +28,17 @@ void UGenericSettingButtonGroup::NativeOnDestroy()
 
 void UGenericSettingButtonGroup::OnPropertyProxyRegister(FGameplayTag InProxyTag, UPropertyProxy* InProxy)
 {
-	UGameSettingProxy* GameSettingProxy = Cast<UGameSettingProxy>(InProxy);
-	if (InProxyTag.MatchesAny(TAG_GameSettingProxy.GetTag().GetSingleTagContainer()) && IsValid(GameSettingProxy))
+	if (IsValid(InProxy->GetPropertyDataSourceCollection<UGameSettingDataSourceCollection>()))
 	{
-		GameSettingProxies.Add(GameSettingProxy);
+		GameSettingProxies.Add(InProxy);
 	}
 }
 
 void UGenericSettingButtonGroup::OnPropertyProxyUnRegister(FGameplayTag InProxyTag, UPropertyProxy* InProxy)
 {
-	UGameSettingProxy* GameSettingProxy = Cast<UGameSettingProxy>(InProxy);
-	if (InProxyTag.MatchesAny(TAG_GameSettingProxy.GetTag().GetSingleTagContainer()) && IsValid(GameSettingProxy))
+	if (IsValid(InProxy->GetPropertyDataSourceCollection<UGameSettingDataSourceCollection>()))
 	{
-		GameSettingProxies.Remove(GameSettingProxy);
+		GameSettingProxies.Remove(InProxy);
 	}
 }
 

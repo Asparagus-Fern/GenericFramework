@@ -8,6 +8,7 @@
 #include "WidgetType.h"
 #include "WorldWidgetComponent.h"
 #include "Base/GenericWidget.h"
+#include "BPFunctions/BPFunctions_EditorScene.h"
 #include "BPFunctions/BPFunctions_EditorWidget.h"
 #include "Type/DebugType.h"
 #include "Widgets/Layout/SConstraintCanvas.h"
@@ -23,15 +24,11 @@ void UWorldWidgetEdSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
 
-	FWorldDelegates::OnPIEStarted.AddUObject(this, &UWorldWidgetEdSubsystem::OnPIEStarted);
-	FWorldDelegates::OnPIEEnded.AddUObject(this, &UWorldWidgetEdSubsystem::OnPIEEnded);
-
 	FLevelEditorModule& LevelEditorModule = FModuleManager::Get().GetModuleChecked<FLevelEditorModule>("LevelEditor");
 	LevelEditorCreatedHandle = LevelEditorModule.OnLevelEditorCreated().AddUObject(this, &UWorldWidgetEdSubsystem::OnLevelEditorCreated);
 
 	LevelViewportClientListChangedHandle = GEditor->OnLevelViewportClientListChanged().AddUObject(this, &UWorldWidgetEdSubsystem::OnLevelViewportClientListChanged);
 	OnBlueprintCompiledHandle = GEditor->OnBlueprintCompiled().AddUObject(this, &UWorldWidgetEdSubsystem::OnBlueprintCompiled);
-
 
 	GenerateEditorWorldWidgets();
 	InitializeEditorWorldWidgets();
@@ -91,19 +88,28 @@ void UWorldWidgetEdSubsystem::Tick(float DeltaTime)
 	}
 }
 
-void UWorldWidgetEdSubsystem::OnPIEStarted(UGameInstance* GameInstance)
+void UWorldWidgetEdSubsystem::OnWorldBeginPlay(UWorld& InWorld)
 {
-	for (const auto& EditorWorldWidget : EditorWorldWidgets)
+	if (InWorld.WorldType == EWorldType::PIE)
 	{
-		UBPFunctions_EditorWidget::RemoveFromEditorViewport(EditorWorldWidget.LevelEditorViewportClient, EditorWorldWidget.ConstraintCanvas.ToSharedRef());
+		for (const auto& WorldWidgetComponent : WorldWidgetComponents)
+		{
+			RemoveWorldWidgetFromScreen(WorldWidgetComponent);
+		}
 	}
 }
 
-void UWorldWidgetEdSubsystem::OnPIEEnded(UGameInstance* GameInstance)
+void UWorldWidgetEdSubsystem::OnWorldBeginTearDown(UWorld* InWorld)
 {
-	for (const auto& EditorWorldWidget : EditorWorldWidgets)
+	Super::OnWorldBeginTearDown(InWorld);
+
+	InWorld->OnWorldBeginPlay.RemoveAll(this);
+	if (InWorld->WorldType == EWorldType::PIE)
 	{
-		UBPFunctions_EditorWidget::AddToEditorViewport(EditorWorldWidget.LevelEditorViewportClient, EditorWorldWidget.ConstraintCanvas.ToSharedRef());
+		for (const auto& WorldWidgetComponent : WorldWidgetComponents)
+		{
+			AddWorldWidgetToScreen(WorldWidgetComponent);
+		}
 	}
 }
 
@@ -131,10 +137,12 @@ void UWorldWidgetEdSubsystem::OnBlueprintCompiled()
 {
 	for (const auto& WorldWidgetComponent : WorldWidgetComponents)
 	{
-		if (WorldWidgetComponent)
-		{
-			WorldWidgetComponent->ReregisterComponent();
-		}
+		RemoveWorldWidgetFromScreen(WorldWidgetComponent);
+	}
+
+	for (const auto& WorldWidgetComponent : WorldWidgetComponents)
+	{
+		AddWorldWidgetToScreen(WorldWidgetComponent);
 	}
 }
 
@@ -204,7 +212,7 @@ void UWorldWidgetEdSubsystem::AddWorldWidgetToScreen(UWorldWidgetComponent* InWo
 {
 	if (!IsValid(InWorldWidgetComponent))
 	{
-		GenericLOG(GenericLogUI, Error, TEXT("WorldWidgetComponent Is NULL"))
+		GenericLOG(GenericLogUI, Error, TEXT("WorldWidgetComponent Is InValid"))
 		return;
 	}
 
@@ -219,6 +227,7 @@ void UWorldWidgetEdSubsystem::AddWorldWidgetToScreen(UWorldWidgetComponent* InWo
 
 			UGenericWidget* DuplicateWorldWidget = DuplicateObject(InWorldWidgetComponent->WorldWidget, InWorldWidgetComponent);
 			TSharedPtr<SEditorWorldWidget> NewEditorWorldWidget = SNew(SEditorWorldWidget)
+				.OnWorldWidgetMiddleClicked_UObject(this, &UWorldWidgetEdSubsystem::OnWorldWidgetClicked)
 				[
 					DuplicateWorldWidget->TakeWidget()
 				];
@@ -245,7 +254,7 @@ void UWorldWidgetEdSubsystem::RemoveWorldWidgetFromScreen(UWorldWidgetComponent*
 {
 	if (!IsValid(InWorldWidgetComponent))
 	{
-		GenericLOG(GenericLogUI, Error, TEXT("WorldWidgetComponent Is NULL"))
+		GenericLOG(GenericLogUI, Error, TEXT("WorldWidgetComponent Is InValid"))
 		return;
 	}
 
@@ -262,6 +271,36 @@ void UWorldWidgetEdSubsystem::RemoveWorldWidgetFromScreen(UWorldWidgetComponent*
 				EditorWorldWidget.EditorWorldWidgetSlots.Remove(InWorldWidgetComponent);
 			}
 		}
+	}
+}
+
+void UWorldWidgetEdSubsystem::OnWorldWidgetClicked(TSharedPtr<SEditorWorldWidget> ClickedWorldWidget)
+{
+	if (!ClickedWorldWidget.IsValid())
+	{
+		return;
+	}
+
+	AActor* SelectedActor = nullptr;
+	for (auto& EditorWorldWidget : EditorWorldWidgets)
+	{
+		TArray<TSharedPtr<SEditorWorldWidget>> Values;
+		EditorWorldWidget.EditorWorldWidgets.GenerateValueArray(Values);
+
+		for (auto& KeyValue : EditorWorldWidget.EditorWorldWidgets)
+		{
+			if (KeyValue.Value == ClickedWorldWidget)
+			{
+				SelectedActor = KeyValue.Key->GetOwner();
+				break;
+			}
+		}
+	}
+
+	if (IsValid(SelectedActor))
+	{
+		UBPFunctions_EditorScene::SelectNone();
+		UBPFunctions_EditorScene::SelectActor(SelectedActor, true);
 	}
 }
 

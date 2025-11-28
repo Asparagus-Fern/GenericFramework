@@ -38,6 +38,9 @@ protected:
 	PROPERTYSYSTEM_API void OnPropertyValueRemoved(const FString& InName, UPropertyViewModel* InViewModel);
 
 	UFUNCTION(BlueprintNativeEvent)
+	PROPERTYSYSTEM_API void OnInitialValueChanged(const FString& InInitialValue);
+	
+	UFUNCTION(BlueprintNativeEvent)
 	PROPERTYSYSTEM_API void OnSelectedValueChanged(const FString& InSelectedValue);
 
 protected:

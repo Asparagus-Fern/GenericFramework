@@ -30,7 +30,7 @@ TMap<FGameplayTag, TSubclassOf<UPropertyListItemOption>> UPropertyVisualData::Ga
 
 	if (IsValid(InPropertyViewModel))
 	{
-		for (auto& PropertyTag : InPropertyViewModel->PropertyTags)
+		for (auto& PropertyTag : InPropertyViewModel->PropertyOptionTags)
 		{
 			if (PropertyListItemOptionForName.Contains(InPropertyViewModel->PropertyName))
 			{

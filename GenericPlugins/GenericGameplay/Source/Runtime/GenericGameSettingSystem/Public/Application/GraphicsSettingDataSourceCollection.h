@@ -1,0 +1,19 @@
+﻿// Copyright ChenTaiye 2025. All Rights Reserved. 
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "GameSettingDataSourceCollection.h"
+#include "GraphicsSettingDataSourceCollection.generated.h"
+
+/**
+ * 
+ */
+UCLASS(MinimalAPI)
+class UGraphicsSettingDataSourceCollection : public UGameSettingDataSourceCollection
+{
+	GENERATED_BODY()
+
+public:
+	GENERICGAMESETTINGSYSTEM_API virtual void GeneratePropertyViewModels_Implementation(TArray<UPropertyViewModel*>& Result) override;
+};

@@ -46,6 +46,9 @@ protected:
 	UPROPERTY(BlueprintReadOnly)
 	TObjectPtr<USessionSearchSettingViewModel> SessionSearchSettingsViewModel = nullptr;
 
+	UPROPERTY(BlueprintReadOnly)
+	TArray<TObjectPtr<USessionSearchResultViewModel>> SessionSearchResultViewModels;
+
 private:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget, BlueprintProtected = true, AllowPrivateAccess = true))
 	TObjectPtr<USessionSearchList> SessionSearchList;

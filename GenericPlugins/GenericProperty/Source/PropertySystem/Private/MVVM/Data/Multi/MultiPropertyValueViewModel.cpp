@@ -112,6 +112,14 @@ void UMultiPropertyValueViewModel::RemoveValueByName(FString InName)
 	}
 }
 
+void UMultiPropertyValueViewModel::RemoveAllValues()
+{
+	for (auto PropertyValue : PropertyValues)
+	{
+		RemoveValueByName(PropertyValue.Key);
+	}
+}
+
 bool UMultiPropertyValueViewModel::FindViewModel(const FString& InName, UPropertyViewModel*& OutViewModel) const
 {
 	if (PropertyValues.Contains(InName))

@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Kismet/BlueprintAsyncActionBase.h"
+#include "SessionAsyncActionBase.h"
 #include "CancelFindSessionAsyncAction.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FCancelFindSessionSuccess);
@@ -14,9 +14,9 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FCancelFindSessionFail);
  * 
  */
 UCLASS()
-class GENERICNETWORKFRAMEWORK_API UCancelFindSessionAsyncAction : public UBlueprintAsyncActionBase
+class GENERICNETWORKFRAMEWORK_API UCancelFindSessionAsyncAction : public USessionAsyncActionBase
 {
-	GENERATED_BODY()
+	GENERATED_UCLASS_BODY()
 
 public:
 	virtual void Activate() override;
@@ -33,8 +33,6 @@ public:
 	FCancelFindSessionFail OnFail;
 
 private:
+	FOnCancelFindSessionsCompleteDelegate OnCancelFindSessionsCompleteDelegate;
 	void OnCancelFindSessionsComplete(bool bWasSuccessful);
-
-	UPROPERTY()
-	UObject* WorldContextObject = nullptr;
 };

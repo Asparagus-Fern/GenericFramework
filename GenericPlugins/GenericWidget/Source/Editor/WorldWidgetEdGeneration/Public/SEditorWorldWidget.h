@@ -26,6 +26,7 @@ public:
 
 public:
 	virtual FReply OnMouseButtonDown(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent) override;
+	virtual FText GetWorldWidgetTooltipText();
 
 protected:
 	FOnWorldWidgetMiddleClicked OnWorldWidgetMiddleClicked;

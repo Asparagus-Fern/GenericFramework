@@ -12,7 +12,11 @@ public class WidgetApplication : ModuleRules
 				"Core",
 				"DevCore",
 				"DevSlateCore",
-				"UnrealMisc"
+				"UnrealMisc",
+				"WidgetGeneration",
+				"WindowGeneration",
+				"WidgetGroupGeneration",
+				"WorldWidgetGeneration",
 			}
 		);
 
@@ -29,10 +33,6 @@ public class WidgetApplication : ModuleRules
 				"InputCore",
 				"DeveloperSettings",
 				"ModelViewViewModel",
-
-				"WidgetGeneration",
-				"WidgetGroupGeneration",
-				"WorldWidgetGeneration",
 			}
 		);
 	}

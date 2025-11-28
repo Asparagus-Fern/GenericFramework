@@ -13,6 +13,7 @@ class UNREALMISC_API FStaticFunctions_Convert
 	/* To Bool */
 public:
 	static bool ToBool(unsigned int Var);
+	static bool ToBool(FString Var);
 
 	/* To Int32 */
 public:

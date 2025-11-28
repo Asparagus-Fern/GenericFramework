@@ -9,8 +9,6 @@ FString UScalarPropertyValueViewModel::GetInitialValueAsString()
 
 void UScalarPropertyValueViewModel::SetInitialValueFromString(const FString& InValue)
 {
-	Super::SetInitialValueFromString(InValue);
-
 	double Value;
 	LexFromString(Value, *InValue);
 	SetInitialValue(Value);
@@ -23,8 +21,6 @@ FString UScalarPropertyValueViewModel::GetCurrentValueAsString()
 
 void UScalarPropertyValueViewModel::SetCurrentValueFromString(const FString& InValue)
 {
-	Super::SetCurrentValueFromString(InValue);
-
 	double Value;
 	LexFromString(Value, *InValue);
 	SetCurrentValue(Value);
@@ -68,14 +64,17 @@ double UScalarPropertyValueViewModel::GetCurrentValue() const
 
 void UScalarPropertyValueViewModel::SetCurrentValue(double InValue)
 {
-	const FDoubleRange Range(ValueRange.X, ValueRange.Y);
-	if (Range.Contains(InValue) && CurrentValue != InValue)
+	if (CurrentValue != InValue)
 	{
-		PrePropertyChanged();
-		CurrentValue = InValue;
-		UE_MVVM_BROADCAST_FIELD_VALUE_CHANGED(CurrentValue);
-		SetNormalizedCurrentValue(GetNormalizedCurrentValue());
-		PostPropertyChanged();
+		const FDoubleRange Range(ValueRange.X, ValueRange.Y);
+		if (!IsClampValueRange || (IsClampValueRange && Range.Contains(InValue)))
+		{
+			PrePropertyChanged();
+			CurrentValue = InValue;
+			UE_MVVM_BROADCAST_FIELD_VALUE_CHANGED(CurrentValue);
+			SetNormalizedCurrentValue(GetNormalizedCurrentValue());
+			PostPropertyChanged();
+		}
 	}
 }
 
@@ -103,6 +102,16 @@ void UScalarPropertyValueViewModel::SetValueStep(double InValue)
 	UE_MVVM_SET_PROPERTY_VALUE_INLINE(ValueStep, InValue);
 }
 
+bool UScalarPropertyValueViewModel::GetIsClampValueRange() const
+{
+	return IsClampValueRange;
+}
+
+void UScalarPropertyValueViewModel::SetIsClampValueRange(bool InIsClampValueRange)
+{
+	UE_MVVM_SET_PROPERTY_VALUE_INLINE(IsClampValueRange, InIsClampValueRange);
+}
+
 FVector2D UScalarPropertyValueViewModel::GetValueRange() const
 {
 	return ValueRange;
@@ -124,6 +133,16 @@ FVector2D UScalarPropertyValueViewModel::GetNormalizedValueRange() const
 void UScalarPropertyValueViewModel::SetNormalizedValueRange(FVector2D InValueRange)
 {
 	UE_MVVM_SET_PROPERTY_VALUE_INLINE(NormalizedValueRange, InValueRange);
+}
+
+bool UScalarPropertyValueViewModel::GetIsClampInteractionRange() const
+{
+	return IsClampInteractionRange;
+}
+
+void UScalarPropertyValueViewModel::SetIsClampInteractionRange(bool InIsClampInteractionRange)
+{
+	UE_MVVM_SET_PROPERTY_VALUE_INLINE(IsClampInteractionRange, InIsClampInteractionRange);
 }
 
 FVector2D UScalarPropertyValueViewModel::GetValueInteractionRange() const

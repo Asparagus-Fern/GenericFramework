@@ -7,7 +7,7 @@
 UDataPropertyViewModel::UDataPropertyViewModel(const FObjectInitializer& FObjectInitializer)
 	: Super(FObjectInitializer)
 {
-	PropertyTags.Add(TAG_PropertyOption_Reset);
+	PropertyOptionTags.Add(TAG_PropertyOption_Reset);
 }
 
 bool UDataPropertyViewModel::Initialize(UPropertyProxy* InOwnerProxy)

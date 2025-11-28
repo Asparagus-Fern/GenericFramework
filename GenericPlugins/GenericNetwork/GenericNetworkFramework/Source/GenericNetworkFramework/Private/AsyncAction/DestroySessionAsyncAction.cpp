@@ -1,9 +1,14 @@
 ﻿// Copyright ChenTaiye 2025. All Rights Reserved.
 
-
 #include "AsyncAction/DestroySessionAsyncAction.h"
 
 #include "GenericSessionSubsystem.h"
+
+UDestroySessionAsyncAction::UDestroySessionAsyncAction(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
+	  , OnDestroySessionCompleteDelegate(FOnDestroySessionCompleteDelegate::CreateUObject(this, &ThisClass::OnDestroySessionComplete))
+{
+}
 
 void UDestroySessionAsyncAction::Activate()
 {
@@ -11,8 +16,13 @@ void UDestroySessionAsyncAction::Activate()
 
 	if (UGenericSessionSubsystem* GenericSessionSubsystem = UGenericSessionSubsystem::Get(WorldContextObject))
 	{
-		GenericSessionSubsystem->DestroySession(SessionName, FOnDestroySessionCompleteDelegate::CreateUObject(this, &UDestroySessionAsyncAction::OnDestroySessionComplete));
+		if (!GenericSessionSubsystem->DestroySession(SessionName, OnDestroySessionCompleteDelegate))
+		{
+			OnFail.Broadcast();
+		}
+		return;;
 	}
+	OnFail.Broadcast();
 }
 
 UDestroySessionAsyncAction* UDestroySessionAsyncAction::DestroySession(UObject* InWorldContextObject, FName InSessionName)
@@ -27,6 +37,11 @@ void UDestroySessionAsyncAction::OnDestroySessionComplete(FName InSessionName, b
 {
 	if (SessionName == InSessionName)
 	{
+		if (IOnlineSessionPtr OnlineSessionPtr = GetOnlineSessionPtr())
+		{
+			OnlineSessionPtr->ClearOnDestroySessionRequestedDelegates(this);
+		}
+
 		if (bWasSuccessful)
 		{
 			OnSuccess.Broadcast();

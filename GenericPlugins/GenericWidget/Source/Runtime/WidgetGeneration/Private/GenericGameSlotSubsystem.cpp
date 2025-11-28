@@ -19,6 +19,11 @@ UGenericGameSlotSubsystem* UGenericGameSlotSubsystem::Get(const UObject* WorldCo
 	return nullptr;
 }
 
+bool UGenericGameSlotSubsystem::ShouldCreateSubsystem(UObject* Outer) const
+{
+	return Super::ShouldCreateSubsystem(Outer) && !IsRunningDedicatedServer();
+}
+
 void UGenericGameSlotSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);

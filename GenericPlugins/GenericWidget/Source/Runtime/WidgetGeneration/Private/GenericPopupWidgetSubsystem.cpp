@@ -16,6 +16,11 @@ UGenericPopupWidgetSubsystem* UGenericPopupWidgetSubsystem::Get(const UObject* W
 	return nullptr;
 }
 
+bool UGenericPopupWidgetSubsystem::ShouldCreateSubsystem(UObject* Outer) const
+{
+	return Super::ShouldCreateSubsystem(Outer) && !IsRunningDedicatedServer();
+}
+
 void UGenericPopupWidgetSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);

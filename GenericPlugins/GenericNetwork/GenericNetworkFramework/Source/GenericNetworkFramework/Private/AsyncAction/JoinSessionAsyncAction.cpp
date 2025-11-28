@@ -3,8 +3,13 @@
 #include "AsyncAction/JoinSessionAsyncAction.h"
 
 #include "GenericSessionSubsystem.h"
-#include "ViewModel/SessionSearchResultViewModel.h"
-#include "ViewModel/SessionSettingViewModel.h"
+#include "BPFunctions/BPFunctions_Gameplay.h"
+
+UJoinSessionAsyncAction::UJoinSessionAsyncAction(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
+	  , OnJoinSessionCompleteDelegate(FOnJoinSessionCompleteDelegate::CreateUObject(this, &ThisClass::OnJoinSessionComplete))
+{
+}
 
 void UJoinSessionAsyncAction::Activate()
 {
@@ -12,26 +17,46 @@ void UJoinSessionAsyncAction::Activate()
 
 	if (UGenericSessionSubsystem* GenericSessionSubsystem = UGenericSessionSubsystem::Get(WorldContextObject))
 	{
-		if (ViewModel)
+		if (!GenericSessionSubsystem->JoinSession(UniqueNetID,SessionSearchResult, OnJoinSessionCompleteDelegate))
 		{
-			GenericSessionSubsystem->JoinSession(UniqueNetID, ViewModel->GetSessionName(), ViewModel->GetSessionSearchResult(), FOnJoinSessionCompleteDelegate::CreateUObject(this, &UJoinSessionAsyncAction::OnJoinSessionComplete));
+			OnComplete.Broadcast(EJoinSessionResult::UnknownError);
 		}
+		return;
 	}
+
+	OnComplete.Broadcast(EJoinSessionResult::UnknownError);
 }
 
-UJoinSessionAsyncAction* UJoinSessionAsyncAction::JoinSession(UObject* InWorldContextObject, const FUniqueNetworkID& InPlayerNetID, USessionSearchResultViewModel* InViewModel)
+UJoinSessionAsyncAction* UJoinSessionAsyncAction::JoinSession(UObject* InWorldContextObject, const FUniqueNetworkID& InPlayerNetID, const FGenericSessionSearchResult& InSessionSearchResult)
 {
 	UJoinSessionAsyncAction* NewAction = NewObject<UJoinSessionAsyncAction>();
 	NewAction->WorldContextObject = InWorldContextObject;
 	NewAction->UniqueNetID = InPlayerNetID;
-	NewAction->ViewModel = InViewModel;
+	NewAction->SessionSearchResult = InSessionSearchResult;
 	return NewAction;
 }
 
 void UJoinSessionAsyncAction::OnJoinSessionComplete(FName InSessionName, EOnJoinSessionCompleteResult::Type Result)
 {
-	if (ViewModel->GetSessionName() == InSessionName)
+	if (SessionSearchResult.GetSessionName() == InSessionName)
 	{
+		if (IOnlineSessionPtr OnlineSessionPtr = GetOnlineSessionPtr())
+		{
+			OnlineSessionPtr->ClearOnJoinSessionCompleteDelegates(this);
+
+			if (Result == EOnJoinSessionCompleteResult::Success) 
+			{
+				if (APlayerController* Player = UBPFunctions_Gameplay::GetPlayerControllerByUniqueNetID(WorldContextObject, APlayerController::StaticClass(), UniqueNetID.UniqueNetIdRepl))
+				{
+					FString ConnectString;
+					if (OnlineSessionPtr->GetResolvedConnectString(InSessionName, ConnectString))
+					{
+						Player->ClientTravel(ConnectString, TRAVEL_Absolute);
+					}
+				}
+			}
+		}
+
 		OnComplete.Broadcast(ConvertToJoinSessionResultBP(Result));
 	}
 }

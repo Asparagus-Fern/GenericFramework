@@ -19,6 +19,11 @@ UGenericWidgetSubsystem* UGenericWidgetSubsystem::Get(const UObject* WorldContex
 	return nullptr;
 }
 
+bool UGenericWidgetSubsystem::ShouldCreateSubsystem(UObject* Outer) const
+{
+	return Super::ShouldCreateSubsystem(Outer) && !IsRunningDedicatedServer();
+}
+
 void UGenericWidgetSubsystem::OnWorldBeginTearDown(UWorld* InWorld)
 {
 	Super::OnWorldBeginTearDown(InWorld);

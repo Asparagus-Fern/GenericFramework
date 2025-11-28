@@ -6,6 +6,7 @@
 #include "Base/GenericWidget.h"
 #include "SessionSearchList.generated.h"
 
+class USessionSettingPanel;
 class USessionSearchListItemObject;
 class USessionSearchResultViewModel;
 class UListView;
@@ -13,8 +14,8 @@ class UListView;
 /**
  * 
  */
-UCLASS()
-class GENERICNETWORKFRAMEWORK_API USessionSearchList : public UGenericWidget
+UCLASS(MinimalAPI)
+class USessionSearchList : public UGenericWidget
 {
 	GENERATED_BODY()
 
@@ -24,17 +25,23 @@ protected:
 
 public:
 	UFUNCTION(BlueprintCallable)
-	void SetSessionSearchResult(const TArray<USessionSearchResultViewModel*>& InViewModels);
+	GENERICNETWORKFRAMEWORK_API void SetSessionSearchResult(const TArray<USessionSearchResultViewModel*>& InViewModels);
 
 	UFUNCTION(BlueprintNativeEvent)
-	void OnFindSessionsStart();
+	GENERICNETWORKFRAMEWORK_API void OnFindSessionsStart();
 
 	UFUNCTION(BlueprintNativeEvent)
-	void OnFindSessionsComplete();
+	GENERICNETWORKFRAMEWORK_API void OnFindSessionsComplete();
+
+protected:
+	GENERICNETWORKFRAMEWORK_API virtual void OnItemSelectionChanged(UObject* Item);
 
 private:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget, BlueprintProtected = true, AllowPrivateAccess = true))
 	TObjectPtr<UListView> ListView_SessionSearch;
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget, BlueprintProtected = true, AllowPrivateAccess = true))
+	TObjectPtr<USessionSettingPanel> SessionSettingPanel;
 
 	UPROPERTY()
 	TArray<TObjectPtr<USessionSearchListItemObject>> SessionSearchListItemObjects;

@@ -22,7 +22,6 @@ public class WidgetGroupEdGeneration : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
-
 				"UnrealEd",
 				"BlueprintGraph",
 				"Kismet",

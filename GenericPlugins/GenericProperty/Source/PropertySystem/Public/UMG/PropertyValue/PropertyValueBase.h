@@ -67,6 +67,12 @@ protected:
 	PROPERTYSYSTEM_API void OnIsDirtyProxyChanged(bool InIsDirtyProxy);
 
 	UFUNCTION(BlueprintNativeEvent)
+	PROPERTYSYSTEM_API void OnIsVisibleChanged(bool InIsVisible);
+	
+	UFUNCTION(BlueprintNativeEvent)
+	PROPERTYSYSTEM_API void OnIsEditableChanged(bool InIsEditable);
+	
+	UFUNCTION(BlueprintNativeEvent)
 	PROPERTYSYSTEM_API void OnPropertyNameChanged(FName InPropertyName);
 
 	UFUNCTION(BlueprintNativeEvent)

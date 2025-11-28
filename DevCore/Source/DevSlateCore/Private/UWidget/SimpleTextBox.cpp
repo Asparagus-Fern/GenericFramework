@@ -43,7 +43,7 @@ USimpleTextBox::USimpleTextBox(const FObjectInitializer& ObjectInitializer)
 	if (!IsRunningDedicatedServer())
 	{
 		static ConstructorHelpers::FObjectFinder<UFont> RobotoFontObj(*GetDefaultFontName());
-		TextFont = FSlateFontInfo(RobotoFontObj.Object, 16, FName("Light"));
+		TextFont = FSlateFontInfo(RobotoFontObj.Object, 18, FName("Light"));
 	}
 }
 
@@ -99,12 +99,12 @@ void USimpleTextBox::ReleaseSlateResources(bool bReleaseChildren)
 	MySimpleTextBox.Reset();
 }
 
-FText USimpleTextBox::GetText() const
+const FText& USimpleTextBox::GetText() const
 {
 	return Text;
 }
 
-void USimpleTextBox::SetText(FText InText)
+void USimpleTextBox::SetText(const FText& InText)
 {
 	Text = InText;
 	if (MySimpleTextBox.IsValid())
@@ -113,12 +113,12 @@ void USimpleTextBox::SetText(FText InText)
 	}
 }
 
-FSlateColor USimpleTextBox::GetTextColor() const
+const FSlateColor& USimpleTextBox::GetTextColor() const
 {
 	return TextColor;
 }
 
-void USimpleTextBox::SetTextColor(FSlateColor InTextColor)
+void USimpleTextBox::SetTextColor(const FSlateColor& InTextColor)
 {
 	TextColor = InTextColor;
 	if (MySimpleTextBox.IsValid())
@@ -127,12 +127,12 @@ void USimpleTextBox::SetTextColor(FSlateColor InTextColor)
 	}
 }
 
-FSlateFontInfo USimpleTextBox::GetTextFont() const
+const FSlateFontInfo& USimpleTextBox::GetTextFont() const
 {
 	return TextFont;
 }
 
-void USimpleTextBox::SetTextFont(FSlateFontInfo InTextFont)
+void USimpleTextBox::SetTextFont(const FSlateFontInfo& InTextFont)
 {
 	TextFont = InTextFont;
 	if (MySimpleTextBox.IsValid())
@@ -141,7 +141,7 @@ void USimpleTextBox::SetTextFont(FSlateFontInfo InTextFont)
 	}
 }
 
-FSlateBrush USimpleTextBox::GetTextStrikeBrush() const
+const FSlateBrush& USimpleTextBox::GetTextStrikeBrush() const
 {
 	return TextStrikeBrush;
 }
@@ -183,12 +183,12 @@ void USimpleTextBox::SetTextShadowColor(FLinearColor InTextShadowColor)
 	}
 }
 
-FText USimpleTextBox::GetHighlightText() const
+const FText& USimpleTextBox::GetHighlightText() const
 {
 	return HighlightText;
 }
 
-void USimpleTextBox::SetHighlightText(FText InHighlightText)
+void USimpleTextBox::SetHighlightText(const FText& InHighlightText)
 {
 	HighlightText = InHighlightText;
 	if (MySimpleTextBox.IsValid())
@@ -197,7 +197,7 @@ void USimpleTextBox::SetHighlightText(FText InHighlightText)
 	}
 }
 
-FSlateBrush USimpleTextBox::GetTextHighlightShape() const
+const FSlateBrush& USimpleTextBox::GetTextHighlightShape() const
 {
 	return TextHighlightShape;
 }
@@ -351,7 +351,7 @@ void USimpleTextBox::SetSpace(float InSpace)
 	}
 }
 
-FSlateBrush USimpleTextBox::GetImage() const
+const FSlateBrush& USimpleTextBox::GetImage() const
 {
 	return Image;
 }
@@ -365,7 +365,7 @@ void USimpleTextBox::SetImage(const FSlateBrush& InImage)
 	}
 }
 
-FSlateColor USimpleTextBox::GetImageColor() const
+const FSlateColor& USimpleTextBox::GetImageColor() const
 {
 	return ImageColor;
 }

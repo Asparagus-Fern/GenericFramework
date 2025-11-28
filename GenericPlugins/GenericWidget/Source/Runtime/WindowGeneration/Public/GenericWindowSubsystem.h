@@ -19,6 +19,7 @@ class UGenericWindowSubsystem : public UGenericGameInstanceSubsystem
 
 public:
 	static WINDOWGENERATION_API UGenericWindowSubsystem* Get(const UObject* WorldContextObject);
+	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void Deinitialize() override;
 

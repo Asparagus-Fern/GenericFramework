@@ -46,6 +46,9 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	PROPERTYSYSTEM_API void RemoveValueByName(FString InName);
 
+	UFUNCTION(BlueprintCallable)
+	PROPERTYSYSTEM_API void RemoveAllValues();
+
 	UFUNCTION(BlueprintPure)
 	PROPERTYSYSTEM_API bool FindViewModel(const FString& InName, UPropertyViewModel*& OutViewModel) const;
 
@@ -85,10 +88,10 @@ public:
 	UPROPERTY(FieldNotify, EditAnywhere, BlueprintReadWrite)
 	bool bAllowWrap = false;
 
-	UPROPERTY(FieldNotify, EditAnywhere, Getter, Setter, BlueprintGetter="GetInitialValue", BlueprintSetter="SetInitialValue")
+	UPROPERTY(FieldNotify, VisibleAnywhere, Getter, Setter, BlueprintGetter="GetInitialValue", BlueprintSetter="SetInitialValue")
 	FString InitialValue;
 
-	UPROPERTY(FieldNotify, EditAnywhere, Getter, Setter, BlueprintGetter="GetSelectedValue", BlueprintSetter="SetSelectedValue")
+	UPROPERTY(FieldNotify, VisibleAnywhere, Getter, Setter, BlueprintGetter="GetSelectedValue", BlueprintSetter="SetSelectedValue")
 	FString SelectedValue;
 
 	UPROPERTY(FieldNotify, EditAnywhere, BlueprintReadOnly, Instanced)

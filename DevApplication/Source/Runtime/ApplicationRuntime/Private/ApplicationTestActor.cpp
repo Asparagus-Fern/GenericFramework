@@ -2,7 +2,21 @@
 
 #include "ApplicationTestActor.h"
 
+#include "NiagaraComponent.h"
+#include "NiagaraDataInterface.h"
+#include "NiagaraSystem.h"
 #include "Type/DebugType.h"
+
+AApplicationTestActor::AApplicationTestActor(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
+{
+	TestNiagaraComponent = CreateDefaultSubobject<UNiagaraComponent>(TEXT("NiagaraComponent"));
+}
+
+void AApplicationTestActor::OnConstruction(const FTransform& Transform)
+{
+	Super::OnConstruction(Transform);
+}
 
 void AApplicationTestActor::BeginPlay()
 {

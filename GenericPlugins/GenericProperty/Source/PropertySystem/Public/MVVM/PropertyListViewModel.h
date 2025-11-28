@@ -7,8 +7,8 @@
 #include "MVVMViewModelBase.h"
 #include "PropertyListViewModel.generated.h"
 
+class UPropertyDataSourceCollection;
 class UPropertyList;
-class UPropertyProxy;
 
 /**
  * 
@@ -29,5 +29,5 @@ public:
 	TSubclassOf<UPropertyList> PropertyListClass = nullptr;
 
 	UPROPERTY(FieldNotify, EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<UPropertyProxy> PropertyProxyClass = nullptr;
+	TSubclassOf<UPropertyDataSourceCollection> PropertyDataSourceCollectionClass = nullptr;
 };

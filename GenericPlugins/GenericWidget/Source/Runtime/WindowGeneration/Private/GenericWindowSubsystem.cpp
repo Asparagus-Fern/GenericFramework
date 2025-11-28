@@ -15,6 +15,11 @@ UGenericWindowSubsystem* UGenericWindowSubsystem::Get(const UObject* WorldContex
 	return nullptr;
 }
 
+bool UGenericWindowSubsystem::ShouldCreateSubsystem(UObject* Outer) const
+{
+	return Super::ShouldCreateSubsystem(Outer) && !IsRunningDedicatedServer();
+}
+
 void UGenericWindowSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);

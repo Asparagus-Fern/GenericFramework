@@ -19,15 +19,6 @@ class PROPERTYSYSTEM_API UBPFunctions_Property : public UBlueprintFunctionLibrar
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintCallable, meta=(WorldContext = "WorldContextObject", GameplayTagFilter="Property.Proxy", DeterminesOutputType = "InPropertyProxyClass"))
-	static UPropertyProxy* RegisterPropertyProxy(const UObject* WorldContextObject, FGameplayTag InPropertyProxyTag, const TSubclassOf<UPropertyProxy>& InPropertyProxyClass);
-
-	UFUNCTION(BlueprintCallable, meta=(WorldContext = "WorldContextObject", GameplayTagFilter="Property.Proxy"))
-	static void UnRegisterPropertyProxyByTag(const UObject* WorldContextObject, FGameplayTag InPropertyProxyTag);
-
-	UFUNCTION(BlueprintCallable, meta=(WorldContext = "WorldContextObject"))
-	static void UnRegisterPropertyProxy(const UObject* WorldContextObject, UPropertyProxy* InPropertyProxy);
-
 	UFUNCTION(BlueprintPure, meta=(WorldContext = "WorldContextObject", GameplayTagFilter="Property.Proxy"))
 	static bool ExistPropertyProxy(const UObject* WorldContextObject, FGameplayTag InPropertyProxyTag);
 

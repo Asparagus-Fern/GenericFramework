@@ -4,10 +4,10 @@
 
 #include "CoreMinimal.h"
 
-#include "GenericButtonType.h"
 #include "Base/GenericWidget.h"
 #include "GenericButtonWidget.generated.h"
 
+class USimpleTextBox;
 class UButtonSoundViewModel;
 class UButtonInputViewModel;
 class UButtonSelectionViewModel;
@@ -153,7 +153,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	WIDGETGROUPGENERATION_API void SimulateButtonClicked();
-	
+
 	UFUNCTION(BlueprintCallable)
 	WIDGETGROUPGENERATION_API void SimulateButtonDoubleClicked();
 

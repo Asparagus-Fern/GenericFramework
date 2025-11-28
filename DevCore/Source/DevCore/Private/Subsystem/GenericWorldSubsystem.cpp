@@ -13,6 +13,7 @@ void UGenericWorldSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 
 	FWorldDelegates::OnPreWorldInitialization.AddUObject(this, &UGenericWorldSubsystem::OnPreWorldInitialization);
 	FWorldDelegates::OnPostWorldInitialization.AddUObject(this, &UGenericWorldSubsystem::OnPostWorldInitialization);
+	FCoreUObjectDelegates::PostLoadMapWithWorld.AddUObject(this, &UGenericWorldSubsystem::PostLoadMapWithWorld);
 	FWorldDelegates::OnWorldBeginTearDown.AddUObject(this, &UGenericWorldSubsystem::OnWorldBeginTearDown);
 	FWorldDelegates::OnWorldCleanup.AddUObject(this, &UGenericWorldSubsystem::OnWorldCleanup);
 	FWorldDelegates::OnPostWorldCleanup.AddUObject(this, &UGenericWorldSubsystem::OnPostWorldCleanup);
@@ -69,6 +70,10 @@ void UGenericWorldSubsystem::OnWorldPostBeginPlay()
 {
 }
 
+void UGenericWorldSubsystem::PostLoadMapWithWorld(UWorld* InWorld)
+{
+}
+
 void UGenericWorldSubsystem::OnWorldBeginTearDown(UWorld* InWorld)
 {
 	InWorld->OnWorldPreBeginPlay.RemoveAll(this);
@@ -90,6 +95,7 @@ void UGenericWorldSubsystem::Deinitialize()
 
 	FWorldDelegates::OnPreWorldInitialization.RemoveAll(this);
 	FWorldDelegates::OnPostWorldInitialization.RemoveAll(this);
+	FCoreUObjectDelegates::PostLoadMapWithWorld.RemoveAll(this);
 	FWorldDelegates::OnWorldBeginTearDown.RemoveAll(this);
 	FWorldDelegates::OnWorldCleanup.RemoveAll(this);
 	FWorldDelegates::OnPostWorldCleanup.RemoveAll(this);

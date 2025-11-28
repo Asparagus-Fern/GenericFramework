@@ -5,31 +5,6 @@
 #include "PropertySubsystem.h"
 #include "DataSource/PropertyDataSource.h"
 
-UPropertyProxy* UBPFunctions_Property::RegisterPropertyProxy(const UObject* WorldContextObject, FGameplayTag InPropertyProxyTag, const TSubclassOf<UPropertyProxy>& InPropertyProxyClass)
-{
-	if (UPropertySubsystem* PropertySubsystem = UPropertySubsystem::Get(WorldContextObject))
-	{
-		return PropertySubsystem->RegisterPropertyProxy(InPropertyProxyTag, InPropertyProxyClass);
-	}
-	return nullptr;
-}
-
-void UBPFunctions_Property::UnRegisterPropertyProxyByTag(const UObject* WorldContextObject, FGameplayTag InPropertyProxyTag)
-{
-	if (UPropertySubsystem* PropertySubsystem = UPropertySubsystem::Get(WorldContextObject))
-	{
-		return PropertySubsystem->UnRegisterPropertyProxy(InPropertyProxyTag);
-	}
-}
-
-void UBPFunctions_Property::UnRegisterPropertyProxy(const UObject* WorldContextObject, UPropertyProxy* InPropertyProxy)
-{
-	if (UPropertySubsystem* PropertySubsystem = UPropertySubsystem::Get(WorldContextObject))
-	{
-		return PropertySubsystem->UnRegisterPropertyProxy(InPropertyProxy);
-	}
-}
-
 bool UBPFunctions_Property::ExistPropertyProxy(const UObject* WorldContextObject, FGameplayTag InPropertyProxyTag)
 {
 	if (UPropertySubsystem* PropertySubsystem = UPropertySubsystem::Get(WorldContextObject))

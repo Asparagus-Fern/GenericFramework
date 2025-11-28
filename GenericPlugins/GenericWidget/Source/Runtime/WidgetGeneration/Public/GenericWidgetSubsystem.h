@@ -40,6 +40,7 @@ class UGenericWidgetSubsystem : public UGenericWorldSubsystem
 
 public:
 	static WIDGETGENERATION_API UGenericWidgetSubsystem* Get(const UObject* WorldContextObject);
+	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
 	virtual void OnWorldBeginTearDown(UWorld* InWorld) override;
 
 	/* UGenericWidgetSubsystem */

@@ -4,14 +4,25 @@
 
 #include "GenericSessionSubsystem.h"
 
+UStartSessionAsyncAction::UStartSessionAsyncAction(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
+	  , OnStartCompleteDelegate(FOnStartSessionCompleteDelegate::CreateUObject(this, &ThisClass::OnStartSessionComplete))
+{
+}
+
 void UStartSessionAsyncAction::Activate()
 {
 	Super::Activate();
 
 	if (UGenericSessionSubsystem* GenericSessionSubsystem = UGenericSessionSubsystem::Get(WorldContextObject))
 	{
-		GenericSessionSubsystem->StartSession(SessionName, FOnStartSessionCompleteDelegate::CreateUObject(this, &UStartSessionAsyncAction::OnStartSessionComplete));
+		if (!GenericSessionSubsystem->StartSession(SessionName, OnStartCompleteDelegate))
+		{
+			OnFail.Broadcast();
+		}
+		return;
 	}
+	OnFail.Broadcast();
 }
 
 UStartSessionAsyncAction* UStartSessionAsyncAction::StartSession(UObject* InWorldContextObject, FName InSessionName)
@@ -26,6 +37,11 @@ void UStartSessionAsyncAction::OnStartSessionComplete(FName InSessionName, bool 
 {
 	if (SessionName == InSessionName)
 	{
+		if (IOnlineSessionPtr OnlineSessionPtr = GetOnlineSessionPtr())
+		{
+			OnlineSessionPtr->ClearOnStartSessionCompleteDelegates(this);
+		}
+
 		if (bWasSuccessful)
 		{
 			OnSuccess.Broadcast();

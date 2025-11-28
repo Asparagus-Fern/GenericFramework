@@ -20,6 +20,11 @@ UGenericGameHUDSubsystem* UGenericGameHUDSubsystem::Get(const UObject* WorldCont
 	return nullptr;
 }
 
+bool UGenericGameHUDSubsystem::ShouldCreateSubsystem(UObject* Outer) const
+{
+	return Super::ShouldCreateSubsystem(Outer) && !IsRunningDedicatedServer();
+}
+
 void UGenericGameHUDSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);

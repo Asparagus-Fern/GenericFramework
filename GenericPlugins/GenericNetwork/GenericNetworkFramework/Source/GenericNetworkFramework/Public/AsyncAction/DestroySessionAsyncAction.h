@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Kismet/BlueprintAsyncActionBase.h"
+#include "SessionAsyncActionBase.h"
 #include "DestroySessionAsyncAction.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDestroySessionSuccess);
@@ -14,9 +14,9 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDestroySessionFail);
  * 
  */
 UCLASS()
-class GENERICNETWORKFRAMEWORK_API UDestroySessionAsyncAction : public UBlueprintAsyncActionBase
+class GENERICNETWORKFRAMEWORK_API UDestroySessionAsyncAction : public USessionAsyncActionBase
 {
-	GENERATED_BODY()
+	GENERATED_UCLASS_BODY()
 
 public:
 	virtual void Activate() override;
@@ -33,10 +33,8 @@ public:
 	FDestroySessionFail OnFail;
 
 private:
+	FOnDestroySessionCompleteDelegate OnDestroySessionCompleteDelegate;
 	void OnDestroySessionComplete(FName InSessionName, bool bWasSuccessful);
-
-	UPROPERTY()
-	UObject* WorldContextObject = nullptr;
 
 	UPROPERTY()
 	FName SessionName = NAME_None;

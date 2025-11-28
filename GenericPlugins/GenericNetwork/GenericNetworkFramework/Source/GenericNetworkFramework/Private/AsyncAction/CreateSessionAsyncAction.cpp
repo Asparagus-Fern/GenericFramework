@@ -3,7 +3,13 @@
 #include "AsyncAction/CreateSessionAsyncAction.h"
 
 #include "GenericSessionSubsystem.h"
-#include "ViewModel/SessionSettingViewModel.h"
+
+UCreateSessionAsyncAction::UCreateSessionAsyncAction(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
+	  , OnCreateSessionCompleteDelegate(FOnCreateSessionCompleteDelegate::CreateUObject(this, &ThisClass::OnCreateSessionComplete))
+	  , OnStartSessionCompleteDelegate(FOnStartSessionCompleteDelegate::CreateUObject(this, &ThisClass::OnStartSessionComplete))
+{
+}
 
 void UCreateSessionAsyncAction::Activate()
 {
@@ -11,60 +17,52 @@ void UCreateSessionAsyncAction::Activate()
 
 	if (UGenericSessionSubsystem* GenericSessionSubsystem = UGenericSessionSubsystem::Get(WorldContextObject))
 	{
-		if (ViewModelClass)
+		if (UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::ReturnNull))
 		{
-			GenericSessionSubsystem->CreateSession(UniqueNetID, SessionName, ViewModelClass, FOnCreateSessionCompleteDelegate::CreateUObject(this, &UCreateSessionAsyncAction::OnCreateSessionComplete));
+			SessionSettings.MapName = World->GetMapName();
 		}
-		else if (ViewModel)
+
+		SessionSettings.EncodeSessionSettings();
+		if (!GenericSessionSubsystem->CreateSession(UniqueNetID, SessionSettings, OnCreateSessionCompleteDelegate))
 		{
-			GenericSessionSubsystem->CreateSession(UniqueNetID, SessionName, ViewModel, FOnCreateSessionCompleteDelegate::CreateUObject(this, &UCreateSessionAsyncAction::OnCreateSessionComplete));
+			OnFail.Broadcast();
 		}
+		return;
 	}
+
+	OnFail.Broadcast();
 }
 
-UCreateSessionAsyncAction* UCreateSessionAsyncAction::CreateSessionByClass(UObject* InWorldContextObject, const FUniqueNetworkID& InPlayerNetID, FName InSessionName, TSubclassOf<USessionSettingViewModel> InViewModelClass, bool IsAutoStart)
+UCreateSessionAsyncAction* UCreateSessionAsyncAction::CreateSession(UObject* InWorldContextObject, const FUniqueNetworkID& InPlayerNetID, const FGenericSessionSettings& InSessionSettings)
 {
 	UCreateSessionAsyncAction* NewAction = NewObject<UCreateSessionAsyncAction>();
 	NewAction->WorldContextObject = InWorldContextObject;
 	NewAction->UniqueNetID = InPlayerNetID;
-	NewAction->SessionName = InSessionName;
-	NewAction->ViewModelClass = InViewModelClass;
-	NewAction->bIsAutoStart = IsAutoStart;
-	return NewAction;
-}
-
-UCreateSessionAsyncAction* UCreateSessionAsyncAction::CreateSession(UObject* InWorldContextObject, const FUniqueNetworkID& InPlayerNetID, FName InSessionName, USessionSettingViewModel* InViewModel, bool IsAutoStart)
-{
-	UCreateSessionAsyncAction* NewAction = NewObject<UCreateSessionAsyncAction>();
-	NewAction->WorldContextObject = InWorldContextObject;
-	NewAction->UniqueNetID = InPlayerNetID;
-	NewAction->SessionName = InSessionName;
-	NewAction->ViewModel = InViewModel;
-	NewAction->bIsAutoStart = IsAutoStart;
+	NewAction->SessionSettings = InSessionSettings;
 	return NewAction;
 }
 
 void UCreateSessionAsyncAction::OnCreateSessionComplete(FName InSessionName, bool bWasSuccessful)
 {
-	if (IOnlineSessionPtr OnlineSessionPtr = GetOnlineSessionPtr())
+	if (SessionSettings.SessionName == InSessionName)
 	{
-		OnlineSessionPtr->ClearOnCreateSessionCompleteDelegates(this);
-	}
+		if (IOnlineSessionPtr OnlineSessionPtr = GetOnlineSessionPtr())
+		{
+			OnlineSessionPtr->ClearOnCreateSessionCompleteDelegates(this);
+		}
 
-	if (SessionName == InSessionName)
-	{
-		if (bIsAutoStart)
+		if (SessionSettings.bIsAutoStart)
 		{
 			if (UGenericSessionSubsystem* GenericSessionSubsystem = UGenericSessionSubsystem::Get(WorldContextObject))
 			{
-				GenericSessionSubsystem->StartSession(InSessionName, FOnStartSessionCompleteDelegate::CreateUObject(this, &UCreateSessionAsyncAction::OnStartSessionComplete));
+				GenericSessionSubsystem->StartSession(InSessionName, OnStartSessionCompleteDelegate);
 			}
 		}
 		else
 		{
 			if (bWasSuccessful)
 			{
-				OnSuccess.Broadcast(ViewModel);
+				OnSuccess.Broadcast(SessionSettings);
 			}
 			else
 			{
@@ -81,11 +79,11 @@ void UCreateSessionAsyncAction::OnStartSessionComplete(FName InSessionName, bool
 		OnlineSessionPtr->ClearOnStartSessionCompleteDelegates(this);
 	}
 
-	if (SessionName == InSessionName)
+	if (SessionSettings.SessionName == InSessionName)
 	{
 		if (bWasSuccessful)
 		{
-			OnSuccess.Broadcast(ViewModel);
+			OnSuccess.Broadcast(SessionSettings);
 		}
 		else
 		{

@@ -16,7 +16,4 @@ class NETWORKAPPLICATION_API ANetworkGameSession : public AGenericGameSession
 
 public:
 	ANetworkGameSession();
-	virtual void RegisterServer() override;
-	virtual void RegisterServerFailed() override;
-
 };

@@ -4,27 +4,27 @@
 
 #include "PropertySubsystem.h"
 #include "PropertyProxy.h"
+#include "PropertyVisualData.h"
 #include "WidgetType.h"
 #include "Components/ListView.h"
 #include "Components/TextBlock.h"
+#include "DataSource/PropertyDataSourceCollection.h"
 #include "MVVM/PropertyListViewModel.h"
 #include "UMG/PropertyListItem.h"
 
-void UPropertyList::NativePreConstruct()
+UPropertyList::UPropertyList(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
 {
-	Super::NativePreConstruct();
-
-	if (IsDesignTime())
+	UPropertyVisualData* DefaultVisualData = LoadObject<UPropertyVisualData>(nullptr, TEXT("/GenericProperty/DataAsset/DA_PropertyVisualData.DA_PropertyVisualData"));
+	if (IsValid(DefaultVisualData))
 	{
-		OnPropertyCategoryChanged(IsValid(PropertyListViewModel) ? PropertyListViewModel->PropertyCategory : FText::FromString(TEXT("Property Category")));
-		OnPropertyProxyClassChanged(IsValid(PropertyListViewModel) ? PropertyListViewModel->PropertyProxyClass : nullptr);
+		PropertyVisualData = DefaultVisualData;
 	}
 }
 
 void UPropertyList::NativeConstruct()
 {
 	Super::NativeConstruct();
-	SetPropertyListViewModel(PropertyListViewModel);
 }
 
 void UPropertyList::NativeDestruct()
@@ -54,7 +54,7 @@ void UPropertyList::SetPropertyListViewModel(UPropertyListViewModel* InViewModel
 	if (PropertyListViewModel)
 	{
 		REGISTER_MVVM_PROPERTY(PropertyListViewModel, PropertyCategory, OnPropertyCategoryChanged, true)
-		REGISTER_MVVM_PROPERTY(PropertyListViewModel, PropertyProxyClass, OnPropertyProxyClassChanged, true)
+		REGISTER_MVVM_PROPERTY(PropertyListViewModel, PropertyDataSourceCollectionClass, OnPropertyDataSourceCollectionClassChanged, true)
 	}
 	else
 	{
@@ -70,6 +70,30 @@ UPropertyProxy* UPropertyList::GetPropertyProxy()
 	return PropertyProxy;
 }
 
+void UPropertyList::RefreshPropertyList()
+{
+	if (ListView_Property)
+	{
+		ListView_Property->ClearListItems();
+		PropertyListItemObjects.Reset();
+
+		/* Generate New List View Items */
+		if (PropertyProxy && PropertyVisualData)
+		{
+			for (auto& PropertyViewModel : PropertyProxy->GetPropertyViewModels())
+			{
+				UPropertyListItemObject* NewItemObject = NewObject<UPropertyListItemObject>(this);
+				NewItemObject->PropertyViewModel = PropertyViewModel;
+				NewItemObject->PropertyValueClass = PropertyVisualData->GatherPropertyValueWidgetClass(PropertyViewModel);
+				NewItemObject->PropertyOptionClasses = PropertyVisualData->GatherPropertyOptionClasses(PropertyViewModel);
+				PropertyListItemObjects.Add(NewItemObject);
+
+				ListView_Property->AddItem(NewItemObject);
+			}
+		}
+	}
+}
+
 void UPropertyList::OnPropertyCategoryChanged_Implementation(const FText& InCategory)
 {
 	if (Text_PropertyCategory)
@@ -78,53 +102,13 @@ void UPropertyList::OnPropertyCategoryChanged_Implementation(const FText& InCate
 	}
 }
 
-void UPropertyList::OnPropertyProxyClassChanged_Implementation(TSubclassOf<UPropertyProxy> InClass)
+void UPropertyList::OnPropertyDataSourceCollectionClassChanged_Implementation(TSubclassOf<UPropertyDataSourceCollection> InClass)
 {
-	/* Clear Property Proxy */
-	if (PropertyProxy)
+	if (UPropertySubsystem* PropertySubsystem = UPropertySubsystem::Get(this))
 	{
-		if (IsDesignTime())
-		{
-			PropertyProxy->NativeOnDestroy();
-		}
-		else
-		{
-			if (UPropertySubsystem* PropertySubsystem = UPropertySubsystem::Get(this))
-			{
-				PropertySubsystem->UnRegisterPropertyProxy(PropertyProxy);
-			}
-		}
-
-		PropertyProxy = nullptr;
+		PropertySubsystem->UnRegisterPropertyProxy(PropertyProxy);
+		PropertyProxy = PropertySubsystem->RegisterPropertyProxy(PropertyListViewModel->PropertyProxyTag, InClass);
 	}
 
-	/* Clear List View Items */
-	if (ListView_Property)
-	{
-		ListView_Property->ClearListItems();
-
-		/* Generate New Property Proxy */
-		if (InClass)
-		{
-			if (IsDesignTime())
-			{
-				PropertyProxy = NewObject<UPropertyProxy>(this, InClass);
-				PropertyProxy->NativeOnCreate();
-			}
-			else if (UPropertySubsystem* PropertySubsystem = UPropertySubsystem::Get(this))
-			{
-				PropertyProxy = PropertySubsystem->RegisterPropertyProxy(PropertyListViewModel->PropertyProxyTag, InClass);
-			}
-		}
-
-		/* Generate New List View Items */
-		if (PropertyProxy)
-		{
-			TArray<UPropertyListItemObject*> PropertyListItemObjects;
-			for (auto& Object : PropertyProxy->GetPropertyListItemObjects())
-			{
-				ListView_Property->AddItem(Object);
-			}
-		}
-	}
+	RefreshPropertyList();
 }

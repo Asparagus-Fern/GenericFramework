@@ -19,6 +19,11 @@ UWorldWidgetSubsystem* UWorldWidgetSubsystem::Get(const UObject* WorldContextObj
 	return nullptr;
 }
 
+bool UWorldWidgetSubsystem::ShouldCreateSubsystem(UObject* Outer) const
+{
+	return Super::ShouldCreateSubsystem(Outer) && !IsRunningDedicatedServer();
+}
+
 void UWorldWidgetSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
@@ -37,7 +42,7 @@ void UWorldWidgetSubsystem::RegisterWorldWidgetComponent(UWorldWidgetComponent* 
 {
 	if (!IsValid(InWorldWidgetComponent))
 	{
-		GenericLOG(GenericLogUI, Error, TEXT("WorldWidgetPoint Is NULL"))
+		GenericLOG(GenericLogUI, Error, TEXT("WorldWidgetPoint Is InValid"))
 		return;
 	}
 
@@ -55,7 +60,7 @@ void UWorldWidgetSubsystem::UnRegisterWorldWidgetComponent(UWorldWidgetComponent
 {
 	if (!IsValid(InWorldWidgetComponent))
 	{
-		GenericLOG(GenericLogUI, Error, TEXT("WorldWidgetPoint Is NULL"))
+		GenericLOG(GenericLogUI, Error, TEXT("WorldWidgetPoint Is InValid"))
 		return;
 	}
 

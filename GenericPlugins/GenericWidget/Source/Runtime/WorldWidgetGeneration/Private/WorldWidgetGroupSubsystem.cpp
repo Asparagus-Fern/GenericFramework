@@ -42,7 +42,7 @@ void UWorldWidgetGroupSubsystem::OnWorldWidgetComponentActiveStateChanged(UWorld
 {
 	if (!IsValid(InWorldWidgetComponent))
 	{
-		GenericLOG(GenericLogUI, Error, TEXT("InWorldWidgetComponent Is NULL"))
+		GenericLOG(GenericLogUI, Error, TEXT("InWorldWidgetComponent Is InValid"))
 		return;
 	}
 

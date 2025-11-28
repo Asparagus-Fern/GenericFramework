@@ -35,6 +35,7 @@ void UPropertyDiscreteValueBase::NativeOnViewModelInitialized()
 		MultiPropertyValueViewModel->OnPropertyValueRemovedEvent.AddUObject(this, &UPropertyDiscreteValueBase::HandleOnPropertyValueRemoved);
 
 		REGISTER_MVVM_PROPERTY(MultiPropertyValueViewModel, bAllowWrap, OnAllowWrapChanged, true)
+		REGISTER_MVVM_PROPERTY(MultiPropertyValueViewModel, InitialValue, OnInitialValueChanged, true)
 		REGISTER_MVVM_PROPERTY(MultiPropertyValueViewModel, SelectedValue, OnSelectedValueChanged, true)
 	}
 }
@@ -58,6 +59,10 @@ void UPropertyDiscreteValueBase::HandleOnPropertyValueAdded(const FString& InNam
 void UPropertyDiscreteValueBase::HandleOnPropertyValueRemoved(const FString& InName, UPropertyViewModel* InViewModel)
 {
 	OnPropertyValueRemoved(InName, InViewModel);
+}
+
+void UPropertyDiscreteValueBase::OnInitialValueChanged_Implementation(const FString& InInitialValue)
+{
 }
 
 void UPropertyDiscreteValueBase::OnAllowWrapChanged_Implementation(bool IsAllowWrap)

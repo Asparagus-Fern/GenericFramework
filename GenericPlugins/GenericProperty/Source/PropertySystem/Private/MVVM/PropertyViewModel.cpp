@@ -18,7 +18,7 @@ bool UPropertyViewModel::Initialize(UPropertyProxy* InOwnerProxy)
 	bIsInitialized = true;
 	OwnerProxy = InOwnerProxy;
 
-	/* Changed Self When Dependency Property Changed */
+	/* Update Value When Dependency Property Changed */
 	for (const auto& PropertyDependency : PropertyDependencyList)
 	{
 		PropertyDependency->OnPropertyChangedEvent.AddUObject(this, &UPropertyViewModel::HandleOnPropertyDependencyValueChanged);
@@ -28,11 +28,11 @@ bool UPropertyViewModel::Initialize(UPropertyProxy* InOwnerProxy)
 		UE_MVVM_BROADCAST_FIELD_VALUE_CHANGED(PropertyDependencyList);
 	}
 
-	for (const auto& PropertyTag : PropertyTags)
+	for (const auto& PropertyTag : PropertyOptionTags)
 	{
 		OnPropertyTagAdded(PropertyTag);
-		OnPropertyTagAddedEvent.Broadcast(this, PropertyTag);
-		UE_MVVM_BROADCAST_FIELD_VALUE_CHANGED(PropertyTags);
+		OnPropertyOptionTagAddedEvent.Broadcast(this, PropertyTag);
+		UE_MVVM_BROADCAST_FIELD_VALUE_CHANGED(PropertyOptionTags);
 	}
 
 	return true;
@@ -161,6 +161,12 @@ bool UPropertyViewModel::GetIsPropertyValueDirty() const
 	return bIsPropertyDirty;
 }
 
+void UPropertyViewModel::SetIsEnableEdit(bool IsEnableEdit)
+{
+	SetIsEditable(false);
+	bIsEnableEdit = IsEnableEdit;
+}
+
 bool UPropertyViewModel::GetIsAutoApplyProperty() const
 {
 	return IsAutoApplyProperty;
@@ -185,6 +191,29 @@ bool UPropertyViewModel::GetIsDirtyProxy() const
 void UPropertyViewModel::SetIsDirtyProxy(bool InIsDirtyProxy)
 {
 	UE_MVVM_SET_PROPERTY_VALUE_INLINE(IsDirtyProxy, InIsDirtyProxy);
+}
+
+bool UPropertyViewModel::GetIsEditable() const
+{
+	return IsEditable;
+}
+
+void UPropertyViewModel::SetIsEditable(bool InIsEditable)
+{
+	if (bIsEnableEdit)
+	{
+		UE_MVVM_SET_PROPERTY_VALUE_INLINE(IsEditable, InIsEditable);
+	}
+}
+
+bool UPropertyViewModel::GetIsVisible() const
+{
+	return IsVisible;
+}
+
+void UPropertyViewModel::SetIsVisible(bool InIsVisible)
+{
+	UE_MVVM_SET_PROPERTY_VALUE_INLINE(IsVisible, InIsVisible);
 }
 
 FName UPropertyViewModel::GetPropertyName() const
@@ -290,13 +319,13 @@ void UPropertyViewModel::AddPropertyTag(FGameplayTag InPropertyTag)
 		return;
 	}
 
-	PropertyTags.Add(InPropertyTag);
+	PropertyOptionTags.Add(InPropertyTag);
 
 	if (bIsInitialized)
 	{
 		OnPropertyTagAdded(InPropertyTag);
-		OnPropertyTagAddedEvent.Broadcast(this, InPropertyTag);
-		UE_MVVM_BROADCAST_FIELD_VALUE_CHANGED(PropertyTags);
+		OnPropertyOptionTagAddedEvent.Broadcast(this, InPropertyTag);
+		UE_MVVM_BROADCAST_FIELD_VALUE_CHANGED(PropertyOptionTags);
 	}
 }
 
@@ -319,19 +348,19 @@ void UPropertyViewModel::RemovePropertyTag(FGameplayTag InPropertyTag)
 		return;
 	}
 
-	PropertyTags.Remove(InPropertyTag);
+	PropertyOptionTags.Remove(InPropertyTag);
 
 	if (bIsInitialized)
 	{
 		OnPropertyTagRemoved(InPropertyTag);
-		OnPropertyTagRemovedEvent.Broadcast(this, InPropertyTag);
-		UE_MVVM_BROADCAST_FIELD_VALUE_CHANGED(PropertyTags);
+		OnPropertyOptionTagRemovedEvent.Broadcast(this, InPropertyTag);
+		UE_MVVM_BROADCAST_FIELD_VALUE_CHANGED(PropertyOptionTags);
 	}
 }
 
 bool UPropertyViewModel::HasPropertyTag(FGameplayTag InPropertyTag) const
 {
-	return PropertyTags.Contains(InPropertyTag);
+	return PropertyOptionTags.Contains(InPropertyTag);
 }
 
 void UPropertyViewModel::OnPropertyInitialized()
@@ -359,7 +388,7 @@ void UPropertyViewModel::OnPropertyDependencyRemoved(UPropertyViewModel* InPrope
 {
 }
 
-void UPropertyViewModel::OnPropertyDependencyValueChanged(UPropertyViewModel* InDependencyProperty, EPropertyChangedReason ChangedReason)
+void UPropertyViewModel::OnPropertyDependencyValueChanged(UPropertyViewModel* InPropertyDependency, EPropertyChangedReason ChangedReason)
 {
 }
 

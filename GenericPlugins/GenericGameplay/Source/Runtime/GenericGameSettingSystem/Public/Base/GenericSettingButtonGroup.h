@@ -8,7 +8,7 @@
 
 class UGenericPopupWidget;
 class UPropertyProxy;
-class UGameSettingProxy;
+class UGameSettingDataSourceCollection;
 
 /**
  * 
@@ -23,8 +23,8 @@ public:
 	GENERICGAMESETTINGSYSTEM_API virtual void NativeOnDestroy() override;
 
 private:
-	virtual void OnPropertyProxyRegister(FGameplayTag InProxyTag, UPropertyProxy* InProxy);
-	virtual void OnPropertyProxyUnRegister(FGameplayTag InProxyTag, UPropertyProxy* InProxy);
+	void OnPropertyProxyRegister(FGameplayTag InProxyTag, UPropertyProxy* InProxy);
+	void OnPropertyProxyUnRegister(FGameplayTag InProxyTag, UPropertyProxy* InProxy);
 
 protected:
 	GENERICGAMESETTINGSYSTEM_API virtual bool HandleOnButtonSelectionConfirmed(UGenericButtonWidget* InButton, bool InSelection) override;
@@ -34,5 +34,5 @@ protected:
 	TSubclassOf<UGenericPopupWidget> PopupWidgetClass = nullptr;
 
 	UPROPERTY()
-	TArray<TObjectPtr<UGameSettingProxy>> GameSettingProxies;
+	TArray<TObjectPtr<UPropertyProxy>> GameSettingProxies;
 };

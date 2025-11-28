@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "PropertyValueBase.h"
+#include "MVVM/Data/Scalar/ScalarPropertyValueViewModel.h"
 #include "PropertyScalarValueBase.generated.h"
 
 class UScalarPropertyValueViewModel;
@@ -42,7 +43,13 @@ protected:
 	PROPERTYSYSTEM_API void OnValueRangeChanged(FVector2D ValueRange);
 
 	UFUNCTION(BlueprintNativeEvent)
+	PROPERTYSYSTEM_API void OnIsClampValueRangeChanged(bool IsClampValueRange);
+
+	UFUNCTION(BlueprintNativeEvent)
 	PROPERTYSYSTEM_API void OnNormalizedValueRangeChanged(FVector2D NormalizedValueRange);
+
+	UFUNCTION(BlueprintNativeEvent)
+	PROPERTYSYSTEM_API void OnIsClampInteractionRangeChanged(bool IsIsClampInteractionRange);
 
 	UFUNCTION(BlueprintNativeEvent)
 	PROPERTYSYSTEM_API void OnValueInteractionRangeChanged(FVector2D ValueInteractionRange);

@@ -20,7 +20,6 @@ UGenericButtonCollection* UBPFunctions_GenericButtonWidget::RegisterButtonCollec
 		return nullptr;
 	}
 
-
 	if (UGenericButtonSubsystem* GenericButtonSubsystem = UGenericButtonSubsystem::Get(WorldContextObject))
 	{
 		return Cast<UGenericButtonCollection>(GenericButtonSubsystem->RegisterButtonCollection(Player, InCollectionClass, InActived));

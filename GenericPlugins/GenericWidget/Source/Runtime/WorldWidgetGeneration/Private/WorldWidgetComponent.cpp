@@ -44,16 +44,15 @@ UWorldWidgetComponent::UWorldWidgetComponent(const FObjectInitializer& ObjectIni
 
 void UWorldWidgetComponent::OnRegister()
 {
+	Super::OnRegister();
 	UpdateWorldWidget();
 	OnWorldWidgetComponentRegister.Broadcast(this);
-
-	Super::OnRegister();
 }
 
 void UWorldWidgetComponent::OnUnregister()
 {
-	OnWorldWidgetComponentUnRegister.Broadcast(this);
 	Super::OnUnregister();
+	OnWorldWidgetComponentUnRegister.Broadcast(this);
 }
 
 void UWorldWidgetComponent::SetActive(bool bNewActive, bool bReset)
@@ -135,7 +134,7 @@ void UWorldWidgetComponent::ChangeWidgetActiveState(bool IsActive)
 {
 	if (!IsValid(WorldWidget))
 	{
-		GenericLOG(GenericLogUI, Warning, TEXT("WorldWidget Is NULL"))
+		GenericLOG(GenericLogUI, Warning, TEXT("WorldWidget Is InValid"))
 		SetDrawSize(FIntPoint::ZeroValue);
 		return;
 	}
@@ -170,27 +169,26 @@ void UWorldWidgetComponent::ChangeWidgetActiveState(bool IsActive)
 
 void UWorldWidgetComponent::UpdateWorldWidget()
 {
-	if (WorldWidgetPaintMethod == EWorldWidgetPaintMethod::PaintInScreen)
+	if (IsValid(WorldWidget))
 	{
-		SetWidgetSpace(EWidgetSpace::Screen);
+		WorldWidget->TakeWidget()->SlatePrepass();
 
-		if (IsValid(WorldWidget))
+		if (WorldWidgetPaintMethod == EWorldWidgetPaintMethod::PaintInScreen)
 		{
+			SetWidgetSpace(EWidgetSpace::Screen);
+			SetDrawAtDesiredSize(true);
 			SetWidget(WorldWidget);
-			UpdateWidget();
 		}
-	}
-	else if (WorldWidgetPaintMethod == EWorldWidgetPaintMethod::PaintInWorld)
-	{
-		SetWidgetSpace(EWidgetSpace::World);
-
-		if (IsValid(WorldWidget))
+		else if (WorldWidgetPaintMethod == EWorldWidgetPaintMethod::PaintInWorld)
 		{
-			WorldWidget->TakeWidget()->SlatePrepass();
+			SetWidgetSpace(EWidgetSpace::World);
+			SetDrawAtDesiredSize(false);
 			SetDrawSize(WorldWidget->GetDesiredSize());
 			SetPivot(WorldWidget->Anchor);
 			SetWidget(WorldWidget);
 		}
+
+		UpdateWidget();
 	}
 }
 
