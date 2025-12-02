@@ -2,6 +2,8 @@
 
 #include "LevelStreamingType.generated.h"
 
+LEVELSTREAMING_API DECLARE_LOG_CATEGORY_EXTERN(GenericLogLevelStreaming, Log, All);
+
 DECLARE_DELEGATE(FOnHandleLevelStreamingOnceFinish);
 
 DECLARE_DELEGATE(FOnHandleLevelStreamingFinish);

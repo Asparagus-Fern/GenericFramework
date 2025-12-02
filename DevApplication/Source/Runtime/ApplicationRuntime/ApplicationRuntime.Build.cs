@@ -58,7 +58,6 @@ public class ApplicationRuntime : ModuleRules
 				"WidgetGroupGeneration",
 				"WorldWidgetGeneration",
 				"WidgetApplication",
-				"WorldUtilities",
 				"LevelStreaming",
 				"WorldPartition",
 

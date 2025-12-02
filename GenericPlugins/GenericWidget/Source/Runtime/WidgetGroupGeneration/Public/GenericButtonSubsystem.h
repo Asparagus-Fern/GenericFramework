@@ -24,11 +24,14 @@ public:
 public:
 	WIDGETGROUPGENERATION_API UGenericButtonCollection* RegisterButtonCollection(APlayerController* Player, TSubclassOf<UGenericButtonCollection> InCollectionClass, bool InActived = true);
 	WIDGETGROUPGENERATION_API bool UnRegisterButtonCollection(UGenericButtonCollection* InCollection);
+	WIDGETGROUPGENERATION_API void UnRegisterAllButtonCollection();
 
+	WIDGETGROUPGENERATION_API bool IsButtonCollectionRegistered(FGameplayTag InRootButtonTag);
 	WIDGETGROUPGENERATION_API bool IsButtonCollectionRegistered(UGenericButtonCollection* InCollection) const;
 
-	WIDGETGROUPGENERATION_API TArray<UGenericButtonCollection*> GetAllButtonCollection() { return Collections; }
+	WIDGETGROUPGENERATION_API TArray<UGenericButtonCollection*> GetAllButtonCollection();
 	WIDGETGROUPGENERATION_API UGenericButtonCollection* GetButtonCollection(FGameplayTag InRootButtonTag);
+	WIDGETGROUPGENERATION_API TArray<UGenericButtonCollection*> GetButtonCollections(const TArray<FGameplayTag>& InRootButtonTags);
 
 private:
 	UPROPERTY()

@@ -56,7 +56,7 @@ void UGenericSettingButtonContainer::OnButtonSelectionChanged_Implementation(UGe
 		{
 			if (UGenericButtonCollection* ButtonCollectionRef = GetButtonCollection())
 			{
-				if (UGenericSettingBuilder* ButtonBuilder = Cast<UGenericSettingBuilder>(ButtonCollectionRef->GetButtonBuilder(InButton->SelfTag)))
+				if (UGenericSettingBuilder* ButtonBuilder = Cast<UGenericSettingBuilder>(ButtonCollectionRef->GetButtonBuilder(InButton->GetButtonTag())))
 				{
 					PropertyCollection_Setting->SetPropertyCollectionAsset(ButtonBuilder->GameSettingDataCollection);
 					return;

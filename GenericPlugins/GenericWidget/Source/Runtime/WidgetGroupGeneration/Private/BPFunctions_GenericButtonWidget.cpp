@@ -44,6 +44,14 @@ bool UBPFunctions_GenericButtonWidget::UnRegisterButtonCollection(const UObject*
 	return false;
 }
 
+void UBPFunctions_GenericButtonWidget::UnRegisterAllButtonCollection(const UObject* WorldContextObject)
+{
+	if (UGenericButtonSubsystem* GenericButtonSubsystem = UGenericButtonSubsystem::Get(WorldContextObject))
+	{
+		GenericButtonSubsystem->UnRegisterAllButtonCollection();
+	}
+}
+
 bool UBPFunctions_GenericButtonWidget::IsButtonCollectionRegistered(const UObject* WorldContextObject, UGenericButtonCollection* InCollection, bool& IsRegistered)
 {
 	if (UGenericButtonSubsystem* GenericButtonSubsystem = UGenericButtonSubsystem::Get(WorldContextObject))
@@ -78,4 +86,15 @@ UGenericButtonCollection* UBPFunctions_GenericButtonWidget::GetButtonCollectionB
 	}
 
 	return nullptr;
+}
+
+TArray<UGenericButtonCollection*> UBPFunctions_GenericButtonWidget::GetButtonCollectionsByTag(const UObject* WorldContextObject, TArray<FGameplayTag> InRootButtonTags)
+{
+	if (UGenericButtonSubsystem* GenericButtonSubsystem = UGenericButtonSubsystem::Get(WorldContextObject))
+	{
+		return GenericButtonSubsystem->GetButtonCollections(InRootButtonTags);
+	}
+
+	TArray<UGenericButtonCollection*> Result;
+	return Result;
 }

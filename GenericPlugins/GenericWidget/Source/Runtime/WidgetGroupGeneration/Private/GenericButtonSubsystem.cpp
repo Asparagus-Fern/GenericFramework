@@ -35,11 +35,6 @@ UGenericButtonCollection* UGenericButtonSubsystem::RegisterButtonCollection(APla
 	return NewCollection;
 }
 
-bool UGenericButtonSubsystem::IsButtonCollectionRegistered(UGenericButtonCollection* InCollection) const
-{
-	return Collections.Contains(InCollection);
-}
-
 bool UGenericButtonSubsystem::UnRegisterButtonCollection(UGenericButtonCollection* InCollection)
 {
 	if (!IsValid(InCollection))
@@ -65,6 +60,36 @@ bool UGenericButtonSubsystem::UnRegisterButtonCollection(UGenericButtonCollectio
 	return true;
 }
 
+void UGenericButtonSubsystem::UnRegisterAllButtonCollection()
+{
+	TArray<UGenericButtonCollection*> TempCollections = Collections;
+	for (auto& Collection : TempCollections)
+	{
+		UnRegisterButtonCollection(Collection);
+	}
+}
+
+bool UGenericButtonSubsystem::IsButtonCollectionRegistered(FGameplayTag InRootButtonTag)
+{
+	return IsButtonCollectionRegistered(GetButtonCollection(InRootButtonTag));
+}
+
+bool UGenericButtonSubsystem::IsButtonCollectionRegistered(UGenericButtonCollection* InCollection) const
+{
+	if (!IsValid(InCollection))
+	{
+		GenericLOG(GenericLogUI, Error, TEXT("InCollection Is InValid"))
+		return false;
+	}
+
+	return Collections.Contains(InCollection);
+}
+
+TArray<UGenericButtonCollection*> UGenericButtonSubsystem::GetAllButtonCollection()
+{
+	return Collections;
+}
+
 UGenericButtonCollection* UGenericButtonSubsystem::GetButtonCollection(FGameplayTag InRootButtonTag)
 {
 	for (auto& Collection : Collections)
@@ -75,4 +100,19 @@ UGenericButtonCollection* UGenericButtonSubsystem::GetButtonCollection(FGameplay
 		}
 	}
 	return nullptr;
+}
+
+TArray<UGenericButtonCollection*> UGenericButtonSubsystem::GetButtonCollections(const TArray<FGameplayTag>& InRootButtonTags)
+{
+	TArray<UGenericButtonCollection*> Result;
+
+	for (auto& Collection : Collections)
+	{
+		if (InRootButtonTags.Contains(Collection->GetRootButtonTag()))
+		{
+			Result.Add(Collection);
+		}
+	}
+
+	return Result;
 }

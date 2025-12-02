@@ -1,11 +1,12 @@
 ﻿// Copyright ChenTaiye 2025. All Rights Reserved.
 
-#include "Compass/CompassActor.h"
+#include "Actor/CompassActor.h"
 
+#include "GameplayType.h"
 #include "Components/ArrowComponent.h"
 #include "Components/TextRenderComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "Type/DebugType.h"
-
 
 ACompassActor::ACompassActor()
 {
@@ -30,7 +31,34 @@ void ACompassActor::OnConstruction(const FTransform& Transform)
 	Super::OnConstruction(Transform);
 	SceneComponent->SetRelativeRotation(FRotator(0.f, Angle, 0.f));
 
-	GenericLOG(GenericLogWorld, Log, TEXT("Direction : %s"), *GetDirectionNorth().ToString())
+	GenericLOG(GenericLogGameplay, Log, TEXT("Direction : %s"), *GetDirectionNorth().ToString())
+}
+
+bool ACompassActor::GetPlayerForwardAngle(const UObject* WorldContextObject, int32 PlayerIndex, float& OutAngle)
+{
+	if (ACompassActor* CompassActor = Cast<ACompassActor>(UGameplayStatics::GetActorOfClass(WorldContextObject, ACompassActor::StaticClass())))
+	{
+		const FVector WorldNorthDirection = CompassActor->GetDirectionNorth();
+		const FVector WorldEastDirection = CompassActor->GetDirectionEast();
+
+		if (const APlayerCameraManager* PlayerCameraManager = UGameplayStatics::GetPlayerCameraManager(WorldContextObject, PlayerIndex))
+		{
+			const FVector LookForward = PlayerCameraManager->GetActorForwardVector().GetSafeNormal2D();
+
+			float DegreesNorth = FMath::RadiansToDegrees(FMath::Acos(FVector::DotProduct(WorldNorthDirection, LookForward)));
+			const float DegreesEast = FMath::RadiansToDegrees(FMath::Acos(FVector::DotProduct(WorldEastDirection, LookForward)));
+
+			if (DegreesEast > 90.f)
+			{
+				DegreesNorth = -DegreesNorth;
+			}
+
+			OutAngle = DegreesNorth;
+			return true;
+		}
+	}
+
+	return false;
 }
 
 void ACompassActor::SetupComponent(UArrowComponent*& InArrow, FName InArrowName, UTextRenderComponent*& InTextRender, FName InTextRenderName, float InArrowYaw, FColor InArrowColor, FString InText)

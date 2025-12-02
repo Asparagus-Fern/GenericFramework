@@ -11,7 +11,7 @@ public class LevelStreaming : ModuleRules
 			{
 				"Core",
 				"DevCore",
-				"WorldUtilities",
+				
 			}
 		);
 

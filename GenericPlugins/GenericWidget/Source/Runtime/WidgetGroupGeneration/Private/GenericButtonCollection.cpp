@@ -133,7 +133,7 @@ void UGenericButtonCollection::BuildChildButtonGroup(const FGameplayTag InButton
 				}
 
 				/* Add Widget To Button Group */
-				ChildButtonWidget->SelfTag = ChildButtonTag;
+				ChildButtonWidget->SetButtonTag(ChildButtonTag);
 				ButtonGroup->AddButton(ChildButtonWidget);
 
 				if (UGenericButtonBuilder* ChildButtonBuilder = GetButtonBuilder(ChildButtonTag))
@@ -195,7 +195,7 @@ void UGenericButtonCollection::DestroyChildButtonGroup(const FGameplayTag InButt
 		/* Get All Children Widgets And Close Them */
 		for (auto& ButtonWidget : ButtonWidgets)
 		{
-			OnButtonDestroy(ButtonWidget->SelfTag);
+			OnButtonDestroy(ButtonWidget->GetButtonTag());
 
 			ButtonGroup->RemoveButton(ButtonWidget);
 			ButtonContainer->RemoveChild(ButtonWidget);
@@ -357,7 +357,7 @@ bool UGenericButtonCollection::UnRegisterButtonGroup(const FGameplayTag InButton
 
 void UGenericButtonCollection::OnButtonPressed_Implementation(UGenericButtonGroup* InButtonGroup, UGenericButtonWidget* InButton)
 {
-	FName NodeName = FButtonCollectionEvent::GetEventNodeName(FButtonCollectionEvent::OnPressedEventName, InButton->SelfTag);
+	FName NodeName = FButtonCollectionEvent::GetEventNodeName(FButtonCollectionEvent::OnPressedEventName, InButton->GetButtonTag());
 	if (UFunction* Function = FindFunction(NodeName))
 	{
 		ProcessEvent(Function, nullptr);
@@ -366,7 +366,7 @@ void UGenericButtonCollection::OnButtonPressed_Implementation(UGenericButtonGrou
 
 void UGenericButtonCollection::OnButtonReleased_Implementation(UGenericButtonGroup* InButtonGroup, UGenericButtonWidget* InButton)
 {
-	FName NodeName = FButtonCollectionEvent::GetEventNodeName(FButtonCollectionEvent::OnReleasedEventName, InButton->SelfTag);
+	FName NodeName = FButtonCollectionEvent::GetEventNodeName(FButtonCollectionEvent::OnReleasedEventName, InButton->GetButtonTag());
 	if (UFunction* Function = FindFunction(NodeName))
 	{
 		ProcessEvent(Function, nullptr);
@@ -375,7 +375,7 @@ void UGenericButtonCollection::OnButtonReleased_Implementation(UGenericButtonGro
 
 void UGenericButtonCollection::OnButtonHovered_Implementation(UGenericButtonGroup* InButtonGroup, UGenericButtonWidget* InButton)
 {
-	FName NodeName = FButtonCollectionEvent::GetEventNodeName(FButtonCollectionEvent::OnHoveredEventName, InButton->SelfTag);
+	FName NodeName = FButtonCollectionEvent::GetEventNodeName(FButtonCollectionEvent::OnHoveredEventName, InButton->GetButtonTag());
 	if (UFunction* Function = FindFunction(NodeName))
 	{
 		ProcessEvent(Function, nullptr);
@@ -384,7 +384,7 @@ void UGenericButtonCollection::OnButtonHovered_Implementation(UGenericButtonGrou
 
 void UGenericButtonCollection::OnButtonUnhovered_Implementation(UGenericButtonGroup* InButtonGroup, UGenericButtonWidget* InButton)
 {
-	FName NodeName = FButtonCollectionEvent::GetEventNodeName(FButtonCollectionEvent::OnUnhoveredEventName, InButton->SelfTag);
+	FName NodeName = FButtonCollectionEvent::GetEventNodeName(FButtonCollectionEvent::OnUnhoveredEventName, InButton->GetButtonTag());
 	if (UFunction* Function = FindFunction(NodeName))
 	{
 		ProcessEvent(Function, nullptr);
@@ -393,7 +393,7 @@ void UGenericButtonCollection::OnButtonUnhovered_Implementation(UGenericButtonGr
 
 void UGenericButtonCollection::OnButtonClicked_Implementation(UGenericButtonGroup* InButtonGroup, UGenericButtonWidget* InButton)
 {
-	FName NodeName = FButtonCollectionEvent::GetEventNodeName(FButtonCollectionEvent::OnClickedEventName, InButton->SelfTag);
+	FName NodeName = FButtonCollectionEvent::GetEventNodeName(FButtonCollectionEvent::OnClickedEventName, InButton->GetButtonTag());
 	if (UFunction* Function = FindFunction(NodeName))
 	{
 		ProcessEvent(Function, nullptr);
@@ -402,7 +402,7 @@ void UGenericButtonCollection::OnButtonClicked_Implementation(UGenericButtonGrou
 
 void UGenericButtonCollection::OnButtonDoubleClicked_Implementation(UGenericButtonGroup* InButtonGroup, UGenericButtonWidget* InButton)
 {
-	FName NodeName = FButtonCollectionEvent::GetEventNodeName(FButtonCollectionEvent::OnDoubleClickedEventName, InButton->SelfTag);
+	FName NodeName = FButtonCollectionEvent::GetEventNodeName(FButtonCollectionEvent::OnDoubleClickedEventName, InButton->GetButtonTag());
 	if (UFunction* Function = FindFunction(NodeName))
 	{
 		ProcessEvent(Function, nullptr);
@@ -434,19 +434,19 @@ void UGenericButtonCollection::OnButtonSelectionChanged_Implementation(UGenericB
 
 	if (Selection)
 	{
-		BuildChildButtonGroup(InButton->SelfTag);
-		ProcessOnSelectionChanged(InButton->SelfTag, Selection);
+		BuildChildButtonGroup(InButton->GetButtonTag());
+		ProcessOnSelectionChanged(InButton->GetButtonTag(), Selection);
 	}
 	else
 	{
-		if (ButtonGroups.Contains(InButton->SelfTag))
+		if (ButtonGroups.Contains(InButton->GetButtonTag()))
 		{
-			UGenericButtonGroup* Group = ButtonGroups.FindRef(InButton->SelfTag);
+			UGenericButtonGroup* Group = ButtonGroups.FindRef(InButton->GetButtonTag());
 			Group->DeselectAll();
-			DestroyChildButtonGroup(InButton->SelfTag);
+			DestroyChildButtonGroup(InButton->GetButtonTag());
 		}
 
-		ProcessOnSelectionChanged(InButton->SelfTag, Selection);
+		ProcessOnSelectionChanged(InButton->GetButtonTag(), Selection);
 	}
 }
 

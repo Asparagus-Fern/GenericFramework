@@ -24,6 +24,9 @@ public:
 	UFUNCTION(BlueprintCallable, meta=(WorldContext = "WorldContextObject"))
 	static bool UnRegisterButtonCollection(const UObject* WorldContextObject, UGenericButtonCollection* InCollection);
 
+	UFUNCTION(BlueprintCallable, meta=(WorldContext = "WorldContextObject"))
+	static void UnRegisterAllButtonCollection(const UObject* WorldContextObject);
+	
 	UFUNCTION(BlueprintPure, meta=(WorldContext = "WorldContextObject"))
 	static bool IsButtonCollectionRegistered(const UObject* WorldContextObject, UGenericButtonCollection* InCollection, bool& IsRegistered);
 
@@ -32,4 +35,7 @@ public:
 
 	UFUNCTION(BlueprintPure, meta=(WorldContext = "WorldContextObject", DeterminesOutputType = "InCollectionClass", GameplayTagFilter="UI.Button"))
 	static UGenericButtonCollection* GetButtonCollectionByTag(const UObject* WorldContextObject, TSubclassOf<UGenericButtonCollection> InCollectionClass, FGameplayTag InRootButtonTag);
+
+	UFUNCTION(BlueprintPure, meta=(WorldContext = "WorldContextObject", GameplayTagFilter="UI.Button"))
+	static TArray<UGenericButtonCollection*> GetButtonCollectionsByTag(const UObject* WorldContextObject,  TArray<FGameplayTag> InRootButtonTags);
 };

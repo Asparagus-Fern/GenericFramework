@@ -17,9 +17,9 @@ void UOpenDeveloperSetting::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
 
-	UGenericFrameworkEdSubsystem::OnToolBarSectionExtend.AddUObject(this, &UOpenDeveloperSetting::RegisterToolBarDeveloperSetting);
+	UGenericFrameworkEdSubsystem::OnToolBarSectionExtend.AddUObject(this, &UOpenDeveloperSetting::RegisterToolBarGenericFrameworkSetting);
 
-	/* Create Developer Settings */
+	/* Create Generic Framework Settings */
 	{
 		ISettingsModule* SettingsModule = FModuleManager::GetModulePtr<ISettingsModule>("Settings");
 
@@ -33,11 +33,11 @@ void UOpenDeveloperSetting::Initialize(FSubsystemCollectionBase& Collection)
 				GetMutableDefault<UGenericGlobalSettings>()
 			);
 
-			SettingsModule->RegisterViewer("Developer", *this);
+			SettingsModule->RegisterViewer("GenericFramework", *this);
 		}
 
-		FGlobalTabmanager::Get()->RegisterNomadTabSpawner(DeveloperSettingsTabName, FOnSpawnTab::CreateUObject(this, &UOpenDeveloperSetting::HandleSpawnSettingsTab))
-			.SetDisplayName(LOCTEXT("ProjectSettingsTabTitle", "Developer Settings"))
+		FGlobalTabmanager::Get()->RegisterNomadTabSpawner(GenericFrameworkSettingsTabName, FOnSpawnTab::CreateUObject(this, &UOpenDeveloperSetting::HandleSpawnSettingsTab))
+			.SetDisplayName(LOCTEXT("GenericFrameworkSettingsTabTitle", "Generic Framework Settings"))
 			.SetMenuType(ETabSpawnerMenuType::Hidden)
 			.SetIcon(FSlateIcon(FAppStyle::GetAppStyleSetName(), "ProjectSettings.TabIcon"));
 	}
@@ -53,14 +53,14 @@ void UOpenDeveloperSetting::Deinitialize()
 
 	if (SettingsModule != nullptr)
 	{
-		SettingsModule->UnregisterSettings("Developer", "Global", "Global");
-		SettingsModule->UnregisterViewer("Developer");
+		SettingsModule->UnregisterSettings("GenericFramework", "Global", "Global");
+		SettingsModule->UnregisterViewer("GenericFramework");
 	}
 }
 
 void UOpenDeveloperSetting::ShowSettings(const FName& CategoryName, const FName& SectionName)
 {
-	FGlobalTabmanager::Get()->TryInvokeTab(DeveloperSettingsTabName);
+	FGlobalTabmanager::Get()->TryInvokeTab(GenericFrameworkSettingsTabName);
 	const ISettingsEditorModelPtr SettingsEditorModel = SettingsEditorModelPtr.Pin();
 
 	if (SettingsEditorModel.IsValid())
@@ -81,7 +81,7 @@ TSharedRef<SDockTab> UOpenDeveloperSetting::HandleSpawnSettingsTab(const FSpawnT
 
 	if (SettingsModule != nullptr)
 	{
-		const ISettingsContainerPtr DeveloperSettingsContainer = SettingsModule->GetContainer("Developer");
+		const ISettingsContainerPtr DeveloperSettingsContainer = SettingsModule->GetContainer("GenericFramework");
 
 		if (DeveloperSettingsContainer.IsValid())
 		{
@@ -100,25 +100,25 @@ TSharedRef<SDockTab> UOpenDeveloperSetting::HandleSpawnSettingsTab(const FSpawnT
 		];
 }
 
-void UOpenDeveloperSetting::RegisterToolBarDeveloperSetting(FToolMenuSection& ToolMenuSection)
+void UOpenDeveloperSetting::RegisterToolBarGenericFrameworkSetting(FToolMenuSection& ToolMenuSection)
 {
 	ToolMenuSection.AddEntry
 	(
 		FToolMenuEntry::InitToolBarButton
 		(
-			"OpenDeveloperSetting",
-			FUIAction(FExecuteAction::CreateUObject(this, &UOpenDeveloperSetting::OpenToolBarDeveloperSetting)),
+			"OpenGenericFrameworkSetting",
+			FUIAction(FExecuteAction::CreateUObject(this, &UOpenDeveloperSetting::OpenToolBarGenericFrameworkSetting)),
 			TAttribute<FText>(),
-			LOCTEXT("OpenDeveloperSetting_ToolTip", "Click To Open Developer Settings"),
+			LOCTEXT("OpenGenericFrameworkSetting_ToolTip", "Click To Open Generic Framework Settings"),
 			FSlateIcon(FDevCoreStyle::GetStyleSetName(), "Developer.DeveloperSetting", "Developer.DeveloperSetting.Small")
 		)
 	);
 }
 
-void UOpenDeveloperSetting::OpenToolBarDeveloperSetting()
+void UOpenDeveloperSetting::OpenToolBarGenericFrameworkSetting()
 {
 	ISettingsModule& SettingsModule = FModuleManager::LoadModuleChecked<ISettingsModule>("Settings");
-	SettingsModule.ShowViewer("Developer", "Global", "Global");
+	SettingsModule.ShowViewer("GenericFramework", "Global", "Global");
 }
 
 #undef LOCTEXT_NAMESPACE

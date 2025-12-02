@@ -71,6 +71,11 @@ public:
 	UFUNCTION(BlueprintCallable)
 	WIDGETGROUPGENERATION_API void SetButtonFocusable(bool bInIsFocusable);
 
+public:
+	UFUNCTION(BlueprintPure)
+	WIDGETGROUPGENERATION_API FGameplayTag GetButtonTag() const;
+	WIDGETGROUPGENERATION_API void SetButtonTag(const FGameplayTag& InButtonTag);
+
 protected:
 	WIDGETGROUPGENERATION_API virtual UGenericButton* ConstructInternalButton();
 	TWeakObjectPtr<class UGenericButton> RootButton;

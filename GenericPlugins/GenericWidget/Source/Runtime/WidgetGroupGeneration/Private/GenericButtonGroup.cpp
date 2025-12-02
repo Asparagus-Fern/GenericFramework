@@ -239,6 +239,27 @@ void UGenericButtonGroup::SetSelectedButtonByIndex(int32 InIndex)
 	}
 }
 
+FGameplayTag UGenericButtonGroup::GetSelectedButtonTag() const
+{
+	if (UGenericButtonWidget* Button = GetSelectedButton())
+	{
+		return Button->GetButtonTag();
+	}
+	return FGameplayTag::EmptyTag;
+}
+
+void UGenericButtonGroup::SetSelectedButtonByTag(FGameplayTag InTag)
+{
+	for (auto& Button : ButtonWidgets)
+	{
+		if (Button->GetButtonTag() == InTag)
+		{
+			SetSelectedButton(Button);
+			return;
+		}
+	}
+}
+
 void UGenericButtonGroup::SelectLastButton()
 {
 	if (HasLastSelectedButton())

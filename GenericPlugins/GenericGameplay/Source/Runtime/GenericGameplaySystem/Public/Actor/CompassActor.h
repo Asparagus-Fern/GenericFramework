@@ -19,6 +19,11 @@ public:
 	virtual void OnConstruction(const FTransform& Transform) override;
 
 public:
+	/* 获取Player当前朝向和指定北方向间的夹角 */
+	UFUNCTION(BlueprintPure, meta=(WorldContext = "WorldContextObject"))
+	static GENERICGAMEPLAYSYSTEM_API bool GetPlayerForwardAngle(const UObject* WorldContextObject, int32 PlayerIndex, float& OutAngle);
+
+public:
 	UPROPERTY()
 	USceneComponent* SceneComponent = nullptr;
 
@@ -55,8 +60,8 @@ public:
 
 public:
 	UFUNCTION(BlueprintPure)
-	FVector GetDirectionNorth() const;
+	GENERICGAMEPLAYSYSTEM_API FVector GetDirectionNorth() const;
 
 	UFUNCTION(BlueprintPure)
-	FVector GetDirectionEast() const;
+	GENERICGAMEPLAYSYSTEM_API FVector GetDirectionEast() const;
 };

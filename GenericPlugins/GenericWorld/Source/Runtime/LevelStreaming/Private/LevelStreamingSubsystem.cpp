@@ -9,7 +9,6 @@
 #include "Handle/SetLevelStreamingVisibilityHandle.h"
 #include "Handle/UnLoadLevelStreamingHandle.h"
 #include "Kismet/GameplayStatics.h"
-#include "SceneType.h"
 
 ULevelStreamingSubsystem* ULevelStreamingSubsystem::Get(const UObject* WorldContextObject)
 {
@@ -48,7 +47,7 @@ ULoadLevelStreamingHandle* ULevelStreamingSubsystem::LoadLevelsBySetting(TArray<
 	/* Make Sure Settings Is Not Empty */
 	if (InSettings.IsEmpty())
 	{
-		GenericLOG(GenericLogWorld, Warning, TEXT("Settings Is Empty"))
+		GenericLOG(GenericLogLevelStreaming, Warning, TEXT("Settings Is Empty"))
 		OnFinish.ExecuteIfBound();
 		return nullptr;
 	}
@@ -60,13 +59,13 @@ ULoadLevelStreamingHandle* ULevelStreamingSubsystem::LoadLevelsBySetting(TArray<
 	{
 		if (!Setting.IsValid())
 		{
-			GenericLOG(GenericLogWorld, Warning, TEXT("Setting Is InValid"))
+			GenericLOG(GenericLogLevelStreaming, Warning, TEXT("Setting Is InValid"))
 			continue;
 		}
 
 		if (!IsCurrentWorldContainLevel(Setting.Level))
 		{
-			GenericLOG(GenericLogWorld, Warning, TEXT("Current World Is Not Contain The Level : %s"), *Setting.Level->GetName())
+			GenericLOG(GenericLogLevelStreaming, Warning, TEXT("Current World Is Not Contain The Level : %s"), *Setting.Level->GetName())
 			continue;
 		}
 
@@ -126,13 +125,13 @@ UUnLoadLevelStreamingHandle* ULevelStreamingSubsystem::UnloadLevelsBySetting(TAr
 	{
 		if (!Setting.IsValid())
 		{
-			GenericLOG(GenericLogWorld, Warning, TEXT("Setting Is InValid"))
+			GenericLOG(GenericLogLevelStreaming, Warning, TEXT("Setting Is InValid"))
 			continue;
 		}
 
 		if (!IsCurrentWorldContainLevel(Setting.Level))
 		{
-			GenericLOG(GenericLogWorld, Warning, TEXT("Current World Is Not Contain The Level : %s"), *Setting.Level->GetName())
+			GenericLOG(GenericLogLevelStreaming, Warning, TEXT("Current World Is Not Contain The Level : %s"), *Setting.Level->GetName())
 			continue;
 		}
 
@@ -193,13 +192,13 @@ USetLevelStreamingVisibilityHandle* ULevelStreamingSubsystem::SetLevelsVisibilit
 	{
 		if (!Setting.IsValid())
 		{
-			GenericLOG(GenericLogWorld, Warning, TEXT("Setting Is InValid"))
+			GenericLOG(GenericLogLevelStreaming, Warning, TEXT("Setting Is InValid"))
 			continue;
 		}
 
 		if (!IsCurrentWorldContainLevel(Setting.Level))
 		{
-			GenericLOG(GenericLogWorld, Warning, TEXT("Current World Is Not Contain The Level : %s"), *Setting.Level->GetName())
+			GenericLOG(GenericLogLevelStreaming, Warning, TEXT("Current World Is Not Contain The Level : %s"), *Setting.Level->GetName())
 			continue;
 		}
 
@@ -291,21 +290,21 @@ ULevelStreaming* ULevelStreamingSubsystem::GetLevelStreaming(const TSoftObjectPt
 {
 	if (Level.IsNull())
 	{
-		GenericLOG(GenericLogWorld, Warning, TEXT("Level Is InValid"))
+		GenericLOG(GenericLogLevelStreaming, Warning, TEXT("Level Is InValid"))
 		return nullptr;
 	}
 
 	const FString PackageName = FPackageName::ObjectPathToPackageName(Level.ToString());
 	if (PackageName.IsEmpty())
 	{
-		GenericLOG(GenericLogWorld, Warning, TEXT("Level Package Is Not Found"))
+		GenericLOG(GenericLogLevelStreaming, Warning, TEXT("Level Package Is Not Found"))
 		return nullptr;
 	}
 
 	ULevelStreaming* LevelStreaming = UGameplayStatics::GetStreamingLevel(this, FName(*PackageName));
 	if (!IsValid(LevelStreaming))
 	{
-		GenericLOG(GenericLogWorld, Warning, TEXT("Level Streaming Is Not Found"));
+		GenericLOG(GenericLogLevelStreaming, Warning, TEXT("Level Streaming Is Not Found"));
 		return nullptr;
 	}
 

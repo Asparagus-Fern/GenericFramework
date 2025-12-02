@@ -10,7 +10,7 @@
 class ISettingsModule;
 class ISettingsEditorModel;
 
-static const FName DeveloperSettingsTabName("DeveloperSettings");
+static const FName GenericFrameworkSettingsTabName("GenericFrameworkSettings");
 
 /**
  * 
@@ -31,8 +31,8 @@ public:
 protected:
 	TWeakPtr<ISettingsEditorModel> SettingsEditorModelPtr;
 	TSharedRef<SDockTab> HandleSpawnSettingsTab(const FSpawnTabArgs& SpawnTabArgs);
-	
+
 private:
-	virtual void RegisterToolBarDeveloperSetting(FToolMenuSection& ToolMenuSection);
-	virtual void OpenToolBarDeveloperSetting();
+	virtual void RegisterToolBarGenericFrameworkSetting(FToolMenuSection& ToolMenuSection);
+	virtual void OpenToolBarGenericFrameworkSetting();
 };

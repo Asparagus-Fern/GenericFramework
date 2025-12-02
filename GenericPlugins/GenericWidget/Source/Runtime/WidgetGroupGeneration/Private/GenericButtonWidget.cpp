@@ -192,6 +192,16 @@ void UGenericButtonWidget::SetButtonFocusable(bool bInIsFocusable)
 	}
 }
 
+FGameplayTag UGenericButtonWidget::GetButtonTag() const
+{
+	return SelfTag;
+}
+
+void UGenericButtonWidget::SetButtonTag(const FGameplayTag& InButtonTag)
+{
+	SelfTag = InButtonTag;
+}
+
 UGenericButton* UGenericButtonWidget::ConstructInternalButton()
 {
 	return WidgetTree->ConstructWidget<UGenericButton>(UGenericButton::StaticClass(), FName(TEXT("GenericButton")));

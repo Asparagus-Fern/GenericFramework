@@ -21,7 +21,7 @@ public:
 public:
 	/* If True, Enter Default Procedure Flow After BeginPlay */
 	UPROPERTY(Config, EditAnywhere)
-	bool AutoEnterDefaultProcedureFlow = true;
+	bool AutoEnterDefaultProcedureFlow = false;
 
 	UPROPERTY(Config, EditAnywhere, meta=(Categories="ProcedureFlow"))
 	FGameplayTag DefaultProcedureFlowTag = FGameplayTag::EmptyTag;

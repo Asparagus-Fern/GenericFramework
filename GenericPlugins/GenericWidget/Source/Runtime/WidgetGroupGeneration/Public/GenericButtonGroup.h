@@ -83,7 +83,7 @@ public:
 
 	UFUNCTION(BlueprintPure)
 	WIDGETGROUPGENERATION_API int32 FindButtonIndex(UGenericButtonWidget* InButton) const;
-
+	
 public:
 	UFUNCTION(BlueprintPure)
 	WIDGETGROUPGENERATION_API bool HasLastSelectedButton() const;
@@ -109,6 +109,12 @@ public:
 	UFUNCTION(BlueprintCallable)
 	WIDGETGROUPGENERATION_API void SetSelectedButtonByIndex(int32 InIndex);
 
+	UFUNCTION(BlueprintPure)
+	WIDGETGROUPGENERATION_API FGameplayTag GetSelectedButtonTag() const;
+
+	UFUNCTION(BlueprintCallable,meta=(GameplayTagFilter="UI.Button"))
+	WIDGETGROUPGENERATION_API void SetSelectedButtonByTag(FGameplayTag InTag);
+	
 public:
 	UFUNCTION(BlueprintCallable)
 	WIDGETGROUPGENERATION_API void SelectLastButton();

@@ -2,9 +2,6 @@
 
 #include "WidgetType.h"
 
-#include "Base/GenericWidget.h"
-#include "Type/DebugType.h"
-
 DEFINE_LOG_CATEGORY(GenericLogUI);
 
 UE_DEFINE_GAMEPLAY_TAG(TAG_GameHUD_Game, "UI.HUD.Game");
@@ -17,6 +14,8 @@ UE_DEFINE_GAMEPLAY_TAG(TAG_GameHUD_Game_StartGame, "UI.HUD.Game.StartGame");
 UE_DEFINE_GAMEPLAY_TAG(TAG_GameHUD_Game_FindSessions, "UI.HUD.Game.JoinSession");
 UE_DEFINE_GAMEPLAY_TAG(TAG_GameHUD_Game_Settings, "UI.HUD.Game.Settings");
 UE_DEFINE_GAMEPLAY_TAG(TAG_GameHUD_Game_About, "UI.HUD.Game.About");
+
+UE_DEFINE_GAMEPLAY_TAG(TAG_GameHUD_Game_Project, "UI.HUD.Game.Project");
 
 UE_DEFINE_GAMEPLAY_TAG(TAG_GameHUD_Popup_Dialog, "UI.HUD.Popup.Dialog");
 UE_DEFINE_GAMEPLAY_TAG(TAG_GameHUD_Popup_Notify, "UI.HUD.Popup.Notify");

@@ -1,10 +1,10 @@
 ﻿// Copyright ChenTaiye 2025. All Rights Reserved.
 
-#include "BPFunctions_Scene.h"
+#include "BPFunctions/BPFunctions_World.h"
 
-#include "SceneSubsystem.h"
+#include "Kismet/GameplayStatics.h"
 
-bool UBPFunctions_Scene::IsPartitionedWorld(const UObject* WorldContextObject)
+bool UBPFunctions_World::IsPartitionedWorld(const UObject* WorldContextObject)
 {
 	if (const UWorld* World = GEngine->GetWorldFromContextObjectChecked(WorldContextObject))
 	{
@@ -14,27 +14,17 @@ bool UBPFunctions_Scene::IsPartitionedWorld(const UObject* WorldContextObject)
 	return false;
 }
 
-ESceneWorldType UBPFunctions_Scene::GetWorldType(const UObject* WorldContextObject)
+EWorldTypeBP UBPFunctions_World::GetWorldType(const UObject* WorldContextObject)
 {
 	if (const UWorld* World = GEngine->GetWorldFromContextObjectChecked(WorldContextObject))
 	{
-		return ConvertWorldTypeToSceneWorldType(World->WorldType);
+		return ConvertWorldTypeBP(World->WorldType);
 	}
 
-	return ESceneWorldType::None;
+	return EWorldTypeBP::None;
 }
 
-float UBPFunctions_Scene::GetPlayerForwardAngle(const UObject* WorldContextObject,const int32 PlayerIndex)
-{
-	if (const USceneSubsystem* SceneManager = USceneSubsystem::Get(WorldContextObject))
-	{
-		return SceneManager->GetPlayerPointToNorthAngle(PlayerIndex);
-	}
-
-	return 0.f;
-}
-
-FString UBPFunctions_Scene::GetUnrealUnitsFormatString(float UnrealUnits)
+/*FString UBPFunctions_Scene::GetUnrealUnitsFormatString(float UnrealUnits)
 {
 	// Put it in mm to start off with
 	UnrealUnits *= 10.f;
@@ -83,4 +73,4 @@ FString UBPFunctions_Scene::GetUnrealUnitsFormatString(float UnrealUnits)
 	{
 		return FString::Printf(TEXT("%s%d%s%s"), Approximation, FMath::TruncToInt(ScaledNumber), *ExponentString, UnitText[FMath::Min(OrderOfThousands, 2)]);
 	}
-}
+}*/
