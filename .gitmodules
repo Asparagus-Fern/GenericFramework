@@ -1,0 +1,3 @@
+[submodule "UnrealMarketplace"]
+	path = UnrealMarketplace
+	url = git@github.com:Asparagus-Fern/UnrealMarketplace.git
