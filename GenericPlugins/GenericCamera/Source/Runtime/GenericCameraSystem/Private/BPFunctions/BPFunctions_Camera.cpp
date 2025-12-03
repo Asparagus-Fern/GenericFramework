@@ -14,6 +14,22 @@ ACameraPointBase* UBPFunctions_Camera::GetCameraPoint(const UObject* WorldContex
 	return nullptr;
 }
 
+void UBPFunctions_Camera::FocusToActor_HandleClass(const UObject* WorldContextObject, APlayerController* InPlayer, AActor* InActor, float FocusLens, TSubclassOf<UGenericCameraSwitchMethod> InCameraSwitchMethodClass)
+{
+	if (UGenericCameraSubsystem* GenericCameraSubsystem = UGenericCameraSubsystem::Get(WorldContextObject))
+	{
+		GenericCameraSubsystem->FocusToActor(InPlayer, InActor, FocusLens, InCameraSwitchMethodClass);
+	}
+}
+
+void UBPFunctions_Camera::FocusToActor_Handle(const UObject* WorldContextObject, APlayerController* InPlayer, AActor* InActor, float FocusLens, UGenericCameraSwitchMethod* InSwitchCameraMethod)
+{
+	if (UGenericCameraSubsystem* GenericCameraSubsystem = UGenericCameraSubsystem::Get(WorldContextObject))
+	{
+		GenericCameraSubsystem->FocusToActor(InPlayer, InActor, FocusLens, InSwitchCameraMethod);
+	}
+}
+
 void UBPFunctions_Camera::SwitchToCamera_Transform_HandleClass(const UObject* WorldContextObject, APlayerController* InPlayer, FVector Location, FRotator Rotation, const TSubclassOf<UGenericCameraSwitchMethod> InCameraHandleClass)
 {
 	if (UGenericCameraSubsystem* GenericCameraSubsystem = UGenericCameraSubsystem::Get(WorldContextObject))

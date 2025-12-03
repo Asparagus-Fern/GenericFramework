@@ -43,25 +43,28 @@ public:
 
 	GENERICCAMERASYSTEM_API ACameraPointBase* GetCameraPoint(FGameplayTag InCameraTag) const;
 
-	GENERICCAMERASYSTEM_API UGenericCameraSwitchMethod* SwitchToCamera(APlayerController* InPlayer, const FVector& Location, const FRotator& Rotation, const TSubclassOf<UGenericCameraSwitchMethod>& InCameraMethodClass, const FSimpleDelegate& OnFinish = FSimpleDelegate());
-	GENERICCAMERASYSTEM_API UGenericCameraSwitchMethod* SwitchToCamera(APlayerController* InPlayer, const FVector& Location, const FRotator& Rotation, UGenericCameraSwitchMethod* InSwitchCameraMethod, const FSimpleDelegate& OnFinish = FSimpleDelegate());
+	GENERICCAMERASYSTEM_API UGenericCameraSwitchMethod* FocusToActor(APlayerController* InPlayer, AActor* InActor, float FocusLens, const TSubclassOf<UGenericCameraSwitchMethod>& InCameraSwitchMethodClass, const FSimpleDelegate& OnFinish = FSimpleDelegate());
+	GENERICCAMERASYSTEM_API UGenericCameraSwitchMethod* FocusToActor(APlayerController* InPlayer, AActor* InActor, float FocusLens, UGenericCameraSwitchMethod* InCameraSwitchMethod, const FSimpleDelegate& OnFinish = FSimpleDelegate());
 
-	GENERICCAMERASYSTEM_API UGenericCameraSwitchMethod* SwitchToCamera(APlayerController* InPlayer, const ACameraActor* InCameraActor, const TSubclassOf<UGenericCameraSwitchMethod>& InCameraMethodClass, const FSimpleDelegate& OnFinish = FSimpleDelegate());
-	GENERICCAMERASYSTEM_API UGenericCameraSwitchMethod* SwitchToCamera(APlayerController* InPlayer, const ACameraActor* InCameraActor, UGenericCameraSwitchMethod* InSwitchCameraMethod, const FSimpleDelegate& OnFinish = FSimpleDelegate());
+	GENERICCAMERASYSTEM_API UGenericCameraSwitchMethod* SwitchToCamera(APlayerController* InPlayer, const FVector& Location, const FRotator& Rotation, const TSubclassOf<UGenericCameraSwitchMethod>& InCameraSwitchMethodClass, const FSimpleDelegate& OnFinish = FSimpleDelegate());
+	GENERICCAMERASYSTEM_API UGenericCameraSwitchMethod* SwitchToCamera(APlayerController* InPlayer, const FVector& Location, const FRotator& Rotation, UGenericCameraSwitchMethod* InCameraSwitchMethod, const FSimpleDelegate& OnFinish = FSimpleDelegate());
 
-	GENERICCAMERASYSTEM_API UGenericCameraSwitchMethod* SwitchToCamera(APlayerController* InPlayer, UCameraComponent* InCameraComponent, const TSubclassOf<UGenericCameraSwitchMethod>& InCameraMethodClass, const FSimpleDelegate& OnFinish = FSimpleDelegate());
-	GENERICCAMERASYSTEM_API UGenericCameraSwitchMethod* SwitchToCamera(APlayerController* InPlayer, UCameraComponent* InCameraComponent, UGenericCameraSwitchMethod* InSwitchCameraMethod, const FSimpleDelegate& OnFinish = FSimpleDelegate());
+	GENERICCAMERASYSTEM_API UGenericCameraSwitchMethod* SwitchToCamera(APlayerController* InPlayer, const ACameraActor* InCameraActor, const TSubclassOf<UGenericCameraSwitchMethod>& InCameraSwitchMethodClass, const FSimpleDelegate& OnFinish = FSimpleDelegate());
+	GENERICCAMERASYSTEM_API UGenericCameraSwitchMethod* SwitchToCamera(APlayerController* InPlayer, const ACameraActor* InCameraActor, UGenericCameraSwitchMethod* InCameraSwitchMethod, const FSimpleDelegate& OnFinish = FSimpleDelegate());
 
-	GENERICCAMERASYSTEM_API UGenericCameraSwitchMethod* SwitchToCamera(APlayerController* InPlayer, FGameplayTag InCameraTag, const TSubclassOf<UGenericCameraSwitchMethod>& InCameraMethodClass, const FSimpleDelegate& OnFinish = FSimpleDelegate());
-	GENERICCAMERASYSTEM_API UGenericCameraSwitchMethod* SwitchToCamera(APlayerController* InPlayer, FGameplayTag InCameraTag, UGenericCameraSwitchMethod* InSwitchCameraMethod, const FSimpleDelegate& OnFinish = FSimpleDelegate());
+	GENERICCAMERASYSTEM_API UGenericCameraSwitchMethod* SwitchToCamera(APlayerController* InPlayer, UCameraComponent* InCameraComponent, const TSubclassOf<UGenericCameraSwitchMethod>& InCameraSwitchMethodClass, const FSimpleDelegate& OnFinish = FSimpleDelegate());
+	GENERICCAMERASYSTEM_API UGenericCameraSwitchMethod* SwitchToCamera(APlayerController* InPlayer, UCameraComponent* InCameraComponent, UGenericCameraSwitchMethod* InCameraSwitchMethod, const FSimpleDelegate& OnFinish = FSimpleDelegate());
 
-	GENERICCAMERASYSTEM_API UGenericCameraSwitchMethod* SwitchToCamera(APlayerController* InPlayer, ACameraPointBase* InCameraPoint, const TSubclassOf<UGenericCameraSwitchMethod>& InCameraMethodClass, const FSimpleDelegate& OnFinish = FSimpleDelegate());
-	GENERICCAMERASYSTEM_API UGenericCameraSwitchMethod* SwitchToCamera(APlayerController* InPlayer, ACameraPointBase* InCameraPoint, UGenericCameraSwitchMethod* InSwitchCameraMethod, const FSimpleDelegate& OnFinish = FSimpleDelegate());
+	GENERICCAMERASYSTEM_API UGenericCameraSwitchMethod* SwitchToCamera(APlayerController* InPlayer, FGameplayTag InCameraTag, const TSubclassOf<UGenericCameraSwitchMethod>& InCameraSwitchMethodClass, const FSimpleDelegate& OnFinish = FSimpleDelegate());
+	GENERICCAMERASYSTEM_API UGenericCameraSwitchMethod* SwitchToCamera(APlayerController* InPlayer, FGameplayTag InCameraTag, UGenericCameraSwitchMethod* InCameraSwitchMethod, const FSimpleDelegate& OnFinish = FSimpleDelegate());
 
-	GENERICCAMERASYSTEM_API UGenericCameraSwitchMethod* SwitchToCurrent(APlayerController* InPlayer, const TSubclassOf<UGenericCameraSwitchMethod>& InCameraMethodClass, const FSimpleDelegate& OnFinish = FSimpleDelegate());
-	GENERICCAMERASYSTEM_API UGenericCameraSwitchMethod* SwitchToCurrent(APlayerController* InPlayer, UGenericCameraSwitchMethod* InSwitchCameraMethod, const FSimpleDelegate& OnFinish = FSimpleDelegate());
-	GENERICCAMERASYSTEM_API UGenericCameraSwitchMethod* SwitchToPrevious(APlayerController* InPlayer, const TSubclassOf<UGenericCameraSwitchMethod>& InCameraMethodClass, const FSimpleDelegate& OnFinish = FSimpleDelegate());
-	GENERICCAMERASYSTEM_API UGenericCameraSwitchMethod* SwitchToPrevious(APlayerController* InPlayer, UGenericCameraSwitchMethod* InSwitchCameraMethod, const FSimpleDelegate& OnFinish = FSimpleDelegate());
+	GENERICCAMERASYSTEM_API UGenericCameraSwitchMethod* SwitchToCamera(APlayerController* InPlayer, ACameraPointBase* InCameraPoint, const TSubclassOf<UGenericCameraSwitchMethod>& InCameraSwitchMethodClass, const FSimpleDelegate& OnFinish = FSimpleDelegate());
+	GENERICCAMERASYSTEM_API UGenericCameraSwitchMethod* SwitchToCamera(APlayerController* InPlayer, ACameraPointBase* InCameraPoint, UGenericCameraSwitchMethod* InCameraSwitchMethod, const FSimpleDelegate& OnFinish = FSimpleDelegate());
+
+	GENERICCAMERASYSTEM_API UGenericCameraSwitchMethod* SwitchToCurrent(APlayerController* InPlayer, const TSubclassOf<UGenericCameraSwitchMethod>& InCameraSwitchMethodClass, const FSimpleDelegate& OnFinish = FSimpleDelegate());
+	GENERICCAMERASYSTEM_API UGenericCameraSwitchMethod* SwitchToCurrent(APlayerController* InPlayer, UGenericCameraSwitchMethod* InCameraSwitchMethod, const FSimpleDelegate& OnFinish = FSimpleDelegate());
+	GENERICCAMERASYSTEM_API UGenericCameraSwitchMethod* SwitchToPrevious(APlayerController* InPlayer, const TSubclassOf<UGenericCameraSwitchMethod>& InCameraSwitchMethodClass, const FSimpleDelegate& OnFinish = FSimpleDelegate());
+	GENERICCAMERASYSTEM_API UGenericCameraSwitchMethod* SwitchToPrevious(APlayerController* InPlayer, UGenericCameraSwitchMethod* InCameraSwitchMethod, const FSimpleDelegate& OnFinish = FSimpleDelegate());
 
 private:
 	bool IsSwitching(const APlayerController* InPlayerController);

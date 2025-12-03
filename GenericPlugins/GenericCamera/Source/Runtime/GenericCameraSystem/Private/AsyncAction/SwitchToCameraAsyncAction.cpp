@@ -4,6 +4,30 @@
 
 #include "GenericCameraSubsystem.h"
 
+USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::FocusToActor_HandleClass(const UObject* WorldContextObject, APlayerController* InPlayer, AActor* InActor, float FocusLens, TSubclassOf<UGenericCameraSwitchMethod> InCameraHandleClass)
+{
+	USwitchToCameraAsyncAction* NewAction = NewObject<USwitchToCameraAsyncAction>();
+
+	if (UGenericCameraSubsystem* GenericCameraSubsystem = UGenericCameraSubsystem::Get(WorldContextObject))
+	{
+		GenericCameraSubsystem->FocusToActor(InPlayer, InActor, FocusLens, InCameraHandleClass, FSimpleDelegate::CreateUObject(NewAction, &USwitchToCameraAsyncAction::OnHandleFinish));
+	}
+
+	return NewAction;
+}
+
+USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::FocusToActor_Handle(const UObject* WorldContextObject, APlayerController* InPlayer, AActor* InActor, float FocusLens, UGenericCameraSwitchMethod* InCameraSwitchMethod)
+{
+	USwitchToCameraAsyncAction* NewAction = NewObject<USwitchToCameraAsyncAction>();
+
+	if (UGenericCameraSubsystem* GenericCameraSubsystem = UGenericCameraSubsystem::Get(WorldContextObject))
+	{
+		GenericCameraSubsystem->FocusToActor(InPlayer, InActor, FocusLens, InCameraSwitchMethod, FSimpleDelegate::CreateUObject(NewAction, &USwitchToCameraAsyncAction::OnHandleFinish));
+	}
+
+	return NewAction;
+}
+
 USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCamera_Transform_HandleClass(const UObject* WorldContextObject, APlayerController* InPlayer, const FVector Location, const FRotator Rotation, const TSubclassOf<UGenericCameraSwitchMethod> InCameraHandleClass)
 {
 	USwitchToCameraAsyncAction* NewAction = NewObject<USwitchToCameraAsyncAction>();
@@ -16,13 +40,13 @@ USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCamera_Transform
 	return NewAction;
 }
 
-USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCamera_Transform_Handle(const UObject* WorldContextObject, APlayerController* InPlayer, const FVector Location, const FRotator Rotation, UGenericCameraSwitchMethod* InCameraHandle)
+USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCamera_Transform_Handle(const UObject* WorldContextObject, APlayerController* InPlayer, const FVector Location, const FRotator Rotation, UGenericCameraSwitchMethod* InCameraSwitchMethod)
 {
 	USwitchToCameraAsyncAction* NewAction = NewObject<USwitchToCameraAsyncAction>();
 
 	if (UGenericCameraSubsystem* GenericCameraSubsystem = UGenericCameraSubsystem::Get(WorldContextObject))
 	{
-		GenericCameraSubsystem->SwitchToCamera(InPlayer, Location, Rotation, InCameraHandle, FSimpleDelegate::CreateUObject(NewAction, &USwitchToCameraAsyncAction::OnHandleFinish));
+		GenericCameraSubsystem->SwitchToCamera(InPlayer, Location, Rotation, InCameraSwitchMethod, FSimpleDelegate::CreateUObject(NewAction, &USwitchToCameraAsyncAction::OnHandleFinish));
 	}
 
 	return NewAction;
@@ -40,13 +64,13 @@ USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCamera_Actor_Han
 	return NewAction;
 }
 
-USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCamera_Actor_Handle(const UObject* WorldContextObject, APlayerController* InPlayer, ACameraActor* InCameraActor, UGenericCameraSwitchMethod* InCameraHandle)
+USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCamera_Actor_Handle(const UObject* WorldContextObject, APlayerController* InPlayer, ACameraActor* InCameraActor, UGenericCameraSwitchMethod* InCameraSwitchMethod)
 {
 	USwitchToCameraAsyncAction* NewAction = NewObject<USwitchToCameraAsyncAction>();
 
 	if (UGenericCameraSubsystem* GenericCameraSubsystem = UGenericCameraSubsystem::Get(WorldContextObject))
 	{
-		GenericCameraSubsystem->SwitchToCamera(InPlayer, InCameraActor, InCameraHandle, FSimpleDelegate::CreateUObject(NewAction, &USwitchToCameraAsyncAction::OnHandleFinish));
+		GenericCameraSubsystem->SwitchToCamera(InPlayer, InCameraActor, InCameraSwitchMethod, FSimpleDelegate::CreateUObject(NewAction, &USwitchToCameraAsyncAction::OnHandleFinish));
 	}
 
 	return NewAction;
@@ -64,13 +88,13 @@ USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCamera_Component
 	return NewAction;
 }
 
-USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCamera_Component_Handle(const UObject* WorldContextObject, APlayerController* InPlayer, UCameraComponent* InCameraComponent, UGenericCameraSwitchMethod* InCameraHandle)
+USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCamera_Component_Handle(const UObject* WorldContextObject, APlayerController* InPlayer, UCameraComponent* InCameraComponent, UGenericCameraSwitchMethod* InCameraSwitchMethod)
 {
 	USwitchToCameraAsyncAction* NewAction = NewObject<USwitchToCameraAsyncAction>();
 
 	if (UGenericCameraSubsystem* GenericCameraSubsystem = UGenericCameraSubsystem::Get(WorldContextObject))
 	{
-		GenericCameraSubsystem->SwitchToCamera(InPlayer, InCameraComponent, InCameraHandle, FSimpleDelegate::CreateUObject(NewAction, &USwitchToCameraAsyncAction::OnHandleFinish));
+		GenericCameraSubsystem->SwitchToCamera(InPlayer, InCameraComponent, InCameraSwitchMethod, FSimpleDelegate::CreateUObject(NewAction, &USwitchToCameraAsyncAction::OnHandleFinish));
 	}
 
 	return NewAction;
@@ -88,13 +112,13 @@ USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCamera_Tag_Handl
 	return NewAction;
 }
 
-USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCamera_Tag_Handle(const UObject* WorldContextObject, APlayerController* InPlayer, const FGameplayTag InCameraTag, UGenericCameraSwitchMethod* InCameraHandle)
+USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCamera_Tag_Handle(const UObject* WorldContextObject, APlayerController* InPlayer, const FGameplayTag InCameraTag, UGenericCameraSwitchMethod* InCameraSwitchMethod)
 {
 	USwitchToCameraAsyncAction* NewAction = NewObject<USwitchToCameraAsyncAction>();
 
 	if (UGenericCameraSubsystem* GenericCameraSubsystem = UGenericCameraSubsystem::Get(WorldContextObject))
 	{
-		GenericCameraSubsystem->SwitchToCamera(InPlayer, InCameraTag, InCameraHandle, FSimpleDelegate::CreateUObject(NewAction, &USwitchToCameraAsyncAction::OnHandleFinish));
+		GenericCameraSubsystem->SwitchToCamera(InPlayer, InCameraTag, InCameraSwitchMethod, FSimpleDelegate::CreateUObject(NewAction, &USwitchToCameraAsyncAction::OnHandleFinish));
 	}
 
 	return NewAction;
@@ -112,13 +136,13 @@ USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCamera_CameraPoi
 	return NewAction;
 }
 
-USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCamera_CameraPoint_Handle(const UObject* WorldContextObject, APlayerController* InPlayer, ACameraPointBase* InCameraPoint, UGenericCameraSwitchMethod* InCameraHandle)
+USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCamera_CameraPoint_Handle(const UObject* WorldContextObject, APlayerController* InPlayer, ACameraPointBase* InCameraPoint, UGenericCameraSwitchMethod* InCameraSwitchMethod)
 {
 	USwitchToCameraAsyncAction* NewAction = NewObject<USwitchToCameraAsyncAction>();
 
 	if (UGenericCameraSubsystem* GenericCameraSubsystem = UGenericCameraSubsystem::Get(WorldContextObject))
 	{
-		GenericCameraSubsystem->SwitchToCamera(InPlayer, InCameraPoint, InCameraHandle, FSimpleDelegate::CreateUObject(NewAction, &USwitchToCameraAsyncAction::OnHandleFinish));
+		GenericCameraSubsystem->SwitchToCamera(InPlayer, InCameraPoint, InCameraSwitchMethod, FSimpleDelegate::CreateUObject(NewAction, &USwitchToCameraAsyncAction::OnHandleFinish));
 	}
 
 	return NewAction;
@@ -136,13 +160,13 @@ USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCurrent_HandleCl
 	return NewAction;
 }
 
-USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCurrent_Handle(const UObject* WorldContextObject, APlayerController* InPlayer, UGenericCameraSwitchMethod* InCameraHandle)
+USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToCurrent_Handle(const UObject* WorldContextObject, APlayerController* InPlayer, UGenericCameraSwitchMethod* InCameraSwitchMethod)
 {
 	USwitchToCameraAsyncAction* NewAction = NewObject<USwitchToCameraAsyncAction>();
 
 	if (UGenericCameraSubsystem* GenericCameraSubsystem = UGenericCameraSubsystem::Get(WorldContextObject))
 	{
-		GenericCameraSubsystem->SwitchToCurrent(InPlayer, InCameraHandle, FSimpleDelegate::CreateUObject(NewAction, &USwitchToCameraAsyncAction::OnHandleFinish));
+		GenericCameraSubsystem->SwitchToCurrent(InPlayer, InCameraSwitchMethod, FSimpleDelegate::CreateUObject(NewAction, &USwitchToCameraAsyncAction::OnHandleFinish));
 	}
 
 	return NewAction;
@@ -160,13 +184,13 @@ USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToPrevious_HandleC
 	return NewAction;
 }
 
-USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToPrevious_Handle(const UObject* WorldContextObject, APlayerController* InPlayer, UGenericCameraSwitchMethod* InCameraHandle)
+USwitchToCameraAsyncAction* USwitchToCameraAsyncAction::SwitchToPrevious_Handle(const UObject* WorldContextObject, APlayerController* InPlayer, UGenericCameraSwitchMethod* InCameraSwitchMethod)
 {
 	USwitchToCameraAsyncAction* NewAction = NewObject<USwitchToCameraAsyncAction>();
 
 	if (UGenericCameraSubsystem* GenericCameraSubsystem = UGenericCameraSubsystem::Get(WorldContextObject))
 	{
-		GenericCameraSubsystem->SwitchToPrevious(InPlayer, InCameraHandle, FSimpleDelegate::CreateUObject(NewAction, &USwitchToCameraAsyncAction::OnHandleFinish));
+		GenericCameraSubsystem->SwitchToPrevious(InPlayer, InCameraSwitchMethod, FSimpleDelegate::CreateUObject(NewAction, &USwitchToCameraAsyncAction::OnHandleFinish));
 	}
 
 	return NewAction;

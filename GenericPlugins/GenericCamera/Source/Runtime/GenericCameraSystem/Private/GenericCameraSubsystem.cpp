@@ -10,6 +10,7 @@
 #include "CameraPoint/GenericCineCameraPoint.h"
 #include "CameraSwitch/GenericCameraSwitchMethod.h"
 #include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "Type/GenericType.h"
 
 #define LOCTEXT_NAMESPACE "FGenericCameraSystemModule"
@@ -87,33 +88,60 @@ ACameraPointBase* UGenericCameraSubsystem::GetCameraPoint(const FGameplayTag InC
 	return nullptr;
 }
 
-UGenericCameraSwitchMethod* UGenericCameraSubsystem::SwitchToCamera(APlayerController* InPlayer, const FVector& Location, const FRotator& Rotation, const TSubclassOf<UGenericCameraSwitchMethod>& InCameraMethodClass, const FSimpleDelegate& OnFinish)
+UGenericCameraSwitchMethod* UGenericCameraSubsystem::FocusToActor(APlayerController* InPlayer, AActor* InActor, float FocusLens, const TSubclassOf<UGenericCameraSwitchMethod>& InCameraSwitchMethodClass, const FSimpleDelegate& OnFinish)
 {
-	return SwitchToCamera(InPlayer, Location, Rotation, NewObject<UGenericCameraSwitchMethod>(this, InCameraMethodClass), OnFinish);
+	return FocusToActor(InPlayer, InActor, FocusLens, NewObject<UGenericCameraSwitchMethod>(this, InCameraSwitchMethodClass), OnFinish);
 }
 
-UGenericCameraSwitchMethod* UGenericCameraSubsystem::SwitchToCamera(APlayerController* InPlayer, const FVector& Location, const FRotator& Rotation, UGenericCameraSwitchMethod* InSwitchCameraMethod, const FSimpleDelegate& OnFinish)
+UGenericCameraSwitchMethod* UGenericCameraSubsystem::FocusToActor(APlayerController* InPlayer, AActor* InActor, float FocusLens, UGenericCameraSwitchMethod* InCameraSwitchMethod, const FSimpleDelegate& OnFinish)
+{
+	if (!IsValid(InPlayer))
+	{
+		GenericLOG(GenericLogCamera, Error, TEXT("Player Is InValid"))
+		OnFinish.ExecuteIfBound();
+		return nullptr;
+	}
+
+	if (!IsValid(InActor))
+	{
+		GenericLOG(GenericLogCamera, Error, TEXT("Actor Is InValid"))
+		OnFinish.ExecuteIfBound();
+		return nullptr;
+	}
+
+	FVector Location = InActor->GetActorLocation() + UKismetMathLibrary::GetForwardVector(UKismetMathLibrary::FindLookAtRotation(InActor->GetActorLocation(), InPlayer->PlayerCameraManager->GetCameraLocation())) * FocusLens;
+	FRotator Rotation = InPlayer->PlayerCameraManager->GetCameraRotation();
+	AGenericCameraPoint* SpawnCameraPoint = GetWorld()->SpawnActor<AGenericCameraPoint>(Location, Rotation);
+	return SwitchToCamera(InPlayer, SpawnCameraPoint, InCameraSwitchMethod, OnFinish);
+}
+
+UGenericCameraSwitchMethod* UGenericCameraSubsystem::SwitchToCamera(APlayerController* InPlayer, const FVector& Location, const FRotator& Rotation, const TSubclassOf<UGenericCameraSwitchMethod>& InCameraSwitchMethodClass, const FSimpleDelegate& OnFinish)
+{
+	return SwitchToCamera(InPlayer, Location, Rotation, NewObject<UGenericCameraSwitchMethod>(this, InCameraSwitchMethodClass), OnFinish);
+}
+
+UGenericCameraSwitchMethod* UGenericCameraSubsystem::SwitchToCamera(APlayerController* InPlayer, const FVector& Location, const FRotator& Rotation, UGenericCameraSwitchMethod* InCameraSwitchMethod, const FSimpleDelegate& OnFinish)
 {
 	AGenericCameraPoint* SpawnCameraPoint = GetWorld()->SpawnActor<AGenericCameraPoint>(Location, Rotation);
-	return SwitchToCamera(InPlayer, SpawnCameraPoint, InSwitchCameraMethod, OnFinish);
+	return SwitchToCamera(InPlayer, SpawnCameraPoint, InCameraSwitchMethod, OnFinish);
 }
 
-UGenericCameraSwitchMethod* UGenericCameraSubsystem::SwitchToCamera(APlayerController* InPlayer, const ACameraActor* InCameraActor, const TSubclassOf<UGenericCameraSwitchMethod>& InCameraMethodClass, const FSimpleDelegate& OnFinish)
+UGenericCameraSwitchMethod* UGenericCameraSubsystem::SwitchToCamera(APlayerController* InPlayer, const ACameraActor* InCameraActor, const TSubclassOf<UGenericCameraSwitchMethod>& InCameraSwitchMethodClass, const FSimpleDelegate& OnFinish)
 {
-	return SwitchToCamera(InPlayer, InCameraActor->GetCameraComponent(), InCameraMethodClass, OnFinish);
+	return SwitchToCamera(InPlayer, InCameraActor->GetCameraComponent(), InCameraSwitchMethodClass, OnFinish);
 }
 
-UGenericCameraSwitchMethod* UGenericCameraSubsystem::SwitchToCamera(APlayerController* InPlayer, const ACameraActor* InCameraActor, UGenericCameraSwitchMethod* InSwitchCameraMethod, const FSimpleDelegate& OnFinish)
+UGenericCameraSwitchMethod* UGenericCameraSubsystem::SwitchToCamera(APlayerController* InPlayer, const ACameraActor* InCameraActor, UGenericCameraSwitchMethod* InCameraSwitchMethod, const FSimpleDelegate& OnFinish)
 {
-	return SwitchToCamera(InPlayer, InCameraActor->GetCameraComponent(), InSwitchCameraMethod, OnFinish);
+	return SwitchToCamera(InPlayer, InCameraActor->GetCameraComponent(), InCameraSwitchMethod, OnFinish);
 }
 
-UGenericCameraSwitchMethod* UGenericCameraSubsystem::SwitchToCamera(APlayerController* InPlayer, UCameraComponent* InCameraComponent, const TSubclassOf<UGenericCameraSwitchMethod>& InCameraMethodClass, const FSimpleDelegate& OnFinish)
+UGenericCameraSwitchMethod* UGenericCameraSubsystem::SwitchToCamera(APlayerController* InPlayer, UCameraComponent* InCameraComponent, const TSubclassOf<UGenericCameraSwitchMethod>& InCameraSwitchMethodClass, const FSimpleDelegate& OnFinish)
 {
-	return SwitchToCamera(InPlayer, InCameraComponent, NewObject<UGenericCameraSwitchMethod>(this, InCameraMethodClass), OnFinish);
+	return SwitchToCamera(InPlayer, InCameraComponent, NewObject<UGenericCameraSwitchMethod>(this, InCameraSwitchMethodClass), OnFinish);
 }
 
-UGenericCameraSwitchMethod* UGenericCameraSubsystem::SwitchToCamera(APlayerController* InPlayer, UCameraComponent* InCameraComponent, UGenericCameraSwitchMethod* InSwitchCameraMethod, const FSimpleDelegate& OnFinish)
+UGenericCameraSwitchMethod* UGenericCameraSubsystem::SwitchToCamera(APlayerController* InPlayer, UCameraComponent* InCameraComponent, UGenericCameraSwitchMethod* InCameraSwitchMethod, const FSimpleDelegate& OnFinish)
 {
 	ACameraPointBase* SpawnCameraPoint;
 	if (InCameraComponent->IsA(UCineCameraComponent::StaticClass()))
@@ -126,25 +154,25 @@ UGenericCameraSwitchMethod* UGenericCameraSubsystem::SwitchToCamera(APlayerContr
 	}
 
 	SpawnCameraPoint->SetCameraComponent(InCameraComponent);
-	return SwitchToCamera(InPlayer, SpawnCameraPoint, InSwitchCameraMethod, OnFinish);
+	return SwitchToCamera(InPlayer, SpawnCameraPoint, InCameraSwitchMethod, OnFinish);
 }
 
-UGenericCameraSwitchMethod* UGenericCameraSubsystem::SwitchToCamera(APlayerController* InPlayer, const FGameplayTag InCameraTag, const TSubclassOf<UGenericCameraSwitchMethod>& InCameraMethodClass, const FSimpleDelegate& OnFinish)
+UGenericCameraSwitchMethod* UGenericCameraSubsystem::SwitchToCamera(APlayerController* InPlayer, const FGameplayTag InCameraTag, const TSubclassOf<UGenericCameraSwitchMethod>& InCameraSwitchMethodClass, const FSimpleDelegate& OnFinish)
 {
-	return SwitchToCamera(InPlayer, InCameraTag, NewObject<UGenericCameraSwitchMethod>(this, InCameraMethodClass), OnFinish);
+	return SwitchToCamera(InPlayer, InCameraTag, NewObject<UGenericCameraSwitchMethod>(this, InCameraSwitchMethodClass), OnFinish);
 }
 
-UGenericCameraSwitchMethod* UGenericCameraSubsystem::SwitchToCamera(APlayerController* InPlayer, const FGameplayTag InCameraTag, UGenericCameraSwitchMethod* InSwitchCameraMethod, const FSimpleDelegate& OnFinish)
+UGenericCameraSwitchMethod* UGenericCameraSubsystem::SwitchToCamera(APlayerController* InPlayer, const FGameplayTag InCameraTag, UGenericCameraSwitchMethod* InCameraSwitchMethod, const FSimpleDelegate& OnFinish)
 {
-	return SwitchToCamera(InPlayer, GetCameraPoint(InCameraTag), InSwitchCameraMethod, OnFinish);
+	return SwitchToCamera(InPlayer, GetCameraPoint(InCameraTag), InCameraSwitchMethod, OnFinish);
 }
 
-UGenericCameraSwitchMethod* UGenericCameraSubsystem::SwitchToCamera(APlayerController* InPlayer, ACameraPointBase* InCameraPoint, const TSubclassOf<UGenericCameraSwitchMethod>& InCameraMethodClass, const FSimpleDelegate& OnFinish)
+UGenericCameraSwitchMethod* UGenericCameraSubsystem::SwitchToCamera(APlayerController* InPlayer, ACameraPointBase* InCameraPoint, const TSubclassOf<UGenericCameraSwitchMethod>& InCameraSwitchMethodClass, const FSimpleDelegate& OnFinish)
 {
-	return SwitchToCamera(InPlayer, InCameraPoint, NewObject<UGenericCameraSwitchMethod>(this, InCameraMethodClass), OnFinish);
+	return SwitchToCamera(InPlayer, InCameraPoint, NewObject<UGenericCameraSwitchMethod>(this, InCameraSwitchMethodClass), OnFinish);
 }
 
-UGenericCameraSwitchMethod* UGenericCameraSubsystem::SwitchToCamera(APlayerController* InPlayer, ACameraPointBase* InCameraPoint, UGenericCameraSwitchMethod* InSwitchCameraMethod, const FSimpleDelegate& OnFinish)
+UGenericCameraSwitchMethod* UGenericCameraSubsystem::SwitchToCamera(APlayerController* InPlayer, ACameraPointBase* InCameraPoint, UGenericCameraSwitchMethod* InCameraSwitchMethod, const FSimpleDelegate& OnFinish)
 {
 	if (!IsValid(InPlayer))
 	{
@@ -160,7 +188,7 @@ UGenericCameraSwitchMethod* UGenericCameraSubsystem::SwitchToCamera(APlayerContr
 		return nullptr;
 	}
 
-	if (!IsValid(InSwitchCameraMethod))
+	if (!IsValid(InCameraSwitchMethod))
 	{
 		GenericLOG(GenericLogCamera, Error, TEXT("SwitchCameraMethod Is InValid"))
 		OnFinish.ExecuteIfBound();
@@ -174,7 +202,7 @@ UGenericCameraSwitchMethod* UGenericCameraSubsystem::SwitchToCamera(APlayerContr
 		CameraHandle->NativeOnSwitchToCameraPointReset();
 	}
 
-	CurrentCameraMethods.AddUnique(InSwitchCameraMethod);
+	CurrentCameraMethods.AddUnique(InCameraSwitchMethod);
 
 	/* Record The Previous And Current Camera Tag */
 	if (InCameraPoint->CameraTag.IsValid())
@@ -182,38 +210,38 @@ UGenericCameraSwitchMethod* UGenericCameraSubsystem::SwitchToCamera(APlayerContr
 		UpdateCameraTag(InPlayer, InCameraPoint->CameraTag);
 	}
 
-	InSwitchCameraMethod->NativeHandleSwitchToCameraPoint(InPlayer, InCameraPoint, OnFinish);
-	BROADCAST_UNIFIED_DELEGATE(Delegate_OnCameraSwitchBegin, BPDelegate_OnCameraSwitchBegin, InCameraPoint, InSwitchCameraMethod);
+	InCameraSwitchMethod->NativeHandleSwitchToCameraPoint(InPlayer, InCameraPoint, OnFinish);
+	BROADCAST_UNIFIED_DELEGATE(Delegate_OnCameraSwitchBegin, BPDelegate_OnCameraSwitchBegin, InCameraPoint, InCameraSwitchMethod);
 
-	return InSwitchCameraMethod;
+	return InCameraSwitchMethod;
 }
 
-UGenericCameraSwitchMethod* UGenericCameraSubsystem::SwitchToCurrent(APlayerController* InPlayer, const TSubclassOf<UGenericCameraSwitchMethod>& InCameraMethodClass, const FSimpleDelegate& OnFinish)
+UGenericCameraSwitchMethod* UGenericCameraSubsystem::SwitchToCurrent(APlayerController* InPlayer, const TSubclassOf<UGenericCameraSwitchMethod>& InCameraSwitchMethodClass, const FSimpleDelegate& OnFinish)
 {
-	return SwitchToCurrent(InPlayer, NewObject<UGenericCameraSwitchMethod>(this, InCameraMethodClass), OnFinish);
+	return SwitchToCurrent(InPlayer, NewObject<UGenericCameraSwitchMethod>(this, InCameraSwitchMethodClass), OnFinish);
 }
 
-UGenericCameraSwitchMethod* UGenericCameraSubsystem::SwitchToCurrent(APlayerController* InPlayer, UGenericCameraSwitchMethod* InSwitchCameraMethod, const FSimpleDelegate& OnFinish)
+UGenericCameraSwitchMethod* UGenericCameraSubsystem::SwitchToCurrent(APlayerController* InPlayer, UGenericCameraSwitchMethod* InCameraSwitchMethod, const FSimpleDelegate& OnFinish)
 {
 	if (CurrentCameraTag.Contains(InPlayer))
 	{
-		return SwitchToCamera(InPlayer, CurrentCameraTag.FindRef(InPlayer), InSwitchCameraMethod, OnFinish);
+		return SwitchToCamera(InPlayer, CurrentCameraTag.FindRef(InPlayer), InCameraSwitchMethod, OnFinish);
 	}
 
 	OnFinish.ExecuteIfBound();
 	return nullptr;
 }
 
-UGenericCameraSwitchMethod* UGenericCameraSubsystem::SwitchToPrevious(APlayerController* InPlayer, const TSubclassOf<UGenericCameraSwitchMethod>& InCameraMethodClass, const FSimpleDelegate& OnFinish)
+UGenericCameraSwitchMethod* UGenericCameraSubsystem::SwitchToPrevious(APlayerController* InPlayer, const TSubclassOf<UGenericCameraSwitchMethod>& InCameraSwitchMethodClass, const FSimpleDelegate& OnFinish)
 {
-	return SwitchToPrevious(InPlayer, NewObject<UGenericCameraSwitchMethod>(this, InCameraMethodClass), OnFinish);
+	return SwitchToPrevious(InPlayer, NewObject<UGenericCameraSwitchMethod>(this, InCameraSwitchMethodClass), OnFinish);
 }
 
-UGenericCameraSwitchMethod* UGenericCameraSubsystem::SwitchToPrevious(APlayerController* InPlayer, UGenericCameraSwitchMethod* InSwitchCameraMethod, const FSimpleDelegate& OnFinish)
+UGenericCameraSwitchMethod* UGenericCameraSubsystem::SwitchToPrevious(APlayerController* InPlayer, UGenericCameraSwitchMethod* InCameraSwitchMethod, const FSimpleDelegate& OnFinish)
 {
 	if (PreviousCameraTag.Contains(InPlayer))
 	{
-		return SwitchToCamera(InPlayer, PreviousCameraTag.FindRef(InPlayer), InSwitchCameraMethod, OnFinish);
+		return SwitchToCamera(InPlayer, PreviousCameraTag.FindRef(InPlayer), InCameraSwitchMethod, OnFinish);
 	}
 
 	OnFinish.ExecuteIfBound();

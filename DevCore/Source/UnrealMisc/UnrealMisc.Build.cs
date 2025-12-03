@@ -46,7 +46,6 @@ public class UnrealMisc : ModuleRules
 				"Projects",
 				"DesktopPlatform",
 				"GameplayTags",
-				"Launch",
 				// ... add private dependencies that you statically link with here ...	
 			}
 		);
