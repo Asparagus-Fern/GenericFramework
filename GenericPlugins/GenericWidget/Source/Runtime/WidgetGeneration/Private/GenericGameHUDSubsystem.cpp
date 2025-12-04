@@ -2,7 +2,7 @@
 
 #include "GenericGameHUDSubsystem.h"
 
-#include "GameHUDSettings.h"
+#include "WidgetSettings.h"
 #include "GenericWidgetSubsystem.h"
 #include "Base/GenericGameHUD.h"
 #include "Base/GenericWidget.h"
@@ -37,11 +37,11 @@ void UGenericGameHUDSubsystem::OnWorldBeginPlay(UWorld& InWorld)
 {
 	Super::OnWorldBeginPlay(InWorld);
 
-	if (UGameHUDSettings::Get()->AutoCreateGameHUD)
+	if (UWidgetSettings::Get()->AutoCreateGameHUD)
 	{
 		BROADCAST_UNIFIED_DELEGATE(Delegate_PreHUDCreated, BPDelegate_PreHUDCreated);
 
-		for (const auto& HUDSoftClass : UGameHUDSettings::Get()->GenericHUDClasses)
+		for (const auto& HUDSoftClass : UWidgetSettings::Get()->GenericHUDClasses)
 		{
 			if (TSubclassOf<UGenericGameHUD> HUDClass = FStaticFunctions_Object::LoadClass<UGenericGameHUD>(HUDSoftClass))
 			{

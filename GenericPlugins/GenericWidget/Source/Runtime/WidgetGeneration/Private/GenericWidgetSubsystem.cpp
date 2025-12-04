@@ -3,8 +3,10 @@
 #include "GenericWidgetSubsystem.h"
 
 #include "GenericGameHUDSubsystem.h"
+#include "WidgetSettings.h"
 #include "Base/GenericWidget.h"
 #include "Blueprint/WidgetTree.h"
+#include "StaticFunctions/StaticFunctions_Object.h"
 
 #include "Type/GenericType.h"
 
@@ -24,6 +26,20 @@ bool UGenericWidgetSubsystem::ShouldCreateSubsystem(UObject* Outer) const
 	return Super::ShouldCreateSubsystem(Outer) && !IsRunningDedicatedServer();
 }
 
+void UGenericWidgetSubsystem::Initialize(FSubsystemCollectionBase& Collection)
+{
+	Super::Initialize(Collection);
+
+	UGenericGameHUDSubsystem::Delegate_PostHUDCreated.AddUObject(this, &UGenericWidgetSubsystem::PostHUDCreated);
+}
+
+void UGenericWidgetSubsystem::Deinitialize()
+{
+	Super::Deinitialize();
+
+	UGenericGameHUDSubsystem::Delegate_PostHUDCreated.RemoveAll(this);
+}
+
 void UGenericWidgetSubsystem::OnWorldBeginTearDown(UWorld* InWorld)
 {
 	Super::OnWorldBeginTearDown(InWorld);
@@ -35,6 +51,18 @@ void UGenericWidgetSubsystem::OnWorldBeginTearDown(UWorld* InWorld)
 	}
 
 	Widgets.Reset();
+}
+
+void UGenericWidgetSubsystem::PostHUDCreated()
+{
+	for (const auto& WidgetSoftClass : UWidgetSettings::Get()->WidgetClasses)
+	{
+		if (TSubclassOf<UGenericWidget> WidgetClass = FStaticFunctions_Object::LoadClass<UGenericWidget>(WidgetSoftClass))
+		{
+			UGenericWidget* NewWidget = CreateWidget<UGenericWidget>(GetWorld(), WidgetClass);
+			OpenGenericWidget(NewWidget);
+		}
+	}
 }
 
 UGenericWidget* UGenericWidgetSubsystem::GetActivedWidget(FGameplayTag InTag) const

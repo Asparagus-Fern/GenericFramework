@@ -18,7 +18,7 @@ class DEVSLATECORE_API UGenericAnimatedSwitcher : public UCommonAnimatedSwitcher
 
 protected:
 #if WITH_EDITOR
-	virtual const FText GetPaletteCategory() override { return NSLOCTEXT("GenericFramework", "WidgetPaletteCategory", "Generic"); }
+	virtual const FText GetPaletteCategory() override { return NSLOCTEXT("GenericFramework", "WidgetPaletteCategory", "Panel"); }
 #endif
 
 public:

@@ -22,17 +22,13 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnButtonLostFocusDelegate);
 UCLASS()
 class DEVSLATECORE_API UGenericButton : public UButton
 {
-	GENERATED_BODY()
+	GENERATED_UCLASS_BODY()
 
 protected:
 	virtual TSharedRef<SWidget> RebuildWidget() override;
 	virtual void SynchronizeProperties() override;
 	virtual void ReleaseSlateResources(bool bReleaseChildren) override;
 
-#if WITH_EDITOR
-	virtual const FText GetPaletteCategory() override { return NSLOCTEXT("GenericFramework", "WidgetPaletteCategory", "Generic"); }
-#endif
-	
 public:
 	/* If true, this button is enabled. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Generic Button")
@@ -44,11 +40,11 @@ public:
 
 	/* The minimum width of the button */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Generic Button")
-	int32 MinWidth;
+	int32 MinWidth = 0;
 
 	/* The minimum height of the button */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Generic Button")
-	int32 MinHeight;
+	int32 MinHeight = 0;
 
 public:
 	/* Called when the button is clicked */

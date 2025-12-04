@@ -4,15 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "Settings/GenericSettings.h"
-#include "GameHUDSettings.generated.h"
+#include "WidgetSettings.generated.h"
 
+class UGenericWidget;
 class UGenericGameHUD;
 
 /**
  * 
  */
 UCLASS()
-class UGameHUDSettings : public UGenericSettings
+class UWidgetSettings : public UGenericSettings
 {
 	GENERATED_UCLASS_BODY()
 
@@ -20,15 +21,16 @@ public:
 	static ThisClass* Get() { return GetMutableDefault<ThisClass>(); }
 
 public:
-#if WITH_EDITOR
-	virtual FText GetSectionText() const override { return FText::FromString(TEXT("Game HUD Settings")); }
-#endif
-
-public:
-	/* 在世界开始时，将GameHUDClasses创建到屏幕 */
+	/* If True, Will Create Game HUD After World Begin Play */
 	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category="HUD")
 	bool AutoCreateGameHUD = true;
 
+	/* The Game HUD Which Need To Auto Created */
 	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, DisplayName="Game HUD Classes", Category="HUD")
 	TArray<TSoftClassPtr<UGenericGameHUD>> GenericHUDClasses;
+
+public:
+	/* The Widget Which Need To Auto Created After Game HUD Created */
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category="Widget")
+	TArray<TSoftClassPtr<UGenericWidget>> WidgetClasses;
 };

@@ -41,8 +41,14 @@ class UGenericWidgetSubsystem : public UGenericWorldSubsystem
 public:
 	static WIDGETGENERATION_API UGenericWidgetSubsystem* Get(const UObject* WorldContextObject);
 	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
+	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+	virtual void Deinitialize() override;
 	virtual void OnWorldBeginTearDown(UWorld* InWorld) override;
 
+	/* Delegate From UGenericGameHUDSubsystem */
+private:
+	void PostHUDCreated();
+	
 	/* UGenericWidgetSubsystem */
 public:
 	UGenericWidget* GetActivedWidget(FGameplayTag InTag) const;

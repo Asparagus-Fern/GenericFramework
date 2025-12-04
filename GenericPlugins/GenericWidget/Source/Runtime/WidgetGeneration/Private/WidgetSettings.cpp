@@ -1,12 +1,12 @@
 ﻿// Copyright ChenTaiye 2025. All Rights Reserved.
 
-#include "GameHUDSettings.h"
+#include "WidgetSettings.h"
 
 #include "GameplayTagsSettings.h"
 #include "Base/GenericGameHUD.h"
 #include "StaticFunctions/StaticFunctions_Object.h"
 
-UGameHUDSettings::UGameHUDSettings(const FObjectInitializer& ObjectInitializer)
+UWidgetSettings::UWidgetSettings(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
 #if WITH_EDITOR

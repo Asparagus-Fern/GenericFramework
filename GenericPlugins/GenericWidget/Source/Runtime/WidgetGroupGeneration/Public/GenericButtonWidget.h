@@ -7,6 +7,7 @@
 #include "Base/GenericWidget.h"
 #include "GenericButtonWidget.generated.h"
 
+class UGenericButtonContent;
 class USimpleTextBox;
 class UButtonSoundViewModel;
 class UButtonInputViewModel;
@@ -636,4 +637,16 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, Instanced, Getter, Setter, BlueprintGetter="GetButtonSoundViewModel", BlueprintSetter="SetButtonSoundViewModel", Category = "Generic Button Widget | ViewModel")
 	TObjectPtr<UButtonSoundViewModel> ButtonSoundViewModel = nullptr;
+
+	/* ==================== Content ==================== */
+public:
+	UFUNCTION(BlueprintCallable,meta=(DeterminesOutputType="ButtonContentClass"))
+	UGenericButtonContent* AddButtonContentLink(TSubclassOf<UGenericButtonContent> ButtonContentClass, UWidget* InWidget, UDataTable* InDataTable);
+
+	UFUNCTION(BlueprintCallable)
+	void RemoveButtonContentLink(UGenericButtonContent* InButtonContent);
+
+protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Generic Button Widget | Content")
+	TArray<TObjectPtr<UGenericButtonContent>> ButtonContents;
 };

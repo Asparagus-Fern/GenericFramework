@@ -1,23 +1,20 @@
 ﻿#pragma once
 
 #include "Components/SizeBox.h"
-#include "GeneraicVisualAttachment.generated.h"
+#include "GenericVisualAttachment.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class DEVSLATECORE_API UGeneraicVisualAttachment : public USizeBox
+class DEVSLATECORE_API UGenericVisualAttachment : public USizeBox
 {
 	GENERATED_BODY()
 
 public:
-	UGeneraicVisualAttachment(const FObjectInitializer& ObjectInitializer);
+	UGenericVisualAttachment(const FObjectInitializer& ObjectInitializer);
 
 protected:
-#if WITH_EDITOR
-	virtual const FText GetPaletteCategory() override { return NSLOCTEXT("GenericFramework", "WidgetPaletteCategory", "Generic"); }
-#endif
 	virtual TSharedRef<SWidget> RebuildWidget() override;
 	virtual void SynchronizeProperties() override;
 	virtual void ReleaseSlateResources(bool bReleaseChildren) override;

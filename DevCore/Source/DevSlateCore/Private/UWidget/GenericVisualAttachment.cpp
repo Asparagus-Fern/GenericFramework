@@ -1,16 +1,16 @@
 ﻿// Copyright ChenTaiye 2025. All Rights Reserved.
 
-#include "UWidget/GeneraicVisualAttachment.h"
+#include "UWidget/GenericVisualAttachment.h"
 
 #include "SVisualAttachmentBox.h"
 #include "Components/SizeBoxSlot.h"
 
-UGeneraicVisualAttachment::UGeneraicVisualAttachment(const FObjectInitializer& ObjectInitializer)
+UGenericVisualAttachment::UGenericVisualAttachment(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
 }
 
-TSharedRef<SWidget> UGeneraicVisualAttachment::RebuildWidget()
+TSharedRef<SWidget> UGenericVisualAttachment::RebuildWidget()
 {
 	MyAttachmentBox = SNew(SVisualAttachmentBox);
 	MySizeBox = MyAttachmentBox;
@@ -23,26 +23,26 @@ TSharedRef<SWidget> UGeneraicVisualAttachment::RebuildWidget()
 	return MySizeBox.ToSharedRef();
 }
 
-void UGeneraicVisualAttachment::SynchronizeProperties()
+void UGenericVisualAttachment::SynchronizeProperties()
 {
 	Super::SynchronizeProperties();
 
 	MyAttachmentBox->SetContentAnchor(ContentAnchor);
 }
 
-void UGeneraicVisualAttachment::ReleaseSlateResources(bool bReleaseChildren)
+void UGenericVisualAttachment::ReleaseSlateResources(bool bReleaseChildren)
 {
 	Super::ReleaseSlateResources(bReleaseChildren);
 
 	MyAttachmentBox.Reset();
 }
 
-FVector2D UGeneraicVisualAttachment::GetContentAnchor() const
+FVector2D UGenericVisualAttachment::GetContentAnchor() const
 {
 	return ContentAnchor;
 }
 
-void UGeneraicVisualAttachment::SetContentAnchor(FVector2D InContentAnchor)
+void UGenericVisualAttachment::SetContentAnchor(FVector2D InContentAnchor)
 {
 	ContentAnchor = InContentAnchor;
 

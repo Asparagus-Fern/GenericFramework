@@ -24,7 +24,6 @@ class DEVSLATECORE_API UGameplayTagSlot : public UNamedSlot
 
 protected:
 #if WITH_EDITOR
-	virtual const FText GetPaletteCategory() override { return NSLOCTEXT("GenericFramework", "WidgetPaletteCategory", "Generic"); }
 	virtual void ValidateCompiledDefaults(class IWidgetCompilerLog& CompileLog) const override;
 #endif
 	virtual TSharedRef<SWidget> RebuildWidget() override;

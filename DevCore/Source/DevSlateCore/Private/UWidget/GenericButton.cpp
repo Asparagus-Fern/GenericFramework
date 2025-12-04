@@ -5,6 +5,17 @@
 #include "Components/ButtonSlot.h"
 #include "SWidget/SGenericButton.h"
 
+UGenericButton::UGenericButton(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
+{
+	FButtonStyle ButtonStyle;
+	ButtonStyle.Normal.DrawAs = ESlateBrushDrawType::Type::NoDrawType;
+	ButtonStyle.Hovered.DrawAs = ESlateBrushDrawType::Type::NoDrawType;
+	ButtonStyle.Pressed.DrawAs = ESlateBrushDrawType::Type::NoDrawType;
+	ButtonStyle.Disabled.DrawAs = ESlateBrushDrawType::Type::NoDrawType;
+	SetStyle(ButtonStyle);
+}
+
 TSharedRef<SWidget> UGenericButton::RebuildWidget()
 {
 	MyButton = MyGenericButton = SNew(SGenericButton)

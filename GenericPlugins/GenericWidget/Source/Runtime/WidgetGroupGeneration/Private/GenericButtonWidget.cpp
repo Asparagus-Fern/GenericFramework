@@ -2,6 +2,7 @@
 
 #include "GenericButtonWidget.h"
 
+#include "GenericButtonContent.h"
 #include "WidgetType.h"
 #include "Binding/States/WidgetStateRegistration.h"
 #include "Blueprint/WidgetTree.h"
@@ -1043,6 +1044,15 @@ void UGenericButtonWidget::UpdateInternalStyle(const TSubclassOf<UGenericButtonS
 	{
 		StyleCDO->GetButtonStyle(OutStyle);
 	}
+	else
+	{
+		FButtonStyle ButtonStyle;
+		ButtonStyle.Normal.DrawAs = ESlateBrushDrawType::Type::NoDrawType;
+		ButtonStyle.Hovered.DrawAs = ESlateBrushDrawType::Type::NoDrawType;
+		ButtonStyle.Pressed.DrawAs = ESlateBrushDrawType::Type::NoDrawType;
+		ButtonStyle.Disabled.DrawAs = ESlateBrushDrawType::Type::NoDrawType;
+		OutStyle = ButtonStyle;
+	}
 }
 
 void UGenericButtonWidget::BuildStyles()
@@ -1283,4 +1293,38 @@ void UGenericButtonWidget::OnLockedHoveredSlateSoundOverrideChanged_Implementati
 void UGenericButtonWidget::OnLockedPressedSlateSoundOverrideChanged_Implementation(FSlateSound InSlateSound)
 {
 	SetLockedPressedSlateSoundOverride(InSlateSound);
+}
+
+/* ==================== Content ==================== */
+
+UGenericButtonContent* UGenericButtonWidget::AddButtonContentLink(TSubclassOf<UGenericButtonContent> ButtonContentClass, UWidget* InWidget, UDataTable* InDataTable)
+{
+	if (!IsValid(InDataTable))
+	{
+		GenericLOG(GenericLogUI, Error, TEXT("DataTable Is InValid"))
+		return nullptr;
+	}
+
+	UGenericButtonContent* NewButtonContent = NewObject<UGenericButtonContent>(this, ButtonContentClass);
+	if (!NewButtonContent->Initialize(InWidget, InDataTable))
+	{
+		NewButtonContent->MarkAsGarbage();
+		return nullptr;
+	}
+	return NewButtonContent;
+}
+
+void UGenericButtonWidget::RemoveButtonContentLink(UGenericButtonContent* InButtonContent)
+{
+	if (!IsValid(InButtonContent))
+	{
+		GenericLOG(GenericLogUI, Error, TEXT("ButtonContent Is InValid"))
+		return;
+	}
+
+	if (ButtonContents.Contains(InButtonContent))
+	{
+		InButtonContent->Deinitialize();
+		ButtonContents.Remove(InButtonContent);
+	}
 }
