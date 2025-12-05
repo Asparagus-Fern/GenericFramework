@@ -65,7 +65,7 @@ UGenericButtonWidget* UGenericButtonContent::GetButtonWidgetByClass(TSubclassOf<
 	return GetButtonWidget();
 }
 
-FGameplayTag UGenericButtonContent::GetButtonTag() const
+FGameplayTag UGenericButtonContent::GetButtonTag_Implementation() const
 {
 	return GetButtonWidget()->GetButtonTag();
 }

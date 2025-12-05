@@ -9,6 +9,9 @@ AWorldWidgetPoint::AWorldWidgetPoint(const FObjectInitializer& ObjectInitializer
 {
 	PrimaryActorTick.bCanEverTick = false;
 
+	USceneComponent* SceneComponent = CreateDefaultSubobject<USceneComponent>("Root");
+	RootComponent = SceneComponent;
+
 	WorldWidgetComponent = CreateDefaultSubobject<UWorldWidgetComponent>("WorldWidgetComponent");
-	RootComponent = WorldWidgetComponent;
+	WorldWidgetComponent->SetupAttachment(SceneComponent);
 }

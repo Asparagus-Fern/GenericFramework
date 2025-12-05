@@ -104,7 +104,7 @@ public:
 	FWorldWidgetLookAtSetting WorldWidgetLookAtSetting;
 
 	/* UI */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced)
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Instanced)
 	UGenericWidget* WorldWidget = nullptr;
 
 	UPROPERTY(BlueprintReadOnly)

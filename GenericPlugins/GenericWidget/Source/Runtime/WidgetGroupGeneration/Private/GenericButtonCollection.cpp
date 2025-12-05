@@ -126,6 +126,7 @@ void UGenericButtonCollection::BuildChildButtonGroup(const FGameplayTag InButton
 			if (UGenericButtonWidget* ChildButtonWidget = BuildButtonWidget(ChildButtonTag, ButtonContainer))
 			{
 				/* Try To Open Child Widget, It Will Add To Container Through a Valid Container Widget, See More In UGenericGameSlotSubsystem::AddSlotWidget */
+				ChildButtonWidget->SetButtonTag(ChildButtonTag);
 				if (!GenericWidgetSubsystem->OpenGenericWidget(ChildButtonWidget))
 				{
 					GenericLOG(GenericLogUI, Error, TEXT("Open Button Widget Fail"))
@@ -133,7 +134,6 @@ void UGenericButtonCollection::BuildChildButtonGroup(const FGameplayTag InButton
 				}
 
 				/* Add Widget To Button Group */
-				ChildButtonWidget->SetButtonTag(ChildButtonTag);
 				ButtonGroup->AddButton(ChildButtonWidget);
 
 				if (UGenericButtonBuilder* ChildButtonBuilder = GetButtonBuilder(ChildButtonTag))

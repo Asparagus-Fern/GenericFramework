@@ -3,6 +3,7 @@
 
 #include "ButtonContent/GenericButtonTextContent.h"
 
+#include "GenericButtonWidget.h"
 #include "Components/TextBlock.h"
 
 bool UGenericButtonTextContent::OnInitialized()
@@ -16,6 +17,9 @@ bool UGenericButtonTextContent::OnInitialized()
 		 }
 	 }
 	);
+
+	UTextBlock* TextBlock = Cast<UTextBlock>(ButtonContent);
+	TextBlock->SetText(Cache.Normal);
 
 	return Super::OnInitialized();
 }
@@ -34,16 +38,22 @@ void UGenericButtonTextContent::OnButtonHovered_Implementation(UGenericButtonWid
 {
 	Super::OnButtonHovered_Implementation(InButton);
 
-	UTextBlock* TextBlock = Cast<UTextBlock>(ButtonContent);
-	TextBlock->SetText(Cache.Hovered);
+	if (!GetButtonWidget()->GetIsSelected())
+	{
+		UTextBlock* TextBlock = Cast<UTextBlock>(ButtonContent);
+		TextBlock->SetText(Cache.Hovered);
+	}
 }
 
 void UGenericButtonTextContent::OnButtonUnhovered_Implementation(UGenericButtonWidget* InButton)
 {
 	Super::OnButtonUnhovered_Implementation(InButton);
 
-	UTextBlock* TextBlock = Cast<UTextBlock>(ButtonContent);
-	TextBlock->SetText(Cache.Normal);
+	if (!GetButtonWidget()->GetIsSelected())
+	{
+		UTextBlock* TextBlock = Cast<UTextBlock>(ButtonContent);
+		TextBlock->SetText(Cache.Normal);
+	}
 }
 
 void UGenericButtonTextContent::OnButtonSelectionChanged_Implementation(UGenericButtonWidget* InButton, bool InSelection)

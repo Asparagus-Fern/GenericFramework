@@ -41,7 +41,7 @@ public:
 	UFUNCTION(BlueprintPure, meta=(DeterminesOutputType = "InClass"))
 	WIDGETGROUPGENERATION_API UGenericButtonWidget* GetButtonWidgetByClass(TSubclassOf<UGenericButtonWidget> InClass) const;
 
-	UFUNCTION(BlueprintPure)
+	UFUNCTION(BlueprintNativeEvent, BlueprintPure)
 	WIDGETGROUPGENERATION_API FGameplayTag GetButtonTag() const;
 
 protected:

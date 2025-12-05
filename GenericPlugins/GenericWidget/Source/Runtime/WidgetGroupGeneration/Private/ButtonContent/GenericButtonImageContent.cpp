@@ -2,6 +2,7 @@
 
 #include "ButtonContent/GenericButtonImageContent.h"
 
+#include "GenericButtonWidget.h"
 #include "Components/Image.h"
 
 bool UGenericButtonImageContent::OnInitialized()
@@ -15,6 +16,9 @@ bool UGenericButtonImageContent::OnInitialized()
 		 }
 	 }
 	);
+
+	UImage* Image = Cast<UImage>(ButtonContent);
+	Image->SetBrush(Cache.Normal);
 
 	return Super::OnInitialized();
 }
@@ -33,16 +37,22 @@ void UGenericButtonImageContent::OnButtonHovered_Implementation(UGenericButtonWi
 {
 	Super::OnButtonHovered_Implementation(InButton);
 
-	UImage* Image = Cast<UImage>(ButtonContent);
-	Image->SetBrush(Cache.Hovered);
+	if (!GetButtonWidget()->GetIsSelected())
+	{
+		UImage* Image = Cast<UImage>(ButtonContent);
+		Image->SetBrush(Cache.Hovered);
+	}
 }
 
 void UGenericButtonImageContent::OnButtonUnhovered_Implementation(UGenericButtonWidget* InButton)
 {
 	Super::OnButtonUnhovered_Implementation(InButton);
 
-	UImage* Image = Cast<UImage>(ButtonContent);
-	Image->SetBrush(Cache.Normal);
+	if (!GetButtonWidget()->GetIsSelected())
+	{
+		UImage* Image = Cast<UImage>(ButtonContent);
+		Image->SetBrush(Cache.Normal);
+	}
 }
 
 void UGenericButtonImageContent::OnButtonSelectionChanged_Implementation(UGenericButtonWidget* InButton, bool InSelection)
