@@ -42,6 +42,9 @@ public:
 	GENERICGAMEPLAYSYSTEM_API virtual float GetZoom() override;
 
 	UFUNCTION(BlueprintPure, Category="Pawn Input Movement")
+	GENERICGAMEPLAYSYSTEM_API virtual float GetMovementBaseSpeed() override;
+	
+	UFUNCTION(BlueprintPure, Category="Pawn Input Movement")
 	GENERICGAMEPLAYSYSTEM_API virtual float GetMovementSpeedRate() override;
 
 	UFUNCTION(BlueprintPure, Category="Pawn Input Movement")

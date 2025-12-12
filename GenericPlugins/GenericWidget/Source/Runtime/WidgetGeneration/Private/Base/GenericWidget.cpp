@@ -72,6 +72,9 @@ void UGenericWidget::NativeConstruct()
 		}
 	}
 
+	SetActiveAnimation(ActivedAnimation);
+	SetInactiveAnimation(InactivedAnimation);
+
 	/* 传递当前UI，计算Slate所需大小 */
 	TakeWidget()->SlatePrepass(FSlateApplicationBase::Get().GetApplicationScale());
 }
@@ -109,6 +112,7 @@ void UGenericWidget::SetWidgetDescriptionViewModel(UWidgetDescriptionViewModel* 
 		REGISTER_MVVM_PROPERTY(WidgetDescriptionViewModel, PrimaryName, OnPrimaryNameChanged, true)
 		REGISTER_MVVM_PROPERTY(WidgetDescriptionViewModel, SecondaryName, OnSecondaryNameChanged, true)
 		REGISTER_MVVM_PROPERTY(WidgetDescriptionViewModel, TooltipText, OnTooltipTextChanged, true)
+		REGISTER_MVVM_PROPERTY(WidgetDescriptionViewModel, Icon, OnIconChanged, true)
 	}
 }
 
@@ -126,6 +130,10 @@ void UGenericWidget::OnTooltipTextChanged_Implementation(const FText& InTooltipT
 	{
 		SetToolTipText(InTooltipText);
 	}
+}
+
+void UGenericWidget::OnIconChanged_Implementation(const FSlateBrush& InIcon)
+{
 }
 
 /* ==================== UWidgetRenderViewModel ==================== */
@@ -170,28 +178,34 @@ void UGenericWidget::NativeOnCreate()
 {
 	IStateInterface::NativeOnCreate();
 
-	WidgetTree->ForEachWidget([&](UWidget* Widget)
-		{
-			if (IStateInterface* StateInterface = Cast<IStateInterface>(Widget))
+	if (IsValid(WidgetTree))
+	{
+		WidgetTree->ForEachWidget([&](UWidget* Widget)
 			{
-				StateInterface->NativeOnCreate();
+				if (IStateInterface* StateInterface = Cast<IStateInterface>(Widget))
+				{
+					StateInterface->NativeOnCreate();
+				}
 			}
-		}
-	);
+		);
+	}
 }
 
 void UGenericWidget::NativeOnActived()
 {
 	IStateInterface::NativeOnActived();
 
-	WidgetTree->ForEachWidget([](UWidget* Widget)
-		{
-			if (IStateInterface* StateInterface = Cast<IStateInterface>(Widget))
+	if (IsValid(WidgetTree))
+	{
+		WidgetTree->ForEachWidget([](UWidget* Widget)
 			{
-				StateInterface->SetIsActived(true);
+				if (IStateInterface* StateInterface = Cast<IStateInterface>(Widget))
+				{
+					StateInterface->SetIsActived(true);
+				}
 			}
-		}
-	);
+		);
+	}
 }
 
 void UGenericWidget::NativeOnActivedFinish()
@@ -248,7 +262,7 @@ void UGenericWidget::OnActiveStateChanged()
 		{
 			if (GetIsActived())
 			{
-				SetVisibility(ESlateVisibility::Visible);
+				SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 			}
 			else
 			{
@@ -353,7 +367,6 @@ void UGenericWidget::SetActiveAnimation(UWidgetAnimation* InAnimation)
 
 	ActivedAnimation = InAnimation;
 	WidgetActiveAnimationFinishBinding.BindDynamic(this, &UGenericWidget::OnWidgetActiveAnimationPlayFinish);
-
 	BindToAnimationFinished(ActivedAnimation, WidgetActiveAnimationFinishBinding);
 }
 
@@ -377,22 +390,31 @@ void UGenericWidget::SetInactiveAnimation(UWidgetAnimation* InAnimation)
 
 void UGenericWidget::PlayWidgetAnimation(bool InIsActive)
 {
-	/**	Check Has Widget Animation */
-	if (!HasWidgetAnimation(GetIsActived()))
+	bool bCollapsed = false;
+	if (WidgetRenderViewModel)
 	{
-		if (GetIsActived())
+		bCollapsed = WidgetRenderViewModel->Visibility == ESlateVisibility::Collapsed;
+	}
+
+	if (!bCollapsed)
+	{
+		SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+		if (HasWidgetAnimation(InIsActive))
 		{
-			OnWidgetActiveAnimationPlayFinish();
+			PlayAnimation(InIsActive ? GetActiveAnimation() : GetInactiveAnimation());
 		}
 		else
 		{
-			OnWidgetInactiveAnimationPlayFinish();
+			if (InIsActive)
+			{
+				OnWidgetActiveAnimationPlayFinish();
+			}
+			else
+			{
+				OnWidgetInactiveAnimationPlayFinish();
+			}
 		}
-		return;
 	}
-
-	SetVisibility(ESlateVisibility::Visible);
-	PlayAnimation(InIsActive ? GetActiveAnimation() : GetInactiveAnimation());
 }
 
 void UGenericWidget::PlayWidgetAnimationRollback(bool InIsActive)
@@ -421,12 +443,14 @@ void UGenericWidget::StopWidgetAnimation(bool InIsActive)
 
 void UGenericWidget::OnWidgetActiveAnimationPlayFinish()
 {
+	StopWidgetAnimation(true);
 	NativeOnActivedFinish();
 	OnWidgetActiveAnimationPlayFinishEvent.Broadcast(this);
 }
 
 void UGenericWidget::OnWidgetInactiveAnimationPlayFinish()
 {
+	StopWidgetAnimation(false);
 	SetVisibility(ESlateVisibility::Collapsed);
 	NativeOnInactivedFinish();
 	OnWidgetInactiveAnimationPlayFinishEvent.Broadcast(this);

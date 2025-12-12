@@ -60,7 +60,7 @@ void USessionSearchListItem::NativeOnItemSelectionChanged(bool bIsSelected)
 
 	if (GenericButtonWidget_Join)
 	{
-		GenericButtonWidget_Join->SetVisibility(bIsSelected ? ESlateVisibility::Visible : ESlateVisibility::Hidden);
+		GenericButtonWidget_Join->SetVisibility(bIsSelected ? ESlateVisibility::SelfHitTestInvisible : ESlateVisibility::Hidden);
 	}
 }
 

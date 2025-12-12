@@ -316,44 +316,44 @@ inline ESizingRuleBP ConvertToSizingRuleBP(const ESizingRule Enum)
 }
 
 /** Enumeration to specify different transparency options for SWindows */
-UENUM(BlueprintType)
-enum class EWindowTransparencyBP : uint8
-{
-	/** Value indicating that a window does not support transparency */
-	None,
-	/** Value indicating that a window supports transparency at the window level (one opacity applies to the entire window) */
-	PerWindow,
-	/** Value indicating that a window supports per-pixel alpha blended transparency */
-	PerPixel,
-};
+// UENUM(BlueprintType)
+// enum class EWindowTransparencyBP : uint8
+// {
+// 	/** Value indicating that a window does not support transparency */
+// 	None,
+// 	/** Value indicating that a window supports transparency at the window level (one opacity applies to the entire window) */
+// 	PerWindow,
+// 	/** Value indicating that a window supports per-pixel alpha blended transparency */
+// 	PerPixel,
+// };
 
-inline EWindowTransparency ConvertToWindowTransparency(const EWindowTransparencyBP EnumBP)
-{
-	switch (EnumBP)
-	{
-	case EWindowTransparencyBP::None:
-		return EWindowTransparency::None;
-	case EWindowTransparencyBP::PerWindow:
-		return EWindowTransparency::PerWindow;
-	case EWindowTransparencyBP::PerPixel:
-		return EWindowTransparency::PerPixel;
-	}
-	return EWindowTransparency::None;
-}
-
-inline EWindowTransparencyBP ConvertToWindowTransparencyBP(const EWindowTransparency Enum)
-{
-	switch (Enum)
-	{
-	case EWindowTransparency::None:
-		return EWindowTransparencyBP::None;
-	case EWindowTransparency::PerWindow:
-		return EWindowTransparencyBP::PerWindow;
-	case EWindowTransparency::PerPixel:
-		return EWindowTransparencyBP::PerPixel;
-	}
-	return EWindowTransparencyBP::None;
-}
+// inline EWindowTransparency ConvertToWindowTransparency(const EWindowTransparencyBP EnumBP)
+// {
+// 	switch (EnumBP)
+// 	{
+// 	case EWindowTransparencyBP::None:
+// 		return EWindowTransparency::None;
+// 	case EWindowTransparencyBP::PerWindow:
+// 		return EWindowTransparency::PerWindow;
+// 	case EWindowTransparencyBP::PerPixel:
+// 		return EWindowTransparency::PerPixel;
+// 	}
+// 	return EWindowTransparency::None;
+// }
+//
+// inline EWindowTransparencyBP ConvertToWindowTransparencyBP(const EWindowTransparency Enum)
+// {
+// 	switch (Enum)
+// 	{
+// 	case EWindowTransparency::None:
+// 		return EWindowTransparencyBP::None;
+// 	case EWindowTransparency::PerWindow:
+// 		return EWindowTransparencyBP::PerWindow;
+// 	case EWindowTransparency::PerPixel:
+// 		return EWindowTransparencyBP::PerPixel;
+// 	}
+// 	return EWindowTransparencyBP::None;
+// }
 
 /** Enumeration to specify whether the window gets activated upon showing it */
 UENUM(BlueprintType)

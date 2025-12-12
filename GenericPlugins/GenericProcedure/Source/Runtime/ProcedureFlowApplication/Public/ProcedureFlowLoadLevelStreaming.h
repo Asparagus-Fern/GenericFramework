@@ -12,8 +12,8 @@ class UProcedureFlowLoadLevelStreaming : public UProcedureFlowLoad
 	GENERATED_BODY()
 
 protected:
-	PROCEDUREFLOWAPPLICATION_API virtual void OnProcedureFlowEnter_Implementation() override;
-	PROCEDUREFLOWAPPLICATION_API virtual void OnProcedureFlowExit_Implementation() override;
+	virtual int32 GetLoadCount() override;
+	virtual void StartLoading() override;
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
@@ -22,9 +22,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TArray<TSoftObjectPtr<UWorld>> VisibleLevels;
 
-protected:
-	PROCEDUREFLOWAPPLICATION_API virtual void OnLoadCurrentWorldLevelStreamingOnceFinish();
-	PROCEDUREFLOWAPPLICATION_API virtual void OnLoadCurrentWorldLevelStreamingFinish();
-	PROCEDUREFLOWAPPLICATION_API virtual void OnLoadVisibleLevelsOnceFinish();
-	PROCEDUREFLOWAPPLICATION_API virtual void OnLoadVisibleLevelsFinish();
+private:
+	void OnLoadCurrentWorldLevelStreamingOnceFinish();
+	void OnLoadCurrentWorldLevelStreamingFinish();
+	void OnLoadVisibleLevelsOnceFinish();
+	void OnLoadVisibleLevelsFinish();
 };

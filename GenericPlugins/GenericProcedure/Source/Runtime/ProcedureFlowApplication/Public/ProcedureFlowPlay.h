@@ -6,6 +6,8 @@
 #include "ProcedureFlowExecute.h"
 #include "ProcedureFlowPlay.generated.h"
 
+class UGenericButtonCollection;
+class UGenericWidget;
 class UGenericCameraSwitchMethod;
 
 UCLASS(MinimalAPI)
@@ -24,4 +26,11 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Instanced, Category="Camera")
 	UGenericCameraSwitchMethod* CameraHandle = nullptr;
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="UMG")
+	TArray<TSubclassOf<UGenericWidget>> DefaultWidgetList;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="UMG")
+	TArray<TSubclassOf<UGenericButtonCollection>> DefaultButtonList;
 };

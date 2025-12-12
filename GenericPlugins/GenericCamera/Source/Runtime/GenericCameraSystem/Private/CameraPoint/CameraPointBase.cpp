@@ -138,12 +138,16 @@ void ACameraPointBase::DuplicateFromCameraActor(ACameraActor* InCameraActor)
 	{
 		Modify();
 
-		SpringArmComponent->TargetArmLength = 0.f;
 		SetActorLocation(InCameraActor->GetActorLocation());
-		SetActorRotation(InCameraActor->GetActorRotation());
+
+		FRotator Rotation;
+		Rotation.Pitch = FMath::Clamp(InCameraActor->GetActorRotation().Pitch, -89.9f, 89.9f);
+		Rotation.Yaw = InCameraActor->GetActorRotation().Yaw + InCameraActor->GetActorRotation().Roll;
+		Rotation.Roll = 0;
+		Rotation.Normalize();
+		SetActorRotation(Rotation);
 
 		DuplicateFromCameraComponent(InCameraActor->GetCameraComponent());
-		RefreshFocus();
 
 		CameraActorLink = nullptr;
 	}

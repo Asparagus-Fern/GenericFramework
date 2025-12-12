@@ -15,11 +15,11 @@
 UPropertyList::UPropertyList(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
-	UPropertyVisualData* DefaultVisualData = LoadObject<UPropertyVisualData>(nullptr, TEXT("/GenericProperty/DataAsset/DA_PropertyVisualData.DA_PropertyVisualData"));
-	if (IsValid(DefaultVisualData))
-	{
-		PropertyVisualData = DefaultVisualData;
-	}
+	// UPropertyVisualData* DefaultVisualData = LoadObject<UPropertyVisualData>(nullptr, TEXT("/GenericProperty/DataAsset/DA_PropertyVisualData.DA_PropertyVisualData"));
+	// if (IsValid(DefaultVisualData))
+	// {
+	// 	PropertyVisualData = DefaultVisualData;
+	// }
 }
 
 void UPropertyList::NativeConstruct()

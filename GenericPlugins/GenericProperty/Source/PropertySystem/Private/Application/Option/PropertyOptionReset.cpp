@@ -38,5 +38,5 @@ void UPropertyOptionReset::OnPropertyReset_Implementation(UPropertyViewModel* In
 
 void UPropertyOptionReset::OnPropertyValueChanged_Implementation(UPropertyViewModel* InViewModel, EPropertyChangedReason ChangedReason)
 {
-	SetVisibility(InViewModel->GetIsPropertyValueDirty() ? ESlateVisibility::Visible : ESlateVisibility::Hidden);
+	SetVisibility(InViewModel->GetIsPropertyValueDirty() ? ESlateVisibility::SelfHitTestInvisible : ESlateVisibility::Hidden);
 }

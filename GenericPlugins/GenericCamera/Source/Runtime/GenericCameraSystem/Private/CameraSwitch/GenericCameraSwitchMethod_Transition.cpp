@@ -2,6 +2,7 @@
 
 #include "CameraSwitch/GenericCameraSwitchMethod_Transition.h"
 
+#include "GenericCameraSubsystem.h"
 #include "CameraPoint/CameraPointBase.h"
 
 UGenericCameraSwitchMethod_Transition::UGenericCameraSwitchMethod_Transition(const FObjectInitializer& ObjectInitializer)
@@ -17,7 +18,7 @@ bool UGenericCameraSwitchMethod_Transition::HandleSwitchToCameraPoint_Implementa
 {
 	if (Super::HandleSwitchToCameraPoint_Implementation(InPlayerController, InCameraPoint))
 	{
-		GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &UGenericCameraSwitchMethod_Transition::NativeOnSwitchToCameraPointFinish, ViewTargetTransitionParams.BlendTime);
+		InPlayerController->GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &UGenericCameraSwitchMethod_Transition::NativeOnSwitchToCameraPointFinish, ViewTargetTransitionParams.BlendTime);
 		OwnerPlayerController->PlayerCameraManager->SetViewTarget(TargetCameraPoint, ViewTargetTransitionParams);
 		return true;
 	}

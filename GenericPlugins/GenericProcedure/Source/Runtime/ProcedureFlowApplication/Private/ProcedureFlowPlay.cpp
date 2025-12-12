@@ -2,20 +2,39 @@
 
 #include "ProcedureFlowPlay.h"
 
+#include "GenericButtonSubsystem.h"
 #include "GenericCameraSubsystem.h"
-#include "CameraSwitch/GenericCameraSwitchMethod.h"
+#include "GenericWidgetSubsystem.h"
+#include "BPFunctions/BPFunctions_Gameplay.h"
 
 void UProcedureFlowPlay::OnProcedureFlowEnter_Implementation()
 {
 	Super::OnProcedureFlowEnter_Implementation();
 
-	if (UGenericCameraSubsystem* CameraManager = UGenericCameraSubsystem::Get(this))
+
+	for (FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)
 	{
-		if (DefaultCameraTag.IsValid() && IsValid(CameraHandle))
+		APlayerController* Player = Cast<APlayerController>(Iterator->Get());
+
+		if (UGenericCameraSubsystem* GenericCameraSubsystem = UGenericCameraSubsystem::Get(this))
 		{
-			if (CameraManager->CanSwitchToCamera(DefaultCameraTag))
+			GenericCameraSubsystem->SwitchToCamera(Player, DefaultCameraTag, CameraHandle);
+		}
+
+		if (UGenericWidgetSubsystem* GenericWidgetSubsystem = UGenericWidgetSubsystem::Get(this))
+		{
+			for (auto& DefaultWidgetClass : DefaultWidgetList)
 			{
-				CameraManager->SwitchToCamera(0, DefaultCameraTag, CameraHandle);
+				UGenericWidget* NewWidget = CreateWidget<UGenericWidget>(Player, DefaultWidgetClass);
+				GenericWidgetSubsystem->OpenGenericWidget(NewWidget);
+			}
+		}
+
+		if (UGenericButtonSubsystem* GenericButtonSubsystem = UGenericButtonSubsystem::Get(this))
+		{
+			for (auto& DefaultButtonClass : DefaultButtonList)
+			{
+				GenericButtonSubsystem->RegisterButtonCollection(Player, DefaultButtonClass);
 			}
 		}
 	}

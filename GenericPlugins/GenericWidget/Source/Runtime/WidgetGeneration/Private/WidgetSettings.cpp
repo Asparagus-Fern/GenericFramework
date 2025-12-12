@@ -10,12 +10,17 @@ UWidgetSettings::UWidgetSettings(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
 #if WITH_EDITOR
-	if (const TSubclassOf<UGenericGameHUD> MainHUD = LoadClass<UGenericGameHUD>(nullptr,TEXT("/Script/UMGEditor.WidgetBlueprint'/GenericWidget/UMG/HUD/WBP_GameHUD_Main.WBP_GameHUD_Main_C'")))
+	if (const TSubclassOf<UGenericGameHUD> MainHUD = LoadClass<UGenericGameHUD>(nullptr,TEXT("/Script/UMGEditor.WidgetBlueprint'/DevApplication/UMG/HUD/WBP_GameHUD_Main.WBP_GameHUD_Main_C'")))
 	{
 		GenericHUDClasses.AddUnique(MainHUD.Get());
 	}
 
-	if (const TSubclassOf<UGenericGameHUD> GameHUD = LoadClass<UGenericGameHUD>(nullptr,TEXT("/Script/UMGEditor.WidgetBlueprint'/GenericWidget/UMG/HUD/WBP_GameHUD_Game.WBP_GameHUD_Game_C'")))
+	if (const TSubclassOf<UGenericGameHUD> GameHUD = LoadClass<UGenericGameHUD>(nullptr,TEXT("/Script/UMGEditor.WidgetBlueprint'/DevApplication/UMG/HUD/WBP_GameHUD_Game.WBP_GameHUD_Game_C'")))
+	{
+		GenericHUDClasses.AddUnique(GameHUD.Get());
+	}
+
+	if (const TSubclassOf<UGenericGameHUD> GameHUD = LoadClass<UGenericGameHUD>(nullptr,TEXT("/Script/UMGEditor.WidgetBlueprint'/DevApplication/UMG/HUD/WBP_GameHUD_Popup.WBP_GameHUD_Popup_C'")))
 	{
 		GenericHUDClasses.AddUnique(GameHUD.Get());
 	}

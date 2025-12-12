@@ -30,6 +30,11 @@
       "LoadingPhase": "Default"
     },
     {
+      "Name": "GenericMovieSceneEdSystem",
+      "Type": "Editor",
+      "LoadingPhase": "Default"
+    },
+    {
       "Name": "LevelSequenceSystem",
       "Type": "Runtime",
       "LoadingPhase": "Default"

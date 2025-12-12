@@ -27,18 +27,5 @@ public class GenericMovieSceneSystem : ModuleRules
 				"LevelSequence",
 			}
 		);
-		
-		if (Target.bBuildEditor)
-		{
-			PublicDependencyModuleNames.Add("DevEdCore");
-			PrivateDependencyModuleNames.Add("UnrealEd");
-			PrivateDependencyModuleNames.Add("EditorSubsystem");
-			PrivateDependencyModuleNames.Add("UMGEditor");
-			PrivateDependencyModuleNames.Add("ContentBrowser");
-			PrivateDependencyModuleNames.Add("ClassViewer");
-			PrivateDependencyModuleNames.Add("Sequencer");
-			PrivateDependencyModuleNames.Add("MovieSceneTools");
-			PrivateDependencyModuleNames.Add("MovieSceneTracks");
-		}
 	}
 }

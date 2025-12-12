@@ -113,6 +113,11 @@ float UPawnInputMovementComponent::GetZoom()
 	return -1.f;
 }
 
+float UPawnInputMovementComponent::GetMovementBaseSpeed()
+{
+	return MovementBaseSpeed;
+}
+
 float UPawnInputMovementComponent::GetMovementSpeedRate()
 {
 	return MovementSpeedRate;

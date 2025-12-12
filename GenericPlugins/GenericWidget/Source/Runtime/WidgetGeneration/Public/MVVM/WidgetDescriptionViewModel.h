@@ -23,4 +23,7 @@ public:
 
 	UPROPERTY(FieldNotify, EditAnywhere, BlueprintReadWrite)
 	FText TooltipText;
+
+	UPROPERTY(FieldNotify, EditAnywhere, BlueprintReadWrite)
+	FSlateBrush Icon;
 };

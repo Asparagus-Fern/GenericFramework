@@ -4,9 +4,29 @@
 
 #include "LevelStreamingSubsystem.h"
 
-void UProcedureFlowLoadLevelStreaming::OnProcedureFlowEnter_Implementation()
+int32 UProcedureFlowLoadLevelStreaming::GetLoadCount()
 {
-	Super::OnProcedureFlowEnter_Implementation();
+	int32 Count = 0;
+
+	if (!GetWorld()->IsPartitionedWorld())
+	{
+		if (bLoadCurrentWorldLevels)
+		{
+			if (ULevelStreamingSubsystem* LevelStreamingSubsystem = ULevelStreamingSubsystem::Get(this))
+			{
+				Count += LevelStreamingSubsystem->GetCurrentWorldLevelStreamingList().Num();
+			}
+		}
+
+		Count += VisibleLevels.Num();
+	}
+
+	return Count;
+}
+
+void UProcedureFlowLoadLevelStreaming::StartLoading()
+{
+	Super::StartLoading();
 
 	if (!GetWorld()->IsPartitionedWorld())
 	{
@@ -14,38 +34,52 @@ void UProcedureFlowLoadLevelStreaming::OnProcedureFlowEnter_Implementation()
 		{
 			if (bLoadCurrentWorldLevels)
 			{
-				LevelStreamingSubsystem->LoadCurrentWorldLevelStreaming(FOnHandleLevelStreamingOnceFinish::CreateUObject(this, &UProcedureFlowLoadLevelStreaming::OnLoadCurrentWorldLevelStreamingOnceFinish), FOnHandleLevelStreamingFinish::CreateUObject(this, &UProcedureFlowLoadLevelStreaming::OnLoadCurrentWorldLevelStreamingFinish));
+				LevelStreamingSubsystem->LoadCurrentWorldLevelStreaming
+				(
+					FOnHandleLevelStreamingOnceFinish::CreateUObject(this, &UProcedureFlowLoadLevelStreaming::OnLoadCurrentWorldLevelStreamingOnceFinish),
+					FOnHandleLevelStreamingFinish::CreateUObject(this, &UProcedureFlowLoadLevelStreaming::OnLoadCurrentWorldLevelStreamingFinish)
+				);
 			}
 			else
 			{
-				LevelStreamingSubsystem->LoadLevels(VisibleLevels, true, false, FOnHandleLevelStreamingOnceFinish::CreateUObject(this, &UProcedureFlowLoadLevelStreaming::OnLoadVisibleLevelsOnceFinish), FOnHandleLevelStreamingFinish::CreateUObject(this, &UProcedureFlowLoadLevelStreaming::OnLoadVisibleLevelsFinish));
+				LevelStreamingSubsystem->LoadLevels
+				(
+					VisibleLevels,
+					true,
+					false,
+					FOnHandleLevelStreamingOnceFinish::CreateUObject(this, &UProcedureFlowLoadLevelStreaming::OnLoadVisibleLevelsOnceFinish),
+					FOnHandleLevelStreamingFinish::CreateUObject(this, &UProcedureFlowLoadLevelStreaming::OnLoadVisibleLevelsFinish)
+				);
 			}
 		}
 	}
 }
 
-void UProcedureFlowLoadLevelStreaming::OnProcedureFlowExit_Implementation()
-{
-	Super::OnProcedureFlowExit_Implementation();
-}
-
 void UProcedureFlowLoadLevelStreaming::OnLoadCurrentWorldLevelStreamingOnceFinish()
 {
+	OnLoadOnceFinish();
 }
 
 void UProcedureFlowLoadLevelStreaming::OnLoadCurrentWorldLevelStreamingFinish()
 {
 	if (ULevelStreamingSubsystem* LevelStreamingSubsystem = ULevelStreamingSubsystem::Get(this))
 	{
-		LevelStreamingSubsystem->LoadLevels(VisibleLevels, true, false, FOnHandleLevelStreamingOnceFinish::CreateUObject(this, &UProcedureFlowLoadLevelStreaming::OnLoadVisibleLevelsOnceFinish), FOnHandleLevelStreamingFinish::CreateUObject(this, &UProcedureFlowLoadLevelStreaming::OnLoadVisibleLevelsFinish));
+		LevelStreamingSubsystem->SetLevelsVisibility
+		(
+			VisibleLevels,
+			true,
+			FOnHandleLevelStreamingOnceFinish::CreateUObject(this, &UProcedureFlowLoadLevelStreaming::OnLoadVisibleLevelsOnceFinish),
+			FOnHandleLevelStreamingFinish::CreateUObject(this, &UProcedureFlowLoadLevelStreaming::OnLoadVisibleLevelsFinish)
+		);
 	}
 }
 
 void UProcedureFlowLoadLevelStreaming::OnLoadVisibleLevelsOnceFinish()
 {
+	OnLoadOnceFinish();
 }
 
 void UProcedureFlowLoadLevelStreaming::OnLoadVisibleLevelsFinish()
 {
-	SwitchToNextProcedureFlow();
+	OnLoadFinish();
 }

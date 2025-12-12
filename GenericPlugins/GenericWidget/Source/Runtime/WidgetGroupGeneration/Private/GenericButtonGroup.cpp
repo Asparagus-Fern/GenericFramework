@@ -167,9 +167,19 @@ UGenericButtonWidget* UGenericButtonGroup::GetButtonByIndex(int32 InIndex)
 
 int32 UGenericButtonGroup::FindButtonIndex(UGenericButtonWidget* InButton) const
 {
-	int32 Index;
+	int32 Index = -1;
 	ButtonWidgets.Find(InButton, Index);
 	return Index;
+}
+
+bool UGenericButtonGroup::IsFirstButton(UGenericButtonWidget* InButton) const
+{
+	return FindButtonIndex(InButton) == 0;
+}
+
+bool UGenericButtonGroup::IsLastButton(UGenericButtonWidget* InButton) const
+{
+	return FindButtonIndex(InButton) == ButtonWidgets.Num() - 1;
 }
 
 bool UGenericButtonGroup::HasLastSelectedButton() const
@@ -481,5 +491,10 @@ void UGenericButtonGroup::SetButtonGroupViewModel(UButtonGroupViewModel* InButto
 
 	if (ButtonGroupViewModel)
 	{
+		REGISTER_MVVM_PROPERTY(ButtonGroupViewModel, bFlipFlowContainer, OnFlipFlowContainerChanged, true)
 	}
+}
+
+void UGenericButtonGroup::OnFlipFlowContainerChanged(bool bFlipFlowContainer)
+{
 }

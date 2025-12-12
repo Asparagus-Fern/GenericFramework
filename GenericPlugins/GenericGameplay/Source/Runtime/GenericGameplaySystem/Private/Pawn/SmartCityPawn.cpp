@@ -10,7 +10,7 @@
 ASmartCityPawn::ASmartCityPawn(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
-	PlayerInputIdleActionComponent = CreateDefaultSubobject<UPlayerInputIdleActionComponent>("PlayerInputIdleActionComponent");
+	// PlayerInputIdleActionComponent = CreateDefaultSubobject<UPlayerInputIdleActionComponent>("PlayerInputIdleActionComponent");
 }
 
 bool ASmartCityPawn::ReassessmentFocus_Implementation()

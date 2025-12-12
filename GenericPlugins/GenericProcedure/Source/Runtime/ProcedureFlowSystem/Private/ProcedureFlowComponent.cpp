@@ -36,7 +36,10 @@ void UProcedureFlowComponent::OnProcedureFlowRegister_Implementation()
 
 	for (auto& ProcedureFlowExecute : ProcedureFlowExecutes)
 	{
-		IProcedureFlowInterface::Execute_OnProcedureFlowRegister(ProcedureFlowExecute);
+		if (IsValid(ProcedureFlowExecute))
+		{
+			IProcedureFlowInterface::Execute_OnProcedureFlowRegister(ProcedureFlowExecute);
+		}
 	}
 }
 

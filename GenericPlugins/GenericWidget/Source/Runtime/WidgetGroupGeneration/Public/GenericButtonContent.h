@@ -18,7 +18,7 @@ struct FButtonContentTableRow : public FTableRowBase
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="UI.Button"))
-	FName ButtonTag;
+	FGameplayTag ButtonTag;
 };
 
 /**

@@ -10,7 +10,7 @@ bool UGenericButtonImageContent::OnInitialized()
 	ButtonContentDataTable->ForeachRow<FButtonImageContentTableRow>
 	("", [this](FName Key, const FButtonImageContentTableRow& Value)
 	 {
-		 if (GetButtonTag().GetTagName() == Value.ButtonTag)
+		 if (GetButtonTag() == Value.ButtonTag)
 		 {
 			 Cache = Value;
 		 }

@@ -21,6 +21,6 @@ public:
 	GENERICGAMEPLAYSYSTEM_API virtual bool ReassessmentFocus_Implementation() override;
 
 public:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	UPlayerInputIdleActionComponent* PlayerInputIdleActionComponent = nullptr;
+	// UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	// UPlayerInputIdleActionComponent* PlayerInputIdleActionComponent = nullptr;
 };

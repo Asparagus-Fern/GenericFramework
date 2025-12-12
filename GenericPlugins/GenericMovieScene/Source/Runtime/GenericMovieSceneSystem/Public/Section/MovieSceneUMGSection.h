@@ -11,8 +11,8 @@ class UUserWidgetBlueprint;
 /**
  * 
  */
-UCLASS(MinimalAPI)
-class UMovieSceneUMGSection : public UMovieSceneSection
+UCLASS()
+class GENERICMOVIESCENESYSTEM_API UMovieSceneUMGSection : public UMovieSceneSection
 {
 	GENERATED_BODY()
 

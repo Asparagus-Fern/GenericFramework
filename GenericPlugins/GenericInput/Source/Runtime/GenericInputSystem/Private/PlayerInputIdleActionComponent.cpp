@@ -8,7 +8,7 @@
 UPlayerInputIdleActionComponent::UPlayerInputIdleActionComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
-	RefreshInputIdleAction = LoadObject<UInputAction>(nullptr,TEXT("/Script/EnhancedInput.InputAction'/DevCore/Input/MiscellaneousActions/IA_RefreshInputIdleAction.IA_RefreshInputIdleAction'"));
+	// RefreshInputIdleAction = LoadObject<UInputAction>(nullptr,TEXT("/Script/EnhancedInput.InputAction'/DevCore/Input/MiscellaneousActions/IA_RefreshInputIdleAction.IA_RefreshInputIdleAction'"));
 }
 
 void UPlayerInputIdleActionComponent::BeginPlay()

@@ -27,15 +27,15 @@ AThirdPersonCharacter::AThirdPersonCharacter()
 
 	if (USkeletalMeshComponent* MeshComponent = GetMesh())
 	{
-		if (USkeletalMesh* FoundSkeletalMesh = LoadObject<USkeletalMesh>(nullptr,TEXT("/Script/Engine.SkeletalMesh'/Mannequins/Meshes/SKM_Quinn_Simple.SKM_Quinn_Simple'")))
-		{
-			MeshComponent->SetSkeletalMesh(FoundSkeletalMesh);
-		}
-
-		if (TSubclassOf<UAnimInstance> FoundAnimClass = LoadClass<UAnimInstance>(nullptr,TEXT("/Script/Engine.AnimBlueprint'/Mannequins/Animations/ABP_Quinn.ABP_Quinn_C'")))
-		{
-			MeshComponent->SetAnimInstanceClass(FoundAnimClass);
-		}
+		// if (USkeletalMesh* FoundSkeletalMesh = LoadObject<USkeletalMesh>(nullptr,TEXT("/Script/Engine.SkeletalMesh'/Mannequins/Meshes/SKM_Quinn_Simple.SKM_Quinn_Simple'")))
+		// {
+		// 	MeshComponent->SetSkeletalMesh(FoundSkeletalMesh);
+		// }
+		//
+		// if (TSubclassOf<UAnimInstance> FoundAnimClass = LoadClass<UAnimInstance>(nullptr,TEXT("/Script/Engine.AnimBlueprint'/Mannequins/Animations/ABP_Quinn.ABP_Quinn_C'")))
+		// {
+		// 	MeshComponent->SetAnimInstanceClass(FoundAnimClass);
+		// }
 
 		MeshComponent->SetRelativeLocation(FVector(0.f, 0.f, -88.f));
 		MeshComponent->SetRelativeRotation(FRotator(0.f, 270.f, 0.f));

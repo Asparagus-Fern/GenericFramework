@@ -6,8 +6,12 @@
 #include "WidgetType.h"
 #include "Binding/States/WidgetStateRegistration.h"
 #include "Blueprint/WidgetTree.h"
+#include "Components/BackgroundBlur.h"
+#include "Components/BackgroundBlurSlot.h"
 #include "Components/Button.h"
 #include "Components/ButtonSlot.h"
+#include "Components/Overlay.h"
+#include "Components/OverlaySlot.h"
 #include "MVVM/ButtonInputViewModel.h"
 #include "MVVM/ButtonSelectionViewModel.h"
 #include "MVVM/ButtonSoundViewModel.h"
@@ -69,7 +73,7 @@ void UGenericButtonWidget::SetIsEnabled(bool bInIsEnabled)
 bool UGenericButtonWidget::IsHovered() const
 {
 	Super::IsHovered();
-	return RootButton.IsValid() && RootButton->IsButtonHovered();
+	return IsValid(InternalButton) && InternalButton->IsButtonHovered();
 }
 
 bool UGenericButtonWidget::Initialize()
@@ -79,31 +83,30 @@ bool UGenericButtonWidget::Initialize()
 	if (bInitializedThisCall)
 	{
 		UGenericButton* RootButtonRaw = ConstructInternalButton();
-
 		RootButtonRaw->SetClickMethod(ClickMethod);
 		RootButtonRaw->SetTouchMethod(TouchMethod);
 		RootButtonRaw->SetPressMethod(PressMethod);
 		RootButtonRaw->SetButtonFocusable(IsFocusable());
 		RootButtonRaw->SetButtonEnabled(bButtonEnabled);
 		RootButtonRaw->SetInteractionEnabled(bInteractionEnabled);
-		RootButton = RootButtonRaw;
+		InternalButton = RootButtonRaw;
 
 		if (WidgetTree->RootWidget)
 		{
-			UButtonSlot* NewSlot = Cast<UButtonSlot>(RootButtonRaw->AddChild(WidgetTree->RootWidget));
-			NewSlot->SetPadding(FMargin());
-			NewSlot->SetHorizontalAlignment(EHorizontalAlignment::HAlign_Fill);
-			NewSlot->SetVerticalAlignment(EVerticalAlignment::VAlign_Fill);
+			UButtonSlot* ButtonSlot = Cast<UButtonSlot>(RootButtonRaw->AddChild(WidgetTree->RootWidget));
+			ButtonSlot->SetPadding(FMargin());
+			ButtonSlot->SetHorizontalAlignment(EHorizontalAlignment::HAlign_Fill);
+			ButtonSlot->SetVerticalAlignment(EVerticalAlignment::VAlign_Fill);
 		}
 
 		WidgetTree->RootWidget = RootButtonRaw;
 
-		RootButton->OnClicked.AddUniqueDynamic(this, &UGenericButtonWidget::HandleButtonClicked);
-		RootButton->OnDoubleClicked.AddUniqueDynamic(this, &UGenericButtonWidget::HandleButtonDoubleClicked);
-		RootButton->OnReceivedFocus.AddUniqueDynamic(this, &UGenericButtonWidget::HandleFocusReceived);
-		RootButton->OnLostFocus.AddUniqueDynamic(this, &UGenericButtonWidget::HandleFocusLost);
-		RootButton->OnPressed.AddUniqueDynamic(this, &UGenericButtonWidget::HandleButtonPressed);
-		RootButton->OnReleased.AddUniqueDynamic(this, &UGenericButtonWidget::HandleButtonReleased);
+		InternalButton->OnClicked.AddUniqueDynamic(this, &UGenericButtonWidget::HandleButtonClicked);
+		InternalButton->OnDoubleClicked.AddUniqueDynamic(this, &UGenericButtonWidget::HandleButtonDoubleClicked);
+		InternalButton->OnReceivedFocus.AddUniqueDynamic(this, &UGenericButtonWidget::HandleFocusReceived);
+		InternalButton->OnLostFocus.AddUniqueDynamic(this, &UGenericButtonWidget::HandleFocusLost);
+		InternalButton->OnPressed.AddUniqueDynamic(this, &UGenericButtonWidget::HandleButtonPressed);
+		InternalButton->OnReleased.AddUniqueDynamic(this, &UGenericButtonWidget::HandleButtonReleased);
 	}
 
 	return bInitializedThisCall;
@@ -187,10 +190,15 @@ void UGenericButtonWidget::SetButtonFocusable(bool bInIsFocusable)
 {
 	SetIsFocusable(bInIsFocusable);
 
-	if (RootButton.IsValid())
+	if (InternalButton)
 	{
-		RootButton->SetButtonFocusable(bInIsFocusable);
+		InternalButton->SetButtonFocusable(bInIsFocusable);
 	}
+}
+
+UGenericButton* UGenericButtonWidget::GetButton()
+{
+	return InternalButton;
 }
 
 FGameplayTag UGenericButtonWidget::GetButtonTag() const
@@ -213,27 +221,27 @@ UGenericButton* UGenericButtonWidget::ConstructInternalButton()
 void UGenericButtonWidget::SetClickMethod(EButtonClickMethod::Type InClickMethod)
 {
 	ClickMethod = InClickMethod;
-	if (RootButton.IsValid())
+	if (InternalButton)
 	{
-		RootButton->SetClickMethod(ClickMethod);
+		InternalButton->SetClickMethod(ClickMethod);
 	}
 }
 
 void UGenericButtonWidget::SetTouchMethod(EButtonTouchMethod::Type InTouchMethod)
 {
 	TouchMethod = InTouchMethod;
-	if (RootButton.IsValid())
+	if (InternalButton)
 	{
-		RootButton->SetTouchMethod(InTouchMethod);
+		InternalButton->SetTouchMethod(InTouchMethod);
 	}
 }
 
 void UGenericButtonWidget::SetPressMethod(EButtonPressMethod::Type InPressMethod)
 {
 	PressMethod = InPressMethod;
-	if (RootButton.IsValid())
+	if (InternalButton)
 	{
-		RootButton->SetPressMethod(InPressMethod);
+		InternalButton->SetPressMethod(InPressMethod);
 	}
 }
 
@@ -295,12 +303,12 @@ void UGenericButtonWidget::SetIsInteractionEnabled(bool bInIsInteractionEnabled)
 		// If this is a selected and not-toggleable button, don't enable root button interaction
 		if (!GetIsSelected() || bToggleable)
 		{
-			RootButton->SetInteractionEnabled(true);
+			InternalButton->SetInteractionEnabled(true);
 		}
 	}
 	else
 	{
-		RootButton->SetInteractionEnabled(false);
+		InternalButton->SetInteractionEnabled(false);
 	}
 
 	// If the hover state changed due to an interactability change, trigger internal logic accordingly.
@@ -323,7 +331,7 @@ void UGenericButtonWidget::EnableButton()
 	if (!bButtonEnabled)
 	{
 		bButtonEnabled = true;
-		RootButton->SetButtonEnabled(true);
+		InternalButton->SetButtonEnabled(true);
 
 		SetButtonStyle();
 
@@ -336,10 +344,9 @@ void UGenericButtonWidget::DisableButton()
 	if (bButtonEnabled)
 	{
 		bButtonEnabled = false;
-		RootButton->SetButtonEnabled(false);
+		InternalButton->SetButtonEnabled(false);
 
 		SetButtonStyle();
-
 		NativeOnDisabled();
 	}
 }
@@ -472,11 +479,11 @@ void UGenericButtonWidget::SetIsToggleable(bool bInIsToggleable)
 
 	if (!GetIsSelected() || bToggleable)
 	{
-		RootButton->SetInteractionEnabled(bInteractionEnabled);
+		InternalButton->SetInteractionEnabled(bInteractionEnabled);
 	}
 	else if (GetIsSelected() && !bToggleable)
 	{
-		RootButton->SetInteractionEnabled(bInteractableWhenSelected);
+		InternalButton->SetInteractionEnabled(bInteractableWhenSelected);
 	}
 }
 
@@ -834,13 +841,13 @@ void UGenericButtonWidget::OnButtonSelectionInternal(bool bInSelected)
 		{
 			// If the button isn't toggleable, then disable interaction with the root button while selected
 			// The prevents us getting unnecessary click noises and events
-			RootButton->SetInteractionEnabled(bInteractableWhenSelected);
+			InternalButton->SetInteractionEnabled(bInteractableWhenSelected);
 		}
 	}
 	else
 	{
 		// Once deselected, restore the root button interactivity to the desired state
-		RootButton->SetInteractionEnabled(bInteractionEnabled);
+		InternalButton->SetInteractionEnabled(bInteractionEnabled);
 
 		NativeOnDeselected();
 	}
@@ -857,14 +864,12 @@ void UGenericButtonWidget::NativeOnEnabled()
 {
 	HandleOnButtonEnabled();
 	OnButtonEnabled.Broadcast(this);
-	NativeOnButtonStyleChanged();
 }
 
 void UGenericButtonWidget::NativeOnDisabled()
 {
 	HandleOnButtonDisabled();
 	OnButtonDisabled.Broadcast(this);
-	NativeOnButtonStyleChanged();
 }
 
 void UGenericButtonWidget::NativeOnPressed()
@@ -888,8 +893,6 @@ void UGenericButtonWidget::NativeOnHovered()
 
 	Invalidate(EInvalidateWidgetReason::Layout);
 
-	NativeOnButtonStyleChanged();
-
 	BroadcastBinaryPostStateChange(UWidgetHoveredStateRegistration::Bit, true);
 
 	if (!GetIsSelected() && HoveredAnimation)
@@ -904,8 +907,6 @@ void UGenericButtonWidget::NativeOnUnhovered()
 	OnButtonUnhovered.Broadcast(this);
 
 	Invalidate(EInvalidateWidgetReason::Layout);
-
-	NativeOnButtonStyleChanged();
 
 	BroadcastBinaryPostStateChange(UWidgetHoveredStateRegistration::Bit, false);
 
@@ -947,7 +948,6 @@ void UGenericButtonWidget::NativeOnSelected()
 {
 	HandleOnButtonSelectionChanged(true);
 	OnButtonSelectionChanged.Broadcast(this, true);
-	NativeOnButtonStyleChanged();
 
 	if (SelectedAnimation)
 	{
@@ -959,7 +959,6 @@ void UGenericButtonWidget::NativeOnDeselected()
 {
 	HandleOnButtonSelectionChanged(false);
 	OnButtonSelectionChanged.Broadcast(this, false);
-	NativeOnButtonStyleChanged();
 
 	if (SelectedAnimation)
 	{
@@ -997,13 +996,19 @@ void UGenericButtonWidget::NativeOnLockDoubleClicked()
 	OnButtonLockDoubleClicked.Broadcast(this);
 }
 
-void UGenericButtonWidget::NativeOnButtonStyleChanged()
+void UGenericButtonWidget::NativeOnButtonStyleChanged(const FButtonStyle& InButtonStyle)
 {
-	HandleOnButtonStyleChanged();
-	OnButtonStyleChanged.Broadcast(this);
+	HandleOnButtonStyleChanged(InButtonStyle);
+	OnButtonStyleChanged.Broadcast(this, InButtonStyle);
 }
 
 /* ==================== Style ==================== */
+
+void UGenericButtonWidget::SetBackgroundBlurStrength(float InBackgroundBlur)
+{
+	BackgroundBlurStrength = InBackgroundBlur;
+	RefreshBackgroundBlur();
+}
 
 void UGenericButtonWidget::SetMinWidth(int32 InMinWidth)
 {
@@ -1017,12 +1022,25 @@ void UGenericButtonWidget::SetMinHeight(int32 InMinHeight)
 	RefreshDimensions();
 }
 
+void UGenericButtonWidget::UpdateButtonStyle()
+{
+	BuildStyles();
+}
+
 void UGenericButtonWidget::RefreshDimensions() const
 {
-	if (RootButton.IsValid())
+	if (InternalButton)
 	{
-		RootButton->SetMinDesiredWidth(MinWidth);
-		RootButton->SetMinDesiredHeight(MinHeight);
+		InternalButton->SetMinDesiredWidth(MinWidth);
+		InternalButton->SetMinDesiredHeight(MinHeight);
+	}
+}
+
+void UGenericButtonWidget::RefreshBackgroundBlur() const
+{
+	if (InternalButton)
+	{
+		InternalButton->SetBackgroundBlurStrength(BackgroundBlurStrength);
 	}
 }
 
@@ -1079,32 +1097,33 @@ void UGenericButtonWidget::BuildStyles()
 
 	SetButtonStyle();
 	RefreshDimensions();
+	RefreshBackgroundBlur();
 }
 
 void UGenericButtonWidget::SetButtonStyle()
 {
-	if (UButton* ButtonPtr = RootButton.Get())
+	if (UButton* ButtonPtr = InternalButton.Get())
 	{
-		const FButtonStyle* UseStyle = nullptr;
+		FButtonStyle UseStyle;
 
 		if (IsDesignTime())
 		{
 #if WITH_EDITOR
 			if (DesiredButtonStyle == EDesiredButtonStyle::Normal)
 			{
-				UseStyle = &InternalNormalStyle;
+				UseStyle = InternalNormalStyle;
 			}
 			else if (DesiredButtonStyle == EDesiredButtonStyle::Selected)
 			{
-				UseStyle = &InternalSelectedStyle;
+				UseStyle = InternalSelectedStyle;
 			}
 			else if (DesiredButtonStyle == EDesiredButtonStyle::Locked)
 			{
-				UseStyle = &InternalLockedStyle;
+				UseStyle = InternalLockedStyle;
 			}
 			else if (DesiredButtonStyle == EDesiredButtonStyle::Disabled)
 			{
-				UseStyle = &InternalDisabledStyle;
+				UseStyle = InternalDisabledStyle;
 			}
 #endif
 		}
@@ -1112,24 +1131,24 @@ void UGenericButtonWidget::SetButtonStyle()
 		{
 			if (bLocked)
 			{
-				UseStyle = &InternalLockedStyle;
+				UseStyle = InternalLockedStyle;
 			}
 			else if (bSelected)
 			{
-				UseStyle = &InternalSelectedStyle;
+				UseStyle = InternalSelectedStyle;
 			}
 			else if (bButtonEnabled)
 			{
-				UseStyle = &InternalNormalStyle;
+				UseStyle = InternalNormalStyle;
 			}
 			else
 			{
-				UseStyle = &InternalDisabledStyle;
+				UseStyle = InternalDisabledStyle;
 			}
 		}
 
-		ButtonPtr->SetStyle(*UseStyle);
-		NativeOnButtonStyleChanged();
+		ButtonPtr->SetStyle(UseStyle);
+		NativeOnButtonStyleChanged(UseStyle);
 	}
 }
 

@@ -43,10 +43,12 @@ public:
 
 protected:
 	UFUNCTION()
-	virtual void OnOnceFinish();
+	void OnOnceFinish();
+	virtual void HandleOnOnceFinish();
 
 	UFUNCTION()
-	virtual void OnFinish();
+	void OnFinish();
+	virtual void HandleOnFinish();
 
 public:
 	FOnLevelStreamingHandleOnceFinish& GetHandleOnceFinishEvent();

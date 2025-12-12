@@ -11,7 +11,7 @@ bool UGenericButtonTextContent::OnInitialized()
 	ButtonContentDataTable->ForeachRow<FButtonTextContentTableRow>
 	("", [this](FName Key, const FButtonTextContentTableRow& Value)
 	 {
-		 if (GetButtonTag().GetTagName() == Value.ButtonTag)
+		 if (GetButtonTag() == Value.ButtonTag)
 		 {
 			 Cache = Value;
 		 }

@@ -7,6 +7,8 @@
 #include "Base/GenericWidget.h"
 #include "GenericButtonWidget.generated.h"
 
+class UOverlay;
+class UBackgroundBlur;
 class UGenericButtonContent;
 class USimpleTextBox;
 class UButtonSoundViewModel;
@@ -16,6 +18,8 @@ class UGenericButtonStyle;
 class UGenericButton;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FInteractableWidgetEvent, UGenericButtonWidget*, Button);
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnButtonStyleChangedEvent, UGenericButtonWidget*, Button, const FButtonStyle&, InButtonStyle);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSelectedStateChangedEvent, UGenericButtonWidget*, Button, bool, IsSelected);
 
@@ -74,12 +78,18 @@ public:
 
 public:
 	UFUNCTION(BlueprintPure)
+	UGenericButton* GetButton();
+
+	UFUNCTION(BlueprintPure)
 	WIDGETGROUPGENERATION_API FGameplayTag GetButtonTag() const;
 	WIDGETGROUPGENERATION_API void SetButtonTag(const FGameplayTag& InButtonTag);
 
 protected:
 	WIDGETGROUPGENERATION_API virtual UGenericButton* ConstructInternalButton();
-	TWeakObjectPtr<class UGenericButton> RootButton;
+
+private:
+	UPROPERTY()
+	TObjectPtr<UGenericButton> InternalButton = nullptr;
 
 	/* ==================== Input ==================== */
 public:
@@ -386,7 +396,7 @@ protected:
 	WIDGETGROUPGENERATION_API virtual void NativeOnLockedChanged(bool bIsLocked);
 	WIDGETGROUPGENERATION_API virtual void NativeOnLockClicked();
 	WIDGETGROUPGENERATION_API virtual void NativeOnLockDoubleClicked();
-	WIDGETGROUPGENERATION_API virtual void NativeOnButtonStyleChanged();
+	WIDGETGROUPGENERATION_API virtual void NativeOnButtonStyleChanged(const FButtonStyle& InButtonStyle);
 
 public:
 	UPROPERTY(BlueprintAssignable, Category = "Events")
@@ -432,7 +442,7 @@ public:
 	FInteractableWidgetEvent OnButtonLockDoubleClicked;
 
 	UPROPERTY(BlueprintAssignable, Category = "Events")
-	FInteractableWidgetEvent OnButtonStyleChanged;
+	FOnButtonStyleChangedEvent OnButtonStyleChanged;
 
 public:
 	UFUNCTION(BlueprintImplementableEvent)
@@ -478,7 +488,7 @@ public:
 	WIDGETGROUPGENERATION_API void HandleOnButtonLockDoubleClicked();
 
 	UFUNCTION(BlueprintImplementableEvent)
-	WIDGETGROUPGENERATION_API void HandleOnButtonStyleChanged();
+	WIDGETGROUPGENERATION_API void HandleOnButtonStyleChanged(const FButtonStyle& InButtonStyle);
 
 public:
 	UPROPERTY(meta=(BindWidgetAnimOptional), Transient)
@@ -493,6 +503,9 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Generic Button Widget | Style")
 	EDesiredButtonStyle DesiredButtonStyle = EDesiredButtonStyle::Normal;
 #endif
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Generic Button Widget | Style", meta = (ClampMin = "0"))
+	float BackgroundBlurStrength = 0.f;
 
 	/* The minimum width of the button (only used if greater than the style's minimum) */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Generic Button Widget | Style", meta = (ClampMin = "0"))
@@ -516,13 +529,20 @@ public:
 
 public:
 	UFUNCTION(BlueprintCallable)
+	WIDGETGROUPGENERATION_API void SetBackgroundBlurStrength(float InBackgroundBlur);
+
+	UFUNCTION(BlueprintCallable)
 	WIDGETGROUPGENERATION_API void SetMinWidth(int32 InMinWidth);
 
 	UFUNCTION(BlueprintCallable)
 	WIDGETGROUPGENERATION_API void SetMinHeight(int32 InMinHeight);
 
+	UFUNCTION(BlueprintCallable)
+	WIDGETGROUPGENERATION_API void UpdateButtonStyle();
+
 protected:
 	WIDGETGROUPGENERATION_API void RefreshDimensions() const;
+	WIDGETGROUPGENERATION_API void RefreshBackgroundBlur() const;
 
 private:
 	const UGenericButtonStyle* GetStyleCDO(const TSubclassOf<UGenericButtonStyle>& InClass) const;
@@ -640,7 +660,7 @@ protected:
 
 	/* ==================== Content ==================== */
 public:
-	UFUNCTION(BlueprintCallable,meta=(DeterminesOutputType="ButtonContentClass"))
+	UFUNCTION(BlueprintCallable, meta=(DeterminesOutputType="ButtonContentClass"))
 	UGenericButtonContent* AddButtonContentLink(TSubclassOf<UGenericButtonContent> ButtonContentClass, UWidget* InWidget, UDataTable* InDataTable);
 
 	UFUNCTION(BlueprintCallable)

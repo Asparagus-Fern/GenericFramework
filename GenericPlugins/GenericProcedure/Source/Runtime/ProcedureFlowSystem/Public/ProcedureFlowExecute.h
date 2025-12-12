@@ -10,7 +10,7 @@
 /**
  * 
  */
-UCLASS(Abstract, MinimalAPI, EditInlineNew)
+UCLASS(Abstract, MinimalAPI, Blueprintable, EditInlineNew)
 class UProcedureFlowExecute : public UGenericObject, public IProcedureFlowInterface
 {
 	GENERATED_BODY()

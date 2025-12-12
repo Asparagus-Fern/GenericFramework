@@ -9,6 +9,7 @@
 #include "Handle/SetLevelStreamingVisibilityHandle.h"
 #include "Handle/UnLoadLevelStreamingHandle.h"
 #include "Kismet/GameplayStatics.h"
+#include "Type/GenericType.h"
 
 ULevelStreamingSubsystem* ULevelStreamingSubsystem::Get(const UObject* WorldContextObject)
 {
@@ -65,7 +66,7 @@ ULoadLevelStreamingHandle* ULevelStreamingSubsystem::LoadLevelsBySetting(TArray<
 
 		if (!IsCurrentWorldContainLevel(Setting.Level))
 		{
-			GenericLOG(GenericLogLevelStreaming, Warning, TEXT("Current World Is Not Contain The Level : %s"), *Setting.Level->GetName())
+			GenericLOG(GenericLogLevelStreaming, Warning, TEXT("Current World Is Not Contain The Level"))
 			continue;
 		}
 
@@ -84,10 +85,11 @@ ULoadLevelStreamingHandle* ULevelStreamingSubsystem::LoadLevelsBySetting(TArray<
 	ULoadLevelStreamingHandle* LoadLevelStreamingHandle = NewObject<ULoadLevelStreamingHandle>(this);
 	LoadLevelStreamingHandle->GetHandleOnceFinishEvent().AddUObject(this, &ULevelStreamingSubsystem::OnHandleLevelOnceFinish);
 	LoadLevelStreamingHandle->GetHandleFinishEvent().AddUObject(this, &ULevelStreamingSubsystem::OnHandleLevelFinish);
-	LoadLevelStreamingHandle->Initialize(ValidSettings);
+	LoadLevelStreamingHandle->Initialize(ValidSettings, OnOnceFinish, OnFinish);
 
 	LevelStreamingHandles.Add(LoadLevelStreamingHandle);
 
+	BROADCAST_UNIFIED_DELEGATE(Delegate_OnLoadLevelStreamingHandleRegister, BPDelegate_OnLoadLevelStreamingHandleRegister, LoadLevelStreamingHandle)
 	LoadLevelStreamingHandle->Startup();
 	return LoadLevelStreamingHandle;
 }
@@ -131,7 +133,7 @@ UUnLoadLevelStreamingHandle* ULevelStreamingSubsystem::UnloadLevelsBySetting(TAr
 
 		if (!IsCurrentWorldContainLevel(Setting.Level))
 		{
-			GenericLOG(GenericLogLevelStreaming, Warning, TEXT("Current World Is Not Contain The Level : %s"), *Setting.Level->GetName())
+			GenericLOG(GenericLogLevelStreaming, Warning, TEXT("Current World Is Not Contain The Level"))
 			continue;
 		}
 
@@ -150,10 +152,11 @@ UUnLoadLevelStreamingHandle* ULevelStreamingSubsystem::UnloadLevelsBySetting(TAr
 	UUnLoadLevelStreamingHandle* UnLoadLevelStreamingHandle = NewObject<UUnLoadLevelStreamingHandle>(this);
 	UnLoadLevelStreamingHandle->GetHandleOnceFinishEvent().AddUObject(this, &ULevelStreamingSubsystem::OnHandleLevelOnceFinish);
 	UnLoadLevelStreamingHandle->GetHandleFinishEvent().AddUObject(this, &ULevelStreamingSubsystem::OnHandleLevelFinish);
-	UnLoadLevelStreamingHandle->Initialize(ValidSettings);
+	UnLoadLevelStreamingHandle->Initialize(ValidSettings, OnOnceFinish, OnFinish);
 
 	LevelStreamingHandles.Add(UnLoadLevelStreamingHandle);
 
+	BROADCAST_UNIFIED_DELEGATE(Delegate_OnUnLoadLevelStreamingHandleRegister, BPDelegate_OnUnLoadLevelStreamingHandleRegister, UnLoadLevelStreamingHandle)
 	UnLoadLevelStreamingHandle->Startup();
 	return UnLoadLevelStreamingHandle;
 }
@@ -196,9 +199,15 @@ USetLevelStreamingVisibilityHandle* ULevelStreamingSubsystem::SetLevelsVisibilit
 			continue;
 		}
 
+		if (Setting.Level.IsNull())
+		{
+			GenericLOG(GenericLogLevelStreaming, Warning, TEXT("Level Is InValid"))
+			continue;
+		}
+
 		if (!IsCurrentWorldContainLevel(Setting.Level))
 		{
-			GenericLOG(GenericLogLevelStreaming, Warning, TEXT("Current World Is Not Contain The Level : %s"), *Setting.Level->GetName())
+			GenericLOG(GenericLogLevelStreaming, Warning, TEXT("Current World Is Not Contain The Level"))
 			continue;
 		}
 
@@ -218,17 +227,17 @@ USetLevelStreamingVisibilityHandle* ULevelStreamingSubsystem::SetLevelsVisibilit
 	USetLevelStreamingVisibilityHandle* SetLevelStreamingVisibilityHandle = NewObject<USetLevelStreamingVisibilityHandle>(this);
 	SetLevelStreamingVisibilityHandle->GetHandleOnceFinishEvent().AddUObject(this, &ULevelStreamingSubsystem::OnHandleLevelOnceFinish);
 	SetLevelStreamingVisibilityHandle->GetHandleFinishEvent().AddUObject(this, &ULevelStreamingSubsystem::OnHandleLevelFinish);
-	SetLevelStreamingVisibilityHandle->Initialize(ValidSettings);
+	SetLevelStreamingVisibilityHandle->Initialize(ValidSettings, OnOnceFinish, OnFinish);
 
 	LevelStreamingHandles.Add(SetLevelStreamingVisibilityHandle);
 
+	BROADCAST_UNIFIED_DELEGATE(Delegate_OnSetLevelStreamingVisibilityHandleRegister, BPDelegate_OnSetLevelStreamingVisibilityHandleRegister, SetLevelStreamingVisibilityHandle)
 	SetLevelStreamingVisibilityHandle->Startup();
 	return SetLevelStreamingVisibilityHandle;
 }
 
-ULoadLevelStreamingHandle* ULevelStreamingSubsystem::LoadCurrentWorldLevelStreaming(const FOnHandleLevelStreamingOnceFinish& OnOnceFinish, const FOnHandleLevelStreamingFinish& OnFinish)
+TArray<TSoftObjectPtr<UWorld>> ULevelStreamingSubsystem::GetCurrentWorldLevelStreamingList() const
 {
-	/* 获取需要加载的关卡 */
 	TArray<TSoftObjectPtr<UWorld>> WorldToLoad;
 	for (const auto StreamingLevel : GetWorld()->GetStreamingLevels())
 	{
@@ -246,6 +255,13 @@ ULoadLevelStreamingHandle* ULevelStreamingSubsystem::LoadCurrentWorldLevelStream
 
 		WorldToLoad.Add(StreamingLevel->GetWorldAsset());
 	}
+	return WorldToLoad;
+}
+
+ULoadLevelStreamingHandle* ULevelStreamingSubsystem::LoadCurrentWorldLevelStreaming(const FOnHandleLevelStreamingOnceFinish& OnOnceFinish, const FOnHandleLevelStreamingFinish& OnFinish)
+{
+	/* 获取需要加载的关卡 */
+	const TArray<TSoftObjectPtr<UWorld>>& WorldToLoad = GetCurrentWorldLevelStreamingList();
 
 	if (WorldToLoad.IsEmpty())
 	{

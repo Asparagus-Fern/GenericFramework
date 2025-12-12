@@ -4,6 +4,7 @@
 
 #include "Components/ButtonSlot.h"
 #include "SWidget/SGenericButton.h"
+#include "Widgets/Layout/SBackgroundBlur.h"
 
 UGenericButton::UGenericButton(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -41,12 +42,25 @@ TSharedRef<SWidget> UGenericButton::RebuildWidget()
 			MyGenericButton.ToSharedRef()
 		];
 
+	MyBackgroundBlur = SNew(SBackgroundBlur)
+		.BlurStrength(BackgroundBlurStrength);
+
+	MyOverlay = SNew(SOverlay)
+		+ SOverlay::Slot()
+		[
+			MyBackgroundBlur.ToSharedRef()
+		]
+		+ SOverlay::Slot()
+		[
+			MyBox.ToSharedRef()
+		];
+
 	if (GetChildrenCount() > 0)
 	{
 		Cast<UButtonSlot>(GetContentSlot())->BuildSlot(MyGenericButton.ToSharedRef());
 	}
 
-	return MyBox.ToSharedRef();
+	return MyOverlay.ToSharedRef();
 }
 
 void UGenericButton::SynchronizeProperties()
@@ -64,6 +78,11 @@ void UGenericButton::SynchronizeProperties()
 		MyGenericButton->SetIsButtonEnabled(bButtonEnabled);
 		MyGenericButton->SetIsInteractionEnabled(bInteractionEnabled);
 	}
+
+	if (MyBackgroundBlur.IsValid())
+	{
+		MyBackgroundBlur->SetBlurStrength(BackgroundBlurStrength);
+	}
 }
 
 void UGenericButton::ReleaseSlateResources(bool bReleaseChildren)
@@ -71,6 +90,8 @@ void UGenericButton::ReleaseSlateResources(bool bReleaseChildren)
 	Super::ReleaseSlateResources(bReleaseChildren);
 	MyGenericButton.Reset();
 	MyBox.Reset();
+	MyBackgroundBlur.Reset();
+	MyOverlay.Reset();
 }
 
 void UGenericButton::SetButtonEnabled(bool bInIsButtonEnabled)
@@ -102,6 +123,14 @@ void UGenericButton::SetButtonFocusable(bool bInIsButtonFocusable)
 	if (MyGenericButton.IsValid())
 	{
 		MyGenericButton->SetIsButtonFocusable(bInIsButtonFocusable);
+	}
+}
+
+void UGenericButton::SetBackgroundBlurStrength(float InBackgroundBlurStrength)
+{
+	if (MyBackgroundBlur)
+	{
+		MyBackgroundBlur->SetBlurStrength(InBackgroundBlurStrength);
 	}
 }
 

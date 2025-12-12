@@ -11,8 +11,8 @@ class UUserWidgetBlueprint;
 /**
  * 
  */
-UCLASS(MinimalAPI)
-class UMovieSceneUMGTrack : public UMovieSceneNameableTrack
+UCLASS()
+class GENERICMOVIESCENESYSTEM_API UMovieSceneUMGTrack : public UMovieSceneNameableTrack
 {
 	GENERATED_BODY()
 

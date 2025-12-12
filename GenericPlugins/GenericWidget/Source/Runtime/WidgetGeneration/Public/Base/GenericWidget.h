@@ -88,6 +88,9 @@ protected:
 	UFUNCTION(BlueprintNativeEvent, Category="Widget Description View Model")
 	WIDGETGENERATION_API void OnTooltipTextChanged(const FText& InTooltipText);
 
+	UFUNCTION(BlueprintNativeEvent, Category="Widget Description View Model")
+	WIDGETGENERATION_API void OnIconChanged(const FSlateBrush& InIcon);
+
 	UPROPERTY(VisibleAnywhere, Instanced, Getter, Setter, BlueprintGetter="GetWidgetDescriptionViewModel", BlueprintSetter="SetWidgetDescriptionViewModel", Category = "Generic Widget | ViewModel")
 	TObjectPtr<UWidgetDescriptionViewModel> WidgetDescriptionViewModel = nullptr;
 
@@ -163,12 +166,12 @@ protected:
 	/* ==================== IWidgetAnimationInterface ==================== */
 public:
 	/* Animation While Widget Is Opening */
-	UPROPERTY(meta=(BindWidgetAnimOptional), Transient)
-	UWidgetAnimation* ActivedAnimation = nullptr;
+	UPROPERTY(VisibleAnywhere, meta=(BindWidgetAnimOptional), Transient)
+	TObjectPtr<UWidgetAnimation> ActivedAnimation = nullptr;
 
 	/* Animation While Widget Is PreClosed */
-	UPROPERTY(meta=(BindWidgetAnimOptional), Transient)
-	UWidgetAnimation* InactivedAnimation = nullptr;
+	UPROPERTY(VisibleAnywhere, meta=(BindWidgetAnimOptional), Transient)
+	TObjectPtr<UWidgetAnimation> InactivedAnimation = nullptr;
 
 public:
 	UFUNCTION(BlueprintPure)

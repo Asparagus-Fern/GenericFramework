@@ -7,12 +7,12 @@
 #include "Handle/UnLoadLevelStreamingHandle.h"
 
 
-void USetLevelStreamingVisibilityHandle::Initialize(const FSetLevelStreamingVisibilitySetting& InSetting)
+void USetLevelStreamingVisibilityHandle::Initialize(const FSetLevelStreamingVisibilitySetting& InSetting, const FOnHandleLevelStreamingOnceFinish& OnOnceFinish, const FOnHandleLevelStreamingFinish& OnFinish)
 {
-	Initialize(TArray<FSetLevelStreamingVisibilitySetting>{InSetting});
+	Initialize(TArray<FSetLevelStreamingVisibilitySetting>{InSetting}, OnOnceFinish, OnFinish);
 }
 
-void USetLevelStreamingVisibilityHandle::Initialize(TArray<FSetLevelStreamingVisibilitySetting> InSettings)
+void USetLevelStreamingVisibilityHandle::Initialize(TArray<FSetLevelStreamingVisibilitySetting> InSettings, const FOnHandleLevelStreamingOnceFinish& OnOnceFinish, const FOnHandleLevelStreamingFinish& OnFinish)
 {
 	for (auto& Setting : InSettings)
 	{
@@ -21,6 +21,9 @@ void USetLevelStreamingVisibilityHandle::Initialize(TArray<FSetLevelStreamingVis
 			SetLevelStreamingVisibilitySettings.Add(Setting);
 		}
 	}
+
+	OnSetLevelStreamingVisibilityOnceFinish = OnOnceFinish;
+	OnSetLevelStreamingVisibilityFinish = OnFinish;
 }
 
 void USetLevelStreamingVisibilityHandle::RemoveLevel(TSoftObjectPtr<UWorld> InLevel)
@@ -67,6 +70,17 @@ void USetLevelStreamingVisibilityHandle::ExecuteHandle(int32 Index)
 	SetLevelVisibility(SetLevelStreamingVisibilitySettings[Index].Level, SetLevelStreamingVisibilitySettings[Index].bVisible);
 }
 
+void USetLevelStreamingVisibilityHandle::HandleOnOnceFinish()
+{
+	Super::HandleOnOnceFinish();
+	OnSetLevelStreamingVisibilityOnceFinish.ExecuteIfBound();
+}
+
+void USetLevelStreamingVisibilityHandle::HandleOnFinish()
+{
+	Super::HandleOnFinish();
+	OnSetLevelStreamingVisibilityFinish.ExecuteIfBound();
+}
 
 void USetLevelStreamingVisibilityHandle::LoadLevelsBeforeSetVisibility()
 {

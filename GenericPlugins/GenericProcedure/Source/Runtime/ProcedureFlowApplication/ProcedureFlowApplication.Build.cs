@@ -11,8 +11,12 @@ public class ProcedureFlowApplication : ModuleRules
 			{
 				"Core",
 				"DevCore",
+				"UnrealMisc",
 				"GenericCameraSystem",
 				"ProcedureFlowSystem",
+				"WidgetGeneration",
+				"WidgetGroupGeneration",
+				"WidgetApplication",
 			}
 		);
 
@@ -26,6 +30,7 @@ public class ProcedureFlowApplication : ModuleRules
 
 				"GameplayTags",
 				"LevelStreaming",
+				"UMG",
 			}
 		);
 	}

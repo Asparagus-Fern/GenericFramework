@@ -68,6 +68,11 @@ float AGenericPawn::GetZoom()
 	return InputMovementComponent->GetZoom();
 }
 
+float AGenericPawn::GetMovementBaseSpeed()
+{
+	return InputMovementComponent->GetMovementBaseSpeed();
+}
+
 float AGenericPawn::GetMovementSpeedRate()
 {
 	return InputMovementComponent->GetMovementSpeedRate();

@@ -44,9 +44,15 @@ void UGenericButtonBuilderSettingAsset::GenerateBuilderSetting()
 
 	Modify();
 
+	FGameplayTagContainer Ignore;
+	for (auto& IgnoreButtonTag : IgnoreButtonTags)
+	{
+		Ignore.AddTag(IgnoreButtonTag);
+	}
+
 	/* Fill Menu Tag In GameplayTagContainer */
 	ButtonTable->ForeachRow<FGameplayTagTableRow>
-	("", [this](FName Key, const FGameplayTagTableRow& Value)
+	("", [this, Ignore](FName Key, const FGameplayTagTableRow& Value)
 	 {
 		 const FGameplayTag ButtonTag = FGameplayTag::RequestGameplayTag(Value.Tag);
 
@@ -57,14 +63,25 @@ void UGenericButtonBuilderSettingAsset::GenerateBuilderSetting()
 			 return;
 		 }
 
+		 /* Skip Generate Again */
 		 if (IsContainButtonTag(ButtonTag))
 		 {
 			 return;
 		 }
 
+		 /* Skip Generate The IgnoreButtonTags */
+		 for (auto& IgnoreButtonTag : IgnoreButtonTags)
+		 {
+			 if (ButtonTag.MatchesAny(Ignore))
+			 {
+				 return;
+			 }
+		 }
+
 		 UGenericButtonBuilderSetting* NewSetting = NewObject<UGenericButtonBuilderSetting>(this);
 		 NewSetting->ButtonTag = ButtonTag;
 		 NewSetting->DevComment = Value.DevComment;
+		 NewSetting->BuilderClass = DefaultBuilderClass;
 		 GenericButtonBuilderSettings.Add(NewSetting);
 	 }
 	);

@@ -127,12 +127,12 @@ public:
 
 public:
 	/* Should this window support transparency */
-	UPROPERTY(FieldNotify, EditAnywhere, BlueprintReadWrite, Category="Opacity")
-	EWindowTransparencyBP Transparency = EWindowTransparencyBP::None;
+	// UPROPERTY(FieldNotify, EditAnywhere, BlueprintReadWrite, Category="Opacity")
+	// EWindowTransparencyBP Transparency = EWindowTransparencyBP::None;
 
 	/* The initial opacity of the window */
-	UPROPERTY(FieldNotify, EditAnywhere, BlueprintReadWrite, meta=(EditCondition = "Transparency != EWindowTransparencyBP::None"), Category="Opacity")
-	float InitialOpacity = 1.f;
+	// UPROPERTY(FieldNotify, EditAnywhere, BlueprintReadWrite, meta=(EditCondition = "Transparency != EWindowTransparencyBP::None"), Category="Opacity")
+	// float InitialOpacity = 1.f;
 
 public:
 	/*

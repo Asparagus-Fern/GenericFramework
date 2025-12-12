@@ -10,7 +10,7 @@ class UUserWidgetBlueprint;
 /**
  * 
  */
-class FMovieSceneUMGSpawner : public IMovieSceneObjectSpawner
+class GENERICMOVIESCENESYSTEM_API FMovieSceneUMGSpawner : public IMovieSceneObjectSpawner
 {
 public:
 	static TSharedRef<IMovieSceneObjectSpawner> CreateObjectSpawner();

@@ -46,6 +46,7 @@ int32 ULevelStreamingHandle::GetIndexByLevel(const TSoftObjectPtr<UWorld>& InLev
 void ULevelStreamingHandle::OnOnceFinish()
 {
 	LevelIndex++;
+	HandleOnOnceFinish();
 	BroadcastOnceFinish();
 
 	if (GetLevels().IsValidIndex(LevelIndex))
@@ -58,10 +59,19 @@ void ULevelStreamingHandle::OnOnceFinish()
 	}
 }
 
+void ULevelStreamingHandle::HandleOnOnceFinish()
+{
+}
+
 void ULevelStreamingHandle::OnFinish()
 {
 	LevelIndex = 0;
+	HandleOnFinish();
 	BroadcastFinish();
+}
+
+void ULevelStreamingHandle::HandleOnFinish()
+{
 }
 
 void ULevelStreamingHandle::BroadcastOnceFinish()

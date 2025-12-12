@@ -17,8 +17,8 @@ class UUnLoadLevelStreamingHandle : public ULevelStreamingHandle
 
 	/* UUnLoadLevelStreamingHandle */
 public:
-	void Initialize(const FUnloadLevelStreamingSetting& InSetting);
-	void Initialize(TArray<FUnloadLevelStreamingSetting> InSettings);
+	void Initialize(const FUnloadLevelStreamingSetting& InSetting, const FOnHandleLevelStreamingOnceFinish& OnOnceFinish, const FOnHandleLevelStreamingFinish& OnFinish);
+	void Initialize(TArray<FUnloadLevelStreamingSetting> InSettings, const FOnHandleLevelStreamingOnceFinish& OnOnceFinish, const FOnHandleLevelStreamingFinish& OnFinish);
 
 	/* ULevelStreamingHandle */
 public:
@@ -26,11 +26,16 @@ public:
 	virtual TArray<TSoftObjectPtr<UWorld>> GetLevels() override;
 	virtual void ExecuteHandle(int32 Index) override;
 
+	virtual void HandleOnOnceFinish() override;
+	virtual void HandleOnFinish() override;
+
 	/* UUnLoadLevelStreamingHandle */
 public:
 	TArray<FUnloadLevelStreamingSetting>& GetUnLoadLevelStreamingSettings() { return UnLoadLevelStreamingSettings; }
 
 private:
 	TArray<FUnloadLevelStreamingSetting> UnLoadLevelStreamingSettings;
+	FOnHandleLevelStreamingOnceFinish OnUnLoadLevelStreamingOnceFinish;
+	FOnHandleLevelStreamingFinish OnUnLoadLevelStreamingFinish;
 	void UnLoadLevel(const TSoftObjectPtr<UWorld>& Level, const bool bShouldBlockOnUnload);
 };

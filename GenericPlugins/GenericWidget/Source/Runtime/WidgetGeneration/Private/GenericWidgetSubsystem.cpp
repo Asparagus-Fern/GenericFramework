@@ -224,6 +224,18 @@ void UGenericWidgetSubsystem::InactiveWidget(FCloseWidgetParameter& CloseWidgetP
 	CloseWidgetParameter.WidgetToHandle->SetIsActived(false);
 }
 
+void UGenericWidgetSubsystem::DestroyWidget()
+{
+	DestroyTimer.Invalidate();
+
+	for (auto& GarbageWidget : GarbageWidgets)
+	{
+		GarbageWidget->MarkAsGarbage();
+	}
+
+	GarbageWidgets.Reset();
+}
+
 void UGenericWidgetSubsystem::OnActiveAnimationPlayFinish(UGenericWidget* InWidget)
 {
 	InWidget->GetOnWidgetActiveAnimationPlayFinish().RemoveAll(this);
@@ -233,8 +245,8 @@ void UGenericWidgetSubsystem::OnActiveAnimationPlayFinish(UGenericWidget* InWidg
 		FOpenWidgetParameter Parameter = *OpenWidgetParameters.FindByKey(InWidget);
 		OpenWidgetParameters.Remove(Parameter);
 
-		Parameter.OnFinish.ExecuteIfBound(Parameter.WidgetToHandle);
 		BROADCAST_UNIFIED_DELEGATE(Delegate_PostWidgetOpened, BPDelegate_PostWidgetOpened, Parameter.WidgetToHandle);
+		Parameter.OnFinish.ExecuteIfBound(Parameter.WidgetToHandle);
 	}
 }
 
@@ -247,14 +259,15 @@ void UGenericWidgetSubsystem::OnInactiveAnimationPlayFinish(UGenericWidget* InWi
 		FCloseWidgetParameter Parameter = *CloseWidgetParameters.FindByKey(InWidget);
 		CloseWidgetParameters.Remove(Parameter);
 
-		Parameter.OnFinish.ExecuteIfBound(Parameter.WidgetToHandle);
-		BROADCAST_UNIFIED_DELEGATE(Delegate_PostWidgetClosed, BPDelegate_PostWidgetClosed, Parameter.WidgetToHandle);
-
 		if (Parameter.bMarkAsGarbage)
 		{
 			InWidget->NativeOnDestroy();
 			Widgets.Remove(Parameter.WidgetToHandle);
-			InWidget->MarkAsGarbage();
+			GarbageWidgets.Add(InWidget);
+			DestroyTimer = GetWorld()->GetTimerManager().SetTimerForNextTick(FTimerDelegate::CreateUObject(this, &UGenericWidgetSubsystem::DestroyWidget));
 		}
+
+		BROADCAST_UNIFIED_DELEGATE(Delegate_PostWidgetClosed, BPDelegate_PostWidgetClosed, Parameter.WidgetToHandle);
+		Parameter.OnFinish.ExecuteIfBound(Parameter.WidgetToHandle);
 	}
 }

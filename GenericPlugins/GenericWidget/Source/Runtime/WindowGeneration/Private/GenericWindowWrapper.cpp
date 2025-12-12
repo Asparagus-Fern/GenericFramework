@@ -6,7 +6,8 @@
 #include "GenericWindowType.h"
 #include "GenericWindowViewModel.h"
 #include "Blueprint/UserWidget.h"
-#include "Interfaces/IMainFrameModule.h"
+
+// #include "Interfaces/IMainFrameModule.h"
 
 UGenericWindowWrapper::UGenericWindowWrapper(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -71,13 +72,13 @@ void UGenericWindowWrapper::OpenWindow()
 
 		if (WindowViewModel->IsModalWindow)
 		{
-			IMainFrameModule& MainFrame = FModuleManager::LoadModuleChecked<IMainFrameModule>("MainFrame");
-			TSharedPtr<SWindow> ParentWindow = MainFrame.GetParentWindow();
-			if (ParentWindow.IsValid())
-			{
-				FSlateApplication::Get().AddModalWindow(Window.ToSharedRef(), ParentWindow);
-				OnWindowOpened.Broadcast();
-			}
+			// IMainFrameModule& MainFrame = FModuleManager::LoadModuleChecked<IMainFrameModule>("MainFrame");
+			// TSharedPtr<SWindow> ParentWindow = MainFrame.GetParentWindow();
+			// if (ParentWindow.IsValid())
+			// {
+			// 	FSlateApplication::Get().AddModalWindow(Window.ToSharedRef(), ParentWindow);
+			// 	OnWindowOpened.Broadcast();
+			// }
 		}
 		else
 		{

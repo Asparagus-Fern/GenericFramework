@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
+#include "GenericButtonBuilder.h"
 #include "Engine/DataAsset.h"
 #include "GenericButtonBuilderSettingAsset.generated.h"
 
@@ -26,11 +27,21 @@ public:
 #endif
 
 public:
+	/* The GameplayTag Under RootButtonTag Will Be Generated(Include RootButtonTag) */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="UI.Button"))
 	FGameplayTag RootButtonTag = FGameplayTag::EmptyTag;
 
+	/* The GameplayTag Under IgnoreButtonTags Will Not Be Generated */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories="UI.Button"))
+	TArray<FGameplayTag> IgnoreButtonTags;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TObjectPtr<UDataTable> ButtonTable = nullptr;
+
+#if WITH_EDITORONLY_DATA
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UGenericButtonBuilder> DefaultBuilderClass = UGenericButtonBuilder::StaticClass();
+#endif
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced, meta = (TitleProperty = "ButtonTag"))
 	TArray<TObjectPtr<UGenericButtonBuilderSetting>> GenericButtonBuilderSettings;

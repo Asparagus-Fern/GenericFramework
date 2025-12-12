@@ -48,6 +48,7 @@ public:
 	virtual float GetZoom() { return 0.f; }
 
 public:
+	virtual float GetMovementBaseSpeed() { return 0.f; }
 	virtual float GetMovementSpeedRate() { return 0.f; }
 	virtual float GetRotationSpeedRate() { return 0.f; }
 	virtual float GetZoomSpeedRate() { return 0.f; }

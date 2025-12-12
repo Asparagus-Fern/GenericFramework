@@ -17,8 +17,8 @@ class USetLevelStreamingVisibilityHandle : public ULevelStreamingHandle
 
 	/* ULoadLevelStreamingHandle */
 public:
-	void Initialize(const FSetLevelStreamingVisibilitySetting& InSetting);
-	void Initialize(TArray<FSetLevelStreamingVisibilitySetting> InSettings);
+	void Initialize(const FSetLevelStreamingVisibilitySetting& InSetting, const FOnHandleLevelStreamingOnceFinish& OnOnceFinish, const FOnHandleLevelStreamingFinish& OnFinish);
+	void Initialize(TArray<FSetLevelStreamingVisibilitySetting> InSettings, const FOnHandleLevelStreamingOnceFinish& OnOnceFinish, const FOnHandleLevelStreamingFinish& OnFinish);
 
 	/* ULevelStreamingHandle */
 public:
@@ -26,12 +26,17 @@ public:
 	virtual TArray<TSoftObjectPtr<UWorld>> GetLevels() override;
 	virtual void ExecuteHandle(int32 Index) override;
 
+	virtual void HandleOnOnceFinish() override;
+	virtual void HandleOnFinish() override;
+
 	/* ULoadLevelStreamingHandle */
 public:
 	TArray<FSetLevelStreamingVisibilitySetting>& GetSetLevelStreamingVisibilitySettings() { return SetLevelStreamingVisibilitySettings; }
 
 private:
 	TArray<FSetLevelStreamingVisibilitySetting> SetLevelStreamingVisibilitySettings;
+	FOnHandleLevelStreamingOnceFinish OnSetLevelStreamingVisibilityOnceFinish;
+	FOnHandleLevelStreamingFinish OnSetLevelStreamingVisibilityFinish;
 
 	void LoadLevelsBeforeSetVisibility();
 	void SetLevelVisibility(const TSoftObjectPtr<UWorld>& Level, const bool bVisible);

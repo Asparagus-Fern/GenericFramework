@@ -110,13 +110,16 @@ protected:
 	WIDGETGROUPGENERATION_API void DestroyChildButtonGroup(FGameplayTag InButtonTag);
 
 	WIDGETGROUPGENERATION_API UGenericButtonContainer* BuildButtonGroupWidget(FGameplayTag InButtonTag, UGenericButtonWidget* ButtonWidget) const;
+	WIDGETGROUPGENERATION_API virtual void NativeOnButtonGroupBuilt(const FButtonGroupBuildParameter& ButtonGroupBuildParameter);
 	UFUNCTION(BlueprintNativeEvent)
 	WIDGETGROUPGENERATION_API void OnButtonGroupBuilt(const FButtonGroupBuildParameter& ButtonGroupBuildParameter);
 
 	WIDGETGROUPGENERATION_API UGenericButtonWidget* BuildButtonWidget(FGameplayTag InButtonTag, UGenericButtonContainer* GroupWidget) const;
+	WIDGETGROUPGENERATION_API virtual void NativeOnButtonBuilt(const FButtonBuildParameter& ButtonBuildParameter);
 	UFUNCTION(BlueprintNativeEvent)
 	WIDGETGROUPGENERATION_API void OnButtonBuilt(const FButtonBuildParameter& ButtonBuildParameter);
-
+	
+ 
 	UFUNCTION(BlueprintNativeEvent)
 	WIDGETGROUPGENERATION_API void OnButtonGroupDestroy(FGameplayTag InButtonTag);
 
@@ -160,10 +163,10 @@ protected:
 
 public:
 	UFUNCTION(BlueprintPure)
-	APlayerController* GetOwnerPlayer() const;
+	WIDGETGROUPGENERATION_API APlayerController* GetOwnerPlayer() const;
 
 	UFUNCTION(BlueprintPure)
-	UGenericButtonAsset* GetButtonAsset() const;
+	WIDGETGROUPGENERATION_API UGenericButtonAsset* GetButtonAsset() const;
 
 	UFUNCTION(BlueprintPure)
 	WIDGETGROUPGENERATION_API TArray<FGameplayTag> GetAllButtonTags() const;

@@ -19,6 +19,7 @@ public:
 	GENERICGAMEPLAYSYSTEM_API AThirdPersonPawn(const FObjectInitializer& ObjectInitializer);
 	GENERICGAMEPLAYSYSTEM_API virtual void BeginPlay() override;
 	GENERICGAMEPLAYSYSTEM_API virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+	GENERICGAMEPLAYSYSTEM_API virtual void Tick(float DeltaSeconds) override;
 	GENERICGAMEPLAYSYSTEM_API virtual void CalcCamera(float DeltaTime, FMinimalViewInfo& OutResult) override;
 
 public:

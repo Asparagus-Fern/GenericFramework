@@ -63,7 +63,6 @@ public class ApplicationRuntime : ModuleRules
 
 				/* Marketplace */
 				"DBTween",
-				"UltraDynamicSkyUtilities"
 			}
 		);
 

@@ -48,11 +48,11 @@ public:
 	/* Delegate From UGenericGameHUDSubsystem */
 private:
 	void PostHUDCreated();
-	
+
 	/* UGenericWidgetSubsystem */
 public:
-	UGenericWidget* GetActivedWidget(FGameplayTag InTag) const;
-	TArray<UGenericWidget*> GetActivedWidgets() const;
+	WIDGETGENERATION_API UGenericWidget* GetActivedWidget(FGameplayTag InTag) const;
+	WIDGETGENERATION_API TArray<UGenericWidget*> GetActivedWidgets() const;
 
 	template <typename T>
 	T* GetActiveWidget(FGameplayTag InWidgetTag)
@@ -93,6 +93,10 @@ public:
 	virtual void InactiveWidget(FCloseWidgetParameter& CloseWidgetParameter);
 
 private:
+	FTimerHandle DestroyTimer;
+	virtual void DestroyWidget();
+
+private:
 	void OnActiveAnimationPlayFinish(UGenericWidget* InWidget);
 	void OnInactiveAnimationPlayFinish(UGenericWidget* InWidget);
 
@@ -128,9 +132,11 @@ public:
 	FBPDelegate_PostWidgetClosed BPDelegate_PostWidgetClosed;
 
 private:
-	/* All Widgets */
 	UPROPERTY(Transient)
 	TArray<TObjectPtr<UGenericWidget>> Widgets;
+
+	UPROPERTY(Transient)
+	TArray<TObjectPtr<UGenericWidget>> GarbageWidgets;
 
 	UPROPERTY(Transient)
 	TArray<FOpenWidgetParameter> OpenWidgetParameters;

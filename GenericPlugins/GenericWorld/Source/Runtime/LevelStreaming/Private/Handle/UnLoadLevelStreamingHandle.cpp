@@ -5,12 +5,12 @@
 #include "BPFunctions_LevelStreaming.h"
 #include "Kismet/GameplayStatics.h"
 
-void UUnLoadLevelStreamingHandle::Initialize(const FUnloadLevelStreamingSetting& InSetting)
+void UUnLoadLevelStreamingHandle::Initialize(const FUnloadLevelStreamingSetting& InSetting, const FOnHandleLevelStreamingOnceFinish& OnOnceFinish, const FOnHandleLevelStreamingFinish& OnFinish)
 {
-	Initialize(TArray<FUnloadLevelStreamingSetting>{InSetting});
+	Initialize(TArray<FUnloadLevelStreamingSetting>{InSetting}, OnOnceFinish, OnFinish);
 }
 
-void UUnLoadLevelStreamingHandle::Initialize(TArray<FUnloadLevelStreamingSetting> InSettings)
+void UUnLoadLevelStreamingHandle::Initialize(TArray<FUnloadLevelStreamingSetting> InSettings, const FOnHandleLevelStreamingOnceFinish& OnOnceFinish, const FOnHandleLevelStreamingFinish& OnFinish)
 {
 	for (auto& Setting : InSettings)
 	{
@@ -19,6 +19,9 @@ void UUnLoadLevelStreamingHandle::Initialize(TArray<FUnloadLevelStreamingSetting
 			UnLoadLevelStreamingSettings.Add(Setting);
 		}
 	}
+
+	OnUnLoadLevelStreamingOnceFinish = OnOnceFinish;
+	OnUnLoadLevelStreamingFinish = OnFinish;
 }
 
 void UUnLoadLevelStreamingHandle::RemoveLevel(TSoftObjectPtr<UWorld> InLevel)
@@ -47,13 +50,25 @@ TArray<TSoftObjectPtr<UWorld>> UUnLoadLevelStreamingHandle::GetLevels()
 
 void UUnLoadLevelStreamingHandle::ExecuteHandle(int32 Index)
 {
-	if (!UBPFunctions_LevelStreaming::IsLevelLoaded(this,UnLoadLevelStreamingSettings[Index].Level))
+	if (!UBPFunctions_LevelStreaming::IsLevelLoaded(this, UnLoadLevelStreamingSettings[Index].Level))
 	{
 		OnOnceFinish();
 		return;
 	}
 
 	UnLoadLevel(UnLoadLevelStreamingSettings[Index].Level, UnLoadLevelStreamingSettings[Index].bShouldBlockOnUnload);
+}
+
+void UUnLoadLevelStreamingHandle::HandleOnOnceFinish()
+{
+	Super::HandleOnOnceFinish();
+	OnUnLoadLevelStreamingOnceFinish.ExecuteIfBound();
+}
+
+void UUnLoadLevelStreamingHandle::HandleOnFinish()
+{
+	Super::HandleOnFinish();
+	OnUnLoadLevelStreamingFinish.ExecuteIfBound();
 }
 
 void UUnLoadLevelStreamingHandle::UnLoadLevel(const TSoftObjectPtr<UWorld>& Level, const bool bShouldBlockOnUnload)

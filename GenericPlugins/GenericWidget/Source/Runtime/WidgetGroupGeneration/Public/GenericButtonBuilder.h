@@ -21,7 +21,7 @@ class UGenericButtonGroup;
  * Used To Generate Button, And Also The Button Data Source.
  * Inherit This Class To Make Custom Data.
  */
-UCLASS(MinimalAPI, EditInlineNew)
+UCLASS(MinimalAPI, EditInlineNew, Blueprintable)
 class UGenericButtonBuilder : public UGenericObject
 {
 	GENERATED_BODY()
@@ -44,7 +44,7 @@ public:
 	/* Custom Button Group Class To Manager All Child Buttons if Exist */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<UGenericButtonGroup> ButtonGroupClass = nullptr;
-	
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Instanced)
 	TObjectPtr<UWidgetDescriptionViewModel> WidgetDescriptionViewModel = nullptr;
 

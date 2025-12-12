@@ -52,6 +52,9 @@ public:
 	virtual float GetZoom() override;
 
 	UFUNCTION(BlueprintPure)
+	virtual float GetMovementBaseSpeed() override;
+	
+	UFUNCTION(BlueprintPure)
 	virtual float GetMovementSpeedRate() override;
 
 	UFUNCTION(BlueprintPure)
@@ -69,6 +72,9 @@ public:
 	void SetActiveCameraRig(ECameraRig InCameraRig);
 
 public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(ClampMin = 0, UIMin = 0))
+	float MovementBaseSpeed = 50.f;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(ClampMin = 0, UIMin = 0))
 	float MovementSpeedRate = 1.f;
 

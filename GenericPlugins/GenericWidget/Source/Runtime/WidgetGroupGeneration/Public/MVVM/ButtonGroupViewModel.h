@@ -17,5 +17,5 @@ class WIDGETGROUPGENERATION_API UButtonGroupViewModel : public UMVVMViewModelBas
 public:
 	/* Hidden Parent Container Widget When The Button Is Selected, Visible When The Button Is Deselected */
 	UPROPERTY(FieldNotify, EditAnywhere, BlueprintReadWrite)
-	bool bShouldHiddenParentContainer = false;
+	bool bFlipFlowContainer = false;
 };

@@ -6,14 +6,9 @@
 class FGenericMovieSceneSystemModule : public IModuleInterface
 {
 public:
-    virtual void StartupModule() override;
-    virtual void ShutdownModule() override;
-    
-private:
-    FDelegateHandle OnCreateMovieSceneUMGSpawnerDelegateHandle;
+	virtual void StartupModule() override;
+	virtual void ShutdownModule() override;
 
-#if WITH_EDITOR
-    FDelegateHandle EditorUMGSpawnerDelegateHandle;
-    FDelegateHandle UMGTrackCreateEditorHandle;
-#endif
+private:
+	FDelegateHandle OnCreateMovieSceneUMGSpawnerDelegateHandle;
 };

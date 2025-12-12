@@ -94,6 +94,22 @@ void UGenericButtonCollection::BuildChildButtonGroup(const FGameplayTag InButton
 		return;
 	}
 
+	/* Hidden Parent Container, When Parent Button Clicked, Just Flip Flow This Button Visibility */
+	FGameplayTag ParentGameplayTag = UBPFunctions_GameplayTag::GetDirectGameplayTagParent(InButtonTag);
+	if (UGenericButtonGroup* ParentButtonGroup = GetButtonGroup(ParentGameplayTag))
+	{
+		if (UButtonGroupViewModel* ParentButtonGroupViewModel = ParentButtonGroup->GetButtonGroupViewModel())
+		{
+			if (ParentButtonGroupViewModel->bFlipFlowContainer)
+			{
+				if (ParentButtonGroup->GetButtonGroupWidget()->IsVisible())
+				{
+					ParentButtonGroup->GetButtonGroupWidget()->SetVisibility(ESlateVisibility::Collapsed);
+				}
+			}
+		}
+	}
+
 	/* Get This Actived Button Widget */
 	UGenericButtonWidget* ButtonWidget = GenericWidgetSubsystem->GetActiveWidget<UGenericButtonWidget>(InButtonTag);
 
@@ -127,11 +143,6 @@ void UGenericButtonCollection::BuildChildButtonGroup(const FGameplayTag InButton
 			{
 				/* Try To Open Child Widget, It Will Add To Container Through a Valid Container Widget, See More In UGenericGameSlotSubsystem::AddSlotWidget */
 				ChildButtonWidget->SetButtonTag(ChildButtonTag);
-				if (!GenericWidgetSubsystem->OpenGenericWidget(ChildButtonWidget))
-				{
-					GenericLOG(GenericLogUI, Error, TEXT("Open Button Widget Fail"))
-					continue;
-				}
 
 				/* Add Widget To Button Group */
 				ButtonGroup->AddButton(ChildButtonWidget);
@@ -150,7 +161,13 @@ void UGenericButtonCollection::BuildChildButtonGroup(const FGameplayTag InButton
 					ButtonBuildParameter.ChildButtonTag = ChildButtonTag;
 					ButtonBuildParameter.ChildButtonBuilder = ChildButtonBuilder;
 					ButtonBuildParameter.ChildButtonWidget = ChildButtonWidget;
+					NativeOnButtonBuilt(ButtonBuildParameter);
 					OnButtonBuilt(ButtonBuildParameter);
+				}
+
+				if (!GenericWidgetSubsystem->OpenGenericWidget(ChildButtonWidget))
+				{
+					GenericLOG(GenericLogUI, Error, TEXT("Open Button Widget Fail"))
 				}
 			}
 		}
@@ -163,7 +180,19 @@ void UGenericButtonCollection::BuildChildButtonGroup(const FGameplayTag InButton
 			ButtonGroupBuildParameter.ButtonBuilder = ButtonBuilder;
 			ButtonGroupBuildParameter.ButtonGroup = ButtonGroup;
 			ButtonGroupBuildParameter.ButtonContainer = ButtonContainer;
+			NativeOnButtonGroupBuilt(ButtonGroupBuildParameter);
 			OnButtonGroupBuilt(ButtonGroupBuildParameter);
+		}
+
+		for (const auto& Button : ButtonGroup->GetAllButton())
+		{
+			Button->UpdateButtonStyle();
+
+			if (Button->GetIsDefaultSelected())
+			{
+				ButtonGroup->SetSelectedButton(Button);
+				return;
+			}
 		}
 	}
 }
@@ -185,6 +214,7 @@ void UGenericButtonCollection::DestroyChildButtonGroup(const FGameplayTag InButt
 	UGenericWidgetSubsystem* GenericWidgetSubsystem = UGenericWidgetSubsystem::Get(this);
 	TObjectPtr<UGenericButtonGroup> ButtonGroup = ButtonGroups.FindRef(InButtonTag);
 
+	ButtonGroup->DeselectAll();
 	OnButtonGroupDestroy(InButtonTag);
 
 	if (IsValid(GenericWidgetSubsystem))
@@ -242,19 +272,12 @@ UGenericButtonContainer* UGenericButtonCollection::BuildButtonGroupWidget(const 
 	return ButtonContainer;
 }
 
+void UGenericButtonCollection::NativeOnButtonGroupBuilt(const FButtonGroupBuildParameter& ButtonGroupBuildParameter)
+{
+}
+
 void UGenericButtonCollection::OnButtonGroupBuilt_Implementation(const FButtonGroupBuildParameter& ButtonGroupBuildParameter)
 {
-	if (UButtonGroupViewModel* ButtonGroupViewModel = ButtonGroupBuildParameter.ButtonBuilder->ButtonGroupViewModel)
-	{
-		if (ButtonGroupViewModel->bShouldHiddenParentContainer)
-		{
-			FGameplayTag ParentGameplayTag = UBPFunctions_GameplayTag::GetDirectGameplayTagParent(ButtonGroupBuildParameter.ButtonTag);
-			if (UGenericButtonGroup* ParentButtonGroup = GetButtonGroup(ParentGameplayTag))
-			{
-				ParentButtonGroup->GetButtonGroupWidget()->SetVisibility(ESlateVisibility::Collapsed);
-			}
-		}
-	}
 }
 
 UGenericButtonWidget* UGenericButtonCollection::BuildButtonWidget(const FGameplayTag InButtonTag, UGenericButtonContainer* GroupWidget) const
@@ -269,6 +292,10 @@ UGenericButtonWidget* UGenericButtonCollection::BuildButtonWidget(const FGamepla
 	}
 
 	return Button;
+}
+
+void UGenericButtonCollection::NativeOnButtonBuilt(const FButtonBuildParameter& ButtonBuildParameter)
+{
 }
 
 void UGenericButtonCollection::OnButtonBuilt_Implementation(const FButtonBuildParameter& ButtonBuildParameter)
@@ -393,6 +420,25 @@ void UGenericButtonCollection::OnButtonUnhovered_Implementation(UGenericButtonGr
 
 void UGenericButtonCollection::OnButtonClicked_Implementation(UGenericButtonGroup* InButtonGroup, UGenericButtonWidget* InButton)
 {
+	if (UGenericButtonGroup* ButtonGroup = GetButtonGroup(InButton->GetButtonTag()))
+	{
+		if (UButtonGroupViewModel* ButtonGroupViewModel = ButtonGroup->GetButtonGroupViewModel())
+		{
+			if (ButtonGroupViewModel->bFlipFlowContainer)
+			{
+				if (ButtonGroup->GetButtonGroupWidget()->IsVisible())
+				{
+					ButtonGroup->GetButtonGroupWidget()->PlayWidgetAnimation(false);
+				}
+				else
+				{
+					ButtonGroup->GetButtonGroupWidget()->PlayWidgetAnimation(true);
+				}
+			}
+		}
+	}
+
+
 	FName NodeName = FButtonCollectionEvent::GetEventNodeName(FButtonCollectionEvent::OnClickedEventName, InButton->GetButtonTag());
 	if (UFunction* Function = FindFunction(NodeName))
 	{
@@ -445,7 +491,6 @@ void UGenericButtonCollection::OnButtonSelectionChanged_Implementation(UGenericB
 			Group->DeselectAll();
 			DestroyChildButtonGroup(InButton->GetButtonTag());
 		}
-
 		ProcessOnSelectionChanged(InButton->GetButtonTag(), Selection);
 	}
 }

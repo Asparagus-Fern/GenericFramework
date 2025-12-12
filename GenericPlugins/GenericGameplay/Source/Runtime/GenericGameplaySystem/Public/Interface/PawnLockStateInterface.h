@@ -15,19 +15,19 @@ struct FPawnLocationLimit
 	GENERATED_BODY()
 
 public:
-	UPROPERTY()
+	UPROPERTY(meta=(InlineEditConditionToggle))
 	bool bLimitLocationX = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditCondition = "bLimitLocationX"))
 	FVector2D LocationXRange = FVector2D::Zero();
 
-	UPROPERTY()
+	UPROPERTY(meta=(InlineEditConditionToggle))
 	bool bLimitLocationY = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditCondition = "bLimitLocationY"))
 	FVector2D LocationYRange = FVector2D::Zero();
 
-	UPROPERTY()
+	UPROPERTY(meta=(InlineEditConditionToggle))
 	bool bLimitLocationZ = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditCondition = "bLimitLocationZ"))
@@ -47,19 +47,19 @@ struct FPawnRotationLimit
 	GENERATED_BODY()
 
 public:
-	UPROPERTY()
+	UPROPERTY(meta=(InlineEditConditionToggle))
 	bool bLimitPitch = true;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditCondition = "bLimitPitch", ClampMin = "-90", UIMin = "-90", ClampMax = "90", UIMax = "90"))
 	FVector2D PitchRange = FVector2D(-90.f, 10.f);
 
-	UPROPERTY()
+	UPROPERTY(meta=(InlineEditConditionToggle))
 	bool bLimitYaw = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditCondition = "bLimitYaw", ClampMin = "0", UIMin = "0", ClampMax = "360", UIMax = "360"))
 	FVector2D YawRange = FVector2D::Zero();
 
-	UPROPERTY()
+	UPROPERTY(meta=(InlineEditConditionToggle))
 	bool bLimitRoll = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditCondition = "bLimitRoll", ClampMin = "0", UIMin = "0", ClampMax = "360", UIMax = "360"))
@@ -79,7 +79,7 @@ struct FSpringArmLimit
 	GENERATED_BODY()
 
 public:
-	UPROPERTY()
+	UPROPERTY(meta=(InlineEditConditionToggle))
 	bool bLimitSpringArmLength = true;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditCondition = "bLimitSpringArmLength", ClampMin = "0", UIMin = "0"))
@@ -126,7 +126,7 @@ public:
 
 // This class does not need to be modified.
 UINTERFACE()
-class UPawnLockStateInterface : public UInterface
+class GENERICGAMEPLAYSYSTEM_API UPawnLockStateInterface : public UInterface
 {
 	GENERATED_BODY()
 };

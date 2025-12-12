@@ -5,12 +5,12 @@
 #include "BPFunctions_LevelStreaming.h"
 #include "Kismet/GameplayStatics.h"
 
-void ULoadLevelStreamingHandle::Initialize(const FLoadLevelStreamingSetting& InSetting)
+void ULoadLevelStreamingHandle::Initialize(const FLoadLevelStreamingSetting& InSetting, const FOnHandleLevelStreamingOnceFinish& OnOnceFinish, const FOnHandleLevelStreamingFinish& OnFinish)
 {
-	Initialize(TArray<FLoadLevelStreamingSetting>{InSetting});
+	Initialize(TArray<FLoadLevelStreamingSetting>{InSetting}, OnOnceFinish, OnFinish);
 }
 
-void ULoadLevelStreamingHandle::Initialize(TArray<FLoadLevelStreamingSetting> InSettings)
+void ULoadLevelStreamingHandle::Initialize(TArray<FLoadLevelStreamingSetting> InSettings, const FOnHandleLevelStreamingOnceFinish& OnOnceFinish, const FOnHandleLevelStreamingFinish& OnFinish)
 {
 	for (auto& Setting : InSettings)
 	{
@@ -19,6 +19,9 @@ void ULoadLevelStreamingHandle::Initialize(TArray<FLoadLevelStreamingSetting> In
 			LoadLevelStreamingSettings.Add(Setting);
 		}
 	}
+
+	OnLoadLevelStreamingOnceFinish = OnOnceFinish;
+	OnLoadLevelStreamingFinish = OnFinish;
 }
 
 void ULoadLevelStreamingHandle::RemoveLevel(TSoftObjectPtr<UWorld> InLevel)
@@ -54,6 +57,18 @@ void ULoadLevelStreamingHandle::ExecuteHandle(int32 Index)
 	}
 
 	LoadLevel(LoadLevelStreamingSettings[Index].Level, LoadLevelStreamingSettings[Index].bMakeVisibleAfterLoad, LoadLevelStreamingSettings[Index].bShouldBlockOnLoad);
+}
+
+void ULoadLevelStreamingHandle::HandleOnOnceFinish()
+{
+	Super::HandleOnOnceFinish();
+	OnLoadLevelStreamingOnceFinish.ExecuteIfBound();
+}
+
+void ULoadLevelStreamingHandle::HandleOnFinish()
+{
+	Super::HandleOnFinish();
+	OnLoadLevelStreamingFinish.ExecuteIfBound();
 }
 
 void ULoadLevelStreamingHandle::LoadLevel(const TSoftObjectPtr<UWorld>& Level, const bool bMakeVisibleAfterLoad, const bool bShouldBlockOnLoad)

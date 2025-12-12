@@ -16,7 +16,7 @@ public class WidgetGeneration : ModuleRules
 				"CommonInput",
 				"InputCore",
 				"ModelViewViewModel",
-				
+
 				"UnrealMisc",
 				"DevCore",
 				"DevSlateCore",
@@ -31,7 +31,8 @@ public class WidgetGeneration : ModuleRules
 				"Slate",
 				"SlateCore",
 				"DeveloperSettings",
-				"MoviePlayer"
+				"MoviePlayer",
+				"ApplicationCore"
 			}
 		);
 
@@ -39,6 +40,16 @@ public class WidgetGeneration : ModuleRules
 		{
 			PrivateDependencyModuleNames.Add("UnrealEd");
 			PrivateDependencyModuleNames.Add("UMGEditor");
+		}
+
+		if (Target.Platform == UnrealTargetPlatform.Android)
+		{
+			PrivateIncludePathModuleNames.AddRange(
+				new string[]
+				{
+					"Launch"
+				}
+			);
 		}
 	}
 }

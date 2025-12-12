@@ -21,11 +21,11 @@ public:
 	WIDGETAPPLICATION_API virtual void NativeConstruct() override;
 	WIDGETAPPLICATION_API virtual void NativeDestruct() override;
 
-private:
-	UFUNCTION()
+protected:
+	UFUNCTION(BlueprintCallable)
 	void SwitchLeft();
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	void SwitchRight();
 
 public:

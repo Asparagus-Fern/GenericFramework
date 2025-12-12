@@ -80,10 +80,6 @@
       "Enabled": true
     },
     {
-      "Name": "UltraDynamicSky",
-      "Enabled": true
-    },
-    {
       "Name": "DBTween",
       "Enabled": true
     },

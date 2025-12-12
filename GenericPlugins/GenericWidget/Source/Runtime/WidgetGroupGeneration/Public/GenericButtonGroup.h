@@ -83,7 +83,13 @@ public:
 
 	UFUNCTION(BlueprintPure)
 	WIDGETGROUPGENERATION_API int32 FindButtonIndex(UGenericButtonWidget* InButton) const;
-	
+
+	UFUNCTION(BlueprintPure)
+	WIDGETGROUPGENERATION_API bool IsFirstButton(UGenericButtonWidget* InButton) const;
+
+	UFUNCTION(BlueprintPure)
+	WIDGETGROUPGENERATION_API bool IsLastButton(UGenericButtonWidget* InButton) const;
+
 public:
 	UFUNCTION(BlueprintPure)
 	WIDGETGROUPGENERATION_API bool HasLastSelectedButton() const;
@@ -112,9 +118,9 @@ public:
 	UFUNCTION(BlueprintPure)
 	WIDGETGROUPGENERATION_API FGameplayTag GetSelectedButtonTag() const;
 
-	UFUNCTION(BlueprintCallable,meta=(GameplayTagFilter="UI.Button"))
+	UFUNCTION(BlueprintCallable, meta=(GameplayTagFilter="UI.Button"))
 	WIDGETGROUPGENERATION_API void SetSelectedButtonByTag(FGameplayTag InTag);
-	
+
 public:
 	UFUNCTION(BlueprintCallable)
 	WIDGETGROUPGENERATION_API void SelectLastButton();
@@ -204,6 +210,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	WIDGETGROUPGENERATION_API void SetButtonGroupViewModel(UButtonGroupViewModel* InButtonGroupViewModel);
 
+protected:
+	void OnFlipFlowContainerChanged(bool bFlipFlowContainer);
+	
 private:
 	UPROPERTY()
 	TWeakObjectPtr<UGenericButtonCollection> ButtonCollection = nullptr;

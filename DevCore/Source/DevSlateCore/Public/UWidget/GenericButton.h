@@ -7,6 +7,7 @@
 #include "Widgets/Layout/SBox.h"
 #include "GenericButton.generated.h"
 
+class SBackgroundBlur;
 class UGenericButtonStyle;
 class SGenericButton;
 
@@ -37,6 +38,9 @@ public:
 	/* If true, this button can be interacted with it normally. Otherwise, it will not react to being hovered or clicked. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Generic Button")
 	bool bInteractionEnabled = true;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Generic Button")
+	float BackgroundBlurStrength = 0.f;
 
 	/* The minimum width of the button */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Generic Button")
@@ -70,6 +74,9 @@ public:
 	void SetButtonFocusable(bool bInIsButtonFocusable);
 
 	UFUNCTION(BlueprintCallable, Category="Generic Button")
+	void SetBackgroundBlurStrength(float InBackgroundBlurStrength);
+	
+	UFUNCTION(BlueprintCallable, Category="Generic Button")
 	void SetMinDesiredHeight(int32 InMinHeight);
 
 	UFUNCTION(BlueprintCallable, Category="Generic Button")
@@ -87,9 +94,11 @@ protected:
 	virtual void SlateHandleOnLostFocus();
 
 protected:
-	/* Cached pointer to the underlying slate button owned by this UWidget */
+	TSharedPtr<SOverlay> MyOverlay;
+
+	TSharedPtr<SBackgroundBlur> MyBackgroundBlur;
+
 	TSharedPtr<SBox> MyBox;
 
-	/* Cached pointer to the underlying slate button owned by this UWidget */
 	TSharedPtr<SGenericButton> MyGenericButton;
 };
